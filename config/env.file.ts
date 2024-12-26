@@ -36,7 +36,32 @@ const {
   SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx'
 } = process.env
 
-export const config = {
+type Config = {
+  env: string;
+  isProd: boolean;
+  baseApiUrl: string;
+  port: string | number;
+  postgres: {
+    user: string;
+    password: string;
+    host: string;
+    port: string | number;
+    dbName: string;
+    ssl: boolean;
+  },
+  redis: {
+    host: string,
+    port: number,
+    password: string,
+  },
+  signedCookie: string,
+  accessTokenSecret: string,
+  refreshTokenSecret: string,
+  smtpEmail: string,
+  smtpPassword: string
+}
+
+export const config: Config = {
   env,
   isProd: env === 'production',
   baseApiUrl: '/api/v2',
@@ -47,7 +72,7 @@ export const config = {
     host: postgresHost,
     port: postgresPort,
     dbName: postgresDBName,
-    ssl: Boolean(postgresSSL),
+    ssl: postgresSSL === 'true',
   },
   redis: {
     host: redisHost,

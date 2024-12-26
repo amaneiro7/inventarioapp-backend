@@ -38,7 +38,7 @@ import { initDeviceMFPModel } from '../../../../Features/MFP/infraestructure/MFP
 import { initMouseModels } from '../../../../ModelSeries/ModelCharacteristics/Mouses/infraestructure/MouseModelSchema'
 import { initMainCategoryModel } from '../../../../Category/Category/infrastructure/Sequelize/MainCategorySchema'
 
-export function setupModels(sequelize: Sequelize): void {
+export async function setupModels(sequelize: Sequelize): Promise<void> {
   initCategoryModel(sequelize)
   initMainCategoryModel(sequelize)
   initBrandModel(sequelize)

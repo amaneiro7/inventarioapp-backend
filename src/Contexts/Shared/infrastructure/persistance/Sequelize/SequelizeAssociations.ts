@@ -41,7 +41,7 @@ import { sequelize } from './SequelizeConfig'
 import { type Models } from './SequelizeRepository'
 
 // Define associations between different Sequelize models
-export function InitSequelizeAssociation(): void {
+export async function InitSequelizeAssociation(): Promise<void> {
   const models = sequelize.models as unknown as Models
   CategoryModel.associate(models) // Sub Category Associations
   MainCategoryModel.associate(models) // Main Category Associations

@@ -33,7 +33,15 @@ import { SequelizeInputTypeRepository } from '../../../../ModelSeries/InputType/
 import { SequelizeDashboardRepository } from '../../../../Device/Inventroy/infra/sequelize/SequelizeDashboardRepository'
 import { SequelizeMainCategoryRepository } from '../../../../Category/Category/infrastructure/Sequelize/SequelizeMainCategoryRepository'
 
-initializeDatabase()
+(async () => {
+  try {
+    await initializeDatabase()
+  } catch (error) {
+    console.error(error)
+    process.exit(1)
+  }
+}
+)()
 
 export interface Models {
   Category: ModelStatic<Model<any>>
