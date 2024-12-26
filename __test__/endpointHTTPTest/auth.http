@@ -1,0 +1,8 @@
+### iniciar sesion
+POST http://localhost:5000/api/v1/auth/login/local
+Content-Type: application/json
+
+{
+  "email": "admin@bnc.com.ve",
+  "password": "Admin12345*"
+}
