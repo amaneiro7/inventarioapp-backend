@@ -1,8 +1,9 @@
-import { type NextFunction, type Request, type Response } from 'express'
-import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 import httpStatus from '../../Shared/utils/http-status'
 import { UserRemover } from '../../../Contexts/User/User/application/UserRemover'
-import { JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
+
+import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
+import { type NextFunction, type Request, type Response } from 'express'
+import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 
 export class UserDeleteController {
     constructor(private readonly repository: Repository) { }
