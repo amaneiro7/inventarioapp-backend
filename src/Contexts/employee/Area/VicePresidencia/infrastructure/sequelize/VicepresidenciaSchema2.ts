@@ -10,14 +10,14 @@ export class VicepresidenciaModel extends Model<VicepresidenciaPrimitives> imple
   readonly vicepresidenciaEjecutivaId!: Primitives<VicepresidenciaEjecutivaId>
   readonly name!: Primitives<VicepresidenciaName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' }) // A Vicepresidencia belongs to Many Vicepresidencias
     this.hasMany(models.Gerencia, { as: 'gerencia', foreignKey: 'vicepresidenciaId' }) // A Vicepresidencia has Many Gerencias
     // this.hasMany(models.Employee, { as: 'employees', foreignKey: 'vicepresidenciaId' }) // A Vicepresidencia has Many employees
   }
 }
 
-export function initVicepresidenciaModel (sequelize: Sequelize): void {
+export async function initVicepresidenciaModel(sequelize: Sequelize): Promise<void> {
   VicepresidenciaModel.init(
     {
       id: {

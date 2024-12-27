@@ -33,7 +33,7 @@ import { RolesModel } from '../../../../User/Role/infrastructure/sequelize/Roles
 import { UserModel } from '../../../../User/user/infrastructure/persistance/Sequelize/UserSchema'
 import { CoordinacionModel } from '../../../../employee/Area/Coordinacion/infrastructure/sequelize/CoordinacionSchema'
 import { GerenciaModel } from '../../../../employee/Area/Gerencia/infrastructure/sequelize/GerenciaSchema'
-import { VicepresidenciaModel } from '../../../../employee/Area/VicePresidencia/infrastructure/sequelize/VicepresidenciaSchema'
+import { VicepresidenciaModel } from '../../../../employee/Area/VicePresidencia/infrastructure/sequelize/VicepresidenciaSchema2'
 import { VicepresidenciaEjecutivaModel } from '../../../../employee/Area/VicepresidenciaEjecutiva/infrastructure/sequelize/VicepresidenciaEjecutivaSchema'
 import { CargoModel } from '../../../../employee/Cargo/infrastructure/sequelize/CargoSchema'
 import { EmployeeModel } from '../../../../employee/Employee/infrastructure/sequelize/EmployeeSchema'
@@ -43,42 +43,42 @@ import { type Models } from './SequelizeRepository'
 // Define associations between different Sequelize models
 export async function InitSequelizeAssociation(): Promise<void> {
   const models = sequelize.models as unknown as Models
-  CategoryModel.associate(models) // Sub Category Associations
-  MainCategoryModel.associate(models) // Main Category Associations
-  BrandModel.associate(models) // Brand Associations
-  ModelSeriesModel.associate(models) // Model Associations
-  ComputerModelsModel.associate(models) // Computer Models Associations
-  LaptopModelsModel.associate(models) // ModelLaptop Associations
-  MonitorModelsModel.associate(models) // ModelMonitor Associations
-  ModelPrinterModel.associate(models) // ModelPrinter Associations
-  KeyboardModelsModel.associate(models) // ModelKeyboard Associations
-  MouseModelsModel.associate(models) // ModelMouse Associations
-  StatusModel.associate(models) // Status Associations
-  DeviceModel.associate(models)// Device Associations
-  DeviceComputerModel.associate(models) // DeviceComputer Associations
-  DeviceHardDriveModel.associate(models) // DeviceHardDrive Associations
-  DeviceMFPModel.associate(models) // MFP Associations
-  HardDriveCapacityModel.associate(models) // HardDriveCapacity Associations
-  HardDriveTypeModel.associate(models) // HardDriveType Associations
-  ProcessorModel.associate(models) // Processor Associations
-  ProcessorSocketModel.associate(models) // ProcessorSocket Associations
-  MemoryRamTypeModel.associate(models) // MemoryRamType Associations
-  OperatingSystemModel.associate(models) // OperatingSystem Associations
-  OperatingSystemArqModel.associate(models) // OperatingSystemArq Associations
-  RolesModel.associate(models) // Role Associations
-  UserModel.associate(models)// User Associations
-  HistoryModel.associate(models)// History Associations
-  StateModel.associate(models)// State Associations
-  CityModel.associate(models) // City Associations
-  TypeOfSiteModel.associate(models) // TypeOfSite Associations
-  RegionModel.associate(models) // Region Associations
-  SiteModels.associate(models) // Site Associations
-  LocationModel.associate(models) // Location Associations
-  VicepresidenciaEjecutivaModel.associate(models) // VicepresidenciaEjecutiva Associations
-  VicepresidenciaModel.associate(models) // Vicepresidencia Associations
-  GerenciaModel.associate(models) // Gerencia Associations
-  CoordinacionModel.associate(models) // Coordinacion Associations
-  CargoModel.associate(models) // Cargo Associations
-  EmployeeModel.associate(models) // Employee Associations
-  InputTypeModel.associate(models) // InputType Associations
+  await CategoryModel.associate(models) // Sub Category Associations
+  await MainCategoryModel.associate(models) // Main Category Associations
+  await BrandModel.associate(models) // Brand Associations
+  await ModelSeriesModel.associate(models) // Model Associations
+  await ComputerModelsModel.associate(models) // Computer Models Associations
+  await LaptopModelsModel.associate(models) // ModelLaptop Associations
+  await MonitorModelsModel.associate(models) // ModelMonitor Associations
+  await ModelPrinterModel.associate(models) // ModelPrinter Associations
+  await KeyboardModelsModel.associate(models) // ModelKeyboard Associations
+  await MouseModelsModel.associate(models) // ModelMouse Associations
+  await StatusModel.associate(models) // Status Associations
+  await DeviceModel.associate(models)// Device Associations
+  await DeviceComputerModel.associate(models) // DeviceComputer Associations
+  await DeviceHardDriveModel.associate(models) // DeviceHardDrive Associations
+  await DeviceMFPModel.associate(models) // MFP Associations
+  await HardDriveCapacityModel.associate(models) // HardDriveCapacity Associations
+  await HardDriveTypeModel.associate(models) // HardDriveType Associations
+  await ProcessorModel.associate(models) // Processor Associations
+  await ProcessorSocketModel.associate(models) // ProcessorSocket Associations
+  await MemoryRamTypeModel.associate(models) // MemoryRamType Associations
+  await OperatingSystemModel.associate(models) // OperatingSystem Associations
+  await OperatingSystemArqModel.associate(models) // OperatingSystemArq Associations
+  await RolesModel.associate(models) // Role Associations
+  await UserModel.associate(models)// User Associations
+  await HistoryModel.associate(models)// History Associations
+  await StateModel.associate(models)// State Associations
+  await CityModel.associate(models) // City Associations
+  await TypeOfSiteModel.associate(models) // TypeOfSite Associations
+  await RegionModel.associate(models) // Region Associations
+  await SiteModels.associate(models) // Site Associations
+  await LocationModel.associate(models) // Location Associations
+  await VicepresidenciaEjecutivaModel.associate(models) // VicepresidenciaEjecutiva Associations
+  await VicepresidenciaModel.associate(models) // Vicepresidencia Associations
+  await GerenciaModel.associate(models) // Gerencia Associations
+  await CoordinacionModel.associate(models) // Coordinacion Associations
+  await CargoModel.associate(models) // Cargo Associations
+  await EmployeeModel.associate(models) // Employee Associations
+  await InputTypeModel.associate(models) // InputType Associations
 }

@@ -13,7 +13,7 @@ export class CategoryModel extends Model<CategoryPrimitives> implements Category
   readonly name!: Primitives<CategoryName>
   readonly mainCategoryId!: Primitives<MainCategoryId>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.MainCategory, { as: 'mainCategory', foreignKey: 'mainCategoryId' }) // A category can have one main category
     this.hasMany(models.Model, { as: 'model', foreignKey: 'categoryId' }) // A category can have many model series
     this.hasMany(models.Device, { as: 'device', foreignKey: 'categoryId' }) // A category can have many device
@@ -29,7 +29,7 @@ export class CategoryModel extends Model<CategoryPrimitives> implements Category
   }
 }
 
-export function initCategoryModel(sequelize: Sequelize): void {
+export async function initCategoryModel(sequelize: Sequelize): Promise<void> {
   CategoryModel.init(
     {
       id: {
