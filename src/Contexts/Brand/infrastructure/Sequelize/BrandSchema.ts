@@ -9,13 +9,13 @@ export class BrandModel extends Model<BrandPrimitives> implements BrandPrimitive
   public id!: Primitives<BrandId>
   public name!: Primitives<BrandName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.Model, { as: 'model', foreignKey: 'brandId' }) // A brand can have many model series
     this.hasMany(models.Device, { as: 'device', foreignKey: 'brandId' }) // A brand can have many device
   }
 }
 
-export function initBrandModel (sequelize: Sequelize): void {
+export async function initBrandModel(sequelize: Sequelize): Promise<void> {
   BrandModel.init(
     {
       id: {
