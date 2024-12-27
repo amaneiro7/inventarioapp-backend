@@ -32,6 +32,10 @@ export class Server {
     this.port = port
     this.app = express()
 
+    this.app.get('/', (req: Request, res: Response) => {
+      res.send("Hola Mundo")
+    })
+
     // Middlewares
     this.setupMiddlewares()
 
