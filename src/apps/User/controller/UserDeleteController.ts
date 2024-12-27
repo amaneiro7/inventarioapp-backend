@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import httpStatus from '../../Shared/utils/http-status'
 
-import { UserRemover } from '../../../Contexts/user/User/application/UserRemover'
+import { UserRemover } from '../../../Contexts/User/user/application/UserRemover'
 import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 
