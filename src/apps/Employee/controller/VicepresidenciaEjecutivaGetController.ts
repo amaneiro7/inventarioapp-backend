@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import httpStatus from '../../Shared/utils/http-status'
+import { SearchAllVicepresidenciaEjecutiva } from '../../../Contexts/employee/Area/VicepresidenciaEjecutiva/application/VicepresidenciaEjecutivaFinderAll'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
-import { SearchAllVicepresidenciaEjecutiva } from '../../../Contexts/Employee/Area/VicepresidenciaEjecutiva/application/VicepresidenciaEjecutivaFinderAll'
 
 export class VicepresidenciaEjecutivaGetController {
   constructor(private readonly repository: Repository) { }

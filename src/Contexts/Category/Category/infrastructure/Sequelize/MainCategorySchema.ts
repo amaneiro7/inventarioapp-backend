@@ -9,12 +9,12 @@ export class MainCategoryModel extends Model<MainCategoryPrimitives> implements 
   readonly id!: Primitives<MainCategoryId>
   readonly name!: Primitives<MainCategoryName>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.Category, { as: 'category', foreignKey: 'mainCategoryId' }) // A main category can have many categories
   }
 }
 
-export function initMainCategoryModel(sequelize: Sequelize): void {
+export async function initMainCategoryModel(sequelize: Sequelize): Promise<void> {
   MainCategoryModel.init(
     {
       id: {
