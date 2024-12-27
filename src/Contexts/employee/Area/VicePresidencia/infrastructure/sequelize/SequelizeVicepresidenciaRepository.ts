@@ -4,7 +4,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type VicepresidenciaPrimitives } from '../../domain/vicepresidencia'
 import { type VicepresidenciaId } from '../../domain/vicepresidenciaId'
 import { type VicepresidenciaRepository } from '../../domain/vicepresidenciaRepository'
-import { VicepresidenciaModel } from './VicepresidenciaSchema2'
+import { VicepresidenciaModel } from './VicepresidenciaSchema'
 
 export class SequelizeVicepresidenciaRepository implements VicepresidenciaRepository {
   private readonly cacheKey: string = 'vicepresidencias'
