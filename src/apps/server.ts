@@ -1,22 +1,24 @@
-import express, { type NextFunction, json, urlencoded, type Request, type Response, response } from 'express'
+import http from 'node:http' // Import the http module
+import express, { type NextFunction, json, urlencoded, type Request, type Response } from 'express' //
 import Router from 'express-promise-router'
-import compress from 'compression'
+import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
 import errorHandler from 'errorhandler'
 import cors from 'cors'
-import helmet from 'helmet'
-import morgan from 'morgan'
-import http from 'http'
-import httpStatus from './Shared/utils/http-status'
-import responseTime from 'response-time'
-import notifier from 'node-notifier'
+import helmet from 'helmet' // Protege contra ataques de seguridad
+import morgan from 'morgan' // manejo de error en consola
+import { limiter } from './Shared/Middleware/rateLimit'  // Importa el middleware de limitacion de peticiones
+import httpStatus from './Shared/utils/http-status' // Importa el modulo de status de http
+import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
+import notifier from 'node-notifier'  // Notifica al usuario de cambios en la aplicacion
 
 import { routerApi } from './Shared/Routes'
 import { options } from './Shared/Middleware/cors'
-import { logger } from './Shared/Middleware/winstonError'
-import { config } from '../../config/env.file'
+import { logger } from './Shared/Middleware/winstonError' // Manejo de error en un archivo
+import { config } from '../../config/env.file' // archivo donde se configurar las variables de entorno
 
 import { type Repository } from '../Contexts/Shared/domain/Repository'
+
 // import { etagMiddleware } from './Shared/Middleware/etagMiddleware'
 // import { lastModifiedMiddleware } from './Shared/Middleware/lastModifiedMiddleware'
 // import { expiresMiddleware } from './Shared/Middleware/expiresMiddleware'
@@ -32,12 +34,13 @@ export class Server {
     this.port = port
     this.app = express()
 
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send("Hola Mundo")
-    })
 
     // Middlewares
     this.setupMiddlewares()
+
+    this.app.get('/', (req: Request, res: Response) => {
+      res.send("Servidor de Inventario funcionando correctamente")
+    })
 
     // Configuración de rutas
     this.setupRoutes(repository)
@@ -45,19 +48,39 @@ export class Server {
   }
 
   private setupMiddlewares(): void {
+    this.app.use(limiter)
+
     // Middlware para medir el tiempo de respuesta
     this.app.use(responseTime())
 
     // Middleware para logging con Morgan
-    this.app.use(morgan('combined', {
-      stream: {
-        write: message => {
-          logger.info(message)
-        }
-      }
-    }))
+    this.app.use(morgan('dev'))
+
 
     // Middleware de seguridad con Helmet
+    // this.app.use(helmet({
+    //   // Configuración de políticas de seguridad
+    //   contentSecurityPolicy: {
+    //     directives: {
+    //       defaultSrc: ["'self'"], // Permitir solo contenido del mismo origen
+    //       scriptSrc: ["'self'", "https://trustedscripts.example.com"], // Permitir scripts de fuentes confiables
+    //       objectSrc: ["'none'"], // No permitir objetos
+    //       upgradeInsecureRequests: [], // Forzar el uso de HTTPS
+    //     },
+    //   },
+    //   crossOriginEmbedderPolicy: true, // Evitar que otros orígenes embeban contenido
+    //   crossOriginOpenerPolicy: true, // Aislar el contexto de navegación
+    //   crossOriginResourcePolicy: { policy: 'same-origin' }, // Restringir recursos a la misma fuente
+    //   frameguard: { action: 'deny' }, // Evitar que la aplicación sea embebida en un iframe
+    //   hidePoweredBy: true, // Ocultar el encabezado "X-Powered-By"
+    //   hsts: { // HTTP Strict Transport Security
+    //     maxAge: 31536000, // 1 año
+    //     includeSubDomains: true, // Aplicar a subdominios
+    //     preload: true, // Permitir que el dominio sea precargado en navegadores
+    //   },
+    //   noSniff: true, // Evitar que el navegador adivine el tipo de contenido
+    //   xssFilter: true, // Habilitar el filtro XSS
+    // }))
     this.app.use(helmet.xssFilter())
     this.app.use(helmet.noSniff())
     this.app.use(helmet.hidePoweredBy())
@@ -76,7 +99,16 @@ export class Server {
     this.app.use(cookieParser())
 
     // Middleware para comprimir las respuestas
-    this.app.use(compress())
+    this.app.use(compress({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          // don't compress responses with this request header
+          return false
+        }
+        // fallback to standard filter function
+        return compress.filter(req, res)
+      }
+    }))
 
     // Middleare para manejo de errores
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
@@ -95,9 +127,7 @@ export class Server {
     const router = Router()
 
     if (!config.isProd) {
-      router.use(errorHandler({
-        log: this.errorNotification
-      }))
+      router.use(errorHandler())
     }
 
     // Configuración de rutas
@@ -118,14 +148,6 @@ export class Server {
         console.log('  Press CTRL-C to stop\n')
         resolve()
       })
-    })
-  }
-
-  errorNotification(err: Error, str: string, req: Request) {
-    const title = 'Error in ' + req.method + ' ' + req.url
-    notifier.notify({
-      title: title,
-      message: str
     })
   }
 

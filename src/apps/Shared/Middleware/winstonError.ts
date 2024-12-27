@@ -1,14 +1,32 @@
-import winston from 'winston'
+import { createLogger, transports, format } from 'winston'
 
-export const logger = winston.createLogger({
-  level: 'error',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
+export const logger = createLogger({
+  format: format.combine(
+    format.timestamp(),
+    format.json()
   ),
-  defaultMeta: { service: 'inventory-app' },
   transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
+    new transports.File({ filename: 'logs.log' }),
   ]
 })
+
+async function executeError() {
+  try {
+    throw new Error("Oops")
+
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error({
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      })
+    } else {
+      logger.error({
+        message: 'Unknown error ocurred'
+      })
+    }
+  }
+}
+
+executeError()
