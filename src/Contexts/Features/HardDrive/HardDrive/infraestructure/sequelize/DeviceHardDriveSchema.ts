@@ -22,7 +22,7 @@ export class DeviceHardDriveModel extends Model<DeviceHardDriveCreationAttribute
   readonly hardDriveCapacityId!: Primitives<HDDCapacity>
   readonly hardDriveTypeId!: Primitives<HDDType>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' }) // A computer belongs to a device
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category
     this.belongsTo(models.HardDriveCapacity, { as: 'hardDriveCapacity', foreignKey: 'hardDriveCapacityId' }) // A computer belongs to a hard drive
@@ -30,7 +30,7 @@ export class DeviceHardDriveModel extends Model<DeviceHardDriveCreationAttribute
   }
 }
 
-export function initDeviceHardDriveModel(sequelize: Sequelize): void {
+export async function initDeviceHardDriveModel(sequelize: Sequelize): Promise<void> {
   DeviceHardDriveModel.init(
     {
       id: {

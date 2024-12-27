@@ -9,12 +9,12 @@ export class OperatingSystemModel extends Model<OperatingSystemPrimitives> imple
   readonly id!: Primitives<OperatingSystemId>
   readonly name!: Primitives<OperatingSystemVersion>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'operatingSystemId' }) // An operating system can have many computers
   }
 }
 
-export function initOperatingSystemModel (sequelize: Sequelize): void {
+export async function initOperatingSystemModel(sequelize: Sequelize): Promise<void> {
   OperatingSystemModel.init(
     {
       id: {

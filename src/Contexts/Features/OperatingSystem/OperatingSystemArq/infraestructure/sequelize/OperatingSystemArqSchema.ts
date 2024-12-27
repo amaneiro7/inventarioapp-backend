@@ -9,12 +9,12 @@ export class OperatingSystemArqModel extends Model<OperatingSystemArqPrimitives>
   readonly id!: Primitives<OperatingSystemArqId>
   readonly name!: Primitives<OperatingSystemArqName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'operatingSystemArqId' }) // An operating system arq can have many computer
   }
 }
 
-export function initOperatingSystemArqModel (sequelize: Sequelize): void {
+export async function initOperatingSystemArqModel(sequelize: Sequelize): Promise<void> {
   OperatingSystemArqModel.init(
     {
       id: {

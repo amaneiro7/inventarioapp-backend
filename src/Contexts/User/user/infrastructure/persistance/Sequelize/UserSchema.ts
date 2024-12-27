@@ -17,13 +17,13 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
   readonly lastName!: Primitives<UserLastName>
   readonly password!: Primitives<UserPassword>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' }) // A user belongs to a role
     this.hasMany(models.History, { as: 'history', foreignKey: 'userId' }) // A user can have many history
   }
 }
 
-export function initUserModel(sequelize: Sequelize): void {
+export async function initUserModel(sequelize: Sequelize): Promise<void> {
   UserModel.init(
     {
       id: {

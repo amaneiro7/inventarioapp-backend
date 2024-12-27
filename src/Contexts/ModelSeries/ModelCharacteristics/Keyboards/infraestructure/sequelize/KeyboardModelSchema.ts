@@ -21,14 +21,14 @@ export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes>
   public inputTypeId!: Primitives<InputTypeId>
   public hasFingerPrintReader!: Primitives<HasFingerPrintReader>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A keyboard model belongs to a model
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A keyboard model belongs to a category
     this.belongsTo(models.InputType, { as: 'inputType', foreignKey: 'inputTypeId' }) // A keyboard model belongs to a InputTypes
   }
 }
 
-export function initKeyboardModels(sequelize: Sequelize): void {
+export async function initKeyboardModels(sequelize: Sequelize): Promise<void> {
   KeyboardModelsModel.init(
     {
       id: {

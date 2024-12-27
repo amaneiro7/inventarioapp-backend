@@ -9,13 +9,13 @@ export class ProcessorSocketModel extends Model<ProcessorSocketPrimitives> imple
   readonly id!: Primitives<ProcessorSocketId>
   readonly name!: Primitives<ProcessorSocketName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     // this.hasMany(models.ModelLaptop, { as: 'modelLaptop' }) // An processor socket can have many laptops
     // this.hasMany(models.ModelComputer, { as: 'modelComputer' }) // An processor socket can have many computers
   }
 }
 
-export function initProcessorSocketModel (sequelize: Sequelize): void {
+export async function initProcessorSocketModel(sequelize: Sequelize): Promise<void> {
   ProcessorSocketModel.init(
     {
       id: {

@@ -11,14 +11,14 @@ export class GerenciaModel extends Model<GerenciaPrimitives> implements Gerencia
   readonly vicepresidenciaId!: Primitives<VicepresidenciaId>
   readonly name!: Primitives<GerenciaName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' }) // A Gerencia belongs to Many Vicepresidencias
     this.hasMany(models.Coordinacion, { as: 'coordinacion', foreignKey: 'gerenciaId' }) // A Gerencia has Many Coordinaciones
     // this.hasMany(models.Employee, { as: 'employees', foreignKey: 'gerenciaId' }) // A Gerencia has Many employees
   }
 }
 
-export function initGerenciaModel (sequelize: Sequelize): void {
+export async function initGerenciaModel(sequelize: Sequelize): Promise<void> {
   GerenciaModel.init(
     {
       id: {

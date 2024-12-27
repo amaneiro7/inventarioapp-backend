@@ -9,12 +9,12 @@ export class CargoModel extends Model<CargoPrimitives> implements CargoPrimitive
   public id!: Primitives<CargoId>
   public name!: Primitives<CargoName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     // this.hasMany(models.Employee, { as: 'employees', foreignKey: 'cargoId' })
   }
 }
 
-export function initCargoModel (sequelize: Sequelize): void {
+export async function initCargoModel(sequelize: Sequelize): Promise<void> {
   CargoModel.init(
     {
       id: {

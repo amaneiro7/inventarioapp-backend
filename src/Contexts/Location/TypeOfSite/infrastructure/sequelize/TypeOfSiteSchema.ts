@@ -10,12 +10,12 @@ export class TypeOfSiteModel extends Model<TypeOfSitePrimitives> implements Type
   readonly id!: Primitives<TypeOfSiteId>
   readonly name!: Primitives<TypeOfSiteName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.Location, { as: 'location', foreignKey: 'typeOfSiteId' })
   }
 }
 
-export function initTypeOfSiteModel (sequelize: Sequelize): void {
+export async function initTypeOfSiteModel(sequelize: Sequelize): Promise<void> {
   TypeOfSiteModel.init(
     {
       id: {

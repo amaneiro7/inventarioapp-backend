@@ -9,13 +9,13 @@ export class MemoryRamTypeModel extends Model<MemoryRamTypePrimitives> implement
   readonly id!: Primitives<MemoryRamTypeId>
   readonly name!: Primitives<MemoryRamTypeName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.ModelComputer, { as: 'modelComputer', foreignKey: 'memoryRamTypeId' }) // A memory ram type can have many model
     this.hasMany(models.ModelLaptop, { as: 'modelLaptop', foreignKey: 'memoryRamTypeId' }) // A memory ram type can have many laptop
   }
 }
 
-export function initMemoryRamTypeModel (sequelize: Sequelize): void {
+export async function initMemoryRamTypeModel(sequelize: Sequelize): Promise<void> {
   MemoryRamTypeModel.init(
     {
       id: {

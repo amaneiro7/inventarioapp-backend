@@ -9,13 +9,13 @@ export class HardDriveTypeModel extends Model<HardDriveTypePrimitives> implement
   readonly id!: Primitives<HardDriveTypeId>
   readonly name!: Primitives<HardDriveTypeName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'hardDriveTypeId' }) // A hard drive type can have many hard drive
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'hardDriveTypeId' }) // A hard drive type can have many computer
   }
 }
 
-export function initHardDriveTypeModel (sequelize: Sequelize): void {
+export async function initHardDriveTypeModel(sequelize: Sequelize): Promise<void> {
   HardDriveTypeModel.init(
     {
       id: {

@@ -18,11 +18,11 @@ export class ProcessorModel extends Model<ProcessorPrimitives> implements Proces
   readonly threads!: Primitives<ProcessorHasThreads>
   readonly frequency!: Primitives<ProcessorFrequency>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'processorId' }) // A processor can have many computer
   }
 }
-export function initProcessorModel (sequelize: Sequelize): void {
+export async function initProcessorModel(sequelize: Sequelize): Promise<void> {
   ProcessorModel.init(
     {
       id: {

@@ -33,7 +33,7 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
   // public gerenciaId!: Primitives<EmployeeGerenciaId>
   // public coordinacionId!: Primitives<EmployeeCoordinacionId>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     // this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
     // this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // An employee belongs to a location
     // this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' }) // An employee belongs to a vicepresidencia
@@ -45,7 +45,7 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
   }
 }
 
-export function initEmployeeModel(sequelize: Sequelize): void {
+export async function initEmployeeModel(sequelize: Sequelize): Promise<void> {
   EmployeeModel.init(
     {
       id: {

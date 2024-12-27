@@ -9,12 +9,12 @@ export class StatusModel extends Model<StatusPrimitives> implements StatusPrimit
   readonly id!: Primitives<StatusId>
   readonly name!: Primitives<StatusName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.Device, { as: 'devices', foreignKey: 'statusId' })
   }
 }
 
-export function initStatusModel (sequelize: Sequelize): void {
+export async function initStatusModel(sequelize: Sequelize): Promise<void> {
   StatusModel.init(
     {
       id: {

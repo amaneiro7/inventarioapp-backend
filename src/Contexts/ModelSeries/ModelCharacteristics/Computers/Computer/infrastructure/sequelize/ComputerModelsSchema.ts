@@ -30,7 +30,7 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
   public hasHDMI!: Primitives<HasHDMI>
   public hasVGA!: Primitives<HasVGA>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A computer model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
     // this.belongsTo(models.ProcessorSocket, { as: 'processorSocket' }) // A computer model belongs to a processor socket
@@ -38,7 +38,7 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
   }
 }
 
-export function initComputerModels(sequelize: Sequelize): void {
+export async function initComputerModels(sequelize: Sequelize): Promise<void> {
   ComputerModelsModel.init(
     {
       id: {

@@ -11,13 +11,13 @@ export class CoordinacionModel extends Model<CoordinacionPrimitives> implements 
   readonly gerenciaId!: Primitives<GerenciaId>
   readonly name!: Primitives<CoordinacionName>
 
-  public static associate (models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Gerencia, { as: 'gerencia', foreignKey: 'gerenciaId' }) // A Coordinacion belongs to Many Gerencias
     // this.hasMany(models.Employee, { as: 'employees', foreignKey: 'coordinacionId' }) // A Coordinacion has Many employees
   }
 }
 
-export function initCoordinacionModel (sequelize: Sequelize): void {
+export async function initCoordinacionModel(sequelize: Sequelize): Promise<void> {
   CoordinacionModel.init(
     {
       id: {

@@ -28,7 +28,7 @@ export class DeviceModel extends Model<DevicePrimitives> implements DevicePrimit
   readonly observation!: Primitives<DeviceObservation>
   readonly stockNumber!: Primitives<DeviceStocknumber>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A device belongs to a category
     this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' }) // A device belongs to a brand
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelId' }) // A device belongs to a model series
@@ -42,7 +42,7 @@ export class DeviceModel extends Model<DevicePrimitives> implements DevicePrimit
   }
 }
 
-export function initDeviceModel(sequelize: Sequelize): void {
+export async function initDeviceModel(sequelize: Sequelize): Promise<void> {
   DeviceModel.init(
     {
       id: {

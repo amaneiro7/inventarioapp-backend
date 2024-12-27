@@ -8,13 +8,13 @@ export class HardDriveCapacityModel extends Model<HardDriveCapacityPrimitives> i
   readonly id!: Primitives<HardDriveCapacityId>
   readonly name!: number
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'hardDriveCapacityId' }) // A hard drive capacity can have many hard drive
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'hardDriveCapacityId' }) // A hard drive capacity can have many computer
   }
 }
 
-export function initHardDriveCapacityModel(sequelize: Sequelize): void {
+export async function initHardDriveCapacityModel(sequelize: Sequelize): Promise<void> {
   HardDriveCapacityModel.init(
     {
       id: {

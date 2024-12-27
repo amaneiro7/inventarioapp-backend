@@ -24,13 +24,13 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
   public hasHDMI!: Primitives<MonitorHasHDMI>
   public hasVGA!: Primitives<MonitorHasVGA>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A monitor model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A monitor model belongs to a category
   }
 }
 
-export function initMonitorModels(sequelize: Sequelize): void {
+export async function initMonitorModels(sequelize: Sequelize): Promise<void> {
   MonitorModelsModel.init(
     {
       id: {

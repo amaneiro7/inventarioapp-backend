@@ -17,13 +17,13 @@ export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPC
   readonly ipAddress!: Primitives<MFPIPAddress>
 
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' }) // A computer belongs to a device
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category    
   }
 }
 
-export function initDeviceMFPModel(sequelize: Sequelize): void {
+export async function initDeviceMFPModel(sequelize: Sequelize): Promise<void> {
   DeviceMFPModel.init(
     {
       id: {

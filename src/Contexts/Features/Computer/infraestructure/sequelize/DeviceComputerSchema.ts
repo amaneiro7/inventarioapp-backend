@@ -37,7 +37,7 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
   readonly macAddress!: Primitives<MACAddress>
   readonly ipAddress!: Primitives<IPAddress>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A computer belongs to a device
     this.belongsTo(models.Processor, { as: 'processor', foreignKey: 'processorId' }) // A computer belongs to a processor
@@ -48,7 +48,7 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
   }
 }
 
-export function initDeviceComputerModel(sequelize: Sequelize): void {
+export async function initDeviceComputerModel(sequelize: Sequelize): Promise<void> {
   DeviceComputerModel.init(
     {
       id: {

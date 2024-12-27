@@ -9,12 +9,12 @@ export class RolesModel extends Model<RolePrimitives> implements RolePrimitives 
   readonly id!: Primitives<RoleId>
   readonly name!: Primitives<RoleName>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.hasMany(models.User, { as: 'user', foreignKey: 'roleId' }) // A role can have many users
   }
 }
 
-export function initRolesodel(sequelize: Sequelize): void {
+export async function initRolesodel(sequelize: Sequelize): Promise<void> {
   RolesModel.init(
     {
       id: {

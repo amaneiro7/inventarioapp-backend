@@ -18,14 +18,14 @@ export class HistoryModel extends Model<HistoryPrimitives> implements HistoryPri
   readonly newData!: object
   readonly createdAt!: Date
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' }) // A history belongs to a user
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' }) // A history belongs to a device
     this.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employeeId' }) // A history belongs to an employee
   }
 }
 
-export function initHistoryModel(sequelize: Sequelize): void {
+export async function initHistoryModel(sequelize: Sequelize): Promise<void> {
   HistoryModel.init(
     {
       id: {

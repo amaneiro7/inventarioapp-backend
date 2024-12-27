@@ -32,7 +32,7 @@ export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> imp
   public hasVGA!: Primitives<HasVGA>
   public batteryModel!: Primitives<BatteryModelName>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A Laptop model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
     // this.belongsTo(models.ProcessorSocket, { as: 'processorSocket' }) // A computer model belongs to a processor socket
@@ -40,7 +40,7 @@ export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> imp
   }
 }
 
-export function initLaptopModels(sequelize: Sequelize): void {
+export async function initLaptopModels(sequelize: Sequelize): Promise<void> {
   LaptopModelsModel.init(
     {
       id: {

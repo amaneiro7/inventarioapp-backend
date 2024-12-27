@@ -17,13 +17,13 @@ export class ModelPrinterModel extends Model<ModelPrinterCreationAttributes> imp
   public modelSeriesId!: Primitives<ModelSeriesId>
   public categoryId!: Primitives<CategoryId>
 
-  public static associate(models: Models): void {
+  public static async associate(models: Models): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A Laptop model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
   }
 }
 
-export function initModelPrinter(sequelize: Sequelize): void {
+export async function initModelPrinter(sequelize: Sequelize): Promise<void> {
   ModelPrinterModel.init(
     {
       id: {
