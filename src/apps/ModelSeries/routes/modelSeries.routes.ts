@@ -13,6 +13,7 @@ export const createModelSeriesRouter = ({ repository }: Props): Router => {
   const modelSeriesPostController = new ModelSeriesPostController(repository)
 
   router.get('/', modelSeriesGetController.getByCriteria)
+  router.get('/download', modelSeriesGetController.download)
   router.get('/all', modelSeriesGetController.getAll)
   router.get('/:id', modelSeriesGetController.getById)
   router.post('/', modelSeriesPostController.create)

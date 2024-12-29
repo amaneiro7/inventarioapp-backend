@@ -18,5 +18,7 @@ export abstract class ModelSeriesRepository {
 
   abstract searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesPrimitives[]>
 
+  abstract donwload(criteria: Criteria): Promise<{}>
+
   abstract remove(id: Primitives<ModelSeriesId>): Promise<void>
 }

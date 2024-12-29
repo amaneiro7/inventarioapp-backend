@@ -8,6 +8,7 @@ import { ModelSeriesName } from '../../../Contexts/ModelSeries/ModelSeries/domai
 import { SearchByCriteriaQuery } from '../../../Contexts/Shared/domain/SearchByCriteriaQuery'
 import { ModelByCriteriaSearcher } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelByCriteriaSearcher'
 import { FiltersPrimitives } from '../../../Contexts/Shared/domain/criteria/Filter'
+import { ModelExcelService } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelExcelService'
 
 export class ModelSeriesGetController {
   constructor(private readonly repository: Repository) { }
@@ -54,6 +55,30 @@ export class ModelSeriesGetController {
       const { name } = req.params
       const data = await new ModelSeriesFinder(this.repository).searchByName(new ModelSeriesName(name))
       res.status(httpStatus.OK).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  download = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { filters, orderBy, orderType, limit, offset } = req.query
+      const query = new SearchByCriteriaQuery(
+        filters ? filters as unknown as FiltersPrimitives[] : [],
+        orderBy ? orderBy as string : undefined,
+        orderType ? orderType as string : undefined,
+        limit ? Number(limit) : undefined,
+        offset ? Number(offset) : undefined
+      )
+
+      const buf = await new ModelExcelService(this.repository).generateExcel(query)
+      const now = new Date()
+      const filename = `Reporte-Inventario${now.toLocaleDateString().replace(/[/:]/g, '-')}.xlsx`
+      res
+        .status(httpStatus.OK)
+        .setHeader('Content-Disposition', `attachment filename=${filename}`)
+        .setHeader('Content-Type', 'application/vnd.ms-excel')
+        .end(buf)
     } catch (error) {
       next(error)
     }

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser'
 import errorHandler from 'errorhandler'
 import cors from 'cors'
 import helmet from 'helmet' // Protege contra ataques de seguridad
-import morgan from 'morgan' // manejo de error en consola
+// manejo de error en consola
 import { limiter } from './Shared/Middleware/rateLimit'  // Importa el middleware de limitacion de peticiones
 import httpStatus from './Shared/utils/http-status' // Importa el modulo de status de http
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
@@ -18,6 +18,8 @@ import { logger } from './Shared/Middleware/winstonError' // Manejo de error en 
 import { config } from '../../config/env.file' // archivo donde se configurar las variables de entorno
 
 import { type Repository } from '../Contexts/Shared/domain/Repository'
+import { morganLog } from './Shared/Middleware/morgan'
+import { helmetConfig } from './Shared/Middleware/helmet'
 
 // import { etagMiddleware } from './Shared/Middleware/etagMiddleware'
 // import { lastModifiedMiddleware } from './Shared/Middleware/lastModifiedMiddleware'
@@ -54,37 +56,15 @@ export class Server {
     this.app.use(responseTime())
 
     // Middleware para logging con Morgan
-    this.app.use(morgan('dev'))
+    this.app.use(morganLog)
 
 
     // Middleware de seguridad con Helmet
-    // this.app.use(helmet({
-    //   // Configuración de políticas de seguridad
-    //   contentSecurityPolicy: {
-    //     directives: {
-    //       defaultSrc: ["'self'"], // Permitir solo contenido del mismo origen
-    //       scriptSrc: ["'self'", "https://trustedscripts.example.com"], // Permitir scripts de fuentes confiables
-    //       objectSrc: ["'none'"], // No permitir objetos
-    //       upgradeInsecureRequests: [], // Forzar el uso de HTTPS
-    //     },
-    //   },
-    //   crossOriginEmbedderPolicy: true, // Evitar que otros orígenes embeban contenido
-    //   crossOriginOpenerPolicy: true, // Aislar el contexto de navegación
-    //   crossOriginResourcePolicy: { policy: 'same-origin' }, // Restringir recursos a la misma fuente
-    //   frameguard: { action: 'deny' }, // Evitar que la aplicación sea embebida en un iframe
-    //   hidePoweredBy: true, // Ocultar el encabezado "X-Powered-By"
-    //   hsts: { // HTTP Strict Transport Security
-    //     maxAge: 31536000, // 1 año
-    //     includeSubDomains: true, // Aplicar a subdominios
-    //     preload: true, // Permitir que el dominio sea precargado en navegadores
-    //   },
-    //   noSniff: true, // Evitar que el navegador adivine el tipo de contenido
-    //   xssFilter: true, // Habilitar el filtro XSS
-    // }))
-    this.app.use(helmet.xssFilter())
-    this.app.use(helmet.noSniff())
-    this.app.use(helmet.hidePoweredBy())
-    this.app.use(helmet.frameguard({ action: 'deny' }))
+    this.app.use(helmetConfig)
+    // this.app.use(helmet.xssFilter())
+    // this.app.use(helmet.noSniff())
+    // this.app.use(helmet.hidePoweredBy())
+    // this.app.use(helmet.frameguard({ action: 'deny' }))
 
     // Middleware para CORS
     this.app.use(cors(options))

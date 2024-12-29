@@ -2,7 +2,7 @@ import { FindOptions } from "sequelize"
 import { Criteria } from "../../../../Shared/domain/criteria/Criteria"
 
 export class ModelAssociation {
-    convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
+    convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
         options.include = [
             'category',
             'brand',

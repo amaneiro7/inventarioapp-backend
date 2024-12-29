@@ -1,3 +1,5 @@
+import { set_fs, utils, write } from 'xlsx'
+import fs from 'node:fs'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type Transaction } from 'sequelize'
@@ -19,6 +21,8 @@ import { MouseModels } from '../../../ModelCharacteristics/Mouses/domain/MouseMo
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { clearModelDataset } from './clearModelDataset'
+import { ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 
 export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
   private readonly models = sequelize.models as unknown as Models
@@ -47,9 +51,9 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
   async matching(criteria: Criteria): Promise<{ total: number; data: ModelSeriesPrimitives[] }> {
     const options = this.convert(criteria)
 
-    const locationOption = new ModelAssociation().convertFilterLocation(criteria, options)
+    const modelOption = new ModelAssociation().convertFilter(criteria, options)
 
-    const { count: total, rows: data } = await ModelSeriesModel.findAndCountAll(locationOption)
+    const { count: total, rows: data } = await ModelSeriesModel.findAndCountAll(modelOption)
 
     return {
       total,
@@ -220,5 +224,25 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
     await ModelSeriesModel.destroy({ where: { id } })
     await new CacheService(this.cache).removeCachedData(this.cacheKey)
     await this.searchAll()
+  }
+
+  async donwload(criteria: Criteria): Promise<{}> {
+    set_fs(fs)
+
+    const { data } = await this.matching(criteria) as { total: number, data: ModelSeriesPrimitives[] }
+
+    const wbData = clearModelDataset({ models: data as ModelApiresponse[] })
+    // Crear una nueva hoja de cálculo
+    const worksheet = utils.json_to_sheet(wbData)
+    worksheet["!cols"] = [{ wch: 20 }]
+    const workbook = utils.book_new()
+    utils.book_append_sheet(workbook, worksheet, 'Inventario')
+
+    // Generar un archivo buffer
+    // const now = new Date()
+    // const filename = `Reporte-Inventario${now.toLocaleString().replace(/[/:]/g, '-')}.xlsx`
+    // return writeFile(workbook, filename, { compression: true })
+    const buf = write(workbook, { type: 'buffer', bookType: 'xlsx', compression: true, })
+    return buf
   }
 }
