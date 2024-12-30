@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import httpStatus from '../../Shared/utils/http-status'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { SearchAllCity } from '../../../Contexts/Location/City/application/CityFinderAll'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 

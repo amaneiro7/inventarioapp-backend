@@ -1,85 +1,70 @@
-import http from 'node:http' // Import the http module
-import express, { type NextFunction, json, urlencoded, type Request, type Response } from 'express' //
+import * as http from 'node:http' // Import the http module
+import express, { json, urlencoded, type Request, type Response } from 'express' //
 import Router from 'express-promise-router'
 import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
 import errorHandler from 'errorhandler'
 import cors from 'cors'
+import { options } from './Shared/Middleware/cors'
 import helmet from 'helmet' // Protege contra ataques de seguridad
-// manejo de error en consola
+
 import { limiter } from './Shared/Middleware/rateLimit'  // Importa el middleware de limitacion de peticiones
-import httpStatus from './Shared/utils/http-status' // Importa el modulo de status de http
+import httpStatus from '../Contexts/Shared/infrastructure/utils/http-status' // Importa el modulo de status de http
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
-import notifier from 'node-notifier'  // Notifica al usuario de cambios en la aplicacion
+import { morganLog } from './Shared/Middleware/morgan'
+
 
 import { routerApi } from './Shared/Routes'
-import { options } from './Shared/Middleware/cors'
-import { logger } from './Shared/Middleware/winstonError' // Manejo de error en un archivo
-import { config } from '../../config/env.file' // archivo donde se configurar las variables de entorno
-
-import { type Repository } from '../Contexts/Shared/domain/Repository'
-import { morganLog } from './Shared/Middleware/morgan'
-import { helmetConfig } from './Shared/Middleware/helmet'
-
-// import { etagMiddleware } from './Shared/Middleware/etagMiddleware'
-// import { lastModifiedMiddleware } from './Shared/Middleware/lastModifiedMiddleware'
-// import { expiresMiddleware } from './Shared/Middleware/expiresMiddleware'
-
-
+import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
 
 export class Server {
-  private readonly app: express.Express
+  private readonly express: express.Express
   private readonly port: string
   private httpServer?: http.Server
 
-  constructor({ port, repository }: { port: string, repository: Repository }) {
+  constructor(port: string) {
     this.port = port
-    this.app = express()
-
+    this.express = express()
 
     // Middlewares
     this.setupMiddlewares()
 
-    this.app.get('/', (req: Request, res: Response) => {
+    // Ruta para validar el funcionamiento del servidor
+    this.express.get('/', (req: Request, res: Response) => {
       res.send("Servidor de Inventario funcionando correctamente")
     })
 
     // Configuración de rutas
-    this.setupRoutes(repository)
-
+    this.setupRoutes()
   }
 
   private setupMiddlewares(): void {
-    this.app.use(limiter)
+    // Middleware para parsear JSON
+    this.express.use(json())
+    // Middleware para parsear URL-encoded
+    this.express.use(urlencoded({ extended: true }))
+    // Middleware de seguridad con Helmet    
+    this.express.use(helmet.xssFilter())
+    this.express.use(helmet.noSniff())
+    this.express.use(helmet.hidePoweredBy())
+    this.express.use(helmet.frameguard({ action: 'deny' }))
+    // Middleware para el rate limit
+    this.express.use(limiter)
 
     // Middlware para medir el tiempo de respuesta
-    this.app.use(responseTime())
+    this.express.use(responseTime())
 
     // Middleware para logging con Morgan
-    this.app.use(morganLog)
-
-
-    // Middleware de seguridad con Helmet
-    this.app.use(helmetConfig)
-    // this.app.use(helmet.xssFilter())
-    // this.app.use(helmet.noSniff())
-    // this.app.use(helmet.hidePoweredBy())
-    // this.app.use(helmet.frameguard({ action: 'deny' }))
+    this.express.use(morganLog)
 
     // Middleware para CORS
-    this.app.use(cors(options))
-
-    // Middleware para parsear JSON
-    this.app.use(json())
-
-    // Middleware para parsear URL-encoded
-    this.app.use(urlencoded({ extended: true }))
+    this.express.use(cors(options))
 
     // Middleware para cookies firmadas
-    this.app.use(cookieParser())
+    this.express.use(cookieParser())
 
     // Middleware para comprimir las respuestas
-    this.app.use(compress({
+    this.express.use(compress({
       filter: (req, res) => {
         if (req.headers['x-no-compression']) {
           // don't compress responses with this request header
@@ -90,41 +75,36 @@ export class Server {
       }
     }))
 
-    // Middleare para manejo de errores
-    this.app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
-      logger.error('Error;', err.message)
-      next(err)
-    })
-
     // Middlewares opcionales de cache
-    // this.app.use(cacheMiddleware)
-    // this.app.use(expiresMiddleware)
-    // this.app.use(lastModifiedMiddleware)
-    // this.app.use(etagMiddleware)
+    // this.express.use(cacheMiddleware)
+    // this.express.use(expiresMiddleware)
+    // this.express.use(lastModifiedMiddleware)
+    // this.express.use(etagMiddleware)
   }
 
-  private setupRoutes(repository: Repository): void {
+  private setupRoutes(): void {
     const router = Router()
 
     if (!config.isProd) {
       router.use(errorHandler())
     }
 
+    this.express.use(router)
+
     // Configuración de rutas
-    routerApi({ app: this.app, repository })
+    routerApi({ app: this.express, repository })
 
     // Manejo de errores global
     router.use((err: Error, req: Request, res: Response, _next: () => void) => {
       res.status(httpStatus.BAD_REQUEST).send(err.message)
     })
-    this.app.use(router)
   }
 
   async listen(): Promise<void> {
     await new Promise<void>(resolve => {
-      const env = this.app.get('env') as string
-      this.httpServer = this.app.listen(this.port, () => {
-        console.log(`  Inventario Backend App is running at http://localhost:${this.port} in ${env} mode`)
+      const env = this.express.get('env') as string
+      this.httpServer = this.express.listen(this.port, () => {
+        console.log(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
         console.log('  Press CTRL-C to stop\n')
         resolve()
       })

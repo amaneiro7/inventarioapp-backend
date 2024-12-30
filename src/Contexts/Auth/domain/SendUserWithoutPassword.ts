@@ -1,19 +1,25 @@
 import { type UserPrimitives } from '../../User/user/domain/User'
 
-type UserWithoutPassowrd = Omit<UserProps, 'password'>
-interface Return {
-  user: UserWithoutPassowrd
-  accessToken: string
-}
-interface UserProps extends UserPrimitives {
+type UserProps = UserPrimitives & {
   role: {
     id: number
     name: string
   }
 }
 
-export function SendUserWithoutPassowrd(user: UserPrimitives, token: string): Return {
-  const { id, lastName, name, email, roleId, role } = user as UserProps
+export function SendUserWithoutPassowrd(
+  user: UserPrimitives & {
+    role: {
+      id: number
+      name: string
+    }
+  },
+  token: string
+): {
+  user: Omit<UserProps, 'password'>
+  accessToken: string
+} {
+  const { id, lastName, name, email, roleId, role } = user
 
   return {
     user: {

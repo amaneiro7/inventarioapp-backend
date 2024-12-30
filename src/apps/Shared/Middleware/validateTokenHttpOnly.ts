@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import httpStatus from '../../Shared/utils/http-status'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 
 export const validateToken = (req: Request, res: Response, next: NextFunction): void => {
   res

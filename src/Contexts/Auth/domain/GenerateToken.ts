@@ -5,7 +5,7 @@ import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type RoleId } from '../../User/Role/domain/RoleId'
 import { type UserEmail } from '../../User/user/domain/UserEmail'
 import { type UserId } from '../../User/user/domain/UserId'
-import { config } from '../../../../config/env.file'
+import { config } from '../../Shared/infrastructure/config'
 
 export interface Tokens {
   accessToken: string

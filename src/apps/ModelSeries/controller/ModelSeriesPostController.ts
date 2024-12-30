@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
-import httpStatus from '../../Shared/utils/http-status'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { ModelSeriesCreator } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesCreator'
 import { ModelSeriesUpdater } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesUpdater'
 

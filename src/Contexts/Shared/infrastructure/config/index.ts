@@ -19,7 +19,7 @@ const options = {
 dotenv.config(options)
 
 const {
-  PORT: port = 3000,
+  PORT: port = '3000',
   POSTGRES_USER: postgresUser = 'postgres',
   POSTGRES_PASSWORD: postgresPassword = 'Man12345*',
   POSTGRES_HOST: postgresHost = 'localhost',
@@ -40,7 +40,7 @@ type Config = {
   env: string;
   isProd: boolean;
   baseApiUrl: string;
-  port: string | number;
+  port: string;
   postgres: {
     user: string;
     password: string;

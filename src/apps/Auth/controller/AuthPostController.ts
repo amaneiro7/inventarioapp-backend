@@ -1,6 +1,6 @@
 import { CookieOptions, type NextFunction, type Request, type Response } from 'express'
-import httpStatus from '../../Shared/utils/http-status'
-import { config } from '../../../../config/env.file'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
+import { config } from '../../../Contexts/Shared/infrastructure/config'
 
 import { generateAceessTokens, generateRefreshToken } from '../../../Contexts/Auth/domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../../../Contexts/Auth/domain/SendUserWithoutPassword'

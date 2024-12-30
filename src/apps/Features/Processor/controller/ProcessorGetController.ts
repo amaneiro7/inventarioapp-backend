@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 
-import httpStatus from '../../../Shared/utils/http-status'
+import httpStatus from '../../../../Contexts/Shared/infrastructure/utils/http-status'
 import { type Repository } from '../../../../Contexts/Shared/domain/Repository'
 import { SearchAllProcessors } from '../../../../Contexts/Features/Processor/Processor/application/ProcessorFinderAll'
 import { ProcessorsFinder } from '../../../../Contexts/Features/Processor/Processor/application/ProcessorFinder'

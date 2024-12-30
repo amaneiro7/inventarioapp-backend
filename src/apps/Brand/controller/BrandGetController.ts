@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
-import httpStatus from '../../Shared/utils/http-status'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { BrandsFinder } from '../../../Contexts/Brand/application/BrandFinder'
 import { BrandId } from '../../../Contexts/Brand/domain/BrandId'
 import { BrandName } from '../../../Contexts/Brand/domain/BrandName'
