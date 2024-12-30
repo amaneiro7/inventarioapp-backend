@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type CityPrimitives } from '../domain/City'
+import { type CityRepository } from '../domain/CityRepository'
 
-export class SearchAllCity {
-  constructor (private readonly repository: Repository) {}
+export class CityFinderAll {
+  constructor(private readonly repository: CityRepository) { }
 
-  async search (): Promise<CityPrimitives[]> {
-    return await this.repository.city.searchAll()
+  async run(): Promise<CityPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

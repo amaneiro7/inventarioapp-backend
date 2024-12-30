@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type RegionPrimitives } from '../domain/Region'
+import { type RegionRepository } from '../domain/RegionRepository'
 
-export class SearchAllRegion {
-  constructor (private readonly repository: Repository) {}
+export class RegionFinderAll {
+  constructor(private readonly repository: RegionRepository) { }
 
-  async search (): Promise<RegionPrimitives[]> {
-    return await this.repository.region.searchAll()
+  async run(): Promise<RegionPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

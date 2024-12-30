@@ -1,4 +1,3 @@
-import { Repository } from "../../../Shared/domain/Repository"
 import { Location, type LocationPrimitives } from "../domain/Location"
 import { LocationDoesNotExistError } from "../domain/LocationDoesNotExistError"
 import { LocationId } from "../domain/LocationId"
@@ -7,26 +6,33 @@ import { LocationSite } from "../domain/LocationSite"
 import { LocationSubnet } from "../domain/LocationSubnet"
 import { LocationTypeOfSite } from "../domain/LocationTypeOfSite"
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
+import { type LocationRepository } from '../domain/LocationRepository'
+import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
+import { type SiteRepository } from "../../Site/domain/SiteRepository"
 
 
 export class LocationUpdater {
-  constructor(private readonly repository: Repository) { }
+  constructor(
+    private readonly repository: LocationRepository,
+    private readonly typeOfSiteRepository: TypeOfSiteRepository,
+    private readonly siteRepository: SiteRepository
+  ) { }
 
   async run({ id, params }: { id: Primitives<LocationId>, params: Partial<Omit<LocationPrimitives, 'id'>> }): Promise<void> {
     const locationId = new LocationId(id).value
-    const location = await this.repository.location.searchById(locationId)
+    const location = await this.repository.searchById(locationId)
     if (location === null) {
       throw new LocationDoesNotExistError(id)
     }
 
     const locationEntity = Location.fromPrimitives(location)
 
-    await LocationName.updateNameField({ repository: this.repository.location, name: params.name, entity: locationEntity })
-    await LocationSite.updateSiteField({ repository: this.repository.site, entity: locationEntity, site: params.siteId })
-    await LocationTypeOfSite.updateTypeOfSiteField({ repository: this.repository.typeOfSite, entity: locationEntity, typeOfSite: params.typeOfSiteId })
+    await LocationName.updateNameField({ repository: this.repository, name: params.name, entity: locationEntity })
+    await LocationSite.updateSiteField({ repository: this.siteRepository, entity: locationEntity, site: params.siteId })
+    await LocationTypeOfSite.updateTypeOfSiteField({ repository: this.typeOfSiteRepository, entity: locationEntity, typeOfSite: params.typeOfSiteId })
     await LocationSubnet.updateSubnetField({ subnet: params.subnet, entity: locationEntity })
 
-    await this.repository.location.save(locationEntity.toPrimitive())
+    await this.repository.save(locationEntity.toPrimitive())
 
   }
 }

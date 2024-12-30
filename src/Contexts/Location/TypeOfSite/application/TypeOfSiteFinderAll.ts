@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type TypeOfSitePrimitives } from '../domain/TypeOfSite'
+import { type TypeOfSiteRepository } from '../domain/TypeOfSiteRepository'
 
-export class SearchAllTypeOfSite {
-  constructor (private readonly repository: Repository) {}
+export class TypeOfSiteFinderAll {
+  constructor(private readonly repository: TypeOfSiteRepository) { }
 
-  async search (): Promise<TypeOfSitePrimitives[]> {
-    return await this.repository.typeOfSite.searchAll()
+  async run(): Promise<TypeOfSitePrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

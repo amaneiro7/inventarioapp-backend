@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type LocationPrimitives } from '../domain/Location'
+import { type LocationRepository } from '../domain/LocationRepository'
 
-export class SearchAllLocation {
-  constructor (private readonly repository: Repository) {}
+export class LocationFinderAll {
+  constructor(private readonly repository: LocationRepository) { }
 
-  async search (): Promise<LocationPrimitives[]> {
-    return await this.repository.location.searchAll()
+  async run(): Promise<LocationPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

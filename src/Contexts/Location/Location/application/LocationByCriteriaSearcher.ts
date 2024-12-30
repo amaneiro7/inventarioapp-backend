@@ -5,14 +5,14 @@ import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { Order } from '../../../Shared/domain/criteria/Order'
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { LocationPrimitives } from '../domain/Location'
+import { type LocationPrimitives } from '../domain/Location'
+import { type LocationRepository } from '../domain/LocationRepository'
 
 export class LocationByCriteriaSearcher {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: LocationRepository) { }
 
-  async search (query: SearchByCriteriaQuery): Promise<LocationPrimitives[]> {
+  async run(query: SearchByCriteriaQuery): Promise<LocationPrimitives[]> {
     const filters = query.filters.map((filter) => {
       return new Filter(
         new FilterField(filter.field),
@@ -24,6 +24,6 @@ export class LocationByCriteriaSearcher {
       query.orderType
     )
     const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.repository.location.matching(criteria)
+    return await this.repository.matching(criteria)
   }
 }

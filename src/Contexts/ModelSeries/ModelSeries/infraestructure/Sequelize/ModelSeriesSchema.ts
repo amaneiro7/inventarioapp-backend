@@ -1,12 +1,12 @@
-import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesName } from '../../domain/ModelSeriesName'
 import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
 import { type BrandId } from '../../../../Brand/domain/BrandId'
 import { type Generic } from '../../domain/Generic'
+import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements ModelSeriesPrimitives {
   readonly id!: Primitives<ModelSeriesId>
@@ -14,6 +14,11 @@ export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements Mo
   readonly categoryId!: Primitives<CategoryId>
   readonly brandId!: Primitives<BrandId>
   readonly generic!: Primitives<Generic>
+
+  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
+    await this.initialize(sequelize)
+    await this.associate(sequelize.models)
+  }
 
   private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A model series belongs to a category
@@ -26,40 +31,41 @@ export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements Mo
     this.hasOne(models.ModelKeyboard, { as: 'modelKeyboard', foreignKey: 'modelSeriesId' }) // A model series has one keyboard model (if it is a keyboard)
     this.hasOne(models.ModelMouse, { as: 'modelMouse', foreignKey: 'modelSeriesId' }) // A model series has one keyboard model (if it is a keyboard)
   }
+
+  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+    ModelSeriesModel.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false
+        },
+        name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true
+        },
+        categoryId: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        brandId: {
+          type: DataTypes.UUID,
+          allowNull: false
+        },
+        generic: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
+        }
+      },
+      {
+        modelName: 'Model',
+        timestamps: true,
+        underscored: true,
+        sequelize
+      }
+    )
+  }
 }
 
-export async function initModelSeriesModel(sequelize: Sequelize): Promise<void> {
-  ModelSeriesModel.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      },
-      categoryId: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      brandId: {
-        type: DataTypes.UUID,
-        allowNull: false
-      },
-      generic: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      }
-    },
-    {
-      modelName: 'Model',
-      timestamps: true,
-      underscored: true,
-      sequelize
-    }
-  )
-}
