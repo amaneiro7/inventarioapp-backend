@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type StatusPrimitives } from '../domain/Status'
+import { type StatusRepository } from '../domain/StatusRepository'
 
 export class SearchAllStatus {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: StatusRepository) { }
 
-  async search (): Promise<StatusPrimitives[]> {
-    return await this.repository.status.searchAll()
+  async run(): Promise<StatusPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

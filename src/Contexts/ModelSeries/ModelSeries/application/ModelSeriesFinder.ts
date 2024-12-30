@@ -1,27 +1,18 @@
 import { ModelSeriesDoesNotExistError } from '../domain/ModelSeriesDoesNotExistError'
-import { type Repository } from '../../../Shared/domain/Repository'
-import { type ModelSeriesId } from '../domain/ModelSeriesId'
-import { type ModelSeriesName } from '../domain/ModelSeriesName'
+import { ModelSeriesId } from '../domain/ModelSeriesId'
 import { type ModelSeriesPrimitives } from '../domain/ModelSeries'
+import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesFinder {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: ModelSeriesRepository) { }
 
-  async searchById (modelSeriesId: ModelSeriesId): Promise<ModelSeriesPrimitives> {
-    const modelSeries = await this.repository.modelSeries.searchById(modelSeriesId.toString())
+  async run(params: { id: string }): Promise<ModelSeriesPrimitives> {
+    const { id } = params
+    const modelSeriesId = new ModelSeriesId(id)
+    const modelSeries = await this.repository.searchById(modelSeriesId.toString())
 
     if (modelSeries === null) {
       throw new ModelSeriesDoesNotExistError(modelSeriesId.toString())
-    }
-
-    return modelSeries
-  }
-
-  async searchByName (modelSeriesName: ModelSeriesName): Promise<ModelSeriesPrimitives> {
-    const modelSeries = await this.repository.modelSeries.searchByName(modelSeriesName.toString())
-
-    if (modelSeries === null) {
-      throw new ModelSeriesDoesNotExistError(modelSeriesName.toString())
     }
 
     return modelSeries

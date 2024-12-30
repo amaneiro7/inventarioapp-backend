@@ -1,6 +1,6 @@
-import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { type DevicePrimitives } from '../../domain/Device'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
+import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
 import { type DeviceId } from '../../domain/DeviceId'
@@ -27,8 +27,11 @@ export class DeviceModel extends Model<DevicePrimitives> implements DevicePrimit
   readonly locationId!: Primitives<DeviceLocation>
   readonly observation!: Primitives<DeviceObservation>
   readonly stockNumber!: Primitives<DeviceStocknumber>
-
-  public static async associate(models: Models): Promise<void> {
+  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
+    await this.initialize(sequelize)
+    await this.associate(sequelize.models)
+  }
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A device belongs to a category
     this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' }) // A device belongs to a brand
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelId' }) // A device belongs to a model series
@@ -40,71 +43,71 @@ export class DeviceModel extends Model<DevicePrimitives> implements DevicePrimit
     this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // A device belongs to a location
     this.hasMany(models.History, { as: 'history', foreignKey: 'deviceId' }) // A device can have many history
   }
-}
-
-export async function initDeviceModel(sequelize: Sequelize): Promise<void> {
-  DeviceModel.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false
-      },
-      activo: {
-        allowNull: true,
-        type: DataTypes.STRING,
-        unique: true
-      },
-      serial: {
-        allowNull: true,
-        type: DataTypes.STRING,
-        unique: true
-      },
-      statusId: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      categoryId: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      brandId: {
-        type: DataTypes.UUID,
-        allowNull: false
-      },
-      modelId: {
-        type: DataTypes.UUID,
-        allowNull: false
-      },
-      employeeId: {
-        type: DataTypes.UUID,
-        allowNull: true
-      },
-      locationId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        validate: {
-          onlyNullIf(value: Primitives<DeviceLocation>) {
-            if (this.statusId !== StatusId.StatusOptions.DESINCORPORADO && value === null) {
-              throw new Error('Solo puede estar vacío si el estatus esta marcado como desincoporado')
+  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+    DeviceModel.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false
+        },
+        activo: {
+          allowNull: true,
+          type: DataTypes.STRING,
+          unique: true
+        },
+        serial: {
+          allowNull: true,
+          type: DataTypes.STRING,
+          unique: true
+        },
+        statusId: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        categoryId: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        brandId: {
+          type: DataTypes.UUID,
+          allowNull: false
+        },
+        modelId: {
+          type: DataTypes.UUID,
+          allowNull: false
+        },
+        employeeId: {
+          type: DataTypes.UUID,
+          allowNull: true
+        },
+        locationId: {
+          type: DataTypes.UUID,
+          allowNull: true,
+          validate: {
+            onlyNullIf(value: Primitives<DeviceLocation>) {
+              if (this.statusId !== StatusId.StatusOptions.DESINCORPORADO && value === null) {
+                throw new Error('Solo puede estar vacío si el estatus esta marcado como desincoporado')
+              }
             }
           }
+        },
+        observation: {
+          type: DataTypes.TEXT,
+          allowNull: true
+        },
+        stockNumber: {
+          type: DataTypes.STRING,
+          allowNull: true
         }
       },
-      observation: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
-      stockNumber: {
-        type: DataTypes.STRING,
-        allowNull: true
+      {
+        modelName: 'Device',
+        timestamps: true,
+        underscored: true,
+        sequelize
       }
-    },
-    {
-      modelName: 'Device',
-      timestamps: true,
-      underscored: true,
-      sequelize
-    }
-  )
+    )
+  }
 }
+

@@ -1,6 +1,5 @@
-import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { type EmployeePrimitives } from '../../domain/Employee'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
 import { type EmployeeId } from '../../domain/EmployeeId'
 // import { type EmployeeName } from '../../domain/EmployeeName'
 // import { type EmployeeLastName } from '../../domain/EmployeeLastName'
@@ -16,6 +15,7 @@ import { type EmployeeId } from '../../domain/EmployeeId'
 // import { type EmployeeCoordinacionId } from '../../domain/EmployeeCoordinacionId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeUserName } from '../../domain/EmployeeUsername'
+import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class EmployeeModel extends Model<EmployeePrimitives> implements EmployeePrimitives {
   public id!: Primitives<EmployeeId>
@@ -33,7 +33,12 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
   // public gerenciaId!: Primitives<EmployeeGerenciaId>
   // public coordinacionId!: Primitives<EmployeeCoordinacionId>
 
-  public static async associate(models: Models): Promise<void> {
+  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
+    await this.initialize(sequelize)
+    await this.associate(sequelize.models)
+  }
+
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     // this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
     // this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // An employee belongs to a location
     // this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' }) // An employee belongs to a vicepresidencia
@@ -43,79 +48,80 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
     this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' }) // An employee has many devices
     this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' }) // An employee has many histories
   }
+
+  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+    EmployeeModel.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false
+        },
+        userName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true
+        }
+        // name: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false
+        // },
+        // lastName: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false
+        // },
+        // cedula: {
+        //   type: DataTypes.INTEGER,
+        //   allowNull: false
+        // },
+        // locationId: {
+        //   type: DataTypes.UUID,
+        //   allowNull: false
+        // },
+        // email: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false,
+        //   unique: true,
+        //   validate: {
+        //     isEmail: true
+        //   }
+        // },
+        // extension: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false
+        // },
+        // cargoId: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false
+        // },
+        // phoneNumber: {
+        //   type: DataTypes.STRING,
+        //   allowNull: false
+        // },
+        // vicepresidenciaEjecutivaId: {
+        //   type: DataTypes.UUID,
+        //   allowNull: false
+        // },
+        // vicepresidenciaId: {
+        //   type: DataTypes.UUID,
+        //   allowNull: true
+        // },
+        // gerenciaId: {
+        //   type: DataTypes.UUID,
+        //   allowNull: true
+        // },
+        // coordinacionId: {
+        //   type: DataTypes.UUID,
+        //   allowNull: true
+        // }
+      },
+      {
+        modelName: 'Employee',
+        timestamps: true,
+        underscored: true,
+        sequelize
+      }
+    )
+  }
 }
 
-export async function initEmployeeModel(sequelize: Sequelize): Promise<void> {
-  EmployeeModel.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false
-      },
-      userName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      }
-      // name: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // lastName: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // cedula: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false
-      // },
-      // locationId: {
-      //   type: DataTypes.UUID,
-      //   allowNull: false
-      // },
-      // email: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      //   unique: true,
-      //   validate: {
-      //     isEmail: true
-      //   }
-      // },
-      // extension: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // cargoId: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // phoneNumber: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // vicepresidenciaEjecutivaId: {
-      //   type: DataTypes.UUID,
-      //   allowNull: false
-      // },
-      // vicepresidenciaId: {
-      //   type: DataTypes.UUID,
-      //   allowNull: true
-      // },
-      // gerenciaId: {
-      //   type: DataTypes.UUID,
-      //   allowNull: true
-      // },
-      // coordinacionId: {
-      //   type: DataTypes.UUID,
-      //   allowNull: true
-      // }
-    },
-    {
-      modelName: 'Employee',
-      timestamps: true,
-      underscored: true,
-      sequelize
-    }
-  )
-}

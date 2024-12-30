@@ -18,7 +18,7 @@ export class MouseModelsModel extends Model<MouseModelsCreationAttributes> imple
   public categoryId!: Primitives<CategoryId>
   public inputTypeId!: Primitives<InputTypeId>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A Mouse model belongs to a model
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A Mouse model belongs to a category
     this.belongsTo(models.InputType, { as: 'inputType', foreignKey: 'inputTypeId' }) // A Mouse model belongs to a InputTypes

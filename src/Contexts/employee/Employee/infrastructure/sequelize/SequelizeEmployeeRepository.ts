@@ -1,8 +1,7 @@
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import container from '../../../../../apps/dependency-injections'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type EmployeePrimitives } from '../../domain/Employee'
 import { type EmployeeRepository } from '../../domain/EmployeeRepository'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
 import { EmployeeModel } from './EmployeeSchema'
@@ -11,7 +10,8 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 
 
 export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
-  private readonly models = sequelize.models as unknown as Models
+  private readonly sequelize = container.get('Shared.SequelizeConfig')
+  private readonly models = this.sequelize.models
 
   private readonly cacheKey: string = 'employees'
   constructor(private readonly cache: CacheRepository) {

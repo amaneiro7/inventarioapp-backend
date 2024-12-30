@@ -24,7 +24,7 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
   public hasHDMI!: Primitives<MonitorHasHDMI>
   public hasVGA!: Primitives<MonitorHasVGA>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A monitor model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A monitor model belongs to a category
   }

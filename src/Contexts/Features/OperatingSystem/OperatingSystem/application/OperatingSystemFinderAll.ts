@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type OperatingSystemPrimitives } from '../domain/OperatingSystem'
+import { type OperatingSystemRepository } from '../domain/OperatingSystemRepository'
 
 export class SearchAllOperatingSystem {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: OperatingSystemRepository) { }
 
-  async search (): Promise<OperatingSystemPrimitives[]> {
-    return await this.repository.operatingSystemVersion.searchAll()
+  async run(): Promise<OperatingSystemPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

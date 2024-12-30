@@ -1,15 +1,17 @@
 
-import { type Repository } from '../../../Shared/domain/Repository'
-import { type MainCategoryPrimitives } from '../domain/MainCategory'
-import { type MainCategoryId } from '../domain/MainCategoryId'
 import { MainCategoryDoesNotExistError } from '../domain/MainCategoryDoesNotExistError'
+import { MainCategoryId } from '../domain/MainCategoryId'
+import { type MainCategoryPrimitives } from '../domain/MainCategory'
+import { type MainCategoryRepository } from '../domain/MainCategoryRepository'
 
 
 export class MainCategoriesFinder {
-  constructor(private readonly repository: Repository) { }
+  constructor(private readonly repository: MainCategoryRepository) { }
 
-  async searchById(categoryId: MainCategoryId): Promise<MainCategoryPrimitives> {
-    const category = await this.repository.mainCategory.searchById(categoryId.value)
+  async run(params: { id: string }): Promise<MainCategoryPrimitives> {
+    const { id } = params
+    const categoryId = new MainCategoryId(id)
+    const category = await this.repository.searchById(categoryId.value)
 
     if (category === null) {
       throw new MainCategoryDoesNotExistError(categoryId.value)

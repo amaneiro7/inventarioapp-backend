@@ -1,10 +1,11 @@
-import { EmployeePrimitives } from '../../../employee/Employee/domain/Employee'
-import { type Repository } from '../../../Shared/domain/Repository'
 
-export class SearchAllEmployees {
-  constructor(private readonly repository: Repository) { }
+import { type DevicePrimitives } from '../domain/Device'
+import { type DeviceRepository } from '../domain/DeviceRepository'
 
-  async search(): Promise<EmployeePrimitives[]> {
-    return await this.repository.employee.searchAll()
+export class DevicesFinderAll {
+  constructor(private readonly repository: DeviceRepository) { }
+
+  async search(): Promise<DevicePrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

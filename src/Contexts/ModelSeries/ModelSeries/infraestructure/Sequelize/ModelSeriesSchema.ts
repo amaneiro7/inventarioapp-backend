@@ -15,7 +15,7 @@ export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements Mo
   readonly brandId!: Primitives<BrandId>
   readonly generic!: Primitives<Generic>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A model series belongs to a category
     this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' }) // A model series belongs to a brand
     this.hasMany(models.Device, { as: 'device', foreignKey: 'modelId' }) // A model series can have many devices

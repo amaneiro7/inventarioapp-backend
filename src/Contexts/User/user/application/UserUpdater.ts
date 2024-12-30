@@ -1,26 +1,30 @@
-import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type Repository } from '../../../Shared/domain/Repository'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { User, UserPrimitives } from '../domain/User'
+import { User, type UserPrimitives } from '../domain/User'
 import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
-import { UserEmail } from '../domain/UserEmail'
 import { UserId } from '../domain/UserId'
+import { UserEmail } from '../domain/UserEmail'
 import { UserLastName } from '../domain/UserLastName'
 import { UserName } from '../domain/UserName'
 import { UserRole } from '../domain/UserRole'
 
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type RoleRepository } from '../../Role/domain/RoleRepository'
+import { type UserRepository } from '../domain/UserRepository'
+
 interface Payload extends Omit<UserPrimitives, 'id' | 'password'> { }
 export class UserUpdater {
-  constructor(private readonly repository: Repository) { }
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly roleRepository: RoleRepository
+  ) { }
 
-  async run({ user, id, payload }: { user?: JwtPayloadUser, id: Primitives<UserId>, payload: Partial<Payload> }): Promise<void> {
+  async run({ user, id, payload }: { user?: JwtPayloadUser, id: string, payload: Partial<Payload> }): Promise<void> {
     // se valida que el usuario que esta realizando esta operacion tiene privilegios    
     isSuperAdmin({ user })
 
     // se busca el usuario al cual se le va a actualizar la contraseña
     const userId = new UserId(id).value
-    const userToUpdated = await this.repository.user.searchById(userId)
+    const userToUpdated = await this.repository.searchById(userId)
 
     // Si no existe, arroja un error
     if (userToUpdated === null) {
@@ -31,9 +35,9 @@ export class UserUpdater {
 
     await UserName.updateNameField({ entity: userEntity, name: payload.name })
     await UserLastName.updateLastNameField({ entity: userEntity, lastName: payload.lastName })
-    await UserEmail.updateEmailField({ repository: this.repository.user, entity: userEntity, email: payload.email })
-    await UserRole.updateStatusField({ repository: this.repository.role, entity: userEntity, role: payload.roleId })
+    await UserEmail.updateEmailField({ repository: this.repository, entity: userEntity, email: payload.email })
+    await UserRole.updateStatusField({ repository: this.roleRepository, entity: userEntity, role: payload.roleId })
 
-    await this.repository.user.save(userEntity.toPrimitives())
+    await this.repository.save(userEntity.toPrimitives())
   }
 }

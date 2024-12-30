@@ -1,5 +1,4 @@
-import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
+import { DataTypes, Model } from 'sequelize'
 import { type DeviceComputerPrimitives } from '../../domain/Computer'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
@@ -14,6 +13,7 @@ import { type ComputerHardDriveType } from '../../domain/ComputerHardDriveType'
 import { type ComputerOperatingSystem } from '../../domain/ComputerOperatingSystem'
 import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingSystemArq'
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
+import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { CategoryValues } from '../../../../Category/SubCategory/domain/Category'
 
 
@@ -37,7 +37,12 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
   readonly macAddress!: Primitives<MACAddress>
   readonly ipAddress!: Primitives<IPAddress>
 
-  public static async associate(models: Models): Promise<void> {
+  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
+    await this.initialize(sequelize)
+    await this.associate(sequelize.models)
+  }
+
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A computer belongs to a device
     this.belongsTo(models.Processor, { as: 'processor', foreignKey: 'processorId' }) // A computer belongs to a processor
@@ -46,82 +51,83 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
     this.belongsTo(models.OperatingSystemVersion, { as: 'operatingSystem', foreignKey: 'operatingSystemId' }) // A computer belongs to an operating system
     this.belongsTo(models.OperatingSystemArq, { as: 'operatingSystemArq', foreignKey: 'operatingSystemArqId' }) // A computer belongs to an operating system arq
   }
-}
 
-export async function initDeviceComputerModel(sequelize: Sequelize): Promise<void> {
-  DeviceComputerModel.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        primaryKey: true
-      },
-      categoryId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          isIn: {
-            args: [[CategoryValues.COMPUTADORAS, CategoryValues.ALLINONE, CategoryValues.LAPTOPS, CategoryValues.SERVIDORES]],
-            msg: 'No pertenece a esta categoria'
+  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+    DeviceComputerModel.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          allowNull: false,
+          primaryKey: true
+        },
+        categoryId: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            isIn: {
+              args: [[CategoryValues.COMPUTADORAS, CategoryValues.ALLINONE, CategoryValues.LAPTOPS, CategoryValues.SERVIDORES]],
+              msg: 'No pertenece a esta categoria'
+            }
+          }
+        },
+        deviceId: {
+          type: DataTypes.UUID,
+          allowNull: false
+        },
+        computerName: {
+          allowNull: true,
+          type: DataTypes.STRING,
+          unique: true
+        },
+        processorId: {
+          type: DataTypes.UUID,
+          allowNull: true
+        },
+        memoryRam: {
+          type: DataTypes.ARRAY(DataTypes.DECIMAL),
+          allowNull: true
+        },
+        memoryRamCapacity: {
+          type: DataTypes.DECIMAL,
+          allowNull: false
+        },
+        hardDriveCapacityId: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        hardDriveTypeId: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        operatingSystemId: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          field: 'operating_system_version_id'
+        },
+        operatingSystemArqId: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        macAddress: {
+          type: DataTypes.MACADDR,
+          allowNull: true,
+          unique: true
+        },
+        ipAddress: {
+          type: DataTypes.INET,
+          allowNull: true,
+          validate: {
+            isIPv4: true
           }
         }
       },
-      deviceId: {
-        type: DataTypes.UUID,
-        allowNull: false
-      },
-      computerName: {
-        allowNull: true,
-        type: DataTypes.STRING,
-        unique: true
-      },
-      processorId: {
-        type: DataTypes.UUID,
-        allowNull: true
-      },
-      memoryRam: {
-        type: DataTypes.ARRAY(DataTypes.DECIMAL),
-        allowNull: true
-      },
-      memoryRamCapacity: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
-      },
-      hardDriveCapacityId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      hardDriveTypeId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      operatingSystemId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: 'operating_system_version_id'
-      },
-      operatingSystemArqId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      macAddress: {
-        type: DataTypes.MACADDR,
-        allowNull: true,
-        unique: true
-      },
-      ipAddress: {
-        type: DataTypes.INET,
-        allowNull: true,
-        validate: {
-          isIPv4: true
-        }
+      {
+        modelName: 'DeviceComputer',
+        underscored: true,
+        timestamps: true,
+        sequelize
       }
-    },
-    {
-      modelName: 'DeviceComputer',
-      underscored: true,
-      timestamps: true,
-      sequelize
-    }
-  )
+    )
+  }
 }
+

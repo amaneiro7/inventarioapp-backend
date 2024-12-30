@@ -1,10 +1,10 @@
 import { type BrandPrimitives } from '../domain/Brand'
 import { type BrandRepository } from '../domain/BrandRepository'
 
-export class SearchAllBrands {
+export class BrandFinderAll {
   constructor(private readonly repository: BrandRepository) { }
 
-  async search(): Promise<BrandPrimitives[]> {
+  async run(): Promise<BrandPrimitives[]> {
     return await this.repository.searchAll()
   }
 }

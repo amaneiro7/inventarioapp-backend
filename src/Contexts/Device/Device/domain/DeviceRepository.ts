@@ -1,16 +1,13 @@
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type Nullable } from '../../../Shared/domain/Nullable'
 import { type DevicePrimitives } from './Device'
 
 export abstract class DeviceRepository {
   abstract save(payload: DevicePrimitives): Promise<void>
 
-  abstract searchById(deviceId: string): Promise<DevicePrimitives | null>
+  abstract searchById(deviceId: string): Promise<Nullable<DevicePrimitives>>
 
-  abstract searchBySerial(serial: string): Promise<DevicePrimitives | null>
-
-  abstract searchByComputerName(computerName: string): Promise<any | null>
-
-  abstract searchByActivo(activo: string): Promise<DevicePrimitives | null>
+  abstract searchAll(): Promise<DevicePrimitives[]>
 
   abstract matching(criteria: Criteria): Promise<{ total: number; data: DevicePrimitives[] }>
 

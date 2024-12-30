@@ -5,14 +5,14 @@ import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { Order } from '../../../Shared/domain/criteria/Order'
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
 import { type DevicePrimitives } from '../domain/Device'
+import { type DeviceRepository } from '../domain/DeviceRepository'
 
 export class DeviceByCriteriaSearcher {
-  constructor(private readonly repository: Repository) { }
+  constructor(private readonly repository: DeviceRepository) { }
 
-  async search(query: SearchByCriteriaQuery): Promise<{ total: number, data: DevicePrimitives[] }> {
+  async run(query: SearchByCriteriaQuery): Promise<{ total: number, data: DevicePrimitives[] }> {
     const filters = query.filters.map((filter) => {
       return new Filter(
         new FilterField(filter.field),
@@ -24,6 +24,6 @@ export class DeviceByCriteriaSearcher {
       query.orderType
     )
     const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.repository.device.matching(criteria)
+    return await this.repository.matching(criteria)
   }
 }

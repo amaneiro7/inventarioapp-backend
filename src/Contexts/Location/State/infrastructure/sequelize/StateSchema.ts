@@ -12,7 +12,7 @@ export class StateModel extends Model<StatePrimitives> implements StatePrimitive
   readonly regionId!: Primitives<RegionId>
   readonly name!: Primitives<StateName>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.Region, { as: 'region', foreignKey: 'regionId' }) // A state belongs to region
     this.hasMany(models.City, { as: 'city', foreignKey: 'stateId' }) // A state has many cities
   }

@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type VicepresidenciaEjecutivaPrimitives } from '../domain/VicepresidenciaEjecutiva'
+import { type VicepresidenciaEjecutivaRepository } from '../domain/VicepresidenciaEjecutivaRepository'
 
 export class SearchAllVicepresidenciaEjecutiva {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: VicepresidenciaEjecutivaRepository) { }
 
-  async search (): Promise<VicepresidenciaEjecutivaPrimitives[]> {
-    return await this.repository.vicepresidenciaEjecutiva.searchAll()
+  async run(): Promise<VicepresidenciaEjecutivaPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

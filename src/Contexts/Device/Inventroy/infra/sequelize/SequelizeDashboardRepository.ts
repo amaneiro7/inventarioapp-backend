@@ -5,12 +5,12 @@ import { DeviceModel } from "../../../Device/infrastructure/sequelize/DeviceSche
 import { OperatingSystemModel } from "../../../../Features/OperatingSystem/OperatingSystem/infraesructure/sequelize/OperatingSystemSchema"
 import { TypeOfSiteModel } from "../../../../Location/TypeOfSite/infrastructure/sequelize/TypeOfSiteSchema"
 import { DeviceComputerModel } from "../../../../Features/Computer/infraestructure/sequelize/DeviceComputerSchema"
-import { sequelize } from "../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig"
-import { LocationModel } from "../../../../Location/Location/infrastructure/sequelize/LocationSchema"
 import { TypeOfSiteId } from "../../../../Location/TypeOfSite/domain/TypeOfSiteId"
 import { type CacheRepository } from "../../../../Shared/domain/CacheRepository"
+import container from "../../../../../apps/dependency-injections"
 
 export class SequelizeDashboardRepository implements DashboardRepository {
+    private readonly sequelize = container.get('Shared.SequelizeConfig')
     private readonly cacheKey: string = 'dashboard'
     constructor(private readonly cache: CacheRepository) { }
     async totalDevice(): Promise<{}> {
@@ -161,7 +161,7 @@ export class SequelizeDashboardRepository implements DashboardRepository {
         const result = await DeviceComputerModel.findAll({
             attributes: [
                 [Sequelize.col('operatingSystem.name'), 'operatingSystemName'],
-                [Sequelize.fn('Count', sequelize.col('DeviceComputer.id')), 'total']
+                [Sequelize.fn('Count', this.sequelize.col('DeviceComputer.id')), 'total']
             ],
             include: [
                 {

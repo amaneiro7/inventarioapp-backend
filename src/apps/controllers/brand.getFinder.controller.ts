@@ -10,7 +10,7 @@ export class BrandGetFinderController implements Controller {
         try {
             const { id } = req.params
             const finder: BrandsFinder = container.get('Brand.application.BrandFinder')
-            const data = await finder.searchById({ id })
+            const data = await finder.run({ id })
             res.status(httpStatus.OK).json(data)
         } catch (error) {
             next(error)

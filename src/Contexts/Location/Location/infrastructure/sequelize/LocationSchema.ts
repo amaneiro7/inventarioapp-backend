@@ -15,7 +15,7 @@ export class LocationModel extends Model<LocationPrimitives> implements Location
   readonly name!: Primitives<LocationName>
   readonly subnet!: Primitives<LocationSubnet>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.TypeOfSite, { as: 'typeOfSite', foreignKey: 'typeOfSiteId' }) // A Location belongs to Many Type Of Site
     this.belongsTo(models.Site, { as: 'site', foreignKey: 'siteId' }) //  A Location belongs to Many sites
     // this.hasMany(models.Employee, { as: 'employees', foreignKey: 'locationId' }) // A Location has Many employees

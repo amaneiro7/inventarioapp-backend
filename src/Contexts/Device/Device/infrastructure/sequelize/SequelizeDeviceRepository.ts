@@ -1,15 +1,17 @@
 import { set_fs, utils, write } from 'xlsx'
 import fs from 'node:fs'
+
 import { type Transaction } from 'sequelize'
 import { type DevicePrimitives } from '../../domain/Device'
 import { type DeviceRepository } from '../../domain/DeviceRepository'
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/DeviceId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
+import container from '../../../../../apps/dependency-injections'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceModel } from './DeviceSchema'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
 import { DeviceAssociation } from './DeviceAssociation'
 import { DevicesApiResponse } from './DeviceResponse'
@@ -17,50 +19,29 @@ import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain
 import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { CacheRepository } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
+import { CacheService } from '../../../../Shared/domain/CacheService'
+import { CategoryModel } from '../../../../Category/SubCategory/infrastructure/Sequelize/CategorySchema'
 
 export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
-  private readonly models = sequelize.models as unknown as Models
+  private readonly sequelize: SequelizeClientFactory = container.get('Shared.SequelizeConfig')
+  private readonly models = this.sequelize.models
   private readonly cacheKey: string = 'devices'
   constructor(private readonly cache: CacheRepository) {
     super()
   }
+
+  async searchAll(): Promise<DevicePrimitives[]> {
+    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+      return await CategoryModel.findAll()
+    })
+  }
+
   async matching(criteria: Criteria): Promise<{ total: number, data: DevicePrimitives[] }> {
     const options = this.convert(criteria)
 
     const deviceOptions = new DeviceAssociation().convertFilterLocation(criteria, options)
     const { count: total, rows: data } = await DeviceModel.findAndCountAll(deviceOptions)
-    let filtered: DevicesApiResponse[] | undefined
-    ['regionId'].forEach(ele => {
-      if (criteria.searchValueInArray(ele)) {
-        filtered = (data as unknown as DevicesApiResponse[]).filter(res => {
-          return res?.location?.site?.city !== null
-        })
-      }
-    });
-    ['stateId'].forEach(ele => {
-      if (criteria.searchValueInArray(ele)) {
-        filtered = (data as unknown as DevicesApiResponse[]).filter(res => {
-          return res.location?.site !== null
-        })
-      }
-    });
-    ['cityId'].forEach(ele => {
-      if (criteria.searchValueInArray(ele)) {
-        filtered = (data as unknown as DevicesApiResponse[]).filter(res => {
-          return res.location !== null
-        })
-      }
-    });
 
-    ['processor', 'hardDriveCapacity', 'hardDriveType', 'operatingSystem', 'operatingSystemArq'].forEach(ele => {
-      if (criteria.searchValueInArray(ele)) {
-        filtered = (data as unknown as DevicesApiResponse[]).filter(res => {
-          return res.computer !== null
-        })
-      }
-    })
-
-    const res = filtered ?? data
     return {
       total,
       data
@@ -130,7 +111,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
    * @param payload - Device data to be saved
    */
   async save(payload: DevicePrimitives): Promise<void> {
-    const t = await sequelize.transaction() // Start a new transaction
+    const t = await this.sequelize.transaction() // Start a new transaction
     try {
       const { id, serial, activo, statusId, categoryId, brandId, modelId, locationId, observation, employeeId } = payload // Destructure the payload
       const device = await DeviceModel.findByPk(id) ?? null // Find the device by its id, if it does not exist, device will be null

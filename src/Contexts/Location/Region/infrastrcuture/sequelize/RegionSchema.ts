@@ -9,7 +9,7 @@ export class RegionModel extends Model<RegionPrimitives> implements RegionPrimit
   readonly id!: Primitives<RegionId>
   readonly name!: Primitives<RegionName>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.hasMany(models.State, { as: 'state', foreignKey: 'regionId' }) // An Region can hava many states
   }
 }

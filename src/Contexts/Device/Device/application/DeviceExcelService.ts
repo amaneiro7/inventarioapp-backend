@@ -1,4 +1,3 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
 import { Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
@@ -8,9 +7,11 @@ import { FilterField } from '../../../Shared/domain/criteria/FilterField'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 
+import { type DeviceRepository } from '../domain/DeviceRepository'
+
 export class DeviceExcelService {
-    constructor(private readonly repository: Repository) { }
-    async generateExcel(query: SearchByCriteriaQuery): Promise<{}> {
+    constructor(private readonly repository: DeviceRepository) { }
+    async run(query: SearchByCriteriaQuery): Promise<{}> {
 
         // Recuperar los datos de la base de datos usando Sequelize
         const filters = query.filters.map((filter) => {
@@ -25,7 +26,7 @@ export class DeviceExcelService {
         )
         const criteria = new Criteria(new Filters(filters), order)
 
-        return await this.repository.device.donwload(criteria)
+        return await this.repository.donwload(criteria)
     }
 
 }

@@ -1,10 +1,10 @@
-import { type Repository } from '../../../Shared/domain/Repository'
 import { type InputTypePrimitives } from '../domain/InputType'
+import { type InputTypeRepository } from '../domain/InputTypeRepository'
 
-export class SearchAllInputType {
-  constructor (private readonly repository: Repository) {}
+export class InputTypeFinderAll {
+  constructor(private readonly repository: InputTypeRepository) { }
 
-  async search (): Promise<InputTypePrimitives[]> {
-    return await this.repository.inputType.searchAll()
+  async run(): Promise<InputTypePrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

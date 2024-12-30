@@ -1,15 +1,16 @@
-import { Repository } from "../../../Shared/domain/Repository"
-import { Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { EmployeePrimitives } from "../domain/Employee"
-import { EmployeeDoesNotExistError } from "../domain/EmployeeDoesNotExistError"
 import { EmployeeId } from "../domain/EmployeeId"
+import { EmployeeDoesNotExistError } from "../domain/EmployeeDoesNotExistError"
+import { type EmployeePrimitives } from "../domain/Employee"
+import { type EmployeeRepository } from "../domain/EmployeeRepository"
 
 export class EmployeeFinder {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: EmployeeRepository) { }
 
-  async searchById (id: Primitives<EmployeeId>): Promise<EmployeePrimitives> {
+  async run(params: { id: string }): Promise<EmployeePrimitives> {
+    const { id } = params
     const employeeId = new EmployeeId(id).value
-    const employee = await this.repository.employee.searchById(employeeId)
+
+    const employee = await this.repository.searchById(employeeId)
 
     if (employee === null) {
       throw new EmployeeDoesNotExistError(employeeId)

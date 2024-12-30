@@ -13,12 +13,25 @@ import { DeviceLocation } from '../domain/DeviceLocation'
 import { DeviceModelSeries } from '../domain/DeviceModelSeries'
 import { DeviceSerial } from '../domain/DeviceSerial'
 import { DeviceStatus } from '../domain/DeviceStatus'
-import { type Repository } from '../../../Shared/domain/Repository'
+
+import { type DeviceRepository } from '../domain/DeviceRepository'
+import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
+import { type StatusRepository } from '../../Status/domain/StatusRepository'
+import { type EmployeeRepository } from '../../../employee/Employee/domain/EmployeeRepository'
+import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
+import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 
 export interface DeviceParams extends Omit<DevicePrimitives, 'id'> { }
 
 export class DeviceCreator {
-  constructor(private readonly repository: Repository) { }
+  constructor(
+    private readonly repository: DeviceRepository,
+    private readonly modelSeriesRepository: ModelSeriesRepository,
+    private readonly statusRepository: StatusRepository,
+    private readonly employeeRepository: EmployeeRepository,
+    private readonly locationRepository: LocationRepository,
+    private readonly historyRepository: HistoryRepository,
+  ) { }
 
   async run({ params, user }: { params: DeviceParams, user?: JwtPayloadUser }): Promise<void> {
     const { categoryId } = params
@@ -42,20 +55,20 @@ export class DeviceCreator {
     else {
       device = Device.create(params)
     }
-    const { generic } = await DeviceModelSeries.ensureModelSeriesExit({ repository: this.repository.modelSeries, modelSeries: params.modelId, brand: params.brandId, category: categoryId })
-    await DeviceActivo.ensureActivoDoesNotExit({ repository: this.repository.device, activo: params.activo })
-    await DeviceStatus.ensureStatusExit({ repository: this.repository.status, status: params.statusId })
-    await DeviceEmployee.ensureEmployeeExit({ repository: this.repository.employee, employee: params.employeeId })
-    await DeviceLocation.ensureLocationExit({ repository: this.repository.location, location: params.locationId, status: params.statusId })
-    await DeviceSerial.ensureSerialDoesNotExit({ repository: this.repository.device, serial: params.serial })
+    const { generic } = await DeviceModelSeries.ensureModelSeriesExit({ repository: this.modelSeriesRepository, modelSeries: params.modelId, brand: params.brandId, category: categoryId })
+    await DeviceActivo.ensureActivoDoesNotExit({ repository: this.repository, activo: params.activo })
+    await DeviceStatus.ensureStatusExit({ repository: this.statusRepository, status: params.statusId })
+    await DeviceEmployee.ensureEmployeeExit({ repository: this.employeeRepository, employee: params.employeeId })
+    await DeviceLocation.ensureLocationExit({ repository: this.locationRepository, location: params.locationId, status: params.statusId })
+    await DeviceSerial.ensureSerialDoesNotExit({ repository: this.repository, serial: params.serial })
     await DeviceSerial.isSerialCanBeNull({ generic: generic, serial: params.serial })
 
-    await this.repository.device.save(device.toPrimitives())
+    await this.repository.save(device.toPrimitives())
       .then(() => {
         if (!user?.sub) {
           throw new InvalidArgumentError('user is required')
         }
-        new HistoryCreator(this.repository).run({
+        new HistoryCreator(this.historyRepository).run({
           deviceId: device.idValue,
           userId: user?.sub,
           employeeId: device.employeeeValue,

@@ -6,7 +6,7 @@ import { Controller } from './controller'
 import { generateAceessTokens, generateRefreshToken } from '../../Contexts/Auth/domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../../Contexts/Auth/domain/SendUserWithoutPassword'
 
-type AuthLoginRequest = Request & {
+interface AuthLoginRequest extends Request {
   user: UserPrimitives & {
     role: {
       id: number

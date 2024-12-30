@@ -11,7 +11,7 @@ export class CityModel extends Model<CityPrimitives> implements CityPrimitives {
   readonly stateId!: Primitives<StateId>
   readonly name!: Primitives<CityName>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.State, { as: 'state', foreignKey: 'stateId' }) // A City can belong to a state
     this.hasMany(models.Site, { as: 'sites', foreignKey: 'cityId' }) //  A city has many Sites
   }

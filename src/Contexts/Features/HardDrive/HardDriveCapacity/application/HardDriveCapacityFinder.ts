@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type HardDriveCapacityPrimitives } from '../domain/HardDriveCapacity'
+import { type HardDriveCapacityRepository } from '../domain/HardDriveCapacityRepository'
 
 export class SearchAllHardDriveCapacity {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: HardDriveCapacityRepository) { }
 
-  async search (): Promise<HardDriveCapacityPrimitives[]> {
-    return await this.repository.hardDriveCapacity.searchAll()
+  async run(): Promise<HardDriveCapacityPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

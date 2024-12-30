@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type MemoryRamTypePrimitives } from '../domain/MemoryRamType'
+import { type MemoryRamTypeRepository } from '../domain/MemoryRamTypeRepository'
 
 export class SearchAllMemoryRamType {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: MemoryRamTypeRepository) { }
 
-  async search (): Promise<MemoryRamTypePrimitives[]> {
-    return await this.repository.memoryRamType.searchAll()
+  async run(): Promise<MemoryRamTypePrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

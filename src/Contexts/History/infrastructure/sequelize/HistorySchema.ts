@@ -18,7 +18,7 @@ export class HistoryModel extends Model<HistoryPrimitives> implements HistoryPri
   readonly newData!: object
   readonly createdAt!: Date
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' }) // A history belongs to a user
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' }) // A history belongs to a device
     this.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employeeId' }) // A history belongs to an employee

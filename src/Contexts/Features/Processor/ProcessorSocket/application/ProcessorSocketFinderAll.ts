@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type ProcessorSocketPrimitives } from '../domain/ProcessorSocket'
+import { type ProcessorSocketRepository } from '../domain/ProcessorSocketRepository'
 
 export class SearchAllProcessorSocket {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: ProcessorSocketRepository) { }
 
-  async search (): Promise<ProcessorSocketPrimitives[]> {
-    return await this.repository.processorSocket.searchAll()
+  async run(): Promise<ProcessorSocketPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

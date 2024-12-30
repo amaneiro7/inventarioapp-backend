@@ -1,10 +1,10 @@
-import { type Repository } from '../../../../Shared/domain/Repository'
 import { type OperatingSystemArqPrimitives } from '../domain/OperatingSystemArq'
+import { type OperatingSystemArqRepository } from '../domain/OperatingSystemArqRepository'
 
 export class SearchAllOperatingSystemArq {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: OperatingSystemArqRepository) { }
 
-  async search (): Promise<OperatingSystemArqPrimitives[]> {
-    return await this.repository.operatingSystemArq.searchAll()
+  async run(): Promise<OperatingSystemArqPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }

@@ -1,5 +1,5 @@
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
-import { SearchAllRole } from '../../../Contexts/User/Role/application/RoleFinder'
+import { SearchAllRole } from '../../../Contexts/User/Role/application/RoleFinderAll'
 import { type NextFunction, type Request, type Response } from 'express'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 

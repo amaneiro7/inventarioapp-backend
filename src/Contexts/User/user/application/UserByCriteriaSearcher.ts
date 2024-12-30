@@ -1,7 +1,4 @@
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type Repository } from '../../../Shared/domain/Repository'
-import { type UserPrimitivesOptional } from '../domain/User'
 import { RoleId } from '../../Role/domain/RoleId'
 import { SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
 import { Filter } from '../../../Shared/domain/criteria/Filter'
@@ -11,11 +8,14 @@ import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { Order } from '../../../Shared/domain/criteria/Order'
 import { Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type UserPrimitivesOptional } from '../domain/User'
+import { type UserRepository } from '../domain/UserRepository'
 
 export class UserByCriteriaSearcher {
-    constructor(private readonly repository: Repository) { }
+    constructor(private readonly repository: UserRepository) { }
 
-    async search({ user, query }: { user?: JwtPayloadUser, query: SearchByCriteriaQuery }): Promise<UserPrimitivesOptional[]> {
+    async run({ user, query }: { user?: JwtPayloadUser, query: SearchByCriteriaQuery }): Promise<UserPrimitivesOptional[]> {
         isSuperAdmin({ user })
         const filters = query.filters.map((filter) => {
             return new Filter(
@@ -30,7 +30,7 @@ export class UserByCriteriaSearcher {
 
         const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
 
-        const users = await this.repository.user.matching(criteria)
+        const users = await this.repository.matching(criteria)
             // Se bloquea exponer los datos del usuario admin
             .then(res => res.filter(user => user.roleId !== RoleId.Options.ADMIN))
             // Se elimina la propiedad password, por alguna razon con sequelize

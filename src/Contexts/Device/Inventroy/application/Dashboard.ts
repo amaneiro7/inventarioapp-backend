@@ -1,19 +1,12 @@
-import { Repository } from "../../../Shared/domain/Repository";
-import { DeviceCounByCategory } from "./DeviceCountByCategory";
-import { DeviceCounByOperatingSystem } from "./DeviceCountByOperatingSystem";
-import { TotalDeviceCount } from "./TotalDeviceCount";
+import { DeviceRepository } from "../../Device/domain/DeviceRepository"
+
+
 
 export class Dashboard {
-    constructor(private readonly repository: Repository) { }
+    constructor(private readonly repository: DeviceRepository) { }
 
     async run(): Promise<{}> {
-        return {
-            // totalDevices: await new TotalDeviceCount(this.repository).run(),
-            // countByCategory: await new DeviceCounByCategory(this.repository).run(),
-            countByOperatingSystem: await new DeviceCounByOperatingSystem(this.repository).run(),
-            // countTypeOfSite: await this.repository.dashboard.countTypeOfSite(),
-            // countTypeOfSiteAndOpetingSystem: await this.repository.dashboard.countByTypeOfSiteAndOperatingSystem(),
-        }
+        return await this.repository.searchAll()
     }
 
 }

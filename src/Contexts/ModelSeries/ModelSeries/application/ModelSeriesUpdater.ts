@@ -1,5 +1,3 @@
-import { type Repository } from '../../../Shared/domain/Repository'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelApiresponse } from '../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 import { KeyboardModels, type KeyboardModelsPrimitives } from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
 import { ModelPrinters, type ModelPrintersPrimitives } from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
@@ -31,16 +29,28 @@ import { ComputerMemoryRamType } from '../../ModelCharacteristics/Computers/Comp
 import { ComputerModels } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
 import { Generic } from '../domain/Generic'
 import { ModelMouseInputType } from '../../ModelCharacteristics/Mouses/domain/ModelMouseInputType'
+import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
+import { type InputTypeRepository } from '../../InputType/domain/InputTypeRepository'
+import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
+import { type CategoryRepository } from '../../../Category/SubCategory/domain/CategoryRepository'
+import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 
 export class ModelSeriesUpdater {
-  constructor(private readonly repository: Repository) { }
+  constructor(
+    private readonly repository: ModelSeriesRepository,
+    private readonly inputTypeRepository: InputTypeRepository,
+    private readonly memoryRamTypeRepository: MemoryRamTypeRepository,
+    private readonly categoryRepository: CategoryRepository,
+    private readonly brandRepository: BrandRepository,
 
-  async run({ id, params }: { id: Primitives<ModelSeriesId>, params: ModelParams }): Promise<void> {
+  ) { }
+
+  async run({ id, params }: { id: string, params: ModelParams }): Promise<void> {
     const { categoryId } = params
 
     const modelSeriesId = new ModelSeriesId(id).value
 
-    const modelSeries = await this.repository.modelSeries.searchById(modelSeriesId)
+    const modelSeries = await this.repository.searchById(modelSeriesId)
 
     if (modelSeries === null) {
       throw new ModelSeriesDoesNotExistError(id)
@@ -60,7 +70,7 @@ export class ModelSeriesUpdater {
         hasFingerPrintReader: modelKeyboard?.hasFingerPrintReader,
       })
       const keyboardParams = params as KeyboardModelsPrimitives
-      await ModelKeyboardInputType.updateInputTypeField({ repository: this.repository.inputType, inputTypeId: keyboardParams.inputTypeId, entity: modelEntity })
+      await ModelKeyboardInputType.updateInputTypeField({ repository: this.inputTypeRepository, inputTypeId: keyboardParams.inputTypeId, entity: modelEntity })
       await HasFingerPrintReader.updateFingerprintField({ hasFingerPrintReader: keyboardParams.hasFingerPrintReader, entity: modelEntity })
     }
     // Actualizar la tabla de Mouse
@@ -75,7 +85,7 @@ export class ModelSeriesUpdater {
         inputTypeId: modelMouse?.inputTypeId
       })
       const mouseParams = params as MouseModelsPrimitives
-      await ModelMouseInputType.updateInputTypeField({ repository: this.repository.inputType, inputTypeId: mouseParams.inputTypeId, entity: modelEntity })
+      await ModelMouseInputType.updateInputTypeField({ repository: this.inputTypeRepository, inputTypeId: mouseParams.inputTypeId, entity: modelEntity })
 
     }
     // Actualizar la tabla de Impresora laser y tinta
@@ -138,7 +148,7 @@ export class ModelSeriesUpdater {
       await HasWifiAdapter.updateWifiAdapterField({ hasWifiAdapter: laptopParams.hasWifiAdapter, entity: modelEntity })
       await BatteryModelName.updateBatteryModelField({ batteryModel: laptopParams.batteryModel, entity: modelEntity })
       await MemoryRamSlotQuantity.updateMemoryRamSlotQuantityField({ memoryRamSlotQuantity: laptopParams.memoryRamSlotQuantity, entity: modelEntity })
-      await ComputerMemoryRamType.updateInputTypeField({ repository: this.repository.memoryRamType, memoryRamTypeId: laptopParams.memoryRamTypeId, entity: modelEntity })
+      await ComputerMemoryRamType.updateInputTypeField({ repository: this.memoryRamTypeRepository, memoryRamTypeId: laptopParams.memoryRamTypeId, entity: modelEntity })
     }
     // Actualizar la tabla de Computadoras
     else if (ComputerModels.isComputerCategory({ categoryId })) {
@@ -164,19 +174,19 @@ export class ModelSeriesUpdater {
       await HasBluetooth.updateBluetoothField({ hasBluetooth: computerParams.hasBluetooth, entity: modelEntity })
       await HasWifiAdapter.updateWifiAdapterField({ hasWifiAdapter: computerParams.hasWifiAdapter, entity: modelEntity })
       await MemoryRamSlotQuantity.updateMemoryRamSlotQuantityField({ memoryRamSlotQuantity: computerParams.memoryRamSlotQuantity, entity: modelEntity })
-      await ComputerMemoryRamType.updateInputTypeField({ repository: this.repository.memoryRamType, memoryRamTypeId: computerParams.memoryRamTypeId, entity: modelEntity })
+      await ComputerMemoryRamType.updateInputTypeField({ repository: this.memoryRamTypeRepository, memoryRamTypeId: computerParams.memoryRamTypeId, entity: modelEntity })
     }
     else {
       modelEntity = ModelSeries.fromPrimitives(modelSeries)
     }
     await this.updateMainModel({ params, entity: modelEntity })
-    await this.repository.modelSeries.save(modelEntity.toPrimitives())
+    await this.repository.save(modelEntity.toPrimitives())
   }
 
   private async updateMainModel({ params, entity }: { params: ModelParams, entity: ModelSeries }): Promise<void> {
-    await ModelSeriesCategory.updateCategoryField({ repository: this.repository.category, categoryId: params.categoryId, entity })
-    await ModelSeriesBrand.updateBrandField({ repository: this.repository.brand, brandId: params.brandId, entity })
-    await ModelSeriesName.updateNameField({ repository: this.repository.modelSeries, name: params.name, entity })
+    await ModelSeriesCategory.updateCategoryField({ repository: this.categoryRepository, categoryId: params.categoryId, entity })
+    await ModelSeriesBrand.updateBrandField({ repository: this.brandRepository, brandId: params.brandId, entity })
+    await ModelSeriesName.updateNameField({ repository: this.repository, name: params.name, entity })
     await Generic.updateGenericField({ generic: params.generic, entity })
   }
 }

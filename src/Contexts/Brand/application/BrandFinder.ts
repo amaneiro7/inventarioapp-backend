@@ -6,7 +6,7 @@ import { type BrandRepository } from '../domain/BrandRepository'
 export class BrandsFinder {
   constructor(private readonly repository: BrandRepository) { }
 
-  async searchById(params: { id: string }): Promise<BrandPrimitives> {
+  async run(params: { id: string }): Promise<BrandPrimitives> {
     const { id } = params
     const brandId = new BrandId(id)
     const brand = await this.repository.searchById(brandId.value)

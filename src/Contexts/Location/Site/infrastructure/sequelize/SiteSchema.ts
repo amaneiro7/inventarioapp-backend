@@ -13,7 +13,7 @@ export class SiteModels extends Model<SitePrimitives> implements SitePrimitives 
   readonly address!: Primitives<SiteAddress>
   readonly name!: Primitives<SiteName>
 
-  public static async associate(models: Models): Promise<void> {
+  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
     this.belongsTo(models.City, { as: 'city', foreignKey: 'cityId' }) // A Site belongs to Many City
     this.hasMany(models.Location, { as: 'location', foreignKey: 'siteId' }) // A Site has Many Locations
   }

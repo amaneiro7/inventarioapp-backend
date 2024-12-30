@@ -1,27 +1,18 @@
 import { CategoryDoesNotExistError } from '../domain/CategoryDoesNotExistError'
-import { type Repository } from '../../../Shared/domain/Repository'
+import { CategoryId } from '../domain/CategoryId'
 import { type CategoryPrimitives } from '../domain/Category'
-import { type CategoryId } from '../domain/CategoryId'
-import { type CategoryName } from '../domain/CategoryName'
+import { type CategoryRepository } from '../domain/CategoryRepository'
 
 export class CategoriesFinder {
-  constructor(private readonly repository: Repository) { }
+  constructor(private readonly repository: CategoryRepository) { }
 
-  async searchById(categoryId: CategoryId): Promise<CategoryPrimitives> {
-    const category = await this.repository.category.searchById(categoryId.value)
+  async run(params: { id: string }): Promise<CategoryPrimitives> {
+    const { id } = params
+    const categoryId = new CategoryId(id)
+    const category = await this.repository.searchById(categoryId.value)
 
     if (category === null) {
       throw new CategoryDoesNotExistError(categoryId.toString())
-    }
-
-    return category
-  }
-
-  async searchByName(categoryName: CategoryName): Promise<CategoryPrimitives> {
-    const category = await this.repository.category.searchByName(categoryName.toString())
-
-    if (category === null) {
-      throw new CategoryDoesNotExistError(categoryName.toString())
     }
 
     return category

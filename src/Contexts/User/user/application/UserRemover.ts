@@ -1,12 +1,12 @@
-import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type Repository } from '../../../Shared/domain/Repository'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { UserId } from '../domain/UserId'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
-import { UserId } from '../domain/UserId'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type UserRepository } from '../domain/UserRepository'
 
 export class UserRemover {
-    constructor(private readonly repository: Repository) { }
+    constructor(private readonly repository: UserRepository) { }
 
     async run({ user, id }: { user?: JwtPayloadUser, id: Primitives<UserId> }): Promise<void> {
         // Se valida que el usuario que realiza la accion esta autorizado
@@ -16,7 +16,7 @@ export class UserRemover {
         const userId = new UserId(id).value
 
         // se busca el usuario a eliminar
-        const userToDelete = await this.repository.user.searchById(userId)
+        const userToDelete = await this.repository.searchById(userId)
 
         // se verifica que el usuario exista, si no existe arrojar un error
         if (userToDelete === null) {
@@ -24,6 +24,6 @@ export class UserRemover {
         }
 
         // eliminar el usuario de la base de datos
-        await this.repository.user.delete(id)
+        await this.repository.delete(id)
     }
 }

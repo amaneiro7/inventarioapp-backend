@@ -1,10 +1,10 @@
-import { type Repository } from '../../Shared/domain/Repository'
 import { type HistoryPrimitives } from '../domain/History'
+import { type HistoryRepository } from '../domain/HistoryRepository'
 
 export class SearchAllHistories {
-  constructor (private readonly repository: Repository) {}
+  constructor(private readonly repository: HistoryRepository) { }
 
-  async search (): Promise<HistoryPrimitives[]> {
-    return await this.repository.history.searchAll()
+  async run(): Promise<HistoryPrimitives[]> {
+    return await this.repository.searchAll()
   }
 }
