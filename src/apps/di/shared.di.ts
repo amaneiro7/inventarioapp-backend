@@ -1,8 +1,8 @@
-import { asClass, AwilixContainer } from "awilix";
-import { WinstonLogger } from "../../Contexts/Shared/infrastructure/WinstonLogger";
+import { type AwilixContainer } from "awilix";
 
-export function registerServices(container: AwilixContainer) {
+export const register = (container: AwilixContainer) => {
     container.register({
-        logger: asClass(WinstonLogger)
+
     })
 }
+

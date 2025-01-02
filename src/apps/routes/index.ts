@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response, type Router } from "express";
-import { validationResult, ValidationError } from "express-validator";
+import { validationResult, type ValidationError } from "express-validator";
 import { join } from 'node:path'
 import { globSync } from 'node:fs'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
@@ -7,10 +7,7 @@ import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 export function registerRoutes(router: Router) {
     const routePath = join(process.cwd(), 'src/apps/routes/*.route.*')
     const routes = globSync(routePath)
-    routes.map(route => {
-        console.log('registerRoute', route)
-        return register(route, router)
-    })
+    routes.map(route => register(route, router))
 }
 
 function register(routePath: string, router: Router) {

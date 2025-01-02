@@ -3,11 +3,6 @@ import { LocalAuthStrategy } from './strategies/local.strategy'
 import { JwtCookiesStrategy } from './strategies/jwt-cookie.strategy'
 
 export class PassportManager {
-  public static readonly Strategy = {
-    LOCAL: 'local',
-    JWT: 'jwt'
-  } as const
-
   constructor(
     private readonly localStrategy: LocalAuthStrategy,
     private readonly jwtCookiesStrategy: JwtCookiesStrategy,

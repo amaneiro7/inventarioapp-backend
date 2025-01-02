@@ -1,20 +1,21 @@
-import { type Router } from 'express'
 import passport from 'passport'
-import { Strategy } from '../../Contexts/Auth/infrastructure/passport'
-import container from '../dependency-injections'
+import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/strategy-options'
+
+import { type Router } from 'express'
 import { type AuthLoginController } from '../controllers/auth.login.controller'
 import { type AuthLogoutController } from '../controllers/auth.logout.controller'
 import { type AuthRefreshTokenController } from '../controllers/auth.refreshtoken.controller'
+import { container } from '../di/container'
 
 
 export const register = (router: Router) => {
 
-  const authLoginController: AuthLoginController = container.get('Apps.controllers.AuthLoginController')
-  const authLogoutController: AuthLogoutController = container.get('Apps.controllers.AuthLogoutController')
-  const authRefreshTokenController: AuthRefreshTokenController = container.get('Apps.controllers.AuthRefreshTokenController')
+  const authLoginController: AuthLoginController = container.resolve('authLoginController')
+  const authLogoutController: AuthLogoutController = container.resolve('authLogoutController')
+  const authRefreshTokenController: AuthRefreshTokenController = container.resolve('authRefreshTokenController')
 
   router.post('/login/local',
-    passport.authenticate(Strategy.LOCAL, { session: false }),
+    passport.authenticate(StrategyOptions.LOCAL, { session: false }),
     authLoginController.run.bind(authLoginController)
   )
 

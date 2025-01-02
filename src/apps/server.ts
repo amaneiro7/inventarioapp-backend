@@ -16,7 +16,7 @@ import { morganLog } from './Shared/Middleware/morgan'
 import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
-import { logger, passportManager } from './di/container'
+import { logger } from './di/container'
 
 export class Server {
   private express: express.Express
@@ -83,8 +83,6 @@ export class Server {
 
     this.express.use(router)
     this.express.use('/api/v1/', router)
-
-    passportManager.initialize()
 
     // Configuración de rutas
     registerRoutes(router)

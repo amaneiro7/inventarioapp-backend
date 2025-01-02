@@ -2,7 +2,9 @@ import { config } from '../Contexts/Shared/infrastructure/config'
 import { Server } from './server'
 import { sequelize } from '../Contexts/Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { initilizarModels } from '../Contexts/Shared/infrastructure/persistance/Sequelize/initSchemas'
-import { cache, logger } from './di/container'
+import { cache, container, logger } from './di/container'
+// import { passportManager } from './di/auth.di'
+import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 
 export class InventarioBackendApp {
   server?: Server
@@ -10,6 +12,8 @@ export class InventarioBackendApp {
     const port = config.port
     this.server = new Server(port)
 
+    const passportManager: PassportManager = container.resolve('passportManager')
+    passportManager.initialize()
 
     await this.initializeDBStorage()
     await this.initializeCacheStorage()
