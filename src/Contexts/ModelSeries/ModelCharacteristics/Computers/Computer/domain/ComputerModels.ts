@@ -1,6 +1,6 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/SubCategory/domain/CategoryDefaultData'
+import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/Category/domain/CategoryDefaultData'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
 import { ModelSeries, type ModelSeriesPrimitives } from '../../../../ModelSeries/domain/ModelSeries'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
@@ -12,7 +12,7 @@ import { HasHDMI } from './HasHDMI'
 import { HasVGA } from './HasVGA'
 import { HasWifiAdapter } from './HasWifiAdapter'
 import { MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
-import { CategoryId } from '../../../../../Category/SubCategory/domain/CategoryId'
+import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 
 export interface ComputerModelsPrimitives extends ModelSeriesPrimitives {
   memoryRamTypeId: Primitives<ComputerMemoryRamType>

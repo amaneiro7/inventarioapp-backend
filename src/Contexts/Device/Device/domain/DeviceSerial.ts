@@ -5,6 +5,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device, type DevicePrimitives } from './Device'
 import { type Generic } from '../../../ModelSeries/ModelSeries/domain/Generic'
 import { type DeviceRepository } from './DeviceRepository'
+import { type Nullable } from '../../../Shared/domain/Nullable'
 
 export class DeviceSerial extends AcceptedNullValueObject<string> {
   private readonly NAME_MAX_LENGTH = 100
@@ -78,7 +79,7 @@ export class DeviceSerial extends AcceptedNullValueObject<string> {
       return
     }
     // Searches for a device with the given serial in the database
-    const deviceWithSerial: DevicePrimitives | null = await repository.searchBySerial(new DeviceSerial(serial).toString())
+    const deviceWithSerial: Nullable<DevicePrimitives> = await repository.searchBySerial(new DeviceSerial(serial).toString())
     // If a device with the given serial exists, it means that it already exists in the database,
     // so we need to throw a {@link DeviceAlreadyExistError} with the given serial
     if (deviceWithSerial !== null) {

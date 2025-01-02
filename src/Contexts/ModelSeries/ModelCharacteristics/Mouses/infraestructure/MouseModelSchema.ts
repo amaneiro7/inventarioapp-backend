@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../Category/SubCategory/domain/Category'
+import { CategoryValues } from '../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { type MouseModelsPrimitives } from '../domain/MouseModels'
 import { type InputTypeId } from '../../../InputType/domain/InputTypeId'
-import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 
 
 

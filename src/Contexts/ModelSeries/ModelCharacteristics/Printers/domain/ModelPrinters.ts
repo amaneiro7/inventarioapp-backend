@@ -6,8 +6,8 @@ import { ModelSeries, type ModelSeriesPrimitives } from '../../../ModelSeries/do
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { CartridgeModel } from './CartridgeModel'
-import { CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/SubCategory/domain/CategoryDefaultData'
+import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
 
 export interface ModelPrintersPrimitives extends ModelSeriesPrimitives {
   cartridgeModel: Primitives<CartridgeModel>

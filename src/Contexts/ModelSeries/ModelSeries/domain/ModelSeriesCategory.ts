@@ -1,8 +1,8 @@
-import { type CategoryPrimitives } from "../../../Category/SubCategory/domain/Category";
+import { type CategoryPrimitives } from "../../../Category/Category/domain/Category";
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives";
 import { type ModelSeries } from "./ModelSeries";
-import { type CategoryRepository } from "../../../Category/SubCategory/domain/CategoryRepository";
-import { CategoryId } from "../../../Category/SubCategory/domain/CategoryId";
+import { type CategoryRepository } from "../../../Category/Category/domain/CategoryRepository";
+import { CategoryId } from "../../../Category/Category/domain/CategoryId";
 import { InvalidArgumentError } from "../../../Shared/domain/value-object/InvalidArgumentError";
 import { ComputerModels } from "../../ModelCharacteristics/Computers/Computer/domain/ComputerModels";
 

@@ -2,7 +2,7 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type DevicePrimitives } from '../../domain/Device'
 
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type DeviceId } from '../../domain/DeviceId'
 import { type DeviceSerial } from '../../domain/DeviceSerial'
 import { type DeviceActivo } from '../../domain/DeviceActivo'

@@ -7,9 +7,8 @@ import { type DeviceRepository } from '../../domain/DeviceRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/DeviceId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 
-
-import container from '../../../../../apps/dependency-injections'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceModel } from './DeviceSchema'
 import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
@@ -17,21 +16,19 @@ import { DeviceAssociation } from './DeviceAssociation'
 import { DevicesApiResponse } from './DeviceResponse'
 import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../../Features/MFP/domain/MFP'
-import { CacheRepository } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
-import { CacheService } from '../../../../Shared/domain/CacheService'
-import { CategoryModel } from '../../../../Category/SubCategory/infrastructure/Sequelize/CategorySchema'
+import { CategoryModel } from '../../../../Category/Category/infrastructure/Sequelize/CategorySchema'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
-  private readonly sequelize: Sequelize = container.get('Shared.SequelizeConfig')
-  private readonly models = this.sequelize.models
+  private readonly models = sequelize.models
   private readonly cacheKey: string = 'devices'
-  constructor(private readonly cache: CacheRepository) {
+  constructor(private readonly cache: CacheService) {
     super()
   }
 
   async searchAll(): Promise<DevicePrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await CategoryModel.findAll()
     })
   }
@@ -111,7 +108,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
    * @param payload - Device data to be saved
    */
   async save(payload: DevicePrimitives): Promise<void> {
-    const t = await this.sequelize.transaction() // Start a new transaction
+    const t = await sequelize.transaction() // Start a new transaction
     try {
       const { id, serial, activo, statusId, categoryId, brandId, modelId, locationId, observation, employeeId } = payload // Destructure the payload
       const device = await DeviceModel.findByPk(id) ?? null // Find the device by its id, if it does not exist, device will be null

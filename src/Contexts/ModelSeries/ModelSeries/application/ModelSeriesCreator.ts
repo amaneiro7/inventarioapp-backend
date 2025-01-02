@@ -13,7 +13,7 @@ import { ModelSeriesCategory } from '../domain/ModelSeriesCategory'
 import { ModelSeriesName } from '../domain/ModelSeriesName'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
-import { type CategoryRepository } from '../../../Category/SubCategory/domain/CategoryRepository'
+import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type InputTypeRepository } from '../../InputType/domain/InputTypeRepository'
 

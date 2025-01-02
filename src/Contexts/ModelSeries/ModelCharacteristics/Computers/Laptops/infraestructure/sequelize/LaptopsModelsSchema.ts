@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../../../Category/SubCategory/domain/Category'
+import { CategoryValues } from '../../../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
@@ -11,7 +11,7 @@ import { type HasDVI } from '../../../Computer/domain/HasDVI'
 import { type HasHDMI } from '../../../Computer/domain/HasHDMI'
 import { type HasVGA } from '../../../Computer/domain/HasVGA'
 import { type BatteryModelName } from '../../domain/BatteryModelName'
-import { type CategoryId } from '../../../../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
 
 interface LaptopModelsCreationAttributes extends Omit<LaptopsModelsPrimitives, 'name' | 'brandId' | 'generic'> {
   modelSeriesId: Primitives<ModelSeriesId>

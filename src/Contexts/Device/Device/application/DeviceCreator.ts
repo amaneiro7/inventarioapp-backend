@@ -25,12 +25,14 @@ export interface DeviceParams extends Omit<DevicePrimitives, 'id'> { }
 
 export class DeviceCreator {
   constructor(
-    private readonly repository: DeviceRepository,
+    private readonly deviceRepository: DeviceRepository,
     private readonly modelSeriesRepository: ModelSeriesRepository,
     private readonly statusRepository: StatusRepository,
     private readonly employeeRepository: EmployeeRepository,
     private readonly locationRepository: LocationRepository,
     private readonly historyRepository: HistoryRepository,
+    private readonly computerValidation: ComputerValidation,
+    private readonly hardDriveValidation: HardDriveValidation,
   ) { }
 
   async run({ params, user }: { params: DeviceParams, user?: JwtPayloadUser }): Promise<void> {
@@ -39,12 +41,12 @@ export class DeviceCreator {
     // Si es computadora
     if (DeviceComputer.isComputerCategory({ categoryId })) {
       const computerParams = params as DeviceComputerPrimitives
-      device = await new ComputerValidation(this.repository).run(computerParams)
+      device = await this.computerValidation.run(computerParams)
     }
     // Si es Disco Duro
     else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
       const hddParams = params as DeviceHardDrivePrimitives
-      device = await new HardDriveValidation(this.repository).run(hddParams)
+      device = await this.hardDriveValidation.run(hddParams)
     }
     // Si es Impresora Multifuncional
     else if (MFP.isMFPCategory({ categoryId })) {
@@ -56,14 +58,14 @@ export class DeviceCreator {
       device = Device.create(params)
     }
     const { generic } = await DeviceModelSeries.ensureModelSeriesExit({ repository: this.modelSeriesRepository, modelSeries: params.modelId, brand: params.brandId, category: categoryId })
-    await DeviceActivo.ensureActivoDoesNotExit({ repository: this.repository, activo: params.activo })
+    await DeviceActivo.ensureActivoDoesNotExit({ repository: this.deviceRepository, activo: params.activo })
     await DeviceStatus.ensureStatusExit({ repository: this.statusRepository, status: params.statusId })
     await DeviceEmployee.ensureEmployeeExit({ repository: this.employeeRepository, employee: params.employeeId })
     await DeviceLocation.ensureLocationExit({ repository: this.locationRepository, location: params.locationId, status: params.statusId })
-    await DeviceSerial.ensureSerialDoesNotExit({ repository: this.repository, serial: params.serial })
+    await DeviceSerial.ensureSerialDoesNotExit({ repository: this.deviceRepository, serial: params.serial })
     await DeviceSerial.isSerialCanBeNull({ generic: generic, serial: params.serial })
 
-    await this.repository.save(device.toPrimitives())
+    await this.deviceRepository.save(device.toPrimitives())
       .then(() => {
         if (!user?.sub) {
           throw new InvalidArgumentError('user is required')

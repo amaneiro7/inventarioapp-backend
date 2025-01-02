@@ -32,7 +32,7 @@ import { ModelMouseInputType } from '../../ModelCharacteristics/Mouses/domain/Mo
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 import { type InputTypeRepository } from '../../InputType/domain/InputTypeRepository'
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
-import { type CategoryRepository } from '../../../Category/SubCategory/domain/CategoryRepository'
+import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 
 export class ModelSeriesUpdater {

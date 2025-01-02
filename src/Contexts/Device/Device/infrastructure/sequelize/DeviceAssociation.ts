@@ -1,7 +1,8 @@
 import { type FindOptions } from "sequelize";
 import { Criteria } from "../../../../Shared/domain/criteria/Criteria";
 import { sequelize } from "../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig";
-import { MainCategoryList } from "../../../../Category/Category/domain/MainCategory";
+import { MainCategoryList } from "../../../../Category/MainCategory/domain/MainCategory";
+
 
 export class DeviceAssociation {
     convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {

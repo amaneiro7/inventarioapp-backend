@@ -1,5 +1,5 @@
 import { type BrandId } from '../../../Brand/domain/BrandId'
-import { type CategoryId } from '../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
 import { type ModelSeriesPrimitives } from '../../../ModelSeries/ModelSeries/domain/ModelSeries'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -31,7 +31,7 @@ export class DeviceModelSeries extends ModelSeriesId {
       return
     }
     // Verifica que el model no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el model pasado
-    const { brandId, categoryId, generic } = await DeviceModelSeries.ensureModelSeriesExit({ repository, modelSeries, category, brand })
+    const { brandId, categoryId } = await DeviceModelSeries.ensureModelSeriesExit({ repository, modelSeries, category, brand })
     // Actualiza el campo model de la entidad {@link Device} con el nuevo model
     entity.updateCategoryId(categoryId)
     entity.updateBrandId(brandId)

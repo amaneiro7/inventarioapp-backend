@@ -3,7 +3,7 @@ import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesName } from '../../domain/ModelSeriesName'
-import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type BrandId } from '../../../../Brand/domain/BrandId'
 import { type Generic } from '../../domain/Generic'
 

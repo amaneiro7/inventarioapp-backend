@@ -6,7 +6,7 @@ import { type ProcessorId } from '../../../Processor/Processor/domain/ProcessorI
 import { type MACAddress } from '../../domain/MACAddress'
 import { type IPAddress } from '../../domain/IPAddress'
 import { type ComputerName } from '../../domain/ComputerName'
-import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type ComputerMemoryRamCapacity } from '../../domain/ComputerMemoryRamCapacity'
 import { type ComputerHardDriveCapacity } from '../../domain/ComputerHardDriveCapacity'
 import { type ComputerHardDriveType } from '../../domain/ComputerHardDriveType'
@@ -14,7 +14,7 @@ import { type ComputerOperatingSystem } from '../../domain/ComputerOperatingSyst
 import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingSystemArq'
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 
-import { CategoryValues } from '../../../../Category/SubCategory/domain/Category'
+import { CategoryValues } from '../../../../Category/Category/domain/Category'
 
 
 

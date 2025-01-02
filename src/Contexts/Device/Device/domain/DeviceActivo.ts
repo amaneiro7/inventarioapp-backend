@@ -1,9 +1,10 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DevicePrimitives, type Device } from './Device'
-import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
 import { type DeviceRepository } from './DeviceRepository'
+import { type Nullable } from '../../../Shared/domain/Nullable'
 
 export class DeviceActivo extends AcceptedNullValueObject<string> {
   private readonly NAME_MAX_LENGTH = 100
@@ -66,7 +67,7 @@ export class DeviceActivo extends AcceptedNullValueObject<string> {
       return
     }
     // Searches for a device with the given activo in the database
-    const deviceWithActivo: DevicePrimitives | null = await repository.searchByActivo(new DeviceActivo(activo).toString())
+    const deviceWithActivo: Nullable<DevicePrimitives> = await repository.searchByActivo(new DeviceActivo(activo).toString())
     // If a device with the given activo exists, it means that it already exists in the database,
     // so we need to throw a {@link DeviceAlreadyExistError} with the given activo
     if (deviceWithActivo !== null) {

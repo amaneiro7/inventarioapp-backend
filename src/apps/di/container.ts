@@ -1,14 +1,6 @@
 import { globSync } from 'node:fs'
 import { join } from 'node:path'
-import { asClass, AwilixContainer, createContainer } from 'awilix'
-import { WinstonLogger } from '../../Contexts/Shared/infrastructure/WinstonLogger'
-import { RedisRepository } from '../../Contexts/Shared/infrastructure/persistance/Redis/RedisRepository'
-import { type CacheRepository } from '../../Contexts/Shared/domain/CacheRepository'
-import { type Logger } from '../../Contexts/Shared/domain/Logger'
-
-
-
-
+import { AwilixContainer, createContainer } from 'awilix'
 
 export const container = createContainer({ injectionMode: 'CLASSIC' })
 
@@ -23,19 +15,5 @@ async function register(routePath: string, container: AwilixContainer) {
     await dependencies.register(container)
 }
 
-container.register({
-    logger: asClass(WinstonLogger),
-    cache: asClass(RedisRepository).singleton(),
-})
+
 registerDI(container)
-
-
-
-export const logger: Logger = container.resolve('logger')
-export const cache: CacheRepository = container.resolve("cache")
-
-
-
-
-
-

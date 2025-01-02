@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../Category/SubCategory/domain/Category'
+import { CategoryValues } from '../../../Category/Category/domain/Category'
 import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type MFPIPAddress } from '../domain/MFPIPAddress'
 import { type DeviceMFPPrimitives } from '../domain/MFP'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CategoryId } from '../../../Category/SubCategory/domain/CategoryId'
+import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
 
 
 interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {

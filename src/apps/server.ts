@@ -16,7 +16,8 @@ import { morganLog } from './Shared/Middleware/morgan'
 import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
-import { logger } from './di/container'
+import { container } from './di/container'
+import { SharedDependencies } from './di/shared.di'
 
 export class Server {
   private express: express.Express
@@ -26,7 +27,7 @@ export class Server {
 
   constructor(port: string) {
     this.port = port
-    this.logger = logger
+    this.logger = container.resolve(SharedDependencies.Logger)
     this.express = express()
 
     // Middleware para parsear JSON

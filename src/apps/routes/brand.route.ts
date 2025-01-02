@@ -1,32 +1,36 @@
 import { type Router } from 'express'
 import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
-import { type BrandGetFinderAllController } from '../controllers/brand.getFinderAll.controller'
-import { type BrandPostController } from '../controllers/brand.post.controller'
-import { type BrandPatchController } from '../controllers/brand.patch.controller'
-import { type BrandGetFinderController } from '../controllers/brand.getFinder.controller'
+import { type BrandGetFinderAllController } from '../controllers/brand/brand.getFinderAll.controller'
+import { type BrandPostController } from '../controllers/brand/brand.post.controller'
+import { type BrandPatchController } from '../controllers/brand/brand.patch.controller'
+import { type BrandGetFinderController } from '../controllers/brand/brand.getFinder.controller'
+import { BrandDependencies } from '../di/brand.di'
 
 
 export const register = (router: Router) => {
-    const brandGetController: BrandGetFinderController = container.resolve('brandGetController')
-    const brandGetAllController: BrandGetFinderAllController = container.resolve('brandGetAllController')
-    const brandPostController: BrandPostController = container.resolve('brandPostController')
-    const brandPatchController: BrandPatchController = container.resolve('brandPatchController')
+    const getController: BrandGetFinderController = container.resolve(BrandDependencies.GetController)
+    const getAllController: BrandGetFinderAllController = container.resolve(BrandDependencies.GetAllController)
+    const postController: BrandPostController = container.resolve(BrandDependencies.PostController)
+    const patchController: BrandPatchController = container.resolve(BrandDependencies.PatchController)
 
 
     router.get('/brands/',
-        brandGetAllController.run.bind(brandGetAllController)
+        authenticate,
+        getAllController.run.bind(getAllController)
     )
     router.get('/brands/:id',
         authenticate,
-        brandGetController.run.bind(brandGetController)
+        getController.run.bind(getController)
     )
 
     router.post('/brands/',
-        brandPostController.run.bind(brandPostController)
+        authenticate,
+        postController.run.bind(postController)
     )
 
     router.patch('/brands/:id',
-        brandPatchController.run.bind(brandPatchController)
+        authenticate,
+        patchController.run.bind(patchController)
     )
 }

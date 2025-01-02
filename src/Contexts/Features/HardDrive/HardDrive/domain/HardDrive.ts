@@ -14,8 +14,8 @@ import { HDDType } from './HDDType'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { DeviceStocknumber } from '../../../../Device/Device/domain/DeviceStock'
 import { DeviceLocation } from '../../../../Device/Device/domain/DeviceLocation'
-import { CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/SubCategory/domain/CategoryDefaultData'
+import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
 
 export interface DeviceHardDrivePrimitives extends DevicePrimitives {
   health: Primitives<HardDriveHealth>

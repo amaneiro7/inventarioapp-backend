@@ -47,7 +47,7 @@ export interface PartialDeviceParams extends DeviceParams { }
 export class DeviceUpdater {
 
   constructor(
-    private readonly repository: DeviceRepository,
+    private readonly deviceRepository: DeviceRepository,
     private readonly processorRepository: ProcessorRepository,
     private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
     private readonly hardDriveTypeRepository: HardDriveTypeRepository,
@@ -66,7 +66,7 @@ export class DeviceUpdater {
     const deviceId = new DeviceId(id).value
 
     // Buscamos el device en la base de datos
-    const device = await this.repository.searchById(deviceId)
+    const device = await this.deviceRepository.searchById(deviceId)
 
     // Si el device no existe, lanzamos una excepcion
     if (!device) {
@@ -115,7 +115,7 @@ export class DeviceUpdater {
       } = params as Partial<DeviceComputerPrimitives>
 
       // Actualizamos los campos de la clase Computer
-      await ComputerName.updateComputerNameField({ repository: this.repository, computerName, entity: deviceEntity })
+      await ComputerName.updateComputerNameField({ repository: this.deviceRepository, computerName, entity: deviceEntity })
       await ComputerMemoryRam.updateMemoryRam({ entity: deviceEntity, memoryRam })
       await ComputerProcessor.updateProcessorField({ repository: this.processorRepository, processor: processorId, entity: deviceEntity })
       await ComputerHardDriveCapacity.updateHardDriveCapacityField({ repository: this.hardDriveCapacityRepository, entity: deviceEntity, hardDriveCapacity: hardDriveCapacityId })
@@ -170,7 +170,7 @@ export class DeviceUpdater {
       await this.updateMainDevice({ params, deviceEntity })
     }
     // Guardamos los cambios en la base de datos    
-    await this.repository.save(deviceEntity.toPrimitives())
+    await this.deviceRepository.save(deviceEntity.toPrimitives())
       .then(() => {
         if (!user?.sub) {
           throw new InvalidArgumentError('user is required')
@@ -195,8 +195,8 @@ export class DeviceUpdater {
   private async updateMainDevice({ params, deviceEntity }: { params: PartialDeviceParams, deviceEntity: Device }): Promise<void> {
     const { serial, activo, statusId, categoryId, brandId, modelId, employeeId, locationId, observation, stockNumber } = params
     await DeviceStatus.updateStatusField({ repository: this.statusRepository, status: statusId, entity: deviceEntity })
-    await DeviceActivo.updateActivoField({ repository: this.repository, activo, entity: deviceEntity })
-    await DeviceSerial.updateSerialField({ repository: this.repository, serial, entity: deviceEntity })
+    await DeviceActivo.updateActivoField({ repository: this.deviceRepository, activo, entity: deviceEntity })
+    await DeviceSerial.updateSerialField({ repository: this.deviceRepository, serial, entity: deviceEntity })
     await DeviceLocation.updateLocationField({ repository: this.locationRepository, location: locationId, entity: deviceEntity })
     await DeviceObservation.updateObservationField({ observation, entity: deviceEntity })
     await DeviceStocknumber.updateStockNumberField({ stockNumber, entity: deviceEntity })

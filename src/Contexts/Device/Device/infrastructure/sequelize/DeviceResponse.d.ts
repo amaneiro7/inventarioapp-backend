@@ -1,7 +1,7 @@
 import { type BrandPrimitives } from '../../../../Brand/domain/Brand'
 import { type BrandId } from '../../../../Brand/domain/BrandId'
 import { type CategoryId } from '../../../../Category/domain/CategoryId'
-import { type CategoryPrimitives } from '../../../../Category/SubCategory/domain/Category'
+import { type CategoryPrimitives } from '../../../../Category/Category/domain/Category'
 import { type EmployeePrimitives } from '../../../../employee/Employee/domain/Employee'
 import { type DeviceComputerPrimitives } from '../../../../Features/Computer/domain/Computer'
 import { type ComputerHardDriveCapacity } from '../../../../Features/Computer/domain/ComputerHardDriveCapacity'

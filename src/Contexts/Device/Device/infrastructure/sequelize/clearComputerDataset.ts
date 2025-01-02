@@ -1,5 +1,4 @@
-
-import { MainCategoryList } from "../../../../Category/Category/domain/MainCategory"
+import { MainCategoryList } from "../../../../Category/MainCategory/domain/MainCategory"
 import { lastHistoryUpdated } from "../../../../Shared/domain/LastHistoryUpdated"
 import { type ClearDefaultDataset, type ClearComputerDataset, type DevicesApiResponse } from "./DeviceResponse"
 

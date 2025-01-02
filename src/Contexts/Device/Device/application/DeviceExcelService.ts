@@ -10,7 +10,7 @@ import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 
 export class DeviceExcelService {
-    constructor(private readonly repository: DeviceRepository) { }
+    constructor(private readonly deviceRepository: DeviceRepository) { }
     async run(query: SearchByCriteriaQuery): Promise<{}> {
 
         // Recuperar los datos de la base de datos usando Sequelize
@@ -26,7 +26,7 @@ export class DeviceExcelService {
         )
         const criteria = new Criteria(new Filters(filters), order)
 
-        return await this.repository.donwload(criteria)
+        return await this.deviceRepository.donwload(criteria)
     }
 
 }
