@@ -1,20 +1,21 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { type Controller } from './controller'
 import { type UserPrimitives } from '../../Contexts/User/user/domain/User'
+import { type RolePrimitives } from '../../Contexts/User/Role/domain/Role'
 
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { generateAceessTokens, generateRefreshToken } from '../../Contexts/Auth/domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../../Contexts/Auth/domain/SendUserWithoutPassword'
 
-type AuthLoginController = Request & {
-  user?: UserPrimitives
+type ReqUser = UserPrimitives & {
+  role: RolePrimitives
 }
 
 
-export class AuthPostController implements Controller {
-  async run(req: AuthLoginController, res: Response, next: NextFunction): Promise<void> {
+export class AuthRefreshTokenController implements Controller {
+  async run(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const user = req.user
+      const user = req.user as ReqUser
       if (user === undefined) throw new Error('User not found')
       const accessToken = generateAceessTokens(user)
       const refreshToken = generateRefreshToken(user)

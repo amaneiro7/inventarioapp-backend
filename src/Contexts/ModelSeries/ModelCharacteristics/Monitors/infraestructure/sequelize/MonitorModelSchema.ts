@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/SubCategory/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
@@ -8,7 +8,7 @@ import { type MonitorHasDVI } from '../../domain/MonitorHasDVI'
 import { type MonitorHasHDMI } from '../../domain/MonitorHasHDMI'
 import { type MonitorHasVGA } from '../../domain/MonitorHasVGA'
 import { type CategoryId } from '../../../../../Category/SubCategory/domain/CategoryId'
-import { type SequelizeClientFactory } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 
 interface MonitorModelsCreationAttributes extends Omit<MonitorModelsPrimitives, 'name' | 'brandId' | 'generic'> {
@@ -24,17 +24,14 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
   public hasHDMI!: Primitives<MonitorHasHDMI>
   public hasVGA!: Primitives<MonitorHasVGA>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A monitor model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A monitor model belongs to a category
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     MonitorModelsModel.init(
       {
         id: {

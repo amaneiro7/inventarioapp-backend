@@ -1,24 +1,21 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type RolePrimitives } from '../../domain/Role'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type RoleId } from '../../domain/RoleId'
 import { type RoleName } from '../../domain/RoleName'
-import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 export class RolesModel extends Model<RolePrimitives> implements RolePrimitives {
   readonly id!: Primitives<RoleId>
   readonly name!: Primitives<RoleName>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.hasMany(models.User, { as: 'user', foreignKey: 'roleId' }) // A role can have many users
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     RolesModel.init(
       {
         id: {

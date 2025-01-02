@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import passport from 'passport'
-import { Strategy } from '../../../Contexts/User/user/infrastructure/auth/passport'
+import { Strategy } from '../../../Contexts/Auth/infrastructure/passport'
 import { AuthPostController } from '../controller/AuthPostController'
 import { type Repository } from '../../../Contexts/Shared/domain/Repository'
 

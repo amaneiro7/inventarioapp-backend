@@ -35,6 +35,8 @@ import { createUserRouter } from '../../User/routes/user.routes'
 import { createRolesRouter } from '../../Roles/routes/roles.routes'
 import { createDashboardRouter } from '../../DeviceDashboard/routes/dashboard.routes'
 import { createMainCategoryRouter } from '../../MainCategory/routes/mainCategory.routes'
+import { config } from '../../../Contexts/Shared/infrastructure/config'
+import errorHandler from 'errorhandler'
 
 // import { createUserRouter } from './user.routes'
 // import { createAuthRouter } from './auth.routes'
@@ -45,45 +47,50 @@ interface Props {
   repository: Repository
   // emailAdapter: EmailAdapter
 }
-export const routerApi = ({ app, repository }: Props): Router => {
+export const routerApi = ({ app }: Props): Router => {
   const router = Router()
   app.use('/api/v1/', router)
-  router.use('/auth', createAuthRouter({ repository }))
-  router.use('/users', authenticate, createUserRouter({ repository }))
-  router.use('/roles', authenticate, createRolesRouter({ repository }))
+  // router.use('/auth', createAuthRouter({ repository }))
+  // router.use('/users', authenticate, createUserRouter({ repository }))
+  // router.use('/roles', authenticate, createRolesRouter({ repository }))
   router.use('/check-token', authenticate, validateToken) //
-  router.use('/categories', authenticate, createCategoryRouter({ repository }))
-  router.use('/maincategories', authenticate, createMainCategoryRouter({ repository }))
+  // router.use('/categories', authenticate, createCategoryRouter({ repository }))
+  // router.use('/maincategories', authenticate, createMainCategoryRouter({ repository }))
   router.use('/brands', authenticate, createBrandRouter({ repository })) //
-  router.use('/models', authenticate, createModelSeriesRouter({ repository })) //
-  router.use('/devices', authenticate, createDeviceRouter({ repository })) //
-  router.use('/status', authenticate, createStatusRouter({ repository })) //
-  router.use('/processors', authenticate, createProcessorRouter({ repository })) //
-  router.use('/processorsockets', authenticate, createProcessorSocketRouter({ repository }))
-  router.use('/memoryramtypes', authenticate, createMemoryRamRouter({ repository }))
-  router.use('/harddrivetypes', authenticate, createHardDriveTypeRouter({ repository }))
-  router.use('/harddrivecapacities', authenticate, createHardDriveCapacityRouter({ repository }))
-  router.use('/operatingsystemarqs', authenticate, createOperatingSystemArqRouter({ repository })) //
-  router.use('/operatingsystems', authenticate, createOperatingSystemVersionsRouter({ repository })) //
-  router.use('/inputtypes', authenticate, createInputTypeRouter({ repository }))
-  router.use('/cities', authenticate, createCityRouter({ repository }))
-  router.use('/states', authenticate, createStateRouter({ repository }))
-  router.use('/regions', authenticate, createRegionRouter({ repository }))
-  router.use('/sites', authenticate, createSiteRouter({ repository }))
-  router.use('/locations', authenticate, createLocationRouter({ repository }))
-  router.use('/typeofsites', authenticate, createTypeOfSiteRouter({ repository }))
-  router.use('/cargos', authenticate, createCargoRouter({ repository }))
-  router.use('/coordinaciones', authenticate, createCoordinacionRouter({ repository }))
-  router.use('/gerencias', authenticate, createGerenciaRouter({ repository }))
-  router.use('/vicepresidencias', authenticate, createVicepresidenciaRouter({ repository }))
-  router.use('/vicepresidenciasejecutivas', authenticate, createVicepresidenciaEjecutivaRouter({ repository }))
-  router.use('/employees', authenticate, createEmployeeRouter({ repository }))
-  router.use('/histories', authenticate, createHistoryRouter({ repository }))
-  router.use('/dashboard', createDashboardRouter({ repository }))
+  // router.use('/models', authenticate, createModelSeriesRouter({ repository })) //
+  // router.use('/devices', authenticate, createDeviceRouter({ repository })) //
+  // router.use('/status', authenticate, createStatusRouter({ repository })) //
+  // router.use('/processors', authenticate, createProcessorRouter({ repository })) //
+  // router.use('/processorsockets', authenticate, createProcessorSocketRouter({ repository }))
+  // router.use('/memoryramtypes', authenticate, createMemoryRamRouter({ repository }))
+  // router.use('/harddrivetypes', authenticate, createHardDriveTypeRouter({ repository }))
+  // router.use('/harddrivecapacities', authenticate, createHardDriveCapacityRouter({ repository }))
+  // router.use('/operatingsystemarqs', authenticate, createOperatingSystemArqRouter({ repository })) //
+  // router.use('/operatingsystems', authenticate, createOperatingSystemVersionsRouter({ repository })) //
+  // router.use('/inputtypes', authenticate, createInputTypeRouter({ repository }))
+  // router.use('/cities', authenticate, createCityRouter({ repository }))
+  // router.use('/states', authenticate, createStateRouter({ repository }))
+  // router.use('/regions', authenticate, createRegionRouter({ repository }))
+  // router.use('/sites', authenticate, createSiteRouter({ repository }))
+  // router.use('/locations', authenticate, createLocationRouter({ repository }))
+  // router.use('/typeofsites', authenticate, createTypeOfSiteRouter({ repository }))
+  // router.use('/cargos', authenticate, createCargoRouter({ repository }))
+  // router.use('/coordinaciones', authenticate, createCoordinacionRouter({ repository }))
+  // router.use('/gerencias', authenticate, createGerenciaRouter({ repository }))
+  // router.use('/vicepresidencias', authenticate, createVicepresidenciaRouter({ repository }))
+  // router.use('/vicepresidenciasejecutivas', authenticate, createVicepresidenciaEjecutivaRouter({ repository }))
+  // router.use('/employees', authenticate, createEmployeeRouter({ repository }))
+  // router.use('/histories', authenticate, createHistoryRouter({ repository }))
+  // router.use('/dashboard', createDashboardRouter({ repository }))
 
   // router.use('/users', createUserRouter({ router, repository }))
   // router.use('/profiles', createProfileRouter({ router, repository }))
+  if (!config.isProd) {
+    router.use(errorHandler())
+  }
+  // Manejo de errores global
   router.use((err: Error, req: Request, res: Response, _next: () => void) => {
+    this.logger.error(err)
     res.status(httpStatus.BAD_REQUEST).send(err.message)
   })
   return router

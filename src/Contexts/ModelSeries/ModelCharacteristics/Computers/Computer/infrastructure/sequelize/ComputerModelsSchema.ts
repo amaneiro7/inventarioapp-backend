@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../../Category/SubCategory/domain/Category'
 import { type ComputerModelsPrimitives } from '../../domain/ComputerModels'
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
@@ -11,8 +11,6 @@ import { type HasHDMI } from '../../domain/HasHDMI'
 import { type HasVGA } from '../../domain/HasVGA'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
 import { type CategoryId } from '../../../../../../Category/SubCategory/domain/CategoryId'
-import { type SequelizeClientFactory } from '../../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-
 
 interface ComputerModelsCreationAttributes extends Omit<ComputerModelsPrimitives, 'name' | 'brandId' | 'generic'> {
   modelSeriesId: Primitives<ModelSeriesId>
@@ -30,18 +28,15 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
   public hasHDMI!: Primitives<HasHDMI>
   public hasVGA!: Primitives<HasVGA>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A computer model belongs to a model
     this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
     // this.belongsTo(models.ProcessorSocket, { as: 'processorSocket' }) // A computer model belongs to a processor socket
     this.belongsTo(models.MemoryRamType, { as: 'memoryRamType' }) // A computer model belongs to a memory ram
   }
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     ComputerModelsModel.init(
       {
         id: {

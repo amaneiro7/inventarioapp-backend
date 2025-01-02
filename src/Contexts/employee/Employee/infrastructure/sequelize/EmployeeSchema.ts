@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type EmployeePrimitives } from '../../domain/Employee'
 import { type EmployeeId } from '../../domain/EmployeeId'
 // import { type EmployeeName } from '../../domain/EmployeeName'
@@ -15,7 +15,7 @@ import { type EmployeeId } from '../../domain/EmployeeId'
 // import { type EmployeeCoordinacionId } from '../../domain/EmployeeCoordinacionId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeUserName } from '../../domain/EmployeeUsername'
-import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 export class EmployeeModel extends Model<EmployeePrimitives> implements EmployeePrimitives {
   public id!: Primitives<EmployeeId>
@@ -33,12 +33,9 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
   // public gerenciaId!: Primitives<EmployeeGerenciaId>
   // public coordinacionId!: Primitives<EmployeeCoordinacionId>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     // this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
     // this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // An employee belongs to a location
     // this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' }) // An employee belongs to a vicepresidencia
@@ -49,7 +46,7 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
     this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' }) // An employee has many histories
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     EmployeeModel.init(
       {
         id: {

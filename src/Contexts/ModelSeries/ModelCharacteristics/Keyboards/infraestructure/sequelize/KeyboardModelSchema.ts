@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/SubCategory/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
@@ -6,7 +6,7 @@ import { type KeyboardModelsPrimitives } from '../../domain/KeyboadModels'
 import { type InputTypeId } from '../../../../InputType/domain/InputTypeId'
 import { type HasFingerPrintReader } from '../../domain/HasFingerPrintReader'
 import { type CategoryId } from '../../../../../Category/SubCategory/domain/CategoryId'
-import { type SequelizeClientFactory } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsPrimitives, 'name' | 'brandId' | 'generic'> {
   modelSeriesId: Primitives<ModelSeriesId>
@@ -19,17 +19,12 @@ export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes>
   public inputTypeId!: Primitives<InputTypeId>
   public hasFingerPrintReader!: Primitives<HasFingerPrintReader>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
-
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A keyboard model belongs to a model
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A keyboard model belongs to a category
     this.belongsTo(models.InputType, { as: 'inputType', foreignKey: 'inputTypeId' }) // A keyboard model belongs to a InputTypes
   }
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     KeyboardModelsModel.init(
       {
         id: {

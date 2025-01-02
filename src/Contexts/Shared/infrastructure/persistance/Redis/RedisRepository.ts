@@ -1,8 +1,8 @@
 import { createClient, type RedisClientType } from 'redis'
-import { type CacheRepository } from '../../../domain/CacheRepository'
 import { config } from '../../config'
+import { type CacheRepository } from '../../../domain/CacheRepository'
+import { type Logger } from '../../../domain/Logger'
 export class RedisRepository implements CacheRepository {
-
     private readonly client: RedisClientType = createClient({
         password: config.redis.password,
         socket: {
@@ -11,18 +11,16 @@ export class RedisRepository implements CacheRepository {
         }
     })
 
-    constructor() {
-        this.client.on('error', (err) => console.error('Redis Client Error', err))
-
-        this.init()
+    constructor(private readonly logger: Logger) {
+        this.client.on('error', (error) => this.logger.error(`'Redis Client Error', ${error}`))
     }
 
-    async init() {
+    async connect(): Promise<void> {
         try {
             await this.client.connect()
-            console.log('Connected to Redis')
+            this.logger.info('Connected to Redis')
         } catch (error) {
-            console.error('Error connecting to Redis', error)
+            this.logger.error(`'Error connecting to Redis', ${error}`)
         }
     }
 
@@ -31,7 +29,7 @@ export class RedisRepository implements CacheRepository {
             const value = await this.client.get(key)
             return value
         } catch (error) {
-            console.error('Error getting value from Redis', error)
+            this.logger.error(`'Error getting value from Redis', ${error}`)
             return null
         }
     }
@@ -40,14 +38,14 @@ export class RedisRepository implements CacheRepository {
         try {
             await this.client.set(key, value)
         } catch (error) {
-            console.error('Error setting value in Redis: ', error)
+            this.logger.error(`'Error setting value in Redis: ', ${error}`)
         }
     }
     async del(key: string): Promise<void> {
         try {
             await this.client.del(key)
         } catch (error) {
-            console.error('Error deleting value in Redis: ', error)
+            this.logger.error(`'Error deleting value in Redis: ', ${error}`)
         }
     }
 

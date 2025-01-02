@@ -9,12 +9,12 @@ import { type UserPrimitives } from '../domain/User'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserFinder {
-  constructor(private readonly repository: UserRepository) { }
+  constructor(private readonly userRepository: UserRepository) { }
 
   async run({ id, user }: { user?: JwtPayloadUser, id: Primitives<UserId> }): Promise<Omit<UserPrimitives, 'password'>> {
     isSuperAdmin({ user })
     const userId = new UserId(id).value
-    const findUser = await this.repository.searchById(userId)
+    const findUser = await this.userRepository.searchById(userId)
 
     if (findUser === null) {
       throw new UserDoesNotExistError(userId)

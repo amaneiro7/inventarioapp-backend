@@ -8,7 +8,7 @@ import { type RoleRepository } from '../../Role/domain/RoleRepository'
 
 export class UserRegister {
   constructor(
-    private readonly repository: UserRepository,
+    private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
   ) { }
 
@@ -17,7 +17,7 @@ export class UserRegister {
     isSuperAdmin({ user })
 
     // se valida que el correo no exista
-    await UserEmail.ensureEmailDoesNotExit({ repository: this.repository, email: payload.email })
+    await UserEmail.ensureEmailDoesNotExit({ repository: this.userRepository, email: payload.email })
     // se valida que el roleId exista
     await UserRole.ensureRoleExit({ repository: this.roleRepository, role: payload.roleId })
 
@@ -25,6 +25,6 @@ export class UserRegister {
     const userEntity = User.create(payload)
 
     // se persiste el usuario en el repositorio
-    await this.repository.save(userEntity.toPrimitives())
+    await this.userRepository.save(userEntity.toPrimitives())
   }
 }

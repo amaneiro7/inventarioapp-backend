@@ -1,3 +1,4 @@
+import { type RolePrimitives } from '../../User/Role/domain/Role'
 import { type UserPrimitives } from '../../User/user/domain/User'
 
 type UserProps = UserPrimitives & {
@@ -9,10 +10,7 @@ type UserProps = UserPrimitives & {
 
 export function SendUserWithoutPassowrd(
   user: UserPrimitives & {
-    role: {
-      id: number
-      name: string
-    }
+    role: RolePrimitives
   },
   token: string
 ): {

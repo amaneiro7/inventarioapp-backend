@@ -5,19 +5,23 @@ import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type BrandRepository } from '../domain/BrandRepository'
 
 export class BrandCreator {
-  constructor(private readonly repository: BrandRepository) { }
+  constructor(private readonly brandRepository: BrandRepository) { }
 
   async run({ name }: Omit<BrandPrimitives, 'id'>): Promise<void> {
     await this.ensureBrandDoesNotExist(name)
 
     const brand = Brand.create({ name })
 
-    await this.repository.save(brand.toPrimitive())
+    await this.brandRepository.save(brand.toPrimitive())
   }
 
   private async ensureBrandDoesNotExist(name: Primitives<BrandName>): Promise<void> {
-    if (await this.repository.searchByName(name) !== null) {
+    if (await this.brandRepository.searchByName(name) !== null) {
       throw new BrandAlreadyExistError(name)
     }
   }
 }
+
+
+
+

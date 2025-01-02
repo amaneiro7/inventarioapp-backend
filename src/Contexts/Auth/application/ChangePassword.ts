@@ -8,7 +8,7 @@ import { JwtPayloadUser } from '../domain/GenerateToken'
 import { type UserRepository } from '../../User/user/domain/UserRepository'
 
 export class ChangePassword {
-  constructor(private readonly repository: UserRepository) { }
+  constructor(private readonly userRepository: UserRepository) { }
 
   async run({
     payload,
@@ -25,7 +25,7 @@ export class ChangePassword {
       throw new InvalidArgumentError('wrong payload')
     }
     const userId = new UserId(payload.sub).value
-    const user = await this.repository.searchById(userId)
+    const user = await this.userRepository.searchById(userId)
     if (user === null) {
       throw new UserDoesNotExistError(payload.sub)
     }
@@ -37,6 +37,6 @@ export class ChangePassword {
     }
     const userEntity = User.fromPrimitives(user)
     userEntity.updatePassword(newPassword)
-    await this.repository.save(userEntity.toPrimitives())
+    await this.userRepository.save(userEntity.toPrimitives())
   }
 }

@@ -1,7 +1,7 @@
-import { Model, ModelStatic } from "sequelize"
-import { SequelizeClientFactory } from "./SequelizeConfig"
+import { type Model, type ModelStatic, type Sequelize } from "sequelize"
 
-export type SequelizeModels = SequelizeClientFactory['models'] & {
+
+export type SequelizeModels = Sequelize['models'] & {
     Category: ModelStatic<Model<any>>
     MainCategory: ModelStatic<Model<any>>
     Brand: ModelStatic<Model<any>>

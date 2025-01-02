@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type UserId } from '../../../domain/UserId'
 import { type UserEmail } from '../../../domain/UserEmail'
@@ -7,7 +7,6 @@ import { type RoleId } from '../../../../Role/domain/RoleId'
 import { type UserLastName } from '../../../domain/UserLastName'
 import { type UserPassword } from '../../../domain/UserPassword'
 import { type UserPrimitives } from '../../../domain/User'
-import { type SequelizeClientFactory } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
   readonly id!: Primitives<UserId>
@@ -17,17 +16,12 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
   readonly lastName!: Primitives<UserLastName>
   readonly password!: Primitives<UserPassword>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
-
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' }) // A user belongs to a role
     this.hasMany(models.History, { as: 'history', foreignKey: 'userId' }) // A user can have many history
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     UserModel.init(
       {
         id: {

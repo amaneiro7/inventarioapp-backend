@@ -7,7 +7,7 @@ import { type DeviceRepository } from '../../domain/DeviceRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/DeviceId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 import container from '../../../../../apps/dependency-injections'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
@@ -23,7 +23,7 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { CategoryModel } from '../../../../Category/SubCategory/infrastructure/Sequelize/CategorySchema'
 
 export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
-  private readonly sequelize: SequelizeClientFactory = container.get('Shared.SequelizeConfig')
+  private readonly sequelize: Sequelize = container.get('Shared.SequelizeConfig')
   private readonly models = this.sequelize.models
   private readonly cacheKey: string = 'devices'
   constructor(private readonly cache: CacheRepository) {

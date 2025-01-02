@@ -1,4 +1,0 @@
-services:
-  Apps.Inventroy.Backend.controllers.AuthLoginController:
-    class: ../../controllers/auth.login.controller
-    arguments: ['@']

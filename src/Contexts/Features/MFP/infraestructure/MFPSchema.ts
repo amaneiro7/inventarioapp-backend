@@ -1,11 +1,11 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../Category/SubCategory/domain/Category'
 import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type MFPIPAddress } from '../domain/MFPIPAddress'
 import { type DeviceMFPPrimitives } from '../domain/MFP'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../Category/SubCategory/domain/CategoryId'
-import { type SequelizeClientFactory } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
   deviceId: Primitives<DeviceId>
@@ -16,18 +16,15 @@ export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPC
   readonly categoryId!: Primitives<CategoryId>
   readonly ipAddress!: Primitives<MFPIPAddress>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' }) // A computer belongs to a device
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category    
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     DeviceMFPModel.init(
       {
         id: {

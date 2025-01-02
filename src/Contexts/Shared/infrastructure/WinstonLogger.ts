@@ -1,5 +1,5 @@
 import winston, { Logger as WindowsLoggerType } from 'winston'
-import Logger from '../domain/Logger'
+import { type Logger } from '../domain/Logger'
 
 enum Levels {
     DEBUG = 'debug',
@@ -7,7 +7,7 @@ enum Levels {
     INFO = "info"
 }
 
-export default class WinstonLogger implements Logger {
+export class WinstonLogger implements Logger {
     private logger: WindowsLoggerType
 
     constructor() {
@@ -38,6 +38,4 @@ export default class WinstonLogger implements Logger {
     info(message: string): void {
         this.logger.log(Levels.INFO, message)
     }
-
-
 }

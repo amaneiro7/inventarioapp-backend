@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
@@ -6,7 +6,7 @@ import { type ModelSeriesName } from '../../domain/ModelSeriesName'
 import { type CategoryId } from '../../../../Category/SubCategory/domain/CategoryId'
 import { type BrandId } from '../../../../Brand/domain/BrandId'
 import { type Generic } from '../../domain/Generic'
-import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements ModelSeriesPrimitives {
   readonly id!: Primitives<ModelSeriesId>
@@ -15,12 +15,9 @@ export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements Mo
   readonly brandId!: Primitives<BrandId>
   readonly generic!: Primitives<Generic>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A model series belongs to a category
     this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' }) // A model series belongs to a brand
     this.hasMany(models.Device, { as: 'device', foreignKey: 'modelId' }) // A model series can have many devices
@@ -32,7 +29,7 @@ export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements Mo
     this.hasOne(models.ModelMouse, { as: 'modelMouse', foreignKey: 'modelSeriesId' }) // A model series has one keyboard model (if it is a keyboard)
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     ModelSeriesModel.init(
       {
         id: {

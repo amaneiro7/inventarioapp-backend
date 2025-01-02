@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type DeviceComputerPrimitives } from '../../domain/Computer'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
@@ -13,7 +13,7 @@ import { type ComputerHardDriveType } from '../../domain/ComputerHardDriveType'
 import { type ComputerOperatingSystem } from '../../domain/ComputerOperatingSystem'
 import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingSystemArq'
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
-import { type SequelizeClientFactory } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 import { CategoryValues } from '../../../../Category/SubCategory/domain/Category'
 
 
@@ -37,12 +37,9 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
   readonly macAddress!: Primitives<MACAddress>
   readonly ipAddress!: Primitives<IPAddress>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A computer belongs to a device
     this.belongsTo(models.Processor, { as: 'processor', foreignKey: 'processorId' }) // A computer belongs to a processor
@@ -52,7 +49,7 @@ export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes>
     this.belongsTo(models.OperatingSystemArq, { as: 'operatingSystemArq', foreignKey: 'operatingSystemArqId' }) // A computer belongs to an operating system arq
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     DeviceComputerModel.init(
       {
         id: {

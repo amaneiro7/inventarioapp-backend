@@ -13,41 +13,46 @@ import httpStatus from '../Contexts/Shared/infrastructure/utils/http-status' // 
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
 import { morganLog } from './Shared/Middleware/morgan'
 
-
-import { routerApi } from './Shared/Routes'
 import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
+import { type Logger } from '../Contexts/Shared/domain/Logger'
+import { registerRoutes } from './routes'
+import { logger, passportManager } from './di/container'
 
 export class Server {
-  private readonly express: express.Express
-  private readonly port: string
-  private httpServer?: http.Server
+  private express: express.Express
+  readonly port: string
+  private logger: Logger
+  httpServer?: http.Server
 
   constructor(port: string) {
     this.port = port
+    this.logger = logger
     this.express = express()
 
-    // Middlewares
-    this.setupMiddlewares()
-
-    // Ruta para validar el funcionamiento del servidor
-    this.express.get('/', (req: Request, res: Response) => {
-      res.send("Servidor de Inventario funcionando correctamente")
-    })
-
-    // Configuración de rutas
-    this.setupRoutes()
-  }
-
-  private setupMiddlewares(): void {
     // Middleware para parsear JSON
     this.express.use(json())
+
     // Middleware para parsear URL-encoded
     this.express.use(urlencoded({ extended: true }))
+
     // Middleware de seguridad con Helmet    
     this.express.use(helmet.xssFilter())
     this.express.use(helmet.noSniff())
     this.express.use(helmet.hidePoweredBy())
     this.express.use(helmet.frameguard({ action: 'deny' }))
+
+    // Middleware para comprimir las respuestas
+    this.express.use(compress({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          // don't compress responses with this request header
+          return false
+        }
+        // fallback to standard filter function
+        return compress.filter(req, res)
+      }
+    }))
+
     // Middleware para el rate limit
     this.express.use(limiter)
 
@@ -63,26 +68,13 @@ export class Server {
     // Middleware para cookies firmadas
     this.express.use(cookieParser())
 
-    // Middleware para comprimir las respuestas
-    this.express.use(compress({
-      filter: (req, res) => {
-        if (req.headers['x-no-compression']) {
-          // don't compress responses with this request header
-          return false
-        }
-        // fallback to standard filter function
-        return compress.filter(req, res)
-      }
-    }))
 
-    // Middlewares opcionales de cache
-    // this.express.use(cacheMiddleware)
-    // this.express.use(expiresMiddleware)
-    // this.express.use(lastModifiedMiddleware)
-    // this.express.use(etagMiddleware)
-  }
+    // Ruta para validar el funcionamiento del servidor
+    this.express.get('/', (req: Request, res: Response) => {
+      res.send("Servidor de Inventario funcionando correctamente")
+    })
 
-  private setupRoutes(): void {
+    // Configuración de rutas
     const router = Router()
 
     if (!config.isProd) {
@@ -90,12 +82,17 @@ export class Server {
     }
 
     this.express.use(router)
+    this.express.use('/api/v1/', router)
+
+    passportManager.initialize()
 
     // Configuración de rutas
-    routerApi({ app: this.express, repository })
+    registerRoutes(router)
+    // routerApi({ app: this.express, repository })
 
     // Manejo de errores global
     router.use((err: Error, req: Request, res: Response, _next: () => void) => {
+      this.logger.error(err)
       res.status(httpStatus.BAD_REQUEST).send(err.message)
     })
   }
@@ -104,8 +101,8 @@ export class Server {
     await new Promise<void>(resolve => {
       const env = this.express.get('env') as string
       this.httpServer = this.express.listen(this.port, () => {
-        console.log(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
-        console.log('  Press CTRL-C to stop\n')
+        this.logger.info(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
+        this.logger.info('  Press CTRL-C to stop\n')
         resolve()
       })
     })

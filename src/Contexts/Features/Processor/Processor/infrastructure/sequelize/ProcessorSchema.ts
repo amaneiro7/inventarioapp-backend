@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type ProcessorPrimitives } from '../../domain/Processor'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ProcessorId } from '../../domain/ProcessorId'
@@ -7,7 +7,7 @@ import { type ProcessorNumberModel } from '../../domain/ProcessorNumberModel'
 import { type ProcessorCores } from '../../domain/ProcessorCores'
 import { type ProcessorHasThreads } from '../../domain/ProcessorIsThreads'
 import { type ProcessorFrequency } from '../../domain/ProcessorFrequency'
-import { type SequelizeClientFactory } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 export class ProcessorModel extends Model<ProcessorPrimitives> implements ProcessorPrimitives {
   readonly id!: Primitives<ProcessorId>
@@ -18,16 +18,13 @@ export class ProcessorModel extends Model<ProcessorPrimitives> implements Proces
   readonly threads!: Primitives<ProcessorHasThreads>
   readonly frequency!: Primitives<ProcessorFrequency>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'processorId' }) // A processor can have many computer
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     ProcessorModel.init(
       {
         id: {

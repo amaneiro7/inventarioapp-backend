@@ -14,7 +14,7 @@ import { type UserRepository } from '../domain/UserRepository'
 interface Payload extends Omit<UserPrimitives, 'id' | 'password'> { }
 export class UserUpdater {
   constructor(
-    private readonly repository: UserRepository,
+    private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository
   ) { }
 
@@ -24,7 +24,7 @@ export class UserUpdater {
 
     // se busca el usuario al cual se le va a actualizar la contraseña
     const userId = new UserId(id).value
-    const userToUpdated = await this.repository.searchById(userId)
+    const userToUpdated = await this.userRepository.searchById(userId)
 
     // Si no existe, arroja un error
     if (userToUpdated === null) {
@@ -35,9 +35,9 @@ export class UserUpdater {
 
     await UserName.updateNameField({ entity: userEntity, name: payload.name })
     await UserLastName.updateLastNameField({ entity: userEntity, lastName: payload.lastName })
-    await UserEmail.updateEmailField({ repository: this.repository, entity: userEntity, email: payload.email })
+    await UserEmail.updateEmailField({ repository: this.userRepository, entity: userEntity, email: payload.email })
     await UserRole.updateStatusField({ repository: this.roleRepository, entity: userEntity, role: payload.roleId })
 
-    await this.repository.save(userEntity.toPrimitives())
+    await this.userRepository.save(userEntity.toPrimitives())
   }
 }

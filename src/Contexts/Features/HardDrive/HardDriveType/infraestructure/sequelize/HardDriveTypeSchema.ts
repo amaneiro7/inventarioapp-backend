@@ -1,25 +1,22 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type HardDriveTypePrimitives } from '../../domain/HardDriveType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type HardDriveTypeName } from '../../domain/HardDriveTypeName'
 import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
-import { type SequelizeClientFactory } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+
 
 export class HardDriveTypeModel extends Model<HardDriveTypePrimitives> implements HardDriveTypePrimitives {
   readonly id!: Primitives<HardDriveTypeId>
   readonly name!: Primitives<HardDriveTypeName>
 
-  static async createModel(sequelize: SequelizeClientFactory): Promise<void> {
-    await this.initialize(sequelize)
-    await this.associate(sequelize.models)
-  }
 
-  private static async associate(models: SequelizeClientFactory['models']): Promise<void> {
+
+  static async associate(models: Sequelize['models']): Promise<void> {
     this.hasMany(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'hardDriveTypeId' }) // A hard drive type can have many hard drive
     this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'hardDriveTypeId' }) // A hard drive type can have many computer
   }
 
-  private static async initialize(sequelize: SequelizeClientFactory): Promise<void> {
+  static async initialize(sequelize: Sequelize): Promise<void> {
     HardDriveTypeModel.init(
       {
         id: {

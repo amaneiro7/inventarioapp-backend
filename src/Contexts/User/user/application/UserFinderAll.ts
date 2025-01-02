@@ -5,12 +5,12 @@ import { RoleId } from '../../Role/domain/RoleId'
 import { UserRepository } from '../domain/UserRepository'
 
 export class UserFinderAll {
-  constructor(private readonly repository: UserRepository) { }
+  constructor(private readonly userRepository: UserRepository) { }
 
   async search({ user }: { user?: JwtPayloadUser }): Promise<UserPrimitivesOptional[]> {
     isSuperAdmin({ user })
 
-    const users = await this.repository.searchAll()
+    const users = await this.userRepository.searchAll()
       // Se bloquea exponer los datos del usuario admin
       .then(res => res.filter(user => user.roleId !== RoleId.Options.ADMIN))
       // Se elimina la propiedad password, por alguna razon con sequelize
