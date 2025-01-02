@@ -3,7 +3,7 @@ import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/
 import { type EmployeePrimitives } from '../../domain/Employee'
 import { type EmployeeRepository } from '../../domain/EmployeeRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
 import { CacheService } from '../../../../Shared/domain/CacheService'
@@ -14,11 +14,11 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
   private readonly models = this.sequelize.models
 
   private readonly cacheKey: string = 'employees'
-  constructor(private readonly cache: CacheRepository) {
+  constructor(private readonly cache: CacheService) {
     super()
   }
   async searchAll(): Promise<EmployeePrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await EmployeeModel.findAll()
     })
 
@@ -60,13 +60,13 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
       employee.set({ ...payload })
       await employee.save()
     }
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 
   async remove(id: string): Promise<void> {
     await EmployeeModel.destroy({ where: { id } })
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 }

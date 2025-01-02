@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type VicepresidenciaEjecutivaPrimitives } from '../../domain/VicepresidenciaEjecutiva'
 import { type VicepresidenciaEjecutivaId } from '../../domain/VicepresidenciaEjecutivaId'
@@ -8,9 +8,9 @@ import { VicepresidenciaEjecutivaModel } from './VicepresidenciaEjecutivaSchema'
 
 export class SequelizeVicepresidenciaEjecutivaRepository implements VicepresidenciaEjecutivaRepository {
   private readonly cacheKey: string = 'vicepresidenciasEjecutivas'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<VicepresidenciaEjecutivaPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await VicepresidenciaEjecutivaModel.findAll()
     })
   }

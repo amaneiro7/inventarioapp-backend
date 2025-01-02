@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SitePrimitives } from '../../domain/Site'
@@ -8,9 +8,9 @@ import { SiteModels } from './SiteSchema'
 
 export class SequelizeSiteRepository implements SiteRepository {
   private readonly cacheKey: string = 'sites'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<SitePrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await SiteModels.findAll({
         include: [
           {
@@ -36,7 +36,7 @@ export class SequelizeSiteRepository implements SiteRepository {
       employee.set({ ...payload })
       await employee.save()
     }
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 }

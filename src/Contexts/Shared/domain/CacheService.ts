@@ -1,4 +1,4 @@
-import { CacheRepository } from "./CacheRepository"
+import { type CacheRepository } from "./CacheRepository"
 
 export class CacheService {
     constructor(private readonly cache: CacheRepository) { }

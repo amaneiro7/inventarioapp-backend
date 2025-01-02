@@ -9,7 +9,7 @@ import { type Models } from '../../../../Shared/infrastructure/persistance/Seque
 import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesRepository } from '../../domain/ModelSeriesRepository'
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { ComputerModels } from '../../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
 import { LaptopsModels } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
 import { MonitorModels } from '../../../ModelCharacteristics/Monitors/domain/MonitorModels'
@@ -27,11 +27,11 @@ import { ModelApiresponse } from '../../../../Device/Device/infrastructure/seque
 export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
   private readonly models = sequelize.models as unknown as Models
   private readonly cacheKey: string = 'modelSeries'
-  constructor(private readonly cache: CacheRepository) {
+  constructor(private readonly cache: CacheService) {
     super()
   }
   async searchAll(): Promise<ModelSeriesPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await ModelSeriesModel.findAll({
         include: [
           'category',
@@ -124,7 +124,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
         await this.createModelMouseIfCategoryMatches(id, payload, t)
       }
       await t.commit()
-      await await new CacheService(this.cache).removeCachedData(this.cacheKey)
+      await await this.cache.removeCachedData(this.cacheKey)
       await this.searchAll()
     } catch (error: any) {
       await t.rollback()
@@ -222,7 +222,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 
   async remove(id: string): Promise<void> {
     await ModelSeriesModel.destroy({ where: { id } })
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 

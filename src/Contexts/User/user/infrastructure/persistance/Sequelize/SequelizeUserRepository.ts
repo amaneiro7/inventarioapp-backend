@@ -3,19 +3,18 @@ import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/Use
 import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { type CacheRepository } from '../../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { UserModel } from './UserSchema'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { UsersAssociation } from './UsersAssociation'
-import { CacheService } from '../../../../../Shared/domain/CacheService'
 
 export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
   private readonly cacheKey: string = 'users'
-  constructor(private readonly cache: CacheRepository) {
+  constructor(private readonly cache: CacheService) {
     super()
   }
   async searchAll(): Promise<UserPrimitivesOptional[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await UserModel.findAll({
         include: ['role']
       })
@@ -51,13 +50,13 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
       user.set({ ...payload })
       await user.save()
     }
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 
   async delete(id: Primitives<UserId>): Promise<void> {
     await UserModel.destroy({ where: { id } })
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
 
   }

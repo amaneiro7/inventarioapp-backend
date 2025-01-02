@@ -1,6 +1,6 @@
 import { createClient, type RedisClientType } from 'redis'
 import { config } from '../../config'
-import { type CacheRepository } from '../../../domain/CacheRepository'
+import { type CacheService } from '../../../domain/CacheRepository'
 import { type Logger } from '../../../domain/Logger'
 export class RedisRepository implements CacheRepository {
     private readonly client: RedisClientType = createClient({

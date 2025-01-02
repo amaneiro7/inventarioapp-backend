@@ -1,6 +1,6 @@
 import { CategoryModel } from './CategorySchema'
 import { CacheService } from '../../../../Shared/domain/CacheService'
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CategoryPrimitives } from '../../domain/Category'
 import { type CategoryId } from '../../domain/CategoryId'
@@ -9,9 +9,9 @@ import { type CategoryRepository } from '../../domain/CategoryRepository'
 
 export class SequelizeCategoryRepository implements CategoryRepository {
   private readonly cacheKey: string = 'categories'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<CategoryPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await CategoryModel.findAll({
         include: ['mainCategory'],
         order: [

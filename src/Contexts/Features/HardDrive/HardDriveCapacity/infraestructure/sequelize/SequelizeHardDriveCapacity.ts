@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityPrimitives } from '../../domain/HardDriveCapacity'
@@ -8,9 +8,9 @@ import { HardDriveCapacityModel } from './HardDriveCapacitySchema'
 
 export class SequelizeHardDriveCapacityRepository implements HardDriveCapacityRepository {
   private readonly cacheKey: string = 'hardDriveCapacities'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<HardDriveCapacityPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await HardDriveCapacityModel.findAll()
     })
   }

@@ -8,6 +8,7 @@ import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 
+
 export class InventarioBackendApp {
   server?: Server
   private readonly logger: Logger = container.resolve(SharedDependencies.Logger)

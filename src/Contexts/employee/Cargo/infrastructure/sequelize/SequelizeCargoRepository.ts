@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoPrimitives } from '../../domain/Cargo'
 import { type CargoId } from '../../domain/CargoId'
@@ -8,9 +8,9 @@ import { CargoModel } from './CargoSchema'
 
 export class SequelizeCargoRepository implements CargoRepository {
   private readonly cacheKey: string = 'cargos'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<CargoPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await CargoModel.findAll()
     })
 

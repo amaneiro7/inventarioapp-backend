@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypePrimitives } from '../../domain/MemoryRamType'
 import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
@@ -8,9 +8,9 @@ import { CacheService } from '../../../../../Shared/domain/CacheService'
 
 export class SequelizeMemoryRamTypeRepository implements MemoryRamTypeRepository {
   private readonly cacheKey: string = 'memoryRamType'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<MemoryRamTypePrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await MemoryRamTypeModel.findAll()
     })
   }

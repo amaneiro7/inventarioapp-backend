@@ -1,4 +1,4 @@
-import { CacheRepository } from '../../../Shared/domain/CacheRepository'
+import { CacheRepository } from '../../../Shared/domain/CacheService'
 import { CacheService } from '../../../Shared/domain/CacheService'
 import { type BrandPrimitives } from '../../domain/Brand'
 import { type BrandRepository } from '../../domain/BrandRepository'
@@ -6,9 +6,9 @@ import { BrandModel } from './BrandSchema'
 
 export class SequelizeBrandRepository implements BrandRepository {
   private readonly cacheKey: string = 'brands'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<BrandPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await BrandModel.findAll({
         include: [
           {
@@ -36,13 +36,13 @@ export class SequelizeBrandRepository implements BrandRepository {
       brand.set({ ...payload })
       await brand.save()
     }
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 
   async remove(id: string): Promise<void> {
     await BrandModel.destroy({ where: { id } })
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 }

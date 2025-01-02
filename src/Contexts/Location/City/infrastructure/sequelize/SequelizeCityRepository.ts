@@ -1,4 +1,4 @@
-import { CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { CacheRepository } from '../../../../Shared/domain/CacheService'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CityPrimitives } from '../../domain/City'
@@ -8,9 +8,9 @@ import { CityModel } from './CitySchema'
 
 export class SequelizeCityRepository implements CityRepository {
   private readonly cacheKey: string = 'cities'
-  constructor(private readonly cache: CacheRepository) { }
+  constructor(private readonly cache: CacheService) { }
   async searchAll(): Promise<CityPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await CityModel.findAll({
         include: ['state']
       })

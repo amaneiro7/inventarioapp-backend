@@ -1,6 +1,6 @@
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import { type CacheRepository } from '../../../../Shared/domain/CacheRepository'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationPrimitives } from '../../domain/Location'
 import { type LocationId } from '../../domain/LocationId'
@@ -13,11 +13,11 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeLocationRepository extends CriteriaToSequelizeConverter implements LocationRepository {
   private readonly cacheKey: string = 'locations'
-  constructor(private readonly cache: CacheRepository) {
+  constructor(private readonly cache: CacheService) {
     super()
   }
   async searchAll(): Promise<LocationPrimitives[]> {
-    return await new CacheService(this.cache).getCachedData(this.cacheKey, async () => {
+    return await this.cache.getCachedData(this.cacheKey, async () => {
       return await LocationModel.findAll({
         include: [
           'typeOfSite',
@@ -91,7 +91,7 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
       employee.set({ ...payload })
       await employee.save()
     }
-    await new CacheService(this.cache).removeCachedData(this.cacheKey)
+    await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()
   }
 }

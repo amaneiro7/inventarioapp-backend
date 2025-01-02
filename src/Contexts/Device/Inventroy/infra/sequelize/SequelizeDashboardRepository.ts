@@ -6,13 +6,13 @@ import { OperatingSystemModel } from "../../../../Features/OperatingSystem/Opera
 import { TypeOfSiteModel } from "../../../../Location/TypeOfSite/infrastructure/sequelize/TypeOfSiteSchema"
 import { DeviceComputerModel } from "../../../../Features/Computer/infraestructure/sequelize/DeviceComputerSchema"
 import { TypeOfSiteId } from "../../../../Location/TypeOfSite/domain/TypeOfSiteId"
-import { type CacheRepository } from "../../../../Shared/domain/CacheRepository"
+import { type CacheService } from "../../../../Shared/domain/CacheService"
 import container from "../../../../../apps/dependency-injections"
 
 export class SequelizeDashboardRepository implements DashboardRepository {
     private readonly sequelize = container.get('Shared.SequelizeConfig')
     private readonly cacheKey: string = 'dashboard'
-    constructor(private readonly cache: CacheRepository) { }
+    constructor(private readonly cache: CacheService) { }
     async totalDevice(): Promise<{}> {
         return DeviceModel.count()
     }
