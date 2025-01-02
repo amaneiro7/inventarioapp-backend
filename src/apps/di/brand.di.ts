@@ -8,10 +8,20 @@ import { BrandGetFinderAllController } from '../controllers/brand.getFinderAll.c
 import { BrandGetFinderController } from '../controllers/brand.getFinder.controller'
 import { BrandPostController } from '../controllers/brand.post.controller'
 import { SequelizeBrandRepository } from '../../Contexts/Brand/infrastructure/Sequelize/SequelizeBrandRepository'
-//import { container } from './container'
+
+export enum BrandDependencies {
+    Repository = 'brandRepository',
+    Creator = 'brandCreator',
+    Finder = 'brandFinder',
+    FinderAll = 'brandFinderAll',
+    Updater = 'brandUpdater',
+    GetController = 'brandGetController',
+    GetAllController = 'brandGetAllController',
+    PostController = 'brandPostController',
+    PatchController = 'brandPatchController',
+}
 
 export const register = (container: AwilixContainer) => {
-
     container.register({
         brandRepository: asClass(SequelizeBrandRepository).singleton(),
         brandCreator: asClass(BrandCreator),
