@@ -12,7 +12,7 @@ import { type UserGetByEmailController } from '../controllers/user/user.get-by-e
 import { type UserChangePasswordController } from '../controllers/user/user.change-password.controller'
 import { type UserResetPasswordController } from '../controllers/user/user.reset-password.controller'
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: UserGetController = container.resolve(UserDependencies.GetController)
     const getAllController: UserGetAllController = container.resolve(UserDependencies.GetAllController)
     const postController: UserPostController = container.resolve(UserDependencies.PostController)

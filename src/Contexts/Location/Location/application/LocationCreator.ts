@@ -9,7 +9,7 @@ import { type SiteRepository } from '../../Site/domain/SiteRepository'
 
 export class LocationCreator {
   constructor(
-    private readonly repository: LocationRepository,
+    private readonly locationRepository: LocationRepository,
     private readonly typeOfSiteRepository: TypeOfSiteRepository,
     private readonly siteRepository: SiteRepository
 
@@ -19,11 +19,11 @@ export class LocationCreator {
 
     const location = Location.create(params)
 
-    await LocationName.ensureNameDoesNotExit({ repository: this.repository, name: params.name })
+    await LocationName.ensureNameDoesNotExit({ repository: this.locationRepository, name: params.name })
     await LocationTypeOfSite.ensureTypeOfSiteExit({ repository: this.typeOfSiteRepository, typeOfSite: params.typeOfSiteId })
     await LocationSite.ensureSiteExit({ repository: this.siteRepository, site: params.siteId })
 
-    await this.repository.save(location.toPrimitive())
+    await this.locationRepository.save(location.toPrimitive())
   }
 
 }

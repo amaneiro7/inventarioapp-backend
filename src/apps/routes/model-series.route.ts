@@ -12,7 +12,7 @@ import { type ModelSeriesDownloadExcelServiceController } from '../controllers/m
 
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)
     const getAllController: ModelSeriesGetAllController = container.resolve(ModelSeriesDependencies.GetAllController)
     const postController: ModelSeriesPostController = container.resolve(ModelSeriesDependencies.PostController)

@@ -1,17 +1,16 @@
 import { type Request, type Response, type NextFunction } from "express"
 import { type Controller } from "../controller"
-import { type CityFinderAll } from "../../../Contexts/Location/City/application/CityFinderAll"
-
+import { type SiteFinder } from "../../../Contexts/Location/Site/application/SiteFinder"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { CityDependencies } from "../../di/city.di"
+import { SiteDependencies } from "../../di/site.di"
 
-
-export class CityGetAllController implements Controller {
+export class SiteGetController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const getAll: CityFinderAll = container.resolve(CityDependencies.FinderAll)
-            const data = await getAll.run()
+            const { id } = req.params
+            const get: SiteFinder = container.resolve(SiteDependencies.Finder)
+            const data = await get.run({ id })
             res.status(httpStatus.OK).json(data)
         } catch (error) {
             next(error)

@@ -5,7 +5,7 @@ import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
 import { OperatingSystemArqDependencies } from '../di/operating-system-arq.di'
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getAllController: OperatingSystemArqGetAllController = container.resolve(OperatingSystemArqDependencies.GetAllController)
 
     router.get('/operatingsystemarqs/',

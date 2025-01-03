@@ -83,11 +83,12 @@ export class Server {
     }
 
     this.express.use(router)
-    this.express.use('/api/v1/', router)
+    this.express.use('/api/v1/', router);
 
     // Configuración de rutas
-    registerRoutes(router)
-    // routerApi({ app: this.express, repository })
+    (async () => {
+      await registerRoutes(router)
+    })()
 
     // Manejo de errores global
     router.use((err: Error, req: Request, res: Response, _next: () => void) => {

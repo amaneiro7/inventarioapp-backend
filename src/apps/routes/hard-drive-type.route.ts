@@ -5,7 +5,7 @@ import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
 import { HardDriveTypeDependencies } from '../di/hard-drive-type.di'
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getAllController: HardDriveTypeGetAllController = container.resolve(HardDriveTypeDependencies.GetAllController)
 
     router.get('/harddrivetypes/',

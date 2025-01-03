@@ -6,11 +6,11 @@ import { SiteName } from "../domain/SiteName";
 import { type SiteRepository } from "../domain/SiteRepository";
 
 export class SiteUpdater {
-    constructor(private readonly repository: SiteRepository) { }
+    constructor(private readonly siteRepository: SiteRepository) { }
 
     async run({ id, params }: { id: string, params: Partial<Omit<SitePrimitives, 'id'>> }): Promise<void> {
         const siteId = new SiteId(id).value
-        const site = await this.repository.searchById(siteId)
+        const site = await this.siteRepository.searchById(siteId)
 
         if (!site) {
             throw new SiteDoesNotExistError(id);
@@ -21,6 +21,6 @@ export class SiteUpdater {
         await SiteName.updateNameField({ name: params.name, entity: siteEntity })
         await SiteAddress.updateAddressField({ address: params.address, entity: siteEntity })
 
-        await this.repository.save(siteEntity.toPrimitive())
+        await this.siteRepository.save(siteEntity.toPrimitive())
     }
 }

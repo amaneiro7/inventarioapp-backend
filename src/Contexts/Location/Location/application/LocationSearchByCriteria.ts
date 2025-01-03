@@ -9,8 +9,8 @@ import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCrite
 import { type LocationPrimitives } from '../domain/Location'
 import { type LocationRepository } from '../domain/LocationRepository'
 
-export class LocationByCriteriaSearcher {
-  constructor(private readonly repository: LocationRepository) { }
+export class LocationSearchByCriteria {
+  constructor(private readonly locationRepository: LocationRepository) { }
 
   async run(query: SearchByCriteriaQuery): Promise<LocationPrimitives[]> {
     const filters = query.filters.map((filter) => {
@@ -24,6 +24,6 @@ export class LocationByCriteriaSearcher {
       query.orderType
     )
     const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.repository.matching(criteria)
+    return await this.locationRepository.matching(criteria)
   }
 }

@@ -5,7 +5,7 @@ import { authenticate } from '../Shared/Middleware/authenticate'
 import { HistoryDependencies } from '../di/history.di'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getAllController: HistoryGetAllController = container.resolve(HistoryDependencies.GetAllController)
 
     router.get('/histories/',

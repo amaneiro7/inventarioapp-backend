@@ -8,7 +8,7 @@ import { type BrandGetFinderController } from '../controllers/brand/brand.getFin
 import { BrandDependencies } from '../di/brand.di'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: BrandGetFinderController = container.resolve(BrandDependencies.GetController)
     const getAllController: BrandGetFinderAllController = container.resolve(BrandDependencies.GetAllController)
     const postController: BrandPostController = container.resolve(BrandDependencies.PostController)

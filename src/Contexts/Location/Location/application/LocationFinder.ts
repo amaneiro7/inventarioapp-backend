@@ -4,14 +4,14 @@ import { type LocationPrimitives } from "../domain/Location"
 import { type LocationRepository } from "../domain/LocationRepository"
 
 export class LocationFinder {
-  constructor(private readonly repository: LocationRepository) { }
+  constructor(private readonly locationRepository: LocationRepository) { }
 
   async run(params: { id: string }): Promise<LocationPrimitives> {
     const { id } = params
     const locationId = new LocationId(id).value
-    const location = await this.repository.searchById(locationId)
+    const location = await this.locationRepository.searchById(locationId)
 
-    if (location === null) {
+    if (!location) {
       throw new LocationDoesNotExistError(locationId)
     }
 

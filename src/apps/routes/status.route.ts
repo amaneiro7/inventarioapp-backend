@@ -5,7 +5,7 @@ import { authenticate } from '../Shared/Middleware/authenticate'
 import { StatusDependencies } from '../di/status.di'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getAllController: StatusGetAllController = container.resolve(StatusDependencies.GetAllController)
 
 

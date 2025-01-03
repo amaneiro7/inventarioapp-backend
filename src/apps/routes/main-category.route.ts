@@ -6,7 +6,7 @@ import { authenticate } from '../Shared/Middleware/authenticate'
 import { MainCategoryDependencies } from '../di/main-category.di'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: MainCategoryGetController = container.resolve(MainCategoryDependencies.GetController)
     const getAllController: MainCategoryGetAllController = container.resolve(MainCategoryDependencies.GetAllController)
 

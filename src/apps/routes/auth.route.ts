@@ -8,7 +8,7 @@ import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/str
 import { AuthDependencies } from '../di/auth.di'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
 
   const authLoginController: AuthLoginController = container.resolve(AuthDependencies.LoginController)
   const authLogoutController: AuthLogoutController = container.resolve(AuthDependencies.LogoutController)

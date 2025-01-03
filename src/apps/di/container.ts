@@ -17,5 +17,4 @@ async function register(routePath: string, container: AwilixContainer) {
     await dependencies.register(container)
 }
 
-
-registerDI(container)
+(async () => await registerDI(container))()

@@ -8,9 +8,7 @@ import { type ProcessorGetController } from '../controllers/processor/processor.
 import { type ProcessorGetAllController } from '../controllers/processor/processor.get-all.controller'
 import { type ProcessorDeleteController } from '../controllers/processor/processor.delete.controller'
 
-
-
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: ProcessorGetController = container.resolve(ProcessorDependencies.GetController)
     const getAllController: ProcessorGetAllController = container.resolve(ProcessorDependencies.GetAllController)
     const postController: ProcessorPostController = container.resolve(ProcessorDependencies.PostController)

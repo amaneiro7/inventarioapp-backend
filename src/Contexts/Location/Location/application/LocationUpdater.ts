@@ -13,26 +13,26 @@ import { type SiteRepository } from "../../Site/domain/SiteRepository"
 
 export class LocationUpdater {
   constructor(
-    private readonly repository: LocationRepository,
+    private readonly locationRepository: LocationRepository,
     private readonly typeOfSiteRepository: TypeOfSiteRepository,
     private readonly siteRepository: SiteRepository
   ) { }
 
   async run({ id, params }: { id: Primitives<LocationId>, params: Partial<Omit<LocationPrimitives, 'id'>> }): Promise<void> {
     const locationId = new LocationId(id).value
-    const location = await this.repository.searchById(locationId)
+    const location = await this.locationRepository.searchById(locationId)
     if (location === null) {
       throw new LocationDoesNotExistError(id)
     }
 
     const locationEntity = Location.fromPrimitives(location)
 
-    await LocationName.updateNameField({ repository: this.repository, name: params.name, entity: locationEntity })
+    await LocationName.updateNameField({ repository: this.locationRepository, name: params.name, entity: locationEntity })
     await LocationSite.updateSiteField({ repository: this.siteRepository, entity: locationEntity, site: params.siteId })
     await LocationTypeOfSite.updateTypeOfSiteField({ repository: this.typeOfSiteRepository, entity: locationEntity, typeOfSite: params.typeOfSiteId })
     await LocationSubnet.updateSubnetField({ subnet: params.subnet, entity: locationEntity })
 
-    await this.repository.save(locationEntity.toPrimitive())
+    await this.locationRepository.save(locationEntity.toPrimitive())
 
   }
 }

@@ -4,7 +4,7 @@ import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
 import { RoleDependencies } from '../di/roles.di'
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getAllController: RoleGetAllController = container.resolve(RoleDependencies.GetAllController)
 
     router.get('/roles/',

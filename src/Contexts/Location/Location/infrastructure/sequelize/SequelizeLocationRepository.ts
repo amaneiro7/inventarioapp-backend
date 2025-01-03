@@ -9,7 +9,6 @@ import { LocationName } from '../../domain/LocationName'
 import { LocationAssociation } from './LocationAssociation'
 import { LocationApiResponse } from './LocationResponse'
 import { LocationModel } from './LocationSchema'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeLocationRepository extends CriteriaToSequelizeConverter implements LocationRepository {
   private readonly cacheKey: string = 'locations'

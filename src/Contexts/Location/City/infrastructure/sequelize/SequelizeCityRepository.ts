@@ -1,5 +1,4 @@
-import { CacheRepository } from '../../../../Shared/domain/CacheService'
-import { CacheService } from '../../../../Shared/domain/CacheService'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CityPrimitives } from '../../domain/City'
 import { type CityId } from '../../domain/CityId'

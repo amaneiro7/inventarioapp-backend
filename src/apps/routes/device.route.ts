@@ -12,7 +12,7 @@ import { type DeviceDeleteController } from '../controllers/device/device.delete
 import { type DeviceDownloadExcelServiceController } from '../controllers/device/device.downloadExcelService.controller'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
     // const getAllController: DeviceGetAllController = container.resolve(DeviceDependencies.GetAllController)
     const postController: DevicePostController = container.resolve(DeviceDependencies.PostController)

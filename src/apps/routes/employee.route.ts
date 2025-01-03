@@ -10,7 +10,7 @@ import { type EmployeeDeleteController } from '../controllers/employee/employee.
 import { type EmployeeGetAllController } from '../controllers/employee/employee.get-all.controller'
 
 
-export const register = (router: Router) => {
+export const register = async (router: Router) => {
     const getController: EmployeeGetController = container.resolve(EmployeeDependencies.GetController)
     const getAllController: EmployeeGetAllController = container.resolve(EmployeeDependencies.GetAllController)
     const postController: EmployeePostController = container.resolve(EmployeeDependencies.PostController)
