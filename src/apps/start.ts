@@ -1,11 +1,13 @@
 
 import { InventarioBackendApp } from "./InventarioBackendApp"
+(async () => {
+    try {
+        await new InventarioBackendApp().start().catch(handleError)
+    } catch (e) {
+        handleError(e)
+    }
 
-try {
-    new InventarioBackendApp().start().catch(handleError)
-} catch (e) {
-    handleError(e)
-}
+})()
 
 
 process.on('uncaughtException', err => {
