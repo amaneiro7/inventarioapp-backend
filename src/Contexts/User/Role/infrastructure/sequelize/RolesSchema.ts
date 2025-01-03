@@ -12,6 +12,7 @@ export class RolesModel extends Model<RolePrimitives> implements RolePrimitives 
 
 
   static async associate(models: Sequelize['models']): Promise<void> {
+    console.log('associating roles:', models.User)
     this.hasMany(models.User, { as: 'user', foreignKey: 'roleId' }) // A role can have many users
   }
 

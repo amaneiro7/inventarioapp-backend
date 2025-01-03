@@ -9,8 +9,8 @@ import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCrite
 import { type ModelSeriesPrimitives } from '../domain/ModelSeries'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
-export class ModelByCriteriaSearcher {
-  constructor(private readonly repository: ModelSeriesRepository) { }
+export class ModelSeriesSearchByCriteria {
+  constructor(private readonly modelSeriesRepository: ModelSeriesRepository) { }
 
   async run(query: SearchByCriteriaQuery): Promise<{ total: number, data: ModelSeriesPrimitives[] }> {
     const filters = query.filters.map((filter) => {
@@ -24,6 +24,6 @@ export class ModelByCriteriaSearcher {
       query.orderType
     )
     const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.repository.matching(criteria)
+    return await this.modelSeriesRepository.matching(criteria)
   }
 }

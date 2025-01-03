@@ -2,7 +2,6 @@ import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type HistoryPrimitives } from '../../domain/History'
 import { type HistoryRepository } from '../../domain/HistoryRepository'
 import { HistoryModel } from './HistorySchema'
-import { CacheService } from '../../../Shared/domain/CacheService'
 
 export class SequelizeHistoryRepository implements HistoryRepository {
   private readonly cacheKey: string = 'histories'

@@ -1,0 +1,14 @@
+import { type Router } from 'express'
+import { type RoleGetAllController } from '../controllers/roles/role.get-all.controller'
+import { container } from '../di/container'
+import { authenticate } from '../Shared/Middleware/authenticate'
+import { RoleDependencies } from '../di/roles.di'
+
+export const register = (router: Router) => {
+    const getAllController: RoleGetAllController = container.resolve(RoleDependencies.GetAllController)
+
+    router.get('/roles/',
+        authenticate,
+        getAllController.run.bind(getAllController)
+    )
+}

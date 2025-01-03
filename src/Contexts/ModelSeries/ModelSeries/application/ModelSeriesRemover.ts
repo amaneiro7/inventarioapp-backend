@@ -4,21 +4,21 @@ import { ModelSeriesId } from '../domain/ModelSeriesId'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesRemover {
-  constructor(private readonly repository: ModelSeriesRepository) { }
+  constructor(private readonly modelSeriesRepository: ModelSeriesRepository) { }
 
   async run(params: { id: string }): Promise<void> {
     const { id } = params
     const modelSeriesId = new ModelSeriesId(id)
 
-    const modelSeries = await this.repository.searchAll()
+    const modelSeries = await this.modelSeriesRepository.searchAll()
     if (modelSeries.length > 0) {
       throw new ModelSeriesCannotDeleteIsNotEmptyError()
     }
-    const modelSerie = await this.repository.searchById(modelSeriesId.value)
+    const modelSerie = await this.modelSeriesRepository.searchById(modelSeriesId.value)
     if (modelSerie === null) {
       throw new ModelSeriesDoesNotExistError(id)
     }
 
-    await this.repository.remove(modelSeriesId.value)
+    await this.modelSeriesRepository.remove(modelSeriesId.value)
   }
 }

@@ -37,7 +37,7 @@ import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 
 export class ModelSeriesUpdater {
   constructor(
-    private readonly repository: ModelSeriesRepository,
+    private readonly modelSeriesRepository: ModelSeriesRepository,
     private readonly inputTypeRepository: InputTypeRepository,
     private readonly memoryRamTypeRepository: MemoryRamTypeRepository,
     private readonly categoryRepository: CategoryRepository,
@@ -50,7 +50,7 @@ export class ModelSeriesUpdater {
 
     const modelSeriesId = new ModelSeriesId(id).value
 
-    const modelSeries = await this.repository.searchById(modelSeriesId)
+    const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
 
     if (modelSeries === null) {
       throw new ModelSeriesDoesNotExistError(id)
@@ -180,13 +180,13 @@ export class ModelSeriesUpdater {
       modelEntity = ModelSeries.fromPrimitives(modelSeries)
     }
     await this.updateMainModel({ params, entity: modelEntity })
-    await this.repository.save(modelEntity.toPrimitives())
+    await this.modelSeriesRepository.save(modelEntity.toPrimitives())
   }
 
   private async updateMainModel({ params, entity }: { params: ModelParams, entity: ModelSeries }): Promise<void> {
     await ModelSeriesCategory.updateCategoryField({ repository: this.categoryRepository, categoryId: params.categoryId, entity })
     await ModelSeriesBrand.updateBrandField({ repository: this.brandRepository, brandId: params.brandId, entity })
-    await ModelSeriesName.updateNameField({ repository: this.repository, name: params.name, entity })
+    await ModelSeriesName.updateNameField({ repository: this.modelSeriesRepository, name: params.name, entity })
     await Generic.updateGenericField({ generic: params.generic, entity })
   }
 }

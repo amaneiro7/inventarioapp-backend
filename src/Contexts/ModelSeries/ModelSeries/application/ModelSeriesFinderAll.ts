@@ -1,10 +1,10 @@
 import { type ModelSeriesPrimitives } from '../domain/ModelSeries'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
-export class SearchAllModelSeries {
-  constructor(private readonly repository: ModelSeriesRepository) { }
+export class ModelSeriesFinderAll {
+  constructor(private readonly modelSeriesRepository: ModelSeriesRepository) { }
 
   async run(): Promise<ModelSeriesPrimitives[]> {
-    return await this.repository.searchAll()
+    return await this.modelSeriesRepository.searchAll()
   }
 }

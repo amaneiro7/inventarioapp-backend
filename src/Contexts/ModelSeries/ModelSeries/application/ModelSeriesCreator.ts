@@ -23,7 +23,7 @@ export interface ModelParams extends Omit<ModelSeriesPrimitives, 'id'> { }
 // Create the ModelSeriesCreator class
 export class ModelSeriesCreator {
   constructor(
-    private readonly repository: ModelSeriesRepository,
+    private readonly modelSeriesRepository: ModelSeriesRepository,
     private readonly categoryRepository: CategoryRepository,
     private readonly brandRepository: BrandRepository,
     private readonly memoryRamTypeRepository: MemoryRamTypeRepository,
@@ -77,9 +77,9 @@ export class ModelSeriesCreator {
 
     await ModelSeriesCategory.ensureCategoryExist({ repository: this.categoryRepository, categoryId })
     await ModelSeriesBrand.ensureBrandExist({ repository: this.brandRepository, brandId })
-    await ModelSeriesName.ensureModelNameDoesNotExist({ repository: this.repository, name, brandId })
+    await ModelSeriesName.ensureModelNameDoesNotExist({ repository: this.modelSeriesRepository, name, brandId })
     // Save the model series
-    await this.repository.save(modelSeries.toPrimitives())
+    await this.modelSeriesRepository.save(modelSeries.toPrimitives())
   }
 }
 

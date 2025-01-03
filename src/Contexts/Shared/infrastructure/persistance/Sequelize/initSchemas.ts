@@ -82,6 +82,7 @@ export async function initilizarModels(sequelize: Sequelize): Promise<void> {
 
 // Define associations between different Sequelize models
 export async function defineAssociations(models: Sequelize['models']): Promise<void> {
+  console.log('defining associations')
   await CategoryModel.associate(models) // Sub Category Associations
   await MainCategoryModel.associate(models) // Main Category Associations
   await BrandModel.associate(models) // Brand Associations

@@ -4,7 +4,6 @@ import { type InputTypePrimitives } from '../../domain/InputType'
 import { type InputTypeId } from '../../domain/InputTypeId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeInputTypeRepository implements InputTypeRepository {
   private readonly cacheKey: string = 'inputTypes'

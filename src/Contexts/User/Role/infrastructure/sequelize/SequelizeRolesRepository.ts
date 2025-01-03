@@ -4,7 +4,6 @@ import { type RolePrimitives } from '../../domain/Role'
 import { type RoleRepository } from '../../domain/RoleRepository'
 import { RoleId } from '../../domain/RoleId'
 import { RolesModel } from './RolesSchema'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeRolesRepository implements RoleRepository {
   private readonly cacheKey: string = 'roles'

@@ -7,7 +7,7 @@ import { UserRepository } from '../domain/UserRepository'
 export class UserFinderAll {
   constructor(private readonly userRepository: UserRepository) { }
 
-  async search({ user }: { user?: JwtPayloadUser }): Promise<UserPrimitivesOptional[]> {
+  async run({ user }: { user?: JwtPayloadUser }): Promise<UserPrimitivesOptional[]> {
     isSuperAdmin({ user })
 
     const users = await this.userRepository.searchAll()

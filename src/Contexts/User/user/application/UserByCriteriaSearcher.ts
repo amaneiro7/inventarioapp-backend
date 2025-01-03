@@ -12,7 +12,7 @@ import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserPrimitivesOptional } from '../domain/User'
 import { type UserRepository } from '../domain/UserRepository'
 
-export class UserByCriteriaSearcher {
+export class UserSearchByCriteria {
     constructor(private readonly userRepository: UserRepository) { }
 
     async run({ user, query }: { user?: JwtPayloadUser, query: SearchByCriteriaQuery }): Promise<UserPrimitivesOptional[]> {

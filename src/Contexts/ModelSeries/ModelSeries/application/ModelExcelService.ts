@@ -8,8 +8,8 @@ import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
-export class ModelExcelService {
-    constructor(private readonly repository: ModelSeriesRepository) { }
+export class ModelSeriesExcelService {
+    constructor(private readonly modelSeriesRepository: ModelSeriesRepository) { }
     async run(query: SearchByCriteriaQuery): Promise<{}> {
 
         // Recuperar los datos de la base de datos usando Sequelize
@@ -25,7 +25,7 @@ export class ModelExcelService {
         )
         const criteria = new Criteria(new Filters(filters), order)
 
-        return await this.repository.donwload(criteria)
+        return await this.modelSeriesRepository.donwload(criteria)
     }
 
 }

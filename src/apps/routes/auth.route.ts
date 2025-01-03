@@ -14,16 +14,16 @@ export const register = (router: Router) => {
   const authLogoutController: AuthLogoutController = container.resolve(AuthDependencies.LogoutController)
   const authRefreshTokenController: AuthRefreshTokenController = container.resolve(AuthDependencies.RefreshTokenController)
 
-  router.post('auth/login/local',
+  router.post('/auth/login/local',
     passport.authenticate(StrategyOptions.LOCAL, { session: false }),
     authLoginController.run.bind(authLoginController)
   )
 
-  router.get('auth/refresh-token',
+  router.get('/auth/refresh-token',
     authRefreshTokenController.run.bind(authRefreshTokenController)
   )
 
-  router.post('auth/logout',
+  router.post('/auth/logout',
     authLogoutController.run.bind(authLogoutController)
   )
 }

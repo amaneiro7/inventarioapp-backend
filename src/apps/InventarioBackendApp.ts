@@ -1,7 +1,7 @@
 import { config } from '../Contexts/Shared/infrastructure/config'
 import { Server } from './server'
 import { sequelize } from '../Contexts/Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { initilizarModels } from '../Contexts/Shared/infrastructure/persistance/Sequelize/initSchemas'
+import { defineAssociations, initilizarModels } from '../Contexts/Shared/infrastructure/persistance/Sequelize/initSchemas'
 import { container } from './di/container'
 import { SharedDependencies } from './di/shared.di'
 import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
@@ -44,6 +44,8 @@ export class InventarioBackendApp {
       this.logger.info('Connection to database has been established successfully.')
       await initilizarModels(sequelize)
       this.logger.info('All models initilized.')
+      await defineAssociations(sequelize.models)
+      this.logger.info('All models associations initilized.')
     } catch (error) {
       this.logger.error(`'Unable to connect to the database:', ${error}`)
     }

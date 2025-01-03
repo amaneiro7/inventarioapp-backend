@@ -4,12 +4,11 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type Transaction } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-
-import { type Models } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeRepository'
 import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesRepository } from '../../domain/ModelSeriesRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 import { ComputerModels } from '../../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
 import { LaptopsModels } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
 import { MonitorModels } from '../../../ModelCharacteristics/Monitors/domain/MonitorModels'
@@ -18,14 +17,12 @@ import { ModelAssociation } from './ModelAssociation'
 import { ModelSeriesModel } from './ModelSeriesSchema'
 import { KeyboardModels } from '../../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
 import { MouseModels } from '../../../ModelCharacteristics/Mouses/domain/MouseModels'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { clearModelDataset } from './clearModelDataset'
-import { ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 
 export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
-  private readonly models = sequelize.models as unknown as Models
+  private readonly models = sequelize.models
   private readonly cacheKey: string = 'modelSeries'
   constructor(private readonly cache: CacheService) {
     super()

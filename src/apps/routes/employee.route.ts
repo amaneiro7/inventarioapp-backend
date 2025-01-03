@@ -7,10 +7,12 @@ import { type EmployeeGetController } from '../controllers/employee/employee.get
 import { type EmployeePostController } from '../controllers/employee/employee.post.controller'
 import { type EmployeePatchController } from '../controllers/employee/employee.patch.controller'
 import { type EmployeeDeleteController } from '../controllers/employee/employee.delete.controller'
+import { type EmployeeGetAllController } from '../controllers/employee/employee.get-all.controller'
 
 
 export const register = (router: Router) => {
     const getController: EmployeeGetController = container.resolve(EmployeeDependencies.GetController)
+    const getAllController: EmployeeGetAllController = container.resolve(EmployeeDependencies.GetAllController)
     const postController: EmployeePostController = container.resolve(EmployeeDependencies.PostController)
     const patchController: EmployeePatchController = container.resolve(EmployeeDependencies.PatchController)
     const searchByCriteria: EmployeeSearchByCriteriaController = container.resolve(EmployeeDependencies.GetByCriteriaController)
@@ -20,6 +22,10 @@ export const register = (router: Router) => {
     router.get('/employees/',
         authenticate,
         searchByCriteria.run.bind(searchByCriteria)
+    )
+    router.get('/employees/all',
+        authenticate,
+        getAllController.run.bind(getAllController)
     )
 
     router.get('/employees/:id',
