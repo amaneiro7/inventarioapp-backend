@@ -8,8 +8,8 @@ import { BrandDependencies } from "../../di/brand.di"
 export class BrandGetFinderAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const brandFinderAll: BrandFinderAll = container.resolve(BrandDependencies.FinderAll)
-            const data = await brandFinderAll.run()
+            const getAll: BrandFinderAll = container.resolve(BrandDependencies.FinderAll)
+            const data = await getAll.run()
             res.status(httpStatus.OK).json(data)
         } catch (error) {
             next(error)

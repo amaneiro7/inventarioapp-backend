@@ -9,13 +9,13 @@ import { type ProcessorParams } from './ProcessorCreator'
 export interface PartialProcessorParams extends Partial<ProcessorParams> { }
 
 export class ProcessorUpdater {
-  constructor(private readonly repository: ProcessorRepository) { }
+  constructor(private readonly processorRepository: ProcessorRepository) { }
 
   async run({ id, params }: { id: string, params: PartialProcessorParams }): Promise<void> {
     const { productCollection, numberModel, cores, frequency, threads } = params
     const processorId = new ProcessorId(id)
 
-    const processor = await this.repository.searchById(processorId.value)
+    const processor = await this.processorRepository.searchById(processorId.value)
     if (processor === null) {
       throw new ProcessorDoesNotExistError(processorId.value)
     }
@@ -43,11 +43,11 @@ export class ProcessorUpdater {
       processorEntity.updateFrequency(frequency)
     }
 
-    await this.repository.save(processorEntity.toPrimitive())
+    await this.processorRepository.save(processorEntity.toPrimitive())
   }
 
   private async ensureprocessorNumberValueDoesNotExist(numberModel: string): Promise<void> {
-    if (await this.repository.searchByNumberModel(new ProcessorNumberModel(numberModel).value) !== null) {
+    if (await this.processorRepository.searchByNumberModel(new ProcessorNumberModel(numberModel).value) !== null) {
       throw new ProcessorAlreadyExistError(numberModel)
     }
   }

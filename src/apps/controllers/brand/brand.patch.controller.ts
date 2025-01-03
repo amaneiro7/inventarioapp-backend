@@ -18,8 +18,8 @@ export class BrandPatchController implements Controller {
         try {
             const { name } = req.body
             const { id } = req.params
-            const brandUpdater: BrandUpdater = container.resolve(BrandDependencies.Updater)
-            await brandUpdater.run({ id, newName: name })
+            const update: BrandUpdater = container.resolve(BrandDependencies.Updater)
+            await update.run({ id, newName: name })
             res.status(httpStatus.CREATED).json({ message: 'Marca creada exitosamente' })
         } catch (error) {
             next(error)

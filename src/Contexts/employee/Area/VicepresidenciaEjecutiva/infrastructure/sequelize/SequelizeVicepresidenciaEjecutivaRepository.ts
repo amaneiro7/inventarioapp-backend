@@ -1,4 +1,3 @@
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type VicepresidenciaEjecutivaPrimitives } from '../../domain/VicepresidenciaEjecutiva'
 import { type VicepresidenciaEjecutivaId } from '../../domain/VicepresidenciaEjecutivaId'

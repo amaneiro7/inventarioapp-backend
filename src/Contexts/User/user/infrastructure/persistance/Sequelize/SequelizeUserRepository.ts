@@ -1,9 +1,10 @@
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
+import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
+
 import { UserModel } from './UserSchema'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { UsersAssociation } from './UsersAssociation'

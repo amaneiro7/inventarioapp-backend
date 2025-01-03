@@ -9,8 +9,8 @@ import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCrite
 import { type EmployeePrimitives } from '../domain/Employee'
 import { type EmployeeRepository } from '../domain/EmployeeRepository'
 
-export class EmployeeByCriteriaSearcher {
-  constructor(private readonly repository: EmployeeRepository) { }
+export class EmployeeSearchByCriteria {
+  constructor(private readonly employeeRepository: EmployeeRepository) { }
 
   async run(query: SearchByCriteriaQuery): Promise<EmployeePrimitives[]> {
     const filters = query.filters.map((filter) => {
@@ -24,6 +24,6 @@ export class EmployeeByCriteriaSearcher {
       query.orderType
     )
     const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.repository.matching(criteria)
+    return await this.employeeRepository.matching(criteria)
   }
 }

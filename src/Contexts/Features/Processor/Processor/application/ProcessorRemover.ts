@@ -3,17 +3,17 @@ import { ProcessorId } from '../domain/ProcessorId'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
 export class ProcessorRemover {
-  constructor(private readonly repository: ProcessorRepository) { }
+  constructor(private readonly processorRepository: ProcessorRepository) { }
 
   async run(params: { id: string }): Promise<void> {
     const { id } = params
     const processorId = new ProcessorId(id)
 
-    const processor = await this.repository.searchById(processorId.value)
+    const processor = await this.processorRepository.searchById(processorId.value)
     if (processor === null) {
       throw new ProcessorDoesNotExistError(id)
     }
 
-    await this.repository.remove(processorId.value)
+    await this.processorRepository.remove(processorId.value)
   }
 }

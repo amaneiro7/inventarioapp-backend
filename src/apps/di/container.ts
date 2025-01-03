@@ -12,6 +12,8 @@ export async function registerDI(container: AwilixContainer) {
 
 async function register(routePath: string, container: AwilixContainer) {
     const dependencies = require(routePath)
+    // si el archivo no contiene un funcion llamada register no se 
+    if (!dependencies.register) return
     await dependencies.register(container)
 }
 

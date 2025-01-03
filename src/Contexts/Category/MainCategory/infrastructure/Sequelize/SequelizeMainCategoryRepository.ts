@@ -1,5 +1,4 @@
 import { MainCategoryModel } from './MainCategorySchema'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type MainCategoryPrimitives } from '../../domain/MainCategory'

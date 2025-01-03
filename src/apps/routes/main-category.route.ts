@@ -1,6 +1,6 @@
 import { type Router } from 'express'
-import { type MainCategoryGetAllController } from '../controllers/category/main-category.getAll.controller'
-import { type MainCategoryGetController } from '../controllers/category/main-category.get.controller'
+import { type MainCategoryGetAllController } from '../controllers/main-category/main-category.getAll.controller'
+import { type MainCategoryGetController } from '../controllers/main-category/main-category.get.controller'
 import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
 import { MainCategoryDependencies } from '../di/main-category.di'

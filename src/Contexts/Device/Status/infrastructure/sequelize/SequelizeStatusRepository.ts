@@ -1,4 +1,3 @@
-import { CacheService } from '../../../../Shared/domain/CacheService'
 import { StatusModel } from './StatusSchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'

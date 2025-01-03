@@ -1,11 +1,11 @@
 import { type CacheRepository } from "./CacheRepository"
 
 export class CacheService {
-    constructor(private readonly cache: CacheRepository) { }
+    constructor(private readonly cacheRepository: CacheRepository) { }
 
     async getCachedData<T>(cacheKey: string, fetchFunction: () => Promise<T[]>) {
         try {
-            const cache = await this.cache.get(cacheKey)
+            const cache = await this.cacheRepository.get(cacheKey)
             if (cache) {
                 return JSON.parse(cache)
             }
@@ -21,7 +21,7 @@ export class CacheService {
 
     async setCachedData<T>(cacheKey: string, data: T) {
         try {
-            await this.cache.set(cacheKey, JSON.stringify(data))
+            await this.cacheRepository.set(cacheKey, JSON.stringify(data))
         } catch (error) {
             console.error('Setting cache failed: ', error)
         }
@@ -29,7 +29,7 @@ export class CacheService {
 
     async removeCachedData<T>(cacheKey: string) {
         try {
-            await this.cache.del(cacheKey)
+            await this.cacheRepository.del(cacheKey)
         } catch (error) {
             console.error('Deleting cache failed: ', error)
         }

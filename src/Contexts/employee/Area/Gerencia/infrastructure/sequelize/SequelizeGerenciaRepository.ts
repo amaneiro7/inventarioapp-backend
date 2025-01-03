@@ -1,4 +1,4 @@
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
+
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type GerenciaPrimitives } from '../../domain/Gerencia'
 import { type GerenciaId } from '../../domain/GerenciaId'

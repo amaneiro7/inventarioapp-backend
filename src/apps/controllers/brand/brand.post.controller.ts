@@ -14,8 +14,8 @@ export class BrandPostController implements Controller {
     async run(req: BrandRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const { name } = req.body
-            const brandCreator: BrandCreator = container.resolve(BrandDependencies.Creator)
-            await brandCreator.run({ name })
+            const create: BrandCreator = container.resolve(BrandDependencies.Creator)
+            await create.run({ name })
             res.status(httpStatus.CREATED).json({ message: 'Marca creada exitosamente' })
         } catch (error) {
             next(error)

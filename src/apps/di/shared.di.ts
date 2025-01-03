@@ -12,7 +12,7 @@ export const register = (container: AwilixContainer) => {
     container.register({
         logger: asClass(WinstonLogger),
         cacheRepository: asClass(RedisRepository).singleton(),
-        cache: asClass(CacheService)
+        cache: asClass(CacheService).singleton(),
     })
 }
 

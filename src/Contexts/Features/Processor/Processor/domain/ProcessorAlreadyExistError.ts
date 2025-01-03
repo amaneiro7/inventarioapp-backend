@@ -1,7 +1,7 @@
 export class ProcessorAlreadyExistError extends Error {
-  message = `The Processor ${this.name} already exist`
 
-  constructor (readonly name: string) {
+  constructor(readonly name: string) {
     super()
+    this.message = `The Processor ${this.name} already exist`
   }
 }

@@ -7,20 +7,20 @@ import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
 import { type EmployeeRepository } from "../domain/EmployeeRepository"
 
 export class EmployeeUpdater {
-  constructor(private readonly repository: EmployeeRepository) { }
+  constructor(private readonly employeeRepository: EmployeeRepository) { }
 
   async run({ id, params }: { id: Primitives<EmployeeId>, params: Partial<Omit<EmployeePrimitives, 'id'>> }): Promise<void> {
     const employeeId = new EmployeeId(id).value
-    const employee = await this.repository.searchById(employeeId)
+    const employee = await this.employeeRepository.searchById(employeeId)
     if (employee === null) {
       throw new EmployeeDoesNotExistError(id)
     }
 
     const employeeEntity = Employee.fromPrimitives(employee)
 
-    await EmployeeUserName.updateUserNameField({ repository: this.repository, userName: params.userName, entity: employeeEntity })
+    await EmployeeUserName.updateUserNameField({ repository: this.employeeRepository, userName: params.userName, entity: employeeEntity })
 
-    await this.repository.save(employeeEntity.toPrimitive())
+    await this.employeeRepository.save(employeeEntity.toPrimitive())
 
   }
 }

@@ -1,10 +1,10 @@
 import { type HardDriveTypePrimitives } from '../domain/HardDriveType'
 import { type HardDriveTypeRepository } from '../domain/HardDriveTypeRepository'
 
-export class SearchAllHardDriveType {
-  constructor(private readonly repository: HardDriveTypeRepository) { }
+export class HardDriveTypeFinderAll {
+  constructor(private readonly hardDriveTypeRepository: HardDriveTypeRepository) { }
 
   async run(): Promise<HardDriveTypePrimitives[]> {
-    return await this.repository.searchAll()
+    return await this.hardDriveTypeRepository.searchAll()
   }
 }

@@ -1,7 +1,6 @@
-import { CacheRepository } from '../../../Shared/domain/CacheService'
-import { CacheService } from '../../../Shared/domain/CacheService'
 import { type BrandPrimitives } from '../../domain/Brand'
 import { type BrandRepository } from '../../domain/BrandRepository'
+import { type CacheService } from '../../../Shared/domain/CacheService'
 import { BrandModel } from './BrandSchema'
 
 export class SequelizeBrandRepository implements BrandRepository {

@@ -3,18 +3,18 @@ import { container } from '../di/container'
 import { authenticate } from '../Shared/Middleware/authenticate'
 import { DeviceDependencies } from '../di/device.di'
 
-import { type DeviceGetAllController } from '../controllers/device/device.getAll.controller'
+// import { type DeviceGetAllController } from '../controllers/device/device.getAll.controller'
 import { type DevicePatchController } from '../controllers/device/device.patch.controller'
 import { type DeviceGetController } from '../controllers/device/device.get.controller'
 import { type DevicePostController } from '../controllers/device/device.post.controller'
-import { DeviceSearchByCriteriaController } from '../controllers/device/device.searchByCriteria.controller'
-import { DeviceDeleteController } from '../controllers/device/device.delete.controller'
-import { DeviceDownloadExcelServiceController } from '../controllers/device/device.downloadExcelService.controller'
+import { type DeviceSearchByCriteriaController } from '../controllers/device/device.searchByCriteria.controller'
+import { type DeviceDeleteController } from '../controllers/device/device.delete.controller'
+import { type DeviceDownloadExcelServiceController } from '../controllers/device/device.downloadExcelService.controller'
 
 
 export const register = (router: Router) => {
     const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
-    const getAllController: DeviceGetAllController = container.resolve(DeviceDependencies.GetAllController)
+    // const getAllController: DeviceGetAllController = container.resolve(DeviceDependencies.GetAllController)
     const postController: DevicePostController = container.resolve(DeviceDependencies.PostController)
     const patchController: DevicePatchController = container.resolve(DeviceDependencies.PatchController)
     const searchByCriteria: DeviceSearchByCriteriaController = container.resolve(DeviceDependencies.GetByCriteriaController)
@@ -26,14 +26,10 @@ export const register = (router: Router) => {
         authenticate,
         searchByCriteria.run.bind(searchByCriteria)
     )
-    router.get('/devices/all',
-        authenticate,
-        getAllController.run.bind(getController)
-    )
 
     router.get('/devices/:id',
         authenticate,
-        getController.run.bind(getAllController)
+        getController.run.bind(getController)
     )
 
     router.get('/devices/download',
@@ -54,7 +50,7 @@ export const register = (router: Router) => {
         patchController.run.bind(patchController)
     )
 
-    // deletel
+    // delete
     router.delete('devices/:id',
         authenticate,
         deleteController.run.bind(deleteController)

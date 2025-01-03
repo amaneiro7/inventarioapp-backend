@@ -8,8 +8,8 @@ import { CategoryDependencies } from "../../di/category.di"
 export class CategoryGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const categoryFinderAll: CategoriesFinderAll = container.resolve(CategoryDependencies.FinderAll)
-            const data = await categoryFinderAll.run()
+            const getAll: CategoriesFinderAll = container.resolve(CategoryDependencies.FinderAll)
+            const data = await getAll.run()
             res.status(httpStatus.OK).json(data)
         } catch (error) {
             next(error)

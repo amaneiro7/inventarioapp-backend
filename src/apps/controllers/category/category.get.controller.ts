@@ -10,8 +10,8 @@ export class CategoryGetController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params
-            const categoryFinder: CategoriesFinder = container.resolve(CategoryDependencies.Finder)
-            const data = await categoryFinder.run({ id })
+            const get: CategoriesFinder = container.resolve(CategoryDependencies.Finder)
+            const data = await get.run({ id })
             res.status(httpStatus.OK).json(data)
         } catch (error) {
             next(error)

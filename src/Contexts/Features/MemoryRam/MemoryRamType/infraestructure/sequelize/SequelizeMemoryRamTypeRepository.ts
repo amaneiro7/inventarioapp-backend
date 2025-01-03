@@ -1,4 +1,4 @@
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
+
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypePrimitives } from '../../domain/MemoryRamType'
 import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
