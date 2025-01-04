@@ -6,8 +6,8 @@ import { type RoleName } from '../../domain/RoleName'
 
 
 export class RolesModel extends Model<RolePrimitives> implements RolePrimitives {
-  readonly id!: Primitives<RoleId>
-  readonly name!: Primitives<RoleName>
+  declare id: Primitives<RoleId>
+  declare name: Primitives<RoleName>
 
 
 

@@ -7,9 +7,9 @@ import { type RegionId } from '../../../Region/domain/RegionId'
 
 
 export class StateModel extends Model<StatePrimitives> implements StatePrimitives {
-  readonly id!: Primitives<StateId>
-  readonly regionId!: Primitives<RegionId>
-  readonly name!: Primitives<StateName>
+  declare id: Primitives<StateId>
+  declare regionId: Primitives<RegionId>
+  declare name: Primitives<StateName>
 
 
 

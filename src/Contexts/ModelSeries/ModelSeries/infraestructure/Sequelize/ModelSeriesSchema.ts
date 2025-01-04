@@ -9,11 +9,11 @@ import { type Generic } from '../../domain/Generic'
 
 
 export class ModelSeriesModel extends Model<ModelSeriesPrimitives> implements ModelSeriesPrimitives {
-  readonly id!: Primitives<ModelSeriesId>
-  readonly name!: Primitives<ModelSeriesName>
-  readonly categoryId!: Primitives<CategoryId>
-  readonly brandId!: Primitives<BrandId>
-  readonly generic!: Primitives<Generic>
+  declare id: Primitives<ModelSeriesId>
+  declare name: Primitives<ModelSeriesName>
+  declare categoryId: Primitives<CategoryId>
+  declare brandId: Primitives<BrandId>
+  declare generic: Primitives<Generic>
 
 
 

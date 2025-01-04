@@ -16,17 +16,17 @@ import { type DeviceStocknumber } from '../../domain/DeviceStock'
 import { StatusId } from '../../../Status/domain/StatusId'
 
 export class DeviceModel extends Model<DevicePrimitives> implements DevicePrimitives {
-  readonly id!: Primitives<DeviceId>
-  readonly serial!: Primitives<DeviceSerial>
-  readonly activo!: Primitives<DeviceActivo>
-  readonly statusId!: Primitives<DeviceStatus>
-  readonly categoryId!: Primitives<CategoryId>
-  readonly brandId!: Primitives<BrandId>
-  readonly modelId!: Primitives<DeviceModelSeries>
-  readonly employeeId!: Primitives<DeviceEmployee>
-  readonly locationId!: Primitives<DeviceLocation>
-  readonly observation!: Primitives<DeviceObservation>
-  readonly stockNumber!: Primitives<DeviceStocknumber>
+  declare id: Primitives<DeviceId>
+  declare serial: Primitives<DeviceSerial>
+  declare activo: Primitives<DeviceActivo>
+  declare statusId: Primitives<DeviceStatus>
+  declare categoryId: Primitives<CategoryId>
+  declare brandId: Primitives<BrandId>
+  declare modelId: Primitives<DeviceModelSeries>
+  declare employeeId: Primitives<DeviceEmployee>
+  declare locationId: Primitives<DeviceLocation>
+  declare observation: Primitives<DeviceObservation>
+  declare stockNumber: Primitives<DeviceStocknumber>
 
 
   static async associate(models: Sequelize['models']): Promise<void> {

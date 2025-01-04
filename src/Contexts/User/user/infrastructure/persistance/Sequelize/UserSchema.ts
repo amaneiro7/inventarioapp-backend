@@ -9,12 +9,12 @@ import { type UserPassword } from '../../../domain/UserPassword'
 import { type UserPrimitives } from '../../../domain/User'
 
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
-  readonly id!: Primitives<UserId>
-  readonly email!: Primitives<UserEmail>
-  readonly name!: Primitives<UserName>
-  readonly roleId!: Primitives<RoleId>
-  readonly lastName!: Primitives<UserLastName>
-  readonly password!: Primitives<UserPassword>
+  declare id: Primitives<UserId>
+  declare email: Primitives<UserEmail>
+  declare name: Primitives<UserName>
+  declare roleId: Primitives<RoleId>
+  declare lastName: Primitives<UserLastName>
+  declare password: Primitives<UserPassword>
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' }) // A user belongs to a role

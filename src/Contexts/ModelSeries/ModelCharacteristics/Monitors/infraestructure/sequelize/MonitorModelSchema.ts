@@ -16,13 +16,13 @@ interface MonitorModelsCreationAttributes extends Omit<MonitorModelsPrimitives, 
 }
 
 export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> implements MonitorModelsCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
-  public screenSize!: Primitives<MonitorScreenSize>
-  public hasDVI!: Primitives<MonitorHasDVI>
-  public hasHDMI!: Primitives<MonitorHasHDMI>
-  public hasVGA!: Primitives<MonitorHasVGA>
+  declare id: Primitives<ModelSeriesId>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
+  declare screenSize: Primitives<MonitorScreenSize>
+  declare hasDVI: Primitives<MonitorHasDVI>
+  declare hasHDMI: Primitives<MonitorHasHDMI>
+  declare hasVGA: Primitives<MonitorHasVGA>
 
 
 

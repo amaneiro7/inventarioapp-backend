@@ -6,8 +6,8 @@ import { type ProcessorSocketName } from '../../domain/ProcessorSocketName'
 
 
 export class ProcessorSocketModel extends Model<ProcessorSocketPrimitives> implements ProcessorSocketPrimitives {
-  readonly id!: Primitives<ProcessorSocketId>
-  readonly name!: Primitives<ProcessorSocketName>
+  declare id: Primitives<ProcessorSocketId>
+  declare name: Primitives<ProcessorSocketName>
 
 
 

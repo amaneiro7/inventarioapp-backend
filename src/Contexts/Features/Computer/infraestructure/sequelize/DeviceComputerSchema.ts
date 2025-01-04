@@ -23,22 +23,24 @@ interface DeviceComputerCreationAttributes extends Pick<DeviceComputerPrimitives
   deviceId: Primitives<DeviceId>
 }
 export class DeviceComputerModel extends Model<DeviceComputerCreationAttributes> implements DeviceComputerCreationAttributes {
-  readonly deviceId!: Primitives<DeviceId>
-  readonly id!: Primitives<DeviceId>
-  readonly categoryId!: Primitives<CategoryId>
-  readonly computerName!: Primitives<ComputerName>
-  readonly memoryRam!: Primitives<MemoryRamValues>[]
-  readonly processorId!: Primitives<ProcessorId>
-  readonly memoryRamCapacity!: Primitives<ComputerMemoryRamCapacity>
-  readonly hardDriveCapacityId!: Primitives<ComputerHardDriveCapacity>
-  readonly hardDriveTypeId!: Primitives<ComputerHardDriveType>
-  readonly operatingSystemId!: Primitives<ComputerOperatingSystem>
-  readonly operatingSystemArqId!: Primitives<ComputerOperatingSystemArq>
-  readonly macAddress!: Primitives<MACAddress>
-  readonly ipAddress!: Primitives<IPAddress>
+  declare deviceId: Primitives<DeviceId>
+  declare id: Primitives<DeviceId>
+  declare categoryId: Primitives<CategoryId>
+  declare computerName: Primitives<ComputerName>
+  declare memoryRam: Primitives<MemoryRamValues>[]
+  declare processorId: Primitives<ProcessorId>
+  declare memoryRamCapacity: Primitives<ComputerMemoryRamCapacity>
+  declare hardDriveCapacityId: Primitives<ComputerHardDriveCapacity>
+  declare hardDriveTypeId: Primitives<ComputerHardDriveType>
+  declare operatingSystemId: Primitives<ComputerOperatingSystem>
+  declare operatingSystemArqId: Primitives<ComputerOperatingSystemArq>
+  declare macAddress: Primitives<MACAddress>
+  declare ipAddress: Primitives<IPAddress>
 
 
 
+  /*************  ✨ Codeium Command ⭐  *************/
+  /******  fd91fc70-6ac1-4a58-b07c-8ae3b465c9d8  *******/
   static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A computer belongs to a category
     this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A computer belongs to a device

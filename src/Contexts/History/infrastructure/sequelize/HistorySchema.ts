@@ -8,14 +8,14 @@ import { UserId } from '../../../User/user/domain/UserId'
 import { HistoryEmployee } from '../../domain/HistoryEmployee'
 
 export class HistoryModel extends Model<HistoryPrimitives> implements HistoryPrimitives {
-  readonly id!: Primitives<HistoryId>
-  readonly deviceId!: Primitives<DeviceId>
-  readonly userId!: Primitives<UserId>
-  readonly employeeId!: Primitives<HistoryEmployee>
-  readonly action!: ActionType
-  readonly oldData!: object
-  readonly newData!: object
-  readonly createdAt!: Date
+  declare id: Primitives<HistoryId>
+  declare deviceId: Primitives<DeviceId>
+  declare userId: Primitives<UserId>
+  declare employeeId: Primitives<HistoryEmployee>
+  declare action: ActionType
+  declare oldData: object
+  declare newData: object
+  declare createdAt: Date
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' }) // A history belongs to a user

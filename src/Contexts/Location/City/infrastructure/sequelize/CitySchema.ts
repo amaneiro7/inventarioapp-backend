@@ -7,9 +7,9 @@ import { type CityName } from '../../domain/CityName'
 
 
 export class CityModel extends Model<CityPrimitives> implements CityPrimitives {
-  readonly id!: Primitives<CityId>
-  readonly stateId!: Primitives<StateId>
-  readonly name!: Primitives<CityName>
+  declare id: Primitives<CityId>
+  declare stateId: Primitives<StateId>
+  declare name: Primitives<CityName>
 
 
   static async associate(models: Sequelize['models']): Promise<void> {

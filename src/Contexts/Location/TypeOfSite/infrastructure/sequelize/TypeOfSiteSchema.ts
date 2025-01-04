@@ -6,8 +6,8 @@ import { type TypeOfSiteName } from '../../domain/TypeOfSiteName'
 
 
 export class TypeOfSiteModel extends Model<TypeOfSitePrimitives> implements TypeOfSitePrimitives {
-  readonly id!: Primitives<TypeOfSiteId>
-  readonly name!: Primitives<TypeOfSiteName>
+  declare id: Primitives<TypeOfSiteId>
+  declare name: Primitives<TypeOfSiteName>
 
 
 

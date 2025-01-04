@@ -6,10 +6,8 @@ import { type RegionName } from '../../domain/RegionName'
 
 
 export class RegionModel extends Model<RegionPrimitives> implements RegionPrimitives {
-  readonly id!: Primitives<RegionId>
-  readonly name!: Primitives<RegionName>
-
-
+  declare id: Primitives<RegionId>
+  declare name: Primitives<RegionName>
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.hasMany(models.State, { as: 'state', foreignKey: 'regionId' }) // An Region can hava many states

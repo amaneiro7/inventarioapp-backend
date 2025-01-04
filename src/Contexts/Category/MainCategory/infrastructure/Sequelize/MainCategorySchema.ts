@@ -6,8 +6,8 @@ import { type MainCategoryName } from '../../domain/MainCategoryName'
 
 
 export class MainCategoryModel extends Model<MainCategoryPrimitives> implements MainCategoryPrimitives {
-  readonly id!: Primitives<MainCategoryId>
-  readonly name!: Primitives<MainCategoryName>
+  declare id: Primitives<MainCategoryId>
+  declare name: Primitives<MainCategoryName>
 
   public static async createModel(sequelize: Sequelize) {
     await this.initialize(sequelize)

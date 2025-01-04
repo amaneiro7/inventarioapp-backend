@@ -13,10 +13,10 @@ interface MouseModelsCreationAttributes extends Omit<MouseModelsPrimitives, 'nam
 }
 
 export class MouseModelsModel extends Model<MouseModelsCreationAttributes> implements MouseModelsCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
-  public inputTypeId!: Primitives<InputTypeId>
+  declare id: Primitives<ModelSeriesId>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
+  declare inputTypeId: Primitives<InputTypeId>
 
 
 

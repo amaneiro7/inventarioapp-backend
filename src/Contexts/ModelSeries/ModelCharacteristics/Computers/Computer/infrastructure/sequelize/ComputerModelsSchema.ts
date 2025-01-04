@@ -17,16 +17,16 @@ interface ComputerModelsCreationAttributes extends Omit<ComputerModelsPrimitives
 }
 
 export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes> implements ComputerModelsCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
-  public memoryRamTypeId!: Primitives<MemoryRamTypeId>
-  public memoryRamSlotQuantity!: Primitives<MemoryRamSlotQuantity>
-  public hasBluetooth!: Primitives<HasBluetooth>
-  public hasWifiAdapter!: Primitives<HasWifiAdapter>
-  public hasDVI!: Primitives<HasDVI>
-  public hasHDMI!: Primitives<HasHDMI>
-  public hasVGA!: Primitives<HasVGA>
+  declare id: Primitives<ModelSeriesId>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
+  declare memoryRamTypeId: Primitives<MemoryRamTypeId>
+  declare memoryRamSlotQuantity: Primitives<MemoryRamSlotQuantity>
+  declare hasBluetooth: Primitives<HasBluetooth>
+  declare hasWifiAdapter: Primitives<HasWifiAdapter>
+  declare hasDVI: Primitives<HasDVI>
+  declare hasHDMI: Primitives<HasHDMI>
+  declare hasVGA: Primitives<HasVGA>
 
 
 

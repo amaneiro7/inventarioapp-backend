@@ -6,8 +6,8 @@ import { type StatusName } from '../../domain/StatusName'
 
 
 export class StatusModel extends Model<StatusPrimitives> implements StatusPrimitives {
-  readonly id!: Primitives<StatusId>
-  readonly name!: Primitives<StatusName>
+  declare id: Primitives<StatusId>
+  declare name: Primitives<StatusName>
 
 
 

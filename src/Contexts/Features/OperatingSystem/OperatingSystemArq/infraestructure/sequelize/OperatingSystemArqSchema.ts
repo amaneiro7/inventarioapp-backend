@@ -6,8 +6,8 @@ import { type OperatingSystemArqName } from '../../domain/OperatingSystemArqName
 
 
 export class OperatingSystemArqModel extends Model<OperatingSystemArqPrimitives> implements OperatingSystemArqPrimitives {
-  readonly id!: Primitives<OperatingSystemArqId>
-  readonly name!: Primitives<OperatingSystemArqName>
+  declare id: Primitives<OperatingSystemArqId>
+  declare name: Primitives<OperatingSystemArqName>
 
 
 

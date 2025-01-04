@@ -8,10 +8,10 @@ import { type SiteAddress } from '../../domain/SiteAddress'
 
 
 export class SiteModels extends Model<SitePrimitives> implements SitePrimitives {
-  readonly id!: Primitives<SiteId>
-  readonly cityId!: Primitives<CityId>
-  readonly address!: Primitives<SiteAddress>
-  readonly name!: Primitives<SiteName>
+  declare id: Primitives<SiteId>
+  declare cityId: Primitives<CityId>
+  declare address: Primitives<SiteAddress>
+  declare name: Primitives<SiteName>
 
 
 

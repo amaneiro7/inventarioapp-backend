@@ -6,8 +6,8 @@ import { type MemoryRamTypeName } from '../../domain/MemoryRamTypeName'
 
 
 export class MemoryRamTypeModel extends Model<MemoryRamTypePrimitives> implements MemoryRamTypePrimitives {
-  readonly id!: Primitives<MemoryRamTypeId>
-  readonly name!: Primitives<MemoryRamTypeName>
+  declare id: Primitives<MemoryRamTypeId>
+  declare name: Primitives<MemoryRamTypeName>
 
 
 

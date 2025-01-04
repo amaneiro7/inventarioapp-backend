@@ -5,8 +5,8 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 
 
 export class HardDriveCapacityModel extends Model<HardDriveCapacityPrimitives> implements HardDriveCapacityPrimitives {
-  readonly id!: Primitives<HardDriveCapacityId>
-  readonly name!: number
+  declare id: Primitives<HardDriveCapacityId>
+  declare name: number
 
 
 

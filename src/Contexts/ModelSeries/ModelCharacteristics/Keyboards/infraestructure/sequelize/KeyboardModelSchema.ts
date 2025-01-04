@@ -13,11 +13,11 @@ interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsPrimitives
 }
 
 export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes> implements KeyboardModelsCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
-  public inputTypeId!: Primitives<InputTypeId>
-  public hasFingerPrintReader!: Primitives<HasFingerPrintReader>
+  declare id: Primitives<ModelSeriesId>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
+  declare inputTypeId: Primitives<InputTypeId>
+  declare hasFingerPrintReader: Primitives<HasFingerPrintReader>
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A keyboard model belongs to a model

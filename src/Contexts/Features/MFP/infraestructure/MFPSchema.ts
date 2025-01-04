@@ -11,10 +11,10 @@ interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'catego
   deviceId: Primitives<DeviceId>
 }
 export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPCreationAttributes {
-  readonly deviceId!: Primitives<DeviceId>
-  readonly id!: Primitives<DeviceId>
-  readonly categoryId!: Primitives<CategoryId>
-  readonly ipAddress!: Primitives<MFPIPAddress>
+  declare deviceId: Primitives<DeviceId>
+  declare id: Primitives<DeviceId>
+  declare categoryId: Primitives<CategoryId>
+  declare ipAddress: Primitives<MFPIPAddress>
 
 
 

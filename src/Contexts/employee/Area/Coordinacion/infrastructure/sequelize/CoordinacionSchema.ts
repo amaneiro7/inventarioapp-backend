@@ -7,9 +7,9 @@ import { type GerenciaId } from '../../../Gerencia/domain/GerenciaId'
 
 
 export class CoordinacionModel extends Model<CoordinacionPrimitives> implements CoordinacionPrimitives {
-  readonly id!: Primitives<CoordinacionId>
-  readonly gerenciaId!: Primitives<GerenciaId>
-  readonly name!: Primitives<CoordinacionName>
+  declare id: Primitives<CoordinacionId>
+  declare gerenciaId: Primitives<GerenciaId>
+  declare name: Primitives<CoordinacionName>
 
 
 

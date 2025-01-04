@@ -8,11 +8,9 @@ import { type MainCategoryId } from '../../../MainCategory/domain/MainCategoryId
 
 
 export class CategoryModel extends Model<CategoryPrimitives> implements CategoryPrimitives {
-  readonly id!: Primitives<CategoryId>
-  readonly name!: Primitives<CategoryName>
-  readonly mainCategoryId!: Primitives<MainCategoryId>
-
-
+  declare id: Primitives<CategoryId>
+  declare name: Primitives<CategoryName>
+  declare mainCategoryId: Primitives<MainCategoryId>
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.belongsTo(models.MainCategory, { as: 'mainCategory', foreignKey: 'mainCategoryId' }) // A category can have one main category

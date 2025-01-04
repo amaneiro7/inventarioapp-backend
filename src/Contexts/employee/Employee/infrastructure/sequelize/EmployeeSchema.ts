@@ -18,20 +18,20 @@ import { type EmployeeUserName } from '../../domain/EmployeeUsername'
 
 
 export class EmployeeModel extends Model<EmployeePrimitives> implements EmployeePrimitives {
-  public id!: Primitives<EmployeeId>
-  public userName!: Primitives<EmployeeUserName>
-  // public name!: Primitives<EmployeeName>
-  // public lastName!: Primitives<EmployeeLastName>
-  // public cedula!: Primitives<EmployeeCedula>
-  // public locationId!: Primitives<LocationId>
-  // public email!: Primitives<UserEmail>
-  // public cargoId!: Primitives<CargoId>
-  // public extension!: Primitives<Extension>
-  // public phoneNumber!: Primitives<PhoneNumber>
-  // public vicepresidenciaEjecutivaId!: Primitives<VicepresidenciaEjecutivaId>
-  // public vicepresidenciaId!: Primitives<EmployeeVicepresidenciaId>
-  // public gerenciaId!: Primitives<EmployeeGerenciaId>
-  // public coordinacionId!: Primitives<EmployeeCoordinacionId>
+  declare id: Primitives<EmployeeId>
+  declare userName: Primitives<EmployeeUserName>
+  // declare name: Primitives<EmployeeName>
+  // declare lastName: Primitives<EmployeeLastName>
+  // declare cedula: Primitives<EmployeeCedula>
+  // declare locationId: Primitives<LocationId>
+  // declare email: Primitives<UserEmail>
+  // declare cargoId: Primitives<CargoId>
+  // declare extension: Primitives<Extension>
+  // declare phoneNumber: Primitives<PhoneNumber>
+  // declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId>
+  // declare vicepresidenciaId: Primitives<EmployeeVicepresidenciaId>
+  // declare gerenciaId: Primitives<EmployeeGerenciaId>
+  // declare coordinacionId: Primitives<EmployeeCoordinacionId>
 
 
 

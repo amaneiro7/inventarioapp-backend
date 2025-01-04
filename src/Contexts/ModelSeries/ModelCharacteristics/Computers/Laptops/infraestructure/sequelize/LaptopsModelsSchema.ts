@@ -18,17 +18,17 @@ interface LaptopModelsCreationAttributes extends Omit<LaptopsModelsPrimitives, '
 }
 
 export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> implements LaptopModelsCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
-  public memoryRamTypeId!: Primitives<MemoryRamTypeId>
-  public memoryRamSlotQuantity!: Primitives<MemoryRamSlotQuantity>
-  public hasBluetooth!: Primitives<HasBluetooth>
-  public hasWifiAdapter!: Primitives<HasWifiAdapter>
-  public hasDVI!: Primitives<HasDVI>
-  public hasHDMI!: Primitives<HasHDMI>
-  public hasVGA!: Primitives<HasVGA>
-  public batteryModel!: Primitives<BatteryModelName>
+  declare id: Primitives<ModelSeriesId>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
+  declare memoryRamTypeId: Primitives<MemoryRamTypeId>
+  declare memoryRamSlotQuantity: Primitives<MemoryRamSlotQuantity>
+  declare hasBluetooth: Primitives<HasBluetooth>
+  declare hasWifiAdapter: Primitives<HasWifiAdapter>
+  declare hasDVI: Primitives<HasDVI>
+  declare hasHDMI: Primitives<HasHDMI>
+  declare hasVGA: Primitives<HasVGA>
+  declare batteryModel: Primitives<BatteryModelName>
 
 
 

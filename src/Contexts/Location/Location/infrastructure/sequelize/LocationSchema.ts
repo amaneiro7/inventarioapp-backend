@@ -9,11 +9,11 @@ import { type SiteId } from '../../../Site/domain/SiteId'
 
 
 export class LocationModel extends Model<LocationPrimitives> implements LocationPrimitives {
-  readonly id!: Primitives<LocationId>
-  readonly typeOfSiteId!: Primitives<TypeOfSiteId>
-  readonly siteId!: Primitives<SiteId>
-  readonly name!: Primitives<LocationName>
-  readonly subnet!: Primitives<LocationSubnet>
+  declare id: Primitives<LocationId>
+  declare typeOfSiteId: Primitives<TypeOfSiteId>
+  declare siteId: Primitives<SiteId>
+  declare name: Primitives<LocationName>
+  declare subnet: Primitives<LocationSubnet>
 
 
 

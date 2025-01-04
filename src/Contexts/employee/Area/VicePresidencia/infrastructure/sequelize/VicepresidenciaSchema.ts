@@ -7,9 +7,9 @@ import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecuti
 
 
 export class VicepresidenciaModel extends Model<VicepresidenciaPrimitives> implements VicepresidenciaPrimitives {
-  readonly id!: Primitives<VicepresidenciaId>
-  readonly vicepresidenciaEjecutivaId!: Primitives<VicepresidenciaEjecutivaId>
-  readonly name!: Primitives<VicepresidenciaName>
+  declare id: Primitives<VicepresidenciaId>
+  declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId>
+  declare name: Primitives<VicepresidenciaName>
 
 
 

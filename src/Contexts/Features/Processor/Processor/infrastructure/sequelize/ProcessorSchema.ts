@@ -10,13 +10,13 @@ import { type ProcessorFrequency } from '../../domain/ProcessorFrequency'
 
 
 export class ProcessorModel extends Model<ProcessorPrimitives> implements ProcessorPrimitives {
-  readonly id!: Primitives<ProcessorId>
-  readonly productCollection!: Primitives<ProcessorProductCollection>
-  readonly numberModel!: Primitives<ProcessorNumberModel>
-  readonly name!: string
-  readonly cores!: Primitives<ProcessorCores>
-  readonly threads!: Primitives<ProcessorHasThreads>
-  readonly frequency!: Primitives<ProcessorFrequency>
+  declare id: Primitives<ProcessorId>
+  declare productCollection: Primitives<ProcessorProductCollection>
+  declare numberModel: Primitives<ProcessorNumberModel>
+  declare name: string
+  declare cores: Primitives<ProcessorCores>
+  declare threads: Primitives<ProcessorHasThreads>
+  declare frequency: Primitives<ProcessorFrequency>
 
 
 

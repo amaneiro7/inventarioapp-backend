@@ -6,8 +6,8 @@ import { type CargoName } from '../../domain/CargoName'
 
 
 export class CargoModel extends Model<CargoPrimitives> implements CargoPrimitives {
-  public id!: Primitives<CargoId>
-  public name!: Primitives<CargoName>
+  declare id: Primitives<CargoId>
+  declare name: Primitives<CargoName>
 
 
 

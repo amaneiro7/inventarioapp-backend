@@ -6,8 +6,8 @@ import { type InputTypeName } from '../../domain/InputTypeName'
 
 
 export class InputTypeModel extends Model<InputTypePrimitives> implements InputTypePrimitives {
-  readonly id!: Primitives<InputTypeId>
-  readonly name!: Primitives<InputTypeName>
+  declare id: Primitives<InputTypeId>
+  declare name: Primitives<InputTypeName>
 
 
 

@@ -6,8 +6,8 @@ import { type OperatingSystemVersion } from '../../domain/OperatingSystemVersion
 
 
 export class OperatingSystemModel extends Model<OperatingSystemPrimitives> implements OperatingSystemPrimitives {
-  readonly id!: Primitives<OperatingSystemId>
-  readonly name!: Primitives<OperatingSystemVersion>
+  declare id: Primitives<OperatingSystemId>
+  declare name: Primitives<OperatingSystemVersion>
 
 
 

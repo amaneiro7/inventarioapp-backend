@@ -12,10 +12,10 @@ interface ModelPrinterCreationAttributes extends Omit<ModelPrintersPrimitives, '
 }
 
 export class ModelPrinterModel extends Model<ModelPrinterCreationAttributes> implements ModelPrinterCreationAttributes {
-  public id!: Primitives<ModelSeriesId>
-  public cartridgeModel!: Primitives<CartridgeModel>
-  public modelSeriesId!: Primitives<ModelSeriesId>
-  public categoryId!: Primitives<CategoryId>
+  declare id: Primitives<ModelSeriesId>
+  declare cartridgeModel: Primitives<CartridgeModel>
+  declare modelSeriesId: Primitives<ModelSeriesId>
+  declare categoryId: Primitives<CategoryId>
 
 
 

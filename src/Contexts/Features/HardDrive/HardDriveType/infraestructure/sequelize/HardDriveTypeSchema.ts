@@ -6,8 +6,8 @@ import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
 
 
 export class HardDriveTypeModel extends Model<HardDriveTypePrimitives> implements HardDriveTypePrimitives {
-  readonly id!: Primitives<HardDriveTypeId>
-  readonly name!: Primitives<HardDriveTypeName>
+  declare id: Primitives<HardDriveTypeId>
+  declare name: Primitives<HardDriveTypeName>
 
 
 

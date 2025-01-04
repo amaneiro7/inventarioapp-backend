@@ -6,8 +6,8 @@ import { type BrandName } from '../../domain/BrandName'
 import { sequelize } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class BrandModel extends Model<BrandPrimitives> implements BrandPrimitives {
-  id!: Primitives<BrandId>
-  name!: Primitives<BrandName>
+  declare id: Primitives<BrandId>
+  declare name: Primitives<BrandName>
 
   static async associate(models: Sequelize['models']): Promise<void> {
     this.hasMany(sequelize.models.Model, { as: 'model', foreignKey: 'brandId' }) // A brand can have many model series

@@ -15,12 +15,12 @@ interface DeviceHardDriveCreationAttributes extends Pick<DeviceHardDrivePrimitiv
   deviceId: Primitives<DeviceId>
 }
 export class DeviceHardDriveModel extends Model<DeviceHardDriveCreationAttributes> implements DeviceHardDriveCreationAttributes {
-  readonly deviceId!: Primitives<DeviceId>
-  readonly id!: Primitives<DeviceId>
-  readonly categoryId!: Primitives<CategoryId>
-  readonly health!: Primitives<HardDriveHealth>
-  readonly hardDriveCapacityId!: Primitives<HDDCapacity>
-  readonly hardDriveTypeId!: Primitives<HDDType>
+  declare deviceId: Primitives<DeviceId>
+  declare id: Primitives<DeviceId>
+  declare categoryId: Primitives<CategoryId>
+  declare health: Primitives<HardDriveHealth>
+  declare hardDriveCapacityId: Primitives<HDDCapacity>
+  declare hardDriveTypeId: Primitives<HDDType>
 
 
 
