@@ -1,29 +1,21 @@
-import passport, { PassportStatic } from 'passport'
-import { LocalAuthStrategy } from './strategies/local.strategy'
-import { JwtCookiesStrategy } from './strategies/jwt-cookie.strategy'
+import passport, { type PassportStatic } from 'passport'
+import { type LocalAuthStrategy } from './strategies/local.strategy'
+import { type JwtCookiesStrategy } from './strategies/jwt-cookie.strategy'
+import { type JwtBearerStrategy } from './strategies/jwt-bearer.strategy'
+import { StrategyOptions } from './strategy-options'
 
 export class PassportManager {
   constructor(
     private readonly localStrategy: LocalAuthStrategy,
     private readonly jwtCookiesStrategy: JwtCookiesStrategy,
+    private readonly jwtBearerStrategy: JwtBearerStrategy,
   ) { }
 
   public async initialize(): Promise<PassportStatic> {
-    passport.use(this.localStrategy)
-    passport.use(this.jwtCookiesStrategy)
+    passport.use(StrategyOptions.LOCAL, this.localStrategy)
+    passport.use(StrategyOptions.JWTCOOKIE, this.jwtCookiesStrategy)
+    passport.use(StrategyOptions.JWTBEARER, this.jwtBearerStrategy)
 
     return passport
   }
 }
-
-// export async function createPassportInstance(): Promise<passport.PassportStatic> {
-//   passport.use(await createLocalStrategy())
-//   passport.use(jwtBearerStrategy)
-
-//   return passport
-// }
-
-// export const Strategy = {
-//   LOCAL: 'local',
-//   JWT: 'jwt',
-// } as const

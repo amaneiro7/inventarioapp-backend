@@ -4,6 +4,7 @@ import { sequelize } from '../Contexts/Shared/infrastructure/persistance/Sequeli
 import { defineAssociations, initilizarModels } from '../Contexts/Shared/infrastructure/persistance/Sequelize/initSchemas'
 import { container } from './di/container'
 import { SharedDependencies } from './di/shared.di'
+import { AuthDependencies } from './di/auth.di'
 import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
@@ -16,14 +17,14 @@ export class InventarioBackendApp {
 
   async start(): Promise<void> {
     const port = config.port
-    this.server = new Server(port)
+    this.server = new Server(port, this.logger)
 
-    const passportManager: PassportManager = container.resolve('passportManager')
-    passportManager.initialize()
+    const passportManager: PassportManager = container.resolve(AuthDependencies.PassportManager)
+    await passportManager.initialize()
 
+    await this.server.listen()
     await this.initializeDBStorage()
     await this.initializeCacheStorage()
-    await this.server.listen()
   }
 
   get httpServer(): Server['httpServer'] | undefined {
@@ -41,13 +42,11 @@ export class InventarioBackendApp {
   private async initializeDBStorage() {
     try {
       await sequelize.authenticate()
-      this.logger.info('Connection to database has been established successfully.')
+        .then(() => this.logger.info('Connection to database has been established successfully.'))
       await initilizarModels(sequelize)
-      this.logger.info('All models initilized.')
       await defineAssociations(sequelize.models)
-      this.logger.info('All models associations initilized.')
     } catch (error) {
-      this.logger.error(`'Unable to connect to the database:', ${error}`)
+      this.logger.error(`Unable to connect to the database:, ${error}`)
     }
   }
   private async initializeCacheStorage() {

@@ -3,5 +3,5 @@ import passport from 'passport'
 import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/strategy-options'
 
 export const authenticate = (req: Request, res: Response, next: NextFunction): any => {
-  passport.authenticate(StrategyOptions.JWT, { session: false })(req, res, next)
+  passport.authenticate(StrategyOptions.JWTBEARER, { session: false })(req, res, next)
 }

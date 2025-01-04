@@ -1,4 +1,5 @@
-export const StrategyOptions = {
-    LOCAL: 'local',
-    JWT: 'jwt'
-} as const
+export enum StrategyOptions {
+    LOCAL = 'local',
+    JWTCOOKIE = 'jwt-cookie',
+    JWTBEARER = 'jwt-bearer'
+}

@@ -16,7 +16,6 @@ export class AuthLoginController implements Controller {
   async run(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const user = req.user as ReqUser
-      console.log(req.user)
       if (!user) throw new Error('User not found')
       const accessToken = generateAceessTokens(user)
       const refreshToken = generateRefreshToken(user)

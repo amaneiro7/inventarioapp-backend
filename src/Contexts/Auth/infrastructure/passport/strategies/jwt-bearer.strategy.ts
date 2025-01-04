@@ -1,10 +1,14 @@
-import { ExtractJwt, Strategy } from 'passport-jwt'
+import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt'
 import { config } from '../../../../Shared/infrastructure/config'
 
-export const jwtBearerStrategy = new Strategy({
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: config.accessTokenSecret
-}, (jwtPayload, done) => {
-  done(null, jwtPayload)
-})
-// This is the middleware that will be used to protect routes. If a request is made
+export class JwtBearerStrategy extends Strategy {
+  constructor() {
+    const jwtOptions: StrategyOptions = {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: config.accessTokenSecret
+    }
+    super(jwtOptions, (jwtOptions, done) => {
+      done(null, jwtOptions);
+    })
+  }
+}

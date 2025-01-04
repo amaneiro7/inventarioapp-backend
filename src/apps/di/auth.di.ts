@@ -4,6 +4,7 @@ import { LocalAuthStrategy } from "../../Contexts/Auth/infrastructure/passport/s
 import { JwtCookiesStrategy } from "../../Contexts/Auth/infrastructure/passport/strategies/jwt-cookie.strategy"
 import { PassportManager } from "../../Contexts/Auth/infrastructure/passport"
 import { AuthLoginController } from "../controllers/auth/auth.login.controller"
+import { JwtBearerStrategy } from "../../Contexts/Auth/infrastructure/passport/strategies/jwt-bearer.strategy"
 
 export enum AuthDependencies {
     UserLoginLocal = 'userLoginLocal',
@@ -18,6 +19,7 @@ export const register = (container: AwilixContainer) => {
         userLoginLocal: asClass(UserLoginLocal),
         localStrategy: asClass(LocalAuthStrategy),
         jwtCookiesStrategy: asClass(JwtCookiesStrategy),
+        jwtBearerStrategy: asClass(JwtBearerStrategy),
         passportManager: asClass(PassportManager),
         authLoginController: asClass(AuthLoginController),
         authLogoutController: asClass(AuthLoginController),
