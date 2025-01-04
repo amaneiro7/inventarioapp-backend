@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { type HistoryGetAllController } from '../controllers/history/history.get-all.controller'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
+import { authenticate } from '../Middleware/authenticate'
 import { HistoryDependencies } from '../di/history.di'
 
 

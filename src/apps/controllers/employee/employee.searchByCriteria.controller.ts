@@ -5,7 +5,7 @@ import { type EmployeeSearchByCriteria } from "../../../Contexts/employee/Employ
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
 import { SearchByCriteriaQuery } from "../../../Contexts/Shared/domain/SearchByCriteriaQuery"
-import { EmployeeDependencies } from "../../di/employee.di"
+import { EmployeeDependencies } from "../../di/employee/employee.di"
 
 export class EmployeeSearchByCriteriaController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

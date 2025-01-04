@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
+import { authenticate } from '../Middleware/authenticate'
 import { EmployeeDependencies } from '../di/employee.di'
 import { type EmployeeSearchByCriteriaController } from '../controllers/employee/employee.searchByCriteria.controller'
 import { type EmployeeGetController } from '../controllers/employee/employee.get.controller'

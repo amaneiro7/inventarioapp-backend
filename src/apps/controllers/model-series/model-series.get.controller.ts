@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type ModelSeriesFinder } from "../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesFinder"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { ModelSeriesDependencies } from "../../di/model-series.di"
+import { ModelSeriesDependencies } from "../../di/model-series/model-series.di"
 
 export class ModelSeriesGetController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

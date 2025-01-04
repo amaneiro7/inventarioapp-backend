@@ -1,15 +1,15 @@
 import { type Router } from 'express'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
-import { DeviceDependencies } from '../di/device.di'
+import { authenticate } from '../Middleware/authenticate'
+import { DeviceDependencies } from '../di/device/device.di'
 
 // import { type DeviceGetAllController } from '../controllers/device/device.getAll.controller'
 import { type DevicePatchController } from '../controllers/device/device.patch.controller'
 import { type DeviceGetController } from '../controllers/device/device.get.controller'
 import { type DevicePostController } from '../controllers/device/device.post.controller'
-import { type DeviceSearchByCriteriaController } from '../controllers/device/device.searchByCriteria.controller'
+import { type DeviceSearchByCriteriaController } from '../controllers/device/device.search-by-criteria.controller'
 import { type DeviceDeleteController } from '../controllers/device/device.delete.controller'
-import { type DeviceDownloadExcelServiceController } from '../controllers/device/device.downloadExcelService.controller'
+import { type DeviceDownloadExcelServiceController } from '../controllers/device/device.download-excel-service.controller'
 
 
 export const register = async (router: Router) => {

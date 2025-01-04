@@ -1,9 +1,9 @@
 import { type Router } from 'express'
-import { type CategoryGetAllController } from '../controllers/category/category.getAll.controller'
+import { type CategoryGetAllController } from '../controllers/category/category.get-all.controller'
 import { type CategoryGetController } from '../controllers/category/category.get.controller'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
-import { CategoryDependencies } from '../di/category.di'
+import { authenticate } from '../Middleware/authenticate'
+import { CategoryDependencies } from '../di/category/category.di'
 
 
 export const register = async (router: Router) => {

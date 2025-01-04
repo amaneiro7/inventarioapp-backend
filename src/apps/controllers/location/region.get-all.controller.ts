@@ -4,7 +4,7 @@ import { type RegionFinderAll } from "../../../Contexts/Location/Region/applicat
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { RegionDependencies } from "../../di/region.di"
+import { RegionDependencies } from "../../di/location/region.di"
 
 export class RegionGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { type RoleGetAllController } from '../controllers/roles/role.get-all.controller'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
+import { authenticate } from '../Middleware/authenticate'
 import { RoleDependencies } from '../di/roles.di'
 
 export const register = async (router: Router) => {

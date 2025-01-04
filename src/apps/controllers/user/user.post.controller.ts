@@ -4,7 +4,7 @@ import { type JwtPayloadUser } from "../../../Contexts/Auth/domain/GenerateToken
 import { type UserRegister } from "../../../Contexts/User/user/application/UserRegister"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { UserDependencies } from "../../di/user.di"
+import { UserDependencies } from "../../di/user/user.di"
 
 export class UserPostController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

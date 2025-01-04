@@ -4,10 +4,7 @@ import { type RoleFinderAll } from "../../../Contexts/User/Role/application/Role
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { RoleDependencies } from "../../di/roles.di"
-
-
-
+import { RoleDependencies } from "../../di/roles/roles.di"
 
 export class RoleGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

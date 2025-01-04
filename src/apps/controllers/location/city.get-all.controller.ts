@@ -4,7 +4,7 @@ import { type CityFinderAll } from "../../../Contexts/Location/City/application/
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { CityDependencies } from "../../di/city.di"
+import { CityDependencies } from "../../di/location/city.di"
 
 
 export class CityGetAllController implements Controller {

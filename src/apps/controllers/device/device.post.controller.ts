@@ -4,7 +4,7 @@ import { type JwtPayloadUser } from "../../../Contexts/Auth/domain/GenerateToken
 import { type DeviceCreator } from "../../../Contexts/Device/Device/application/DeviceCreator"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { DeviceDependencies } from "../../di/device.di"
+import { DeviceDependencies } from "../../di/device/device.di"
 
 export class DevicePostController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

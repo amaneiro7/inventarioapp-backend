@@ -5,8 +5,8 @@ import { type SitePatchController } from '../controllers/location/site.patch.con
 import { type SiteGetController } from '../controllers/location/site.get.controller'
 
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
-import { SiteDependencies } from '../di/site.di'
+import { authenticate } from '../Middleware/authenticate'
+import { SiteDependencies } from '../di/location/site.di'
 
 export const register = async (router: Router) => {
     const getAllController: SiteGetAllController = container.resolve(SiteDependencies.GetAllController)

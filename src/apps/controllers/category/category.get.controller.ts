@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type CategoriesFinder } from "../../../Contexts/Category/Category/application/CategoryFinder"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { CategoryDependencies } from "../../di/category.di"
+import { CategoryDependencies } from "../../di/category/category.di"
 
 
 export class CategoryGetController implements Controller {

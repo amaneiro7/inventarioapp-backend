@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type MainCategoriesFinder } from "../../../Contexts/Category/MainCategory/application/MainCategoryFinder"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { MainCategoryDependencies } from "../../di/main-category.di"
+import { MainCategoryDependencies } from "../../di/main-category/main-category.di"
 
 
 export class MainCategoryGetController implements Controller {

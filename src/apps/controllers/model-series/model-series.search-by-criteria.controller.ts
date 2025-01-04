@@ -5,7 +5,7 @@ import { type ModelSeriesSearchByCriteria } from "../../../Contexts/ModelSeries/
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
 import { SearchByCriteriaQuery } from "../../../Contexts/Shared/domain/SearchByCriteriaQuery"
-import { ModelSeriesDependencies } from "../../di/model-series.di"
+import { ModelSeriesDependencies } from "../../di/model-series/model-series.di"
 
 
 export class ModelSeriesSearchByCriteriaController implements Controller {

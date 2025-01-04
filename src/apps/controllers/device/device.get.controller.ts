@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type DeviceFinder } from "../../../Contexts/Device/Device/application/DeviceFinder"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { DeviceDependencies } from "../../di/device.di"
+import { DeviceDependencies } from "../../di/device/device.di"
 
 
 

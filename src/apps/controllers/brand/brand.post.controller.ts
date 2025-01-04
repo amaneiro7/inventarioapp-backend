@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type BrandCreator } from "../../../Contexts/Brand/application/BrandCreator"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { BrandDependencies } from "../../di/brand.di"
+import { BrandDependencies } from "../../di/brand/brand.di"
 interface BrandRequest extends Request {
     body: {
         name: string

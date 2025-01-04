@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type ProcessorRemover } from "../../../Contexts/Features/Processor/Processor/application/ProcessorRemover"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { ProcessorDependencies } from "../../di/processor.di"
+import { ProcessorDependencies } from "../../di/processor/processor.di"
 
 
 export class ProcessorDeleteController implements Controller {

@@ -1,11 +1,11 @@
 import { type Router } from 'express'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
-import { type BrandGetFinderAllController } from '../controllers/brand/brand.getFinderAll.controller'
+import { authenticate } from '../Middleware/authenticate'
+import { type BrandGetFinderAllController } from '../controllers/brand/brand.get-all.controller'
 import { type BrandPostController } from '../controllers/brand/brand.post.controller'
 import { type BrandPatchController } from '../controllers/brand/brand.patch.controller'
-import { type BrandGetFinderController } from '../controllers/brand/brand.getFinder.controller'
-import { BrandDependencies } from '../di/brand.di'
+import { type BrandGetFinderController } from '../controllers/brand/brand.get.controller'
+import { BrandDependencies } from '../di/brand/brand.di'
 
 
 export const register = async (router: Router) => {

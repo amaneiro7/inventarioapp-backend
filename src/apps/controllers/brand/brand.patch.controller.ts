@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type BrandUpdater } from "../../../Contexts/Brand/application/BrandUpdater"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { BrandDependencies } from "../../di/brand.di"
+import { BrandDependencies } from "../../di/brand/brand.di"
 interface BrandRequest extends Request {
     params: {
         id: string

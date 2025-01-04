@@ -4,7 +4,7 @@ import { type LocationFinderAll } from "../../../Contexts/Location/Location/appl
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { LocationDependencies } from "../../di/location.di"
+import { LocationDependencies } from "../../di/location/location.di"
 
 
 export class LocationGetAllController implements Controller {

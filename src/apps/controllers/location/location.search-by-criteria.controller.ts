@@ -5,7 +5,7 @@ import { type FiltersPrimitives } from "../../../Contexts/Shared/domain/criteria
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
 import { SearchByCriteriaQuery } from "../../../Contexts/Shared/domain/SearchByCriteriaQuery"
-import { LocationDependencies } from "../../di/location.di"
+import { LocationDependencies } from "../../di/location/location.di"
 
 
 export class LocationSearchByCriteriaController implements Controller {

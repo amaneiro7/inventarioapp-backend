@@ -4,7 +4,7 @@ import { type StateFinderAll } from "../../../Contexts/Location/State/applicatio
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { StateDependencies } from "../../di/state.di"
+import { StateDependencies } from "../../di/location/state.di"
 
 export class StateGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -4,7 +4,7 @@ import { type Controller } from "../controller"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
 import { ModelSeriesRemover } from "../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesRemover"
-import { ModelSeriesDependencies } from "../../di/model-series.di"
+import { ModelSeriesDependencies } from "../../di/model-series/model-series.di"
 
 
 export class ModelSeriesDeleteController implements Controller {

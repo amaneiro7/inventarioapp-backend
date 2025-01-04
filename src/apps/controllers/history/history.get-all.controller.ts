@@ -4,7 +4,7 @@ import { type HistoryFinderAll } from "../../../Contexts/History/application/His
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { HistoryDependencies } from "../../di/history.di"
+import { HistoryDependencies } from "../../di/history/history.di"
 
 export class HistoryGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

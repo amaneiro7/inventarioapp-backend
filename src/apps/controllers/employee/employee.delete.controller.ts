@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type EmployeeRemover } from "../../../Contexts/employee/Employee/application/EmployeeRemover"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { EmployeeDependencies } from "../../di/employee.di"
+import { EmployeeDependencies } from "../../di/employee/employee.di"
 
 
 export class EmployeeDeleteController implements Controller {

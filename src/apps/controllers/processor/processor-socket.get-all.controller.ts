@@ -4,7 +4,7 @@ import { type ProcessorSocketFinderAll } from "../../../Contexts/Features/Proces
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { ProcessorSocketDependencies } from "../../di/processor-socket.di"
+import { ProcessorSocketDependencies } from "../../di/processor/processor-socket.di"
 
 
 

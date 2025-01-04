@@ -6,7 +6,7 @@ import { type ModelSeriesExcelService } from "../../../Contexts/ModelSeries/Mode
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
 import { SearchByCriteriaQuery } from "../../../Contexts/Shared/domain/SearchByCriteriaQuery"
-import { ModelSeriesDependencies } from "../../di/model-series.di"
+import { ModelSeriesDependencies } from "../../di/model-series/model-series.di"
 
 
 export class ModelSeriesDownloadExcelServiceController implements Controller {

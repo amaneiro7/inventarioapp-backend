@@ -4,7 +4,7 @@ import { type InputTypeFinderAll } from "../../../Contexts/ModelSeries/InputType
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { InputTypeDependencies } from "../../di/input-type.di"
+import { InputTypeDependencies } from "../../di/input-type/input-type.di"
 
 
 export class InputTypeGetAllController implements Controller {

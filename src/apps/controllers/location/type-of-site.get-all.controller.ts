@@ -4,7 +4,7 @@ import { type TypeOfSiteFinderAll } from "../../../Contexts/Location/TypeOfSite/
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { TypeOfSiteDependencies } from "../../di/type-of-site.di"
+import { TypeOfSiteDependencies } from "../../di/location/type-of-site.di"
 
 export class TypeOfSiteGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

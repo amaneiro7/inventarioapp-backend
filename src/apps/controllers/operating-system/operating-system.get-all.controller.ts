@@ -4,7 +4,7 @@ import { type OperatingSystemFinderAll } from "../../../Contexts/Features/Operat
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { OperatingSystemDependencies } from "../../di/operating-system.di"
+import { OperatingSystemDependencies } from "../../di/operating-system/operating-system.di"
 
 
 export class OperatingSystemGetAllController implements Controller {

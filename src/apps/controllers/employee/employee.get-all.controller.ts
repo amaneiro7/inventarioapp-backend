@@ -4,7 +4,7 @@ import { type EmployeeFinderAll } from "../../../Contexts/employee/Employee/appl
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { EmployeeDependencies } from "../../di/employee.di"
+import { EmployeeDependencies } from "../../di/employee/employee.di"
 
 
 export class EmployeeGetAllController implements Controller {

@@ -4,7 +4,7 @@ import { type OperatingSystemArqFinderAll } from "../../../Contexts/Features/Ope
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { OperatingSystemArqDependencies } from "../../di/operating-system-arq.di"
+import { OperatingSystemArqDependencies } from "../../di/operating-system/operating-system-arq.di"
 
 
 export class OperatingSystemArqGetAllController implements Controller {

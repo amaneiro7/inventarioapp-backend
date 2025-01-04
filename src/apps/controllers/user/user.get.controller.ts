@@ -4,7 +4,7 @@ import { type UserFinder } from "../../../Contexts/User/user/application/UserFin
 import { type JwtPayloadUser } from "../../../Contexts/Auth/domain/GenerateToken"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { UserDependencies } from "../../di/user.di"
+import { UserDependencies } from "../../di/user/user.di"
 
 
 export class UserGetController implements Controller {

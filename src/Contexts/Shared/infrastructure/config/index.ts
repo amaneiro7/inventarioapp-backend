@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 
 const envs: Record<string, string> = {
   production: '.env.prod',
-  development: '.env.dev',
+  development: '.env.development',
   e2e: '.env.e2e'
 }
 

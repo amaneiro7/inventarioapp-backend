@@ -3,7 +3,7 @@ import { type Controller } from "../controller"
 import { type LocationUpdater } from "../../../Contexts/Location/Location/application/LocationUpdater"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { LocationDependencies } from "../../di/location.di"
+import { LocationDependencies } from "../../di/location/location.di"
 
 export class LocationPatchController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -4,7 +4,7 @@ import { type ProcessorCreator } from "../../../Contexts/Features/Processor/Proc
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { ProcessorDependencies } from "../../di/processor.di"
+import { ProcessorDependencies } from "../../di/processor/processor.di"
 
 export class ProcessorPostController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

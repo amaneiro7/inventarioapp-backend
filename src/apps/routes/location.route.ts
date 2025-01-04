@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../di/container'
-import { authenticate } from '../Shared/Middleware/authenticate'
+import { authenticate } from '../Middleware/authenticate'
 import { LocationDependencies } from '../di/location.di'
 import { type LocationGetController } from '../controllers/location/location.get.controller'
 import { type LocationGetAllController } from '../controllers/location/location.get-all.controller'

@@ -5,13 +5,13 @@ import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
 import errorHandler from 'errorhandler'
 import cors from 'cors'
-import { options } from './Shared/Middleware/cors'
+import { options } from './Middleware/cors'
 import helmet from 'helmet' // Protege contra ataques de seguridad
 
-import { limiter } from './Shared/Middleware/rateLimit'  // Importa el middleware de limitacion de peticiones
+import { limiter } from './Middleware/rateLimit'  // Importa el middleware de limitacion de peticiones
 import httpStatus from '../Contexts/Shared/infrastructure/utils/http-status' // Importa el modulo de status de http
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
-import { morganLog } from './Shared/Middleware/morgan'
+import { morganLog } from './Middleware/morgan'
 
 import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
 import { type Logger } from '../Contexts/Shared/domain/Logger'

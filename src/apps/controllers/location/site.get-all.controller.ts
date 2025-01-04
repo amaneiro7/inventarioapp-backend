@@ -4,7 +4,7 @@ import { type SiteFinderAll } from "../../../Contexts/Location/Site/application/
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { SiteDependencies } from "../../di/site.di"
+import { SiteDependencies } from "../../di/location/site.di"
 
 export class SiteGetAllController implements Controller {
     async run(req: Request, res: Response, next: NextFunction): Promise<void> {

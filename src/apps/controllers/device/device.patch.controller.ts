@@ -4,7 +4,7 @@ import { type JwtPayloadUser } from "../../../Contexts/Auth/domain/GenerateToken
 import { type DeviceUpdater } from "../../../Contexts/Device/Device/application/DeviceUpdater"
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from "../../di/container"
-import { DeviceDependencies } from "../../di/device.di"
+import { DeviceDependencies } from "../../di/device/device.di"
 
 
 export class DevicePatchController implements Controller {
