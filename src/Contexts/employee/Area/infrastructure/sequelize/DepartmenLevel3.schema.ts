@@ -2,10 +2,10 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentId } from '../../domain/value-object/DepartmentId'
 import { type DepartmentName } from '../../domain/value-object/DepartmentName'
-import { type DepartamentLevel3Primitives } from '../../domain/entity/DepartmentLevel3'
+import { type DepartmentLevel3Primitives } from '../../domain/entity/DepartmentLevel3'
 
 
-export class DepartmentLevel3Model extends Model<DepartamentLevel3Primitives> implements DepartamentLevel3Primitives {
+export class DepartmentLevel3Model extends Model<DepartmentLevel3Primitives> implements DepartmentLevel3Primitives {
     declare id: Primitives<DepartmentId>
     declare name: Primitives<DepartmentName>
     declare departmentLevel2Id: Primitives<DepartmentId>

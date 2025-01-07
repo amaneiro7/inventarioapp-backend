@@ -1,3 +1,3 @@
 import { GenericRepository } from "../../../../Shared/domain/GenericRepository";
 
-export abstract class DepartementRepository<T> extends GenericRepository<T> { }
+export abstract class DepartmentRepository<T> extends GenericRepository<T> { }

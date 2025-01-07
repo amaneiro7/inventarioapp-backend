@@ -48,9 +48,6 @@ importers:
       express-validator:
         specifier: 7.2.1
         version: 7.2.1
-      fast-glob:
-        specifier: ^3.3.2
-        version: 3.3.2
       glob:
         specifier: 11.0.0
         version: 11.0.0

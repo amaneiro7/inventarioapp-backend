@@ -1,10 +1,10 @@
 import { type DepartmentPrimitives } from "../../domain/entity/IDeparment"
-import { type DepartementRepository } from "../../domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../domain/repository/DepartmentRepository"
 import { DepartmentDoesNotExistError } from "../../domain/value-object/DepartmentDoesNotExistError"
 import { DepartmentId } from "../../domain/value-object/DepartmentId"
 
 export class DepartmentLevel1Finder {
-    constructor(private readonly departmentLevel1Repository: DepartementRepository<DepartmentPrimitives>) { }
+    constructor(private readonly departmentLevel1Repository: DepartmentRepository<DepartmentPrimitives>) { }
 
     async run(params: { id: string }): Promise<DepartmentPrimitives> {
         const { id } = params
