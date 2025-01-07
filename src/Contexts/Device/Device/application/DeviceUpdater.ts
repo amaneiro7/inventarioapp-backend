@@ -127,7 +127,7 @@ export class DeviceUpdater {
     } else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
       // Si el device es de tipo hard drive, obtenemos los datos de la tabla hard_drive
       const { hardDrive } = device as unknown as DevicesApiResponse
-      if (hardDrive === null) {
+      if (!hardDrive) {
         throw new InvalidArgumentError('HardDrive does not exist')
       }
       deviceEntity = DeviceHardDrive.fromPrimitives({

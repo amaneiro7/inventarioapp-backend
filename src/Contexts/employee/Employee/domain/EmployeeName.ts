@@ -1,27 +1,43 @@
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type RegularEmployee } from './entity/RegularEmployee'
+
 
 export class EmployeeName extends StringValueObject {
-  private readonly NAME_MAX_LENGTH = 100
-  private readonly NAME_MIN_LENGTH = 2
+  private readonly NAME_MAX_LENGTH = 50
+  private readonly NAME_MIN_LENGTH = 3
+  private readonly Regex = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
 
-  constructor (readonly value: string) {
+  constructor(readonly value: string) {
     super(value)
 
     this.ensureIsValidName(value)
   }
 
-  toPrimitives (): string {
-    return this.value
-  }
+  private ensureIsValidName(value: string): void {
+    // Create an empty array to store any validation errors
+    const errors = []
+    if (value.length < this.NAME_MIN_LENGTH) {
+      errors.push(`El nombre debe ser mayor a ${this.NAME_MIN_LENGTH} caracteres`)
+    }
+    if (value.length > this.NAME_MAX_LENGTH) {
+      errors.push(`El nombre debe ser menor a ${this.NAME_MAX_LENGTH} caracteres`)
+    }
+    if (!this.Regex.test(value)) {
+      errors.push(`La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final al menos que sea un nombre compuesto`)
+    }
 
-  private ensureIsValidName (value: string): void {
-    if (!this.isValid(value)) {
-      throw new InvalidArgumentError(`<${value}> is not a valid name`)
+    if (errors.length > 0) {
+      throw new InvalidArgumentError(errors.join(', '))
     }
   }
 
-  private isValid (name: string): boolean {
-    return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
+
+  static async updateNameField({ name, entity }: { name?: Primitives<EmployeeName>, entity: RegularEmployee }): Promise<void> {
+    // Solo si se ha pasado un nuevo nombre y es diferente al actual se actualiza
+    if (!!name && entity.nameValue !== name) {
+      entity.updateName(name)
+    }
   }
 }

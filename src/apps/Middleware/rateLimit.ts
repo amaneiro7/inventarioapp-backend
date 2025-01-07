@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit"
 
 const WINDOW_SIZE_IN_HOURS = 15 * 60 * 1000 // 15 minutos
-const MAX_WINDOW_REQUEST_COUNT = 100
+const MAX_WINDOW_REQUEST_COUNT = 1000
 
 export const limiter = rateLimit({
     windowMs: WINDOW_SIZE_IN_HOURS, // 15 minutes

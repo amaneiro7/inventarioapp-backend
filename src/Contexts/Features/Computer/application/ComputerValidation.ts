@@ -15,7 +15,7 @@ import { type ProcessorRepository } from '../../Processor/Processor/domain/Proce
 
 export class ComputerValidation {
   constructor(
-    private readonly repository: DeviceRepository,
+    private readonly deviceRepository: DeviceRepository,
     private readonly processorRepository: ProcessorRepository,
     private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
     private readonly hardDriveTypeRepository: HardDriveTypeRepository,
@@ -25,13 +25,16 @@ export class ComputerValidation {
   ) { }
 
   async run(params: Omit<DeviceComputerPrimitives, 'id' | 'memoryRamCapacity'>): Promise<DeviceComputer> {
-    await ComputerName.ensuerComputerNameDoesNotExit({ repository: this.repository, computerName: params.computerName })
+    await this.ensureValidation(params)
+    return DeviceComputer.create(params)
+  }
+
+  private async ensureValidation(params: Omit<DeviceComputerPrimitives, 'id' | 'memoryRamCapacity'>): Promise<void> {
+    await ComputerName.ensuerComputerNameDoesNotExit({ repository: this.deviceRepository, computerName: params.computerName })
     await ComputerProcessor.ensureProcessorExit({ repository: this.processorRepository, processor: params.processorId })
     await HardDriveCapacityId.ensureHardDriveCapacityExit({ repository: this.hardDriveCapacityRepository, hardDriveCapacity: params.hardDriveCapacityId })
     await HardDriveTypeId.ensureHardDriveTypeExit({ repository: this.hardDriveTypeRepository, hardDriveType: params.hardDriveTypeId })
     await ComputerOperatingSystem.ensureOperatingSystemExit({ repository: this.operatingSystemRepository, operatingSystem: params.operatingSystemId })
     await ComputerOperatingSystemArq.ensureOperatingSystemArqExit({ repository: this.operatingSystemArqRepository, operatingSystemArq: params.operatingSystemArqId })
-
-    return DeviceComputer.create(params)
   }
 }

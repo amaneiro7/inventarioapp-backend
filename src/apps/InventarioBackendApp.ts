@@ -4,7 +4,7 @@ import { sequelize } from '../Contexts/Shared/infrastructure/persistance/Sequeli
 import { defineAssociations, initilizarModels } from '../Contexts/Shared/infrastructure/persistance/Sequelize/initSchemas'
 import { container } from './di/container'
 import { SharedDependencies } from './di/shared.di'
-import { AuthDependencies } from './di/auth.di'
+import { AuthDependencies } from './di/auth/auth.di'
 import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'

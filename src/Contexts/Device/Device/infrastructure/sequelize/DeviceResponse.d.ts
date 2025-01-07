@@ -1,18 +1,8 @@
+import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type BrandPrimitives } from '../../../../Brand/domain/Brand'
-import { type BrandId } from '../../../../Brand/domain/BrandId'
-import { type CategoryId } from '../../../../Category/domain/CategoryId'
 import { type CategoryPrimitives } from '../../../../Category/Category/domain/Category'
 import { type EmployeePrimitives } from '../../../../employee/Employee/domain/Employee'
 import { type DeviceComputerPrimitives } from '../../../../Features/Computer/domain/Computer'
-import { type ComputerHardDriveCapacity } from '../../../../Features/Computer/domain/ComputerHardDriveCapacity'
-import { type ComputerHardDriveType } from '../../../../Features/Computer/domain/ComputerHardDriveType'
-import { type ComputerMemoryRamCapacity } from '../../../../Features/Computer/domain/ComputerMemoryRamCapacity'
-import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
-import { type ComputerOperatingSystem } from '../../../../Features/Computer/domain/ComputerOperatingSystem'
-import { type ComputerOperatingSystemArq } from '../../../../Features/Computer/domain/ComputerOperatingSystemArq'
-import { type ComputerProcessor } from '../../../../Features/Computer/domain/ComputerProcessor'
-import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
-import { type MACAddress } from '../../../../Features/Computer/domain/MACAddress'
 import { type HardDriveCapacityPrimitives } from '../../../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacity'
 import { type HardDriveTypePrimitives } from '../../../../Features/HardDrive/HardDriveType/domain/HardDriveType'
 import { type MemoryRamTypePrimitives } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamType'
@@ -32,18 +22,10 @@ import { type MonitorModelsPrimitives } from '../../../../ModelSeries/ModelChara
 import { type MouseModelsPrimitives } from '../../../../ModelSeries/ModelCharacteristics/Mouses/domain/MouseModels'
 import { type ModelPrintersPrimitives } from '../../../../ModelSeries/ModelCharacteristics/Printers/domain/ModelPrinters'
 import { type ModelSeriesPrimitives } from '../../../../ModelSeries/ModelSeries/domain/ModelSeries'
-import { type ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type UserPrimitives } from '../../../../User/user/domain/User'
 import { type StatusPrimitives } from '../../../Status/domain/Status'
 import { type DevicePrimitives } from '../../domain/Device'
-import { type DeviceActivo } from '../../domain/DeviceActivo'
-import { type DeviceEmployee } from '../../domain/DeviceEmployee'
-import { type DeviceId } from '../../domain/DeviceId'
-import { type DeviceLocation } from '../../domain/DeviceLocation'
-import { type DeviceObservation } from '../../domain/DeviceObservation'
-import { type DeviceSerial } from '../../domain/DeviceSerial'
-import { type DeviceStatus } from '../../domain/DeviceStatus'
+import { type DeviceHardDrivePrimitives } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 
 export interface DevicesApiResponse extends DevicePrimitives {
   createdAt: string
@@ -52,18 +34,28 @@ export interface DevicesApiResponse extends DevicePrimitives {
   brand: BrandPrimitives
   model: ModelApiresponse
   location: LocationApiResponse
-  employee: EmployeePrimitives | null
   status: StatusPrimitives
-  computer: Computer | null
-  hardDrive: HardDrive | null
+  employee: Nullable<EmployeePrimitives>
+  computer: Nullable<DeviceComputerPrimitives & {
+    processor: ProcessorPrimitives
+    hardDriveCapacity: HardDriveCapacityPrimitives
+    hardDriveType: HardDriveTypePrimitives
+    operatingSystem: OperatingSystemPrimitives
+    operatingSystemArq: OperatingSystemArqPrimitives
+
+  }>
+  hardDrive: Nullable<DeviceHardDrivePrimitives & {
+    hardDriveCapacity: HardDriveCapacityPrimitives
+    hardDriveType: HardDriveTypePrimitives
+  }>
   history: HistoryApiResponse[]
 }
 
 export interface HistoryApiResponse extends HistoryPrimitives {
   employee: EmployeePrimitives
   user: Pick<UserPrimitives, 'email' | 'name' | 'lastName'>
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface LocationApiResponse extends LocationPrimitives {
@@ -74,24 +66,10 @@ export interface LocationApiResponse extends LocationPrimitives {
 export interface SiteApiResponse extends SitePrimitives {
   city: CityPrimitives
 }
-
-export interface Computer extends DeviceComputerPrimitives {
-  id: Primitives<DeviceId>
-  categoryId: Primitives<CategoryId>
-  deviceId: Primitives<DeviceId>
-  createdAt: Date
-  updatedAt: Date
-  processor: ProcessorPrimitives
-  hardDriveCapacity: HardDriveCapacityPrimitives
-  hardDriveType: HardDriveTypePrimitives
-  operatingSystem: OperatingSystemPrimitives
-  operatingSystemArq: OperatingSystemArqPrimitives
-}
-
 export interface ModelApiresponse extends ModelSeriesPrimitives {
   createdAt: Date
   updatedAt: Date
-  category: Status
+  category: CategoryPrimitives
   brand: BrandPrimitives
   modelComputer: ModelComputer
   modelLaptop: ModelLaptop

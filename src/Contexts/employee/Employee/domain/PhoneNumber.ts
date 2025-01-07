@@ -14,7 +14,7 @@ export class PhoneNumber extends StringValueObject {
   private readonly extension = `^(${this.areaCodes.join('|')})\\d{${this.numberLenght}}$`
   private readonly phoneRegex = new RegExp(this.extension)
 
-  constructor (
+  constructor(
     readonly value: string
   ) {
     super(value)
@@ -22,17 +22,17 @@ export class PhoneNumber extends StringValueObject {
     this.ensureIsValid(value)
   }
 
-  toPrimitives (): string {
+  toPrimitives(): string {
     return this.value
   }
 
-  private ensureIsValid (value: string): void {
+  private ensureIsValid(value: string): void {
     if (!this.isValid(value)) {
-      throw new InvalidArgumentError(`<${value}> is not a valid Phone Number`)
+      throw new InvalidArgumentError(`<${value}> is not a valid phone number.`)
     }
   }
 
-  private isValid (name: string): boolean {
+  private isValid(name: string): boolean {
     return this.phoneRegex.test(name)
   }
 }

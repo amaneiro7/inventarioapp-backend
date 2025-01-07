@@ -1,10 +1,10 @@
 import { type CargoPrimitives } from '../domain/Cargo'
 import { type CargoRepository } from '../domain/CargoRepository'
 
-export class SearchAllCargo {
-  constructor(private readonly repository: CargoRepository) { }
+export class CargoFinderAll {
+  constructor(private readonly cargoRepository: CargoRepository) { }
 
   async run(): Promise<CargoPrimitives[]> {
-    return await this.repository.searchAll()
+    return await this.cargoRepository.searchAll()
   }
 }
