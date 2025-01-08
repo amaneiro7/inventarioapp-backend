@@ -1,8 +1,10 @@
 import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoPrimitives } from '../../domain/Cargo'
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoRepository } from '../../domain/CargoRepository'
+import { type CargoName } from '../../domain/CargoName'
 import { CargoModel } from './CargoSchema'
 
 export class SequelizeCargoRepository implements CargoRepository {
@@ -15,7 +17,29 @@ export class SequelizeCargoRepository implements CargoRepository {
 
   }
 
-  async searchById(id: Primitives<CargoId>): Promise<CargoPrimitives | null> {
+  async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoPrimitives>> {
     return await CargoModel.findByPk(id) ?? null
+  }
+
+  async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoPrimitives>> {
+    return await CargoModel.findOne({ where: { name } }) ?? null
+  }
+
+  async save(payload: CargoPrimitives): Promise<void> {
+    const { id, departments, ...restPayload } = payload
+    const cargo = await CargoModel.findByPk(id) ?? null
+    if (cargo === null) {
+      const newCargo = await CargoModel.create({
+        ...restPayload,
+        id
+      })
+      await newCargo.setDeparments(departments)
+    } else {
+      cargo.set({ ...restPayload })
+      await cargo.save()
+      await cargo.setDeparments(departments)
+    }
+    await this.cache.removeCachedData(this.cacheKey)
+    await this.searchAll()
   }
 }

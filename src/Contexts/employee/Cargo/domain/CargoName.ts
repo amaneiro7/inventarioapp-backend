@@ -1,42 +1,45 @@
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-
-export type CargosValues = typeof CargoName.AcceptedCargos[keyof typeof CargoName.AcceptedCargos]
+import { Cargo } from './Cargo'
 
 export class CargoName extends StringValueObject {
-  private readonly NAME_MAX_LENGTH = 30
+  private readonly NAME_MAX_LENGTH = 50
   private readonly NAME_MIN_LENGTH = 15
-  public static AcceptedCargos: Readonly<Record<string, string>> = {
-    1: 'Analista',
-    2: 'Especialista Senior',
-    3: 'Coordinador',
-    4: 'Gerente',
-    5: 'Vicepresidente',
-    6: 'Vicepresidente Ejecutivo',
-    7: 'Cajero de Agencia',
-    8: 'Coordinador de Agencia',
-    9: 'Promotor de Agencia',
-    10: 'SubGerente de Agencia',
-    11: 'Gerente de Agencia'
-  }
+  private readonly regex = /^[a-zA-Z0-9()\-.,\s]*$/
 
-  constructor (readonly value: string) {
+  constructor(readonly value: string) {
     super(value)
 
-    this.ensureIsValidSerial(value)
+    this.ensureIsValidName(value)
   }
 
-  toPrimitives (): string {
+  toPrimitives(): string {
     return this.value
   }
 
-  private ensureIsValidSerial (value: string): void {
+  private ensureIsValidName(value: string): void {
+    if (!this.isValidLength(value)) {
+      throw new InvalidArgumentError(`El nombre del cargo debe tener al menos ${this.NAME_MIN_LENGTH} caracteres y un máximo de ${this.NAME_MAX_LENGTH} caracteres`)
+    }
     if (!this.isValid(value)) {
-      throw new InvalidArgumentError(`<${value}> is not a valid Cargo name`)
+      throw new InvalidArgumentError(`<${value}> no es un nombre de cargo válido`)
     }
   }
 
-  private isValid (name: string): boolean {
+  private isValid(name: string): boolean {
+    return this.regex.test(name)
+  }
+
+  private isValidLength(name: string): boolean {
     return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
+  }
+
+  static async updateNameField({ name, entity }: { name?: Primitives<CargoName>, entity: Cargo }): Promise<void> {
+    if (!name) return
+
+    if (entity.nameValue === name) return
+
+    entity.updateName(name)
   }
 }

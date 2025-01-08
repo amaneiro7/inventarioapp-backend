@@ -1,9 +1,9 @@
-import { Primitives } from "../../../../Shared/domain/value-object/Primitives"
+import { type DepartmentPrimitives } from "../../domain/entity/IDeparment"
+import { type DepartmentRepository } from "../../domain/repository/DepartmentRepository"
+import { type DepartmentName } from "../../domain/value-object/DepartmentName"
+import { type Primitives } from "../../../../Shared/domain/value-object/Primitives"
 import { DepartmentLevel1 } from "../../domain/entity/DepartmentLevel1"
-import { DepartmentPrimitives } from "../../domain/entity/IDeparment"
-import { DepartmentRepository } from "../../domain/repository/DepartmentRepository"
 import { DepartmentAlreadyExistError } from "../../domain/value-object/DepartmentAlreadyExistError"
-import { DepartmentName } from "../../domain/value-object/DepartmentName"
 
 export class DepartmentLevel1Creator {
   constructor(private readonly departmentLevel1Repository: DepartmentRepository<DepartmentPrimitives>) { }

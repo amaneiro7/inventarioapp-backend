@@ -34,22 +34,25 @@ export class DepartmentLevel2Updater {
   }
 
   private async ensureDepartmentLevel2DoesNotExist({ entity, name }: { name?: Primitives<DepartmentName>, entity: DepartmentLevel2 }): Promise<void> {
-    if (!!name && entity.nameValue !== name) {
-      const newName = new DepartmentName(name)
-      if (await this.departmentLevel2Repository.searchByName(newName.value) !== null) {
-        throw new DepartmentAlreadyExistError()
-      }
-      entity.updateName(name)
+    if (!name) return
 
+    if (entity.nameValue !== name) return
+
+    if (await this.departmentLevel2Repository.searchByName(name) !== null) {
+      throw new DepartmentAlreadyExistError()
     }
+    entity.updateName(name)
+
   }
   private async ensureDepartmentLevel1Exists({ entity, departmentLevel1Id }: { departmentLevel1Id?: Primitives<DepartmentId>, entity: DepartmentLevel2 }): Promise<void> {
-    if (!!departmentLevel1Id && entity.idDepartmentLevel1Value !== departmentLevel1Id) {
-      const id = new DepartmentId(departmentLevel1Id)
-      if (await this.departmentLevel1Repository.searchById(id.value) === null) {
-        throw new DepartmentDoesNotExistError()
-      }
-      entity.updateDepartment1(id.value)
+    if (!departmentLevel1Id) return
+
+    if (entity.idDepartmentLevel1Value !== departmentLevel1Id) return
+
+    if (await this.departmentLevel1Repository.searchById(departmentLevel1Id) === null) {
+      throw new DepartmentDoesNotExistError()
     }
+    entity.updateDepartment1(departmentLevel1Id)
+
   }
 }

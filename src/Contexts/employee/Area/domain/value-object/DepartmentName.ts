@@ -11,14 +11,14 @@ export class DepartmentName extends StringValueObject {
     constructor(readonly value: string) {
         super(value)
 
-        this.ensureIsValidSerial(value)
+        this.ensureIsValidName(value)
     }
 
     toPrimitives(): string {
         return this.value
     }
 
-    private ensureIsValidSerial(value: string): void {
+    private ensureIsValidName(value: string): void {
         if (!this.isValidLength(value)) {
             throw new InvalidArgumentError(`El nombre del area debe tener al menos ${this.NAME_MIN_LENGTH} caracteres y un máximo de ${this.NAME_MAX_LENGTH} caracteres`)
         }
@@ -36,14 +36,9 @@ export class DepartmentName extends StringValueObject {
     }
 
     static async updateNameField({ name, entity }: { name?: Primitives<DepartmentName>, entity: IDepartment }): Promise<void> {
+        if (!name) return
 
-        if (name === undefined) {
-            return
-        }
-
-        if (entity.nameValue === name) {
-            return
-        }
+        if (entity.nameValue === name) return
 
         entity.updateName(name)
     }

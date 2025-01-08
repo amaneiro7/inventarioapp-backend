@@ -1,37 +1,64 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { DepartmentId } from '../../Area/domain/value-object/DepartmentId'
 import { CargoId } from './CargoId'
 import { CargoName } from './CargoName'
 
 export interface CargoPrimitives {
   id: Primitives<CargoId>
   name: Primitives<CargoName>
+  departments: Primitives<DepartmentId>[]
 }
 
 export class Cargo {
-  constructor (
+  constructor(
     private readonly id: CargoId,
-    private readonly name: CargoName
-  ) {}
+    private name: CargoName,
+    private departments: DepartmentId[]
+  ) { }
 
-  static fromPrimitives (primitives: CargoPrimitives): Cargo {
+  static create(params: Omit<CargoPrimitives, "id">): Cargo {
+    const id = CargoId.random().value
+    const departments = params.departments.map(deps => new DepartmentId(deps))
     return new Cargo(
-      new CargoId(primitives.id),
-      new CargoName(primitives.name)
+      new CargoId(id),
+      new CargoName(params.name),
+      departments
     )
   }
 
-  toPrimitive (): CargoPrimitives {
+  static fromPrimitives(primitives: CargoPrimitives): Cargo {
+    return new Cargo(
+      new CargoId(primitives.id),
+      new CargoName(primitives.name),
+      primitives.departments.map(deps => new DepartmentId(deps))
+    )
+  }
+
+  toPrimitive(): CargoPrimitives {
     return {
       id: this.idValue,
-      name: this.nameValue
+      name: this.nameValue,
+      departments: this.departments.map(dept => dept.value)
     }
   }
 
-  get idValue (): Primitives<CargoId> {
+  get idValue(): Primitives<CargoId> {
     return this.id.value
   }
 
-  get nameValue (): Primitives<CargoName> {
+  get nameValue(): Primitives<CargoName> {
     return this.name.value
+  }
+
+  get departmentsValue(): Primitives<DepartmentId>[] {
+    return this.departments.map(deps => deps.value)
+  }
+
+  updateName(newName: Primitives<CargoName>): void {
+    this.name = new CargoName(newName)
+  }
+
+  updateDepartments(dedepartmentIds: Primitives<DepartmentId>[]): void {
+    this.departments = dedepartmentIds.map(deps => new DepartmentId(deps))
   }
 }

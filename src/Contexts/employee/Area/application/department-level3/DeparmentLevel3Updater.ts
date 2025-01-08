@@ -7,7 +7,7 @@ import { CargoRepository } from "../../../Cargo/domain/CargoRepository"
 import { DepartmentLevel3, DepartmentLevel3Primitives } from "../../domain/entity/DepartmentLevel3"
 
 
-export class DepartmentLevel2Updater {
+export class DepartmentLevel3Updater {
   private readonly updateDepartmentLevel3UseCase: UpdateDepartmentLevel3UseCase
   constructor(
     private readonly departmentLevel3Repository: DepartmentRepository<DepartmentLevel3Primitives>,

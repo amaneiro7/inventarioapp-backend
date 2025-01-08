@@ -1,3 +1,3 @@
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { Uuid } from "../../../Shared/domain/value-object/Uuid";
 
-export class CargoId extends StringValueObject {}
+export class CargoId extends Uuid { }

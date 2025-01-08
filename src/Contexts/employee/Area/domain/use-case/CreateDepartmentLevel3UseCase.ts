@@ -5,9 +5,10 @@ import { type DepartmentPrimitives } from "../entity/IDeparment"
 import { type DepartmentRepository } from "../repository/DepartmentRepository"
 import { type DepartmentId } from "../value-object/DepartmentId"
 import { type DepartmentName } from "../value-object/DepartmentName"
+import { CargoId } from "../../../Cargo/domain/CargoId"
 import { DepartmentAlreadyExistError } from "../value-object/DepartmentAlreadyExistError"
 import { DepartmentDoesNotExistError } from "../value-object/DepartmentDoesNotExistError"
-import { CargoId } from "../../../Cargo/domain/CargoId"
+import { CargoDoesNotExistError } from "../../../Cargo/domain/CargoDoesNotExistError"
 
 export class CreateDepartmentLevel3UseCase {
     constructor(
@@ -42,7 +43,7 @@ export class CreateDepartmentLevel3UseCase {
     private async ensureCargoExists(cargos: Primitives<CargoId>[]): Promise<void> {
         for (const cargoId of cargos) {
             if (await this.cargoRepository.searchById(new CargoId(cargoId).value) === null) {
-                throw new DepartmentDoesNotExistError()
+                throw new CargoDoesNotExistError()
             }
         }
     }
