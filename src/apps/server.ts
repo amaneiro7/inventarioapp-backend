@@ -90,7 +90,8 @@ export class Server {
 
     // Manejo de errores global
     router.use((err: Error, req: Request, res: Response, _next: () => void) => {
-      this.logger.error(err)
+      const errorMessage = `name: ${err.name} - message: ${err.message}`
+      this.logger.error(errorMessage)
       res.status(httpStatus.BAD_REQUEST).send(err.message)
     })
   }
