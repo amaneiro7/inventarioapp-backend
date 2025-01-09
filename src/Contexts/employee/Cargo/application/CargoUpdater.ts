@@ -1,5 +1,5 @@
-import { type DepartmentLevel3Primitives } from "../../Area/domain/entity/DepartmentLevel3";
-import { type DepartmentRepository } from "../../Area/domain/repository/DepartmentRepository";
+import { type DepartmentLevel3Primitives } from "../../IDepartment/domain/entity/DepartmentLevel3";
+import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository";
 import { type CargoRepository } from "../domain/CargoRepository";
 import { CargoId } from "../domain/CargoId";
 import { Cargo, type CargoPrimitives } from "../domain/Cargo";

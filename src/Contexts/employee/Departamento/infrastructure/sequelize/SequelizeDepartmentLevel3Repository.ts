@@ -3,8 +3,8 @@ import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentLevel3Primitives } from '../../domain/entity/DepartmentLevel3'
 import { type CargoName } from '../../../Cargo/domain/CargoName'
-import { type DepartmentRepository } from '../../domain/repository/DepartmentRepository'
-import { DepartmentId } from '../../DepartmentId'
+import { type DepartmentRepository } from '../../../IDepartment/domain/repository/DepartmentRepository'
+import { DepartmentId } from '../../../IDepartment/DepartmentId'
 import { DepartmentLevel3Model } from './DepartmenLevel3Schema'
 
 

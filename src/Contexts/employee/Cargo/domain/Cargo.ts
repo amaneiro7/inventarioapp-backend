@@ -1,5 +1,5 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { DepartmentId } from '../../Area/domain/value-object/DepartmentId'
+import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { CargoId } from './CargoId'
 import { CargoName } from './CargoName'
 

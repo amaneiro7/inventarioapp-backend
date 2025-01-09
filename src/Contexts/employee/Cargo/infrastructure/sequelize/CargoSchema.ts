@@ -10,8 +10,8 @@ import { type CargoPrimitives } from '../../domain/Cargo'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoName } from '../../domain/CargoName'
-import { type DepartmentId } from '../../../Area/domain/value-object/DepartmentId'
-import { DepartmentLevel3Model } from '../../../Area/infrastructure/sequelize/DepartmenLevel3Schema'
+import { type DepartmentId } from '../../../IDepartment/DepartmentId'
+import { DepartmentLevel3Model } from '../../../Departamento/infrastructure/sequelize/DepartmenLevel3Schema'
 
 
 export class CargoModel extends Model<Omit<CargoPrimitives, 'departments'>> implements CargoPrimitives {

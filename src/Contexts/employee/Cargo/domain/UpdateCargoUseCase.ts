@@ -1,11 +1,11 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type DepartmentLevel3Primitives } from "../../Area/domain/entity/DepartmentLevel3"
-import { type DepartmentRepository } from "../../Area/domain/repository/DepartmentRepository"
-import { type DepartmentId } from "../../Area/domain/value-object/DepartmentId"
+import { type DepartmentLevel3Primitives } from "../../IDepartment/domain/entity/DepartmentLevel3"
+import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentId } from "../../IDepartment/DepartmentId"
 import { type Cargo, type CargoPrimitives } from "./Cargo"
 import { type CargoName } from "./CargoName"
 import { type CargoRepository } from "./CargoRepository"
-import { DepartmentDoesNotExistError } from "../../Area/domain/value-object/DepartmentDoesNotExistError"
+import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
 import { CargoAlreadyExistError } from "./CargoAlreadyExistError"
 
 export class UpdateCargoUseCase {
