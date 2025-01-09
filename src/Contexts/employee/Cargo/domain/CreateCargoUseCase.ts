@@ -1,8 +1,8 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type DepartmentLevel3Primitives } from "../../IDepartment/domain/entity/DepartmentLevel3"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type CargoRepository } from "./CargoRepository"
 import { type CargoPrimitives } from "./Cargo"
+import { type DepartmentoPrimitives } from "../../Departamento/domain/Departmento"
 import { DepartmentId } from "../../IDepartment/DepartmentId"
 import { CargoName } from "./CargoName"
 import { CargoAlreadyExistError } from "./CargoAlreadyExistError"
@@ -11,16 +11,16 @@ import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNot
 export class CreateCargoUseCase {
     constructor(
         private readonly cargoRepository: CargoRepository,
-        private readonly departmentLevel3Repository: DepartmentRepository<DepartmentLevel3Primitives>,
+        private readonly departmentoRepository: DepartmentRepository<DepartmentoPrimitives>,
     ) { }
 
-    public async execute({ name, departments }: Omit<CargoPrimitives, 'id'>): Promise<void> {
+    public async execute({ name, departmentos }: Omit<CargoPrimitives, 'id'>): Promise<void> {
 
         // Se verifica que el cargo no exista
         await this.ensureCargoDoesNotExist(name)
 
         // Se verifica que los departamentos existan
-        await this.ensureDepartmentsExists(departments)
+        await this.ensureDepartmentosExists(departmentos)
     }
 
     private async ensureCargoDoesNotExist(name: Primitives<CargoName>): Promise<void> {
@@ -29,10 +29,10 @@ export class CreateCargoUseCase {
         }
     }
 
-    private async ensureDepartmentsExists(departments: Primitives<DepartmentId>[]): Promise<void> {
-        for (const departmentId of departments) {
-            if (await this.departmentLevel3Repository.searchById(departmentId) === null) {
-                throw new DepartmentDoesNotExistError()
+    private async ensureDepartmentosExists(departmentos: Primitives<DepartmentId>[]): Promise<void> {
+        for (const departmentId of departmentos) {
+            if (await this.departmentoRepository.searchById(departmentId) === null) {
+                throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
             }
         }
     }

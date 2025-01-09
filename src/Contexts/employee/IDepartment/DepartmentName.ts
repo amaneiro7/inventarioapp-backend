@@ -1,6 +1,6 @@
+import { type Primitives } from "../../Shared/domain/value-object/Primitives"
 import { InvalidArgumentError } from "../../Shared/domain/value-object/InvalidArgumentError"
 import { StringValueObject } from "../../Shared/domain/value-object/StringValueObject"
-import { type Primitives } from "../../Shared/domain/value-object/Primitives"
 import { IDepartment } from "./IDeparment"
 
 export class DepartmentName extends StringValueObject {

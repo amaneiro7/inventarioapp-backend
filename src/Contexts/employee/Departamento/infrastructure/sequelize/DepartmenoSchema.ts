@@ -9,15 +9,17 @@ import {
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
-import { type DepartmentLevel3Primitives } from '../../domain/entity/DepartmentLevel3'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
+import { type DepartmentoPrimitives } from '../../domain/Departmento'
+import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 
 
-export class DepartmentLevel3Model extends Model<Omit<DepartmentLevel3Primitives, 'cargos'>> implements DepartmentLevel3Primitives {
+export class DepartmentoModel extends Model<Omit<DepartmentoPrimitives, 'cargos'>> implements DepartmentoPrimitives {
     declare id: Primitives<DepartmentId>
     declare name: Primitives<DepartmentName>
-    declare departmentLevel2Id: Primitives<DepartmentId>
+    declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
+    declare centroCostoId: Primitives<CodCentroCosto>
     declare cargos: Primitives<CargoId>[]
 
     // Métodos de asociación
@@ -26,12 +28,13 @@ export class DepartmentLevel3Model extends Model<Omit<DepartmentLevel3Primitives
     public setCargos!: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 
     static async associate(models: Sequelize['models']): Promise<void> {
-        this.belongsTo(models.DepartmentLevel2, { as: 'departmentLevel2', foreignKey: 'departmentLevel2Id' })
-        this.belongsToMany(models.Cargo, { as: 'cargos', through: 'CargoDepartmentLevel3', foreignKey: 'departmentLevel3Id' })
+        this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' })
+        this.belongsTo(models.CentroCosto, { as: 'centroCosto', foreignKey: 'centroCostoId' })
+        this.belongsToMany(models.Cargo, { as: 'cargos', through: 'CargoDepartmento', foreignKey: 'departmentoId' })
     }
 
     static async initialize(sequelize: Sequelize): Promise<void> {
-        DepartmentLevel3Model.init(
+        DepartmentoModel.init(
             {
                 id: {
                     type: DataTypes.UUID,
@@ -43,14 +46,18 @@ export class DepartmentLevel3Model extends Model<Omit<DepartmentLevel3Primitives
                     allowNull: false,
                     unique: true
                 },
-                departmentLevel2Id: {
+                vicepresidenciaEjecutivaId: {
                     type: DataTypes.UUID,
+                    allowNull: false
+                },
+                centroCostoId: {
+                    type: DataTypes.STRING,
                     allowNull: false
                 }
             },
             {
                 sequelize,
-                modelName: 'DepartmentLevel3',
+                modelName: 'Departmento',
                 timestamps: false,
                 underscored: true
             }

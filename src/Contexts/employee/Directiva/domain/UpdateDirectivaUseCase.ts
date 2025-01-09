@@ -1,6 +1,6 @@
 
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type DepartmentName } from "../../IDepartment/DepartmentName"
 import { Directiva, type DirectivaPrimitives } from "./Directiva"
 import { DepartmentAlreadyExistError } from "../../IDepartment/DepartmentAlreadyExistError"

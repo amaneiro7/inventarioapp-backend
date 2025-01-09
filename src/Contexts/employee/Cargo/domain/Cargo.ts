@@ -6,23 +6,23 @@ import { CargoName } from './CargoName'
 export interface CargoPrimitives {
   id: Primitives<CargoId>
   name: Primitives<CargoName>
-  departments: Primitives<DepartmentId>[]
+  departmentos: Primitives<DepartmentId>[]
 }
 
 export class Cargo {
   constructor(
     private readonly id: CargoId,
     private name: CargoName,
-    private departments: DepartmentId[]
+    private departmentos: DepartmentId[]
   ) { }
 
   static create(params: Omit<CargoPrimitives, "id">): Cargo {
     const id = CargoId.random().value
-    const departments = params.departments.map(deps => new DepartmentId(deps))
+    const departmentos = params.departmentos.map(deps => new DepartmentId(deps))
     return new Cargo(
       new CargoId(id),
       new CargoName(params.name),
-      departments
+      departmentos
     )
   }
 
@@ -30,7 +30,7 @@ export class Cargo {
     return new Cargo(
       new CargoId(primitives.id),
       new CargoName(primitives.name),
-      primitives.departments.map(deps => new DepartmentId(deps))
+      primitives.departmentos.map(deps => new DepartmentId(deps))
     )
   }
 
@@ -38,7 +38,7 @@ export class Cargo {
     return {
       id: this.idValue,
       name: this.nameValue,
-      departments: this.departments.map(dept => dept.value)
+      departmentos: this.departmentos.map(dept => dept.value)
     }
   }
 
@@ -50,15 +50,15 @@ export class Cargo {
     return this.name.value
   }
 
-  get departmentsValue(): Primitives<DepartmentId>[] {
-    return this.departments.map(deps => deps.value)
+  get departmentosValue(): Primitives<DepartmentId>[] {
+    return this.departmentos.map(deps => deps.value)
   }
 
   updateName(newName: Primitives<CargoName>): void {
     this.name = new CargoName(newName)
   }
 
-  updateDepartments(dedepartmentIds: Primitives<DepartmentId>[]): void {
-    this.departments = dedepartmentIds.map(deps => new DepartmentId(deps))
+  updateDepartmentos(departamentosIds: Primitives<DepartmentId>[]): void {
+    this.departmentos = departamentosIds.map(deps => new DepartmentId(deps))
   }
 }

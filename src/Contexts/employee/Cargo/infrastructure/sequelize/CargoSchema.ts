@@ -11,21 +11,22 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoName } from '../../domain/CargoName'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { DepartmentLevel3Model } from '../../../Departamento/infrastructure/sequelize/DepartmenLevel3Schema'
+import { type DepartmentoModel } from '../../../Departamento/infrastructure/sequelize/DepartmenoSchema'
 
 
-export class CargoModel extends Model<Omit<CargoPrimitives, 'departments'>> implements CargoPrimitives {
+
+export class CargoModel extends Model<Omit<CargoPrimitives, 'departmentos'>> implements CargoPrimitives {
   declare id: Primitives<CargoId>
   declare name: Primitives<CargoName>
-  declare departments: Primitives<DepartmentId>[]
+  declare departmentos: Primitives<DepartmentId>[]
 
   // Métodos de asociación
-  public getDeparments!: BelongsToManyGetAssociationsMixin<DepartmentLevel3Model>
-  public addDeparments!: BelongsToManyAddAssociationsMixin<DepartmentLevel3Model, Primitives<DepartmentId>>
-  public setDeparments!: BelongsToManySetAssociationsMixin<DepartmentLevel3Model, Primitives<DepartmentId>>
+  public getDeparments!: BelongsToManyGetAssociationsMixin<DepartmentoModel>
+  public addDeparments!: BelongsToManyAddAssociationsMixin<DepartmentoModel, Primitives<DepartmentId>>
+  public setDeparments!: BelongsToManySetAssociationsMixin<DepartmentoModel, Primitives<DepartmentId>>
 
   static async associate(models: Sequelize['models']): Promise<void> {
-    this.belongsToMany(models.DepartmentsLevel3, { as: 'departments', through: "CargoDepartmentLevel3" })
+    this.belongsToMany(models.Departmentso, { as: 'departmentos', through: "CargoDepartmento" })
     this.hasMany(models.Employee, { as: 'employees', foreignKey: 'cargoId' })
   }
   static async initialize(sequelize: Sequelize): Promise<void> {

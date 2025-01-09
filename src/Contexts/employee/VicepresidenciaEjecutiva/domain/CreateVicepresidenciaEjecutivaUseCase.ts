@@ -1,5 +1,5 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives";
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository";
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository";
 import { type DepartmentName } from "../../IDepartment/DepartmentName";
 import { type VicepresidenciaEjecutivaPrimitives } from "./VicepresidenciaEjecutiva";
 import { type DirectivaPrimitives } from "../../Directiva/domain/Directiva";
@@ -26,7 +26,7 @@ export class CreateVicepresidenciaEjecutivaUseCase {
 
     private async ensuredirectivaExists(directivaId: Primitives<DepartmentId>): Promise<void> {
         if (await this.directivaRepository.searchById(directivaId) === null) {
-            throw new DepartmentDoesNotExistError('La Directiva')
+            throw new DepartmentDoesNotExistError('La directiva')
         }
     }
 }

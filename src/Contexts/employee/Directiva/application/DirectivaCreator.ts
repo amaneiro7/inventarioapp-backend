@@ -1,4 +1,4 @@
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { CreateDirectivaUseCase } from "../domain/CreatorDirectivaUseCase"
 import { Directiva, type DirectivaPrimitives } from "../domain/Directiva"
 

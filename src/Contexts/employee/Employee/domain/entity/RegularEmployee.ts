@@ -1,17 +1,37 @@
-import { Primitives } from "../../../../Shared/domain/value-object/Primitives";
-import { EmployeeCedula } from "../EmployeeCedula";
-import { EmployeeEmail } from "../EmployeeEmail";
-import { EmployeeId } from "../EmployeeId";
-import { EmployeeIsGeneric } from "../EmployeeIsGeneric";
-import { EmployeeIsWorking } from "../EmployeeIsWorking";
-import { EmployeeLastName } from "../EmployeeLastName";
-import { EmployeeName } from "../EmployeeName";
-import { EmployeeNationality } from "../EmployeeNationality";
-import { EmployeeUserName } from "../EmployeeUsername";
-import { Extension } from "../Extension";
-import { PhoneNumber } from "../PhoneNumber";
-import { EmployeeCode } from "../valueObject/EmployeCode";
-import { Employee } from "./Employee";
+import { Primitives } from "../../../../Shared/domain/value-object/Primitives"
+import { CargoId } from "../../../Cargo/domain/CargoId"
+import { CodCentroCosto } from "../../../CentroCosto/domain/CodCentroCosto"
+import { DepartmentId } from "../../../IDepartment/DepartmentId"
+import { EmployeeCedula } from "../EmployeeCedula"
+import { EmployeeEmail } from "../EmployeeEmail"
+import { EmployeeId } from "../EmployeeId"
+import { EmployeeIsGeneric } from "../EmployeeIsGeneric"
+import { EmployeeIsWorking } from "../EmployeeIsWorking"
+import { EmployeeLastName } from "../EmployeeLastName"
+import { EmployeeName } from "../EmployeeName"
+import { EmployeeNationality } from "../EmployeeNationality"
+import { EmployeeUserName } from "../EmployeeUsername"
+import { Extension } from "../Extension"
+import { PhoneNumber } from "../PhoneNumber"
+import { EmployeeCode } from "../valueObject/EmployeCode"
+import { EmployeeLocation } from "../valueObject/EmployeeLocation"
+import { Employee, type EmployeePrimitives } from "./Employee"
+
+export interface RegularEmployeePrimitives extends EmployeePrimitives {
+    name: Primitives<EmployeeName>,
+    lastName: Primitives<EmployeeLastName>,
+    email: Primitives<EmployeeEmail>,
+    isWorking: Primitives<EmployeeIsWorking>,
+    employeeCode: Primitives<EmployeeCode>,
+    nationality: Primitives<EmployeeNationality>,
+    cedula: Primitives<EmployeeCedula>,
+    codCentroCosto: Primitives<CodCentroCosto>,
+    locationId: Primitives<EmployeeLocation>,
+    departmentoId: Primitives<DepartmentId>,
+    cargoId: Primitives<CargoId>,
+    extension: Primitives<Extension>[],
+    phone: Primitives<PhoneNumber>[],
+}
 
 export class RegularEmployee extends Employee {
     constructor(
@@ -25,10 +45,10 @@ export class RegularEmployee extends Employee {
         private readonly employeeCode: EmployeeCode,
         private readonly nationality: EmployeeNationality,
         private readonly cedula: EmployeeCedula,
-        private codCentroCosto: string,
-        private locationId: string,
-        private departmentId: string,
-        private cargoId: string,
+        private codCentroCosto: CodCentroCosto,
+        private locationId: EmployeeLocation,
+        private departmentoId: DepartmentId,
+        private cargoId: CargoId,
         private extension: Extension[],
         private phone: PhoneNumber[]
     ) {
@@ -63,23 +83,23 @@ export class RegularEmployee extends Employee {
     get cedulaValue(): Primitives<EmployeeCedula> {
         return this.cedula.value
     }
-    get codCentroCostoValue(): Primitives<EmployeeUserName> {
+    get codCentroCostoValue(): Primitives<CodCentroCosto> {
         return this.codCentroCosto.value
     }
-    get locationIdValue(): Primitives<EmployeeUserName> {
+    get locationIdValue(): Primitives<EmployeeLocation> {
         return this.locationId.value
     }
-    get departmentIdValue(): Primitives<EmployeeUserName> {
-        return this.departmentId.value
+    get departmentoIdValue(): Primitives<DepartmentId> {
+        return this.departmentoId.value
     }
-    get cargoIdValue(): Primitives<EmployeeUserName> {
+    get cargoIdValue(): Primitives<CargoId> {
         return this.cargoId.value
     }
-    get extensionValue(): Primitives<Extension[]> {
-        return this.extension
+    get extensionValue(): Primitives<Extension>[] {
+        return this.extension.map(extension => extension.value)
     }
-    get phoneValue(): Primitives<PhoneNumber[]> {
-        return this.phone
+    get phoneValue(): Primitives<PhoneNumber>[] {
+        return this.phone.map(phone => phone.value)
     }
 
     updateName(newName: Primitives<EmployeeName>): void {
@@ -94,22 +114,22 @@ export class RegularEmployee extends Employee {
     updateIsWorking(newIsWorking: Primitives<EmployeeIsWorking>): void {
         this.isWorking = new EmployeeIsWorking(newIsWorking)
     }
-    updateCodCentroCosto(newCodCentroCosto: Primitives<EmployeeUserName>): void {
-        this.codCentroCosto = new EmployeeUserName(newCodCentroCosto)
+    updateCodCentroCosto(newCodCentroCosto: Primitives<CodCentroCosto>): void {
+        this.codCentroCosto = new CodCentroCosto(newCodCentroCosto)
     }
-    updateLocationId(newLocationId: Primitives<EmployeeUserName>): void {
-        this.locationId = new EmployeeUserName(newLocationId)
+    updateLocationId(newLocationId: Primitives<EmployeeLocation>): void {
+        this.locationId = new EmployeeLocation(newLocationId)
     }
-    updateDepartmentId(newDepartmentId: Primitives<EmployeeUserName>): void {
-        this.departmentId = new EmployeeUserName(newDepartmentId)
+    updateDepartmentoId(newDepartmentoId: Primitives<DepartmentId>): void {
+        this.departmentoId = new DepartmentId(newDepartmentoId)
     }
-    updateCargoId(newCargoId: Primitives<EmployeeUserName>): void {
-        this.cargoId = new EmployeeUserName(newCargoId)
+    updateCargoId(newCargoId: Primitives<CargoId>): void {
+        this.cargoId = new CargoId(newCargoId)
     }
-    updateExtension(newExtension: Primitives<Extension>): void {
-        this.extension = new Extension(newExtension)
+    updateExtension(extensionIds: Primitives<Extension>[]): void {
+        this.extension = extensionIds.map(extension => new Extension(extension))
     }
-    updatePhone(newPhone: Primitives<PhoneNumber>): void {
-        this.phone = new PhoneNumber(newPhone)
+    updatePhone(phoneIds: Primitives<PhoneNumber>[]): void {
+        this.phone = phoneIds.map(phone => new PhoneNumber(phone))
     }
 }

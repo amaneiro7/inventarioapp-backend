@@ -1,7 +1,7 @@
 import { CreateCargoUseCase } from "../domain/CreateCargoUseCase"
 import { Cargo, type CargoPrimitives } from "../domain/Cargo"
 import { type DepartmentLevel3Primitives } from "../../IDepartment/domain/entity/DepartmentLevel3"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type CargoRepository } from "../domain/CargoRepository"
 
 export class CargoCreator {

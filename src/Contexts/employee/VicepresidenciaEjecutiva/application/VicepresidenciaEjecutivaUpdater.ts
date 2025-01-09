@@ -2,7 +2,7 @@ import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNot
 import { DepartmentId } from "../../IDepartment/DepartmentId"
 import { UpdateVicepresidenciaEjecutivaUseCase } from "../domain/UpdateVicepresidenciaEjecutivaUseCase"
 import { VicepresidenciaEjecutiva, type VicepresidenciaEjecutivaPrimitives } from "../domain/VicepresidenciaEjecutiva"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type DirectivaPrimitives } from "../../Directiva/domain/Directiva"
 
 

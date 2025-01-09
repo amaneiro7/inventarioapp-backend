@@ -1,4 +1,4 @@
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type DirectivaPrimitives } from "../domain/Directiva"
 
 export class DirectivaFinderAll {

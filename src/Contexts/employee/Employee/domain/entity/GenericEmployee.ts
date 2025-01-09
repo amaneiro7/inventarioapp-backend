@@ -1,8 +1,10 @@
-import { Employee } from "./Employee"
+import { Employee, EmployeePrimitives } from "./Employee"
 import { EmployeeId } from "../EmployeeId"
 import { EmployeeIsGeneric } from "../EmployeeIsGeneric"
 import { EmployeeUserName } from "../EmployeeUsername"
 import { InvalidArgumentError } from "../../../../Shared/domain/value-object/InvalidArgumentError"
+
+export type GenericEmployeePrimitives = EmployeePrimitives
 
 export class GenericEmployee extends Employee {
     constructor(

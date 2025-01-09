@@ -1,4 +1,4 @@
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { Directiva, type DirectivaPrimitives } from "../domain/Directiva"
 import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
 import { DepartmentId } from "../../IDepartment/DepartmentId"

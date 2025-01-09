@@ -1,7 +1,7 @@
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DepartmentRepository } from '../../../IDepartment/domain/repository/DepartmentRepository'
+import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type DirectivaPrimitives } from '../../domain/Directiva'

@@ -1,5 +1,5 @@
 import { type VicepresidenciaEjecutivaPrimitives } from "../domain/VicepresidenciaEjecutiva"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
 import { DepartmentId } from "../../IDepartment/DepartmentId"
 

@@ -1,5 +1,5 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives";
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository";
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository";
 import { type DepartmentName } from "../../IDepartment/DepartmentName";
 import { type DirectivaPrimitives } from "./Directiva";
 import { DepartmentAlreadyExistError } from "../../IDepartment/DepartmentAlreadyExistError";
@@ -12,7 +12,7 @@ export class CreateDirectivaUseCase {
     }
     private async ensureDirectivaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
         if (await this.directivaRepository.searchByName(name) !== null) {
-            throw new DepartmentAlreadyExistError('Directiva')
+            throw new DepartmentAlreadyExistError('La directiva')
         }
     }
 }

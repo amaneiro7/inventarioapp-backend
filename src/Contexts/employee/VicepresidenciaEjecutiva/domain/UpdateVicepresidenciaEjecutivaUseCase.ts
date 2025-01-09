@@ -1,7 +1,7 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type DepartmentRepository } from "../../IDepartment/domain/repository/DepartmentRepository"
 import { DepartmentAlreadyExistError } from "../../IDepartment/DepartmentAlreadyExistError"
 import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
+import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type DepartmentId } from "../../IDepartment/DepartmentId"
 import { type DepartmentName } from "../../IDepartment/DepartmentName"
 import { type DirectivaPrimitives } from "../../Directiva/domain/Directiva"
