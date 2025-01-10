@@ -1,6 +1,6 @@
 import { Employee, EmployeePrimitives } from "./Employee"
 import { EmployeeId } from "../EmployeeId"
-import { EmployeeIsGeneric } from "../EmployeeIsGeneric"
+import { EmployeeIsGeneric } from "../EmployeeType"
 import { EmployeeUserName } from "../EmployeeUsername"
 import { InvalidArgumentError } from "../../../../Shared/domain/value-object/InvalidArgumentError"
 
