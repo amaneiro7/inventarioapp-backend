@@ -1,10 +1,10 @@
-import { Employee, type EmployeePrimitives } from "../domain/Employee"
-import { EmployeeDoesNotExistError } from "../domain/EmployeeDoesNotExistError"
-import { EmployeeId } from "../domain/EmployeeId"
-import { EmployeeUserName } from "../domain/EmployeeUsername"
+import { EmployeeDoesNotExistError } from "../domain/Errors/EmployeeDoesNotExistError"
+import { EmployeeId } from "../domain/valueObject/EmployeeId"
+import { EmployeeUserName } from "../domain/valueObject/EmployeeUsername"
 
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type EmployeeRepository } from "../domain/EmployeeRepository"
+import { type EmployeeRepository } from "../domain/Repository/EmployeeRepository"
+import { Employee, type EmployeePrimitives } from "../domain/entity/Employee"
 
 export class EmployeeUpdater {
   constructor(private readonly employeeRepository: EmployeeRepository) { }
@@ -12,7 +12,8 @@ export class EmployeeUpdater {
   async run({ id, params }: { id: Primitives<EmployeeId>, params: Partial<Omit<EmployeePrimitives, 'id'>> }): Promise<void> {
     const employeeId = new EmployeeId(id).value
     const employee = await this.employeeRepository.searchById(employeeId)
-    if (employee === null) {
+
+    if (!employee) {
       throw new EmployeeDoesNotExistError(id)
     }
 

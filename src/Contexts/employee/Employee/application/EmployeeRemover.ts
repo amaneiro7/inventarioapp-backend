@@ -1,6 +1,6 @@
-import { EmployeeId } from "../domain/EmployeeId"
+import { EmployeeId } from "../domain/valueObject/EmployeeId"
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
-import { type EmployeeRepository } from "../domain/EmployeeRepository"
+import { type EmployeeRepository } from "../domain/Repository/EmployeeRepository"
 
 export class EmployeeRemover {
   constructor(private readonly employeeRepository: EmployeeRepository) { }

@@ -38,7 +38,7 @@ import { type DevicesApiResponse } from '../infrastructure/sequelize/DeviceRespo
 import { type DeviceParams } from './DeviceCreator'
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
-import { type EmployeeRepository } from '../../../employee/Employee/domain/EmployeeRepository'
+import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 

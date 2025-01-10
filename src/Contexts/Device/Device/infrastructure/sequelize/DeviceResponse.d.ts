@@ -1,7 +1,7 @@
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type BrandPrimitives } from '../../../../Brand/domain/Brand'
 import { type CategoryPrimitives } from '../../../../Category/Category/domain/Category'
-import { type EmployeePrimitives } from '../../../../employee/Employee/domain/Employee'
+import { type EmployeePrimitives } from '../../../../employee/Employee/domain/Employee.ts.old'
 import { type DeviceComputerPrimitives } from '../../../../Features/Computer/domain/Computer'
 import { type HardDriveCapacityPrimitives } from '../../../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacity'
 import { type HardDriveTypePrimitives } from '../../../../Features/HardDrive/HardDriveType/domain/HardDriveType'

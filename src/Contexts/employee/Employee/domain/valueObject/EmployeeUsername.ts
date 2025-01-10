@@ -1,9 +1,9 @@
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { Employee, EmployeePrimitives } from './Employee'
-import { EmployeeAlreadyExistError } from './EmployeeAlreadyExistError'
-import { EmployeeRepository } from './EmployeeRepository'
+import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { Employee, EmployeePrimitives } from '../Employee.ts.old'
+import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
+import { EmployeeRepository } from '../Repository/EmployeeRepository'
 
 export class EmployeeUserName extends StringValueObject {
   private readonly NAME_MAX_LENGTH: number = 20
@@ -11,23 +11,23 @@ export class EmployeeUserName extends StringValueObject {
   private readonly validRegex: RegExp = /^[a-zA-Z].*\d*/
   private errors: string[] = []
 
-  constructor (readonly value: string) {
+  constructor(readonly value: string) {
     super(value)
 
     this.ensureIsValidName(value)
   }
 
-  toPrimitives (): string {
+  toPrimitives(): string {
     return this.value
   }
 
-  private ensureIsValidName (value: string): void {
+  private ensureIsValidName(value: string): void {
     if (!this.isValid(value)) {
       throw new InvalidArgumentError(`<${value}> is not a valid userName ${this.errors.join(' ')}`)
     }
   }
 
-  private isValid (name: string): boolean {
+  private isValid(name: string): boolean {
     const isNotHasSpecialCharacters = this.validRegex.test(name)
     if (!isNotHasSpecialCharacters) {
       this.errors.push('Username should not contain special characters.')
@@ -39,7 +39,7 @@ export class EmployeeUserName extends StringValueObject {
     return isNotHasSpecialCharacters && validNameLength
   }
 
-  static async updateUserNameField ({ repository, userName, entity }: { repository: EmployeeRepository, userName?: Primitives<EmployeeUserName>, entity: Employee }): Promise<void> {
+  static async updateUserNameField({ repository, userName, entity }: { repository: EmployeeRepository, userName?: Primitives<EmployeeUserName>, entity: Employee }): Promise<void> {
     // Si no se ha pasado un nuevo nombre de usuario no realiza ninguna acción
     if (userName === undefined) {
       return
@@ -54,7 +54,7 @@ export class EmployeeUserName extends StringValueObject {
     entity.updateUserName(userName)
   }
 
-  static async ensureEmployeeDoesNotExit ({ repository, userName }: { repository: EmployeeRepository, userName: Primitives<EmployeeUserName> }): Promise<void> {
+  static async ensureEmployeeDoesNotExit({ repository, userName }: { repository: EmployeeRepository, userName: Primitives<EmployeeUserName> }): Promise<void> {
     // If the nombre de usuario is null, it does not exist, so we don't need to do any verification
     if (userName === null) {
       return

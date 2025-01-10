@@ -1,5 +1,5 @@
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
 enum AreaCode {
   CARACAS = '0212',

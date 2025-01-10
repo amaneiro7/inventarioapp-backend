@@ -6,13 +6,14 @@ import { Filters } from '../../../Shared/domain/criteria/Filters'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { Order } from '../../../Shared/domain/criteria/Order'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { type EmployeePrimitives } from '../domain/Employee'
-import { type EmployeeRepository } from '../domain/EmployeeRepository'
+import { type EmployeePrimitives } from '../domain/entity/Employee'
+import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 
 export class EmployeeSearchByCriteria {
   constructor(private readonly employeeRepository: EmployeeRepository) { }
 
   async run(query: SearchByCriteriaQuery): Promise<EmployeePrimitives[]> {
+
     const filters = query.filters.map((filter) => {
       return new Filter(
         new FilterField(filter.field),

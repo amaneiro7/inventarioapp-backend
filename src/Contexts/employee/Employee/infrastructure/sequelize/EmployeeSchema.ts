@@ -1,6 +1,6 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type EmployeePrimitives } from '../../domain/Employee'
-import { type EmployeeId } from '../../domain/EmployeeId'
+import { type EmployeePrimitives } from '../../domain/Employee.ts.old'
+import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
 // import { type EmployeeName } from '../../domain/EmployeeName'
 // import { type EmployeeLastName } from '../../domain/EmployeeLastName'
 // import { type EmployeeCedula } from '../../domain/EmployeeCedula'
@@ -14,7 +14,7 @@ import { type EmployeeId } from '../../domain/EmployeeId'
 // import { type EmployeeGerenciaId } from '../../domain/EmployeeGerenciaId'
 // import { type EmployeeCoordinacionId } from '../../domain/EmployeeCoordinacionId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeUserName } from '../../domain/EmployeeUsername'
+import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
 
 
 export class EmployeeModel extends Model<EmployeePrimitives> implements EmployeePrimitives {

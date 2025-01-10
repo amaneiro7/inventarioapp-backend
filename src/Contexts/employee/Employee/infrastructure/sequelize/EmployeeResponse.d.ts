@@ -1,7 +1,7 @@
 import { type LocationPrimitives } from '../../../../Location/Location/domain/Location'
 import { type ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 import { type BrandPrimitives } from '../../../../Brand/domain/Brand'
-import { type EmployeePrimitives } from '../../domain/Employee'
+import { type EmployeePrimitives } from '../../domain/Employee.ts.old'
 import { type DevicePrimitives } from '../../../../Device/Device/domain/Device'
 import { type CategoryPrimitives } from '../../../../Category/Category/domain/Category'
 import { type StatusPrimitives } from '../../../../Device/Status/domain/Status'

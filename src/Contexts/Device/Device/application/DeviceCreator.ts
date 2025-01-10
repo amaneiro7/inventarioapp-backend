@@ -17,7 +17,7 @@ import { DeviceStatus } from '../domain/DeviceStatus'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
-import { type EmployeeRepository } from '../../../employee/Employee/domain/EmployeeRepository'
+import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 

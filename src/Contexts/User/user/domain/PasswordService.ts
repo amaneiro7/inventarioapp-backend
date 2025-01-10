@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 import bcrypt from 'bcrypt'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 

@@ -17,11 +17,12 @@ import { Extension } from "../valueObject/Extension"
 import { PhoneNumber } from "../valueObject/PhoneNumber"
 import { EmployeeCode } from "../valueObject/EmployeCode"
 import { EmployeeLocationId } from "../valueObject/EmployeeLocation"
+import { Password } from "./Password"
 
-export interface RegularEmployeePrimitives extends EmployeePrimitives {
+export interface ServiceEmployeePrimitives extends EmployeePrimitives {
     id: Primitives<EmployeeId>,
     username: Primitives<EmployeeUserName>,
-    type: EmployeeTypes.REGULAR
+    type: EmployeeTypes.SERVICE
     name: Primitives<EmployeeName>,
     lastName: Primitives<EmployeeLastName>
     email: Primitives<EmployeeEmail>
@@ -37,7 +38,7 @@ export interface RegularEmployeePrimitives extends EmployeePrimitives {
     phone: Primitives<PhoneNumber>[]
 }
 
-export class RegularEmployee extends Employee {
+export class ServiceEmployee extends Employee {
 
     constructor(
         id: EmployeeId,
@@ -55,7 +56,8 @@ export class RegularEmployee extends Employee {
         departmentoId: DepartmentId,
         cargoId: CargoId,
         extension: Extension[],
-        phone: PhoneNumber[]
+        phone: PhoneNumber[],
+        password: Password,
     ) {
         super(
             id,
@@ -75,18 +77,19 @@ export class RegularEmployee extends Employee {
             extension,
             phone,
         )
-        this.ensureTypeIsRegular()
+        this.ensureTypeIsService()
 
     }
 
-    private ensureTypeIsRegular(): void {
-        if (this.typeValue !== EmployeeTypes.REGULAR) {
-            throw new InvalidArgumentError('Un empleado regular solo puede tener el tipo REGULAR')
+    private ensureTypeIsService(): void {
+        if (this.typeValue !== EmployeeTypes.SERVICE) {
+            throw new InvalidArgumentError('Un empleado Service solo puede tener el tipo Service')
         }
     }
-    static create(params: Omit<RegularEmployeePrimitives, 'id'>): RegularEmployee {
+    static create(params: Omit<ServiceEmployeePrimitives, 'id'>): ServiceEmployee {
         const id = EmployeeId.random().value
-        return new RegularEmployee(
+        const password = Password.defaultPassword
+        return new ServiceEmployee(
             new EmployeeId(id),
             new EmployeeUserName(params.username),
             new EmployeeType(params.type),
@@ -103,6 +106,7 @@ export class RegularEmployee extends Employee {
             new CargoId(params.cargoId),
             params.extension?.map(ext => new Extension(ext)),
             params.phone?.map(phone => new PhoneNumber(phone)),
+            new Password(password),
         )
     }
 

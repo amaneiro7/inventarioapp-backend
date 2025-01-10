@@ -1,7 +1,7 @@
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { RegularEmployee } from './entity/RegularEmployee'
+import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { RegularEmployee } from '../entity/RegularEmployee'
 
 export class EmployeeLastName extends StringValueObject {
   private readonly NAME_MAX_LENGTH = 50

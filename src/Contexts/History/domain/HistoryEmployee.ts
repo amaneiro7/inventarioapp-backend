@@ -1,4 +1,4 @@
-import { EmployeeId } from "../../employee/Employee/domain/EmployeeId"
+import { EmployeeId } from "../../employee/Employee/domain/valueObject/EmployeeId"
 import { AcceptedNullValueObject } from "../../Shared/domain/value-object/AcceptedNullValueObjects"
 import { InvalidArgumentError } from "../../Shared/domain/value-object/InvalidArgumentError"
 import { Primitives } from "../../Shared/domain/value-object/Primitives"

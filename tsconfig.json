@@ -20,7 +20,8 @@
     // "skipLibCheck": true
   },
   "include": [
-    "src/**/**.ts"
+    "src/**/**.ts",
+    "src/Contexts/employee/Employee/domain/Employee.ts.old"
   ],
   "exclude": [
     "node_modules",

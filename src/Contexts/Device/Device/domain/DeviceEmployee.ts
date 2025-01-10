@@ -1,12 +1,12 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { DeviceStatus } from './DeviceStatus'
-import { EmployeeId } from '../../../employee/Employee/domain/EmployeeId'
+import { EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/EmployeeDoesNotExistError'
+import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type EmployeeRepository } from '../../../employee/Employee/domain/EmployeeRepository'
-import { type EmployeePrimitives } from '../../../employee/Employee/domain/Employee'
+import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
+import { type EmployeePrimitives } from '../../../employee/Employee/domain/Employee.ts.old'
 
 
 export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {

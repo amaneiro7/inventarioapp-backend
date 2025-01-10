@@ -1,5 +1,5 @@
-import { type EmployeePrimitives } from '../../domain/Employee'
-import { type EmployeeRepository } from '../../domain/EmployeeRepository'
+import { type EmployeePrimitives } from '../../domain/Employee.ts.old'
+import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
