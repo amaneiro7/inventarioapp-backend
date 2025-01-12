@@ -2,9 +2,9 @@ import { type DepartmentRepository } from "../../IDepartment/DepartmentRepositor
 import { type DepartamentoPrimitives } from "../domain/Departamento"
 
 export class DepartamentoFinderAll {
-    constructor(private readonly departemntoRepository: DepartmentRepository<DepartamentoPrimitives>) { }
+    constructor(private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>) { }
 
     async run(): Promise<DepartamentoPrimitives[]> {
-        return await this.departemntoRepository.searchAll()
+        return await this.departamentoRepository.searchAll()
     }
 }

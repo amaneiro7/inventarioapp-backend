@@ -9,7 +9,7 @@
     "start": "node ./dist/src/apps/start.js",
     "start:bun": "bun ./dist/src/apps/start.js",
     "dev:node": "cross-env NODE_ENV=development nodemon ./src/apps/start.ts",
-    "dev:bun": "cross-env NODE_ENV=development bun ./src/apps/start.ts --watch",
+    "dev:bun": "cross-env NODE_ENV=development bun --watch ./src/apps/start.ts",
     "migration:generate": "sequelize-cli migration:generate --name",
     "migration:all": "sequelize-cli db:migrate",
     "migration:undo": "sequelize-cli db:migrate:undo",

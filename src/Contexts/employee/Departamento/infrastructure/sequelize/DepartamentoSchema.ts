@@ -31,7 +31,7 @@ export class DepartamentoModel extends Model<Omit<DepartamentoPrimitives, 'cargo
         this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' })
         this.belongsTo(models.CentroCosto, { as: 'centroCosto', foreignKey: 'centroCostoId' })
         this.hasMany(models.Employee, { as: 'employee', foreignKey: 'departamentoId' })
-        this.belongsToMany(models.Cargo, { as: 'cargo', through: 'CargoDepartamento', foreignKey: 'departamentoId' })
+        this.belongsToMany(models.Cargo, { as: 'cargos', through: 'cargo_departamento', foreignKey: 'departamentoId', otherKey: 'cargoId' })
     }
 
     static async initialize(sequelize: Sequelize): Promise<void> {

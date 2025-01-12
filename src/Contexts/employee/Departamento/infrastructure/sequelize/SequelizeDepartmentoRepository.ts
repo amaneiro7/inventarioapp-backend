@@ -10,16 +10,72 @@ import { DepartamentoModel } from './DepartamentoSchema'
 
 
 export class SequelizeDepartamentoRepository implements DepartmentRepository<DepartamentoPrimitives> {
-    private readonly cacheKey: string = 'Departamento'
+    private readonly cacheKey: string = 'departamento'
     constructor(private readonly cache: CacheService) { }
     async searchAll(): Promise<DepartamentoPrimitives[]> {
         return await this.cache.getCachedData(this.cacheKey, async () => {
-            return await DepartamentoModel.findAll()
+            return await DepartamentoModel.findAll({
+                attributes: [
+                    'id',
+                    'name',
+                    'createdAt',
+                    'updatedAt'
+                ],
+                include: [
+                    {
+                        association: 'vicepresidenciaEjecutiva',
+                        attributes: ['name'],
+                        include: [{
+                            association: 'directiva',
+                            attributes: ['id', 'name']
+
+                        }]
+                    },
+                    {
+                        association: 'centroCosto',
+                        attributes: ['id', 'name']
+                    },
+                    {
+                        association: 'cargos',
+                        attributes: ['id', 'name'],
+                        through: { attributes: [] }
+                    },
+                    'employee'
+                ]
+            })
         })
     }
 
     async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoPrimitives>> {
-        return await DepartamentoModel.findByPk(id) ?? null
+        return await DepartamentoModel.findByPk(id, {
+            attributes: [
+                'id',
+                'name',
+                'createdAt',
+                'updatedAt'
+            ],
+            include: [
+                {
+                    association: 'vicepresidenciaEjecutiva',
+                    attributes: ['name'],
+                    include: [{
+                        association: 'directiva',
+                        attributes: ['id', 'name']
+
+                    }]
+                },
+                {
+                    association: 'centroCosto',
+                    attributes: ['id', 'name']
+                },
+                {
+                    association: 'cargos',
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] }
+                },
+                'employee'
+            ]
+        }) ?? null
     }
 
     async searchByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoPrimitives>> {

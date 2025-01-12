@@ -24,7 +24,7 @@ export const register = async (router: Router) => {
         searchByCriteria.run.bind(searchByCriteria)
     )
     router.get('/employees/all',
-        authenticate,
+        // authenticate,
         getAllController.run.bind(getAllController)
     )
 

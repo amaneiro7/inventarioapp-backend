@@ -26,7 +26,7 @@ export class CargoModel extends Model<Omit<CargoPrimitives, 'departamentos'>> im
   public setDeparments!: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 
   static async associate(models: Sequelize['models']): Promise<void> {
-    this.belongsToMany(models.Departamento, { as: 'departamento', through: "CargoDepartamento" })
+    this.belongsToMany(models.Departamento, { as: 'departamentos', through: "cargo_departamento", foreignKey: "cargoId", otherKey: "departamentoId" })
     this.hasMany(models.Employee, { as: 'employee', foreignKey: 'cargoId' })
   }
   static async initialize(sequelize: Sequelize): Promise<void> {

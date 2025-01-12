@@ -14,12 +14,12 @@ export const register = async (router: Router) => {
     const patchController: DepartamentoPatchController = container.resolve(DepartamentoDependencies.PatchController)
 
     router.get('/departamentos/',
-        authenticate,
+        // authenticate,
         getAllController.run.bind(getAllController)
     )
 
     router.get('/departamentos/:id',
-        authenticate,
+        // authenticate,
         getController.run.bind(getController)
     )
 
