@@ -11,29 +11,29 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoName } from '../../domain/CargoName'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { type DepartmentoModel } from '../../../Departamento/infrastructure/sequelize/DepartmenoSchema'
+import { type DepartamentoModel } from '../../../Departamento/infrastructure/sequelize/DepartamentoSchema'
 
 
 
-export class CargoModel extends Model<Omit<CargoPrimitives, 'departmentos'>> implements CargoPrimitives {
+export class CargoModel extends Model<Omit<CargoPrimitives, 'departamentos'>> implements CargoPrimitives {
   declare id: Primitives<CargoId>
   declare name: Primitives<CargoName>
-  declare departmentos: Primitives<DepartmentId>[]
+  declare departamentos: Primitives<DepartmentId>[]
 
   // Métodos de asociación
-  public getDeparments!: BelongsToManyGetAssociationsMixin<DepartmentoModel>
-  public addDeparments!: BelongsToManyAddAssociationsMixin<DepartmentoModel, Primitives<DepartmentId>>
-  public setDeparments!: BelongsToManySetAssociationsMixin<DepartmentoModel, Primitives<DepartmentId>>
+  public getDeparments!: BelongsToManyGetAssociationsMixin<DepartamentoModel>
+  public addDeparments!: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
+  public setDeparments!: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 
   static async associate(models: Sequelize['models']): Promise<void> {
-    this.belongsToMany(models.Departmentso, { as: 'departmentos', through: "CargoDepartmento" })
-    this.hasMany(models.Employee, { as: 'employees', foreignKey: 'cargoId' })
+    this.belongsToMany(models.Departamento, { as: 'departamento', through: "CargoDepartamento" })
+    this.hasMany(models.Employee, { as: 'employee', foreignKey: 'cargoId' })
   }
   static async initialize(sequelize: Sequelize): Promise<void> {
     CargoModel.init(
       {
         id: {
-          type: DataTypes.STRING,
+          type: DataTypes.UUID,
           primaryKey: true,
           allowNull: false
         },
@@ -45,7 +45,7 @@ export class CargoModel extends Model<Omit<CargoPrimitives, 'departmentos'>> imp
       },
       {
         modelName: 'Cargo',
-        timestamps: false,
+        timestamps: true,
         underscored: true,
         sequelize
       })

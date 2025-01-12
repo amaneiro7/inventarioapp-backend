@@ -1,4 +1,4 @@
-import { type EmployeePrimitives } from '../../domain/Employee.ts.old'
+import { type EmployeePrimitives } from '../../domain/entity/Employee'
 import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
@@ -36,13 +36,15 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
             'location',
             'computer'
           ]
-        }
+        },
+
       ]
     }) ?? null
   }
 
-  async searchByUserName(userName: string): Promise<EmployeePrimitives | null> {
-    return await EmployeeModel.findOne({ where: { userName } })
+  async searchByQuery(criteria: Criteria): Promise<EmployeePrimitives | null> {
+    const options = this.convert(criteria)
+    return await EmployeeModel.findOne(options)
   }
 
   async save(payload: EmployeePrimitives): Promise<void> {

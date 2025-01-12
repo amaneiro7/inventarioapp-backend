@@ -17,9 +17,9 @@ export interface GenericEmployeePrimitives extends EmployeePrimitives {
     employeeCode: null
     nationality: null
     cedula: null
-    codCentroCosto: null
+    centroTrabajoId: null
     locationId: null
-    departmentoId: null
+    departamentoId: null
     cargoId: null
     extension: []
     phone: []
@@ -37,9 +37,9 @@ export class GenericEmployee extends Employee {
         employeeCode: null,
         nationality: null,
         cedula: null,
-        codCentroCosto: null,
+        centroTrabajoId: null,
         locationId: null,
-        departmentoId: null,
+        departamentoId: null,
         cargoId: null,
         extension: [],
         phone: []
@@ -55,9 +55,9 @@ export class GenericEmployee extends Employee {
             employeeCode,
             nationality,
             cedula,
-            codCentroCosto,
+            centroTrabajoId,
             locationId,
-            departmentoId,
+            departamentoId,
             cargoId,
             extension,
             phone,

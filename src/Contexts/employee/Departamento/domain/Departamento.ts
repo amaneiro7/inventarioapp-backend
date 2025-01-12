@@ -8,13 +8,13 @@ import { CodCentroCosto } from "../../CentroCosto/domain/CodCentroCosto"
 /**
  * Esta clase es el tercer nivel que es el ultimo del organigrama laboral
  */
-export type DepartmentoPrimitives = DepartmentPrimitives & {
+export type DepartamentoPrimitives = DepartmentPrimitives & {
     vicepresidenciaEjecutivaId: Primitives<DepartmentId>
     centroCostoId: Primitives<CodCentroCosto>
     cargos: Primitives<CargoId>[]
 }
 
-export class Departmento extends IDepartment {
+export class Departamento extends IDepartment {
 
     constructor(
         id: DepartmentId,
@@ -26,10 +26,10 @@ export class Departmento extends IDepartment {
         super(id, name)
     }
 
-    static create(params: Omit<DepartmentoPrimitives, 'id'>): Departmento {
+    static create(params: Omit<DepartamentoPrimitives, 'id'>): Departamento {
         const id = DepartmentId.random().value
         const cargos = params.cargos.map(cargo => new CargoId(cargo))
-        return new Departmento(
+        return new Departamento(
             new DepartmentId(id),
             new DepartmentName(params.name),
             new DepartmentId(params.vicepresidenciaEjecutivaId),
@@ -38,8 +38,8 @@ export class Departmento extends IDepartment {
         )
     }
 
-    static fromPrimitives(primitives: DepartmentoPrimitives): Departmento {
-        return new Departmento(
+    static fromPrimitives(primitives: DepartamentoPrimitives): Departamento {
+        return new Departamento(
             new DepartmentId(primitives.id),
             new DepartmentName(primitives.name),
             new DepartmentId(primitives.vicepresidenciaEjecutivaId),
@@ -48,7 +48,7 @@ export class Departmento extends IDepartment {
         )
     }
 
-    toPrimitive(): DepartmentoPrimitives {
+    toPrimitive(): DepartamentoPrimitives {
         return {
             id: this.idValue,
             name: this.nameValue,

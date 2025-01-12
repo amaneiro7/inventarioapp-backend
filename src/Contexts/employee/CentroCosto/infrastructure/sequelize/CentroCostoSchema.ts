@@ -9,8 +9,8 @@ export class CentroCostoModel extends Model<CentroCostoPrimitives> implements Ce
   declare name: Primitives<CentroCostoName>
 
   static async associate(models: Sequelize['models']): Promise<void> {
-    this.hasMany(models.Departamento, { as: 'departamento', foreignKey: 'CentroCostoId' }) // Un CentroCosto puede tener muchos Departamento
-    this.hasMany(models.CentroTrabajo, { as: 'centroTrabajo', foreignKey: 'CentroCostoId' }) // Un CentroCosto puede tener muchos CentroTrabajo
+    this.hasMany(models.Departamento, { as: 'departamento', foreignKey: 'centroCostoId' }) // Un CentroCosto puede tener muchos Departamento
+    this.hasMany(models.CentroTrabajo, { as: 'centroTrabajo', foreignKey: 'centroCostoId' }) // Un CentroCosto puede tener muchos CentroTrabajo
   }
 
   static async initialize(sequelize: Sequelize): Promise<void> {
@@ -19,7 +19,6 @@ export class CentroCostoModel extends Model<CentroCostoPrimitives> implements Ce
         id: {
           type: DataTypes.STRING,
           primaryKey: true,
-          unique: true,
           allowNull: false
         },
         name: {

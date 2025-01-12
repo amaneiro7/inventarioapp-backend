@@ -18,6 +18,7 @@ import { PhoneNumber } from "../valueObject/PhoneNumber"
 import { EmployeeCode } from "../valueObject/EmployeCode"
 import { EmployeeLocationId } from "../valueObject/EmployeeLocation"
 import { Password } from "./Password"
+import { CentroTrabajoId } from "../../../CentroTrabajo/domain/CentroTrabajoId"
 
 export interface ServiceEmployeePrimitives extends EmployeePrimitives {
     id: Primitives<EmployeeId>,
@@ -30,9 +31,9 @@ export interface ServiceEmployeePrimitives extends EmployeePrimitives {
     employeeCode: Primitives<EmployeeCode>
     nationality: Primitives<EmployeeNationality>
     cedula: Primitives<EmployeeCedula>
-    codCentroCosto: Primitives<CodCentroCosto>
+    centroTrabajoId: Primitives<CodCentroCosto>
     locationId: Primitives<EmployeeLocationId>
-    departmentoId: Primitives<DepartmentId>
+    departamentoId: Primitives<DepartmentId>
     cargoId: Primitives<CargoId>
     extension: Primitives<Extension>[]
     phone: Primitives<PhoneNumber>[]
@@ -51,9 +52,9 @@ export class ServiceEmployee extends Employee {
         employeeCode: EmployeeCode,
         nationality: EmployeeNationality,
         cedula: EmployeeCedula,
-        codCentroCosto: CodCentroCosto,
+        centroTrabajoId: CentroTrabajoId,
         locationId: EmployeeLocationId,
-        departmentoId: DepartmentId,
+        departamentoId: DepartmentId,
         cargoId: CargoId,
         extension: Extension[],
         phone: PhoneNumber[],
@@ -70,9 +71,9 @@ export class ServiceEmployee extends Employee {
             employeeCode,
             nationality,
             cedula,
-            codCentroCosto,
+            centroTrabajoId,
             locationId,
-            departmentoId,
+            departamentoId,
             cargoId,
             extension,
             phone,
@@ -100,9 +101,9 @@ export class ServiceEmployee extends Employee {
             new EmployeeCode(params.employeeCode),
             new EmployeeNationality(params.nationality),
             new EmployeeCedula(params.cedula),
-            new CodCentroCosto(params.codCentroCosto),
+            new CentroTrabajoId(params.centroTrabajoId),
             new EmployeeLocationId(params.locationId),
-            new DepartmentId(params.departmentoId),
+            new DepartmentId(params.departamentoId),
             new CargoId(params.cargoId),
             params.extension?.map(ext => new Extension(ext)),
             params.phone?.map(phone => new PhoneNumber(phone)),

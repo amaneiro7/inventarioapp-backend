@@ -26,18 +26,18 @@ export class SequelizeCargoRepository implements CargoRepository {
   }
 
   async save(payload: CargoPrimitives): Promise<void> {
-    const { id, departments, ...restPayload } = payload
+    const { id, departamentos, ...restPayload } = payload
     const cargo = await CargoModel.findByPk(id) ?? null
     if (cargo === null) {
       const newCargo = await CargoModel.create({
         ...restPayload,
         id
       })
-      await newCargo.setDeparments(departments)
+      await newCargo.setDeparments(departamentos)
     } else {
       cargo.set({ ...restPayload })
       await cargo.save()
-      await cargo.setDeparments(departments)
+      await cargo.setDeparments(departamentos)
     }
     await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()

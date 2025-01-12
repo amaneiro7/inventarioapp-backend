@@ -1,24 +1,24 @@
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
 import { CodCentroCosto } from "../../CentroCosto/domain/CodCentroCosto"
 import { CentroTrabajoName } from "./CentroTrabajoName"
-import { CodCentroTrabajo } from "./CodCentroTrabajo"
+import { CentroTrabajoId } from "./CentroTrabajoId"
 
 export interface CentroTrabajoPrimitives {
-  id: Primitives<CodCentroTrabajo>
+  id: Primitives<CentroTrabajoId>
   name: Primitives<CentroTrabajoName>
   centroCostoId: Primitives<CodCentroCosto>
 }
 
 export class CentroTrabajo {
   constructor(
-    private readonly id: CodCentroTrabajo,
+    private readonly id: CentroTrabajoId,
     private name: CentroTrabajoName,
     private centroCostoId: CodCentroCosto
   ) { }
 
   static create({ name, id, centroCostoId }: CentroTrabajoPrimitives): CentroTrabajo {
     return new CentroTrabajo(
-      new CodCentroTrabajo(id),
+      new CentroTrabajoId(id),
       new CentroTrabajoName(name),
       new CodCentroCosto(centroCostoId)
     )
@@ -34,7 +34,7 @@ export class CentroTrabajo {
 
   static fromPrimitives(primitives: CentroTrabajoPrimitives): CentroTrabajo {
     return new CentroTrabajo(
-      new CodCentroTrabajo(primitives.id),
+      new CentroTrabajoId(primitives.id),
       new CentroTrabajoName(primitives.name),
       new CodCentroCosto(primitives.centroCostoId)
     )
@@ -48,7 +48,7 @@ export class CentroTrabajo {
     }
   }
 
-  get idValue(): Primitives<CodCentroTrabajo> {
+  get idValue(): Primitives<CentroTrabajoId> {
     return this.id.value
   }
 

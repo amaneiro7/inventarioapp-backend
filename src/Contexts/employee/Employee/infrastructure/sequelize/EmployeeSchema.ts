@@ -1,47 +1,49 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type EmployeePrimitives } from '../../domain/Employee.ts.old'
-import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
-// import { type EmployeeName } from '../../domain/EmployeeName'
-// import { type EmployeeLastName } from '../../domain/EmployeeLastName'
-// import { type EmployeeCedula } from '../../domain/EmployeeCedula'
-// import { type LocationId } from '../../../../Location/Location/domain/LocationId'
-// import { type UserEmail } from '../../../../User/user/domain/UserEmail'
-// import { type CargoId } from '../../../Cargo/domain/CargoId'
-// import { type Extension } from '../../domain/Extension'
-// import { type PhoneNumber } from '../../domain/PhoneNumber'
-// import { type VicepresidenciaEjecutivaId } from '../../../Area/VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutivaId'
-// import { type EmployeeVicepresidenciaId } from '../../domain/EmployeeVicepresidenciaId'
-// import { type EmployeeGerenciaId } from '../../domain/EmployeeGerenciaId'
-// import { type EmployeeCoordinacionId } from '../../domain/EmployeeCoordinacionId'
+import { EmployeeTypes, type EmployeeType } from '../../domain/valueObject/EmployeeType'
+import { Nationalities, type EmployeeNationality } from '../../domain/valueObject/EmployeeNationality'
+import { type EmployeePrimitives } from '../../domain/entity/Employee'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
 import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
+import { type EmployeeCode } from '../../domain/valueObject/EmployeCode'
+import { type EmployeeName } from '../../domain/valueObject/EmployeeName'
+import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
+import { type EmployeeIsStillWorking } from '../../domain/valueObject/EmployeeIsStillWorking'
+import { type EmployeeCedula } from '../../domain/valueObject/EmployeeCedula'
+import { type EmployeeLastName } from '../../domain/valueObject/EmployeeLastName'
+import { type CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
+import { type EmployeeLocationId } from '../../domain/valueObject/EmployeeLocation'
+import { type DepartmentId } from '../../../IDepartment/DepartmentId'
+import { type CargoId } from '../../../Cargo/domain/CargoId'
+import { type Extension } from '../../domain/valueObject/Extension'
+import { type PhoneNumber } from '../../domain/valueObject/PhoneNumber'
 
 
 export class EmployeeModel extends Model<EmployeePrimitives> implements EmployeePrimitives {
   declare id: Primitives<EmployeeId>
   declare userName: Primitives<EmployeeUserName>
-  // declare name: Primitives<EmployeeName>
-  // declare lastName: Primitives<EmployeeLastName>
-  // declare cedula: Primitives<EmployeeCedula>
-  // declare locationId: Primitives<LocationId>
-  // declare email: Primitives<UserEmail>
-  // declare cargoId: Primitives<CargoId>
-  // declare extension: Primitives<Extension>
-  // declare phoneNumber: Primitives<PhoneNumber>
-  // declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId>
-  // declare vicepresidenciaId: Primitives<EmployeeVicepresidenciaId>
-  // declare gerenciaId: Primitives<EmployeeGerenciaId>
-  // declare coordinacionId: Primitives<EmployeeCoordinacionId>
+  declare type: Primitives<EmployeeType>
+  declare name: Primitives<EmployeeName>
+  declare lastName: Primitives<EmployeeLastName>
+  declare email: Primitives<EmployeeEmail>
+  declare isStillWorking: Primitives<EmployeeIsStillWorking>
+  declare employeeCode: Primitives<EmployeeCode>
+  declare nationality: Primitives<EmployeeNationality>
+  declare cedula: Primitives<EmployeeCedula>
+  declare centroTrabajoId: Primitives<CentroTrabajoId>
+  declare locationId: Primitives<EmployeeLocationId>
+  declare departamentoId: Primitives<DepartmentId>
+  declare cargoId: Primitives<CargoId>
+  declare extension: Primitives<Extension>[]
+  declare phone: Primitives<PhoneNumber>[]
 
 
 
   static async associate(models: Sequelize['models']): Promise<void> {
-    // this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
-    // this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // An employee belongs to a location
-    // this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' }) // An employee belongs to a vicepresidencia
-    // this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' }) // An employee belongs to a vicepresidencia
-    // this.belongsTo(models.Gerencia, { as: 'gerencia', foreignKey: 'gerenciaId' }) // An employee belongs to a gerencia
-    // this.belongsTo(models.Coordinacion, { as: 'coordinacion', foreignKey: 'coordinacionId' }) // An employee belongs to a coordinacion
+    this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
+    this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' }) // An employee belongs to a location
+    this.belongsTo(models.Departamento, { as: 'departamento', foreignKey: 'departamentoId' }) // An employee belongs to a departamento
+    this.belongsTo(models.CentroTrabajo, { as: 'centroTrabajo', foreignKey: 'centroTrabajoId' }) // An employee belongs to a centro de trabajo
     this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' }) // An employee has many devices
     this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' }) // An employee has many histories
   }
@@ -57,60 +59,72 @@ export class EmployeeModel extends Model<EmployeePrimitives> implements Employee
         userName: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: false
+        },
+        type: {
+          type: DataTypes.ENUM(EmployeeTypes.GENERIC, EmployeeTypes.REGULAR, EmployeeTypes.SERVICE),
+          allowNull: false,
+          defaultValue: EmployeeTypes.REGULAR,
+        },
+        name: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        lastName: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          validate: {
+            isEmail: true
+          }
+        },
+        isStillWorking: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true
+        },
+        employeeCode: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
           unique: true
+        },
+        nationality: {
+          type: DataTypes.ENUM(Nationalities.V, Nationalities.E),
+          allowNull: true,
+        },
+        cedula: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          unique: true
+        },
+        centroTrabajoId: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        locationId: {
+          type: DataTypes.UUID,
+          allowNull: true,
+        },
+        departamentoId: {
+          type: DataTypes.UUID,
+          allowNull: true
+        },
+        cargoId: {
+          type: DataTypes.UUID,
+          allowNull: true
+        },
+        extension: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          defaultValue: []
+        },
+        phone: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          defaultValue: []
         }
-        // name: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false
-        // },
-        // lastName: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false
-        // },
-        // cedula: {
-        //   type: DataTypes.INTEGER,
-        //   allowNull: false
-        // },
-        // locationId: {
-        //   type: DataTypes.UUID,
-        //   allowNull: false
-        // },
-        // email: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false,
-        //   unique: true,
-        //   validate: {
-        //     isEmail: true
-        //   }
-        // },
-        // extension: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false
-        // },
-        // cargoId: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false
-        // },
-        // phoneNumber: {
-        //   type: DataTypes.STRING,
-        //   allowNull: false
-        // },
-        // vicepresidenciaEjecutivaId: {
-        //   type: DataTypes.UUID,
-        //   allowNull: false
-        // },
-        // vicepresidenciaId: {
-        //   type: DataTypes.UUID,
-        //   allowNull: true
-        // },
-        // gerenciaId: {
-        //   type: DataTypes.UUID,
-        //   allowNull: true
-        // },
-        // coordinacionId: {
-        //   type: DataTypes.UUID,
-        //   allowNull: true
-        // }
+
       },
       {
         modelName: 'Employee',

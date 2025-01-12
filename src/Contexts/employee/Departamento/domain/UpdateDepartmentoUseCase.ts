@@ -1,3 +1,4 @@
+import { Departamento, type DepartamentoPrimitives } from "./Departamento"
 import { type Primitives } from "../../../Shared/domain/value-object/Primitives"
 import { type CargoRepository } from "../../Cargo/domain/CargoRepository"
 import { type DepartmentPrimitives } from "../../IDepartment/IDeparment"
@@ -6,22 +7,21 @@ import { type DepartmentId } from "../../IDepartment/DepartmentId"
 import { type DepartmentName } from "../../IDepartment/DepartmentName"
 import { type CargoId } from "../../Cargo/domain/CargoId"
 import { type CentroCostoRepository } from "../../CentroCosto/domain/CentroCostoRepository"
-import { Departmento, type DepartmentoPrimitives } from "./Departmento"
 import { type CodCentroCosto } from "../../CentroCosto/domain/CodCentroCosto"
 import { DepartmentAlreadyExistError } from "../../IDepartment/DepartmentAlreadyExistError"
 import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
 import { CargoDoesNotExistError } from "../../Cargo/domain/CargoDoesNotExistError"
 import { CentroCostoDoesNotExistError } from "../../CentroCosto/domain/CentroCostoDoesNotExistError"
 
-export class UpdateDepartmentoUseCase {
+export class UpdateDepartamentoUseCase {
     constructor(
-        private readonly departmentoRepository: DepartmentRepository<DepartmentoPrimitives>,
+        private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
         private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<DepartmentPrimitives>,
         private readonly centroCostoRepository: CentroCostoRepository,
         private readonly cargoRepository: CargoRepository,
     ) { }
 
-    public async execute({ params: { name, vicepresidenciaEjecutivaId, centroCostoId, cargos }, entity }: { entity: Departmento, params: Partial<Omit<DepartmentoPrimitives, 'id'>> }): Promise<void> {
+    public async execute({ params: { name, vicepresidenciaEjecutivaId, centroCostoId, cargos }, entity }: { entity: Departamento, params: Partial<Omit<DepartamentoPrimitives, 'id'>> }): Promise<void> {
         // Se verifica que la vicepresidencia exista
         await this.ensureVicepresidenciaEjecutivaExists({ vicepresidenciaEjecutivaId, entity })
 
@@ -29,25 +29,25 @@ export class UpdateDepartmentoUseCase {
         await this.ensureCentroCostoExists({ centroCostoId, entity })
 
         // Se verifica que el departamento no exista para no duplicar
-        await this.ensureDepartmentoDoesNotExist({ name, entity })
+        await this.ensureDepartamentoDoesNotExist({ name, entity })
 
         // Se verifica que los cargos existan
         await this.ensureCargoExists({ cargos, entity })
     }
 
-    private async ensureDepartmentoDoesNotExist({ name, entity }: { name?: Primitives<DepartmentName>, entity: Departmento }): Promise<void> {
+    private async ensureDepartamentoDoesNotExist({ name, entity }: { name?: Primitives<DepartmentName>, entity: Departamento }): Promise<void> {
         if (!name) return
 
         if (entity.nameValue === name) return
 
-        if (await this.departmentoRepository.searchByName(name) !== null) {
+        if (await this.departamentoRepository.searchByName(name) !== null) {
             throw new DepartmentAlreadyExistError('La gerencia, coordinación o departamento')
         }
         entity.updateName(name)
 
     }
 
-    private async ensureVicepresidenciaEjecutivaExists({ entity, vicepresidenciaEjecutivaId }: { vicepresidenciaEjecutivaId?: Primitives<DepartmentId>, entity: Departmento }): Promise<void> {
+    private async ensureVicepresidenciaEjecutivaExists({ entity, vicepresidenciaEjecutivaId }: { vicepresidenciaEjecutivaId?: Primitives<DepartmentId>, entity: Departamento }): Promise<void> {
         if (!vicepresidenciaEjecutivaId) return
 
         if (entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId) return
@@ -57,7 +57,7 @@ export class UpdateDepartmentoUseCase {
         }
         entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId)
     }
-    private async ensureCentroCostoExists({ entity, centroCostoId }: { centroCostoId?: Primitives<CodCentroCosto>, entity: Departmento }): Promise<void> {
+    private async ensureCentroCostoExists({ entity, centroCostoId }: { centroCostoId?: Primitives<CodCentroCosto>, entity: Departamento }): Promise<void> {
         if (!centroCostoId) return
 
         if (entity.centroCostoValue === centroCostoId) return
@@ -68,7 +68,7 @@ export class UpdateDepartmentoUseCase {
         entity.updateCodCentroCosto(centroCostoId)
     }
 
-    private async ensureCargoExists({ entity, cargos }: { cargos?: Primitives<CargoId>[], entity: Departmento }): Promise<void> {
+    private async ensureCargoExists({ entity, cargos }: { cargos?: Primitives<CargoId>[], entity: Departamento }): Promise<void> {
         if (!cargos) return
 
         // Asegurarse que no existan valores duplicados

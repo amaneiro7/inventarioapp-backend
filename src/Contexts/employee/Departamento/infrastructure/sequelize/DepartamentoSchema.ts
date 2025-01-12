@@ -10,12 +10,12 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
-import { type DepartmentoPrimitives } from '../../domain/Departmento'
+import { type DepartamentoPrimitives } from '../../domain/Departamento'
 import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
-import { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
+import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 
 
-export class DepartmentoModel extends Model<Omit<DepartmentoPrimitives, 'cargos'>> implements DepartmentoPrimitives {
+export class DepartamentoModel extends Model<Omit<DepartamentoPrimitives, 'cargos'>> implements DepartamentoPrimitives {
     declare id: Primitives<DepartmentId>
     declare name: Primitives<DepartmentName>
     declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
@@ -30,11 +30,12 @@ export class DepartmentoModel extends Model<Omit<DepartmentoPrimitives, 'cargos'
     static async associate(models: Sequelize['models']): Promise<void> {
         this.belongsTo(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'vicepresidenciaEjecutivaId' })
         this.belongsTo(models.CentroCosto, { as: 'centroCosto', foreignKey: 'centroCostoId' })
-        this.belongsToMany(models.Cargo, { as: 'cargos', through: 'CargoDepartmento', foreignKey: 'departmentoId' })
+        this.hasMany(models.Employee, { as: 'employee', foreignKey: 'departamentoId' })
+        this.belongsToMany(models.Cargo, { as: 'cargo', through: 'CargoDepartamento', foreignKey: 'departamentoId' })
     }
 
     static async initialize(sequelize: Sequelize): Promise<void> {
-        DepartmentoModel.init(
+        DepartamentoModel.init(
             {
                 id: {
                     type: DataTypes.UUID,
@@ -57,8 +58,8 @@ export class DepartmentoModel extends Model<Omit<DepartmentoPrimitives, 'cargos'
             },
             {
                 sequelize,
-                modelName: 'Departmento',
-                timestamps: false,
+                modelName: 'Departamento',
+                timestamps: true,
                 underscored: true
             }
         )

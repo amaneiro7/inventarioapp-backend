@@ -2,7 +2,7 @@ import { CentroTrabajo, type CentroTrabajoPrimitives } from '../domain/CentroTra
 import { CentroTrabajoAlreadyExistError } from '../domain/CentroTrabajoAlreadyExistError'
 import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CodCentroTrabajo } from '../domain/CodCentroTrabajo'
+import { type CentroTrabajoId } from '../domain/CentroTrabajoId'
 import { CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { CentroCostoAlreadyExistError } from '../../CentroCosto/domain/CentroCostoAlreadyExistError'
@@ -22,7 +22,7 @@ export class CentroTrabajoCreator {
     await this.centroTrabajoRepository.save(centroTrabajo.toPrimitive())
   }
 
-  private async ensureCentroTrabajoDoesNotExist({ id }: { id: Primitives<CodCentroTrabajo> }): Promise<void> {
+  private async ensureCentroTrabajoDoesNotExist({ id }: { id: Primitives<CentroTrabajoId> }): Promise<void> {
     if (await this.centroTrabajoRepository.searchById(id) !== null) {
       throw new CentroTrabajoAlreadyExistError()
     }

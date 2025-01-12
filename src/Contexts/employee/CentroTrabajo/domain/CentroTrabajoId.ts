@@ -1,7 +1,7 @@
 import { InvalidArgumentError } from "../../../Shared/domain/value-object/InvalidArgumentError";
 import { StringValueObject } from "../../../Shared/domain/value-object/StringValueObject";
 
-export class CodCentroTrabajo extends StringValueObject {
+export class CentroTrabajoId extends StringValueObject {
     private readonly NAME_MAX_LENGTH = 8
     private readonly NAME_MIN_LENGTH = 1
     private readonly REGEX = /^[\d-]+$/ // Regex para validar el codigo, que acepte numeros y guiones

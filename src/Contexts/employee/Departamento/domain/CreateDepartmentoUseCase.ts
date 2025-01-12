@@ -4,24 +4,24 @@ import { type DepartmentPrimitives } from "../../IDepartment/IDeparment"
 import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
 import { type DepartmentId } from "../../IDepartment/DepartmentId"
 import { type DepartmentName } from "../../IDepartment/DepartmentName"
-import { type DepartmentoPrimitives } from "./Departmento"
 import { type CargoId } from "../../Cargo/domain/CargoId"
 import { type CodCentroCosto } from "../../CentroCosto/domain/CodCentroCosto"
 import { type CentroCostoRepository } from "../../CentroCosto/domain/CentroCostoRepository"
+import { type DepartamentoPrimitives } from "./Departamento"
 import { DepartmentAlreadyExistError } from "../../IDepartment/DepartmentAlreadyExistError"
 import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
 import { CargoDoesNotExistError } from "../../Cargo/domain/CargoDoesNotExistError"
 import { CentroCostoDoesNotExistError } from "../../CentroCosto/domain/CentroCostoDoesNotExistError"
 
-export class CreateDepartmentoUseCase {
+export class CreateDepartamentoUseCase {
     constructor(
-        private readonly departmentoRepository: DepartmentRepository<DepartmentoPrimitives>,
+        private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
         private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<DepartmentPrimitives>,
         private readonly centroCostoRepository: CentroCostoRepository,
         private readonly cargoRepository: CargoRepository,
     ) { }
 
-    public async execute({ name, vicepresidenciaEjecutivaId, centroCostoId, cargos }: Omit<DepartmentoPrimitives, 'id'>): Promise<void> {
+    public async execute({ name, vicepresidenciaEjecutivaId, centroCostoId, cargos }: Omit<DepartamentoPrimitives, 'id'>): Promise<void> {
         // Se verifica que el departamento 2 exista
         await this.ensureVicepresidenciaEjecutivaExists(vicepresidenciaEjecutivaId)
 
@@ -29,14 +29,14 @@ export class CreateDepartmentoUseCase {
         await this.ensureCentroCostoExists(centroCostoId)
 
         // Se verifica que el departamento 3 no exista
-        await this.ensureDepartmentoDoesNotExist(name)
+        await this.ensureDepartamentoDoesNotExist(name)
 
         // Se verifica que los cargos existan
         await this.ensureCargoExists(cargos)
     }
 
-    private async ensureDepartmentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
-        if (await this.departmentoRepository.searchByName(name) !== null) {
+    private async ensureDepartamentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
+        if (await this.departamentoRepository.searchByName(name) !== null) {
             throw new DepartmentAlreadyExistError('La Genrecia, coordinación o departamento')
         }
     }

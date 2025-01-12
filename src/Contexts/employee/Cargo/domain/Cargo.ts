@@ -6,23 +6,23 @@ import { CargoName } from './CargoName'
 export interface CargoPrimitives {
   id: Primitives<CargoId>
   name: Primitives<CargoName>
-  departmentos: Primitives<DepartmentId>[]
+  departamentos: Primitives<DepartmentId>[]
 }
 
 export class Cargo {
   constructor(
     private readonly id: CargoId,
     private name: CargoName,
-    private departmentos: DepartmentId[]
+    private departamentos: DepartmentId[]
   ) { }
 
   static create(params: Omit<CargoPrimitives, "id">): Cargo {
     const id = CargoId.random().value
-    const departmentos = params.departmentos.map(deps => new DepartmentId(deps))
+    const Departamentos = params.departamentos.map(deps => new DepartmentId(deps))
     return new Cargo(
       new CargoId(id),
       new CargoName(params.name),
-      departmentos
+      Departamentos
     )
   }
 
@@ -30,7 +30,7 @@ export class Cargo {
     return new Cargo(
       new CargoId(primitives.id),
       new CargoName(primitives.name),
-      primitives.departmentos.map(deps => new DepartmentId(deps))
+      primitives.departamentos.map(deps => new DepartmentId(deps))
     )
   }
 
@@ -38,7 +38,7 @@ export class Cargo {
     return {
       id: this.idValue,
       name: this.nameValue,
-      departmentos: this.departmentos.map(dept => dept.value)
+      departamentos: this.departamentos.map(dept => dept.value)
     }
   }
 
@@ -50,15 +50,15 @@ export class Cargo {
     return this.name.value
   }
 
-  get departmentosValue(): Primitives<DepartmentId>[] {
-    return this.departmentos.map(deps => deps.value)
+  get departamentosValue(): Primitives<DepartmentId>[] {
+    return this.departamentos.map(deps => deps.value)
   }
 
   updateName(newName: Primitives<CargoName>): void {
     this.name = new CargoName(newName)
   }
 
-  updateDepartmentos(departamentosIds: Primitives<DepartmentId>[]): void {
-    this.departmentos = departamentosIds.map(deps => new DepartmentId(deps))
+  updateDepartamentos(departamentoIds: Primitives<DepartmentId>[]): void {
+    this.departamentos = departamentoIds.map(deps => new DepartmentId(deps))
   }
 }

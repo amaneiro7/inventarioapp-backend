@@ -2,7 +2,6 @@ import { type Primitives } from "../../../../Shared/domain/value-object/Primitiv
 import { type EmployeePrimitives, Employee } from "./Employee"
 import { InvalidArgumentError } from "../../../../Shared/domain/value-object/InvalidArgumentError"
 import { CargoId } from "../../../Cargo/domain/CargoId"
-import { CodCentroCosto } from "../../../CentroCosto/domain/CodCentroCosto"
 import { DepartmentId } from "../../../IDepartment/DepartmentId"
 import { EmployeeCedula } from "../valueObject/EmployeeCedula"
 import { EmployeeEmail } from "../valueObject/EmployeeEmail"
@@ -17,6 +16,7 @@ import { Extension } from "../valueObject/Extension"
 import { PhoneNumber } from "../valueObject/PhoneNumber"
 import { EmployeeCode } from "../valueObject/EmployeCode"
 import { EmployeeLocationId } from "../valueObject/EmployeeLocation"
+import { CentroTrabajoId } from "../../../CentroTrabajo/domain/CentroTrabajoId"
 
 export interface RegularEmployeePrimitives extends EmployeePrimitives {
     id: Primitives<EmployeeId>,
@@ -29,9 +29,9 @@ export interface RegularEmployeePrimitives extends EmployeePrimitives {
     employeeCode: Primitives<EmployeeCode>
     nationality: Primitives<EmployeeNationality>
     cedula: Primitives<EmployeeCedula>
-    codCentroCosto: Primitives<CodCentroCosto>
+    centroTrabajoId: Primitives<CentroTrabajoId>
     locationId: Primitives<EmployeeLocationId>
-    departmentoId: Primitives<DepartmentId>
+    departamentoId: Primitives<DepartmentId>
     cargoId: Primitives<CargoId>
     extension: Primitives<Extension>[]
     phone: Primitives<PhoneNumber>[]
@@ -50,9 +50,9 @@ export class RegularEmployee extends Employee {
         employeeCode: EmployeeCode,
         nationality: EmployeeNationality,
         cedula: EmployeeCedula,
-        codCentroCosto: CodCentroCosto,
+        centroTrabajoId: CentroTrabajoId,
         locationId: EmployeeLocationId,
-        departmentoId: DepartmentId,
+        departamentoId: DepartmentId,
         cargoId: CargoId,
         extension: Extension[],
         phone: PhoneNumber[]
@@ -68,9 +68,9 @@ export class RegularEmployee extends Employee {
             employeeCode,
             nationality,
             cedula,
-            codCentroCosto,
+            centroTrabajoId,
             locationId,
-            departmentoId,
+            departamentoId,
             cargoId,
             extension,
             phone,
@@ -97,9 +97,9 @@ export class RegularEmployee extends Employee {
             new EmployeeCode(params.employeeCode),
             new EmployeeNationality(params.nationality),
             new EmployeeCedula(params.cedula),
-            new CodCentroCosto(params.codCentroCosto),
+            new CentroTrabajoId(params.centroTrabajoId),
             new EmployeeLocationId(params.locationId),
-            new DepartmentId(params.departmentoId),
+            new DepartmentId(params.departamentoId),
             new CargoId(params.cargoId),
             params.extension?.map(ext => new Extension(ext)),
             params.phone?.map(phone => new PhoneNumber(phone)),

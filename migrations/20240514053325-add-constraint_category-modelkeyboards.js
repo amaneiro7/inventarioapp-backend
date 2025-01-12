@@ -12,7 +12,7 @@ module.exports = {
           table: 'categories',
           field: 'id'
         },
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
         onUpdate: 'no action'
       },
       {
@@ -23,7 +23,7 @@ module.exports = {
           table: 'models',
           field: 'id'
         },
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
         onUpdate: 'no action'
       },
       {
@@ -34,7 +34,7 @@ module.exports = {
           table: 'input_types',
           field: 'id'
         },
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
         onUpdate: 'no action'
       },
     )

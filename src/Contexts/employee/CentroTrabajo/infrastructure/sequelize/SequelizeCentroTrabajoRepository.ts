@@ -2,7 +2,7 @@ import { type CentroTrabajoPrimitives } from '../../domain/CentroTrabajo'
 import { type CentroTrabajoRepository } from '../../domain/CentroTrabajoRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
-import { type CodCentroTrabajo } from '../../domain/CodCentroTrabajo'
+import { type CentroTrabajoId } from '../../domain/CentroTrabajoId'
 import { type CentroTrabajoName } from '../../domain/CentroTrabajoName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { CentroTrabajoModel } from './CentroTrabajoSchema'
@@ -16,7 +16,7 @@ export class SequelizeCentroTrabajoRepository implements CentroTrabajoRepository
     })
   }
 
-  async searchById(id: Primitives<CodCentroTrabajo>): Promise<Nullable<CentroTrabajoPrimitives>> {
+  async searchById(id: Primitives<CentroTrabajoId>): Promise<Nullable<CentroTrabajoPrimitives>> {
     return await CentroTrabajoModel.findByPk(id) ?? null
   }
 
@@ -37,7 +37,7 @@ export class SequelizeCentroTrabajoRepository implements CentroTrabajoRepository
     await this.searchAll()
   }
 
-  async remove(id: Primitives<CodCentroTrabajo>): Promise<void> {
+  async remove(id: Primitives<CentroTrabajoId>): Promise<void> {
     await CentroTrabajoModel.destroy({ where: { id } })
     await this.cache.removeCachedData(this.cacheKey)
     await this.searchAll()

@@ -35,7 +35,7 @@ export class VicepresidenciaEjecutivaModel extends Model<VicepresidenciaEjecutiv
             {
                 sequelize,
                 modelName: 'VicepresidenciaEjecutiva',
-                timestamps: false,
+                timestamps: true,
                 underscored: true
 
             }

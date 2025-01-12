@@ -29,7 +29,7 @@ export class DirectivaModel extends Model<DirectivaPrimitives> implements Direct
             {
                 sequelize,
                 modelName: 'Directiva',
-                timestamps: false,
+                timestamps: true,
                 underscored: true
 
             }

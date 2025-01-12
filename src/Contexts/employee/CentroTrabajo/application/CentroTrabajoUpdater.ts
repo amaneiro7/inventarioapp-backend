@@ -1,6 +1,6 @@
 import { CentroTrabajo, type CentroTrabajoPrimitives } from '../domain/CentroTrabajo'
 import { CentroTrabajoDoesNotExistError } from '../domain/CentroTrabajoDoesNotExistError'
-import { CodCentroTrabajo } from '../domain/CodCentroTrabajo'
+import { CentroTrabajoId } from '../domain/CentroTrabajoId'
 import { CentroCostoDoesNotExistError } from '../../CentroCosto/domain/CentroCostoDoesNotExistError'
 import { type CentroTrabajoName } from '../domain/CentroTrabajoName'
 import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
@@ -14,10 +14,10 @@ export class CentroTrabajoUpdater {
     private readonly centroCostoRepository: CentroCostoRepository
   ) { }
 
-  async run({ id, params: { name, centroCostoId } }: { id: Primitives<CodCentroTrabajo>; params: Partial<Omit<CentroTrabajoPrimitives, 'id'>> }): Promise<void> {
-    const codCentroTrabajo = new CodCentroTrabajo(id)
+  async run({ id, params: { name, centroCostoId } }: { id: Primitives<CentroTrabajoId>; params: Partial<Omit<CentroTrabajoPrimitives, 'id'>> }): Promise<void> {
+    const centroTrabajoId = new CentroTrabajoId(id)
 
-    const centroTrabajo = await this.centroTrabajoRepository.searchById(codCentroTrabajo.value)
+    const centroTrabajo = await this.centroTrabajoRepository.searchById(centroTrabajoId.value)
     if (!centroTrabajo) {
       throw new CentroTrabajoDoesNotExistError()
     }
