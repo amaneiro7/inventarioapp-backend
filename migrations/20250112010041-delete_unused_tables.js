@@ -4,6 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.dropTable("coordinacions")
+    await queryInterface.dropTable("cargos")
     await queryInterface.dropTable("gerencia")
     await queryInterface.dropTable("vicepresidencia")
     await queryInterface.dropTable("vicepresidencia_ejecutivas")

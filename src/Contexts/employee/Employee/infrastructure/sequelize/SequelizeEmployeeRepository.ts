@@ -13,7 +13,40 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
   }
   async searchAll(): Promise<EmployeePrimitives[]> {
     return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await EmployeeModel.findAll()
+      return await EmployeeModel.findAll({
+        include: [
+          {
+            association: 'centroTrabajo',
+            attributes: ['id', 'name'],
+            include: [
+              {
+                association: 'centroCosto',
+                attributes: ['id', 'name']
+              }
+            ]
+          },
+          {
+            association: "departamento",
+            attributes: ['id', 'name'],
+            include: [
+              {
+                association: 'vicepresidenciaEjecutiva',
+                attributes: ['id', 'name'],
+                include: [
+                  {
+                    association: 'directiva',
+                    attributes: ['id', 'name']
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            association: 'cargo',
+            attributes: ['id', 'name']
+          }
+        ]
+      })
     })
 
   }

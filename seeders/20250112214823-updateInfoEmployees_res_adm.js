@@ -11,12 +11,15 @@ module.exports = {
       employee.extension = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
       const existingEmployee = await queryInterface.rawSelect('employees', {
         where: {
-          user_name: employee.userName,
+          user_name: {
+            [Sequelize.Op.iLike]: `${employee.userName}`,
+          }
         },
       }, ['id'])
 
       if (existingEmployee) {
         await queryInterface.bulkUpdate('employees', {
+          user_name: employee.userName.toLowerCase(),
           name: employee.name,
           last_name: employee.lastName,
           type: employee.type,

@@ -1,12 +1,11 @@
 'use strict';
 
-const { updateEmployees_95_6 } = require('./employee/newDataEmployee');
-
+const { genericsUsers } = require('./employee/usuariosGenericos');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    for (const employee of updateEmployees_95_6) {
+    for (const employee of genericsUsers) {
       employee.phone = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
       employee.extension = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
       const existingEmployee = await queryInterface.rawSelect('employees', {
@@ -16,23 +15,24 @@ module.exports = {
           }
         },
       }, ['id'])
+
       if (existingEmployee) {
         await queryInterface.bulkUpdate('employees', {
           user_name: employee.userName.toLowerCase(),
-          name: employee.name,
-          last_name: employee.lastName,
+          name: null,
+          last_name: null,
           type: employee.type,
-          email: employee.email,
+          email: null,
           is_still_working: employee.isStillWorking,
-          employee_code: employee.employeeCode,
-          nationality: employee.nationality,
-          cedula: employee.cedula,
-          centro_trabajo_id: employee.centroTrabajoId,
-          location_id: employee.locationId,
-          departamento_id: employee.departamentoId,
-          cargo_id: employee.cargoId,
-          extension: employee.extension,
-          phone: employee.phone
+          employee_code: null,
+          nationality: null,
+          cedula: null,
+          centro_trabajo_id: null,
+          location_id: null,
+          departamento_id: null,
+          cargo_id: null,
+          extension: null,
+          phone: null
         }, {
           id: existingEmployee
         })
@@ -41,20 +41,20 @@ module.exports = {
         await queryInterface.bulkInsert('employees', [{
           id,
           user_name: employee.userName,
-          name: employee.name,
-          last_name: employee.lastName,
+          name: null,
+          last_name: null,
           type: employee.type,
-          email: employee.email,
+          email: null,
           is_still_working: employee.isStillWorking,
-          employee_code: employee.employeeCode,
-          nationality: employee.nationality,
-          cedula: employee.cedula,
-          centro_trabajo_id: employee.centroTrabajoId,
-          location_id: employee.locationId,
-          departamento_id: employee.departamentoId,
-          cargo_id: employee.cargoId,
-          extension: employee.extension,
-          phone: employee.phone,
+          employee_code: null,
+          nationality: null,
+          cedula: null,
+          centro_trabajo_id: null,
+          location_id: null,
+          departamento_id: null,
+          cargo_id: null,
+          extension: null,
+          phone: null,
           created_at: new Date(),
           updated_at: new Date()
         }])
