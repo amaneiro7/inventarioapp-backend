@@ -72,7 +72,21 @@ export class DeviceAssociation {
             'status', // 3
             {
                 association: 'employee', // 4                
-                attributes: ['id', 'userName']
+                attributes: ['id', 'userName', 'type', 'name', 'lastName', 'email', 'isStillWorking', 'employeeCode', 'nationality', 'cedula', 'extension', 'phone'],
+                include: [
+                    {
+                        association: 'cargo',
+                        attributes: ['id', 'name']
+                    },
+                    {
+                        association: 'departamento',
+                        attributes: ['id', 'name']
+                    },
+                    {
+                        association: 'centroTrabajo',
+                        attributes: ['id', 'name']
+                    },
+                ]
             },
             {
                 association: 'computer', // 5

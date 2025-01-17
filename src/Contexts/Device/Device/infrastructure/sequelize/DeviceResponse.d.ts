@@ -1,7 +1,7 @@
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type BrandPrimitives } from '../../../../Brand/domain/Brand'
 import { type CategoryPrimitives } from '../../../../Category/Category/domain/Category'
-import { type EmployeePrimitives } from '../../../../employee/Employee/domain/Employee.ts.old'
+
 import { type DeviceComputerPrimitives } from '../../../../Features/Computer/domain/Computer'
 import { type HardDriveCapacityPrimitives } from '../../../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacity'
 import { type HardDriveTypePrimitives } from '../../../../Features/HardDrive/HardDriveType/domain/HardDriveType'
@@ -26,6 +26,10 @@ import { type UserPrimitives } from '../../../../User/user/domain/User'
 import { type StatusPrimitives } from '../../../Status/domain/Status'
 import { type DevicePrimitives } from '../../domain/Device'
 import { type DeviceHardDrivePrimitives } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
+import { type EmployeePrimitives } from '../../../../employee/Employee/domain/entity/Employee'
+import { type CargoPrimitives } from '../../../../employee/Cargo/domain/Cargo'
+import { type CentroTrabajoPrimitives } from '../../../../employee/CentroTrabajo/domain/CentroTrabajo'
+import { type DepartamentoPrimitives } from '../../../../employee/Departamento/domain/Departamento'
 
 export interface DevicesApiResponse extends DevicePrimitives {
   createdAt: string
@@ -35,7 +39,7 @@ export interface DevicesApiResponse extends DevicePrimitives {
   model: ModelApiresponse
   location: LocationApiResponse
   status: StatusPrimitives
-  employee: Nullable<EmployeePrimitives>
+  employee: Nullable<EmployeeApiResponse>
   computer: Nullable<DeviceComputerPrimitives & {
     processor: ProcessorPrimitives
     hardDriveCapacity: HardDriveCapacityPrimitives
@@ -49,6 +53,12 @@ export interface DevicesApiResponse extends DevicePrimitives {
     hardDriveType: HardDriveTypePrimitives
   }>
   history: HistoryApiResponse[]
+}
+
+export interface EmployeeApiResponse extends EmployeePrimitives {
+  cargo: CargoPrimitives
+  centroTrabajo: CentroTrabajoPrimitives
+  departamento: DepartamentoPrimitives
 }
 
 export interface HistoryApiResponse extends HistoryPrimitives {

@@ -27,15 +27,16 @@ export const register = async (router: Router) => {
         searchByCriteria.run.bind(searchByCriteria)
     )
 
+    router.get('/devices/download',
+        authenticate,
+        download.run.bind(download)
+    )
+
     router.get('/devices/:id',
         authenticate,
         getController.run.bind(getController)
     )
 
-    router.get('/devices/download',
-        authenticate,
-        download.run.bind(download)
-    )
 
     //post
 

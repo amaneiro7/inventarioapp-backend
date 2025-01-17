@@ -22,12 +22,13 @@ export class DeviceDownloadExcelServiceController implements Controller {
             const downloadExcel: DeviceExcelService = container.resolve(DeviceDependencies.ExcelService)
             const buf = await downloadExcel.run(query)
             const now = new Date()
+
             const filename = `Reporte-Inventario${now.toLocaleDateString().replace(/[/:]/g, '-')}.xlsx`
             res
                 .status(httpStatus.OK)
                 .setHeader('Content-Disposition', `attachment filename=${filename}`)
                 .setHeader('Content-Type', 'application/vnd.ms-excel')
-                .end(buf)
+                .send(buf)
         } catch (error) {
             next(error)
         }
