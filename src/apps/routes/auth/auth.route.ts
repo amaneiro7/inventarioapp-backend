@@ -20,6 +20,7 @@ export const register = async (router: Router) => {
   )
 
   router.get('/auth/refresh-token',
+    passport.authenticate(StrategyOptions.JWTCOOKIE, { session: false }),
     authRefreshTokenController.run.bind(authRefreshTokenController)
   )
 
