@@ -9,7 +9,7 @@ export class AuthLogoutController implements Controller {
         .status(httpStatus.OK)
         .clearCookie('refreshToken')
         .clearCookie('accessToken')
-        .json({ message: 'Sesion cerrada exitosamente' })
+        .send({ message: 'Sesion cerrada exitosamente' })
     } catch (error) {
       next(error)
     }

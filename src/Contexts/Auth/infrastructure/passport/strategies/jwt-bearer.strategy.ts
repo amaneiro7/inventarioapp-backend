@@ -8,7 +8,7 @@ export class JwtBearerStrategy extends Strategy {
       secretOrKey: config.accessTokenSecret
     }
     super(jwtOptions, (jwtOptions, done) => {
-      done(null, jwtOptions);
+      done(null, jwtOptions)
     })
   }
 }
