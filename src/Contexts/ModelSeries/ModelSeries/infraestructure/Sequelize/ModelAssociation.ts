@@ -1,18 +1,18 @@
-import { FindOptions } from "sequelize"
-import { Criteria } from "../../../../Shared/domain/criteria/Criteria"
+import { FindOptions } from 'sequelize'
+import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class ModelAssociation {
-    convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-        options.include = [
-            'category',
-            'brand',
-            'modelPrinter',
-            'modelMonitor',
-            { association: 'modelLaptop', include: ['memoryRamType'] },
-            { association: 'modelComputer', include: ['memoryRamType'] },
-            { association: 'modelKeyboard', include: ['inputType'] },
-            { association: 'modelMouse', include: ['inputType'] }
-        ]
-        return options
-    }
+	convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		options.include = [
+			'category',
+			'brand',
+			'modelPrinter',
+			'modelMonitor',
+			{ association: 'modelLaptop', include: ['memoryRamType'] },
+			{ association: 'modelComputer', include: ['memoryRamType'] },
+			{ association: 'modelKeyboard', include: ['inputType'] },
+			{ association: 'modelMouse', include: ['inputType'] }
+		]
+		return options
+	}
 }

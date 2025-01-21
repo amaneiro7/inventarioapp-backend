@@ -6,27 +6,43 @@ import { type CentroCostoRepository } from '../domain/CentroCostoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 export class CentroCostoUpdater {
-  constructor(private readonly centroCostoRepository: CentroCostoRepository) { }
+	constructor(
+		private readonly centroCostoRepository: CentroCostoRepository
+	) {}
 
-  async run({ id, params: { name } }: { id: Primitives<CodCentroCosto>; params: Omit<CentroCostoPrimitives, 'id'> }): Promise<void> {
-    const codCentroCosto = new CodCentroCosto(id)
+	async run({
+		id,
+		params: { name }
+	}: {
+		id: Primitives<CodCentroCosto>
+		params: Omit<CentroCostoPrimitives, 'id'>
+	}): Promise<void> {
+		const codCentroCosto = new CodCentroCosto(id)
 
-    const centroCosto = await this.centroCostoRepository.searchById(codCentroCosto.value)
-    if (!centroCosto) {
-      throw new CentroCostoDoesNotExistError()
-    }
+		const centroCosto = await this.centroCostoRepository.searchById(
+			codCentroCosto.value
+		)
+		if (!centroCosto) {
+			throw new CentroCostoDoesNotExistError()
+		}
 
-    const centroCostoEntity = CentroCosto.fromPrimitives(centroCosto)
-    await this.updateCentroCostoUseCase({ name, entity: centroCostoEntity })
+		const centroCostoEntity = CentroCosto.fromPrimitives(centroCosto)
+		await this.updateCentroCostoUseCase({ name, entity: centroCostoEntity })
 
-    await this.centroCostoRepository.save(centroCostoEntity.toPrimitive())
-  }
+		await this.centroCostoRepository.save(centroCostoEntity.toPrimitive())
+	}
 
-  private async updateCentroCostoUseCase({ entity, name }: { name?: Primitives<CentroCostoName>, entity: CentroCosto }): Promise<void> {
-    if (!name) return
+	private async updateCentroCostoUseCase({
+		entity,
+		name
+	}: {
+		name?: Primitives<CentroCostoName>
+		entity: CentroCosto
+	}): Promise<void> {
+		if (!name) return
 
-    if (entity.nameValue === name) return
+		if (entity.nameValue === name) return
 
-    entity.updateName(name)
-  }
+		entity.updateName(name)
+	}
 }

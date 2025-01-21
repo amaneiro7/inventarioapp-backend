@@ -1,3 +1,3 @@
 export class StatusCannotDeleteIsNotEmptyError extends Error {
-  message = 'Cannot delete this brand because is not empty'
+	message = 'Cannot delete this brand because is not empty'
 }

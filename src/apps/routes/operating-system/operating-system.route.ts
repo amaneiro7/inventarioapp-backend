@@ -6,10 +6,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { OperatingSystemDependencies } from '../../di/operating-system/operating-system.di'
 
 export const register = async (router: Router) => {
-    const getAllController: OperatingSystemGetAllController = container.resolve(OperatingSystemDependencies.GetAllController)
+	const getAllController: OperatingSystemGetAllController = container.resolve(
+		OperatingSystemDependencies.GetAllController
+	)
 
-    router.get('/operatingsystems/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/operatingsystems/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

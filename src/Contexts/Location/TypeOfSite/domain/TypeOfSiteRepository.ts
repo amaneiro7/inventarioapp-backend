@@ -3,7 +3,9 @@ import { type TypeOfSitePrimitives } from './TypeOfSite'
 import { type TypeOfSiteId } from './TypeOfSiteId'
 
 export abstract class TypeOfSiteRepository {
-  abstract searchAll (): Promise<TypeOfSitePrimitives[]>
+	abstract searchAll(): Promise<TypeOfSitePrimitives[]>
 
-  abstract searchById (id: Primitives<TypeOfSiteId>): Promise<TypeOfSitePrimitives | null>
+	abstract searchById(
+		id: Primitives<TypeOfSiteId>
+	): Promise<TypeOfSitePrimitives | null>
 }

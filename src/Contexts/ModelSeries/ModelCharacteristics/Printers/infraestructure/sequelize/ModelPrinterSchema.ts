@@ -6,57 +6,65 @@ import { type ModelPrintersPrimitives } from '../../domain/ModelPrinters'
 import { type CartridgeModel } from '../../domain/CartridgeModel'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 
-
-interface ModelPrinterCreationAttributes extends Omit<ModelPrintersPrimitives, 'name' | 'brandId' | 'generic'> {
-  modelSeriesId: Primitives<ModelSeriesId>
+interface ModelPrinterCreationAttributes
+	extends Omit<ModelPrintersPrimitives, 'name' | 'brandId' | 'generic'> {
+	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class ModelPrinterModel extends Model<ModelPrinterCreationAttributes> implements ModelPrinterCreationAttributes {
-  declare id: Primitives<ModelSeriesId>
-  declare cartridgeModel: Primitives<CartridgeModel>
-  declare modelSeriesId: Primitives<ModelSeriesId>
-  declare categoryId: Primitives<CategoryId>
+export class ModelPrinterModel
+	extends Model<ModelPrinterCreationAttributes>
+	implements ModelPrinterCreationAttributes
+{
+	declare id: Primitives<ModelSeriesId>
+	declare cartridgeModel: Primitives<CartridgeModel>
+	declare modelSeriesId: Primitives<ModelSeriesId>
+	declare categoryId: Primitives<CategoryId>
 
-
-
-  static async associate(models: Sequelize['models']): Promise<void> {
-    this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A Laptop model belongs to a model
-    this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
-  }
-  static async initialize(sequelize: Sequelize): Promise<void> {
-    ModelPrinterModel.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          primaryKey: true,
-          allowNull: false
-        },
-        modelSeriesId: {
-          type: DataTypes.UUID,
-          unique: true,
-          allowNull: false
-        },
-        categoryId: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          validate: {
-            isIn: {
-              args: [[CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]],
-              msg: 'Solo puede pertenecer a la categoria de Impresoras Laser e Impresoras Tinta'
-            }
-          }
-        },
-        cartridgeModel: {
-          type: DataTypes.STRING,
-          allowNull: false
-        }
-      },
-      {
-        modelName: 'ModelPrinter',
-        underscored: true,
-        sequelize
-      }
-    )
-  }
+	static async associate(models: Sequelize['models']): Promise<void> {
+		this.belongsTo(models.Model, {
+			as: 'model',
+			foreignKey: 'modelSeriesId'
+		}) // A Laptop model belongs to a model
+		this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
+	}
+	static async initialize(sequelize: Sequelize): Promise<void> {
+		ModelPrinterModel.init(
+			{
+				id: {
+					type: DataTypes.UUID,
+					primaryKey: true,
+					allowNull: false
+				},
+				modelSeriesId: {
+					type: DataTypes.UUID,
+					unique: true,
+					allowNull: false
+				},
+				categoryId: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					validate: {
+						isIn: {
+							args: [
+								[
+									CategoryValues.LASERPRINTER,
+									CategoryValues.INKPRINTER
+								]
+							],
+							msg: 'Solo puede pertenecer a la categoria de Impresoras Laser e Impresoras Tinta'
+						}
+					}
+				},
+				cartridgeModel: {
+					type: DataTypes.STRING,
+					allowNull: false
+				}
+			},
+			{
+				modelName: 'ModelPrinter',
+				underscored: true,
+				sequelize
+			}
+		)
+	}
 }
-

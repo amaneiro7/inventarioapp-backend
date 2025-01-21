@@ -1,5 +1,8 @@
 import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { DeviceComputer, type DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer'
+import {
+	DeviceComputer,
+	type DeviceComputerPrimitives
+} from '../../../Features/Computer/domain/Computer'
 import { ComputerHardDriveCapacity } from '../../../Features/Computer/domain/ComputerHardDriveCapacity'
 import { ComputerHardDriveType } from '../../../Features/Computer/domain/ComputerHardDriveType'
 import { ComputerMemoryRam } from '../../../Features/Computer/domain/ComputerMemoryRam'
@@ -9,7 +12,10 @@ import { ComputerOperatingSystemArq } from '../../../Features/Computer/domain/Co
 import { ComputerProcessor } from '../../../Features/Computer/domain/ComputerProcessor'
 import { IPAddress } from '../../../Features/Computer/domain/IPAddress'
 import { MACAddress } from '../../../Features/Computer/domain/MACAddress'
-import { DeviceHardDrive, type DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
+import {
+	DeviceHardDrive,
+	type DeviceHardDrivePrimitives
+} from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { HardDriveHealth } from '../../../Features/HardDrive/HardDrive/domain/HardDriveHealth'
 import { HDDCapacity } from '../../../Features/HardDrive/HardDrive/domain/HDDCapacity'
 import { HDDType } from '../../../Features/HardDrive/HardDrive/domain/HDDType'
@@ -42,165 +48,272 @@ import { type EmployeeRepository } from '../../../employee/Employee/domain/Repos
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 
-export interface PartialDeviceParams extends DeviceParams { }
+export interface PartialDeviceParams extends DeviceParams {}
 
 export class DeviceUpdater {
+	constructor(
+		private readonly deviceRepository: DeviceRepository,
+		private readonly processorRepository: ProcessorRepository,
+		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
+		private readonly hardDriveTypeRepository: HardDriveTypeRepository,
+		private readonly operatingSystemVersionRepository: OperatingSystemRepository,
+		private readonly operatingSystemArqRepository: OperatingSystemArqRepository,
+		private readonly historyRepository: HistoryRepository,
+		private readonly statusRepository: StatusRepository,
+		private readonly locationRepository: LocationRepository,
+		private readonly employeeRepository: EmployeeRepository,
+		private readonly modelSeriesRepository: ModelSeriesRepository
+	) {}
+	async run({
+		id,
+		params,
+		user
+	}: {
+		id: Primitives<DeviceId>
+		params: PartialDeviceParams
+		user?: JwtPayloadUser
+	}): Promise<void> {
+		const { categoryId } = params
+		// Extraemos el id del device a actualizar
+		const deviceId = new DeviceId(id).value
 
-  constructor(
-    private readonly deviceRepository: DeviceRepository,
-    private readonly processorRepository: ProcessorRepository,
-    private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
-    private readonly hardDriveTypeRepository: HardDriveTypeRepository,
-    private readonly operatingSystemVersionRepository: OperatingSystemRepository,
-    private readonly operatingSystemArqRepository: OperatingSystemArqRepository,
-    private readonly historyRepository: HistoryRepository,
-    private readonly statusRepository: StatusRepository,
-    private readonly locationRepository: LocationRepository,
-    private readonly employeeRepository: EmployeeRepository,
-    private readonly modelSeriesRepository: ModelSeriesRepository,
+		// Buscamos el device en la base de datos
+		const device = await this.deviceRepository.searchById(deviceId)
 
-  ) { }
-  async run({ id, params, user }: { id: Primitives<DeviceId>, params: PartialDeviceParams, user?: JwtPayloadUser }): Promise<void> {
-    const { categoryId } = params
-    // Extraemos el id del device a actualizar
-    const deviceId = new DeviceId(id).value
+		// Si el device no existe, lanzamos una excepcion
+		if (!device) {
+			throw new DeviceDoesNotExistError(id)
+		}
 
-    // Buscamos el device en la base de datos
-    const device = await this.deviceRepository.searchById(deviceId)
+		// Creamos una instancia de la entidad Device a partir de los datos obtenidos
+		let deviceEntity
+		let oldDeviceEntity
+		if (DeviceComputer.isComputerCategory({ categoryId })) {
+			// Si el device es de tipo computadora, obtenemos los datos de la tabla computer
+			const { computer } = device as unknown as DevicesApiResponse
+			if (!computer) {
+				throw new InvalidArgumentError('Computer does not exist')
+			}
+			deviceEntity = DeviceComputer.fromPrimitives({
+				id: device.id,
+				serial: device.serial,
+				activo: device.activo,
+				statusId: device.statusId,
+				categoryId: device.categoryId,
+				brandId: device.brandId,
+				modelId: device.modelId,
+				stockNumber: device.stockNumber,
+				employeeId: device.employeeId,
+				locationId: device.locationId,
+				observation: device.observation,
+				computerName: computer.computerName,
+				processorId: computer.processorId,
+				memoryRam: computer.memoryRam,
+				memoryRamCapacity: computer.memoryRamCapacity,
+				hardDriveCapacityId: computer.hardDriveCapacityId,
+				hardDriveTypeId: computer.hardDriveTypeId,
+				operatingSystemId: computer.operatingSystemId,
+				operatingSystemArqId: computer.operatingSystemArqId,
+				macAddress: computer.macAddress,
+				ipAddress: computer.ipAddress
+			})
+			oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
+			// Actualizamos los campos principales del device
+			await this.updateMainDevice({ params, deviceEntity })
 
-    // Si el device no existe, lanzamos una excepcion
-    if (!device) {
-      throw new DeviceDoesNotExistError(id)
-    }
+			// Extraemos los parametros de la clase Computer
+			const {
+				computerName,
+				processorId,
+				operatingSystemArqId,
+				operatingSystemId,
+				hardDriveCapacityId,
+				hardDriveTypeId,
+				memoryRam,
+				ipAddress,
+				macAddress
+			} = params as Partial<DeviceComputerPrimitives>
 
-    // Creamos una instancia de la entidad Device a partir de los datos obtenidos
-    let deviceEntity
-    let oldDeviceEntity
-    if (DeviceComputer.isComputerCategory({ categoryId })) {
-      // Si el device es de tipo computadora, obtenemos los datos de la tabla computer
-      const { computer } = device as unknown as DevicesApiResponse
-      if (!computer) {
-        throw new InvalidArgumentError('Computer does not exist')
-      }
-      deviceEntity = DeviceComputer.fromPrimitives({
-        id: device.id,
-        serial: device.serial,
-        activo: device.activo,
-        statusId: device.statusId,
-        categoryId: device.categoryId,
-        brandId: device.brandId,
-        modelId: device.modelId,
-        stockNumber: device.stockNumber,
-        employeeId: device.employeeId,
-        locationId: device.locationId,
-        observation: device.observation,
-        computerName: computer.computerName,
-        processorId: computer.processorId,
-        memoryRam: computer.memoryRam,
-        memoryRamCapacity: computer.memoryRamCapacity,
-        hardDriveCapacityId: computer.hardDriveCapacityId,
-        hardDriveTypeId: computer.hardDriveTypeId,
-        operatingSystemId: computer.operatingSystemId,
-        operatingSystemArqId: computer.operatingSystemArqId,
-        macAddress: computer.macAddress,
-        ipAddress: computer.ipAddress,
-      })
-      oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
-      // Actualizamos los campos principales del device
-      await this.updateMainDevice({ params, deviceEntity })
+			// Actualizamos los campos de la clase Computer
+			await ComputerName.updateComputerNameField({
+				repository: this.deviceRepository,
+				computerName,
+				entity: deviceEntity
+			})
+			await ComputerMemoryRam.updateMemoryRam({
+				entity: deviceEntity,
+				memoryRam
+			})
+			await ComputerProcessor.updateProcessorField({
+				repository: this.processorRepository,
+				processor: processorId,
+				entity: deviceEntity
+			})
+			await ComputerHardDriveCapacity.updateHardDriveCapacityField({
+				repository: this.hardDriveCapacityRepository,
+				entity: deviceEntity,
+				hardDriveCapacity: hardDriveCapacityId
+			})
+			await ComputerHardDriveType.updateHardDriveTypeField({
+				repository: this.hardDriveTypeRepository,
+				hardDriveType: hardDriveTypeId,
+				entity: deviceEntity
+			})
+			await ComputerOperatingSystem.updateOperatingSystemField({
+				repository: this.operatingSystemVersionRepository,
+				operatingSystem: operatingSystemId,
+				entity: deviceEntity
+			})
+			await ComputerOperatingSystemArq.updateOperatingSystemArqField({
+				repository: this.operatingSystemArqRepository,
+				operatingSystemArq: operatingSystemArqId,
+				entity: deviceEntity
+			})
+			await IPAddress.updateIPAddressField({
+				ipAddress,
+				entity: deviceEntity
+			})
+			await MACAddress.updateMACAddressField({
+				macAddress,
+				entity: deviceEntity
+			})
+		} else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
+			// Si el device es de tipo hard drive, obtenemos los datos de la tabla hard_drive
+			const { hardDrive } = device as unknown as DevicesApiResponse
+			if (!hardDrive) {
+				throw new InvalidArgumentError('HardDrive does not exist')
+			}
+			deviceEntity = DeviceHardDrive.fromPrimitives({
+				id: device.id,
+				serial: device.serial,
+				activo: device.activo,
+				statusId: device.statusId,
+				categoryId: device.categoryId,
+				brandId: device.brandId,
+				modelId: device.modelId,
+				employeeId: device.employeeId,
+				locationId: device.locationId,
+				observation: device.observation,
+				stockNumber: device.stockNumber,
+				hardDriveCapacityId: hardDrive.hardDriveCapacityId,
+				hardDriveTypeId: hardDrive.hardDriveTypeId,
+				health: hardDrive.health
+			})
 
-      // Extraemos los parametros de la clase Computer
-      const {
-        computerName, processorId, operatingSystemArqId, operatingSystemId, hardDriveCapacityId, hardDriveTypeId, memoryRam, ipAddress, macAddress
-      } = params as Partial<DeviceComputerPrimitives>
+			oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
 
-      // Actualizamos los campos de la clase Computer
-      await ComputerName.updateComputerNameField({ repository: this.deviceRepository, computerName, entity: deviceEntity })
-      await ComputerMemoryRam.updateMemoryRam({ entity: deviceEntity, memoryRam })
-      await ComputerProcessor.updateProcessorField({ repository: this.processorRepository, processor: processorId, entity: deviceEntity })
-      await ComputerHardDriveCapacity.updateHardDriveCapacityField({ repository: this.hardDriveCapacityRepository, entity: deviceEntity, hardDriveCapacity: hardDriveCapacityId })
-      await ComputerHardDriveType.updateHardDriveTypeField({ repository: this.hardDriveTypeRepository, hardDriveType: hardDriveTypeId, entity: deviceEntity })
-      await ComputerOperatingSystem.updateOperatingSystemField({ repository: this.operatingSystemVersionRepository, operatingSystem: operatingSystemId, entity: deviceEntity })
-      await ComputerOperatingSystemArq.updateOperatingSystemArqField({ repository: this.operatingSystemArqRepository, operatingSystemArq: operatingSystemArqId, entity: deviceEntity })
-      await IPAddress.updateIPAddressField({ ipAddress, entity: deviceEntity })
-      await MACAddress.updateMACAddressField({ macAddress, entity: deviceEntity })
-    } else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-      // Si el device es de tipo hard drive, obtenemos los datos de la tabla hard_drive
-      const { hardDrive } = device as unknown as DevicesApiResponse
-      if (!hardDrive) {
-        throw new InvalidArgumentError('HardDrive does not exist')
-      }
-      deviceEntity = DeviceHardDrive.fromPrimitives({
-        id: device.id,
-        serial: device.serial,
-        activo: device.activo,
-        statusId: device.statusId,
-        categoryId: device.categoryId,
-        brandId: device.brandId,
-        modelId: device.modelId,
-        employeeId: device.employeeId,
-        locationId: device.locationId,
-        observation: device.observation,
-        stockNumber: device.stockNumber,
-        hardDriveCapacityId: hardDrive.hardDriveCapacityId,
-        hardDriveTypeId: hardDrive.hardDriveTypeId,
-        health: hardDrive.health,
-      })
+			// Extraemos los parametros de la clase HardDrive
+			const { hardDriveCapacityId, hardDriveTypeId, health } =
+				params as DeviceHardDrivePrimitives
 
-      oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
+			// Actualizamos los campos principales del device
+			await this.updateMainDevice({ params, deviceEntity })
 
-      // Extraemos los parametros de la clase HardDrive
-      const {
-        hardDriveCapacityId, hardDriveTypeId, health
-      } = params as DeviceHardDrivePrimitives
+			// Actualizamos los campos de la clase HardDrive
+			await HDDCapacity.updateHardDriveCapacityField({
+				repository: this.hardDriveCapacityRepository,
+				entity: deviceEntity,
+				hardDriveCapacity: hardDriveCapacityId
+			})
+			await HDDType.updateHardDriveTypeField({
+				repository: this.hardDriveTypeRepository,
+				hardDriveType: hardDriveTypeId,
+				entity: deviceEntity
+			})
+			await HardDriveHealth.updateHealthField({
+				health,
+				entity: deviceEntity
+			})
+		} else {
+			// Si el device no es de tipo computadora o hard drive, lo creamos como una instancia de la clase Device
+			deviceEntity = Device.fromPrimitives(device)
+			oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
 
-      // Actualizamos los campos principales del device
-      await this.updateMainDevice({ params, deviceEntity })
+			// Actualizamos los campos principales del device
+			await this.updateMainDevice({ params, deviceEntity })
+		}
+		// Guardamos los cambios en la base de datos
+		await this.deviceRepository
+			.save(deviceEntity.toPrimitives())
+			.then(() => {
+				if (!user?.sub) {
+					throw new InvalidArgumentError('user is required')
+				}
+				new HistoryCreator(this.historyRepository).run({
+					deviceId: deviceEntity.idValue,
+					userId: user?.sub,
+					employeeId: deviceEntity.employeeeValue,
+					action: 'UPDATE',
+					newData: deviceEntity.toPrimitives(),
+					oldData: oldDeviceEntity,
+					createdAt: new Date()
+				})
+			})
+	}
 
-      // Actualizamos los campos de la clase HardDrive
-      await HDDCapacity.updateHardDriveCapacityField({ repository: this.hardDriveCapacityRepository, entity: deviceEntity, hardDriveCapacity: hardDriveCapacityId })
-      await HDDType.updateHardDriveTypeField({ repository: this.hardDriveTypeRepository, hardDriveType: hardDriveTypeId, entity: deviceEntity })
-      await HardDriveHealth.updateHealthField({ health, entity: deviceEntity })
-    } else {
-      // Si el device no es de tipo computadora o hard drive, lo creamos como una instancia de la clase Device
-      deviceEntity = Device.fromPrimitives(device)
-      oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
-
-      // Actualizamos los campos principales del device
-      await this.updateMainDevice({ params, deviceEntity })
-    }
-    // Guardamos los cambios en la base de datos    
-    await this.deviceRepository.save(deviceEntity.toPrimitives())
-      .then(() => {
-        if (!user?.sub) {
-          throw new InvalidArgumentError('user is required')
-        }
-        new HistoryCreator(this.historyRepository).run({
-          deviceId: deviceEntity.idValue,
-          userId: user?.sub,
-          employeeId: deviceEntity.employeeeValue,
-          action: 'UPDATE',
-          newData: deviceEntity.toPrimitives(),
-          oldData: oldDeviceEntity,
-          createdAt: new Date()
-        })
-      })
-  }
-
-  /**
-   * Actualiza los campos principales del device
-   * @param params Parametros a actualizar
-   * @param deviceEntity Entidad del device
-   */
-  private async updateMainDevice({ params, deviceEntity }: { params: PartialDeviceParams, deviceEntity: Device }): Promise<void> {
-    const { serial, activo, statusId, categoryId, brandId, modelId, employeeId, locationId, observation, stockNumber } = params
-    await DeviceStatus.updateStatusField({ repository: this.statusRepository, status: statusId, entity: deviceEntity })
-    await DeviceActivo.updateActivoField({ repository: this.deviceRepository, activo, entity: deviceEntity })
-    await DeviceSerial.updateSerialField({ repository: this.deviceRepository, serial, entity: deviceEntity })
-    await DeviceLocation.updateLocationField({ repository: this.locationRepository, location: locationId, entity: deviceEntity })
-    await DeviceObservation.updateObservationField({ observation, entity: deviceEntity })
-    await DeviceStocknumber.updateStockNumberField({ stockNumber, entity: deviceEntity })
-    await DeviceEmployee.updateEmployeeField({ repository: this.employeeRepository, employee: employeeId, entity: deviceEntity })
-    await DeviceModelSeries.updateModelField({ repository: this.modelSeriesRepository, modelSeries: modelId, category: categoryId, brand: brandId, entity: deviceEntity })
-  }
+	/**
+	 * Actualiza los campos principales del device
+	 * @param params Parametros a actualizar
+	 * @param deviceEntity Entidad del device
+	 */
+	private async updateMainDevice({
+		params,
+		deviceEntity
+	}: {
+		params: PartialDeviceParams
+		deviceEntity: Device
+	}): Promise<void> {
+		const {
+			serial,
+			activo,
+			statusId,
+			categoryId,
+			brandId,
+			modelId,
+			employeeId,
+			locationId,
+			observation,
+			stockNumber
+		} = params
+		await DeviceStatus.updateStatusField({
+			repository: this.statusRepository,
+			status: statusId,
+			entity: deviceEntity
+		})
+		await DeviceActivo.updateActivoField({
+			repository: this.deviceRepository,
+			activo,
+			entity: deviceEntity
+		})
+		await DeviceSerial.updateSerialField({
+			repository: this.deviceRepository,
+			serial,
+			entity: deviceEntity
+		})
+		await DeviceLocation.updateLocationField({
+			repository: this.locationRepository,
+			location: locationId,
+			entity: deviceEntity
+		})
+		await DeviceObservation.updateObservationField({
+			observation,
+			entity: deviceEntity
+		})
+		await DeviceStocknumber.updateStockNumberField({
+			stockNumber,
+			entity: deviceEntity
+		})
+		await DeviceEmployee.updateEmployeeField({
+			repository: this.employeeRepository,
+			employee: employeeId,
+			entity: deviceEntity
+		})
+		await DeviceModelSeries.updateModelField({
+			repository: this.modelSeriesRepository,
+			modelSeries: modelId,
+			category: categoryId,
+			brand: brandId,
+			entity: deviceEntity
+		})
+	}
 }

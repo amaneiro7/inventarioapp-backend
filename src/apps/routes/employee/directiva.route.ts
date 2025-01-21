@@ -8,30 +8,42 @@ import { authenticate } from '../../Middleware/authenticate'
 import { DirectivaDependencies } from '../../di/employee/directiva.di'
 
 export const register = async (router: Router) => {
-    const getAllController: DirectivaGetAllController = container.resolve(DirectivaDependencies.GetAllController)
-    const getController: DirectivaGetController = container.resolve(DirectivaDependencies.GetController)
-    const postController: DirectivaPostController = container.resolve(DirectivaDependencies.PostController)
-    const patchController: DirectivaPatchController = container.resolve(DirectivaDependencies.PatchController)
+	const getAllController: DirectivaGetAllController = container.resolve(
+		DirectivaDependencies.GetAllController
+	)
+	const getController: DirectivaGetController = container.resolve(
+		DirectivaDependencies.GetController
+	)
+	const postController: DirectivaPostController = container.resolve(
+		DirectivaDependencies.PostController
+	)
+	const patchController: DirectivaPatchController = container.resolve(
+		DirectivaDependencies.PatchController
+	)
 
-    router.get('/directivas/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/directivas/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 
-    router.get('/directivas/:id',
-        authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/directivas/:id',
+		authenticate,
+		getController.run.bind(getController)
+	)
 
-    //post
-    router.post('/directivas/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	//post
+	router.post(
+		'/directivas/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    // patch
-    router.patch('/directivas/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
+	// patch
+	router.patch(
+		'/directivas/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 }

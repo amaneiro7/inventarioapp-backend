@@ -4,34 +4,36 @@ import { type RegionPrimitives } from '../../domain/Region'
 import { type RegionId } from '../../domain/RegionId'
 import { type RegionName } from '../../domain/RegionName'
 
+export class RegionModel
+	extends Model<RegionPrimitives>
+	implements RegionPrimitives
+{
+	declare id: Primitives<RegionId>
+	declare name: Primitives<RegionName>
 
-export class RegionModel extends Model<RegionPrimitives> implements RegionPrimitives {
-  declare id: Primitives<RegionId>
-  declare name: Primitives<RegionName>
-
-  static async associate(models: Sequelize['models']): Promise<void> {
-    this.hasMany(models.State, { as: 'state', foreignKey: 'regionId' }) // An Region can hava many states
-  }
-  static async initialize(sequelize: Sequelize): Promise<void> {
-    RegionModel.init(
-      {
-        id: {
-          type: DataTypes.STRING,
-          primaryKey: true,
-          allowNull: false
-        },
-        name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          unique: true
-        }
-      },
-      {
-        modelName: 'Region',
-        timestamps: false,
-        underscored: true,
-        sequelize
-      }
-    )
-  }
+	static async associate(models: Sequelize['models']): Promise<void> {
+		this.hasMany(models.State, { as: 'state', foreignKey: 'regionId' }) // An Region can hava many states
+	}
+	static async initialize(sequelize: Sequelize): Promise<void> {
+		RegionModel.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false
+				},
+				name: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					unique: true
+				}
+			},
+			{
+				modelName: 'Region',
+				timestamps: false,
+				underscored: true,
+				sequelize
+			}
+		)
+	}
 }

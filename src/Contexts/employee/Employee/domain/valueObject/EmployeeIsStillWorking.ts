@@ -1,3 +1,3 @@
-import { BooleanValueObject } from "../../../../Shared/domain/value-object/BooleanValueObject";
+import { BooleanValueObject } from '../../../../Shared/domain/value-object/BooleanValueObject'
 
-export class EmployeeIsStillWorking extends BooleanValueObject { }
+export class EmployeeIsStillWorking extends BooleanValueObject {}

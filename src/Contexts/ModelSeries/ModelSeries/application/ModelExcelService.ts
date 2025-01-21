@@ -9,23 +9,24 @@ import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCrite
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesExcelService {
-    constructor(private readonly modelSeriesRepository: ModelSeriesRepository) { }
-    async run(query: SearchByCriteriaQuery): Promise<{}> {
+	constructor(
+		private readonly modelSeriesRepository: ModelSeriesRepository
+	) {}
+	async run(query: SearchByCriteriaQuery): Promise<{}> {
+		// Recuperar los datos de la base de datos usando Sequelize
+		const filters = query.filters.map(filter => {
+			return new Filter(
+				new FilterField(filter.field),
+				FilterOperator.fromValue(filter.operator),
+				new FilterValue(filter.value)
+			)
+		})
+		const order = Order.fromValues(
+			query.orderBy ?? 'categoryId',
+			query.orderType
+		)
+		const criteria = new Criteria(new Filters(filters), order)
 
-        // Recuperar los datos de la base de datos usando Sequelize
-        const filters = query.filters.map((filter) => {
-            return new Filter(
-                new FilterField(filter.field),
-                FilterOperator.fromValue(filter.operator),
-                new FilterValue(filter.value))
-        })
-        const order = Order.fromValues(
-            query.orderBy ?? 'categoryId',
-            query.orderType
-        )
-        const criteria = new Criteria(new Filters(filters), order)
-
-        return await this.modelSeriesRepository.donwload(criteria)
-    }
-
+		return await this.modelSeriesRepository.donwload(criteria)
+	}
 }

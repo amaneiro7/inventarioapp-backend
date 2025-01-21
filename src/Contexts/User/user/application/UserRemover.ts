@@ -6,24 +6,30 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserRemover {
-    constructor(private readonly userRepository: UserRepository) { }
+	constructor(private readonly userRepository: UserRepository) {}
 
-    async run({ user, id }: { user?: JwtPayloadUser, id: Primitives<UserId> }): Promise<void> {
-        // Se valida que el usuario que realiza la accion esta autorizado
-        isSuperAdmin({ user })
+	async run({
+		user,
+		id
+	}: {
+		user?: JwtPayloadUser
+		id: Primitives<UserId>
+	}): Promise<void> {
+		// Se valida que el usuario que realiza la accion esta autorizado
+		isSuperAdmin({ user })
 
-        // se valida que el id, sea un id valida
-        const userId = new UserId(id).value
+		// se valida que el id, sea un id valida
+		const userId = new UserId(id).value
 
-        // se busca el usuario a eliminar
-        const userToDelete = await this.userRepository.searchById(userId)
+		// se busca el usuario a eliminar
+		const userToDelete = await this.userRepository.searchById(userId)
 
-        // se verifica que el usuario exista, si no existe arrojar un error
-        if (userToDelete === null) {
-            throw new UserDoesNotExistError(userId)
-        }
+		// se verifica que el usuario exista, si no existe arrojar un error
+		if (userToDelete === null) {
+			throw new UserDoesNotExistError(userId)
+		}
 
-        // eliminar el usuario de la base de datos
-        await this.userRepository.delete(id)
-    }
+		// eliminar el usuario de la base de datos
+		await this.userRepository.delete(id)
+	}
 }

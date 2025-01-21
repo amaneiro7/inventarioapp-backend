@@ -6,21 +6,21 @@ import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryRepository } from '../../domain/MainCategoryRepository'
 
 export class SequelizeMainCategoryRepository implements MainCategoryRepository {
-  private readonly cacheKey: string = 'mainCategories'
-  constructor(private readonly cache: CacheService) { }
+	private readonly cacheKey: string = 'mainCategories'
+	constructor(private readonly cache: CacheService) {}
 
-  async searchAll(): Promise<MainCategoryPrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await MainCategoryModel.findAll({
-        include: ['category'],
-        order: [
-          ['name', 'ASC']
-        ]
-      })
-    })
-  }
+	async searchAll(): Promise<MainCategoryPrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await MainCategoryModel.findAll({
+				include: ['category'],
+				order: [['name', 'ASC']]
+			})
+		})
+	}
 
-  async searchById(id: Primitives<MainCategoryId>): Promise<MainCategoryPrimitives | null> {
-    return await MainCategoryModel.findByPk(id) ?? null
-  }
+	async searchById(
+		id: Primitives<MainCategoryId>
+	): Promise<MainCategoryPrimitives | null> {
+		return (await MainCategoryModel.findByPk(id)) ?? null
+	}
 }

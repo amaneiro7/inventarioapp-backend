@@ -13,32 +13,46 @@ import { type UserPrimitivesOptional } from '../domain/User'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserSearchByCriteria {
-    constructor(private readonly userRepository: UserRepository) { }
+	constructor(private readonly userRepository: UserRepository) {}
 
-    async run({ user, query }: { user?: JwtPayloadUser, query: SearchByCriteriaQuery }): Promise<UserPrimitivesOptional[]> {
-        isSuperAdmin({ user })
-        const filters = query.filters.map((filter) => {
-            return new Filter(
-                new FilterField(filter.field),
-                FilterOperator.fromValue(filter.operator),
-                new FilterValue(filter.value))
-        })
-        const order = Order.fromValues(
-            query.orderBy,
-            query.orderType
-        )
+	async run({
+		user,
+		query
+	}: {
+		user?: JwtPayloadUser
+		query: SearchByCriteriaQuery
+	}): Promise<UserPrimitivesOptional[]> {
+		isSuperAdmin({ user })
+		const filters = query.filters.map(filter => {
+			return new Filter(
+				new FilterField(filter.field),
+				FilterOperator.fromValue(filter.operator),
+				new FilterValue(filter.value)
+			)
+		})
+		const order = Order.fromValues(query.orderBy, query.orderType)
 
-        const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
+		const criteria = new Criteria(
+			new Filters(filters),
+			order,
+			query.limit,
+			query.offset
+		)
 
-        const users = await this.userRepository.matching(criteria)
-            // Se bloquea exponer los datos del usuario admin
-            .then(res => res.filter(user => user.roleId !== RoleId.Options.ADMIN))
-            // Se elimina la propiedad password, por alguna razon con sequelize
-            .then(res => res.map(user => {
-                const { password, ...rest } = user
-                return rest
-            }))
+		const users = await this.userRepository
+			.matching(criteria)
+			// Se bloquea exponer los datos del usuario admin
+			.then(res =>
+				res.filter(user => user.roleId !== RoleId.Options.ADMIN)
+			)
+			// Se elimina la propiedad password, por alguna razon con sequelize
+			.then(res =>
+				res.map(user => {
+					const { password, ...rest } = user
+					return rest
+				})
+			)
 
-        return users
-    }
+		return users
+	}
 }

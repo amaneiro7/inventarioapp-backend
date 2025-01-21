@@ -8,30 +8,42 @@ import { authenticate } from '../../Middleware/authenticate'
 import { DepartamentoDependencies } from '../../di/employee/departamento.di'
 
 export const register = async (router: Router) => {
-    const getAllController: DepartamentoGetAllController = container.resolve(DepartamentoDependencies.GetAllController)
-    const getController: DepartamentoGetController = container.resolve(DepartamentoDependencies.GetController)
-    const postController: DepartamentoPostController = container.resolve(DepartamentoDependencies.PostController)
-    const patchController: DepartamentoPatchController = container.resolve(DepartamentoDependencies.PatchController)
+	const getAllController: DepartamentoGetAllController = container.resolve(
+		DepartamentoDependencies.GetAllController
+	)
+	const getController: DepartamentoGetController = container.resolve(
+		DepartamentoDependencies.GetController
+	)
+	const postController: DepartamentoPostController = container.resolve(
+		DepartamentoDependencies.PostController
+	)
+	const patchController: DepartamentoPatchController = container.resolve(
+		DepartamentoDependencies.PatchController
+	)
 
-    router.get('/departamentos/',
-        // authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/departamentos/',
+		// authenticate,
+		getAllController.run.bind(getAllController)
+	)
 
-    router.get('/departamentos/:id',
-        // authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/departamentos/:id',
+		// authenticate,
+		getController.run.bind(getController)
+	)
 
-    //post
-    router.post('/departamentos/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	//post
+	router.post(
+		'/departamentos/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    // patch
-    router.patch('/departamentos/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
+	// patch
+	router.patch(
+		'/departamentos/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 }

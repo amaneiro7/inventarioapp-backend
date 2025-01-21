@@ -15,24 +15,27 @@ import { type OperatingSystemArqPrimitives } from '../../../../Features/Operatin
 import { type ProcessorPrimitives } from '../../../../Features/Processor/Processor/domain/Processor'
 
 export interface DevicesApiResponse extends DevicePrimitives {
-  createdAt: string
-  updatedAt: string
-  category: CategoryPrimitives
-  brand: BrandPrimitives
-  model: ModelApiresponse
-  location: LocationPrimitives
-  status: StatusPrimitives
-  employee: Nullable<EmployeePrimitives>
-  computer: Nullable<DeviceComputerPrimitives & {
-    processor: ProcessorPrimitives
-    hardDriveCapacity: HardDriveCapacityPrimitives
-    hardDriveType: HardDriveTypePrimitives
-    operatingSystem: OperatingSystemPrimitives
-    operatingSystemArq: OperatingSystemArqPrimitives
-
-  }>
-  hardDrive: Nullable<DeviceHardDrivePrimitives & {
-    hardDriveCapacity: HardDriveCapacityPrimitives
-    hardDriveType: HardDriveTypePrimitives
-  }>
+	createdAt: string
+	updatedAt: string
+	category: CategoryPrimitives
+	brand: BrandPrimitives
+	model: ModelApiresponse
+	location: LocationPrimitives
+	status: StatusPrimitives
+	employee: Nullable<EmployeePrimitives>
+	computer: Nullable<
+		DeviceComputerPrimitives & {
+			processor: ProcessorPrimitives
+			hardDriveCapacity: HardDriveCapacityPrimitives
+			hardDriveType: HardDriveTypePrimitives
+			operatingSystem: OperatingSystemPrimitives
+			operatingSystemArq: OperatingSystemArqPrimitives
+		}
+	>
+	hardDrive: Nullable<
+		DeviceHardDrivePrimitives & {
+			hardDriveCapacity: HardDriveCapacityPrimitives
+			hardDriveType: HardDriveTypePrimitives
+		}
+	>
 }

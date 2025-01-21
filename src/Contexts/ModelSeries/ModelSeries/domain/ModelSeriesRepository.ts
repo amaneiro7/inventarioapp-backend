@@ -6,19 +6,27 @@ import { type ModelSeriesId } from './ModelSeriesId'
 import { type ModelSeriesName } from './ModelSeriesName'
 
 export abstract class ModelSeriesRepository {
-  abstract save(payload: ModelSeriesPrimitives): Promise<void>
+	abstract save(payload: ModelSeriesPrimitives): Promise<void>
 
-  abstract searchAll(): Promise<ModelSeriesPrimitives[]>
+	abstract searchAll(): Promise<ModelSeriesPrimitives[]>
 
-  abstract matching(criteria: Criteria): Promise<{ total: number; data: ModelSeriesPrimitives[] }>
+	abstract matching(
+		criteria: Criteria
+	): Promise<{ total: number; data: ModelSeriesPrimitives[] }>
 
-  abstract searchById(id: Primitives<ModelSeriesId>): Promise<ModelSeriesPrimitives | null>
+	abstract searchById(
+		id: Primitives<ModelSeriesId>
+	): Promise<ModelSeriesPrimitives | null>
 
-  abstract searchByName(name: Primitives<ModelSeriesName>): Promise<ModelSeriesPrimitives | null>
+	abstract searchByName(
+		name: Primitives<ModelSeriesName>
+	): Promise<ModelSeriesPrimitives | null>
 
-  abstract searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesPrimitives[]>
+	abstract searchByCategory(
+		categoryId: Primitives<CategoryId>
+	): Promise<ModelSeriesPrimitives[]>
 
-  abstract donwload(criteria: Criteria): Promise<{}>
+	abstract donwload(criteria: Criteria): Promise<{}>
 
-  abstract remove(id: Primitives<ModelSeriesId>): Promise<void>
+	abstract remove(id: Primitives<ModelSeriesId>): Promise<void>
 }

@@ -1,5 +1,4 @@
-import { GenericRepository } from "../../../Shared/domain/GenericRepository";
-import { CentroTrabajoPrimitives } from "./CentroTrabajo";
+import { GenericRepository } from '../../../Shared/domain/GenericRepository'
+import { CentroTrabajoPrimitives } from './CentroTrabajo'
 
-
-export abstract class CentroTrabajoRepository extends GenericRepository<CentroTrabajoPrimitives> { }
+export abstract class CentroTrabajoRepository extends GenericRepository<CentroTrabajoPrimitives> {}

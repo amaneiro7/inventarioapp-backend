@@ -6,36 +6,35 @@ import { type SiteRepository } from '../../domain/SiteRepository'
 import { SiteModels } from './SiteSchema'
 
 export class SequelizeSiteRepository implements SiteRepository {
-  private readonly cacheKey: string = 'sites'
-  constructor(private readonly cache: CacheService) { }
-  async searchAll(): Promise<SitePrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await SiteModels.findAll({
-        include: [
-          {
-            association: 'city',
-            include: ['state']
-          }
-        ]
-      })
+	private readonly cacheKey: string = 'sites'
+	constructor(private readonly cache: CacheService) {}
+	async searchAll(): Promise<SitePrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await SiteModels.findAll({
+				include: [
+					{
+						association: 'city',
+						include: ['state']
+					}
+				]
+			})
+		})
+	}
 
-    })
-  }
+	async searchById(id: Primitives<SiteId>): Promise<SitePrimitives | null> {
+		return (await SiteModels.findByPk(id)) ?? null
+	}
 
-  async searchById(id: Primitives<SiteId>): Promise<SitePrimitives | null> {
-    return await SiteModels.findByPk(id) ?? null
-  }
-
-  async save(payload: SitePrimitives): Promise<void> {
-    const { id } = payload
-    const employee = await SiteModels.findByPk(id) ?? null
-    if (employee === null) {
-      await SiteModels.create({ ...payload })
-    } else {
-      employee.set({ ...payload })
-      await employee.save()
-    }
-    await this.cache.removeCachedData(this.cacheKey)
-    await this.searchAll()
-  }
+	async save(payload: SitePrimitives): Promise<void> {
+		const { id } = payload
+		const employee = (await SiteModels.findByPk(id)) ?? null
+		if (employee === null) {
+			await SiteModels.create({ ...payload })
+		} else {
+			employee.set({ ...payload })
+			await employee.save()
+		}
+		await this.cache.removeCachedData(this.cacheKey)
+		await this.searchAll()
+	}
 }

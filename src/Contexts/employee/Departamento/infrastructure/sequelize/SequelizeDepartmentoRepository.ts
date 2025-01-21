@@ -7,102 +7,100 @@ import { type DepartamentoPrimitives } from '../../domain/Departamento'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { DepartamentoModel } from './DepartamentoSchema'
 
+export class SequelizeDepartamentoRepository
+	implements DepartmentRepository<DepartamentoPrimitives>
+{
+	private readonly cacheKey: string = 'departamento'
+	constructor(private readonly cache: CacheService) {}
+	async searchAll(): Promise<DepartamentoPrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await DepartamentoModel.findAll({
+				attributes: ['id', 'name', 'createdAt', 'updatedAt'],
+				include: [
+					{
+						association: 'vicepresidenciaEjecutiva',
+						attributes: ['name'],
+						include: [
+							{
+								association: 'directiva',
+								attributes: ['id', 'name']
+							}
+						]
+					},
+					{
+						association: 'centroCosto',
+						attributes: ['id', 'name']
+					},
+					{
+						association: 'cargos',
+						attributes: ['id', 'name'],
+						through: { attributes: [] }
+					},
+					'employee'
+				]
+			})
+		})
+	}
 
+	async searchById(
+		id: Primitives<DepartmentId>
+	): Promise<Nullable<DepartamentoPrimitives>> {
+		return (
+			(await DepartamentoModel.findByPk(id, {
+				attributes: ['id', 'name', 'createdAt', 'updatedAt'],
+				include: [
+					{
+						association: 'vicepresidenciaEjecutiva',
+						attributes: ['name'],
+						include: [
+							{
+								association: 'directiva',
+								attributes: ['id', 'name']
+							}
+						]
+					},
+					{
+						association: 'centroCosto',
+						attributes: ['id', 'name']
+					},
+					{
+						association: 'cargos',
+						attributes: ['id', 'name'],
+						through: { attributes: [] }
+					},
+					'employee'
+				]
+			})) ?? null
+		)
+	}
 
-export class SequelizeDepartamentoRepository implements DepartmentRepository<DepartamentoPrimitives> {
-    private readonly cacheKey: string = 'departamento'
-    constructor(private readonly cache: CacheService) { }
-    async searchAll(): Promise<DepartamentoPrimitives[]> {
-        return await this.cache.getCachedData(this.cacheKey, async () => {
-            return await DepartamentoModel.findAll({
-                attributes: [
-                    'id',
-                    'name',
-                    'createdAt',
-                    'updatedAt'
-                ],
-                include: [
-                    {
-                        association: 'vicepresidenciaEjecutiva',
-                        attributes: ['name'],
-                        include: [{
-                            association: 'directiva',
-                            attributes: ['id', 'name']
+	async searchByName(
+		name: Primitives<CargoName>
+	): Promise<Nullable<DepartamentoPrimitives>> {
+		return (await DepartamentoModel.findOne({ where: { name } })) ?? null
+	}
 
-                        }]
-                    },
-                    {
-                        association: 'centroCosto',
-                        attributes: ['id', 'name']
-                    },
-                    {
-                        association: 'cargos',
-                        attributes: ['id', 'name'],
-                        through: { attributes: [] }
-                    },
-                    'employee'
-                ]
-            })
-        })
-    }
+	async save(payload: DepartamentoPrimitives): Promise<void> {
+		const { id, cargos, ...restPayload } = payload
+		const departamento = (await DepartamentoModel.findByPk(id)) ?? null
+		if (departamento === null) {
+			const newDepartmentso = await DepartamentoModel.create({
+				...restPayload,
+				id
+			})
+			await newDepartmentso.setCargos(cargos)
+		} else {
+			departamento.set({ ...restPayload })
+			await departamento.save()
+			await departamento.setCargos(cargos)
+		}
+		await this.cache.removeCachedData(this.cacheKey)
+		await this.searchAll()
+	}
 
-    async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoPrimitives>> {
-        return await DepartamentoModel.findByPk(id, {
-            attributes: [
-                'id',
-                'name',
-                'createdAt',
-                'updatedAt'
-            ],
-            include: [
-                {
-                    association: 'vicepresidenciaEjecutiva',
-                    attributes: ['name'],
-                    include: [{
-                        association: 'directiva',
-                        attributes: ['id', 'name']
-
-                    }]
-                },
-                {
-                    association: 'centroCosto',
-                    attributes: ['id', 'name']
-                },
-                {
-                    association: 'cargos',
-                    attributes: ['id', 'name'],
-                    through: { attributes: [] }
-                },
-                'employee'
-            ]
-        }) ?? null
-    }
-
-    async searchByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoPrimitives>> {
-        return await DepartamentoModel.findOne({ where: { name } }) ?? null
-    }
-
-    async save(payload: DepartamentoPrimitives): Promise<void> {
-        const { id, cargos, ...restPayload } = payload
-        const departamento = await DepartamentoModel.findByPk(id) ?? null
-        if (departamento === null) {
-            const newDepartmentso = await DepartamentoModel.create({
-                ...restPayload,
-                id
-            })
-            await newDepartmentso.setCargos(cargos)
-        } else {
-            departamento.set({ ...restPayload })
-            await departamento.save()
-            await departamento.setCargos(cargos)
-        }
-        await this.cache.removeCachedData(this.cacheKey)
-        await this.searchAll()
-    }
-
-    async remove(id: Primitives<DepartmentId>): Promise<void> {
-        await DepartamentoModel.destroy({ where: { id } })
-        await this.cache.removeCachedData(this.cacheKey)
-        await this.searchAll()
-    }
+	async remove(id: Primitives<DepartmentId>): Promise<void> {
+		await DepartamentoModel.destroy({ where: { id } })
+		await this.cache.removeCachedData(this.cacheKey)
+		await this.searchAll()
+	}
 }

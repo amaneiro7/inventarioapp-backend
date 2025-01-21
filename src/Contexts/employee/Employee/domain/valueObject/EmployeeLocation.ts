@@ -1,3 +1,3 @@
-import { LocationId } from "../../../../Location/Location/domain/LocationId"
+import { LocationId } from '../../../../Location/Location/domain/LocationId'
 
-export class EmployeeLocationId extends LocationId { }
+export class EmployeeLocationId extends LocationId {}

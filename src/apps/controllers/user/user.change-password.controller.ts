@@ -8,24 +8,24 @@ import { container } from '../../di/container'
 import { UserDependencies } from '../../di/user/user.di'
 
 export class UserChangePasswordController implements Controller {
-  async run(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const user = req.user as JwtPayloadUser
-      const { password, newPassword, reTypePassword } = req.body
-      const changePassword: UserChangePassword = container.resolve(
-        UserDependencies.ChangePassword
-      )
-      await changePassword.run({
-        payload: user,
-        password,
-        newPassword,
-        reTypePassword
-      })
-      res
-        .status(httpStatus.CREATED)
-        .send({ message: 'Contraseña actualizada exitosamente' })
-    } catch (error) {
-      next(error)
-    }
-  }
+	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const user = req.user as JwtPayloadUser
+			const { password, newPassword, reTypePassword } = req.body
+			const changePassword: UserChangePassword = container.resolve(
+				UserDependencies.ChangePassword
+			)
+			await changePassword.run({
+				payload: user,
+				password,
+				newPassword,
+				reTypePassword
+			})
+			res.status(httpStatus.CREATED).send({
+				message: 'Contraseña actualizada exitosamente'
+			})
+		} catch (error) {
+			next(error)
+		}
+	}
 }

@@ -10,55 +10,67 @@ import { type ModelSeriesSearchByCriteriaController } from '../../controllers/mo
 import { type ModelSeriesDeleteController } from '../../controllers/model-series/model-series.delete.controller'
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
 
-
-
 export const register = async (router: Router) => {
-    const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)
-    const getAllController: ModelSeriesGetAllController = container.resolve(ModelSeriesDependencies.GetAllController)
-    const postController: ModelSeriesPostController = container.resolve(ModelSeriesDependencies.PostController)
-    const patchController: ModelSeriesPatchController = container.resolve(ModelSeriesDependencies.PatchController)
-    const searchByCriteria: ModelSeriesSearchByCriteriaController = container.resolve(ModelSeriesDependencies.GetByCriteriaController)
-    const deleteController: ModelSeriesDeleteController = container.resolve(ModelSeriesDependencies.DeleteController)
-    const download: ModelSeriesDownloadExcelServiceController = container.resolve(ModelSeriesDependencies.ExcelDownloadController)
+	const getController: ModelSeriesGetController = container.resolve(
+		ModelSeriesDependencies.GetController
+	)
+	const getAllController: ModelSeriesGetAllController = container.resolve(
+		ModelSeriesDependencies.GetAllController
+	)
+	const postController: ModelSeriesPostController = container.resolve(
+		ModelSeriesDependencies.PostController
+	)
+	const patchController: ModelSeriesPatchController = container.resolve(
+		ModelSeriesDependencies.PatchController
+	)
+	const searchByCriteria: ModelSeriesSearchByCriteriaController =
+		container.resolve(ModelSeriesDependencies.GetByCriteriaController)
+	const deleteController: ModelSeriesDeleteController = container.resolve(
+		ModelSeriesDependencies.DeleteController
+	)
+	const download: ModelSeriesDownloadExcelServiceController =
+		container.resolve(ModelSeriesDependencies.ExcelDownloadController)
 
-    // get
-    router.get('/models/',
-        authenticate,
-        searchByCriteria.run.bind(searchByCriteria)
-    )
+	// get
+	router.get(
+		'/models/',
+		authenticate,
+		searchByCriteria.run.bind(searchByCriteria)
+	)
 
-    router.get('/models/all',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/models/all',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 
-    router.get('/models/download',
-        authenticate,
-        download.run.bind(download)
-    )
+	router.get('/models/download', authenticate, download.run.bind(download))
 
-    router.get('/models/:id',
-        authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/models/:id',
+		authenticate,
+		getController.run.bind(getController)
+	)
 
+	//post
 
-    //post
+	router.post(
+		'/models/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    router.post('/models/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	// patch
+	router.patch(
+		'/models/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 
-    // patch
-    router.patch('/models/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
-
-    // delete
-    router.delete('models/:id',
-        authenticate,
-        deleteController.run.bind(deleteController)
-    )
+	// delete
+	router.delete(
+		'models/:id',
+		authenticate,
+		deleteController.run.bind(deleteController)
+	)
 }

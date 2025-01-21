@@ -3,7 +3,9 @@ import { type StatePrimitives } from './State'
 import { type StateId } from './StateId'
 
 export abstract class StateRepository {
-  abstract searchAll (): Promise<StatePrimitives[]>
+	abstract searchAll(): Promise<StatePrimitives[]>
 
-  abstract searchById (id: Primitives<StateId>): Promise<StatePrimitives | null>
+	abstract searchById(
+		id: Primitives<StateId>
+	): Promise<StatePrimitives | null>
 }

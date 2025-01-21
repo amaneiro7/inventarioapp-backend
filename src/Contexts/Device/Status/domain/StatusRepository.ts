@@ -3,7 +3,9 @@ import { type StatusPrimitives } from './Status'
 import { type StatusId } from './StatusId'
 
 export abstract class StatusRepository {
-  abstract searchAll (): Promise<StatusPrimitives[]>
+	abstract searchAll(): Promise<StatusPrimitives[]>
 
-  abstract searchById (id: Primitives<StatusId>): Promise<StatusPrimitives | null>
+	abstract searchById(
+		id: Primitives<StatusId>
+	): Promise<StatusPrimitives | null>
 }

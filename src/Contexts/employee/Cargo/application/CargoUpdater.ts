@@ -1,36 +1,45 @@
-import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
-import { type CargoRepository } from "../domain/CargoRepository"
-import { type DepartamentoPrimitives } from "../../Departamento/domain/Departamento"
-import { Cargo, type CargoPrimitives } from "../domain/Cargo"
-import { CargoId } from "../domain/CargoId"
-import { CargoDoesNotExistError } from "../domain/CargoDoesNotExistError"
-import { UpdateCargoUseCase } from "../domain/UpdateCargoUseCase"
+import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { type CargoRepository } from '../domain/CargoRepository'
+import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
+import { Cargo, type CargoPrimitives } from '../domain/Cargo'
+import { CargoId } from '../domain/CargoId'
+import { CargoDoesNotExistError } from '../domain/CargoDoesNotExistError'
+import { UpdateCargoUseCase } from '../domain/UpdateCargoUseCase'
 
 export class CargoUpdater {
-  private readonly updateCargoUseCase: UpdateCargoUseCase
-  constructor(
-    private readonly cargoRepository: CargoRepository,
-    private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
-  ) {
-    this.updateCargoUseCase = new UpdateCargoUseCase(
-      this.cargoRepository,
-      this.departamentoRepository
-    )
-  }
+	private readonly updateCargoUseCase: UpdateCargoUseCase
+	constructor(
+		private readonly cargoRepository: CargoRepository,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>
+	) {
+		this.updateCargoUseCase = new UpdateCargoUseCase(
+			this.cargoRepository,
+			this.departamentoRepository
+		)
+	}
 
-  async run({ id, params }: { id: string, params: Partial<Omit<CargoPrimitives, 'id'>> }): Promise<void> {
-    const { name, departamentos } = params
-    const cargoId = new CargoId(id)
+	async run({
+		id,
+		params
+	}: {
+		id: string
+		params: Partial<Omit<CargoPrimitives, 'id'>>
+	}): Promise<void> {
+		const { name, departamentos } = params
+		const cargoId = new CargoId(id)
 
-    const cargo = await this.cargoRepository.searchById(cargoId.value)
-    if (!cargo) {
-      throw new CargoDoesNotExistError()
-    }
+		const cargo = await this.cargoRepository.searchById(cargoId.value)
+		if (!cargo) {
+			throw new CargoDoesNotExistError()
+		}
 
-    const cargoEntity = Cargo.fromPrimitives(cargo)
+		const cargoEntity = Cargo.fromPrimitives(cargo)
 
-    await this.updateCargoUseCase.execute({ entity: cargoEntity, params: { name, departamentos } })
+		await this.updateCargoUseCase.execute({
+			entity: cargoEntity,
+			params: { name, departamentos }
+		})
 
-    await this.cargoRepository.save(cargoEntity.toPrimitive())
-  }
+		await this.cargoRepository.save(cargoEntity.toPrimitive())
+	}
 }

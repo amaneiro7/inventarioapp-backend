@@ -10,24 +10,24 @@ import { AuthRefreshTokenController } from '../../controllers/auth/auth.refresht
 import { AuthRefreshTokenUseCase } from '../../../Contexts/Auth/application/AuthRefhreshTokenUseCase'
 AuthRefreshTokenUseCase
 export enum AuthDependencies {
-  UserLoginLocal = 'userLoginLocal',
-  RefreshTokenUseCase = 'refreshTokenUseCase',
-  PassportManager = 'passportManager',
-  LoginController = 'authLoginController',
-  LogoutController = 'authLogoutController',
-  RefreshTokenController = 'authRefreshTokenController'
+	UserLoginLocal = 'userLoginLocal',
+	RefreshTokenUseCase = 'refreshTokenUseCase',
+	PassportManager = 'passportManager',
+	LoginController = 'authLoginController',
+	LogoutController = 'authLogoutController',
+	RefreshTokenController = 'authRefreshTokenController'
 }
 
 export const register = (container: AwilixContainer) => {
-  container.register({
-    userLoginLocal: asClass(UserLoginLocal),
-    refreshTokenUseCase: asClass(AuthRefreshTokenUseCase),
-    localStrategy: asClass(LocalAuthStrategy),
-    jwtCookiesStrategy: asClass(JwtCookiesStrategy),
-    jwtBearerStrategy: asClass(JwtBearerStrategy),
-    passportManager: asClass(PassportManager),
-    authLoginController: asClass(AuthLoginController),
-    authLogoutController: asClass(AuthLogoutController),
-    authRefreshTokenController: asClass(AuthRefreshTokenController)
-  })
+	container.register({
+		userLoginLocal: asClass(UserLoginLocal),
+		refreshTokenUseCase: asClass(AuthRefreshTokenUseCase),
+		localStrategy: asClass(LocalAuthStrategy),
+		jwtCookiesStrategy: asClass(JwtCookiesStrategy),
+		jwtBearerStrategy: asClass(JwtBearerStrategy),
+		passportManager: asClass(PassportManager),
+		authLoginController: asClass(AuthLoginController),
+		authLogoutController: asClass(AuthLogoutController),
+		authRefreshTokenController: asClass(AuthRefreshTokenController)
+	})
 }

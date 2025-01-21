@@ -6,30 +6,30 @@ import { Controller } from '../controller'
 import { AuthUseCase } from '../../../Contexts/Auth/application/AuthUseCase'
 
 type ReqUser = UserPrimitives & {
-  role: RolePrimitives
+	role: RolePrimitives
 }
 
 export class AuthLoginController implements Controller {
-  async run(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const user = req.user as ReqUser
-      if (!user) throw new Error('User not found')
+	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const user = req.user as ReqUser
+			if (!user) throw new Error('User not found')
 
-      const { infoUser, refreshToken } = await AuthUseCase.authenticaUser(user)
+			const { infoUser, refreshToken } =
+				await AuthUseCase.authenticaUser(user)
 
-      res
-        .status(httpStatus.OK)
-        .cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          // secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict'
-        })
-        .json({
-          ...infoUser,
-          message: 'Sesion iniciada exitosamente'
-        })
-    } catch (error) {
-      next(error)
-    }
-  }
+			res.status(httpStatus.OK)
+				.cookie('refreshToken', refreshToken, {
+					httpOnly: true,
+					// secure: process.env.NODE_ENV === 'production',
+					sameSite: 'strict'
+				})
+				.json({
+					...infoUser,
+					message: 'Sesion iniciada exitosamente'
+				})
+		} catch (error) {
+			next(error)
+		}
+	}
 }

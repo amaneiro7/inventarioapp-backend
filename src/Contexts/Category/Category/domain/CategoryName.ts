@@ -2,26 +2,29 @@ import { InvalidArgumentError } from '../../../Shared/domain/value-object/Invali
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
 export class CategoryName extends StringValueObject {
-  private readonly NAME_MAX_LENGTH = 100
-  private readonly NAME_MIN_LENGTH = 5
+	private readonly NAME_MAX_LENGTH = 100
+	private readonly NAME_MIN_LENGTH = 5
 
-  constructor(readonly value: string) {
-    super(value)
+	constructor(readonly value: string) {
+		super(value)
 
-    this.ensureIsValidName(value)
-  }
+		this.ensureIsValidName(value)
+	}
 
-  toPrimitives(): string {
-    return this.value
-  }
+	toPrimitives(): string {
+		return this.value
+	}
 
-  private ensureIsValidName(value: string): void {
-    if (this.isCategoryNameValid(value)) {
-      throw new InvalidArgumentError(`<${value}> is not a valid name`)
-    }
-  }
+	private ensureIsValidName(value: string): void {
+		if (this.isCategoryNameValid(value)) {
+			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+		}
+	}
 
-  private isCategoryNameValid(name: string): boolean {
-    return name.length <= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-  }
+	private isCategoryNameValid(name: string): boolean {
+		return (
+			name.length <= this.NAME_MIN_LENGTH &&
+			name.length <= this.NAME_MAX_LENGTH
+		)
+	}
 }

@@ -3,7 +3,9 @@ import { type HardDriveTypePrimitives } from './HardDriveType'
 import { type HardDriveTypeId } from './HardDriveTypeId'
 
 export abstract class HardDriveTypeRepository {
-  abstract searchAll (): Promise<HardDriveTypePrimitives[]>
+	abstract searchAll(): Promise<HardDriveTypePrimitives[]>
 
-  abstract searchById (id: Primitives<HardDriveTypeId>): Promise<HardDriveTypePrimitives | null>
+	abstract searchById(
+		id: Primitives<HardDriveTypeId>
+	): Promise<HardDriveTypePrimitives | null>
 }

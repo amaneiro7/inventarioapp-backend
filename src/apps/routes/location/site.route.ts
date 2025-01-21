@@ -9,29 +9,41 @@ import { authenticate } from '../../Middleware/authenticate'
 import { SiteDependencies } from '../../di/location/site.di'
 
 export const register = async (router: Router) => {
-    const getAllController: SiteGetAllController = container.resolve(SiteDependencies.GetAllController)
-    const getController: SiteGetController = container.resolve(SiteDependencies.GetController)
-    const postController: SitePostController = container.resolve(SiteDependencies.PostController)
-    const patchController: SitePatchController = container.resolve(SiteDependencies.PatchController)
+	const getAllController: SiteGetAllController = container.resolve(
+		SiteDependencies.GetAllController
+	)
+	const getController: SiteGetController = container.resolve(
+		SiteDependencies.GetController
+	)
+	const postController: SitePostController = container.resolve(
+		SiteDependencies.PostController
+	)
+	const patchController: SitePatchController = container.resolve(
+		SiteDependencies.PatchController
+	)
 
-    router.get('/sites/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
-    router.get('/sites/:id',
-        authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/sites/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
+	router.get(
+		'/sites/:id',
+		authenticate,
+		getController.run.bind(getController)
+	)
 
-    //post
-    router.post('/sites/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	//post
+	router.post(
+		'/sites/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    // patch
-    router.patch('/sites/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
+	// patch
+	router.patch(
+		'/sites/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 }

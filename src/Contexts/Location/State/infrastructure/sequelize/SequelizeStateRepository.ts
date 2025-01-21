@@ -6,19 +6,17 @@ import { StateRepository } from '../../domain/StateRepository'
 import { StateModel } from './StateSchema'
 
 export class SequelizeStateRepository extends StateRepository {
-  private readonly cacheKey: string = 'states'
-  constructor(private readonly cache: CacheService) {
-    super()
-  }
-  async searchAll(): Promise<StatePrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await StateModel.findAll()
-    })
+	private readonly cacheKey: string = 'states'
+	constructor(private readonly cache: CacheService) {
+		super()
+	}
+	async searchAll(): Promise<StatePrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await StateModel.findAll()
+		})
+	}
 
-  }
-
-  async searchById(id: Primitives<StateId>): Promise<StatePrimitives | null> {
-    return await StateModel.findByPk(id) ?? null
-  }
+	async searchById(id: Primitives<StateId>): Promise<StatePrimitives | null> {
+		return (await StateModel.findByPk(id)) ?? null
+	}
 }
-

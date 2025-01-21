@@ -3,7 +3,7 @@ import { type CityPrimitives } from './City'
 import { type CityId } from './CityId'
 
 export abstract class CityRepository {
-  abstract searchAll (): Promise<CityPrimitives[]>
+	abstract searchAll(): Promise<CityPrimitives[]>
 
-  abstract searchById (id: Primitives<CityId>): Promise<CityPrimitives | null>
+	abstract searchById(id: Primitives<CityId>): Promise<CityPrimitives | null>
 }

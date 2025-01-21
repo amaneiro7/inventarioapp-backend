@@ -6,16 +6,15 @@ import { RoleId } from '../../domain/RoleId'
 import { RolesModel } from './RolesSchema'
 
 export class SequelizeRolesRepository implements RoleRepository {
-  private readonly cacheKey: string = 'roles'
-  constructor(private readonly cache: CacheService) { }
-  async searchById(id: Primitives<RoleId>): Promise<RolePrimitives | null> {
-    return await RolesModel.findByPk(id) ?? null
-  }
+	private readonly cacheKey: string = 'roles'
+	constructor(private readonly cache: CacheService) {}
+	async searchById(id: Primitives<RoleId>): Promise<RolePrimitives | null> {
+		return (await RolesModel.findByPk(id)) ?? null
+	}
 
-  async searchAll(): Promise<RolePrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await RolesModel.findAll()
-    })
-
-  }
+	async searchAll(): Promise<RolePrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await RolesModel.findAll()
+		})
+	}
 }

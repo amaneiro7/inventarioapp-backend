@@ -6,10 +6,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { CityDependencies } from '../../di/location/city.di'
 
 export const register = async (router: Router) => {
-    const getAllController: CityGetAllController = container.resolve(CityDependencies.GetAllController)
+	const getAllController: CityGetAllController = container.resolve(
+		CityDependencies.GetAllController
+	)
 
-    router.get('/cities/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/cities/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

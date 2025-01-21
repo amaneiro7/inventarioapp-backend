@@ -5,13 +5,17 @@ import { type LocationId } from './LocationId'
 import { LocationName } from './LocationName'
 
 export abstract class LocationRepository {
-  abstract searchAll (): Promise<LocationPrimitives[]>
+	abstract searchAll(): Promise<LocationPrimitives[]>
 
-  abstract save (payload: LocationPrimitives): Promise<void>
+	abstract save(payload: LocationPrimitives): Promise<void>
 
-  abstract searchById (id: Primitives<LocationId>): Promise<LocationPrimitives | null>
-  
-  abstract searchByName (name: Primitives<LocationName>): Promise<LocationPrimitives | null>
+	abstract searchById(
+		id: Primitives<LocationId>
+	): Promise<LocationPrimitives | null>
 
-  abstract matching (criteria: Criteria): Promise<LocationPrimitives[]>
+	abstract searchByName(
+		name: Primitives<LocationName>
+	): Promise<LocationPrimitives | null>
+
+	abstract matching(criteria: Criteria): Promise<LocationPrimitives[]>
 }

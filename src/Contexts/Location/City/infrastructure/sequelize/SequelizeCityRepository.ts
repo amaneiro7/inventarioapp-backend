@@ -6,17 +6,17 @@ import { CityRepository } from '../../domain/CityRepository'
 import { CityModel } from './CitySchema'
 
 export class SequelizeCityRepository implements CityRepository {
-  private readonly cacheKey: string = 'cities'
-  constructor(private readonly cache: CacheService) { }
-  async searchAll(): Promise<CityPrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await CityModel.findAll({
-        include: ['state']
-      })
-    })
-  }
+	private readonly cacheKey: string = 'cities'
+	constructor(private readonly cache: CacheService) {}
+	async searchAll(): Promise<CityPrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await CityModel.findAll({
+				include: ['state']
+			})
+		})
+	}
 
-  async searchById(id: Primitives<CityId>): Promise<CityPrimitives | null> {
-    return await CityModel.findByPk(id) ?? null
-  }
+	async searchById(id: Primitives<CityId>): Promise<CityPrimitives | null> {
+		return (await CityModel.findByPk(id)) ?? null
+	}
 }

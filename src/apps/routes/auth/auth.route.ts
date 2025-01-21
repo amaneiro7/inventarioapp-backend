@@ -8,29 +8,29 @@ import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/
 import { AuthDependencies } from '../../di/auth/auth.di'
 
 export const register = async (router: Router) => {
-  const authLoginController: AuthLoginController = container.resolve(
-    AuthDependencies.LoginController
-  )
-  const authLogoutController: AuthLogoutController = container.resolve(
-    AuthDependencies.LogoutController
-  )
-  const authRefreshTokenController: AuthRefreshTokenController =
-    container.resolve(AuthDependencies.RefreshTokenController)
+	const authLoginController: AuthLoginController = container.resolve(
+		AuthDependencies.LoginController
+	)
+	const authLogoutController: AuthLogoutController = container.resolve(
+		AuthDependencies.LogoutController
+	)
+	const authRefreshTokenController: AuthRefreshTokenController =
+		container.resolve(AuthDependencies.RefreshTokenController)
 
-  router.post(
-    '/auth/login/local',
-    passport.authenticate(StrategyOptions.LOCAL, { session: false }),
-    authLoginController.run.bind(authLoginController)
-  )
+	router.post(
+		'/auth/login/local',
+		passport.authenticate(StrategyOptions.LOCAL, { session: false }),
+		authLoginController.run.bind(authLoginController)
+	)
 
-  router.get(
-    '/auth/refresh-token',
-    passport.authenticate(StrategyOptions.JWTCOOKIE, { session: false }),
-    authRefreshTokenController.run.bind(authRefreshTokenController)
-  )
+	router.get(
+		'/auth/refresh-token',
+		passport.authenticate(StrategyOptions.JWTCOOKIE, { session: false }),
+		authRefreshTokenController.run.bind(authRefreshTokenController)
+	)
 
-  router.post(
-    '/auth/logout',
-    authLogoutController.run.bind(authLogoutController)
-  )
+	router.post(
+		'/auth/logout',
+		authLogoutController.run.bind(authLogoutController)
+	)
 }

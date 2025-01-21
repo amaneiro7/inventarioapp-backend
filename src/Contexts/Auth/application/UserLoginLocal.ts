@@ -5,19 +5,25 @@ import { type UserPrimitives } from '../../User/user/domain/User'
 import { type UserRepository } from '../../User/user/domain/UserRepository'
 
 export class UserLoginLocal {
-  constructor(private readonly userRepository: UserRepository) { }
+	constructor(private readonly userRepository: UserRepository) {}
 
-  async run({ email, password }: { email: string, password: string }): Promise<UserPrimitives> {
-    const userEmail = new UserEmail(email)
+	async run({
+		email,
+		password
+	}: {
+		email: string
+		password: string
+	}): Promise<UserPrimitives> {
+		const userEmail = new UserEmail(email)
 
-    const user = await this.userRepository.searchByEmail(userEmail.value)
+		const user = await this.userRepository.searchByEmail(userEmail.value)
 
-    if (!user) {
-      throw new UserDoesNotExistError(email)
-    }
+		if (!user) {
+			throw new UserDoesNotExistError(email)
+		}
 
-    PasswordService.compare(password, user.password)
+		PasswordService.compare(password, user.password)
 
-    return user
-  }
+		return user
+	}
 }

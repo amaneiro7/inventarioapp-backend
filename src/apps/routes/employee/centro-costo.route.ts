@@ -8,30 +8,42 @@ import { authenticate } from '../../Middleware/authenticate'
 import { CentroCostoDependencies } from '../../di/employee/centro-costo.di'
 
 export const register = async (router: Router) => {
-    const getAllController: CentroCostoGetAllController = container.resolve(CentroCostoDependencies.GetAllController)
-    const getController: CentroCostoGetController = container.resolve(CentroCostoDependencies.GetController)
-    const postController: CentroCostoPostController = container.resolve(CentroCostoDependencies.PostController)
-    const patchController: CentroCostoPatchController = container.resolve(CentroCostoDependencies.PatchController)
+	const getAllController: CentroCostoGetAllController = container.resolve(
+		CentroCostoDependencies.GetAllController
+	)
+	const getController: CentroCostoGetController = container.resolve(
+		CentroCostoDependencies.GetController
+	)
+	const postController: CentroCostoPostController = container.resolve(
+		CentroCostoDependencies.PostController
+	)
+	const patchController: CentroCostoPatchController = container.resolve(
+		CentroCostoDependencies.PatchController
+	)
 
-    router.get('/centrocostos/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/centrocostos/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 
-    router.get('/centrocostos/:id',
-        authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/centrocostos/:id',
+		authenticate,
+		getController.run.bind(getController)
+	)
 
-    //post
-    router.post('/centrocostos/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	//post
+	router.post(
+		'/centrocostos/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    // patch
-    router.patch('/centrocostos/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
+	// patch
+	router.patch(
+		'/centrocostos/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 }

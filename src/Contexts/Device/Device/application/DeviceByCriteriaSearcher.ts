@@ -10,20 +10,25 @@ import { type DevicePrimitives } from '../domain/Device'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 
 export class DeviceSearchByCriteria {
-  constructor(private readonly deviceRepository: DeviceRepository) { }
+	constructor(private readonly deviceRepository: DeviceRepository) {}
 
-  async run(query: SearchByCriteriaQuery): Promise<{ total: number, data: DevicePrimitives[] }> {
-    const filters = query.filters.map((filter) => {
-      return new Filter(
-        new FilterField(filter.field),
-        FilterOperator.fromValue(filter.operator),
-        new FilterValue(filter.value))
-    })
-    const order = Order.fromValues(
-      query.orderBy,
-      query.orderType
-    )
-    const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.deviceRepository.matching(criteria)
-  }
+	async run(
+		query: SearchByCriteriaQuery
+	): Promise<{ total: number; data: DevicePrimitives[] }> {
+		const filters = query.filters.map(filter => {
+			return new Filter(
+				new FilterField(filter.field),
+				FilterOperator.fromValue(filter.operator),
+				new FilterValue(filter.value)
+			)
+		})
+		const order = Order.fromValues(query.orderBy, query.orderType)
+		const criteria = new Criteria(
+			new Filters(filters),
+			order,
+			query.limit,
+			query.offset
+		)
+		return await this.deviceRepository.matching(criteria)
+	}
 }

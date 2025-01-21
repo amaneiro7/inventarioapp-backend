@@ -2,23 +2,25 @@ import { BooleanValueObject } from '../../../../Shared/domain/value-object/Boole
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 
 export class ProcessorHasThreads extends BooleanValueObject {
-  constructor (readonly value: boolean) {
-    super(value)
+	constructor(readonly value: boolean) {
+		super(value)
 
-    this.ensureIsValid(value)
-  }
+		this.ensureIsValid(value)
+	}
 
-  toPrimitives (): boolean {
-    return this.value
-  }
+	toPrimitives(): boolean {
+		return this.value
+	}
 
-  private ensureIsValid (value: boolean): void {
-    if (!this.isValid(value)) {
-      throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-    }
-  }
+	private ensureIsValid(value: boolean): void {
+		if (!this.isValid(value)) {
+			throw new InvalidArgumentError(
+				`This <${value}> is not a valid type`
+			)
+		}
+	}
 
-  private isValid (value: boolean): boolean {
-    return typeof value === 'boolean'
-  }
+	private isValid(value: boolean): boolean {
+		return typeof value === 'boolean'
+	}
 }

@@ -3,7 +3,9 @@ import { type MainCategoryPrimitives } from './MainCategory'
 import { type MainCategoryId } from './MainCategoryId'
 
 export abstract class MainCategoryRepository {
-  abstract searchAll(): Promise<MainCategoryPrimitives[]>
+	abstract searchAll(): Promise<MainCategoryPrimitives[]>
 
-  abstract searchById(id: Primitives<MainCategoryId>): Promise<MainCategoryPrimitives | null>
+	abstract searchById(
+		id: Primitives<MainCategoryId>
+	): Promise<MainCategoryPrimitives | null>
 }

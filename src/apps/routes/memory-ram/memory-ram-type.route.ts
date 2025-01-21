@@ -6,10 +6,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { MemoryRamTypeDependencies } from '../../di/memory-ram/memory-ram-type.di'
 
 export const register = async (router: Router) => {
-    const getAllController: MemoryRamTypeGetAllController = container.resolve(MemoryRamTypeDependencies.GetAllController)
+	const getAllController: MemoryRamTypeGetAllController = container.resolve(
+		MemoryRamTypeDependencies.GetAllController
+	)
 
-    router.get('/memoryramtypes/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/memoryramtypes/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

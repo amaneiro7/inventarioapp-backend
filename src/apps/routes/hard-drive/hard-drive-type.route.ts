@@ -6,10 +6,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { HardDriveTypeDependencies } from '../../di/hard-drive/hard-drive-type.di'
 
 export const register = async (router: Router) => {
-    const getAllController: HardDriveTypeGetAllController = container.resolve(HardDriveTypeDependencies.GetAllController)
+	const getAllController: HardDriveTypeGetAllController = container.resolve(
+		HardDriveTypeDependencies.GetAllController
+	)
 
-    router.get('/harddrivetypes/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/harddrivetypes/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

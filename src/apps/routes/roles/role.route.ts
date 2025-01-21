@@ -5,10 +5,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { RoleDependencies } from '../../di/roles/roles.di'
 
 export const register = async (router: Router) => {
-    const getAllController: RoleGetAllController = container.resolve(RoleDependencies.GetAllController)
+	const getAllController: RoleGetAllController = container.resolve(
+		RoleDependencies.GetAllController
+	)
 
-    router.get('/roles/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/roles/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

@@ -6,18 +6,19 @@ import { RegionRepository } from '../../domain/RegionRepository'
 import { RegionModel } from './RegionSchema'
 
 export class SequelizeRegionRepository implements RegionRepository {
-  private readonly cacheKey: string = 'regions'
-  constructor(private readonly cache: CacheService) { }
-  async searchAll(): Promise<RegionPrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await RegionModel.findAll({
-        include: ['state']
-      })
-    })
+	private readonly cacheKey: string = 'regions'
+	constructor(private readonly cache: CacheService) {}
+	async searchAll(): Promise<RegionPrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await RegionModel.findAll({
+				include: ['state']
+			})
+		})
+	}
 
-  }
-
-  async searchById(id: Primitives<RegionId>): Promise<RegionPrimitives | null> {
-    return await RegionModel.findByPk(id) ?? null
-  }
+	async searchById(
+		id: Primitives<RegionId>
+	): Promise<RegionPrimitives | null> {
+		return (await RegionModel.findByPk(id)) ?? null
+	}
 }

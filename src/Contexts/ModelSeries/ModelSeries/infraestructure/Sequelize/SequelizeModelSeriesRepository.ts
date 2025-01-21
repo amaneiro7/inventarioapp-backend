@@ -21,225 +21,306 @@ import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { clearModelDataset } from './clearModelDataset'
 
-export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
-  private readonly models = sequelize.models
-  private readonly cacheKey: string = 'modelSeries'
-  constructor(private readonly cache: CacheService) {
-    super()
-  }
-  async searchAll(): Promise<ModelSeriesPrimitives[]> {
-    return await this.cache.getCachedData(this.cacheKey, async () => {
-      return await ModelSeriesModel.findAll({
-        include: [
-          'category',
-          'brand',
-          'modelPrinter',
-          'modelMonitor',
-          { association: 'modelLaptop', include: ['memoryRamType'] },
-          { association: 'modelComputer', include: ['memoryRamType'] },
-          { association: 'modelKeyboard', include: ['inputType'] }
-        ]
-      })
-    })
+export class SequelizeModelSeriesRepository
+	extends SequelizeCriteriaConverter
+	implements ModelSeriesRepository
+{
+	private readonly models = sequelize.models
+	private readonly cacheKey: string = 'modelSeries'
+	constructor(private readonly cache: CacheService) {
+		super()
+	}
+	async searchAll(): Promise<ModelSeriesPrimitives[]> {
+		return await this.cache.getCachedData(this.cacheKey, async () => {
+			return await ModelSeriesModel.findAll({
+				include: [
+					'category',
+					'brand',
+					'modelPrinter',
+					'modelMonitor',
+					{ association: 'modelLaptop', include: ['memoryRamType'] },
+					{
+						association: 'modelComputer',
+						include: ['memoryRamType']
+					},
+					{ association: 'modelKeyboard', include: ['inputType'] }
+				]
+			})
+		})
+	}
 
+	async matching(
+		criteria: Criteria
+	): Promise<{ total: number; data: ModelSeriesPrimitives[] }> {
+		const options = this.convert(criteria)
 
-  }
+		const modelOption = new ModelAssociation().convertFilter(
+			criteria,
+			options
+		)
 
-  async matching(criteria: Criteria): Promise<{ total: number; data: ModelSeriesPrimitives[] }> {
-    const options = this.convert(criteria)
+		const { count: total, rows: data } =
+			await ModelSeriesModel.findAndCountAll(modelOption)
 
-    const modelOption = new ModelAssociation().convertFilter(criteria, options)
+		return {
+			total,
+			data: data.map(model => model.get())
+		}
+	}
 
-    const { count: total, rows: data } = await ModelSeriesModel.findAndCountAll(modelOption)
+	async searchById(id: string): Promise<ModelSeriesPrimitives | null> {
+		return (
+			(await ModelSeriesModel.findByPk(id, {
+				include: [
+					'category',
+					'brand',
+					'modelComputer',
+					'modelLaptop',
+					'modelMonitor',
+					'modelPrinter',
+					'modelKeyboard'
+				]
+			})) ?? null
+		)
+	}
 
-    return {
-      total,
-      data: data.map((model) => model.get())
-    }
-  }
+	async searchByCategory(
+		categoryId: Primitives<CategoryId>
+	): Promise<ModelSeriesPrimitives[]> {
+		return await ModelSeriesModel.findAll({
+			where: { categoryId },
+			include: ['category', 'brand']
+		})
+	}
 
-  async searchById(id: string): Promise<ModelSeriesPrimitives | null> {
-    return await ModelSeriesModel.findByPk(id, {
-      include: ['category', 'brand', 'modelComputer', 'modelLaptop', 'modelMonitor', 'modelPrinter', 'modelKeyboard']
-    }) ?? null
-  }
+	async searchByName(name: string): Promise<ModelSeriesPrimitives | null> {
+		return (
+			(await ModelSeriesModel.findOne({
+				where: { name },
+				include: ['category', 'brand']
+			})) ?? null
+		)
+	}
 
-  async searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesPrimitives[]> {
-    return await ModelSeriesModel.findAll(
-      {
-        where: { categoryId },
-        include: ['category', 'brand']
-      })
-  }
+	async save(payload: ModelSeriesPrimitives): Promise<void> {
+		const t = await sequelize.transaction()
+		try {
+			const { id, name, categoryId, brandId, generic } = payload
+			const model = (await ModelSeriesModel.findByPk(id)) ?? null
 
-  async searchByName(name: string): Promise<ModelSeriesPrimitives | null> {
-    return await ModelSeriesModel.findOne(
-      {
-        where: { name },
-        include: ['category', 'brand']
-      }) ?? null
-  }
+			if (model === null) {
+				await ModelSeriesModel.create({
+					id,
+					name,
+					categoryId,
+					brandId,
+					generic
+				})
+			} else {
+				await ModelSeriesModel.update(
+					{ name, categoryId, brandId },
+					{
+						where: { id },
+						transaction: t
+					}
+				)
+			}
 
-  async save(payload: ModelSeriesPrimitives): Promise<void> {
-    const t = await sequelize.transaction()
-    try {
-      const { id, name, categoryId, brandId, generic } = payload
-      const model = await ModelSeriesModel.findByPk(id) ?? null
+			if (ComputerModels.isComputerCategory({ categoryId })) {
+				await this.createModelComputerIfCategoryMatches(id, payload, t)
+			}
 
-      if (model === null) {
-        await ModelSeriesModel.create({ id, name, categoryId, brandId, generic })
-      } else {
-        await ModelSeriesModel.update(
-          { name, categoryId, brandId },
-          {
-            where: { id },
-            transaction: t
-          }
-        )
-      }
+			if (LaptopsModels.isLaptopCategory({ categoryId })) {
+				await this.createModelLaptopIfCategoryMatches(id, payload, t)
+			}
 
-      if (ComputerModels.isComputerCategory({ categoryId })) {
-        await this.createModelComputerIfCategoryMatches(id, payload, t)
-      }
+			if (MonitorModels.isMonitorCategory({ categoryId })) {
+				await this.createModelMonitorIfCategoryMatches(id, payload, t)
+			}
 
-      if (LaptopsModels.isLaptopCategory({ categoryId })) {
-        await this.createModelLaptopIfCategoryMatches(id, payload, t)
-      }
+			if (ModelPrinters.isPrinterCategory({ categoryId })) {
+				await this.createModelPrinterIfCategoryMatches(id, payload, t)
+			}
+			if (KeyboardModels.isKeyboardCategory({ categoryId })) {
+				await this.createModelKeyboardIfCategoryMatches(id, payload, t)
+			}
 
-      if (MonitorModels.isMonitorCategory({ categoryId })) {
-        await this.createModelMonitorIfCategoryMatches(id, payload, t)
-      }
+			if (MouseModels.isMouseCategory({ categoryId })) {
+				await this.createModelMouseIfCategoryMatches(id, payload, t)
+			}
+			await t.commit()
+			await await this.cache.removeCachedData(this.cacheKey)
+			await this.searchAll()
+		} catch (error: any) {
+			await t.rollback()
+			throw new Error(error)
+		}
+	}
 
-      if (ModelPrinters.isPrinterCategory({ categoryId })) {
-        await this.createModelPrinterIfCategoryMatches(id, payload, t)
-      }
-      if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-        await this.createModelKeyboardIfCategoryMatches(id, payload, t)
-      }
+	private async createModelComputerIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelComputer =
+			(await this.models.ModelComputer.findByPk(id)) ?? null
+		if (modelComputer === null) {
+			await this.models.ModelComputer.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelComputer.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
 
-      if (MouseModels.isMouseCategory({ categoryId })) {
-        await this.createModelMouseIfCategoryMatches(id, payload, t)
-      }
-      await t.commit()
-      await await this.cache.removeCachedData(this.cacheKey)
-      await this.searchAll()
-    } catch (error: any) {
-      await t.rollback()
-      throw new Error(error)
-    }
-  }
+	private async createModelLaptopIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelLaptop = (await this.models.ModelLaptop.findByPk(id)) ?? null
+		if (modelLaptop === null) {
+			await this.models.ModelLaptop.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelLaptop.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
 
-  private async createModelComputerIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelComputer = await this.models.ModelComputer.findByPk(id) ?? null
-    if (modelComputer === null) {
-      await this.models.ModelComputer.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelComputer.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
+	private async createModelMonitorIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelMonitor =
+			(await this.models.ModelMonitor.findByPk(id)) ?? null
+		if (modelMonitor === null) {
+			await this.models.ModelMonitor.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelMonitor.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
 
-  private async createModelLaptopIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelLaptop = await this.models.ModelLaptop.findByPk(id) ?? null
-    if (modelLaptop === null) {
-      await this.models.ModelLaptop.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelLaptop.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
+	private async createModelPrinterIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelPrinter =
+			(await this.models.ModelPrinter.findByPk(id)) ?? null
+		if (modelPrinter === null) {
+			await this.models.ModelPrinter.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelPrinter.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
+	private async createModelKeyboardIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelKeyboard =
+			(await this.models.ModelKeyboard.findByPk(id)) ?? null
+		if (modelKeyboard === null) {
+			await this.models.ModelKeyboard.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelKeyboard.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
+	private async createModelMouseIfCategoryMatches(
+		id: Primitives<ModelSeriesId>,
+		payload: ModelSeriesPrimitives,
+		transaction: Transaction
+	): Promise<void> {
+		const modelMouse = (await this.models.ModelMouse.findByPk(id)) ?? null
+		if (modelMouse === null) {
+			await this.models.ModelMouse.create({
+				modelSeriesId: id,
+				...payload
+			})
+		} else {
+			await this.models.ModelMouse.update(
+				{ ...payload },
+				{
+					where: { id },
+					transaction
+				}
+			)
+		}
+	}
 
-  private async createModelMonitorIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelMonitor = await this.models.ModelMonitor.findByPk(id) ?? null
-    if (modelMonitor === null) {
-      await this.models.ModelMonitor.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelMonitor.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
+	async remove(id: string): Promise<void> {
+		await ModelSeriesModel.destroy({ where: { id } })
+		await this.cache.removeCachedData(this.cacheKey)
+		await this.searchAll()
+	}
 
-  private async createModelPrinterIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelPrinter = await this.models.ModelPrinter.findByPk(id) ?? null
-    if (modelPrinter === null) {
-      await this.models.ModelPrinter.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelPrinter.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
-  private async createModelKeyboardIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelKeyboard = await this.models.ModelKeyboard.findByPk(id) ?? null
-    if (modelKeyboard === null) {
-      await this.models.ModelKeyboard.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelKeyboard.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
-  private async createModelMouseIfCategoryMatches(id: Primitives<ModelSeriesId>, payload: ModelSeriesPrimitives, transaction: Transaction): Promise<void> {
-    const modelMouse = await this.models.ModelMouse.findByPk(id) ?? null
-    if (modelMouse === null) {
-      await this.models.ModelMouse.create({ modelSeriesId: id, ...payload })
-    } else {
-      await this.models.ModelMouse.update(
-        { ...payload },
-        {
-          where: { id },
-          transaction
-        }
-      )
-    }
-  }
+	async donwload(criteria: Criteria): Promise<{}> {
+		set_fs(fs)
 
-  async remove(id: string): Promise<void> {
-    await ModelSeriesModel.destroy({ where: { id } })
-    await this.cache.removeCachedData(this.cacheKey)
-    await this.searchAll()
-  }
+		const { data } = (await this.matching(criteria)) as {
+			total: number
+			data: ModelSeriesPrimitives[]
+		}
 
-  async donwload(criteria: Criteria): Promise<{}> {
-    set_fs(fs)
+		const wbData = clearModelDataset({ models: data as ModelApiresponse[] })
+		// Crear una nueva hoja de cálculo
+		const worksheet = utils.json_to_sheet(wbData)
+		worksheet['!cols'] = [{ wch: 20 }]
+		const workbook = utils.book_new()
+		utils.book_append_sheet(workbook, worksheet, 'Inventario')
 
-    const { data } = await this.matching(criteria) as { total: number, data: ModelSeriesPrimitives[] }
-
-    const wbData = clearModelDataset({ models: data as ModelApiresponse[] })
-    // Crear una nueva hoja de cálculo
-    const worksheet = utils.json_to_sheet(wbData)
-    worksheet["!cols"] = [{ wch: 20 }]
-    const workbook = utils.book_new()
-    utils.book_append_sheet(workbook, worksheet, 'Inventario')
-
-    // Generar un archivo buffer
-    // const now = new Date()
-    // const filename = `Reporte-Inventario${now.toLocaleString().replace(/[/:]/g, '-')}.xlsx`
-    // return writeFile(workbook, filename, { compression: true })
-    const buf = write(workbook, { type: 'buffer', bookType: 'xlsx', compression: true, })
-    return buf
-  }
+		// Generar un archivo buffer
+		// const now = new Date()
+		// const filename = `Reporte-Inventario${now.toLocaleString().replace(/[/:]/g, '-')}.xlsx`
+		// return writeFile(workbook, filename, { compression: true })
+		const buf = write(workbook, {
+			type: 'buffer',
+			bookType: 'xlsx',
+			compression: true
+		})
+		return buf
+	}
 }

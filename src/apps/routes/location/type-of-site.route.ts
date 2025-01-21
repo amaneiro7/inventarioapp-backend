@@ -5,10 +5,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { TypeOfSiteDependencies } from '../../di/location/type-of-site.di'
 
 export const register = async (router: Router) => {
-    const getAllController: TypeOfSiteGetAllController = container.resolve(TypeOfSiteDependencies.GetAllController)
+	const getAllController: TypeOfSiteGetAllController = container.resolve(
+		TypeOfSiteDependencies.GetAllController
+	)
 
-    router.get('/typeofsites/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/typeofsites/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

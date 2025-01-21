@@ -1,20 +1,27 @@
-import { type VicepresidenciaEjecutivaPrimitives } from "../domain/VicepresidenciaEjecutiva"
-import { type DepartmentRepository } from "../../IDepartment/DepartmentRepository"
-import { DepartmentDoesNotExistError } from "../../IDepartment/DepartmentDoesNotExistError"
-import { DepartmentId } from "../../IDepartment/DepartmentId"
+import { type VicepresidenciaEjecutivaPrimitives } from '../domain/VicepresidenciaEjecutiva'
+import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
+import { DepartmentId } from '../../IDepartment/DepartmentId'
 
 export class VicepresidenciaEjecutivaFinder {
-    constructor(private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>) { }
+	constructor(
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>
+	) {}
 
-    async run(params: { id: string }): Promise<VicepresidenciaEjecutivaPrimitives> {
-        const { id } = params
-        const vicepresidenciaEjecutivaId = new DepartmentId(id).value
-        const vicepresidenciaEjecutiva = await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)
+	async run(params: {
+		id: string
+	}): Promise<VicepresidenciaEjecutivaPrimitives> {
+		const { id } = params
+		const vicepresidenciaEjecutivaId = new DepartmentId(id).value
+		const vicepresidenciaEjecutiva =
+			await this.vicepresidenciaEjecutivaRepository.searchById(
+				vicepresidenciaEjecutivaId
+			)
 
-        if (!vicepresidenciaEjecutiva) {
-            throw new DepartmentDoesNotExistError('La vicepresidenciaEjecutiva')
-        }
+		if (!vicepresidenciaEjecutiva) {
+			throw new DepartmentDoesNotExistError('La vicepresidenciaEjecutiva')
+		}
 
-        return vicepresidenciaEjecutiva
-    }
+		return vicepresidenciaEjecutiva
+	}
 }

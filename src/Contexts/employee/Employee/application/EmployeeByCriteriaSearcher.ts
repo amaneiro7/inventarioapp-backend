@@ -10,21 +10,23 @@ import { type EmployeePrimitives } from '../domain/entity/Employee'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 
 export class EmployeeSearchByCriteria {
-  constructor(private readonly employeeRepository: EmployeeRepository) { }
+	constructor(private readonly employeeRepository: EmployeeRepository) {}
 
-  async run(query: SearchByCriteriaQuery): Promise<EmployeePrimitives[]> {
-
-    const filters = query.filters.map((filter) => {
-      return new Filter(
-        new FilterField(filter.field),
-        FilterOperator.fromValue(filter.operator),
-        new FilterValue(filter.value))
-    })
-    const order = Order.fromValues(
-      query.orderBy,
-      query.orderType
-    )
-    const criteria = new Criteria(new Filters(filters), order, query.limit, query.offset)
-    return await this.employeeRepository.matching(criteria)
-  }
+	async run(query: SearchByCriteriaQuery): Promise<EmployeePrimitives[]> {
+		const filters = query.filters.map(filter => {
+			return new Filter(
+				new FilterField(filter.field),
+				FilterOperator.fromValue(filter.operator),
+				new FilterValue(filter.value)
+			)
+		})
+		const order = Order.fromValues(query.orderBy, query.orderType)
+		const criteria = new Criteria(
+			new Filters(filters),
+			order,
+			query.limit,
+			query.offset
+		)
+		return await this.employeeRepository.matching(criteria)
+	}
 }

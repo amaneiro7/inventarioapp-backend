@@ -6,10 +6,13 @@ import { authenticate } from '../../Middleware/authenticate'
 import { ProcessorSocketDependencies } from '../../di/processor/processor-socket.di'
 
 export const register = async (router: Router) => {
-    const getAllController: ProcessorSocketGetAllController = container.resolve(ProcessorSocketDependencies.GetAllController)
+	const getAllController: ProcessorSocketGetAllController = container.resolve(
+		ProcessorSocketDependencies.GetAllController
+	)
 
-    router.get('/processorsockets/',
-        authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	router.get(
+		'/processorsockets/',
+		authenticate,
+		getAllController.run.bind(getAllController)
+	)
 }

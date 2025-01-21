@@ -8,21 +8,21 @@ import { container } from '../../di/container'
 import { AuthDependencies } from '../../di/auth/auth.di'
 
 export class AuthRefreshTokenController implements Controller {
-  async run(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const jwtToken = req?.user as JwtPayloadUser
-      if (!jwtToken) throw new Error('Token not provided')
+	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const jwtToken = req?.user as JwtPayloadUser
+			if (!jwtToken) throw new Error('Token not provided')
 
-      const refreshToken: AuthRefreshTokenUseCase = container.resolve(
-        AuthDependencies.RefreshTokenUseCase
-      )
-      const { infoUser } = await refreshToken.run(jwtToken)
+			const refreshToken: AuthRefreshTokenUseCase = container.resolve(
+				AuthDependencies.RefreshTokenUseCase
+			)
+			const { infoUser } = await refreshToken.run(jwtToken)
 
-      res.status(httpStatus.OK).send({
-        ...infoUser
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
+			res.status(httpStatus.OK).send({
+				...infoUser
+			})
+		} catch (error) {
+			next(error)
+		}
+	}
 }

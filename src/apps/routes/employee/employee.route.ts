@@ -9,46 +9,62 @@ import { type EmployeePatchController } from '../../controllers/employee/employe
 import { type EmployeeDeleteController } from '../../controllers/employee/employee.delete.controller'
 import { type EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
 
-
 export const register = async (router: Router) => {
-    const getController: EmployeeGetController = container.resolve(EmployeeDependencies.GetController)
-    const getAllController: EmployeeGetAllController = container.resolve(EmployeeDependencies.GetAllController)
-    const postController: EmployeePostController = container.resolve(EmployeeDependencies.PostController)
-    const patchController: EmployeePatchController = container.resolve(EmployeeDependencies.PatchController)
-    const searchByCriteria: EmployeeSearchByCriteriaController = container.resolve(EmployeeDependencies.GetByCriteriaController)
-    const deleteController: EmployeeDeleteController = container.resolve(EmployeeDependencies.DeleteController)
+	const getController: EmployeeGetController = container.resolve(
+		EmployeeDependencies.GetController
+	)
+	const getAllController: EmployeeGetAllController = container.resolve(
+		EmployeeDependencies.GetAllController
+	)
+	const postController: EmployeePostController = container.resolve(
+		EmployeeDependencies.PostController
+	)
+	const patchController: EmployeePatchController = container.resolve(
+		EmployeeDependencies.PatchController
+	)
+	const searchByCriteria: EmployeeSearchByCriteriaController =
+		container.resolve(EmployeeDependencies.GetByCriteriaController)
+	const deleteController: EmployeeDeleteController = container.resolve(
+		EmployeeDependencies.DeleteController
+	)
 
-    // get
-    router.get('/employees/',
-        authenticate,
-        searchByCriteria.run.bind(searchByCriteria)
-    )
-    router.get('/employees/all',
-        // authenticate,
-        getAllController.run.bind(getAllController)
-    )
+	// get
+	router.get(
+		'/employees/',
+		authenticate,
+		searchByCriteria.run.bind(searchByCriteria)
+	)
+	router.get(
+		'/employees/all',
+		// authenticate,
+		getAllController.run.bind(getAllController)
+	)
 
-    router.get('/employees/:id',
-        authenticate,
-        getController.run.bind(getController)
-    )
+	router.get(
+		'/employees/:id',
+		authenticate,
+		getController.run.bind(getController)
+	)
 
-    //post
+	//post
 
-    router.post('/employees/',
-        authenticate,
-        postController.run.bind(postController)
-    )
+	router.post(
+		'/employees/',
+		authenticate,
+		postController.run.bind(postController)
+	)
 
-    // patch
-    router.patch('/employees/:id',
-        authenticate,
-        patchController.run.bind(patchController)
-    )
+	// patch
+	router.patch(
+		'/employees/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 
-    // delete
-    router.delete('employees/:id',
-        authenticate,
-        deleteController.run.bind(deleteController)
-    )
+	// delete
+	router.delete(
+		'employees/:id',
+		authenticate,
+		deleteController.run.bind(deleteController)
+	)
 }

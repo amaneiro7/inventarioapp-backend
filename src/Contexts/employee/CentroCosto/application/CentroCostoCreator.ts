@@ -5,23 +5,25 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CodCentroCosto } from '../domain/CodCentroCosto'
 
 export class CentroCostoCreator {
-  constructor(private readonly centroCostoRepository: CentroCostoRepository) { }
+	constructor(
+		private readonly centroCostoRepository: CentroCostoRepository
+	) {}
 
-  async run({ id, name }: CentroCostoPrimitives): Promise<void> {
-    await this.ensureCentroCostoDoesNotExist({ id })
+	async run({ id, name }: CentroCostoPrimitives): Promise<void> {
+		await this.ensureCentroCostoDoesNotExist({ id })
 
-    const centroCosto = CentroCosto.create({ id, name })
+		const centroCosto = CentroCosto.create({ id, name })
 
-    await this.centroCostoRepository.save(centroCosto.toPrimitive())
-  }
+		await this.centroCostoRepository.save(centroCosto.toPrimitive())
+	}
 
-  private async ensureCentroCostoDoesNotExist({ id }: { id: Primitives<CodCentroCosto> }): Promise<void> {
-    if (await this.centroCostoRepository.searchById(id) !== null) {
-      throw new CentroCostoAlreadyExistError()
-    }
-  }
+	private async ensureCentroCostoDoesNotExist({
+		id
+	}: {
+		id: Primitives<CodCentroCosto>
+	}): Promise<void> {
+		if ((await this.centroCostoRepository.searchById(id)) !== null) {
+			throw new CentroCostoAlreadyExistError()
+		}
+	}
 }
-
-
-
-

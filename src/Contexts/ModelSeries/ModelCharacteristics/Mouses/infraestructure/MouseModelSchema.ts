@@ -6,60 +6,68 @@ import { type MouseModelsPrimitives } from '../domain/MouseModels'
 import { type InputTypeId } from '../../../InputType/domain/InputTypeId'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 
-
-
-interface MouseModelsCreationAttributes extends Omit<MouseModelsPrimitives, 'name' | 'brandId' | 'generic'> {
-  modelSeriesId: Primitives<ModelSeriesId>
+interface MouseModelsCreationAttributes
+	extends Omit<MouseModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class MouseModelsModel extends Model<MouseModelsCreationAttributes> implements MouseModelsCreationAttributes {
-  declare id: Primitives<ModelSeriesId>
-  declare modelSeriesId: Primitives<ModelSeriesId>
-  declare categoryId: Primitives<CategoryId>
-  declare inputTypeId: Primitives<InputTypeId>
+export class MouseModelsModel
+	extends Model<MouseModelsCreationAttributes>
+	implements MouseModelsCreationAttributes
+{
+	declare id: Primitives<ModelSeriesId>
+	declare modelSeriesId: Primitives<ModelSeriesId>
+	declare categoryId: Primitives<CategoryId>
+	declare inputTypeId: Primitives<InputTypeId>
 
-
-
-  static async associate(models: Sequelize['models']): Promise<void> {
-    this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' }) // A Mouse model belongs to a model
-    this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' }) // A Mouse model belongs to a category
-    this.belongsTo(models.InputType, { as: 'inputType', foreignKey: 'inputTypeId' }) // A Mouse model belongs to a InputTypes
-  }
-  static async initialize(sequelize: Sequelize): Promise<void> {
-    MouseModelsModel.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          primaryKey: true,
-          allowNull: false
-        },
-        modelSeriesId: {
-          type: DataTypes.UUID,
-          unique: true,
-          allowNull: false
-        },
-        categoryId: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          validate: {
-            isIn: {
-              args: [[CategoryValues.MOUSE]],
-              msg: 'Solo puede pertenecer a la categoria de Mouses'
-            }
-          }
-        },
-        inputTypeId: {
-          type: DataTypes.STRING,
-          allowNull: false
-        }
-      },
-      {
-        modelName: 'ModelMouse',
-        tableName: 'model_mouses',
-        underscored: true,
-        sequelize
-      }
-    )
-  }
+	static async associate(models: Sequelize['models']): Promise<void> {
+		this.belongsTo(models.Model, {
+			as: 'model',
+			foreignKey: 'modelSeriesId'
+		}) // A Mouse model belongs to a model
+		this.belongsTo(models.Category, {
+			as: 'category',
+			foreignKey: 'categoryId'
+		}) // A Mouse model belongs to a category
+		this.belongsTo(models.InputType, {
+			as: 'inputType',
+			foreignKey: 'inputTypeId'
+		}) // A Mouse model belongs to a InputTypes
+	}
+	static async initialize(sequelize: Sequelize): Promise<void> {
+		MouseModelsModel.init(
+			{
+				id: {
+					type: DataTypes.UUID,
+					primaryKey: true,
+					allowNull: false
+				},
+				modelSeriesId: {
+					type: DataTypes.UUID,
+					unique: true,
+					allowNull: false
+				},
+				categoryId: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					validate: {
+						isIn: {
+							args: [[CategoryValues.MOUSE]],
+							msg: 'Solo puede pertenecer a la categoria de Mouses'
+						}
+					}
+				},
+				inputTypeId: {
+					type: DataTypes.STRING,
+					allowNull: false
+				}
+			},
+			{
+				modelName: 'ModelMouse',
+				tableName: 'model_mouses',
+				underscored: true,
+				sequelize
+			}
+		)
+	}
 }
-

@@ -5,15 +5,19 @@ import { type EmployeePrimitives } from '../entity/Employee'
 import { type EmployeeId } from '../valueObject/EmployeeId'
 
 export abstract class EmployeeRepository {
-  abstract save(payload: EmployeePrimitives): Promise<void>
+	abstract save(payload: EmployeePrimitives): Promise<void>
 
-  abstract searchAll(): Promise<EmployeePrimitives[]>
+	abstract searchAll(): Promise<EmployeePrimitives[]>
 
-  abstract matching(criteria: Criteria): Promise<EmployeePrimitives[]>
+	abstract matching(criteria: Criteria): Promise<EmployeePrimitives[]>
 
-  abstract searchByQuery(criteria: Criteria): Promise<Nullable<EmployeePrimitives>>
+	abstract searchByQuery(
+		criteria: Criteria
+	): Promise<Nullable<EmployeePrimitives>>
 
-  abstract searchById(employeeId: Primitives<EmployeeId>): Promise<Nullable<EmployeePrimitives>>
+	abstract searchById(
+		employeeId: Primitives<EmployeeId>
+	): Promise<Nullable<EmployeePrimitives>>
 
-  abstract remove(employeeId: Primitives<EmployeeId>): Promise<void>
+	abstract remove(employeeId: Primitives<EmployeeId>): Promise<void>
 }
