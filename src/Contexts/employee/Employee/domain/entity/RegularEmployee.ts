@@ -1,5 +1,6 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeePrimitives, Employee } from './Employee'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { CargoId } from '../../../Cargo/domain/CargoId'
 import { DepartmentId } from '../../../IDepartment/DepartmentId'
@@ -50,7 +51,7 @@ export class RegularEmployee extends Employee {
 		nationality: EmployeeNationality,
 		cedula: EmployeeCedula,
 		centroTrabajoId: CentroTrabajoId,
-		locationId: EmployeeLocationId,
+		locationId: Nullable<EmployeeLocationId>,
 		departamentoId: DepartmentId,
 		cargoId: CargoId,
 		extension: Extension[],
