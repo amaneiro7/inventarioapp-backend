@@ -59,7 +59,6 @@ export class SequelizeLocationRepository
 				)
 			}
 		})
-
 		;['stateId'].forEach(ele => {
 			if (criteria.searchValueInArray(ele)) {
 				filtered = (data as unknown as LocationApiResponse[]).filter(
