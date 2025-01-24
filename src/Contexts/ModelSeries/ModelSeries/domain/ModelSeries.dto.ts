@@ -6,7 +6,7 @@ import { type ModelSeriesId } from './ModelSeriesId'
 import { type ModelSeriesName } from './ModelSeriesName'
 import { type CategoryDto } from '../../../Category/Category/domain/Category.dto'
 import { type BrandDto } from '../../../Brand/domain/Brand.dto'
-import { type ComputerDto } from '../../ModelCharacteristics/Computers/Computer/domain/Computer.dto'
+import { type ComputerModelsDto } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
 
 export interface ModelSeries {
 	id: Primitives<ModelSeriesId>
@@ -22,5 +22,5 @@ export type ModelSeriesPrimitives = ModelSeries
 export type ModelSeriesDto = ModelSeries & {
 	category: CategoryDto
 	brand: BrandDto
-	computer: ComputerDto
+	computer: ComputerModelsDto
 }
