@@ -2,7 +2,7 @@ import { type FindOptions, Op } from 'sequelize'
 import { type Criteria } from '../../domain/criteria/Criteria'
 import { type Filter } from '../../domain/criteria/Filter'
 
-export type Mappings = Record<string, string>
+export type Mappings = { [key: string]: string }
 
 export class CriteriaToSequelizeConverter {
 	convert(criteria: Criteria, mappings: Mappings = {}): FindOptions {
@@ -19,12 +19,12 @@ export class CriteriaToSequelizeConverter {
 			]
 		}
 
-		if (criteria.limit !== undefined) {
-			query.limit = criteria.limit
+		if (criteria.pageSize) {
+			query.limit = criteria.pageSize
 		}
 
-		if (criteria.limit !== undefined && criteria.offset !== undefined) {
-			query.offset = criteria.offset
+		if (criteria.pageSize && criteria.pageNumber) {
+			query.offset = criteria.pageNumber
 		}
 
 		return query
@@ -34,18 +34,34 @@ export class CriteriaToSequelizeConverter {
 	private generateWhereQuery(filter: Filter, mappings: Mappings = {}) {
 		const field = mappings[filter.field.value] ?? filter.field.value
 
+		const value = filter.value.value
+
 		if (filter.operator.isContains()) {
-			return { [field]: { [Op.iLike]: `%${filter.value.value}%` } }
+			return { [field]: { [Op.iLike]: `%${value}%` } }
 		}
 
 		if (filter.operator.isNotContains()) {
-			return { [field]: { [Op.notILike]: `%${filter.value.value}%` } }
+			return { [field]: { [Op.notILike]: `%${value}%` } }
 		}
 
 		if (filter.operator.isNotEquals()) {
-			return { [field]: filter.value.value }
+			return { [field]: value }
 		}
 
-		return { [field]: filter.value.value }
+		if (filter.operator.isGreaterThan()) {
+			return { [field]: { [Op.gt]: value } }
+		}
+
+		if (filter.operator.isGreaterThanOrEqual()) {
+			return { [field]: { [Op.gte]: value } }
+		}
+		if (filter.operator.isGreaterThan()) {
+			return { [field]: { [Op.lt]: value } }
+		}
+		if (filter.operator.isGreaterThanOrEqual()) {
+			return { [field]: { [Op.lte]: value } }
+		}
+
+		return { [field]: value }
 	}
 }

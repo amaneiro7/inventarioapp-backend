@@ -15,7 +15,7 @@ export class BrandName extends StringValueObject {
 		return this.value
 	}
 
-	private ensureIsValidName(value: string): void {
+	private ensureIsValidName(value: BrandName['value']): void {
 		if (!this.isBrandNameValid(value)) {
 			throw new InvalidArgumentError(
 				`<${value}> no es un nombre de marca válido`
@@ -23,7 +23,7 @@ export class BrandName extends StringValueObject {
 		}
 	}
 
-	private isBrandNameValid(name: string): boolean {
+	private isBrandNameValid(name: BrandName['value']): boolean {
 		return (
 			name.length >= this.NAME_MIN_LENGTH &&
 			name.length <= this.NAME_MAX_LENGTH

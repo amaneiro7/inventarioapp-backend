@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { InvalidArgumentError } from '../value-object/InvalidArgumentError'
-import { Primitives } from '../value-object/Primitives'
+import { type Primitives } from '../value-object/Primitives'
 import { FilterField } from './FilterField'
-import { FilterOperator } from './FilterOperator'
+import { FilterOperator, Operator } from './FilterOperator'
 import { FilterValue } from './FilterValue'
 
 export interface FiltersPrimitives {
@@ -20,22 +19,15 @@ export class Filter {
 
 	// Esto es simplemente otra forma de instanciar nuestra clase
 	// La usamos cuando queremos hacer logica extra en nuestra instanciación
-	static fromValues(values: Map<string, string>): Filter {
-		const field = values.get('field')
-		const operator = values.get('operator')
-		const value = values.get('value')
-
-		if (
-			field === undefined ||
-			operator === undefined ||
-			value === undefined
-		) {
-			throw new InvalidArgumentError('The filter is invalid')
-		}
-
+	static fromValues(
+		field: Primitives<FilterField>,
+		operator: Primitives<FilterOperator>,
+		value: Primitives<FilterValue>
+	): Filter {
 		return new Filter(
 			new FilterField(field),
-			FilterOperator.fromValue(operator),
+			// FilterOperator.fromValue(operator),
+			new FilterOperator(Operator[operator as keyof typeof Operator]),
 			new FilterValue(value)
 		)
 	}

@@ -1,24 +1,15 @@
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type BrandParams, type BrandPrimitives } from './Brand.dto'
 import { BrandId } from './BrandId'
 import { BrandName } from './BrandName'
-
-export interface BrandPrimitives {
-	id: Primitives<BrandId>
-	name: Primitives<BrandName>
-}
-
 export class Brand {
-	constructor(
-		private readonly id: BrandId,
-		private name: BrandName
-	) {}
+	constructor(private readonly id: BrandId, private name: BrandName) {}
 
-	static create({ name }: Omit<BrandPrimitives, 'id'>): Brand {
+	static create(params: BrandParams): Brand {
 		const id = BrandId.random().value
-		return new Brand(new BrandId(id), new BrandName(name))
+		return new Brand(new BrandId(id), new BrandName(params.name))
 	}
 
-	updateName(newName: Primitives<BrandName>): void {
+	updateName(newName: BrandName['value']): void {
 		this.name = new BrandName(newName)
 	}
 
@@ -36,11 +27,11 @@ export class Brand {
 		}
 	}
 
-	get idValue(): Primitives<BrandId> {
+	get idValue(): BrandId['value'] {
 		return this.id.value
 	}
 
-	get nameValue(): Primitives<BrandName> {
+	get nameValue(): BrandName['value'] {
 		return this.name.value
 	}
 }

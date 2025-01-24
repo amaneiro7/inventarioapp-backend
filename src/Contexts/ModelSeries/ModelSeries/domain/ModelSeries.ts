@@ -24,7 +24,7 @@ export class ModelSeries {
 	) {}
 
 	static create(params: Omit<ModelSeriesPrimitives, 'id'>): ModelSeries {
-		const id = String(ModelSeriesId.random())
+		const id = ModelSeriesId.random().value
 		return new ModelSeries(
 			new ModelSeriesId(id),
 			new ModelSeriesName(params.name),

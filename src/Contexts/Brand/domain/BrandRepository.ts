@@ -1,23 +1,18 @@
+import { type Criteria } from '../../Shared/domain/criteria/Criteria'
+import { type Nullable } from '../../Shared/domain/Nullable'
+import { type BrandDto, type BrandParams } from './Brand.dto'
 import { type GenericRepository } from '../../Shared/domain/GenericRepository'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type BrandPrimitives } from './Brand'
-import { type BrandId } from './BrandId'
-import { type BrandName } from './BrandName'
 
-export abstract class BrandRepository
-	implements GenericRepository<BrandPrimitives>
-{
-	abstract save(payload: BrandPrimitives): Promise<void>
+export abstract class BrandRepository implements GenericRepository<BrandDto> {
+	abstract save(payload: BrandParams): Promise<void>
 
-	abstract searchAll(): Promise<BrandPrimitives[]>
+	abstract searchAll(
+		criteria: Criteria
+	): Promise<{ total: number; data: BrandDto[] }>
 
-	abstract searchById(
-		id: Primitives<BrandId>
-	): Promise<BrandPrimitives | null>
+	abstract searchById(id: BrandDto['id']): Promise<Nullable<BrandDto>>
 
-	abstract searchByName(
-		name: Primitives<BrandName>
-	): Promise<BrandPrimitives | null>
+	abstract searchByName(name: BrandDto['name']): Promise<Nullable<BrandDto>>
 
-	abstract remove(id: Primitives<BrandId>): Promise<void>
+	abstract remove(id: BrandDto['id']): Promise<void>
 }

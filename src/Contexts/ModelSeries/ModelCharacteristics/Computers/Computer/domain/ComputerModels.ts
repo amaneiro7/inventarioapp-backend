@@ -51,7 +51,7 @@ export class ComputerModels extends ModelSeries {
 	static create(
 		params: Omit<ComputerModelsPrimitives, 'id'>
 	): ComputerModels {
-		const id = ModelSeriesId.random().toString()
+		const id = ModelSeriesId.random().value
 		return new ComputerModels(
 			new ModelSeriesId(id),
 			new ModelSeriesName(params.name),

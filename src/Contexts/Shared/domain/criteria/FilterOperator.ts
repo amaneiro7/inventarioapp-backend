@@ -4,8 +4,10 @@ import { EnumValueObject } from '../value-object/EnumValueObject'
 export enum Operator {
 	EQUAL = '=',
 	NOT_EQUAL = '!=',
-	GT = '>',
-	LT = '<',
+	GREATER_THAN = '>',
+	GREATER_THAN_OR_EQUAL = '>=',
+	LOWER_THAN = '<',
+	LOWER_THAN_OR_EQUAL = '<=',
 	CONTAINS = 'CONTAINS',
 	NOT_CONTAINS = 'NOT_CONTAINS'
 }
@@ -37,16 +39,32 @@ export class FilterOperator extends EnumValueObject<Operator> {
 		)
 	}
 
-	public isContains(): boolean {
-		return this.value === Operator.CONTAINS
+	isContains(): boolean {
+		return this.value.valueOf() === Operator.CONTAINS.valueOf()
 	}
 
-	public isNotContains(): boolean {
-		return this.value === Operator.NOT_CONTAINS
+	isNotContains(): boolean {
+		return this.value.valueOf() === Operator.NOT_CONTAINS.valueOf()
 	}
 
-	public isNotEquals(): boolean {
-		return this.value === Operator.NOT_EQUAL
+	isNotEquals(): boolean {
+		return this.value.valueOf() === Operator.NOT_EQUAL.valueOf()
+	}
+
+	isGreaterThan(): boolean {
+		return this.value.valueOf() === Operator.GREATER_THAN.valueOf()
+	}
+
+	isGreaterThanOrEqual(): boolean {
+		return this.value.valueOf() === Operator.GREATER_THAN_OR_EQUAL.valueOf()
+	}
+
+	isLowerThan(): boolean {
+		return this.value.valueOf() === Operator.LOWER_THAN.valueOf()
+	}
+
+	isLowerThanOrEqual(): boolean {
+		return this.value.valueOf() === Operator.LOWER_THAN_OR_EQUAL.valueOf()
 	}
 
 	// Instancio la clase con el operador =

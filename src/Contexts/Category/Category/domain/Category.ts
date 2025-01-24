@@ -1,13 +1,7 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { CategoryId } from './CategoryId'
 import { CategoryName } from './CategoryName'
 import { MainCategoryId } from '../../MainCategory/domain/MainCategoryId'
-
-export interface CategoryPrimitives {
-	id: Primitives<CategoryId>
-	name: Primitives<CategoryName>
-	mainCategoryId: Primitives<MainCategoryId>
-}
+import { CategoryPrimitives } from './Category.dto'
 
 export const CategoryValues = {
 	COMPUTADORAS: '1',
@@ -60,15 +54,15 @@ export class Category {
 		}
 	}
 
-	get idValue(): Primitives<CategoryId> {
+	get idValue(): CategoryId['value'] {
 		return this.id.value
 	}
 
-	get nameValue(): Primitives<CategoryName> {
+	get nameValue(): CategoryName['value'] {
 		return this.name.value
 	}
 
-	get mainCategoryIdValue(): Primitives<MainCategoryId> {
+	get mainCategoryIdValue(): MainCategoryId['value'] {
 		return this.mainCategoryId.value
 	}
 }

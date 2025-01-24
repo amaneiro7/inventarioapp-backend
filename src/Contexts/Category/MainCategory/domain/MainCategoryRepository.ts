@@ -1,11 +1,12 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type MainCategoryPrimitives } from './MainCategory'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
+import { type MainCategoryDto } from './MainCategoryId.dto'
 import { type MainCategoryId } from './MainCategoryId'
 
 export abstract class MainCategoryRepository {
-	abstract searchAll(): Promise<MainCategoryPrimitives[]>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<MainCategoryDto>>
 
 	abstract searchById(
-		id: Primitives<MainCategoryId>
-	): Promise<MainCategoryPrimitives | null>
+		id: MainCategoryId['value']
+	): Promise<MainCategoryDto | null>
 }

@@ -2,8 +2,8 @@ import { Brand } from '../domain/Brand'
 import { BrandAlreadyExistError } from '../domain/BrandAlreadyExistError'
 import { BrandDoesNotExistError } from '../domain/BrandDoesNotExistError'
 import { BrandId } from '../domain/BrandId'
-import { BrandName } from '../domain/BrandName'
-import { BrandRepository } from '../domain/BrandRepository'
+import { type BrandName } from '../domain/BrandName'
+import { type BrandRepository } from '../domain/BrandRepository'
 
 export class BrandUpdater {
 	constructor(private readonly brandRepository: BrandRepository) {}
@@ -13,7 +13,7 @@ export class BrandUpdater {
 		const brandId = new BrandId(id)
 
 		const brand = await this.brandRepository.searchById(brandId.value)
-		if (brand === null) {
+		if (!brand) {
 			throw new BrandDoesNotExistError(newName)
 		}
 
@@ -24,11 +24,10 @@ export class BrandUpdater {
 	}
 
 	private async ensureBrandDoesNotExist(
-		name: string,
+		name: BrandName['value'],
 		entity: Brand
 	): Promise<void> {
-		const newName = new BrandName(name)
-		if ((await this.brandRepository.searchByName(newName.value)) !== null) {
+		if (!(await this.brandRepository.searchByName(name))) {
 			throw new BrandAlreadyExistError(name)
 		}
 		entity.updateName(name)

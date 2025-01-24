@@ -1,10 +1,24 @@
-import { type BrandPrimitives } from '../domain/Brand'
+import { type Criteria } from '../../Shared/domain/criteria/Criteria'
+import { type ResponseService } from '../../Shared/domain/ResponseType'
+import { GetAllBaseService } from '../../Shared/methods/getAll.abstract'
+import { Brand, type BrandDto } from '../domain/Brand.dto'
 import { type BrandRepository } from '../domain/BrandRepository'
 
-export class BrandFinderAll {
-	constructor(private readonly brandRepository: BrandRepository) {}
+export class BrandFinderAll extends GetAllBaseService<BrandDto> {
+	constructor(private readonly brandRepository: BrandRepository) {
+		super()
+	}
 
-	async run(): Promise<BrandPrimitives[]> {
-		return await this.brandRepository.searchAll()
+	async run(criteria: Criteria): Promise<ResponseService<Brand>> {
+		const { data, total } = await this.brandRepository.searchAll(criteria)
+
+		return {
+			data,
+			info: {
+				total,
+				page: criteria.pageNumber ?? 1,
+				totalPage: this.calcularPaginas(total, criteria.pageNumber)
+			}
+		}
 	}
 }

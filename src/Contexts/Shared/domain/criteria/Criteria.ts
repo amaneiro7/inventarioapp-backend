@@ -1,21 +1,35 @@
-import { InvalidArgumentError } from '../value-object/InvalidArgumentError'
-import { type Primitives } from '../value-object/Primitives'
-import { type FilterField } from './FilterField'
-import { type Filters } from './Filters'
-import { type Order } from './Order'
+import { Primitives } from '../value-object/Primitives'
+import { FiltersPrimitives } from './Filter'
+import { FilterField } from './FilterField'
+import { Filters } from './Filters'
+import { InvalidCriteria } from './InvalidCriteria'
+import { Order } from './Order'
 
 export class Criteria {
 	constructor(
 		public readonly filters: Filters,
 		public readonly order: Order,
-		public readonly limit?: number,
-		public readonly offset?: number
+		public readonly pageSize?: number | null,
+		public readonly pageNumber?: number | null
 	) {
-		if (offset !== undefined && limit === undefined) {
-			throw new InvalidArgumentError(
-				'Limit must be defined if offset is defined'
-			)
+		if (pageNumber !== null && !pageSize) {
+			throw new InvalidCriteria()
 		}
+	}
+
+	static fromPrimitives(
+		filters: FiltersPrimitives[],
+		orderBy: string | null,
+		orderType: string | null,
+		pageSize?: number | null,
+		pageNumber?: number | null
+	): Criteria {
+		return new Criteria(
+			Filters.fromValues(filters),
+			Order.fromValues(orderBy, orderType),
+			pageSize,
+			pageNumber
+		)
 	}
 
 	hasFilters(): boolean {
