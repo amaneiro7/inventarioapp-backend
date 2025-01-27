@@ -1,21 +1,14 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import {
-	type DepartmentPrimitives,
-	IDepartment
-} from '../../IDepartment/IDeparment'
+import { IDepartment } from '../../IDepartment/IDeparment'
 import { CargoId } from '../../Cargo/domain/CargoId'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
-
-/**
- * Esta clase es el tercer nivel que es el ultimo del organigrama laboral
- */
-export type DepartamentoPrimitives = DepartmentPrimitives & {
-	vicepresidenciaEjecutivaId: Primitives<DepartmentId>
-	centroCostoId: Primitives<CodCentroCosto>
-	cargos: Primitives<CargoId>[]
-}
+import {
+	type DepartamentoDto,
+	type DepartamentoParams,
+	type DepartamentoPrimitives
+} from './Departamento.dto'
 
 export class Departamento extends IDepartment {
 	constructor(
@@ -28,7 +21,7 @@ export class Departamento extends IDepartment {
 		super(id, name)
 	}
 
-	static create(params: Omit<DepartamentoPrimitives, 'id'>): Departamento {
+	static create(params: DepartamentoParams): Departamento {
 		const id = DepartmentId.random().value
 		const cargos = params.cargos.map(cargo => new CargoId(cargo))
 		return new Departamento(
@@ -40,7 +33,7 @@ export class Departamento extends IDepartment {
 		)
 	}
 
-	static fromPrimitives(primitives: DepartamentoPrimitives): Departamento {
+	static fromPrimitives(primitives: DepartamentoDto): Departamento {
 		return new Departamento(
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),

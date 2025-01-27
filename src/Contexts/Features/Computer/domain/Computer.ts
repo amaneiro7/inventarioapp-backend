@@ -1,7 +1,4 @@
-import {
-	Device,
-	type DevicePrimitives
-} from '../../../Device/Device/domain/Device'
+import { Device } from '../../../Device/Device/domain/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
 import {
@@ -30,19 +27,10 @@ import { ComputerMemoryRam } from './ComputerMemoryRam'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
-
-export interface DeviceComputerPrimitives extends DevicePrimitives {
-	computerName: Primitives<ComputerName>
-	processorId: Primitives<ComputerProcessor>
-	memoryRam: Primitives<MemoryRamValues>[]
-	memoryRamCapacity: Primitives<ComputerMemoryRamCapacity>
-	hardDriveCapacityId: Primitives<ComputerHardDriveCapacity>
-	hardDriveTypeId: Primitives<ComputerHardDriveType>
-	operatingSystemId: Primitives<ComputerOperatingSystem>
-	operatingSystemArqId: Primitives<ComputerOperatingSystemArq>
-	macAddress: Primitives<MACAddress>
-	ipAddress: Primitives<IPAddress>
-}
+import {
+	type DeviceComputerParams,
+	type DeviceComputerPrimitives
+} from './Computer.dto'
 
 export class DeviceComputer extends Device {
 	constructor(
@@ -89,9 +77,7 @@ export class DeviceComputer extends Device {
 		}
 	}
 
-	static create(
-		params: Omit<DeviceComputerPrimitives, 'id' | 'memoryRamCapacity'>
-	): DeviceComputer {
+	static create(params: DeviceComputerParams): DeviceComputer {
 		const id = DeviceId.random().value
 		return new DeviceComputer(
 			new DeviceId(id),

@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type CentroCostoPrimitives } from '../../domain/CentroCosto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CodCentroCosto } from '../../domain/CodCentroCosto'
 import { type CentroCostoName } from '../../domain/CentroCostoName'
+import { type CentroCostoDto } from '../../domain/CentroCosto.dto'
 
 export class CentroCostoModel
-	extends Model<CentroCostoPrimitives>
-	implements CentroCostoPrimitives
+	extends Model<CentroCostoDto>
+	implements CentroCostoDto
 {
 	declare id: Primitives<CodCentroCosto>
 	declare name: Primitives<CentroCostoName>

@@ -1,18 +1,19 @@
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type VicepresidenciaEjecutivaPrimitives } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva'
 import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { CreateDepartamentoUseCase } from '../domain/CreateDepartmentoUseCase'
+import { Departamento } from '../domain/Departamento'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import {
-	Departamento,
-	type DepartamentoPrimitives
-} from '../domain/Departamento'
+	type DepartamentoDto,
+	type DepartamentoParams
+} from '../domain/Departamento.dto'
 
 export class DepartamentoCreator {
 	private readonly createDepartamentoUseCase: CreateDepartamentoUseCase
 	constructor(
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {
@@ -29,7 +30,7 @@ export class DepartamentoCreator {
 		vicepresidenciaEjecutivaId,
 		centroCostoId,
 		cargos
-	}: Omit<DepartamentoPrimitives, 'id'>): Promise<void> {
+	}: DepartamentoParams): Promise<void> {
 		const arraySinDuplicados = Array.from(new Set(cargos))
 
 		await this.createDepartamentoUseCase.execute({

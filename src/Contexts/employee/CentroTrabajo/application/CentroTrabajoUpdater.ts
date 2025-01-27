@@ -1,7 +1,4 @@
-import {
-	CentroTrabajo,
-	type CentroTrabajoPrimitives
-} from '../domain/CentroTrabajo'
+import { CentroTrabajo } from '../domain/CentroTrabajo'
 import { CentroTrabajoDoesNotExistError } from '../domain/CentroTrabajoDoesNotExistError'
 import { CentroTrabajoId } from '../domain/CentroTrabajoId'
 import { CentroCostoDoesNotExistError } from '../../CentroCosto/domain/CentroCostoDoesNotExistError'
@@ -10,6 +7,7 @@ import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
+import { type CentroTrabajoParams } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoUpdater {
 	constructor(
@@ -22,7 +20,7 @@ export class CentroTrabajoUpdater {
 		params: { name, centroCostoId }
 	}: {
 		id: Primitives<CentroTrabajoId>
-		params: Partial<Omit<CentroTrabajoPrimitives, 'id'>>
+		params: Partial<CentroTrabajoParams>
 	}): Promise<void> {
 		const centroTrabajoId = new CentroTrabajoId(id)
 

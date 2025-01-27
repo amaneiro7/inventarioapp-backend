@@ -1,15 +1,15 @@
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
 import { lastHistoryUpdated } from '../../../../Shared/domain/LastHistoryUpdated'
+import { type DeviceDto } from '../../domain/Device.dto'
 import {
 	type ClearDefaultDataset,
-	type ClearComputerDataset,
-	type DevicesApiResponse
+	type ClearComputerDataset
 } from './DeviceResponse'
 
 export function clearComputerDataset({
 	devices
 }: {
-	devices: DevicesApiResponse[]
+	devices: DeviceDto[]
 }): ClearComputerDataset[] | ClearDefaultDataset[] {
 	if (
 		devices.every(
@@ -45,8 +45,8 @@ export function clearComputerDataset({
 			'Tipo de Memoria Ram': device?.model?.modelComputer
 				? device?.model?.modelComputer?.memoryRamType?.name
 				: device?.model.modelLaptop
-					? device?.model?.modelLaptop?.memoryRamType?.name
-					: null,
+				? device?.model?.modelLaptop?.memoryRamType?.name
+				: null,
 			'Disco Duro Total': device?.computer?.hardDriveCapacity?.name ?? '',
 			'Tipo de Disco Duro': device?.computer?.hardDriveType?.name ?? '',
 			'Sistema Operativo': device?.computer?.operatingSystem?.name ?? '',

@@ -1,8 +1,9 @@
 import { CreateCargoUseCase } from '../domain/CreateCargoUseCase'
-import { Cargo, type CargoPrimitives } from '../domain/Cargo'
+import { Cargo } from '../domain/Cargo'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CargoRepository } from '../domain/CargoRepository'
 import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
+import { CargoParams } from '../domain/Cargo.dto'
 
 export class CargoCreator {
 	private readonly createCargoUseCase: CreateCargoUseCase
@@ -16,11 +17,10 @@ export class CargoCreator {
 		)
 	}
 
-	async run({
-		name,
-		departamentos
-	}: Omit<CargoPrimitives, 'id'>): Promise<void> {
-		const arraySinDuplicados = Array.from(new Set(departamentos))
+	async run({ name, departamentos }: CargoParams): Promise<void> {
+		const arraySinDuplicados: CargoParams['departamentos'] = Array.from(
+			new Set(departamentos)
+		)
 		await this.createCargoUseCase.execute({
 			name,
 			departamentos: arraySinDuplicados

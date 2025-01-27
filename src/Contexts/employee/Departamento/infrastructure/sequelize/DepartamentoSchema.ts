@@ -10,19 +10,29 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
-import { type DepartamentoPrimitives } from '../../domain/Departamento'
 import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
+import { type DepartamentoDto } from '../../domain/Departamento.dto'
+import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class DepartamentoModel
-	extends Model<Omit<DepartamentoPrimitives, 'cargos'>>
-	implements DepartamentoPrimitives
+	extends Model<
+		Omit<
+			DepartamentoDto,
+			'cargos' | 'vicepresiednciaEjecutiva' | 'centroCosto'
+		>
+	>
+	implements DepartamentoDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
 	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
 	declare centroCostoId: Primitives<CodCentroCosto>
-	declare cargos: Primitives<CargoId>[]
+	declare vicepresiednciaEjecutiva: VicepresidenciaEjecutivaDto
+	declare centroCosto: CentroCostoDto
+	declare cargos: string[] & Omit<CargoDto, 'departamentos'>[]
 
 	// Métodos de asociación
 	public getCargos!: BelongsToManyGetAssociationsMixin<CargoModel>

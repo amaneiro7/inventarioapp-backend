@@ -50,4 +50,6 @@ export type DeviceDto = Device & {
 	hardDrive: DeviceHardDriveDto | null
 	mfp: MFPDto | null
 	history: HistoryDto
+	updatedAt: Date
+	createdAt: Date
 }

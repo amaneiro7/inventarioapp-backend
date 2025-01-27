@@ -1,7 +1,4 @@
-import {
-	Device,
-	type DevicePrimitives
-} from '../../../Device/Device/domain/Device'
+import { Device } from '../../../Device/Device/domain/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import {
 	CategoryDefaultData,
@@ -21,10 +18,7 @@ import { MFPIPAddress } from './MFPIPAddress'
 import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
-
-export interface DeviceMFPPrimitives extends DevicePrimitives {
-	ipAddress: Primitives<MFPIPAddress>
-}
+import { type DeviceMFPParams, type DeviceMFPPrimitives } from './MFP.dto'
 
 export class MFP extends Device {
 	constructor(
@@ -56,7 +50,7 @@ export class MFP extends Device {
 		)
 	}
 
-	static create(params: Omit<DeviceMFPPrimitives, 'id'>): MFP {
+	static create(params: DeviceMFPParams): MFP {
 		if (!MFP.isMFPCategory({ categoryId: params.categoryId })) {
 			throw new InvalidArgumentError('No pertenece a esta categoria')
 		}

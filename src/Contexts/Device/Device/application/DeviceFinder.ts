@@ -1,20 +1,19 @@
 import { DeviceDoesNotExistError } from '../domain/DeviceDoesNotExistError'
 import { DeviceId } from '../domain/DeviceId'
-
-import { type DevicePrimitives } from '../domain/Device'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 import { type Nullable } from '../../../Shared/domain/Nullable'
+import { type DeviceDto } from '../domain/Device.dto'
 
 export class DeviceFinder {
 	constructor(private readonly deviceRepository: DeviceRepository) {}
 
-	async run(params: { id: string }): Promise<Nullable<DevicePrimitives>> {
+	async run(params: { id: string }): Promise<Nullable<DeviceDto>> {
 		const { id } = params
 		const deviceId = new DeviceId(id).value
 
 		const device = await this.deviceRepository.searchById(deviceId)
 
-		if (device === null) {
+		if (!device) {
 			throw new DeviceDoesNotExistError(id.toString())
 		}
 

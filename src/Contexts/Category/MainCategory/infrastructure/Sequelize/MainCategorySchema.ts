@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type MainCategoryPrimitives } from '../../domain/MainCategory'
+import { type MainCategoryDto } from '../../domain/MainCategory.dto'
 import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryName } from '../../domain/MainCategoryName'
 
 export class MainCategoryModel
-	extends Model<MainCategoryPrimitives>
-	implements MainCategoryPrimitives
+	extends Model<MainCategoryDto>
+	implements MainCategoryDto
 {
 	declare id: Primitives<MainCategoryId>
 	declare name: Primitives<MainCategoryName>

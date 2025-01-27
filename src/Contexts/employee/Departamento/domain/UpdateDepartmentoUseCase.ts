@@ -1,4 +1,4 @@
-import { Departamento, type DepartamentoPrimitives } from './Departamento'
+import { Departamento } from './Departamento'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentPrimitives } from '../../IDepartment/IDeparment'
@@ -12,10 +12,14 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { CargoDoesNotExistError } from '../../Cargo/domain/CargoDoesNotExistError'
 import { CentroCostoDoesNotExistError } from '../../CentroCosto/domain/CentroCostoDoesNotExistError'
+import {
+	type DepartamentoDto,
+	type DepartamentoParams
+} from './Departamento.dto'
 
 export class UpdateDepartamentoUseCase {
 	constructor(
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<DepartmentPrimitives>,
 		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
@@ -26,7 +30,7 @@ export class UpdateDepartamentoUseCase {
 		entity
 	}: {
 		entity: Departamento
-		params: Partial<Omit<DepartamentoPrimitives, 'id'>>
+		params: Partial<DepartamentoParams>
 	}): Promise<void> {
 		// Se verifica que la vicepresidencia exista
 		await this.ensureVicepresidenciaEjecutivaExists({

@@ -1,17 +1,20 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type CentroTrabajoPrimitives } from '../../domain/CentroTrabajo'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CentroTrabajoId } from '../../domain/CentroTrabajoId'
 import { type CentroTrabajoName } from '../../domain/CentroTrabajoName'
 import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
+import { type CentroTrabajoDto } from '../../domain/CentroTrabajo.dto'
+import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
 
 export class CentroTrabajoModel
-	extends Model<CentroTrabajoPrimitives>
-	implements CentroTrabajoPrimitives
+	extends Model<Omit<CentroTrabajoDto, 'centroCosto'>>
+	implements CentroTrabajoDto
 {
 	declare id: Primitives<CentroTrabajoId>
 	declare name: Primitives<CentroTrabajoName>
 	declare centroCostoId: Primitives<CodCentroCosto>
+	// joins
+	declare centroCosto: CentroCostoDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.CentroCosto, {

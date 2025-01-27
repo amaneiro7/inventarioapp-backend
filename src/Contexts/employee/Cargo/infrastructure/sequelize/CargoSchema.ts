@@ -6,20 +6,21 @@ import {
 	type BelongsToManySetAssociationsMixin,
 	type Sequelize
 } from 'sequelize'
-import { type CargoPrimitives } from '../../domain/Cargo'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoName } from '../../domain/CargoName'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartamentoModel } from '../../../Departamento/infrastructure/sequelize/DepartamentoSchema'
+import { type CargoDto } from '../../domain/Cargo.dto'
+import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 
 export class CargoModel
-	extends Model<Omit<CargoPrimitives, 'departamentos'>>
-	implements CargoPrimitives
+	extends Model<Omit<CargoDto, 'departamentos'>>
+	implements CargoDto
 {
 	declare id: Primitives<CargoId>
 	declare name: Primitives<CargoName>
-	declare departamentos: Primitives<DepartmentId>[]
+	declare departamentos: DepartamentoDto[]
 
 	// Métodos de asociación
 	public getDeparments!: BelongsToManyGetAssociationsMixin<DepartamentoModel>

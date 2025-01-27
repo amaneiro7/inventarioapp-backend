@@ -1,11 +1,7 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type MainCategoryPrimitives } from './MainCategory.dto'
 import { MainCategoryId } from './MainCategoryId'
 import { MainCategoryName } from './MainCategoryName'
-
-export interface MainCategoryPrimitives {
-	id: Primitives<MainCategoryId>
-	name: Primitives<MainCategoryName>
-}
 
 export const MainCategoryList = {
 	COMPUTER: '1',

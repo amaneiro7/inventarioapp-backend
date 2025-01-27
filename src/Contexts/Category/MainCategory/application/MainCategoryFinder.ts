@@ -1,6 +1,6 @@
+import { type MainCategoryDto } from '../domain/MainCategory.dto'
 import { MainCategoryDoesNotExistError } from '../domain/MainCategoryDoesNotExistError'
 import { MainCategoryId } from '../domain/MainCategoryId'
-import { type MainCategoryPrimitives } from '../domain/MainCategory'
 import { type MainCategoryRepository } from '../domain/MainCategoryRepository'
 
 export class MainCategoriesFinder {
@@ -8,17 +8,17 @@ export class MainCategoriesFinder {
 		private readonly mainCategoryRepository: MainCategoryRepository
 	) {}
 
-	async run(params: { id: string }): Promise<MainCategoryPrimitives> {
+	async run(params: { id: string }): Promise<MainCategoryDto> {
 		const { id } = params
-		const categoryId = new MainCategoryId(id)
-		const category = await this.mainCategoryRepository.searchById(
-			categoryId.value
+		const mainCategoryId = new MainCategoryId(id)
+		const mainCategory = await this.mainCategoryRepository.searchById(
+			mainCategoryId.value
 		)
 
-		if (category === null) {
-			throw new MainCategoryDoesNotExistError(categoryId.value)
+		if (!mainCategory) {
+			throw new MainCategoryDoesNotExistError(mainCategoryId.value)
 		}
 
-		return category
+		return mainCategory
 	}
 }

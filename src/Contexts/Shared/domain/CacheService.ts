@@ -1,14 +1,26 @@
-import { type CacheRepository } from './CacheRepository'
+import { type TimeTolive, type CacheRepository } from './CacheRepository'
+import { type Criteria } from './criteria/Criteria'
 
 export class CacheService {
 	constructor(private readonly cacheRepository: CacheRepository) {}
 
-	async getCachedData<T>(
-		cacheKey: string,
-		fetchFunction: () => Promise<T[]>
-	) {
+	async getCachedData<T>({
+		cacheKey,
+		criteria,
+		fetchFunction,
+		ex
+	}: {
+		cacheKey: string
+		criteria?: Criteria
+		ex?: TimeTolive
+		fetchFunction: () => Promise<T>
+	}) {
+		const key = this.generaCacheKeyFromCriteriaPattern({
+			cacheKey,
+			criteria
+		})
 		try {
-			const cache = await this.cacheRepository.get(cacheKey)
+			const cache = await this.cacheRepository.get(key)
 			if (cache) {
 				return JSON.parse(cache)
 			}
@@ -16,25 +28,59 @@ export class CacheService {
 			console.error('Cache service failed: ', error)
 		}
 		// If cache fails, fetch data from the database
-		const result = await fetchFunction()
+		const data = await fetchFunction()
 
-		await this.setCachedData(cacheKey, result)
-		return result
+		await this.setCachedData({ cacheKey: key, data, ex })
+		return data
 	}
 
-	async setCachedData<T>(cacheKey: string, data: T) {
+	async setCachedData<T>({
+		cacheKey,
+		data,
+		ex
+	}: {
+		cacheKey: string
+		data: T
+		ex?: TimeTolive
+	}) {
 		try {
-			await this.cacheRepository.set(cacheKey, JSON.stringify(data))
+			await this.cacheRepository.set(cacheKey, JSON.stringify(data), ex)
 		} catch (error) {
 			console.error('Setting cache failed: ', error)
 		}
 	}
 
-	async removeCachedData<T>(cacheKey: string) {
+	async removeCachedData<T>({ cacheKey }: { cacheKey: string }) {
 		try {
 			await this.cacheRepository.del(cacheKey)
 		} catch (error) {
 			console.error('Deleting cache failed: ', error)
 		}
+	}
+
+	private generaCacheKeyFromCriteriaPattern({
+		cacheKey,
+		criteria
+	}: {
+		cacheKey: string
+		criteria?: Criteria
+	}): string {
+		if (!criteria) {
+			return cacheKey
+		}
+
+		let hashKey = cacheKey
+		if (!criteria?.filters.isEmpty()) {
+			hashKey += `-Filters:${criteria.filters.toPrimitives().join(',')}`
+		}
+
+		if (criteria?.pageSize) {
+			hashKey += `-PageSize:${criteria.pageSize}`
+		}
+		if (criteria?.pageNumber) {
+			hashKey += `-PageNumber:${criteria.pageNumber}`
+		}
+
+		return hashKey
 	}
 }

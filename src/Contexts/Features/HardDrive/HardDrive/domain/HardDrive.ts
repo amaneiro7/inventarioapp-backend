@@ -1,9 +1,6 @@
 import { HardDriveHealth } from './HardDriveHealth'
 import { DeviceId } from '../../../../Device/Device/domain/DeviceId'
-import {
-	Device,
-	type DevicePrimitives
-} from '../../../../Device/Device/domain/Device'
+import { Device } from '../../../../Device/Device/domain/Device'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
 import { BrandId } from '../../../../Brand/domain/BrandId'
@@ -22,13 +19,10 @@ import {
 	CategoryDefaultData,
 	type CategoryValues
 } from '../../../../Category/Category/domain/CategoryDefaultData'
-
-export interface DeviceHardDrivePrimitives extends DevicePrimitives {
-	health: Primitives<HardDriveHealth>
-	hardDriveCapacityId: Primitives<HDDCapacity>
-	hardDriveTypeId: Primitives<HDDType>
-}
-
+import {
+	type DeviceHardDriveParams,
+	type DeviceHardDrivePrimitives
+} from './HardDrive.dto'
 export class DeviceHardDrive extends Device {
 	constructor(
 		id: DeviceId,
@@ -71,9 +65,7 @@ export class DeviceHardDrive extends Device {
 		}
 	}
 
-	static create(
-		params: Omit<DeviceHardDrivePrimitives, 'id'>
-	): DeviceHardDrive {
+	static create(params: DeviceHardDriveParams): DeviceHardDrive {
 		const id = DeviceId.random().value
 		return new DeviceHardDrive(
 			new DeviceId(id),

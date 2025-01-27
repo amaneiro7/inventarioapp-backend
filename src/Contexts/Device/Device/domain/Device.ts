@@ -10,20 +10,7 @@ import { DeviceLocation } from './DeviceLocation'
 import { DeviceModelSeries } from './DeviceModelSeries'
 import { DeviceStatus } from './DeviceStatus'
 import { DeviceStocknumber } from './DeviceStock'
-
-export interface DevicePrimitives {
-	id: Primitives<DeviceId>
-	serial: Primitives<DeviceSerial>
-	activo: Primitives<DeviceActivo>
-	statusId: Primitives<DeviceStatus>
-	categoryId: Primitives<CategoryId>
-	brandId: Primitives<BrandId>
-	modelId: Primitives<DeviceModelSeries>
-	employeeId: Primitives<DeviceEmployee>
-	locationId: Primitives<DeviceLocation>
-	observation: Primitives<DeviceObservation>
-	stockNumber: Primitives<DeviceStocknumber>
-}
+import { type DevicePrimitives, type DeviceParams } from './Device.dto'
 
 export class Device {
 	constructor(
@@ -40,7 +27,7 @@ export class Device {
 		private stockNumber: DeviceStocknumber
 	) {}
 
-	static create(params: Omit<DevicePrimitives, 'id'>): Device {
+	static create(params: DeviceParams): Device {
 		const id = DeviceId.random().value
 		return new Device(
 			new DeviceId(id),

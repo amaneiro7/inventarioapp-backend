@@ -1,9 +1,10 @@
-import { CentroCosto, type CentroCostoPrimitives } from '../domain/CentroCosto'
+import { CentroCosto } from '../domain/CentroCosto'
 import { CentroCostoDoesNotExistError } from '../domain/CentroCostoDoesNotExistError'
 import { CodCentroCosto } from '../domain/CodCentroCosto'
 import { type CentroCostoName } from '../domain/CentroCostoName'
 import { type CentroCostoRepository } from '../domain/CentroCostoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type CentroCostoParams } from '../domain/CentroCosto.dto'
 
 export class CentroCostoUpdater {
 	constructor(
@@ -15,7 +16,7 @@ export class CentroCostoUpdater {
 		params: { name }
 	}: {
 		id: Primitives<CodCentroCosto>
-		params: Omit<CentroCostoPrimitives, 'id'>
+		params: Partial<CentroCostoParams>
 	}): Promise<void> {
 		const codCentroCosto = new CodCentroCosto(id)
 

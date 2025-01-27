@@ -12,12 +12,38 @@ import { type DeviceLocation } from '../../domain/DeviceLocation'
 import { type DeviceModelSeries } from '../../domain/DeviceModelSeries'
 import { type DeviceStatus } from '../../domain/DeviceStatus'
 import { type DeviceStocknumber } from '../../domain/DeviceStock'
-import { type DevicePrimitives } from '../../domain/Device.dto'
+import { type DeviceDto } from '../../domain/Device.dto'
 import { StatusId } from '../../../Status/domain/StatusId'
+import { type BrandDto } from '../../../../Brand/domain/Brand.dto'
+import { type CategoryDto } from '../../../../Category/Category/domain/Category.dto'
+import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
+import { type DeviceComputerDto } from '../../../../Features/Computer/domain/Computer.dto'
+import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
+import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
+import { type HistoryDto } from '../../../../History/domain/History.dto'
+import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
+import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
+import { type StatusDto } from '../../../Status/domain/Status.dto'
 
 export class DeviceModel
-	extends Model<DevicePrimitives>
-	implements DevicePrimitives
+	extends Model<
+		Omit<
+			DeviceDto,
+			| 'status'
+			| 'category'
+			| 'brand'
+			| 'model'
+			| 'employee'
+			| 'location'
+			| 'computer'
+			| 'hardDrive'
+			| 'mfp'
+			| 'history'
+			| 'updatedAt'
+			| 'createdAt'
+		>
+	>
+	implements DeviceDto
 {
 	declare id: Primitives<DeviceId>
 	declare serial: Primitives<DeviceSerial>
@@ -30,6 +56,18 @@ export class DeviceModel
 	declare locationId: Primitives<DeviceLocation>
 	declare observation: Primitives<DeviceObservation>
 	declare stockNumber: Primitives<DeviceStocknumber>
+	declare status: StatusDto
+	declare category: CategoryDto
+	declare brand: BrandDto
+	declare model: ModelSeriesDto
+	declare employee: EmployeeDto
+	declare location: LocationDto
+	declare computer: DeviceComputerDto | null
+	declare hardDrive: DeviceHardDriveDto | null
+	declare mfp: DeviceMFPDto | null
+	declare history: HistoryDto
+	declare updatedAt: Date
+	declare createdAt: Date
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Category, {

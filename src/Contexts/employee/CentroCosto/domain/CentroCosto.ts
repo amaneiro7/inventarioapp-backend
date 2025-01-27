@@ -1,11 +1,11 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import {
+	type CentroCostoDto,
+	type CentroCostoParams,
+	type CentroCostoPrimitives
+} from './CentroCosto.dto'
 import { CentroCostoName } from './CentroCostoName'
 import { CodCentroCosto } from './CodCentroCosto'
-
-export interface CentroCostoPrimitives {
-	id: Primitives<CodCentroCosto>
-	name: Primitives<CentroCostoName>
-}
 
 export class CentroCosto {
 	constructor(
@@ -13,7 +13,7 @@ export class CentroCosto {
 		private name: CentroCostoName
 	) {}
 
-	static create({ name, id }: CentroCostoPrimitives): CentroCosto {
+	static create({ name, id }: CentroCostoParams): CentroCosto {
 		return new CentroCosto(
 			new CodCentroCosto(id),
 			new CentroCostoName(name)
@@ -24,7 +24,7 @@ export class CentroCosto {
 		this.name = new CentroCostoName(newName)
 	}
 
-	static fromPrimitives(primitives: CentroCostoPrimitives): CentroCosto {
+	static fromPrimitives(primitives: CentroCostoDto): CentroCosto {
 		return new CentroCosto(
 			new CodCentroCosto(primitives.id),
 			new CentroCostoName(primitives.name)

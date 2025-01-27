@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CentroCostoPrimitives } from '../domain/CentroCosto'
 import { type CentroCostoRepository } from '../domain/CentroCostoRepository'
+import { type CentroCostoDto } from '../domain/CentroCosto.dto'
 import { CodCentroCosto } from '../domain/CodCentroCosto'
 import { CentroCostoDoesNotExistError } from '../domain/CentroCostoDoesNotExistError'
 
@@ -11,7 +11,7 @@ export class CentroCostoFinder {
 
 	async run(params: {
 		id: Primitives<CodCentroCosto>
-	}): Promise<CentroCostoPrimitives> {
+	}): Promise<CentroCostoDto> {
 		const { id } = params
 		const codCentroCosto = new CodCentroCosto(id)
 		const centroCosto = await this.centroCostoRepository.searchById(

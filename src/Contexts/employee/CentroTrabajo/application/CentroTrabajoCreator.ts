@@ -1,7 +1,4 @@
-import {
-	CentroTrabajo,
-	type CentroTrabajoPrimitives
-} from '../domain/CentroTrabajo'
+import { CentroTrabajo } from '../domain/CentroTrabajo'
 import { CentroTrabajoAlreadyExistError } from '../domain/CentroTrabajoAlreadyExistError'
 import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -9,6 +6,7 @@ import { type CentroTrabajoId } from '../domain/CentroTrabajoId'
 import { CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { CentroCostoAlreadyExistError } from '../../CentroCosto/domain/CentroCostoAlreadyExistError'
+import { CentroTrabajoParams } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoCreator {
 	constructor(
@@ -19,7 +17,7 @@ export class CentroTrabajoCreator {
 	async run({
 		params: { id, name, centroCostoId }
 	}: {
-		params: CentroTrabajoPrimitives
+		params: CentroTrabajoParams
 	}): Promise<void> {
 		await this.ensureCentroTrabajoDoesNotExist({ id })
 		await this.ensureCentroCostoDoesNotExist({ centroCostoId })

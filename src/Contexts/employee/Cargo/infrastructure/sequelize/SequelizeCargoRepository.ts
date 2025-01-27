@@ -1,30 +1,47 @@
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoPrimitives } from '../../domain/Cargo'
 import { type CargoId } from '../../domain/CargoId'
 import { type CargoRepository } from '../../domain/CargoRepository'
 import { type CargoName } from '../../domain/CargoName'
+import { type CargoDto, type CargoPrimitives } from '../../domain/Cargo.dto'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { CargoModel } from './CargoSchema'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 
-export class SequelizeCargoRepository implements CargoRepository {
+export class SequelizeCargoRepository
+	extends CriteriaToSequelizeConverter
+	implements CargoRepository
+{
 	private readonly cacheKey: string = 'cargos'
-	constructor(private readonly cache: CacheService) {}
-	async searchAll(): Promise<CargoPrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await CargoModel.findAll()
+	constructor(private readonly cache: CacheService) {
+		super()
+	}
+	async searchAll(criteria: Criteria): Promise<ResponseDB<CargoDto>> {
+		const options = this.convert(criteria)
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria: criteria,
+			fetchFunction: async () => {
+				const { count, rows } = await CargoModel.findAndCountAll(
+					options
+				)
+				return {
+					data: rows,
+					total: count
+				}
+			}
 		})
 	}
 
-	async searchById(
-		id: Primitives<CargoId>
-	): Promise<Nullable<CargoPrimitives>> {
+	async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
 		return (await CargoModel.findByPk(id)) ?? null
 	}
 
 	async searchByName(
 		name: Primitives<CargoName>
-	): Promise<Nullable<CargoPrimitives>> {
+	): Promise<Nullable<CargoDto>> {
 		return (await CargoModel.findOne({ where: { name } })) ?? null
 	}
 
@@ -42,7 +59,6 @@ export class SequelizeCargoRepository implements CargoRepository {
 			await cargo.save()
 			await cargo.setDeparments(departamentos)
 		}
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

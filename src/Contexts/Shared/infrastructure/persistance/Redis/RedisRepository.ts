@@ -1,7 +1,7 @@
 import { createClient, type RedisClientType } from 'redis'
 import { config } from '../../config'
 import { type Logger } from '../../../domain/Logger'
-import { CacheRepository } from '../../../domain/CacheRepository'
+import { type CacheRepository } from '../../../domain/CacheRepository'
 export class RedisRepository implements CacheRepository {
 	private readonly client: RedisClientType = createClient({
 		password: config.redis.password,
@@ -36,16 +36,19 @@ export class RedisRepository implements CacheRepository {
 		}
 	}
 
-	async set(key: string, value: string): Promise<void> {
+	async set(key: string, value: string, ex: number): Promise<void> {
 		try {
-			await this.client.set(key, value)
+			await this.client.set(key, value, { EX: ex })
 		} catch (error) {
 			this.logger.error(`'Error setting value in Redis: ', ${error}`)
 		}
 	}
 	async del(key: string): Promise<void> {
 		try {
-			await this.client.del(key)
+			const keys = await this.client.keys(`${key}*`)
+			for (const key of keys) {
+				await this.client.del(key)
+			}
 		} catch (error) {
 			this.logger.error(`'Error deleting value in Redis: ', ${error}`)
 		}

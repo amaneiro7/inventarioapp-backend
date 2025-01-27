@@ -1,19 +1,19 @@
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type Nullable } from '../../../Shared/domain/Nullable'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CargoPrimitives } from './Cargo'
+import { type CargoParams, type CargoDto } from './Cargo.dto'
 import { type CargoId } from './CargoId'
 import { type CargoName } from './CargoName'
 
 export abstract class CargoRepository {
-	abstract searchAll(): Promise<CargoPrimitives[]>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<CargoDto>>
 
-	abstract searchById(
-		id: Primitives<CargoId>
-	): Promise<Nullable<CargoPrimitives>>
+	abstract searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>>
 
 	abstract searchByName(
 		id: Primitives<CargoName>
-	): Promise<Nullable<CargoPrimitives>>
+	): Promise<Nullable<CargoDto>>
 
-	abstract save(cargo: CargoPrimitives): Promise<void>
+	abstract save(cargo: CargoParams): Promise<void>
 }

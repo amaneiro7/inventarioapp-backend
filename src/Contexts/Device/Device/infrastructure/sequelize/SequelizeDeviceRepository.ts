@@ -12,13 +12,13 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { DeviceModel } from './DeviceSchema'
 import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
 import { DeviceAssociation } from './DeviceAssociation'
-import { DevicesApiResponse } from './DeviceResponse'
 import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { clearComputerDataset } from './clearComputerDataset'
-import { CategoryModel } from '../../../../Category/Category/infrastructure/Sequelize/CategorySchema'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { type DeviceDto } from '../../domain/Device.dto'
+import { type DevicePrimitives, type DeviceDto } from '../../domain/Device.dto'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 export class SequelizeDeviceRepository
 	extends SequelizeCriteriaConverter
@@ -30,29 +30,45 @@ export class SequelizeDeviceRepository
 		super()
 	}
 
-	async searchAll(): Promise<DeviceDto[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await CategoryModel.findAll()
+	async searchAll(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
+		const options = this.convert(criteria)
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria: criteria,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const { count, rows } = await DeviceModel.findAndCountAll(
+					options
+				)
+				return {
+					total: count,
+					data: rows
+				}
+			}
 		})
 	}
 
-	async matching(
-		criteria: Criteria
-	): Promise<{ total: number; data: DeviceDto[] }> {
+	async matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
 
 		const deviceOptions = new DeviceAssociation().convertFilterLocation(
 			criteria,
 			options
 		)
-		const { count: total, rows: data } = await DeviceModel.findAndCountAll(
-			deviceOptions
-		)
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria: criteria,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const { count: total, rows: data } =
+					await DeviceModel.findAndCountAll(deviceOptions)
 
-		return {
-			total,
-			data
-		}
+				return {
+					total,
+					data
+				}
+			}
+		})
 	}
 
 	async searchById(id: string): Promise<DeviceDto | null> {
@@ -135,7 +151,7 @@ export class SequelizeDeviceRepository
 	 *
 	 * @param payload - Device data to be saved
 	 */
-	async save(payload: DeviceDto): Promise<void> {
+	async save(payload: DevicePrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
 			const {
@@ -151,7 +167,7 @@ export class SequelizeDeviceRepository
 				employeeId
 			} = payload // Destructure the payload
 			const device = (await DeviceModel.findByPk(id)) ?? null // Find the device by its id, if it does not exist, device will be null
-			if (device === null) {
+			if (!device) {
 				// If the device does not exist
 				await DeviceModel.create(
 					{
@@ -214,7 +230,7 @@ export class SequelizeDeviceRepository
 
 	private async creareDeviceComputerIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DeviceDto,
+		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
 		const computer = (await this.models.DeviceComputer.findByPk(id)) ?? null
@@ -232,7 +248,7 @@ export class SequelizeDeviceRepository
 	}
 	private async creareDeviceHardDriveIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DeviceDto,
+		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
 		const hardDrive =
@@ -251,7 +267,7 @@ export class SequelizeDeviceRepository
 	}
 	private async creareDeviceMFPIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DeviceDto,
+		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
 		const mfp = (await this.models.DeviceMFP.findByPk(id)) ?? null
@@ -275,10 +291,7 @@ export class SequelizeDeviceRepository
 	async donwload(criteria: Criteria): Promise<{}> {
 		set_fs(fs)
 
-		const { data } = (await this.matching(criteria)) as {
-			total: number
-			data: DevicesApiResponse[]
-		}
+		const { data } = await this.matching(criteria)
 
 		const wbData = clearComputerDataset({ devices: data })
 		// Crear una nueva hoja de cálculo

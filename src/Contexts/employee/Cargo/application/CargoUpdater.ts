@@ -1,10 +1,11 @@
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CargoRepository } from '../domain/CargoRepository'
 import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
-import { Cargo, type CargoPrimitives } from '../domain/Cargo'
+import { Cargo } from '../domain/Cargo'
 import { CargoId } from '../domain/CargoId'
 import { CargoDoesNotExistError } from '../domain/CargoDoesNotExistError'
 import { UpdateCargoUseCase } from '../domain/UpdateCargoUseCase'
+import { type CargoParams } from '../domain/Cargo.dto'
 
 export class CargoUpdater {
 	private readonly updateCargoUseCase: UpdateCargoUseCase
@@ -23,7 +24,7 @@ export class CargoUpdater {
 		params
 	}: {
 		id: string
-		params: Partial<Omit<CargoPrimitives, 'id'>>
+		params: Partial<CargoParams>
 	}): Promise<void> {
 		const { name, departamentos } = params
 		const cargoId = new CargoId(id)

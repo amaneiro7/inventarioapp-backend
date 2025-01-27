@@ -1,18 +1,12 @@
 import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { ComputerValidation } from '../../../Features/Computer/application/ComputerValidation'
-import {
-	DeviceComputer,
-	type DeviceComputerPrimitives
-} from '../../../Features/Computer/domain/Computer'
+import { DeviceComputer } from '../../../Features/Computer/domain/Computer'
 import { HardDriveValidation } from '../../../Features/HardDrive/HardDrive/application/HardDriveValidation'
-import {
-	DeviceHardDrive,
-	type DeviceHardDrivePrimitives
-} from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
-import { DeviceMFPPrimitives, MFP } from '../../../Features/MFP/domain/MFP'
+import { DeviceHardDrive } from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
+import { MFP } from '../../../Features/MFP/domain/MFP'
 import { HistoryCreator } from '../../../History/application/HistoryCreator'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { Device, type DevicePrimitives } from '../domain/Device'
+import { Device } from '../domain/Device'
 import { DeviceActivo } from '../domain/DeviceActivo'
 import { DeviceEmployee } from '../domain/DeviceEmployee'
 import { DeviceLocation } from '../domain/DeviceLocation'
@@ -26,8 +20,10 @@ import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
-
-export interface DeviceParams extends Omit<DevicePrimitives, 'id'> {}
+import { type DeviceParams } from '../domain/Device.dto'
+import { type DeviceComputerParams } from '../../../Features/Computer/domain/Computer.dto'
+import { type DeviceHardDriveParams } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
+import { type DeviceMFPParams } from '../../../Features/MFP/domain/MFP.dto'
 
 export class DeviceCreator {
 	constructor(
@@ -52,17 +48,17 @@ export class DeviceCreator {
 		let device
 		// Si es computadora
 		if (DeviceComputer.isComputerCategory({ categoryId })) {
-			const computerParams = params as DeviceComputerPrimitives
+			const computerParams = params as DeviceComputerParams
 			device = await this.computerValidation.run(computerParams)
 		}
 		// Si es Disco Duro
 		else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-			const hddParams = params as DeviceHardDrivePrimitives
+			const hddParams = params as DeviceHardDriveParams
 			device = await this.hardDriveValidation.run(hddParams)
 		}
 		// Si es Impresora Multifuncional
 		else if (MFP.isMFPCategory({ categoryId })) {
-			const mfpParams = params as DeviceMFPPrimitives
+			const mfpParams = params as DeviceMFPParams
 			device = MFP.create(mfpParams)
 		}
 		// Si es otro

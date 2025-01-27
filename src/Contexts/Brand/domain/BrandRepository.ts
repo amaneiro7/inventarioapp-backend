@@ -2,7 +2,7 @@ import { type Criteria } from '../../Shared/domain/criteria/Criteria'
 import { type Nullable } from '../../Shared/domain/Nullable'
 import { type BrandDto, type BrandParams } from './Brand.dto'
 import { type GenericRepository } from '../../Shared/domain/GenericRepository'
-import { ResponseDB } from '../../Shared/domain/ResponseType'
+import { type ResponseDB } from '../../Shared/domain/ResponseType'
 
 export abstract class BrandRepository implements GenericRepository<BrandDto> {
 	abstract save(payload: BrandParams): Promise<void>

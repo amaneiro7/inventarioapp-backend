@@ -1,13 +1,8 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
+import { CargoDto, type CargoParams, type CargoPrimitives } from './Cargo.dto'
 import { CargoId } from './CargoId'
 import { CargoName } from './CargoName'
-
-export interface CargoPrimitives {
-	id: Primitives<CargoId>
-	name: Primitives<CargoName>
-	departamentos: Primitives<DepartmentId>[]
-}
 
 export class Cargo {
 	constructor(
@@ -16,7 +11,7 @@ export class Cargo {
 		private departamentos: DepartmentId[]
 	) {}
 
-	static create(params: Omit<CargoPrimitives, 'id'>): Cargo {
+	static create(params: CargoParams): Cargo {
 		const id = CargoId.random().value
 		const Departamentos = params.departamentos.map(
 			deps => new DepartmentId(deps)
@@ -28,11 +23,11 @@ export class Cargo {
 		)
 	}
 
-	static fromPrimitives(primitives: CargoPrimitives): Cargo {
+	static fromPrimitives(primitives: CargoDto): Cargo {
 		return new Cargo(
 			new CargoId(primitives.id),
 			new CargoName(primitives.name),
-			primitives.departamentos.map(deps => new DepartmentId(deps))
+			primitives.departamentos.map(deps => new DepartmentId(deps.id))
 		)
 	}
 

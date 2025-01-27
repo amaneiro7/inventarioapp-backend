@@ -10,7 +10,7 @@ export class DeviceRemover {
 		const deviceId = new DeviceId(id).toString()
 
 		const device = await this.deviceRepository.searchById(deviceId)
-		if (device === null) {
+		if (!device) {
 			throw new DeviceDoesNotExistError(id)
 		}
 

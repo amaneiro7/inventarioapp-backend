@@ -12,9 +12,12 @@ export type CargoPrimitives = Cargo & {
 	departamentos: DepartmentId['value'][]
 }
 
-export type CargoParams = Cargo & {
-	departamentos: DepartmentId['value'][]
-}
+export type CargoParams = Omit<
+	Cargo & {
+		departamentos: DepartmentId['value'][]
+	},
+	'id'
+>
 
 export type CargoDto = Cargo & {
 	departamentos: DepartamentoDto[]

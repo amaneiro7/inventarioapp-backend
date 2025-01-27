@@ -1,20 +1,21 @@
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
-import {
-	Departamento,
-	type DepartamentoPrimitives
-} from '../domain/Departamento'
+import { Departamento } from '../domain/Departamento'
 import { UpdateDepartamentoUseCase } from '../domain/UpdateDepartmentoUseCase'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type VicepresidenciaEjecutivaPrimitives } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva'
 import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
+import {
+	type DepartamentoParams,
+	type DepartamentoDto
+} from '../domain/Departamento.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class DepartamentoUpdater {
 	private readonly updateDepartamentoUseCase: UpdateDepartamentoUseCase
 	constructor(
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {
@@ -31,7 +32,7 @@ export class DepartamentoUpdater {
 		params
 	}: {
 		id: string
-		params: Partial<Omit<DepartamentoPrimitives, 'id'>>
+		params: Partial<DepartamentoParams>
 	}): Promise<void> {
 		const { name, cargos, vicepresidenciaEjecutivaId, centroCostoId } =
 			params

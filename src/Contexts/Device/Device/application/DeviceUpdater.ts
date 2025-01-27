@@ -1,8 +1,5 @@
 import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import {
-	DeviceComputer,
-	type DeviceComputerPrimitives
-} from '../../../Features/Computer/domain/Computer'
+import { DeviceComputer } from '../../../Features/Computer/domain/Computer'
 import { ComputerHardDriveCapacity } from '../../../Features/Computer/domain/ComputerHardDriveCapacity'
 import { ComputerHardDriveType } from '../../../Features/Computer/domain/ComputerHardDriveType'
 import { ComputerMemoryRam } from '../../../Features/Computer/domain/ComputerMemoryRam'
@@ -12,10 +9,7 @@ import { ComputerOperatingSystemArq } from '../../../Features/Computer/domain/Co
 import { ComputerProcessor } from '../../../Features/Computer/domain/ComputerProcessor'
 import { IPAddress } from '../../../Features/Computer/domain/IPAddress'
 import { MACAddress } from '../../../Features/Computer/domain/MACAddress'
-import {
-	DeviceHardDrive,
-	type DeviceHardDrivePrimitives
-} from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
+import { DeviceHardDrive } from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { HardDriveHealth } from '../../../Features/HardDrive/HardDrive/domain/HardDriveHealth'
 import { HDDCapacity } from '../../../Features/HardDrive/HardDrive/domain/HDDCapacity'
 import { HDDType } from '../../../Features/HardDrive/HardDrive/domain/HDDType'
@@ -41,14 +35,14 @@ import { type OperatingSystemRepository } from '../../../Features/OperatingSyste
 import { type OperatingSystemArqRepository } from '../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
 import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
 import { type DevicesApiResponse } from '../infrastructure/sequelize/DeviceResponse'
-import { type DeviceParams } from './DeviceCreator'
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
-
-export interface PartialDeviceParams extends DeviceParams {}
+import { DeviceParams } from '../domain/Device.dto'
+import { DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer.dto'
+import { DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 
 export class DeviceUpdater {
 	constructor(
@@ -70,10 +64,9 @@ export class DeviceUpdater {
 		user
 	}: {
 		id: Primitives<DeviceId>
-		params: PartialDeviceParams
+		params: Partial<DeviceParams>
 		user?: JwtPayloadUser
 	}): Promise<void> {
-		const { categoryId } = params
 		// Extraemos el id del device a actualizar
 		const deviceId = new DeviceId(id).value
 
@@ -88,7 +81,9 @@ export class DeviceUpdater {
 		// Creamos una instancia de la entidad Device a partir de los datos obtenidos
 		let deviceEntity
 		let oldDeviceEntity
-		if (DeviceComputer.isComputerCategory({ categoryId })) {
+		if (
+			DeviceComputer.isComputerCategory({ categoryId: device.categoryId })
+		) {
 			// Si el device es de tipo computadora, obtenemos los datos de la tabla computer
 			const { computer } = device as unknown as DevicesApiResponse
 			if (!computer) {
@@ -177,7 +172,11 @@ export class DeviceUpdater {
 				macAddress,
 				entity: deviceEntity
 			})
-		} else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
+		} else if (
+			DeviceHardDrive.isHardDriveCategory({
+				categoryId: device.categoryId
+			})
+		) {
 			// Si el device es de tipo hard drive, obtenemos los datos de la tabla hard_drive
 			const { hardDrive } = device as unknown as DevicesApiResponse
 			if (!hardDrive) {
@@ -260,7 +259,7 @@ export class DeviceUpdater {
 		params,
 		deviceEntity
 	}: {
-		params: PartialDeviceParams
+		params: Partial<DeviceParams>
 		deviceEntity: Device
 	}): Promise<void> {
 		const {

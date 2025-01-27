@@ -4,6 +4,8 @@ import { type BrandDto } from '../../domain/Brand.dto'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { BrandModel } from './BrandSchema'
 import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { TimeTolive } from '../../../Shared/domain/CacheRepository'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 
 export class SequelizeBrandRepository
 	extends SequelizeCriteriaConverter
@@ -13,17 +15,24 @@ export class SequelizeBrandRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<{ total: number; data: BrandDto[] }> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<BrandDto>> {
 		const options = this.convert(criteria)
 
-		const { count, rows } = await BrandModel.findAndCountAll(options)
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria: criteria,
+			ex: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const { count, rows } = await BrandModel.findAndCountAll(
+					options
+				)
 
-		return {
-			total: count,
-			data: rows
-		}
+				return {
+					total: count,
+					data: rows
+				}
+			}
+		})
 	}
 
 	async searchById(id: string): Promise<BrandDto | null> {
@@ -37,19 +46,17 @@ export class SequelizeBrandRepository
 	async save(payload: BrandDto): Promise<void> {
 		const { id } = payload
 		const brand = (await BrandModel.findByPk(id)) ?? null
-		if (brand === null) {
+		if (!brand) {
 			await BrandModel.create({ ...payload })
 		} else {
 			brand.set({ ...payload })
 			await brand.save()
 		}
-		await this.cache.removeCachedData(this.cacheKey)
-		// await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 
 	async remove(id: string): Promise<void> {
 		await BrandModel.destroy({ where: { id } })
-		await this.cache.removeCachedData(this.cacheKey)
-		// await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }
