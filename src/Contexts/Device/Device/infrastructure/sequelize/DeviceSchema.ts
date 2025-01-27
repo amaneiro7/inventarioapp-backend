@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type DevicePrimitives } from '../../domain/Device'
 
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
@@ -13,6 +12,7 @@ import { type DeviceLocation } from '../../domain/DeviceLocation'
 import { type DeviceModelSeries } from '../../domain/DeviceModelSeries'
 import { type DeviceStatus } from '../../domain/DeviceStatus'
 import { type DeviceStocknumber } from '../../domain/DeviceStock'
+import { type DevicePrimitives } from '../../domain/Device.dto'
 import { StatusId } from '../../../Status/domain/StatusId'
 
 export class DeviceModel

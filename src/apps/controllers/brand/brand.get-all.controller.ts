@@ -9,13 +9,12 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class BrandGetFinderAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const url = new URL(req.url)
 			const convert = new CriteriaFromUrlConverter()
-			const query = convert.toCriteria(url)
+			const query = convert.toCriteria(req)
 			const getAll: BrandFinderAll = container.resolve(
 				BrandDependencies.FinderAll
 			)
-			const data = await getAll.run()
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)

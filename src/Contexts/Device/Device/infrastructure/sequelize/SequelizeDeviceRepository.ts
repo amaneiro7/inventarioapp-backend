@@ -2,7 +2,6 @@ import { set_fs, utils, write } from 'xlsx'
 import fs from 'node:fs'
 
 import { type Transaction } from 'sequelize'
-import { type DevicePrimitives } from '../../domain/Device'
 import { type DeviceRepository } from '../../domain/DeviceRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/DeviceId'
@@ -19,6 +18,7 @@ import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { clearComputerDataset } from './clearComputerDataset'
 import { CategoryModel } from '../../../../Category/Category/infrastructure/Sequelize/CategorySchema'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { type DeviceDto } from '../../domain/Device.dto'
 
 export class SequelizeDeviceRepository
 	extends SequelizeCriteriaConverter
@@ -30,7 +30,7 @@ export class SequelizeDeviceRepository
 		super()
 	}
 
-	async searchAll(): Promise<DevicePrimitives[]> {
+	async searchAll(): Promise<DeviceDto[]> {
 		return await this.cache.getCachedData(this.cacheKey, async () => {
 			return await CategoryModel.findAll()
 		})
@@ -38,15 +38,16 @@ export class SequelizeDeviceRepository
 
 	async matching(
 		criteria: Criteria
-	): Promise<{ total: number; data: DevicePrimitives[] }> {
+	): Promise<{ total: number; data: DeviceDto[] }> {
 		const options = this.convert(criteria)
 
 		const deviceOptions = new DeviceAssociation().convertFilterLocation(
 			criteria,
 			options
 		)
-		const { count: total, rows: data } =
-			await DeviceModel.findAndCountAll(deviceOptions)
+		const { count: total, rows: data } = await DeviceModel.findAndCountAll(
+			deviceOptions
+		)
 
 		return {
 			total,
@@ -54,7 +55,7 @@ export class SequelizeDeviceRepository
 		}
 	}
 
-	async searchById(id: string): Promise<DevicePrimitives | null> {
+	async searchById(id: string): Promise<DeviceDto | null> {
 		return (
 			(await DeviceModel.findByPk(id, {
 				include: [
@@ -106,11 +107,11 @@ export class SequelizeDeviceRepository
 		)
 	}
 
-	async searchByActivo(activo: string): Promise<DevicePrimitives | null> {
+	async searchByActivo(activo: string): Promise<DeviceDto | null> {
 		return (await DeviceModel.findOne({ where: { activo } })) ?? null
 	}
 
-	async searchBySerial(serial: string): Promise<DevicePrimitives | null> {
+	async searchBySerial(serial: string): Promise<DeviceDto | null> {
 		return (await DeviceModel.findOne({ where: { serial } })) ?? null
 	}
 
@@ -134,7 +135,7 @@ export class SequelizeDeviceRepository
 	 *
 	 * @param payload - Device data to be saved
 	 */
-	async save(payload: DevicePrimitives): Promise<void> {
+	async save(payload: DeviceDto): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
 			const {
@@ -213,7 +214,7 @@ export class SequelizeDeviceRepository
 
 	private async creareDeviceComputerIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DevicePrimitives,
+		payload: DeviceDto,
 		transaction: Transaction
 	): Promise<void> {
 		const computer = (await this.models.DeviceComputer.findByPk(id)) ?? null
@@ -231,7 +232,7 @@ export class SequelizeDeviceRepository
 	}
 	private async creareDeviceHardDriveIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DevicePrimitives,
+		payload: DeviceDto,
 		transaction: Transaction
 	): Promise<void> {
 		const hardDrive =
@@ -250,7 +251,7 @@ export class SequelizeDeviceRepository
 	}
 	private async creareDeviceMFPIfCategoryMatches(
 		id: Primitives<DeviceId>,
-		payload: DevicePrimitives,
+		payload: DeviceDto,
 		transaction: Transaction
 	): Promise<void> {
 		const mfp = (await this.models.DeviceMFP.findByPk(id)) ?? null

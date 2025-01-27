@@ -23,13 +23,13 @@ export const register = async (router: Router) => {
 
 	router.get(
 		'/departamentos/',
-		// authenticate,
+		authenticate,
 		getAllController.run.bind(getAllController)
 	)
 
 	router.get(
 		'/departamentos/:id',
-		// authenticate,
+		authenticate,
 		getController.run.bind(getController)
 	)
 

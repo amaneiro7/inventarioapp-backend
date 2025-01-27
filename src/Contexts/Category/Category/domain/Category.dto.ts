@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type MainCategoryId } from '../../MainCategory/domain/MainCategoryId'
-import { type MainCategoryDto } from '../../MainCategory/domain/MainCategoryId.dto'
+import { type MainCategoryDto } from '../../MainCategory/domain/MainCategory.dto'
 import { type CategoryId } from './CategoryId'
 import { type CategoryName } from './CategoryName'
 

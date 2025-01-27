@@ -1,9 +1,12 @@
+import { type Request } from 'express'
+import { type FiltersPrimitives } from '../../domain/criteria/Filter'
 import { Criteria } from '../../domain/criteria/Criteria'
-import { FiltersPrimitives } from '../../domain/criteria/Filter'
 
 export class CriteriaFromUrlConverter {
-	public toCriteria(url: URL): Criteria {
-		const { searchParams } = url
+	public toCriteria(req: Request): Criteria {
+		const searchParams = new URLSearchParams(
+			req.query as unknown as Record<string, string>
+		)
 
 		const filters = this.parseFilters(searchParams)
 

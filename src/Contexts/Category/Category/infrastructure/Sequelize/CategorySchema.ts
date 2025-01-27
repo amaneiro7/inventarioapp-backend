@@ -1,17 +1,19 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type CategoryPrimitives } from '../../domain/Category'
 import { type CategoryId } from '../../domain/CategoryId'
 import { type CategoryName } from '../../domain/CategoryName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type MainCategoryId } from '../../../MainCategory/domain/MainCategoryId'
+import { type CategoryDto } from '../../domain/Category.dto'
+import { type MainCategoryDto } from '../../../MainCategory/domain/MainCategory.dto'
 
 export class CategoryModel
-	extends Model<CategoryPrimitives>
-	implements CategoryPrimitives
+	extends Model<Omit<CategoryDto, 'mainCategory'>>
+	implements CategoryDto
 {
 	declare id: Primitives<CategoryId>
 	declare name: Primitives<CategoryName>
 	declare mainCategoryId: Primitives<MainCategoryId>
+	declare mainCategory: MainCategoryDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.MainCategory, {

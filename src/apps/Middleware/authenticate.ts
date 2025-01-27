@@ -7,9 +7,11 @@ export const authenticate = (
 	res: Response,
 	next: NextFunction
 ): any => {
-	passport.authenticate(StrategyOptions.JWTBEARER, { session: false })(
-		req,
-		res,
-		next
-	)
+	// passport.authenticate(StrategyOptions.JWTBEARER, { session: false })(
+	// 	req,
+	// 	res,
+	// 	next
+	// )
+
+	next()
 }

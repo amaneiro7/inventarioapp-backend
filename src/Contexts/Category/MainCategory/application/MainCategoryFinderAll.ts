@@ -1,6 +1,6 @@
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type MainCategoryDto } from '../domain/MainCategoryId.dto'
+import { type MainCategoryDto } from '../domain/MainCategory.dto'
 import { type MainCategoryRepository } from '../domain/MainCategoryRepository'
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 

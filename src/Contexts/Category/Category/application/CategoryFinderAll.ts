@@ -14,13 +14,11 @@ export class CategoriesFinderAll extends GetAllBaseService<CategoryDto> {
 			criteria
 		)
 
-		return {
+		return this.response({
 			data,
-			info: {
-				total,
-				page: criteria.pageNumber ?? 1,
-				totalPage: this.calcularPaginas(total, criteria.pageNumber)
-			}
-		}
+			total,
+			pageNumber: criteria.pageNumber,
+			pageSize: criteria.pageSize
+		})
 	}
 }

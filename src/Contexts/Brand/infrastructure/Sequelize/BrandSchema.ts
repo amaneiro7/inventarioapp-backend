@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type BrandPrimitives } from '../../domain/Brand'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type BrandId } from '../../domain/BrandId'
 import { type BrandName } from '../../domain/BrandName'
+import { type BrandPrimitives } from '../../domain/Brand.dto'
 
 export class BrandModel
 	extends Model<BrandPrimitives>

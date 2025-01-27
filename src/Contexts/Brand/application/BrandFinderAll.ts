@@ -12,13 +12,11 @@ export class BrandFinderAll extends GetAllBaseService<BrandDto> {
 	async run(criteria: Criteria): Promise<ResponseService<Brand>> {
 		const { data, total } = await this.brandRepository.searchAll(criteria)
 
-		return {
+		return this.response({
 			data,
-			info: {
-				total,
-				page: criteria.pageNumber ?? 1,
-				totalPage: this.calcularPaginas(total, criteria.pageNumber)
-			}
-		}
+			total,
+			pageSize: criteria.pageSize,
+			pageNumber: criteria.pageNumber
+		})
 	}
 }

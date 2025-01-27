@@ -25,8 +25,10 @@ export class SequelizeCriteriaConverter {
 		>([
 			[Operator.EQUAL, this.equalFilter], // [Operador, función]
 			[Operator.NOT_EQUAL, this.notEqualFilter], // [Operador, función]
-			[Operator.GT, this.greaterThanFilter], // [Operador, función]
-			[Operator.LT, this.lowerThanFilter], // [Operador, función]
+			[Operator.GREATER_THAN, this.greaterThanFilter], // [Operador, función]
+			[Operator.GREATER_THAN_OR_EQUAL, this.greaterThanOrEqualFilter], // [Operador, función]
+			[Operator.LOWER_THAN, this.lowerThanFilter], // [Operador, función]
+			[Operator.LOWER_THAN_OR_EQUAL, this.lowerThanOrEqualFilter], // [Operador, función]
 			[Operator.CONTAINS, this.containsFilter], // [Operador, función]
 			[Operator.NOT_CONTAINS, this.notContainsFilter] // [Operador, función]
 		])
@@ -46,12 +48,12 @@ export class SequelizeCriteriaConverter {
 			]
 		}
 
-		if (criteria.limit !== undefined) {
-			query.limit = criteria.limit
+		if (criteria.pageSize) {
+			query.limit = criteria.pageSize
 		}
 
-		if (criteria.limit !== undefined && criteria.offset !== undefined) {
-			query.offset = criteria.offset
+		if (criteria.pageSize && criteria.pageNumber) {
+			query.offset = criteria.pageNumber * criteria.pageSize
 		}
 
 		return query
@@ -147,9 +149,19 @@ export class SequelizeCriteriaConverter {
 	private greaterThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.gt]: filter.value } }
 	}
+	private greaterThanOrEqualFilter(
+		filter: FiltersPrimitives
+	): FindOptions['where'] {
+		return { [filter.field]: { [Op.gte]: filter.value } }
+	}
 
 	private lowerThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.lt]: filter.value } }
+	}
+	private lowerThanOrEqualFilter(
+		filter: FiltersPrimitives
+	): FindOptions['where'] {
+		return { [filter.field]: { [Op.lte]: filter.value } }
 	}
 
 	private containsFilter(filter: FiltersPrimitives): FindOptions['where'] {
