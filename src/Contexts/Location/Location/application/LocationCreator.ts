@@ -1,10 +1,11 @@
-import { Location, type LocationPrimitives } from '../domain/Location'
+import { Location } from '../domain/Location'
 import { LocationName } from '../domain/LocationName'
 import { LocationSite } from '../domain/LocationSite'
 import { LocationTypeOfSite } from '../domain/LocationTypeOfSite'
 import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
+import { type LocationParams } from '../domain/Location.dto'
 
 export class LocationCreator {
 	constructor(
@@ -13,7 +14,7 @@ export class LocationCreator {
 		private readonly siteRepository: SiteRepository
 	) {}
 
-	async run(params: Omit<LocationPrimitives, 'id'>): Promise<void> {
+	async run(params: LocationParams): Promise<void> {
 		const location = Location.create(params)
 
 		await LocationName.ensureNameDoesNotExit({

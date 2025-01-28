@@ -1,4 +1,4 @@
-import { Location, type LocationPrimitives } from '../domain/Location'
+import { Location } from '../domain/Location'
 import { LocationDoesNotExistError } from '../domain/LocationDoesNotExistError'
 import { LocationId } from '../domain/LocationId'
 import { LocationName } from '../domain/LocationName'
@@ -9,6 +9,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
+import { type LocationParams } from '../domain/Location.dto'
 
 export class LocationUpdater {
 	constructor(
@@ -22,7 +23,7 @@ export class LocationUpdater {
 		params
 	}: {
 		id: Primitives<LocationId>
-		params: Partial<Omit<LocationPrimitives, 'id'>>
+		params: Partial<LocationParams>
 	}): Promise<void> {
 		const locationId = new LocationId(id).value
 		const location = await this.locationRepository.searchById(locationId)
