@@ -14,7 +14,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeVicepresidenciaEjecutivaRepositorye
+export class SequelizeVicepresidenciaEjecutivaRepository
 	extends CriteriaToSequelizeConverter
 	implements DepartmentRepository<VicepresidenciaEjecutivaDto>
 {
