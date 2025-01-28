@@ -1,11 +1,7 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type StatusDto, type StatusPrimitives } from './Status.dto'
 import { StatusId } from './StatusId'
 import { StatusName } from './StatusName'
-
-export interface StatusPrimitives {
-	id: Primitives<StatusId>
-	name: Primitives<StatusName>
-}
 
 export class Status {
 	constructor(
@@ -13,14 +9,14 @@ export class Status {
 		private readonly name: StatusName
 	) {}
 
-	static fromPrimitives(primitives: StatusPrimitives): Status {
+	static fromPrimitives(primitives: StatusDto): Status {
 		return new Status(
 			new StatusId(primitives.id),
 			new StatusName(primitives.name)
 		)
 	}
 
-	toPrimitive(): any {
+	toPrimitive(): StatusPrimitives {
 		return {
 			id: this.id.value,
 			name: this.name.value

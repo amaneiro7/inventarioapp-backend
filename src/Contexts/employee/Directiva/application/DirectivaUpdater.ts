@@ -1,13 +1,17 @@
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { Directiva, type DirectivaPrimitives } from '../domain/Directiva'
+import { Directiva } from '../domain/Directiva'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { UpdateDirectivaUseCase } from '../domain/UpdateDirectivaUseCase'
+import {
+	type DirectivaParams,
+	type DirectivaDto
+} from '../domain/Directiva.dto'
 
 export class DirectivaUpdater {
 	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
 	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaPrimitives>
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {
 		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(
 			directivaRepository
@@ -19,7 +23,7 @@ export class DirectivaUpdater {
 		params
 	}: {
 		id: string
-		params: Omit<DirectivaPrimitives, 'id'>
+		params: Partial<DirectivaParams>
 	}): Promise<void> {
 		const { name } = params
 		const directivaId = new DepartmentId(id)

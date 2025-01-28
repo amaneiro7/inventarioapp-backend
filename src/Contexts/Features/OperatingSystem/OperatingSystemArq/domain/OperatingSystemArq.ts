@@ -1,12 +1,10 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type OperatingSystemArqDto,
+	type OperatingSystemArqPrimitives
+} from './OperatingSystemArq.dto'
 import { OperatingSystemArqId } from './OperatingSystemArqID'
 import { OperatingSystemArqName } from './OperatingSystemArqName'
-
-export interface OperatingSystemArqPrimitives {
-	id: Primitives<OperatingSystemArqId>
-	name: Primitives<OperatingSystemArqName>
-}
-
 export class OperatingSystemArq {
 	constructor(
 		private readonly id: OperatingSystemArqId,
@@ -14,7 +12,7 @@ export class OperatingSystemArq {
 	) {}
 
 	static fromPrimitives(
-		primitives: OperatingSystemArqPrimitives
+		primitives: OperatingSystemArqDto
 	): OperatingSystemArq {
 		return new OperatingSystemArq(
 			new OperatingSystemArqId(primitives.id),
@@ -22,7 +20,7 @@ export class OperatingSystemArq {
 		)
 	}
 
-	toPrimitive(): any {
+	toPrimitive(): OperatingSystemArqPrimitives {
 		return {
 			id: this.id.value,
 			name: this.name.value

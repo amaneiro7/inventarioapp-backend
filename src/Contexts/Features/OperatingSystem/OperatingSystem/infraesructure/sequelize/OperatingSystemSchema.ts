@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type OperatingSystemPrimitives } from '../../domain/OperatingSystem'
+import { type OperatingSystemDto } from '../../domain/OperatingSystem.dto'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type OperatingSystemId } from '../../domain/OperatingSystemId'
 import { type OperatingSystemVersion } from '../../domain/OperatingSystemVersion'
 
 export class OperatingSystemModel
-	extends Model<OperatingSystemPrimitives>
-	implements OperatingSystemPrimitives
+	extends Model<OperatingSystemDto>
+	implements OperatingSystemDto
 {
 	declare id: Primitives<OperatingSystemId>
 	declare name: Primitives<OperatingSystemVersion>

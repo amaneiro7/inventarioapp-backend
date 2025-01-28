@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DirectivaPrimitives } from '../../domain/Directiva'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
+import { type DirectivaDto } from '../../domain/Directiva.dto'
 
 export class DirectivaModel
-	extends Model<DirectivaPrimitives>
-	implements DirectivaPrimitives
+	extends Model<DirectivaDto>
+	implements DirectivaDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>

@@ -1,16 +1,18 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type VicepresidenciaEjecutivaPrimitives } from '../../domain/VicepresidenciaEjecutiva'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
+import { type VicepresidenciaEjecutivaDto } from '../../domain/VicepresidenciaEjecutiva.dto'
+import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 
 export class VicepresidenciaEjecutivaModel
-	extends Model<VicepresidenciaEjecutivaPrimitives>
-	implements VicepresidenciaEjecutivaPrimitives
+	extends Model<Omit<VicepresidenciaEjecutivaDto, 'directiva'>>
+	implements VicepresidenciaEjecutivaDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
 	declare directivaId: Primitives<DepartmentId>
+	declare directiva: DirectivaDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Directiva, {

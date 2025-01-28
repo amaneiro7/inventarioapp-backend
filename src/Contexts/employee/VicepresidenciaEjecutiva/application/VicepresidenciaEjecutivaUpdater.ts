@@ -1,18 +1,19 @@
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { UpdateVicepresidenciaEjecutivaUseCase } from '../domain/UpdateVicepresidenciaEjecutivaUseCase'
-import {
-	VicepresidenciaEjecutiva,
-	type VicepresidenciaEjecutivaPrimitives
-} from '../domain/VicepresidenciaEjecutiva'
+import { VicepresidenciaEjecutiva } from '../domain/VicepresidenciaEjecutiva'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type DirectivaPrimitives } from '../../Directiva/domain/Directiva'
+import {
+	type VicepresidenciaEjecutivaDto,
+	type VicepresidenciaEjecutivaParams
+} from '../domain/VicepresidenciaEjecutiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 
 export class VicepresidenciaEjecutivaUpdater {
 	private readonly updateVicepresidenciaEjecutivaUseCase: UpdateVicepresidenciaEjecutivaUseCase
 	constructor(
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaPrimitives>
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {
 		this.updateVicepresidenciaEjecutivaUseCase =
 			new UpdateVicepresidenciaEjecutivaUseCase(
@@ -26,7 +27,7 @@ export class VicepresidenciaEjecutivaUpdater {
 		params
 	}: {
 		id: string
-		params: Partial<Omit<VicepresidenciaEjecutivaPrimitives, 'id'>>
+		params: Partial<VicepresidenciaEjecutivaParams>
 	}): Promise<void> {
 		const { name, directivaId } = params
 		const vpeId = new DepartmentId(id)

@@ -1,22 +1,25 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
-import { type VicepresidenciaEjecutivaPrimitives } from './VicepresidenciaEjecutiva'
-import { type DirectivaPrimitives } from '../../Directiva/domain/Directiva'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlreadyExistError'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
+import {
+	type VicepresidenciaEjecutivaParams,
+	type VicepresidenciaEjecutivaDto
+} from './VicepresidenciaEjecutiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 
 export class CreateVicepresidenciaEjecutivaUseCase {
 	constructor(
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaPrimitives>
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {}
 
 	public async execute({
 		name,
 		directivaId
-	}: Omit<VicepresidenciaEjecutivaPrimitives, 'id'>): Promise<void> {
+	}: VicepresidenciaEjecutivaParams): Promise<void> {
 		await this.ensureVicepresidenciaEjecutivaDoesNotExist(name)
 
 		await this.ensuredirectivaExists(directivaId)

@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type DeviceComputerPrimitives } from '../../domain/Computer'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
 import { type ProcessorId } from '../../../Processor/Processor/domain/ProcessorId'
@@ -13,7 +12,7 @@ import { type ComputerHardDriveType } from '../../domain/ComputerHardDriveType'
 import { type ComputerOperatingSystem } from '../../domain/ComputerOperatingSystem'
 import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingSystemArq'
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
-
+import { type DeviceComputerPrimitives } from '../../domain/Computer.dto'
 import { CategoryValues } from '../../../../Category/Category/domain/Category'
 
 interface DeviceComputerCreationAttributes

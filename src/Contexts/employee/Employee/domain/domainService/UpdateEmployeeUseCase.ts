@@ -1,4 +1,4 @@
-import { Employee, type EmployeePrimitives } from '../entity/Employee'
+import { Employee } from '../entity/Employee'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../../Location/Location/domain/LocationRepository'
@@ -8,7 +8,6 @@ import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { type EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type CargoRepository } from '../../../Cargo/domain/CargoRepository'
-import { type DepartamentoPrimitives } from '../../../Departamento/domain/Departamento'
 import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
 import { type EmployeeUserName } from '../valueObject/EmployeeUsername'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
@@ -18,6 +17,8 @@ import { type Extension } from '../valueObject/Extension'
 import { type PhoneNumber } from '../valueObject/PhoneNumber'
 import { type EmployeeName } from '../valueObject/EmployeeName'
 import { type EmployeeLastName } from '../valueObject/EmployeeLastName'
+import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type EmployeeParams } from '../entity/Employee.dto'
 import { EmployeeTypes } from '../valueObject/EmployeeType'
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
@@ -32,7 +33,7 @@ export class UpdateEmployeeUseCase {
 		private readonly employeeRepository: EmployeeRepository,
 		private readonly centroTrabajoRepository: CentroTrabajoRepository,
 		private readonly locationRepository: LocationRepository,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
@@ -41,10 +42,7 @@ export class UpdateEmployeeUseCase {
 		params
 	}: {
 		params: Partial<
-			Omit<
-				EmployeePrimitives,
-				'id' | 'employeeCode' | 'cedula' | 'nationality'
-			>
+			Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>
 		>
 		entity: Employee
 	}): Promise<void> {

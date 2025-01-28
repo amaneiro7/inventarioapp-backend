@@ -4,29 +4,56 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { DepartmentId } from '../../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../../IDepartment/DepartmentName'
-import { VicepresidenciaEjecutivaPrimitives } from '../../domain/VicepresidenciaEjecutiva'
 import { VicepresidenciaEjecutivaModel } from './VicepresidenciaEjecutivaSchema'
+import {
+	type VicepresidenciaEjecutivaDto,
+	type VicepresidenciaEjecutivaPrimitives
+} from '../../domain/VicepresidenciaEjecutiva.dto'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeVicepresidenciaEjecutivaRepository
-	implements DepartmentRepository<VicepresidenciaEjecutivaPrimitives>
+export class SequelizeVicepresidenciaEjecutivaRepositorye
+	extends CriteriaToSequelizeConverter
+	implements DepartmentRepository<VicepresidenciaEjecutivaDto>
 {
 	private readonly cacheKey: string = 'vicepresidenciaEjecutiva'
-	constructor(private readonly cache: CacheService) {}
-	async searchAll(): Promise<VicepresidenciaEjecutivaPrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await VicepresidenciaEjecutivaModel.findAll()
+	constructor(private readonly cache: CacheService) {
+		super()
+	}
+	async searchAll(
+		criteria: Criteria
+	): Promise<ResponseDB<VicepresidenciaEjecutivaDto>> {
+		const options = this.convert(criteria)
+
+		options.include = ['directiva']
+
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const { rows, count } =
+					await VicepresidenciaEjecutivaModel.findAndCountAll(options)
+
+				return {
+					data: rows,
+					total: count
+				}
+			}
 		})
 	}
 
 	async searchById(
 		id: Primitives<DepartmentId>
-	): Promise<Nullable<VicepresidenciaEjecutivaPrimitives>> {
+	): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return (await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
 	}
 
 	async searchByName(
 		name: Primitives<DepartmentName>
-	): Promise<Nullable<VicepresidenciaEjecutivaPrimitives>> {
+	): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return (
 			(await VicepresidenciaEjecutivaModel.findOne({
 				where: { name }
@@ -44,13 +71,11 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 			vicepresidenciaEjecutiva.set({ ...payload })
 			await vicepresidenciaEjecutiva.save()
 		}
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 
 	async remove(id: Primitives<DepartmentId>): Promise<void> {
 		await VicepresidenciaEjecutivaModel.destroy({ where: { id } })
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

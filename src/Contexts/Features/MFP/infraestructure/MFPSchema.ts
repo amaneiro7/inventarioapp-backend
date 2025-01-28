@@ -2,7 +2,7 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../Category/Category/domain/Category'
 import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type MFPIPAddress } from '../domain/MFPIPAddress'
-import { type DeviceMFPPrimitives } from '../domain/MFP'
+import { type DeviceMFPPrimitives } from '../domain/MFP.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
 

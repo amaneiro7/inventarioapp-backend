@@ -1,17 +1,16 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
+import { IDepartment } from '../../IDepartment/IDeparment'
 import {
-	IDepartment,
-	type DepartmentPrimitives
-} from '../../IDepartment/IDeparment'
+	type VicepresidenciaEjecutivaDto,
+	type VicepresidenciaEjecutivaParams,
+	type VicepresidenciaEjecutivaPrimitives
+} from './VicepresidenciaEjecutiva.dto'
 
 /**
  * Esta clase es el segundo nivel del organigrama laboral
  */
-export type VicepresidenciaEjecutivaPrimitives = DepartmentPrimitives & {
-	directivaId: Primitives<DepartmentId>
-}
 
 export class VicepresidenciaEjecutiva extends IDepartment {
 	constructor(
@@ -23,7 +22,7 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 	}
 
 	static create(
-		params: Omit<VicepresidenciaEjecutivaPrimitives, 'id'>
+		params: VicepresidenciaEjecutivaParams
 	): VicepresidenciaEjecutiva {
 		const id = DepartmentId.random().value
 		return new VicepresidenciaEjecutiva(
@@ -34,7 +33,7 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 	}
 
 	static fromPrimitives(
-		primitives: VicepresidenciaEjecutivaPrimitives
+		primitives: VicepresidenciaEjecutivaDto
 	): VicepresidenciaEjecutiva {
 		return new VicepresidenciaEjecutiva(
 			new DepartmentId(primitives.id),

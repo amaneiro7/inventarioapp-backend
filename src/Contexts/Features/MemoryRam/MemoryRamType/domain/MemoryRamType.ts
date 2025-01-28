@@ -1,11 +1,10 @@
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type MemoryRamTypeDto,
+	type MemoryRamTypePrimitives
+} from './MemoryRam.dto'
 import { MemoryRamTypeId } from './MemoryRamTypeId'
 import { MemoryRamTypeName } from './MemoryRamTypeName'
-
-export interface MemoryRamTypePrimitives {
-	id: Primitives<MemoryRamTypeId>
-	name: Primitives<MemoryRamTypeName>
-}
 
 export class MemoryRamType {
 	constructor(
@@ -13,7 +12,7 @@ export class MemoryRamType {
 		private readonly name: MemoryRamTypeName
 	) {}
 
-	static fromPrimitives(primitives: MemoryRamTypePrimitives): MemoryRamType {
+	static fromPrimitives(primitives: MemoryRamTypeDto): MemoryRamType {
 		return new MemoryRamType(
 			new MemoryRamTypeId(primitives.id),
 			new MemoryRamTypeName(primitives.name)

@@ -2,14 +2,12 @@ import { EmployeeId } from '../domain/valueObject/EmployeeId'
 import { EmployeeDoesNotExistError } from '../domain/Errors/EmployeeDoesNotExistError'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type EmployeePrimitives } from '../domain/entity/Employee'
+import { type EmployeeDto } from '../domain/entity/Employee.dto'
 
 export class EmployeeFinder {
 	constructor(private readonly employeeRepository: EmployeeRepository) {}
 
-	async run(params: {
-		id: Primitives<EmployeeId>
-	}): Promise<EmployeePrimitives> {
+	async run(params: { id: Primitives<EmployeeId> }): Promise<EmployeeDto> {
 		const { id } = params
 		const employeeId = new EmployeeId(id).value
 

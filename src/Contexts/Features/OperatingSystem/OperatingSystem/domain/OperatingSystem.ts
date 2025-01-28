@@ -1,11 +1,10 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type OperatingSystemDto,
+	type OperatingSystemPrimitives
+} from './OperatingSystem.dto'
 import { OperatingSystemId } from './OperatingSystemId'
 import { OperatingSystemVersion } from './OperatingSystemVersion'
-
-export interface OperatingSystemPrimitives {
-	id: Primitives<OperatingSystemId>
-	name: Primitives<OperatingSystemVersion>
-}
 
 export class OperatingSystem {
 	constructor(
@@ -13,9 +12,7 @@ export class OperatingSystem {
 		private readonly name: OperatingSystemVersion
 	) {}
 
-	static fromPrimitives(
-		primitives: OperatingSystemPrimitives
-	): OperatingSystem {
+	static fromPrimitives(primitives: OperatingSystemDto): OperatingSystem {
 		return new OperatingSystem(
 			new OperatingSystemId(primitives.id),
 			new OperatingSystemVersion(primitives.name)

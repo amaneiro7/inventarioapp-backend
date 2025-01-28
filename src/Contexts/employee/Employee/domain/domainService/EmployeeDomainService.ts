@@ -1,33 +1,22 @@
 import { EmployeeTypes } from '../valueObject/EmployeeType'
-import { Employee, type EmployeePrimitives } from '../entity/Employee'
-import {
-	GenericEmployee,
-	type GenericEmployeePrimitives
-} from '../entity/GenericEmployee'
-import {
-	RegularEmployee,
-	type RegularEmployeePrimitives
-} from '../entity/RegularEmployee'
-import {
-	ServiceEmployee,
-	type ServiceEmployeePrimitives
-} from '../entity/ServiceEmployee'
+import { Employee } from '../entity/Employee'
+import { GenericEmployee } from '../entity/GenericEmployee'
+import { RegularEmployee } from '../entity/RegularEmployee'
+import { ServiceEmployee } from '../entity/ServiceEmployee'
+import { type EmployeeParams } from '../entity/Employee.dto'
+import { type GenericEmployeeParams } from '../entity/GenericEmployee.dto'
+import { type RegularEmployeeParams } from '../entity/RegularEmployee.dto'
+import { type ServiceEmployeeParams } from '../entity/ServiceEmployee.dto'
 
 export class EmployeeUseCase {
-	execute(params: Omit<EmployeePrimitives, 'id'>) {
+	execute(params: EmployeeParams) {
 		let employee: Employee
 		if (params.type === EmployeeTypes.GENERIC) {
-			employee = GenericEmployee.create(
-				params as Omit<GenericEmployeePrimitives, 'id'>
-			)
+			employee = GenericEmployee.create(params as GenericEmployeeParams)
 		} else if (params.type === EmployeeTypes.REGULAR) {
-			employee = RegularEmployee.create(
-				params as Omit<RegularEmployeePrimitives, 'id'>
-			)
+			employee = RegularEmployee.create(params as RegularEmployeeParams)
 		} else if (params.type === EmployeeTypes.SERVICE) {
-			employee = ServiceEmployee.create(
-				params as Omit<ServiceEmployeePrimitives, 'id'>
-			)
+			employee = ServiceEmployee.create(params as ServiceEmployeeParams)
 		} else {
 			employee = Employee.create(params) // default to Employee
 		}

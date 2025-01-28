@@ -6,7 +6,6 @@ export type Mappings = { [key: string]: string }
 
 export class CriteriaToSequelizeConverter {
 	convert(criteria: Criteria, mappings: Mappings = {}): FindOptions {
-		console.log('CriteriaToSequelizeConverter:', criteria.pageSize)
 		const query: FindOptions = {}
 
 		if (criteria.hasFilters()) {
@@ -25,7 +24,7 @@ export class CriteriaToSequelizeConverter {
 		}
 
 		if (criteria.pageSize && criteria.pageNumber) {
-			query.offset = criteria.pageNumber
+			query.offset = (criteria.pageNumber - 1) * criteria.pageSize
 		}
 
 		return query

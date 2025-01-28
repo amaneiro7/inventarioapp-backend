@@ -1,8 +1,6 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeePrimitives, Employee } from './Employee'
+import { Employee } from './Employee'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { CargoId } from '../../../Cargo/domain/CargoId'
-import { CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { DepartmentId } from '../../../IDepartment/DepartmentId'
 import { EmployeeCedula } from '../valueObject/EmployeeCedula'
 import { EmployeeEmail } from '../valueObject/EmployeeEmail'
@@ -19,25 +17,7 @@ import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { Password } from './Password'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
-
-export interface ServiceEmployeePrimitives extends EmployeePrimitives {
-	id: Primitives<EmployeeId>
-	username: Primitives<EmployeeUserName>
-	type: EmployeeTypes.SERVICE
-	name: Primitives<EmployeeName>
-	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
-	isStillWorking: Primitives<EmployeeIsStillWorking>
-	employeeCode: Primitives<EmployeeCode>
-	nationality: Primitives<EmployeeNationality>
-	cedula: Primitives<EmployeeCedula>
-	centroTrabajoId: Primitives<CodCentroCosto>
-	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
-	cargoId: Primitives<CargoId>
-	extension: Primitives<Extension>[]
-	phone: Primitives<PhoneNumber>[]
-}
+import { ServiceEmployeeParams } from './ServiceEmployee.dto'
 
 export class ServiceEmployee extends Employee {
 	constructor(
@@ -87,14 +67,12 @@ export class ServiceEmployee extends Employee {
 			)
 		}
 	}
-	static create(
-		params: Omit<ServiceEmployeePrimitives, 'id'>
-	): ServiceEmployee {
+	static create(params: ServiceEmployeeParams): ServiceEmployee {
 		const id = EmployeeId.random().value
 		const password = Password.defaultPassword
 		return new ServiceEmployee(
 			new EmployeeId(id),
-			new EmployeeUserName(params.username),
+			new EmployeeUserName(params.userName),
 			new EmployeeType(params.type),
 			new EmployeeName(params.name),
 			new EmployeeLastName(params.lastName),

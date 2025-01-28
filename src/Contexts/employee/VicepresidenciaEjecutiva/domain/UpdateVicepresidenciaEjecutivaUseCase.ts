@@ -4,16 +4,17 @@ import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNot
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
-import { type DirectivaPrimitives } from '../../Directiva/domain/Directiva'
+import { type VicepresidenciaEjecutiva } from './VicepresidenciaEjecutiva'
+import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import {
-	type VicepresidenciaEjecutiva,
-	type VicepresidenciaEjecutivaPrimitives
-} from './VicepresidenciaEjecutiva'
+	type VicepresidenciaEjecutivaParams,
+	type VicepresidenciaEjecutivaDto
+} from './VicepresidenciaEjecutiva.dto'
 
 export class UpdateVicepresidenciaEjecutivaUseCase {
 	constructor(
-		private readonly vicepresidenciaEjecutivaaRepository: DepartmentRepository<VicepresidenciaEjecutivaPrimitives>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaPrimitives>
+		private readonly vicepresidenciaEjecutivaaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {}
 
 	public async execute({
@@ -21,7 +22,7 @@ export class UpdateVicepresidenciaEjecutivaUseCase {
 		entity
 	}: {
 		entity: VicepresidenciaEjecutiva
-		params: Partial<Omit<VicepresidenciaEjecutivaPrimitives, 'id'>>
+		params: Partial<VicepresidenciaEjecutivaParams>
 	}): Promise<void> {
 		await this.ensureVicepresidenciaEjecutivaDoesNotExist({ name, entity })
 		await this.ensureDirectivaExists({ directivaId, entity })

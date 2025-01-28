@@ -17,25 +17,12 @@ import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
+import {
+	type EmployeeDto,
+	type EmployeeParams,
+	type EmployeePrimitives
+} from './Employee.dto'
 
-export type EmployeePrimitives = {
-	id: Primitives<EmployeeId>
-	userName: Primitives<EmployeeUserName>
-	type: Primitives<EmployeeType>
-	name: Nullable<Primitives<EmployeeName>>
-	lastName: Nullable<Primitives<EmployeeLastName>>
-	email: Nullable<Primitives<EmployeeEmail>>
-	isStillWorking: Primitives<EmployeeIsStillWorking>
-	employeeCode: Nullable<Primitives<EmployeeCode>>
-	nationality: Nullable<Primitives<EmployeeNationality>>
-	cedula: Nullable<Primitives<EmployeeCedula>>
-	centroTrabajoId: Nullable<Primitives<CentroTrabajoId>>
-	locationId: Nullable<Primitives<EmployeeLocationId>>
-	departamentoId: Nullable<Primitives<DepartmentId>>
-	cargoId: Nullable<Primitives<CargoId>>
-	extension: Primitives<Extension>[]
-	phone: Primitives<PhoneNumber>[]
-}
 export class Employee {
 	constructor(
 		private readonly id: EmployeeId,
@@ -56,7 +43,7 @@ export class Employee {
 		private phone: PhoneNumber[]
 	) {}
 
-	private static assignValues(params: Omit<EmployeePrimitives, 'id'>) {
+	private static assignValues(params: EmployeeParams) {
 		return {
 			userName: new EmployeeUserName(params.userName),
 			type: new EmployeeType(params.type),
@@ -92,7 +79,7 @@ export class Employee {
 		}
 	}
 
-	static create(params: Omit<EmployeePrimitives, 'id'>): Employee {
+	static create(params: EmployeeParams): Employee {
 		const values = this.assignValues(params)
 		const id = EmployeeId.random().value
 		return new Employee(
@@ -114,7 +101,7 @@ export class Employee {
 			values.phone
 		)
 	}
-	static fromPrimitives(primitives: EmployeePrimitives): Employee {
+	static fromPrimitives(primitives: EmployeeDto): Employee {
 		const values = this.assignValues(primitives)
 		return new Employee(
 			new EmployeeId(primitives.id),

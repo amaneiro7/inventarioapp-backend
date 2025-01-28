@@ -1,11 +1,10 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type HardDriveTypeDto,
+	type HardDriveTypePrimitives
+} from './HardDriveType.dto'
 import { HardDriveTypeId } from './HardDriveTypeId'
 import { HardDriveTypeName } from './HardDriveTypeName'
-
-export interface HardDriveTypePrimitives {
-	id: Primitives<HardDriveTypeId>
-	name: Primitives<HardDriveTypeName>
-}
 
 export class HardDriveType {
 	constructor(
@@ -13,7 +12,7 @@ export class HardDriveType {
 		private readonly name: HardDriveTypeName
 	) {}
 
-	static fromPrimitives(primitives: HardDriveTypePrimitives): HardDriveType {
+	static fromPrimitives(primitives: HardDriveTypeDto): HardDriveType {
 		return new HardDriveType(
 			new HardDriveTypeId(primitives.id),
 			new HardDriveTypeName(primitives.name)

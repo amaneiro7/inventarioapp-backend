@@ -1,3 +1,4 @@
+import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'

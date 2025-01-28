@@ -1,5 +1,4 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeePrimitives, Employee } from './Employee'
+import { Employee } from './Employee'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { CargoId } from '../../../Cargo/domain/CargoId'
@@ -18,25 +17,7 @@ import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
-
-export interface RegularEmployeePrimitives extends EmployeePrimitives {
-	id: Primitives<EmployeeId>
-	username: Primitives<EmployeeUserName>
-	type: EmployeeTypes.REGULAR
-	name: Primitives<EmployeeName>
-	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
-	isStillWorking: Primitives<EmployeeIsStillWorking>
-	employeeCode: Primitives<EmployeeCode>
-	nationality: Primitives<EmployeeNationality>
-	cedula: Primitives<EmployeeCedula>
-	centroTrabajoId: Primitives<CentroTrabajoId>
-	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
-	cargoId: Primitives<CargoId>
-	extension: Primitives<Extension>[]
-	phone: Primitives<PhoneNumber>[]
-}
+import { type RegularEmployeeParams } from './RegularEmployee.dto'
 
 export class RegularEmployee extends Employee {
 	constructor(
@@ -85,13 +66,11 @@ export class RegularEmployee extends Employee {
 			)
 		}
 	}
-	static create(
-		params: Omit<RegularEmployeePrimitives, 'id'>
-	): RegularEmployee {
+	static create(params: RegularEmployeeParams): RegularEmployee {
 		const id = EmployeeId.random().value
 		return new RegularEmployee(
 			new EmployeeId(id),
-			new EmployeeUserName(params.username),
+			new EmployeeUserName(params.userName),
 			new EmployeeType(params.type),
 			new EmployeeName(params.name),
 			new EmployeeLastName(params.lastName),

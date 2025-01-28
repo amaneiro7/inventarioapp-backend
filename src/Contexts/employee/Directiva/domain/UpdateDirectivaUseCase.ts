@@ -1,12 +1,13 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
-import { Directiva, type DirectivaPrimitives } from './Directiva'
+import { Directiva } from './Directiva'
 import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlreadyExistError'
+import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
 
 export class UpdateDirectivaUseCase {
 	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaPrimitives>
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {}
 
 	public async execute({
@@ -14,7 +15,7 @@ export class UpdateDirectivaUseCase {
 		entity
 	}: {
 		entity: Directiva
-		params: Partial<Omit<DirectivaPrimitives, 'id'>>
+		params: Partial<DirectivaParams>
 	}): Promise<void> {
 		await this.ensureDirectivaDoesNotExist({ name, entity })
 	}

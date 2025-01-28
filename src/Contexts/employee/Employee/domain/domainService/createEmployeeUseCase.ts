@@ -1,5 +1,4 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeePrimitives } from '../entity/Employee'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 import { type CentroCostoRepository } from '../../../CentroCosto/domain/CentroCostoRepository'
 import { type LocationRepository } from '../../../../Location/Location/domain/LocationRepository'
@@ -9,7 +8,6 @@ import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { type EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type CargoRepository } from '../../../Cargo/domain/CargoRepository'
-import { type DepartamentoPrimitives } from '../../../Departamento/domain/Departamento'
 import { type EmployeeCode } from '../valueObject/EmployeCode'
 import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
 import { type EmployeeUserName } from '../valueObject/EmployeeUsername'
@@ -23,19 +21,19 @@ import { LocationDoesNotExistError } from '../../../../Location/Location/domain/
 import { DepartmentDoesNotExistError } from '../../../IDepartment/DepartmentDoesNotExistError'
 import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
+import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type EmployeeParams } from '../entity/Employee.dto'
 
 export class CreateEmployeeUseCase {
 	constructor(
 		private readonly employeeRepository: EmployeeRepository,
 		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly locationRepository: LocationRepository,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>,
+		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
-	public async execute(
-		params: Omit<EmployeePrimitives, 'id'>
-	): Promise<void> {
+	public async execute(params: EmployeeParams): Promise<void> {
 		await this.ensureIsStillWorkingUserNameDoesNotExis(params.userName)
 
 		if (EmployeeTypes.GENERIC === params.type) {

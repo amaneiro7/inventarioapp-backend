@@ -4,6 +4,7 @@ import { type DevicesFinderAll } from '../../../Contexts/Device/Device/applicati
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { DeviceDependencies } from '../../di/device/device.di'
+import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructure/criteria/CriteriaFromUrlConverter'
 
 export class DeviceGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -11,7 +12,9 @@ export class DeviceGetAllController implements Controller {
 			const getAll: DevicesFinderAll = container.resolve(
 				DeviceDependencies.FinderAll
 			)
-			const data = await getAll.run()
+			const convert = new CriteriaFromUrlConverter()
+			const query = convert.toCriteria(req)
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)

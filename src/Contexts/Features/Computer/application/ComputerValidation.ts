@@ -1,8 +1,5 @@
 import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
-import {
-	DeviceComputer,
-	type DeviceComputerPrimitives
-} from '../domain/Computer'
+import { DeviceComputer } from '../domain/Computer'
 import { ComputerName } from '../domain/ComputerName'
 import { ComputerOperatingSystem } from '../domain/ComputerOperatingSystem'
 import { ComputerOperatingSystemArq } from '../domain/ComputerOperatingSystemArq'
@@ -15,6 +12,7 @@ import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingS
 import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
 import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'
+import { type DeviceComputerParams } from '../domain/Computer.dto'
 
 export class ComputerValidation {
 	constructor(
@@ -26,15 +24,13 @@ export class ComputerValidation {
 		private readonly operatingSystemArqRepository: OperatingSystemArqRepository
 	) {}
 
-	async run(
-		params: Omit<DeviceComputerPrimitives, 'id' | 'memoryRamCapacity'>
-	): Promise<DeviceComputer> {
+	async run(params: DeviceComputerParams): Promise<DeviceComputer> {
 		await this.ensureValidation(params)
 		return DeviceComputer.create(params)
 	}
 
 	private async ensureValidation(
-		params: Omit<DeviceComputerPrimitives, 'id' | 'memoryRamCapacity'>
+		params: DeviceComputerParams
 	): Promise<void> {
 		await ComputerName.ensuerComputerNameDoesNotExit({
 			repository: this.deviceRepository,

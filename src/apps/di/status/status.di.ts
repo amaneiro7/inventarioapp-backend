@@ -1,6 +1,6 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { SequelizeStatusRepository } from '../../../Contexts/Device/Status/infrastructure/sequelize/SequelizeStatusRepository'
-import { StatusFinderAll } from '../../../Contexts/Device/Status/application/StatusFinder'
+import { StatusFinderAll } from '../../../Contexts/Device/Status/application/StatusFinderAll'
 import { StatusGetAllController } from '../../controllers/status/status.get-all.controller'
 
 export enum StatusDependencies {

@@ -1,13 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type StatusPrimitives } from '../../domain/Status'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type StatusId } from '../../domain/StatusId'
 import { type StatusName } from '../../domain/StatusName'
+import { type StatusDto } from '../../domain/Status.dto'
 
-export class StatusModel
-	extends Model<StatusPrimitives>
-	implements StatusPrimitives
-{
+export class StatusModel extends Model<StatusDto> implements StatusDto {
 	declare id: Primitives<StatusId>
 	declare name: Primitives<StatusName>
 

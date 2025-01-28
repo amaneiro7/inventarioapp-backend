@@ -1,32 +1,21 @@
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { Filter } from '../../../Shared/domain/criteria/Filter'
-import { FilterField } from '../../../Shared/domain/criteria/FilterField'
-import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
-import { Filters } from '../../../Shared/domain/criteria/Filters'
-import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
-import { Order } from '../../../Shared/domain/criteria/Order'
-import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { type EmployeePrimitives } from '../domain/entity/Employee'
+import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseService } from '../../../Shared/domain/ResponseType'
+import { type EmployeeDto } from '../domain/entity/Employee.dto'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 
-export class EmployeeSearchByCriteria {
-	constructor(private readonly employeeRepository: EmployeeRepository) {}
+export class EmployeeSearchByCriteria extends GetAllBaseService<EmployeeDto> {
+	constructor(private readonly employeeRepository: EmployeeRepository) {
+		super()
+	}
 
-	async run(query: SearchByCriteriaQuery): Promise<EmployeePrimitives[]> {
-		const filters = query.filters.map(filter => {
-			return new Filter(
-				new FilterField(filter.field),
-				FilterOperator.fromValue(filter.operator),
-				new FilterValue(filter.value)
-			)
+	async run(criteria: Criteria): Promise<ResponseService<EmployeeDto>> {
+		const { data, total } = await this.employeeRepository.matching(criteria)
+		return this.response({
+			data,
+			total,
+			pageNumber: criteria.pageNumber,
+			pageSize: criteria.pageSize
 		})
-		const order = Order.fromValues(query.orderBy, query.orderType)
-		const criteria = new Criteria(
-			new Filters(filters),
-			order,
-			query.limit,
-			query.offset
-		)
-		return await this.employeeRepository.matching(criteria)
 	}
 }

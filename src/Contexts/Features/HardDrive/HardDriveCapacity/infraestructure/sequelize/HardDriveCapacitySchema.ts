@@ -1,14 +1,15 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type HardDriveCapacityPrimitives } from '../../domain/HardDriveCapacity'
 import { type HardDriveCapacityId } from '../../domain/HardDriveCapacityId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type HardDriveCapacityDto } from '../../domain/HardDriveCapacity.dto'
+import { type HardDriveCapacityValue } from '../../domain/HardDriveCapacityValue'
 
 export class HardDriveCapacityModel
-	extends Model<HardDriveCapacityPrimitives>
-	implements HardDriveCapacityPrimitives
+	extends Model<HardDriveCapacityDto>
+	implements HardDriveCapacityDto
 {
 	declare id: Primitives<HardDriveCapacityId>
-	declare name: number
+	declare name: Primitives<HardDriveCapacityValue>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.hasMany(models.DeviceHardDrive, {

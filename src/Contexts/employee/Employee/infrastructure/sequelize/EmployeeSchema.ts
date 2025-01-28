@@ -7,7 +7,6 @@ import {
 	Nationalities,
 	type EmployeeNationality
 } from '../../domain/valueObject/EmployeeNationality'
-import { type EmployeePrimitives } from '../../domain/entity/Employee'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
 import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
@@ -23,10 +22,20 @@ import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
 import { type Extension } from '../../domain/valueObject/Extension'
 import { type PhoneNumber } from '../../domain/valueObject/PhoneNumber'
+import { EmployeeDto } from '../../domain/entity/Employee.dto'
+import { LocationDto } from '../../../../Location/Location/domain/Location.dto'
+import { CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { CentroTrabajoDto } from '../../../CentroTrabajo/domain/CentroTrabajo.dto'
+import { DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 
 export class EmployeeModel
-	extends Model<EmployeePrimitives>
-	implements EmployeePrimitives
+	extends Model<
+		Omit<
+			EmployeeDto,
+			'centroTrabajo' | 'location' | 'departamento' | 'cargo'
+		>
+	>
+	implements EmployeeDto
 {
 	declare id: Primitives<EmployeeId>
 	declare userName: Primitives<EmployeeUserName>
@@ -44,6 +53,11 @@ export class EmployeeModel
 	declare cargoId: Primitives<CargoId>
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
+	// joins
+	declare centroTrabajo: CentroTrabajoDto
+	declare location: LocationDto
+	declare departamento: Omit<DepartamentoDto, 'cargos'>
+	declare cargo: Omit<CargoDto, 'departamentos'>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo

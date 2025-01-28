@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type MemoryRamTypePrimitives } from '../../domain/MemoryRamType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
 import { type MemoryRamTypeName } from '../../domain/MemoryRamTypeName'
+import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
 
 export class MemoryRamTypeModel
-	extends Model<MemoryRamTypePrimitives>
-	implements MemoryRamTypePrimitives
+	extends Model<MemoryRamTypeDto>
+	implements MemoryRamTypeDto
 {
 	declare id: Primitives<MemoryRamTypeId>
 	declare name: Primitives<MemoryRamTypeName>
