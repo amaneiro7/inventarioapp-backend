@@ -1,29 +1,12 @@
-import { type ModelApiresponse } from '../../../Device/Device/infrastructure/sequelize/DeviceResponse'
-import {
-	KeyboardModels,
-	type KeyboardModelsPrimitives
-} from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
-import {
-	ModelPrinters,
-	type ModelPrintersPrimitives
-} from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
-import {
-	MonitorModels,
-	type MonitorModelsPrimitives
-} from '../../ModelCharacteristics/Monitors/domain/MonitorModels'
-import {
-	LaptopsModels,
-	type LaptopsModelsPrimitives
-} from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
-import {
-	MouseModels,
-	type MouseModelsPrimitives
-} from '../../ModelCharacteristics/Mouses/domain/MouseModels'
+import { KeyboardModels } from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
+import { ModelPrinters } from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
+import { MonitorModels } from '../../ModelCharacteristics/Monitors/domain/MonitorModels'
+import { LaptopsModels } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
+import { MouseModels } from '../../ModelCharacteristics/Mouses/domain/MouseModels'
 import { ModelSeriesDoesNotExistError } from '../domain/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../domain/ModelSeriesId'
 import { ModelSeriesName } from '../domain/ModelSeriesName'
 import { ModelSeries } from '../domain/ModelSeries'
-import { ModelParams } from './ModelSeriesCreator'
 import { ModelSeriesCategory } from '../domain/ModelSeriesCategory'
 import { ModelSeriesBrand } from '../domain/ModelSeriesBrand'
 import { ModelKeyboardInputType } from '../../ModelCharacteristics/Keyboards/domain/ModelKeyboardInputType'
@@ -49,6 +32,13 @@ import { type InputTypeRepository } from '../../InputType/domain/InputTypeReposi
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
+import { type ModelSeriesParams } from '../domain/ModelSeries.dto'
+import { type KeyboardModelsParams } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
+import { type MouseModelsParams } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
+import { type PrinteModelsParams } from '../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
+import { type MonitorModelsParams } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
+import { type LaptopModelsParams } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
+import { type ComputerModelsParams } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
 
 export class ModelSeriesUpdater {
 	constructor(
@@ -64,33 +54,25 @@ export class ModelSeriesUpdater {
 		params
 	}: {
 		id: string
-		params: ModelParams
+		params: Partial<ModelSeriesParams>
 	}): Promise<void> {
-		const { categoryId } = params
-
 		const modelSeriesId = new ModelSeriesId(id).value
 
-		const modelSeries =
-			await this.modelSeriesRepository.searchById(modelSeriesId)
+		const modelSeries = await this.modelSeriesRepository.searchById(
+			modelSeriesId
+		)
 
-		if (modelSeries === null) {
+		if (!modelSeries) {
 			throw new ModelSeriesDoesNotExistError(id)
 		}
+
+		const { categoryId } = modelSeries
 
 		let modelEntity
 		// Actualizar la tabla de Teclado
 		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-			const { modelKeyboard } = modelSeries as unknown as ModelApiresponse
-			modelEntity = KeyboardModels.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				inputTypeId: modelKeyboard?.inputTypeId,
-				hasFingerPrintReader: modelKeyboard?.hasFingerPrintReader
-			})
-			const keyboardParams = params as KeyboardModelsPrimitives
+			modelEntity = KeyboardModels.fromPrimitives(modelSeries)
+			const keyboardParams = params as KeyboardModelsParams
 			await ModelKeyboardInputType.updateInputTypeField({
 				repository: this.inputTypeRepository,
 				inputTypeId: keyboardParams.inputTypeId,
@@ -103,16 +85,8 @@ export class ModelSeriesUpdater {
 		}
 		// Actualizar la tabla de Mouse
 		if (MouseModels.isMouseCategory({ categoryId })) {
-			const { modelMouse } = modelSeries as unknown as ModelApiresponse
-			modelEntity = MouseModels.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				inputTypeId: modelMouse?.inputTypeId
-			})
-			const mouseParams = params as MouseModelsPrimitives
+			modelEntity = MouseModels.fromPrimitives(modelSeries)
+			const mouseParams = params as MouseModelsParams
 			await ModelMouseInputType.updateInputTypeField({
 				repository: this.inputTypeRepository,
 				inputTypeId: mouseParams.inputTypeId,
@@ -121,16 +95,8 @@ export class ModelSeriesUpdater {
 		}
 		// Actualizar la tabla de Impresora laser y tinta
 		else if (ModelPrinters.isPrinterCategory({ categoryId })) {
-			const { modelPrinter } = modelSeries as unknown as ModelApiresponse
-			modelEntity = ModelPrinters.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				cartridgeModel: modelPrinter.cartridgeModel
-			})
-			const printerParams = params as ModelPrintersPrimitives
+			modelEntity = ModelPrinters.fromPrimitives(modelSeries)
+			const printerParams = params as PrinteModelsParams
 			await CartridgeModel.updateCartridgeModelField({
 				cartridgeModel: printerParams.cartridgeModel,
 				entity: modelEntity
@@ -138,19 +104,8 @@ export class ModelSeriesUpdater {
 		}
 		// Actualizar la tabla de monitores
 		else if (MonitorModels.isMonitorCategory({ categoryId })) {
-			const { modelMonitor } = modelSeries as unknown as ModelApiresponse
-			modelEntity = MonitorModels.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				screenSize: modelMonitor.screenSize,
-				hasVGA: modelMonitor.hasVGA,
-				hasDVI: modelMonitor.hasDVI,
-				hasHDMI: modelMonitor.hasHDMI
-			})
-			const monitorParams = params as MonitorModelsPrimitives
+			modelEntity = MonitorModels.fromPrimitives(modelSeries)
+			const monitorParams = params as MonitorModelsParams
 			await MonitorHasDVI.updateDVIField({
 				hasDVI: monitorParams.hasDVI,
 				entity: modelEntity
@@ -170,23 +125,8 @@ export class ModelSeriesUpdater {
 		}
 		// Actualizar la tabla de Laptop
 		else if (LaptopsModels.isLaptopCategory({ categoryId })) {
-			const { modelLaptop } = modelSeries as unknown as ModelApiresponse
-			modelEntity = LaptopsModels.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				memoryRamSlotQuantity: modelLaptop.memoryRamSlotQuantity,
-				memoryRamTypeId: modelLaptop.memoryRamTypeId,
-				hasDVI: modelLaptop.hasDVI,
-				hasHDMI: modelLaptop.hasHDMI,
-				hasVGA: modelLaptop.hasVGA,
-				hasBluetooth: modelLaptop.hasBluetooth,
-				hasWifiAdapter: modelLaptop.hasWifiAdapter,
-				batteryModel: modelLaptop.batteryModel
-			})
-			const laptopParams = params as LaptopsModelsPrimitives
+			modelEntity = LaptopsModels.fromPrimitives(modelSeries)
+			const laptopParams = params as LaptopModelsParams
 			await HasVGA.updateVGAField({
 				hasVGA: laptopParams.hasVGA,
 				entity: modelEntity
@@ -223,22 +163,8 @@ export class ModelSeriesUpdater {
 		}
 		// Actualizar la tabla de Computadoras
 		else if (ComputerModels.isComputerCategory({ categoryId })) {
-			const { modelComputer } = modelSeries as unknown as ModelApiresponse
-			modelEntity = ComputerModels.fromPrimitives({
-				id: modelSeries.id,
-				name: modelSeries.name,
-				categoryId: modelSeries.categoryId,
-				generic: modelSeries.generic,
-				brandId: modelSeries.brandId,
-				memoryRamSlotQuantity: modelComputer.memoryRamSlotQuantity,
-				memoryRamTypeId: modelComputer.memoryRamTypeId,
-				hasDVI: modelComputer.hasDVI,
-				hasHDMI: modelComputer.hasHDMI,
-				hasVGA: modelComputer.hasVGA,
-				hasBluetooth: modelComputer.hasBluetooth,
-				hasWifiAdapter: modelComputer.hasWifiAdapter
-			})
-			const computerParams = params as LaptopsModelsPrimitives
+			modelEntity = ComputerModels.fromPrimitives(modelSeries)
+			const computerParams = params as ComputerModelsParams
 			await HasVGA.updateVGAField({
 				hasVGA: computerParams.hasVGA,
 				entity: modelEntity
@@ -279,7 +205,7 @@ export class ModelSeriesUpdater {
 		params,
 		entity
 	}: {
-		params: ModelParams
+		params: Partial<ModelSeriesParams>
 		entity: ModelSeries
 	}): Promise<void> {
 		await ModelSeriesCategory.updateCategoryField({

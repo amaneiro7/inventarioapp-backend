@@ -1,4 +1,3 @@
-import { type CategoryPrimitives } from '../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeries } from './ModelSeries'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
@@ -9,7 +8,7 @@ import { ComputerModels } from '../../ModelCharacteristics/Computers/Computer/do
 export class ModelSeriesCategory extends CategoryId {
 	static async updateCategoryField(params: {
 		repository: CategoryRepository
-		categoryId: Primitives<CategoryId>
+		categoryId?: Primitives<CategoryId>
 		entity: ModelSeries
 	}): Promise<void> {
 		// Si no se ha pasado un nuevo valor de categoria no realiza ninguna acción
@@ -41,9 +40,10 @@ export class ModelSeriesCategory extends CategoryId {
 		repository: CategoryRepository
 		categoryId: Primitives<CategoryId>
 	}): Promise<void> {
-		const isCategoryExist: CategoryPrimitives | null =
-			await params.repository.searchById(params.categoryId)
-		if (isCategoryExist === null) {
+		const isCategoryExist = await params.repository.searchById(
+			params.categoryId
+		)
+		if (!isCategoryExist) {
 			throw new Error('Category does not exist')
 		}
 	}

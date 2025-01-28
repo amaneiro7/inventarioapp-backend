@@ -7,12 +7,10 @@ import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
+import { ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../../ModelSeries/domain/ModelSeriesName'
-import {
-	ComputerModels,
-	type ComputerModelsPrimitives
-} from '../../Computer/domain/ComputerModels'
+import { ComputerModels } from '../../Computer/domain/ComputerModels'
 import { HasBluetooth } from '../../Computer/domain/HasBluetooth'
 import { HasDVI } from '../../Computer/domain/HasDVI'
 import { HasHDMI } from '../../Computer/domain/HasHDMI'
@@ -20,10 +18,10 @@ import { HasVGA } from '../../Computer/domain/HasVGA'
 import { HasWifiAdapter } from '../../Computer/domain/HasWifiAdapter'
 import { MemoryRamSlotQuantity } from '../../Computer/domain/MemoryRamSlotQuantity'
 import { BatteryModelName } from './BatteryModelName'
-
-export interface LaptopsModelsPrimitives extends ComputerModelsPrimitives {
-	batteryModel: Primitives<BatteryModelName>
-}
+import {
+	type LaptopModelsParams,
+	type LaptopModelsPrimitives
+} from './LaptopsModels.dto'
 
 export class LaptopsModels extends ComputerModels {
 	constructor(
@@ -57,7 +55,7 @@ export class LaptopsModels extends ComputerModels {
 		)
 	}
 
-	static create(params: Omit<LaptopsModelsPrimitives, 'id'>): LaptopsModels {
+	static create(params: LaptopModelsParams): LaptopsModels {
 		const id = String(ModelSeriesId.random())
 		return new LaptopsModels(
 			new ModelSeriesId(id),
@@ -87,25 +85,32 @@ export class LaptopsModels extends ComputerModels {
 		)
 	}
 
-	static fromPrimitives(primitives: LaptopsModelsPrimitives): LaptopsModels {
+	static fromPrimitives(primitives: ModelSeriesDto): LaptopsModels {
+		if (!primitives.modelLaptop) {
+			throw new Error(
+				'Error al cargar la información de modelos de Laptos'
+			)
+		}
 		return new LaptopsModels(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
-			new MemoryRamTypeId(primitives.memoryRamTypeId),
-			new MemoryRamSlotQuantity(primitives.memoryRamSlotQuantity),
-			new HasBluetooth(primitives.hasBluetooth),
-			new HasWifiAdapter(primitives.hasWifiAdapter),
-			new HasDVI(primitives.hasDVI),
-			new HasHDMI(primitives.hasHDMI),
-			new HasVGA(primitives.hasVGA),
-			new BatteryModelName(primitives.batteryModel)
+			new MemoryRamTypeId(primitives.modelLaptop.memoryRamTypeId),
+			new MemoryRamSlotQuantity(
+				primitives.modelLaptop.memoryRamSlotQuantity
+			),
+			new HasBluetooth(primitives.modelLaptop.hasBluetooth),
+			new HasWifiAdapter(primitives.modelLaptop.hasWifiAdapter),
+			new HasDVI(primitives.modelLaptop.hasDVI),
+			new HasHDMI(primitives.modelLaptop.hasHDMI),
+			new HasVGA(primitives.modelLaptop.hasVGA),
+			new BatteryModelName(primitives.modelLaptop.batteryModel)
 		)
 	}
 
-	toPrimitives(): LaptopsModelsPrimitives {
+	toPrimitives(): LaptopModelsPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue,

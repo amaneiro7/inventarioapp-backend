@@ -1,31 +1,13 @@
 import { ComputerMemoryRamType } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerMemoryRamType'
-import {
-	ComputerModels,
-	type ComputerModelsPrimitives
-} from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
-import {
-	LaptopsModels,
-	type LaptopsModelsPrimitives
-} from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
-import {
-	KeyboardModels,
-	KeyboardModelsPrimitives
-} from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
+import { ComputerModels } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
+import { LaptopsModels } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
+import { KeyboardModels } from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
 import { ModelKeyboardInputType } from '../../ModelCharacteristics/Keyboards/domain/ModelKeyboardInputType'
-import {
-	MonitorModels,
-	type MonitorModelsPrimitives
-} from '../../ModelCharacteristics/Monitors/domain/MonitorModels'
+import { MonitorModels } from '../../ModelCharacteristics/Monitors/domain/MonitorModels'
 import { ModelMouseInputType } from '../../ModelCharacteristics/Mouses/domain/ModelMouseInputType'
-import {
-	MouseModels,
-	MouseModelsPrimitives
-} from '../../ModelCharacteristics/Mouses/domain/MouseModels'
-import {
-	ModelPrinters,
-	type ModelPrintersPrimitives
-} from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
-import { ModelSeries, type ModelSeriesPrimitives } from '../domain/ModelSeries'
+import { MouseModels } from '../../ModelCharacteristics/Mouses/domain/MouseModels'
+import { ModelPrinters } from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
+import { ModelSeries } from '../domain/ModelSeries'
 import { ModelSeriesBrand } from '../domain/ModelSeriesBrand'
 import { ModelSeriesCategory } from '../domain/ModelSeriesCategory'
 import { ModelSeriesName } from '../domain/ModelSeriesName'
@@ -34,9 +16,13 @@ import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type InputTypeRepository } from '../../InputType/domain/InputTypeRepository'
-
-// Define the model parameters interface
-export interface ModelParams extends Omit<ModelSeriesPrimitives, 'id'> {}
+import { type ModelSeriesParams } from '../domain/ModelSeries.dto'
+import { type ComputerModelsParams } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
+import { type LaptopModelsParams } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
+import { type MonitorModelsParams } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
+import { type PrinteModelsParams } from '../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
+import { type MouseModelsParams } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
+import { type KeyboardModelsParams } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 
 // Create the ModelSeriesCreator class
 export class ModelSeriesCreator {
@@ -55,14 +41,14 @@ export class ModelSeriesCreator {
 		brandId,
 		generic,
 		...otherParams
-	}: ModelParams): Promise<void> {
+	}: ModelSeriesParams): Promise<void> {
 		let modelSeries
 
 		// Create the model series based on the category
 		if (ComputerModels.isComputerCategory({ categoryId })) {
 			// Check if the category is a computer
 			// If it is a computer category, extract computer-specific parameters
-			const computerParams = otherParams as ComputerModelsPrimitives
+			const computerParams = otherParams as ComputerModelsParams
 			await ComputerMemoryRamType.ensureInputTypeExist({
 				repository: this.memoryRamTypeRepository,
 				memoryRamTypeId: computerParams.memoryRamTypeId
@@ -78,7 +64,7 @@ export class ModelSeriesCreator {
 		} else if (LaptopsModels.isLaptopCategory({ categoryId })) {
 			// Check if the category is a laptop
 			// If it is a laptop category, extract laptop-specific parameters
-			const laptopParams = otherParams as LaptopsModelsPrimitives
+			const laptopParams = otherParams as LaptopModelsParams
 			await ComputerMemoryRamType.ensureInputTypeExist({
 				repository: this.memoryRamTypeRepository,
 				memoryRamTypeId: laptopParams.memoryRamTypeId
@@ -94,7 +80,7 @@ export class ModelSeriesCreator {
 		} else if (MonitorModels.isMonitorCategory({ categoryId })) {
 			// Check if the category is a monitor
 			// If it is a monitor category, extract monitor-specific parameters
-			const monitorParams = otherParams as MonitorModelsPrimitives
+			const monitorParams = otherParams as MonitorModelsParams
 			// Create a monitor model series with the extracted parameters, name, category ID, and brand ID
 			modelSeries = MonitorModels.create({
 				...monitorParams,
@@ -106,7 +92,7 @@ export class ModelSeriesCreator {
 		} else if (ModelPrinters.isPrinterCategory({ categoryId })) {
 			// Check if the category is a printer
 			// If it is a printer category, extract printer-specific parameters
-			const printerParams = otherParams as ModelPrintersPrimitives
+			const printerParams = otherParams as PrinteModelsParams
 			// Create a printer model series with the extracted parameters, name, category ID, and brand ID
 			modelSeries = ModelPrinters.create({
 				...printerParams,
@@ -117,7 +103,7 @@ export class ModelSeriesCreator {
 			})
 		} else if (KeyboardModels.isKeyboardCategory({ categoryId })) {
 			// If it is a keyboard category, extract keyboard-specific parameters
-			const keyboardParams = otherParams as KeyboardModelsPrimitives
+			const keyboardParams = otherParams as KeyboardModelsParams
 			await ModelKeyboardInputType.ensureInputTypeExist({
 				repository: this.inputTypeRepository,
 				inputTypeId: keyboardParams.inputTypeId
@@ -132,7 +118,7 @@ export class ModelSeriesCreator {
 			})
 		} else if (MouseModels.isMouseCategory({ categoryId })) {
 			// If it is a Mouse category, extract Mouse-specific parameters
-			const mouseParams = otherParams as MouseModelsPrimitives
+			const mouseParams = otherParams as MouseModelsParams
 			await ModelMouseInputType.ensureInputTypeExist({
 				repository: this.inputTypeRepository,
 				inputTypeId: mouseParams.inputTypeId

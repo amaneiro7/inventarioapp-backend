@@ -2,18 +2,19 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
-import { type ModelPrintersPrimitives } from '../../domain/ModelPrinters'
 import { type CartridgeModel } from '../../domain/CartridgeModel'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type PrinteModelsDto } from '../../domain/ModelPrinters.dto'
 
-interface ModelPrinterCreationAttributes
-	extends Omit<ModelPrintersPrimitives, 'name' | 'brandId' | 'generic'> {
+interface ModelPrinterCreationAttributes extends PrinteModelsDto {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class ModelPrinterModel
 	extends Model<ModelPrinterCreationAttributes>
-	implements ModelPrinterCreationAttributes
+	implements PrinteModelsDto
 {
 	declare id: Primitives<ModelSeriesId>
 	declare cartridgeModel: Primitives<CartridgeModel>

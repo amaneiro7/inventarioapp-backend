@@ -5,17 +5,11 @@ import { Action, type ActionType } from './HistoryAction'
 import { CreatedAt } from './CreatedAt'
 import { HistoryEmployee } from './HistoryEmployee'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-
-export interface HistoryPrimitives {
-	id: Primitives<HistoryId>
-	deviceId: Primitives<DeviceId>
-	userId: Primitives<UserId>
-	employeeId: Primitives<HistoryEmployee>
-	action: ActionType
-	oldData: object
-	newData: object
-	createdAt: Date
-}
+import {
+	type HistoryDto,
+	type HistoryParams,
+	type HistoryPrimitives
+} from './History.dto'
 
 export class History {
 	constructor(
@@ -29,7 +23,7 @@ export class History {
 		private readonly createdAt: CreatedAt
 	) {}
 
-	static create(params: Omit<HistoryPrimitives, 'id'>): History {
+	static create(params: HistoryParams): History {
 		const id = HistoryId.random().value
 		return new History(
 			new HistoryId(id),
@@ -56,7 +50,7 @@ export class History {
 		}
 	}
 
-	static fromPrimitives(primitives: HistoryPrimitives): History {
+	static fromPrimitives(primitives: HistoryDto): History {
 		return new History(
 			new HistoryId(primitives.id),
 			new DeviceId(primitives.deviceId),

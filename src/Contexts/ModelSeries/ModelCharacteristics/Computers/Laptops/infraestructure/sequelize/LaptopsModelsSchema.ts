@@ -3,7 +3,6 @@ import { CategoryValues } from '../../../../../../Category/Category/domain/Categ
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
-import { type LaptopsModelsPrimitives } from '../../domain/LaptopsModels'
 import { type MemoryRamSlotQuantity } from '../../../Computer/domain/MemoryRamSlotQuantity'
 import { type HasBluetooth } from '../../../Computer/domain/HasBluetooth'
 import { type HasWifiAdapter } from '../../../Computer/domain/HasWifiAdapter'
@@ -12,15 +11,19 @@ import { type HasHDMI } from '../../../Computer/domain/HasHDMI'
 import { type HasVGA } from '../../../Computer/domain/HasVGA'
 import { type BatteryModelName } from '../../domain/BatteryModelName'
 import { type CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
+import { type LaptopModelsDto } from '../../domain/LaptopsModels.dto'
+import { type MemoryRamTypeDto } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 
 interface LaptopModelsCreationAttributes
-	extends Omit<LaptopsModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+	extends Omit<LaptopModelsDto, 'memoryRamType'> {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class LaptopModelsModel
 	extends Model<LaptopModelsCreationAttributes>
-	implements LaptopModelsCreationAttributes
+	implements LaptopModelsDto
 {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -33,6 +36,7 @@ export class LaptopModelsModel
 	declare hasHDMI: Primitives<HasHDMI>
 	declare hasVGA: Primitives<HasVGA>
 	declare batteryModel: Primitives<BatteryModelName>
+	declare memoryRamType: MemoryRamTypeDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Model, {

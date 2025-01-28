@@ -1,21 +1,51 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesName } from '../../domain/ModelSeriesName'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type BrandId } from '../../../../Brand/domain/BrandId'
 import { type Generic } from '../../domain/Generic'
+import { type ModelSeriesDto } from '../../domain/ModelSeries.dto'
+import { type BrandDto } from '../../../../Brand/domain/Brand.dto'
+import { type CategoryDto } from '../../../../Category/Category/domain/Category.dto'
+import { type ComputerModelsDto } from '../../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
+import { type LaptopModelsDto } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
+import { type KeyboardModelsDto } from '../../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
+import { type MonitorModelsDto } from '../../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
+import { type PrinteModelsDto } from '../../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
 
 export class ModelSeriesModel
-	extends Model<ModelSeriesPrimitives>
-	implements ModelSeriesPrimitives
+	extends Model<
+		Omit<
+			ModelSeriesDto,
+			| 'category'
+			| 'brand'
+			| 'modelComputer'
+			| 'modelLaptop'
+			| 'modelPrinter'
+			| 'modelKeyboard'
+			| 'modelMonitor'
+			| 'updatedAt'
+			| 'createdAt'
+		>
+	>
+	implements ModelSeriesDto
 {
+	declare updatedAt: Date
+	declare createdAt: Date
 	declare id: Primitives<ModelSeriesId>
 	declare name: Primitives<ModelSeriesName>
 	declare categoryId: Primitives<CategoryId>
 	declare brandId: Primitives<BrandId>
 	declare generic: Primitives<Generic>
+	// join
+	declare category: CategoryDto
+	declare brand: BrandDto
+	declare modelComputer: ComputerModelsDto | null
+	declare modelLaptop: LaptopModelsDto | null
+	declare modelPrinter: PrinteModelsDto | null
+	declare modelKeyboard: KeyboardModelsDto | null
+	declare modelMonitor: MonitorModelsDto | null
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Category, {

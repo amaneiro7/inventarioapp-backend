@@ -1,16 +1,20 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type LocationPrimitives } from '../../domain/Location'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from '../../domain/LocationId'
 import { type TypeOfSiteId } from '../../../TypeOfSite/domain/TypeOfSiteId'
 import { type LocationName } from '../../domain/LocationName'
 import { type LocationSubnet } from '../../domain/LocationSubnet'
 import { type SiteId } from '../../../Site/domain/SiteId'
+import { type LocationDto } from '../../domain/Location.dto'
+import { type SiteDto } from '../../../Site/domain/Site.dto'
+import { type TypeOfSite } from '../../../TypeOfSite/domain/TypeOfSite.dto'
 
 export class LocationModel
-	extends Model<LocationPrimitives>
-	implements LocationPrimitives
+	extends Model<Omit<LocationDto, 'site' | 'typeOfSite'>>
+	implements LocationDto
 {
+	declare typeOfSite: TypeOfSite
+	declare site: SiteDto
 	declare id: Primitives<LocationId>
 	declare typeOfSiteId: Primitives<TypeOfSiteId>
 	declare siteId: Primitives<SiteId>

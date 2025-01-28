@@ -1,6 +1,6 @@
 import { ModelSeriesDoesNotExistError } from '../domain/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../domain/ModelSeriesId'
-import { type ModelSeriesPrimitives } from '../domain/ModelSeries'
+import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesFinder {
@@ -8,7 +8,7 @@ export class ModelSeriesFinder {
 		private readonly modelSeriesRepository: ModelSeriesRepository
 	) {}
 
-	async run(params: { id: string }): Promise<ModelSeriesPrimitives> {
+	async run(params: { id: string }): Promise<ModelSeriesDto> {
 		const { id } = params
 		const modelSeriesId = new ModelSeriesId(id)
 		const modelSeries = await this.modelSeriesRepository.searchById(

@@ -3,17 +3,13 @@ import { CategoryId } from '../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 import { Generic } from './Generic'
+import {
+	type ModelSeriesDto,
+	type ModelSeriesParams,
+	type ModelSeriesPrimitives
+} from './ModelSeries.dto'
 import { ModelSeriesId } from './ModelSeriesId'
 import { ModelSeriesName } from './ModelSeriesName'
-
-export interface ModelSeriesPrimitives {
-	id: Primitives<ModelSeriesId>
-	name: Primitives<ModelSeriesName>
-	categoryId: Primitives<CategoryId>
-	brandId: Primitives<BrandId>
-	generic: Primitives<Generic>
-}
-
 export class ModelSeries {
 	constructor(
 		private readonly id: ModelSeriesId,
@@ -23,7 +19,7 @@ export class ModelSeries {
 		private generic: Generic
 	) {}
 
-	static create(params: Omit<ModelSeriesPrimitives, 'id'>): ModelSeries {
+	static create(params: ModelSeriesParams): ModelSeries {
 		const id = ModelSeriesId.random().value
 		return new ModelSeries(
 			new ModelSeriesId(id),
@@ -50,7 +46,7 @@ export class ModelSeries {
 		this.generic = new Generic(generic)
 	}
 
-	static fromPrimitives(primitives: ModelSeriesPrimitives): ModelSeries {
+	static fromPrimitives(primitives: ModelSeriesDto): ModelSeries {
 		return new ModelSeries(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),

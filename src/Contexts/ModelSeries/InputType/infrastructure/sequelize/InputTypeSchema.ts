@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type InputTypePrimitives } from '../../domain/InputType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type InputTypeId } from '../../domain/InputTypeId'
 import { type InputTypeName } from '../../domain/InputTypeName'
+import { type InputTypeDto } from '../../domain/InputType.dto'
 
 export class InputTypeModel
-	extends Model<InputTypePrimitives>
-	implements InputTypePrimitives
+	extends Model<InputTypeDto>
+	implements InputTypeDto
 {
 	declare id: Primitives<InputTypeId>
 	declare name: Primitives<InputTypeName>

@@ -1,21 +1,20 @@
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type LocationPrimitives } from './Location'
+import { type LocationDto, type LocationPrimitives } from './Location.dto'
 import { type LocationId } from './LocationId'
-import { LocationName } from './LocationName'
+import { type LocationName } from './LocationName'
 
 export abstract class LocationRepository {
-	abstract searchAll(): Promise<LocationPrimitives[]>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<LocationDto>>
+
+	abstract matching(criteria: Criteria): Promise<ResponseDB<LocationDto>>
 
 	abstract save(payload: LocationPrimitives): Promise<void>
 
-	abstract searchById(
-		id: Primitives<LocationId>
-	): Promise<LocationPrimitives | null>
+	abstract searchById(id: Primitives<LocationId>): Promise<LocationDto | null>
 
 	abstract searchByName(
 		name: Primitives<LocationName>
-	): Promise<LocationPrimitives | null>
-
-	abstract matching(criteria: Criteria): Promise<LocationPrimitives[]>
+	): Promise<LocationDto | null>
 }

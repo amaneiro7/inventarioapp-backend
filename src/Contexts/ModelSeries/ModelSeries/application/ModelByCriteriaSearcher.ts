@@ -1,39 +1,24 @@
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { Filter } from '../../../Shared/domain/criteria/Filter'
-import { FilterField } from '../../../Shared/domain/criteria/FilterField'
-import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
-import { Filters } from '../../../Shared/domain/criteria/Filters'
-import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
-import { Order } from '../../../Shared/domain/criteria/Order'
-import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { type ModelSeriesPrimitives } from '../domain/ModelSeries'
+import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseService } from '../../../Shared/domain/ResponseType'
+import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
-export class ModelSeriesSearchByCriteria {
-	constructor(
-		private readonly modelSeriesRepository: ModelSeriesRepository
-	) {}
+export class ModelSeriesSearchByCriteria extends GetAllBaseService<ModelSeriesDto> {
+	constructor(private readonly modelSeriesRepository: ModelSeriesRepository) {
+		super()
+	}
 
-	async run(
-		query: SearchByCriteriaQuery
-	): Promise<{ total: number; data: ModelSeriesPrimitives[] }> {
-		const filters = query.filters.map(filter => {
-			return new Filter(
-				new FilterField(filter.field),
-				FilterOperator.fromValue(filter.operator),
-				new FilterValue(filter.value)
-			)
+	async run(criteria: Criteria): Promise<ResponseService<ModelSeriesDto>> {
+		const { data, total } = await this.modelSeriesRepository.matching(
+			criteria
+		)
+
+		return this.response({
+			data,
+			total,
+			pageNumber: criteria.pageNumber,
+			pageSize: criteria.pageSize
 		})
-		const order = Order.fromValues(
-			query.orderBy ?? 'categoryId',
-			query.orderType
-		)
-		const criteria = new Criteria(
-			new Filters(filters),
-			order,
-			query.limit,
-			query.offset
-		)
-		return await this.modelSeriesRepository.matching(criteria)
 	}
 }

@@ -1,27 +1,47 @@
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type SitePrimitives } from '../../domain/Site'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { type SitePrimitives, type SiteDto } from '../../domain/Site.dto'
 import { type SiteId } from '../../domain/SiteId'
 import { type SiteRepository } from '../../domain/SiteRepository'
 import { SiteModels } from './SiteSchema'
 
-export class SequelizeSiteRepository implements SiteRepository {
+export class SequelizeSiteRepository
+	extends CriteriaToSequelizeConverter
+	implements SiteRepository
+{
 	private readonly cacheKey: string = 'sites'
-	constructor(private readonly cache: CacheService) {}
-	async searchAll(): Promise<SitePrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await SiteModels.findAll({
-				include: [
-					{
-						association: 'city',
-						include: ['state']
-					}
-				]
-			})
+	constructor(private readonly cache: CacheService) {
+		super()
+	}
+	async searchAll(criteria: Criteria): Promise<ResponseDB<SiteDto>> {
+		const options = this.convert(criteria)
+		options.include = [
+			{
+				association: 'city',
+				include: ['state']
+			}
+		]
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.MEDIUM,
+			fetchFunction: async () => {
+				const { count, rows } = await SiteModels.findAndCountAll(
+					options
+				)
+				return {
+					data: rows,
+					total: count
+				}
+			}
 		})
 	}
 
-	async searchById(id: Primitives<SiteId>): Promise<SitePrimitives | null> {
+	async searchById(id: Primitives<SiteId>): Promise<SiteDto | null> {
 		return (await SiteModels.findByPk(id)) ?? null
 	}
 
@@ -34,7 +54,6 @@ export class SequelizeSiteRepository implements SiteRepository {
 			employee.set({ ...payload })
 			await employee.save()
 		}
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

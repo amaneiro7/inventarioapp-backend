@@ -2,10 +2,7 @@ import { BrandId } from '../../../../Brand/domain/BrandId'
 
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
-import {
-	ModelSeries,
-	type ModelSeriesPrimitives
-} from '../../../ModelSeries/domain/ModelSeries'
+import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { CartridgeModel } from './CartridgeModel'
@@ -14,10 +11,12 @@ import {
 	CategoryDefaultData,
 	type CategoryValues
 } from '../../../../Category/Category/domain/CategoryDefaultData'
+import {
+	type PrinteModelsParams,
+	type PrinteModelsPrimitives
+} from './ModelPrinters.dto'
+import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 
-export interface ModelPrintersPrimitives extends ModelSeriesPrimitives {
-	cartridgeModel: Primitives<CartridgeModel>
-}
 export class ModelPrinters extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -30,7 +29,7 @@ export class ModelPrinters extends ModelSeries {
 		super(id, name, categoryId, brandId, generic)
 	}
 
-	static create(params: Omit<ModelPrintersPrimitives, 'id'>): ModelPrinters {
+	static create(params: PrinteModelsParams): ModelPrinters {
 		if (!this.isPrinterCategory({ categoryId: params.categoryId })) {
 			throw new Error(
 				'Invalid category for printer model The category must be "printer"'
@@ -61,18 +60,21 @@ export class ModelPrinters extends ModelSeries {
 		)
 	}
 
-	static fromPrimitives(primitives: ModelPrintersPrimitives): ModelPrinters {
+	static fromPrimitives(primitives: ModelSeriesDto): ModelPrinters {
+		if (!primitives.modelPrinter) {
+			throw new Error('Error al cargar información de impresoras')
+		}
 		return new ModelPrinters(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
-			new CartridgeModel(primitives.cartridgeModel)
+			new CartridgeModel(primitives.modelPrinter.cartridgeModel)
 		)
 	}
 
-	toPrimitives(): ModelPrintersPrimitives {
+	toPrimitives(): PrinteModelsPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue,

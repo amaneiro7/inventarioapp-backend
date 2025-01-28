@@ -1,4 +1,9 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type ProcessorDto,
+	type ProcessorParams,
+	type ProcessorPrimitives
+} from './Processor.dto'
 import { ProcessorCores } from './ProcessorCores'
 import { ProcessorFrequency } from './ProcessorFrequency'
 import { ProcessorId } from './ProcessorId'
@@ -6,16 +11,6 @@ import { ProcessorHasThreads } from './ProcessorIsThreads'
 import { ProcessorName } from './ProcessorName'
 import { ProcessorNumberModel } from './ProcessorNumberModel'
 import { ProcessorProductCollection } from './ProcessorProductCollection'
-
-export interface ProcessorPrimitives {
-	id: Primitives<ProcessorId>
-	productCollection: Primitives<ProcessorProductCollection>
-	numberModel: Primitives<ProcessorNumberModel>
-	name: Primitives<ProcessorName>
-	cores: Primitives<ProcessorCores>
-	threads: Primitives<ProcessorHasThreads>
-	frequency: Primitives<ProcessorFrequency>
-}
 
 export class Processor {
 	constructor(
@@ -33,7 +28,7 @@ export class Processor {
 		cores,
 		threads,
 		frequency
-	}: Omit<ProcessorPrimitives, 'id' | 'name'>): Processor {
+	}: ProcessorParams): Processor {
 		const id = ProcessorId.random().value
 		return new Processor(
 			new ProcessorId(id),
@@ -69,7 +64,7 @@ export class Processor {
 		this.frequency = new ProcessorFrequency(frequency)
 	}
 
-	static fromPrimitives(primitives: ProcessorPrimitives): Processor {
+	static fromPrimitives(primitives: ProcessorDto): Processor {
 		return new Processor(
 			new ProcessorId(primitives.id),
 			new ProcessorProductCollection(primitives.productCollection),

@@ -2,19 +2,23 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
-import { type MouseModelsPrimitives } from '../domain/MouseModels'
 import { type InputTypeId } from '../../../InputType/domain/InputTypeId'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { type MouseModelsDto } from '../domain/MouseModels.dto'
+import { type InputTypeDto } from '../../../InputType/domain/InputType.dto'
 
 interface MouseModelsCreationAttributes
-	extends Omit<MouseModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+	extends Omit<MouseModelsDto, 'inputType'> {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class MouseModelsModel
 	extends Model<MouseModelsCreationAttributes>
-	implements MouseModelsCreationAttributes
+	implements MouseModelsDto
 {
+	declare inputType: InputTypeDto
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>

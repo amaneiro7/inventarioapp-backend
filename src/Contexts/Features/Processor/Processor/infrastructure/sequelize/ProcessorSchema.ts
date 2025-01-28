@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type ProcessorPrimitives } from '../../domain/Processor'
+import { type ProcessorDto } from '../../domain/Processor.dto'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ProcessorId } from '../../domain/ProcessorId'
 import { type ProcessorProductCollection } from '../../domain/ProcessorProductCollection'
@@ -9,8 +9,8 @@ import { type ProcessorHasThreads } from '../../domain/ProcessorIsThreads'
 import { type ProcessorFrequency } from '../../domain/ProcessorFrequency'
 
 export class ProcessorModel
-	extends Model<ProcessorPrimitives>
-	implements ProcessorPrimitives
+	extends Model<ProcessorDto>
+	implements ProcessorDto
 {
 	declare id: Primitives<ProcessorId>
 	declare productCollection: Primitives<ProcessorProductCollection>

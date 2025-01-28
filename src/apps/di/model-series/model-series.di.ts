@@ -4,14 +4,12 @@ import { ModelSeriesFinder } from '../../../Contexts/ModelSeries/ModelSeries/app
 import { ModelSeriesFinderAll } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesFinderAll'
 import { ModelSeriesCreator } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesCreator'
 import { ModelSeriesUpdater } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesUpdater'
-import { ModelSeriesRemover } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelSeriesRemover'
 import { ModelSeriesExcelService } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelExcelService'
 import { ModelSeriesSearchByCriteria } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelByCriteriaSearcher'
 import { ModelSeriesGetController } from '../../controllers/model-series/model-series.get.controller'
 import { ModelSeriesGetAllController } from '../../controllers/model-series/model-series.get-all.controller'
 import { ModelSeriesPostController } from '../../controllers/model-series/model-series.post.controller'
 import { ModelSeriesPatchController } from '../../controllers/model-series/model-series.patch.controller'
-import { ModelSeriesDeleteController } from '../../controllers/model-series/model-series.delete.controller'
 import { ModelSeriesSearchByCriteriaController } from '../../controllers/model-series/model-series.search-by-criteria.controller'
 import { ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
 
@@ -21,14 +19,13 @@ export enum ModelSeriesDependencies {
 	FinderAll = 'modelSeriesFinderAll',
 	Creator = 'modelSeriesCreator',
 	Updater = 'modelSeriesUpdater',
-	Remover = 'modelSeriesRemover',
 	ExcelService = 'modelSeriesExcelService',
 	SearchByCriteria = 'modelSeriesSearchByCriteria',
 	GetController = 'modelSeriesGetController',
 	GetAllController = 'modelSeriesGetAllController',
 	PostController = 'modelSeriesPostController',
 	PatchController = 'modelSeriesPatchController',
-	DeleteController = 'modelSeriesDeleteController',
+
 	GetByCriteriaController = 'modelSeriesGetByCriteria',
 	ExcelDownloadController = 'modelSeriesExcelDownload'
 }
@@ -42,14 +39,12 @@ export const register = (container: AwilixContainer) => {
 		modelSeriesFinderAll: asClass(ModelSeriesFinderAll),
 		modelSeriesCreator: asClass(ModelSeriesCreator),
 		modelSeriesUpdater: asClass(ModelSeriesUpdater),
-		modelSeriesRemover: asClass(ModelSeriesRemover),
 		modelSeriesExcelService: asClass(ModelSeriesExcelService),
 		modelSeriesSearchByCriteria: asClass(ModelSeriesSearchByCriteria),
 		modelSeriesGetController: asClass(ModelSeriesGetController),
 		modelSeriesGetAllController: asClass(ModelSeriesGetAllController),
 		modelSeriesPostController: asClass(ModelSeriesPostController),
 		modelSeriesPatchController: asClass(ModelSeriesPatchController),
-		modelSeriesDeleteController: asClass(ModelSeriesDeleteController),
 		modelSeriesGetByCriteria: asClass(
 			ModelSeriesSearchByCriteriaController
 		),

@@ -5,10 +5,7 @@ import {
 	CategoryDefaultData
 } from '../../../../../Category/Category/domain/CategoryDefaultData'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
-import {
-	ModelSeries,
-	type ModelSeriesPrimitives
-} from '../../../../ModelSeries/domain/ModelSeries'
+import { ModelSeries } from '../../../../ModelSeries/domain/ModelSeries'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../../ModelSeries/domain/ModelSeriesName'
 import { ComputerMemoryRamType } from './ComputerMemoryRamType'
@@ -19,16 +16,11 @@ import { HasVGA } from './HasVGA'
 import { HasWifiAdapter } from './HasWifiAdapter'
 import { MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-
-export interface ComputerModelsPrimitives extends ModelSeriesPrimitives {
-	memoryRamTypeId: Primitives<ComputerMemoryRamType>
-	memoryRamSlotQuantity: Primitives<MemoryRamSlotQuantity>
-	hasBluetooth: Primitives<HasBluetooth>
-	hasWifiAdapter: Primitives<HasWifiAdapter>
-	hasDVI: Primitives<HasDVI>
-	hasHDMI: Primitives<HasHDMI>
-	hasVGA: Primitives<HasVGA>
-}
+import {
+	type ComputerModelsParams,
+	type ComputerModelsPrimitives
+} from './ComputerModels.dto'
+import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 
 export class ComputerModels extends ModelSeries {
 	constructor(
@@ -48,9 +40,7 @@ export class ComputerModels extends ModelSeries {
 		super(id, name, categoryId, brandId, generic)
 	}
 
-	static create(
-		params: Omit<ComputerModelsPrimitives, 'id'>
-	): ComputerModels {
+	static create(params: ComputerModelsParams): ComputerModels {
 		const id = ModelSeriesId.random().value
 		return new ComputerModels(
 			new ModelSeriesId(id),
@@ -83,22 +73,27 @@ export class ComputerModels extends ModelSeries {
 		)
 	}
 
-	static fromPrimitives(
-		primitives: ComputerModelsPrimitives
-	): ComputerModels {
+	static fromPrimitives(primitives: ModelSeriesDto): ComputerModels {
+		if (!primitives.modelComputer) {
+			throw new Error(
+				'Error al extraer los datos de modelos de computadora'
+			)
+		}
 		return new ComputerModels(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
-			new ComputerMemoryRamType(primitives.memoryRamTypeId),
-			new MemoryRamSlotQuantity(primitives.memoryRamSlotQuantity),
-			new HasBluetooth(primitives.hasBluetooth),
-			new HasWifiAdapter(primitives.hasWifiAdapter),
-			new HasDVI(primitives.hasDVI),
-			new HasHDMI(primitives.hasHDMI),
-			new HasVGA(primitives.hasVGA)
+			new ComputerMemoryRamType(primitives.modelComputer.memoryRamTypeId),
+			new MemoryRamSlotQuantity(
+				primitives.modelComputer.memoryRamSlotQuantity
+			),
+			new HasBluetooth(primitives.modelComputer.hasBluetooth),
+			new HasWifiAdapter(primitives.modelComputer.hasWifiAdapter),
+			new HasDVI(primitives.modelComputer.hasDVI),
+			new HasHDMI(primitives.modelComputer.hasHDMI),
+			new HasVGA(primitives.modelComputer.hasVGA)
 		)
 	}
 

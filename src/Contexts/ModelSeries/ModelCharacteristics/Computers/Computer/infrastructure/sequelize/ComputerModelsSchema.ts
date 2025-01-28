@@ -1,6 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../../Category/Category/domain/Category'
-import { type ComputerModelsPrimitives } from '../../domain/ComputerModels'
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type MemoryRamSlotQuantity } from '../../domain/MemoryRamSlotQuantity'
@@ -11,15 +10,19 @@ import { type HasHDMI } from '../../domain/HasHDMI'
 import { type HasVGA } from '../../domain/HasVGA'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
 import { type CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
+import { type ComputerModelsDto } from '../../domain/ComputerModels.dto'
+import { type MemoryRamType } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 
 interface ComputerModelsCreationAttributes
-	extends Omit<ComputerModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+	extends Omit<ComputerModelsDto, 'memoryRamType'> {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class ComputerModelsModel
 	extends Model<ComputerModelsCreationAttributes>
-	implements ComputerModelsCreationAttributes
+	implements ComputerModelsDto
 {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -31,6 +34,7 @@ export class ComputerModelsModel
 	declare hasDVI: Primitives<HasDVI>
 	declare hasHDMI: Primitives<HasHDMI>
 	declare hasVGA: Primitives<HasVGA>
+	declare memoryRamType: MemoryRamType
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Model, {

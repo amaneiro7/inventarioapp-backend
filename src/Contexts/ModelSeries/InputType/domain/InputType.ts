@@ -1,11 +1,7 @@
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type InputTypeDto, type InputTypePrimitives } from './InputType.dto'
 import { InputTypeId } from './InputTypeId'
 import { InputTypeName } from './InputTypeName'
-
-export interface InputTypePrimitives {
-	id: Primitives<InputTypeId>
-	name: Primitives<InputTypeName>
-}
 
 export class InputType {
 	constructor(
@@ -13,7 +9,7 @@ export class InputType {
 		private readonly name: InputTypeName
 	) {}
 
-	static fromPrimitives(primitives: InputTypePrimitives): InputType {
+	static fromPrimitives(primitives: InputTypeDto): InputType {
 		return new InputType(
 			new InputTypeId(primitives.id),
 			new InputTypeName(primitives.name)

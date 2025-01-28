@@ -1,14 +1,16 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type StatePrimitives } from '../../domain/State'
+import { type StateDto } from '../../domain/State.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type StateId } from '../../domain/StateId'
 import { type StateName } from '../../domain/StateName'
 import { type RegionId } from '../../../Region/domain/RegionId'
+import { type RegionDto } from '../../../Region/domain/Region.dto'
 
 export class StateModel
-	extends Model<StatePrimitives>
-	implements StatePrimitives
+	extends Model<Omit<StateDto, 'region'>>
+	implements StateDto
 {
+	declare region: RegionDto
 	declare id: Primitives<StateId>
 	declare regionId: Primitives<RegionId>
 	declare name: Primitives<StateName>

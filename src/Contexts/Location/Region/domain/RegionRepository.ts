@@ -1,11 +1,11 @@
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
+import { type RegionDto } from './Region.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type RegionPrimitives } from './Region'
 import { type RegionId } from './RegionId'
 
 export abstract class RegionRepository {
-	abstract searchAll(): Promise<RegionPrimitives[]>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<RegionDto>>
 
-	abstract searchById(
-		id: Primitives<RegionId>
-	): Promise<RegionPrimitives | null>
+	abstract searchById(id: Primitives<RegionId>): Promise<RegionDto | null>
 }

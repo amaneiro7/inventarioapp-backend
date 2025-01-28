@@ -1,13 +1,8 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type StateDto, type StatePrimitives } from './State.dto'
 import { RegionId } from '../../Region/domain/RegionId'
 import { StateId } from './StateId'
 import { StateName } from './StateName'
-
-export interface StatePrimitives {
-	id: Primitives<StateId>
-	regionId: Primitives<RegionId>
-	name: Primitives<StateName>
-}
 
 export class State {
 	constructor(
@@ -16,7 +11,7 @@ export class State {
 		private readonly name: StateName
 	) {}
 
-	static fromPrimitives(primitives: StatePrimitives): State {
+	static fromPrimitives(primitives: StateDto): State {
 		return new State(
 			new StateId(primitives.id),
 			new RegionId(primitives.regionId),

@@ -6,23 +6,19 @@ import {
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
-import {
-	ModelSeries,
-	type ModelSeriesPrimitives
-} from '../../../ModelSeries/domain/ModelSeries'
+import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
+import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
+import {
+	type MonitorModelsParams,
+	type MonitorModelsPrimitives
+} from './MonitoModels.dto'
 import { MonitorHasDVI } from './MonitorHasDVI'
 import { MonitorHasHDMI } from './MonitorHasHDMI'
 import { MonitorHasVGA } from './MonitorHasVGA'
 import { MonitorScreenSize } from './MonitorScreenSize'
 
-export interface MonitorModelsPrimitives extends ModelSeriesPrimitives {
-	screenSize: Primitives<MonitorScreenSize>
-	hasDVI: Primitives<MonitorHasDVI>
-	hasHDMI: Primitives<MonitorHasHDMI>
-	hasVGA: Primitives<MonitorHasVGA>
-}
 export class MonitorModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -38,7 +34,7 @@ export class MonitorModels extends ModelSeries {
 		super(id, name, categoryId, brandId, generic)
 	}
 
-	static create(params: Omit<MonitorModelsPrimitives, 'id'>): MonitorModels {
+	static create(params: MonitorModelsParams): MonitorModels {
 		if (!this.isMonitorCategory({ categoryId: params.categoryId })) {
 			throw new Error('Invalid category')
 		}
@@ -68,17 +64,20 @@ export class MonitorModels extends ModelSeries {
 		)
 	}
 
-	static fromPrimitives(primitives: MonitorModelsPrimitives): MonitorModels {
+	static fromPrimitives(primitives: ModelSeriesDto): MonitorModels {
+		if (!primitives.modelMonitor) {
+			throw new Error('Error al cargar la información de Monitores')
+		}
 		return new MonitorModels(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
-			new MonitorScreenSize(primitives.screenSize),
-			new MonitorHasDVI(primitives.hasDVI),
-			new MonitorHasHDMI(primitives.hasHDMI),
-			new MonitorHasVGA(primitives.hasVGA)
+			new MonitorScreenSize(primitives.modelMonitor.screenSize),
+			new MonitorHasDVI(primitives.modelMonitor.hasDVI),
+			new MonitorHasHDMI(primitives.modelMonitor.hasHDMI),
+			new MonitorHasVGA(primitives.modelMonitor.hasVGA)
 		)
 	}
 

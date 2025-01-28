@@ -11,6 +11,7 @@ import { type LaptopModelsDto } from '../../ModelCharacteristics/Computers/Lapto
 import { type PrinteModelsDto } from '../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
 import { type KeyboardModelsDto } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 import { type MonitorModelsDto } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
+import { type MouseModelsDto } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
 
 export interface ModelSeries {
 	id: Primitives<ModelSeriesId>
@@ -26,9 +27,12 @@ export type ModelSeriesPrimitives = ModelSeries
 export type ModelSeriesDto = ModelSeries & {
 	category: CategoryDto
 	brand: BrandDto
-	modelComputer: ComputerModelsDto
-	modelLaptop: LaptopModelsDto
-	modelPrinter: PrinteModelsDto
-	modelKeyboard: KeyboardModelsDto
-	modelMonitor: MonitorModelsDto
+	modelComputer: ComputerModelsDto | null
+	modelLaptop: LaptopModelsDto | null
+	modelPrinter: PrinteModelsDto | null
+	modelKeyboard: KeyboardModelsDto | null
+	modelMouse: MouseModelsDto | null
+	modelMonitor: MonitorModelsDto | null
+	updatedAt: Date
+	createdAt: Date
 }

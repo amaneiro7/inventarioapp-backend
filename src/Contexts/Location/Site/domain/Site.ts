@@ -1,16 +1,9 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { CityId } from '../../City/domain/CityId'
+import { type SiteDto, type SiteParams, type SitePrimitives } from './Site.dto'
 import { SiteAddress } from './SiteAddress'
 import { SiteId } from './SiteId'
 import { SiteName } from './SiteName'
-
-export interface SitePrimitives {
-	id: Primitives<SiteId>
-	cityId: Primitives<CityId>
-	address: Primitives<SiteAddress>
-	name: Primitives<SiteName>
-}
-
 export class Site {
 	constructor(
 		private readonly id: SiteId,
@@ -19,7 +12,7 @@ export class Site {
 		private name: SiteName
 	) {}
 
-	static fromPrimitives(primitives: SitePrimitives): Site {
+	static fromPrimitives(primitives: SiteDto): Site {
 		return new Site(
 			new SiteId(primitives.id),
 			new CityId(primitives.cityId),
@@ -28,7 +21,7 @@ export class Site {
 		)
 	}
 
-	static create(params: Omit<SitePrimitives, 'id'>): Site {
+	static create(params: SiteParams): Site {
 		const id = SiteId.random().value
 		return new Site(
 			new SiteId(id),

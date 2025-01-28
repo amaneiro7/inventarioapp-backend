@@ -1,13 +1,12 @@
-import { BrandPrimitives } from '../../../Brand/domain/Brand'
 import { BrandId } from '../../../Brand/domain/BrandId'
-import { BrandRepository } from '../../../Brand/domain/BrandRepository'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { ModelSeries } from './ModelSeries'
+import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type ModelSeries } from './ModelSeries'
 
 export class ModelSeriesBrand extends BrandId {
 	static async updateBrandField(params: {
 		repository: BrandRepository
-		brandId: Primitives<BrandId>
+		brandId?: Primitives<BrandId>
 		entity: ModelSeries
 	}): Promise<void> {
 		// Si no se ha pasado un nuevo valor de categoria no realiza ninguna acción
@@ -30,9 +29,8 @@ export class ModelSeriesBrand extends BrandId {
 		repository: BrandRepository
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
-		const isBrandExist: BrandPrimitives | null =
-			await params.repository.searchById(params.brandId)
-		if (isBrandExist === null) {
+		const isBrandExist = await params.repository.searchById(params.brandId)
+		if (!isBrandExist) {
 			throw new Error('Brand does not exist')
 		}
 	}

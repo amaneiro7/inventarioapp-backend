@@ -7,7 +7,6 @@ import { type ModelSeriesGetController } from '../../controllers/model-series/mo
 import { type ModelSeriesPostController } from '../../controllers/model-series/model-series.post.controller'
 import { type ModelSeriesPatchController } from '../../controllers/model-series/model-series.patch.controller'
 import { type ModelSeriesSearchByCriteriaController } from '../../controllers/model-series/model-series.search-by-criteria.controller'
-import { type ModelSeriesDeleteController } from '../../controllers/model-series/model-series.delete.controller'
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
 
 export const register = async (router: Router) => {
@@ -25,9 +24,7 @@ export const register = async (router: Router) => {
 	)
 	const searchByCriteria: ModelSeriesSearchByCriteriaController =
 		container.resolve(ModelSeriesDependencies.GetByCriteriaController)
-	const deleteController: ModelSeriesDeleteController = container.resolve(
-		ModelSeriesDependencies.DeleteController
-	)
+
 	const download: ModelSeriesDownloadExcelServiceController =
 		container.resolve(ModelSeriesDependencies.ExcelDownloadController)
 
@@ -65,12 +62,5 @@ export const register = async (router: Router) => {
 		'/models/:id',
 		authenticate,
 		patchController.run.bind(patchController)
-	)
-
-	// delete
-	router.delete(
-		'models/:id',
-		authenticate,
-		deleteController.run.bind(deleteController)
 	)
 }

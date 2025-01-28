@@ -6,19 +6,17 @@ import {
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
-import {
-	ModelSeries,
-	type ModelSeriesPrimitives
-} from '../../../ModelSeries/domain/ModelSeries'
+import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
+import { ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { HasFingerPrintReader } from './HasFingerPrintReader'
+import {
+	KeyboardModelsParams,
+	KeyboardModelsPrimitives
+} from './KeyboardModels.dto'
 import { ModelKeyboardInputType } from './ModelKeyboardInputType'
 
-export interface KeyboardModelsPrimitives extends ModelSeriesPrimitives {
-	inputTypeId: Primitives<ModelKeyboardInputType>
-	hasFingerPrintReader: Primitives<HasFingerPrintReader>
-}
 export class KeyboardModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -32,9 +30,7 @@ export class KeyboardModels extends ModelSeries {
 		super(id, name, categoryId, brandId, generic)
 	}
 
-	static create(
-		params: Omit<KeyboardModelsPrimitives, 'id'>
-	): KeyboardModels {
+	static create(params: KeyboardModelsParams): KeyboardModels {
 		const id = String(ModelSeriesId.random())
 		return new KeyboardModels(
 			new ModelSeriesId(id),
@@ -58,17 +54,20 @@ export class KeyboardModels extends ModelSeries {
 		)
 	}
 
-	static fromPrimitives(
-		primitives: KeyboardModelsPrimitives
-	): KeyboardModels {
+	static fromPrimitives(primitives: ModelSeriesDto): KeyboardModels {
+		if (!primitives.modelKeyboard) {
+			throw new Error('Error al cargar la información de teclados')
+		}
 		return new KeyboardModels(
 			new ModelSeriesId(primitives.id),
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
-			new ModelKeyboardInputType(primitives.inputTypeId),
-			new HasFingerPrintReader(primitives.hasFingerPrintReader)
+			new ModelKeyboardInputType(primitives.modelKeyboard.inputTypeId),
+			new HasFingerPrintReader(
+				primitives.modelKeyboard.hasFingerPrintReader
+			)
 		)
 	}
 

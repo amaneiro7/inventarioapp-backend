@@ -1,19 +1,21 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type SitePrimitives } from '../../domain/Site'
+import { type SiteDto } from '../../domain/Site.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SiteId } from '../../domain/SiteId'
 import { type CityId } from '../../../City/domain/CityId'
 import { type SiteName } from '../../domain/SiteName'
 import { type SiteAddress } from '../../domain/SiteAddress'
+import { type CityDto } from '../../../City/domain/City.dto'
 
 export class SiteModels
-	extends Model<SitePrimitives>
-	implements SitePrimitives
+	extends Model<Omit<SiteDto, 'city'>>
+	implements SiteDto
 {
 	declare id: Primitives<SiteId>
 	declare cityId: Primitives<CityId>
 	declare address: Primitives<SiteAddress>
 	declare name: Primitives<SiteName>
+	declare city: CityDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.City, { as: 'city', foreignKey: 'cityId' }) // A Site belongs to Many City

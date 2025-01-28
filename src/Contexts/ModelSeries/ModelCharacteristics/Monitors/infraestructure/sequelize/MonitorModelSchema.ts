@@ -2,21 +2,22 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
-import { type MonitorModelsPrimitives } from '../../domain/MonitorModels'
 import { type MonitorScreenSize } from '../../domain/MonitorScreenSize'
 import { type MonitorHasDVI } from '../../domain/MonitorHasDVI'
 import { type MonitorHasHDMI } from '../../domain/MonitorHasHDMI'
 import { type MonitorHasVGA } from '../../domain/MonitorHasVGA'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type MonitorModelsDto } from '../../domain/MonitoModels.dto'
 
-interface MonitorModelsCreationAttributes
-	extends Omit<MonitorModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+interface MonitorModelsCreationAttributes extends MonitorModelsDto {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class MonitorModelsModel
 	extends Model<MonitorModelsCreationAttributes>
-	implements MonitorModelsCreationAttributes
+	implements MonitorModelsDto
 {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>

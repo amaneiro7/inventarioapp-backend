@@ -1,19 +1,16 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { SiteId } from '../../Site/domain/SiteId'
 import { TypeOfSiteId } from '../../TypeOfSite/domain/TypeOfSiteId'
+import {
+	type LocationDto,
+	type LocationParams,
+	type LocationPrimitives
+} from './Location.dto'
 import { LocationId } from './LocationId'
 import { LocationName } from './LocationName'
 import { LocationSite } from './LocationSite'
 import { LocationSubnet } from './LocationSubnet'
 import { LocationTypeOfSite } from './LocationTypeOfSite'
-
-export interface LocationPrimitives {
-	id: Primitives<LocationId>
-	typeOfSiteId: Primitives<LocationTypeOfSite>
-	siteId: Primitives<LocationSite>
-	name: Primitives<LocationName>
-	subnet: Primitives<LocationSubnet>
-}
 
 export class Location {
 	constructor(
@@ -24,7 +21,7 @@ export class Location {
 		private subnet: LocationSubnet
 	) {}
 
-	static create(params: Omit<LocationPrimitives, 'id'>): Location {
+	static create(params: LocationParams): Location {
 		const id = LocationId.random().value
 		return new Location(
 			new LocationId(id),
@@ -35,7 +32,7 @@ export class Location {
 		)
 	}
 
-	static fromPrimitives(primitives: LocationPrimitives): Location {
+	static fromPrimitives(primitives: LocationDto): Location {
 		return new Location(
 			new LocationId(primitives.id),
 			new LocationTypeOfSite(primitives.typeOfSiteId),

@@ -4,11 +4,9 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type Transaction } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesPrimitives } from '../../domain/ModelSeries'
 import { type ModelSeriesId } from '../../domain/ModelSeriesId'
 import { type ModelSeriesRepository } from '../../domain/ModelSeriesRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
 import { ComputerModels } from '../../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
 import { LaptopsModels } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
 import { MonitorModels } from '../../../ModelCharacteristics/Monitors/domain/MonitorModels'
@@ -20,6 +18,12 @@ import { MouseModels } from '../../../ModelCharacteristics/Mouses/domain/MouseMo
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { clearModelDataset } from './clearModelDataset'
+import {
+	type ModelSeriesDto,
+	type ModelSeriesPrimitives
+} from '../../domain/ModelSeries.dto'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 export class SequelizeModelSeriesRepository
 	extends SequelizeCriteriaConverter
@@ -30,28 +34,40 @@ export class SequelizeModelSeriesRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(): Promise<ModelSeriesPrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await ModelSeriesModel.findAll({
-				include: [
-					'category',
-					'brand',
-					'modelPrinter',
-					'modelMonitor',
-					{ association: 'modelLaptop', include: ['memoryRamType'] },
-					{
-						association: 'modelComputer',
-						include: ['memoryRamType']
-					},
-					{ association: 'modelKeyboard', include: ['inputType'] }
-				]
-			})
+	async searchAll(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
+		const options = this.convert(criteria)
+		options.include = [
+			'category',
+			'brand',
+			'modelPrinter',
+			'modelMonitor',
+			{
+				association: 'modelLaptop',
+				include: ['memoryRamType']
+			},
+			{
+				association: 'modelComputer',
+				include: ['memoryRamType']
+			},
+			{ association: 'modelKeyboard', include: ['inputType'] }
+		]
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.MEDIUM,
+			fetchFunction: async () => {
+				const { rows, count } = await ModelSeriesModel.findAndCountAll(
+					options
+				)
+				return {
+					data: rows,
+					total: count
+				}
+			}
 		})
 	}
 
-	async matching(
-		criteria: Criteria
-	): Promise<{ total: number; data: ModelSeriesPrimitives[] }> {
+	async matching(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
 		const options = this.convert(criteria)
 
 		const modelOption = new ModelAssociation().convertFilter(
@@ -59,16 +75,23 @@ export class SequelizeModelSeriesRepository
 			options
 		)
 
-		const { count: total, rows: data } =
-			await ModelSeriesModel.findAndCountAll(modelOption)
-
-		return {
-			total,
-			data: data.map(model => model.get())
-		}
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.MEDIUM,
+			fetchFunction: async () => {
+				const { rows, count } = await ModelSeriesModel.findAndCountAll(
+					modelOption
+				)
+				return {
+					data: rows,
+					total: count
+				}
+			}
+		})
 	}
 
-	async searchById(id: string): Promise<ModelSeriesPrimitives | null> {
+	async searchById(id: string): Promise<ModelSeriesDto | null> {
 		return (
 			(await ModelSeriesModel.findByPk(id, {
 				include: [
@@ -86,14 +109,14 @@ export class SequelizeModelSeriesRepository
 
 	async searchByCategory(
 		categoryId: Primitives<CategoryId>
-	): Promise<ModelSeriesPrimitives[]> {
+	): Promise<ModelSeriesDto[]> {
 		return await ModelSeriesModel.findAll({
 			where: { categoryId },
 			include: ['category', 'brand']
 		})
 	}
 
-	async searchByName(name: string): Promise<ModelSeriesPrimitives | null> {
+	async searchByName(name: string): Promise<ModelSeriesDto | null> {
 		return (
 			(await ModelSeriesModel.findOne({
 				where: { name },
@@ -149,8 +172,7 @@ export class SequelizeModelSeriesRepository
 				await this.createModelMouseIfCategoryMatches(id, payload, t)
 			}
 			await t.commit()
-			await await this.cache.removeCachedData(this.cacheKey)
-			await this.searchAll()
+			await await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 		} catch (error: any) {
 			await t.rollback()
 			throw new Error(error)
@@ -293,19 +315,15 @@ export class SequelizeModelSeriesRepository
 
 	async remove(id: string): Promise<void> {
 		await ModelSeriesModel.destroy({ where: { id } })
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 
 	async donwload(criteria: Criteria): Promise<{}> {
 		set_fs(fs)
 
-		const { data } = (await this.matching(criteria)) as {
-			total: number
-			data: ModelSeriesPrimitives[]
-		}
+		const { data } = await this.matching(criteria)
 
-		const wbData = clearModelDataset({ models: data as ModelApiresponse[] })
+		const wbData = clearModelDataset({ models: data })
 		// Crear una nueva hoja de cálculo
 		const worksheet = utils.json_to_sheet(wbData)
 		worksheet['!cols'] = [{ wch: 20 }]

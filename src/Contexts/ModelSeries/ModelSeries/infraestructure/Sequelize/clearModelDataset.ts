@@ -1,6 +1,6 @@
-import { type ModelApiresponse } from '../../../../Device/Device/infrastructure/sequelize/DeviceResponse'
+import { type ModelSeriesDto } from '../../domain/ModelSeries.dto'
 
-export function clearModelDataset({ models }: { models: ModelApiresponse[] }) {
+export function clearModelDataset({ models }: { models: ModelSeriesDto[] }) {
 	return models.map(model => ({
 		id: model?.id,
 		Categoria: model?.category?.name,
@@ -17,38 +17,38 @@ export function clearModelDataset({ models }: { models: ModelApiresponse[] }) {
 		'Puerto VGA':
 			model?.modelComputer || model?.modelLaptop || model?.modelMonitor
 				? model?.modelComputer?.hasVGA ||
-					model?.modelLaptop?.hasVGA ||
-					model?.modelMonitor?.hasVGA
+				  model?.modelLaptop?.hasVGA ||
+				  model?.modelMonitor?.hasVGA
 					? 'Si'
 					: 'No'
 				: 'N/A',
 		'Puerto HDMI':
 			model?.modelComputer || model?.modelLaptop || model?.modelMonitor
 				? model?.modelComputer?.hasDVI ||
-					model?.modelLaptop?.hasDVI ||
-					model?.modelMonitor?.hasDVI
+				  model?.modelLaptop?.hasDVI ||
+				  model?.modelMonitor?.hasDVI
 					? 'Si'
 					: 'No'
 				: 'N/A',
 		'Puerto DVI':
 			model?.modelComputer || model?.modelLaptop || model?.modelMonitor
 				? model?.modelComputer?.hasHDMI ||
-					model?.modelLaptop?.hasHDMI ||
-					model?.modelMonitor?.hasHDMI
+				  model?.modelLaptop?.hasHDMI ||
+				  model?.modelMonitor?.hasHDMI
 					? 'Si'
 					: 'No'
 				: 'N/A',
 		'Adaptador Bluetooth':
 			model?.modelComputer || model?.modelLaptop
 				? model?.modelComputer?.hasBluetooth ||
-					model?.modelLaptop?.hasBluetooth
+				  model?.modelLaptop?.hasBluetooth
 					? 'Si'
 					: 'No'
 				: 'N/A',
 		'Adaptador Wifi':
 			model?.modelComputer || model?.modelLaptop
 				? model?.modelComputer?.hasWifiAdapter ||
-					model?.modelLaptop?.hasWifiAdapter
+				  model?.modelLaptop?.hasWifiAdapter
 					? 'Si'
 					: 'No'
 				: 'N/A',

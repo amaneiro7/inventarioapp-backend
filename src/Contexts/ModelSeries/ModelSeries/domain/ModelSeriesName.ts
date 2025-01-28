@@ -1,10 +1,10 @@
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type ModelSeriesRepository } from './ModelSeriesRepository'
 import { BrandId } from '../../../Brand/domain/BrandId'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { ModelSeries, ModelSeriesPrimitives } from './ModelSeries'
+import { ModelSeries } from './ModelSeries'
 import { ModelSeriesAlreadyExistError } from './ModelSeriesAlreadyExistError'
-import { ModelSeriesRepository } from './ModelSeriesRepository'
 
 export class ModelSeriesName extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 100
@@ -41,7 +41,7 @@ export class ModelSeriesName extends StringValueObject {
 		entity
 	}: {
 		repository: ModelSeriesRepository
-		name: Primitives<ModelSeriesName>
+		name?: Primitives<ModelSeriesName>
 		entity: ModelSeries
 	}): Promise<void> {
 		// Si no se ha pasado un nuevo nombre no realiza ninguna acción
@@ -73,10 +73,9 @@ export class ModelSeriesName extends StringValueObject {
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
 		// Busca por un modelo con el nombre suministrador en la base de datos
-		const modelSeries: ModelSeriesPrimitives | null =
-			await repository.searchByName(name)
+		const modelSeries = await repository.searchByName(name)
 		// si el resultado es nulo significa que no existe por ende el nombre esta disponible
-		if (modelSeries === null) {
+		if (!modelSeries) {
 			return
 		}
 		// Pueden existir dos nombres iguales siempre y cuando pertenezcan a dos marcas distintas

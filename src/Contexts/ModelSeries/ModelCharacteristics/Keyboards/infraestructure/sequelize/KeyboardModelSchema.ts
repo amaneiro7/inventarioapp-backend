@@ -2,25 +2,29 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
-import { type KeyboardModelsPrimitives } from '../../domain/KeyboadModels'
 import { type InputTypeId } from '../../../../InputType/domain/InputTypeId'
 import { type HasFingerPrintReader } from '../../domain/HasFingerPrintReader'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { KeyboardModelsDto } from '../../domain/KeyboardModels.dto'
+import { InputType } from '../../../../InputType/domain/InputType.dto'
 
 interface KeyboardModelsCreationAttributes
-	extends Omit<KeyboardModelsPrimitives, 'name' | 'brandId' | 'generic'> {
+	extends Omit<KeyboardModelsDto, 'inputType'> {
+	id: Primitives<ModelSeriesId>
+	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
 export class KeyboardModelsModel
 	extends Model<KeyboardModelsCreationAttributes>
-	implements KeyboardModelsCreationAttributes
+	implements KeyboardModelsDto
 {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>
 	declare inputTypeId: Primitives<InputTypeId>
 	declare hasFingerPrintReader: Primitives<HasFingerPrintReader>
+	declare inputType: InputType
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Model, {

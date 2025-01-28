@@ -1,7 +1,6 @@
-import { History, type HistoryPrimitives } from '../domain/History'
+import { History } from '../domain/History'
+import { type HistoryParams } from '../domain/History.dto'
 import { type HistoryRepository } from '../domain/HistoryRepository'
-
-export interface HistoryParams extends Omit<HistoryPrimitives, 'id'> {}
 
 export class HistoryCreator {
 	constructor(private readonly historyRepository: HistoryRepository) {}

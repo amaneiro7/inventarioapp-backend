@@ -1,14 +1,18 @@
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationPrimitives } from '../../domain/Location'
 import { type LocationId } from '../../domain/LocationId'
 import { type LocationRepository } from '../../domain/LocationRepository'
 import { LocationName } from '../../domain/LocationName'
 import { LocationAssociation } from './LocationAssociation'
-import { LocationApiResponse } from './LocationResponse'
 import { LocationModel } from './LocationSchema'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import {
+	type LocationDto,
+	type LocationPrimitives
+} from '../../domain/Location.dto'
 
 export class SequelizeLocationRepository
 	extends CriteriaToSequelizeConverter
@@ -18,63 +22,66 @@ export class SequelizeLocationRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(): Promise<LocationPrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await LocationModel.findAll({
+	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationDto>> {
+		const options = this.convert(criteria)
+
+		options.include = [
+			'typeOfSite',
+			{
+				association: 'site',
 				include: [
-					'typeOfSite',
 					{
-						association: 'site',
+						association: 'city',
 						include: [
 							{
-								association: 'city',
-								include: [
-									{
-										association: 'state',
-										include: ['region']
-									}
-								]
+								association: 'state',
+								include: ['region']
 							}
 						]
 					}
 				]
-			})
+			}
+		]
+
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const { rows, count } = await LocationModel.findAndCountAll(
+					options
+				)
+				return {
+					data: rows,
+					total: count
+				}
+			}
 		})
 	}
 
-	async matching(criteria: Criteria): Promise<LocationPrimitives[]> {
+	async matching(criteria: Criteria): Promise<ResponseDB<LocationDto>> {
 		const options = this.convert(criteria)
 		const locationOption = new LocationAssociation().convertFilterLocation(
 			criteria,
 			options
 		)
-		const data = await LocationModel.findAll(locationOption)
-		let filtered: LocationApiResponse[] | undefined
-		;['regionId'].forEach(ele => {
-			if (criteria.searchValueInArray(ele)) {
-				filtered = (data as unknown as LocationApiResponse[]).filter(
-					res => {
-						return res?.site?.city !== null
-					}
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const { rows, count } = await LocationModel.findAndCountAll(
+					locationOption
 				)
+				return {
+					data: rows,
+					total: count
+				}
 			}
 		})
-		;['stateId'].forEach(ele => {
-			if (criteria.searchValueInArray(ele)) {
-				filtered = (data as unknown as LocationApiResponse[]).filter(
-					res => {
-						return res?.site !== null
-					}
-				)
-			}
-		})
-
-		return filtered ?? data
 	}
 
-	async searchById(
-		id: Primitives<LocationId>
-	): Promise<LocationPrimitives | null> {
+	async searchById(id: Primitives<LocationId>): Promise<LocationDto | null> {
 		return (
 			(await LocationModel.findByPk(id, {
 				include: [
@@ -100,7 +107,7 @@ export class SequelizeLocationRepository
 
 	async searchByName(
 		name: Primitives<LocationName>
-	): Promise<LocationPrimitives | null> {
+	): Promise<LocationDto | null> {
 		return (await LocationModel.findOne({ where: { name } })) ?? null
 	}
 
@@ -113,7 +120,6 @@ export class SequelizeLocationRepository
 			employee.set({ ...payload })
 			await employee.save()
 		}
-		await this.cache.removeCachedData(this.cacheKey)
-		await this.searchAll()
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

@@ -1,5 +1,5 @@
 import { FindOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class ModelAssociation {
 	convertFilter(criteria: Criteria, options: FindOptions): FindOptions {

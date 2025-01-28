@@ -1,15 +1,17 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type HistoryPrimitives } from '../../domain/History'
+import { type HistoryDto } from '../../domain/History.dto'
 import { type ActionType, acionTypes } from '../../domain/HistoryAction'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { DeviceId } from '../../../Device/Device/domain/DeviceId'
-import { HistoryId } from '../../domain/HistoryId'
-import { UserId } from '../../../User/user/domain/UserId'
-import { HistoryEmployee } from '../../domain/HistoryEmployee'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
+import { type HistoryId } from '../../domain/HistoryId'
+import { type UserId } from '../../../User/user/domain/UserId'
+import { type HistoryEmployee } from '../../domain/HistoryEmployee'
+import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
+import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 
 export class HistoryModel
-	extends Model<HistoryPrimitives>
-	implements HistoryPrimitives
+	extends Model<Omit<HistoryDto, 'employee' | 'device'>>
+	implements HistoryDto
 {
 	declare id: Primitives<HistoryId>
 	declare deviceId: Primitives<DeviceId>
@@ -19,6 +21,9 @@ export class HistoryModel
 	declare oldData: object
 	declare newData: object
 	declare createdAt: Date
+	// joins
+	declare employee: EmployeeDto
+	declare device: DeviceDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' }) // A history belongs to a user
