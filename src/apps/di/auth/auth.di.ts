@@ -8,7 +8,7 @@ import { JwtBearerStrategy } from '../../../Contexts/Auth/infrastructure/passpor
 import { AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'
 import { AuthRefreshTokenUseCase } from '../../../Contexts/Auth/application/AuthRefhreshTokenUseCase'
-AuthRefreshTokenUseCase
+
 export enum AuthDependencies {
 	UserLoginLocal = 'userLoginLocal',
 	RefreshTokenUseCase = 'refreshTokenUseCase',
