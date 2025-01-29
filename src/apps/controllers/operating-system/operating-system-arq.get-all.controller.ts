@@ -5,6 +5,7 @@ import { type OperatingSystemArqFinderAll } from '../../../Contexts/Features/Ope
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { OperatingSystemArqDependencies } from '../../di/operating-system/operating-system-arq.di'
+import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructure/criteria/CriteriaFromUrlConverter'
 
 export class OperatingSystemArqGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -12,7 +13,10 @@ export class OperatingSystemArqGetAllController implements Controller {
 			const getAll: OperatingSystemArqFinderAll = container.resolve(
 				OperatingSystemArqDependencies.FinderAll
 			)
-			const data = await getAll.run()
+			const convert = new CriteriaFromUrlConverter()
+			const query = convert.toCriteria(req)
+
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)

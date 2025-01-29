@@ -1,21 +1,18 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import {
+	type ProcessorSocketDto,
+	type ProcessorSocketPrimitives
+} from './ProcessorSocket.dto'
 import { ProcessorSocketId } from './ProcessorSocketId'
 import { ProcessorSocketName } from './ProcessorSocketName'
-
-export interface ProcessorSocketPrimitives {
-	id: Primitives<ProcessorSocketId>
-	name: Primitives<ProcessorSocketName>
-}
 
 export class ProcessorSocket {
 	constructor(
 		private readonly id: ProcessorSocketId,
-		private readonly version: ProcessorSocketName
+		private readonly name: ProcessorSocketName
 	) {}
 
-	static fromPrimitives(
-		primitives: ProcessorSocketPrimitives
-	): ProcessorSocket {
+	static fromPrimitives(primitives: ProcessorSocketDto): ProcessorSocket {
 		return new ProcessorSocket(
 			new ProcessorSocketId(primitives.id),
 			new ProcessorSocketName(primitives.name)
@@ -34,6 +31,6 @@ export class ProcessorSocket {
 	}
 
 	get nameValue(): Primitives<ProcessorSocketName> {
-		return this.version.value
+		return this.name.value
 	}
 }

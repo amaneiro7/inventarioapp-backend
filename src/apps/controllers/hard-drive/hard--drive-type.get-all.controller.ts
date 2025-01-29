@@ -4,6 +4,7 @@ import { type HardDriveTypeFinderAll } from '../../../Contexts/Features/HardDriv
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { HardDriveTypeDependencies } from '../../di/hard-drive/hard-drive-type.di'
+import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructure/criteria/CriteriaFromUrlConverter'
 
 export class HardDriveTypeGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -11,7 +12,10 @@ export class HardDriveTypeGetAllController implements Controller {
 			const getAll: HardDriveTypeFinderAll = container.resolve(
 				HardDriveTypeDependencies.FinderAll
 			)
-			const data = await getAll.run()
+			const convert = new CriteriaFromUrlConverter()
+			const query = convert.toCriteria(req)
+
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)

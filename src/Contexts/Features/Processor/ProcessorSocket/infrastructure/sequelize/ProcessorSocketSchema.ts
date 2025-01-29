@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type ProcessorSocketPrimitives } from '../../domain/ProcessorSocket'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ProcessorSocketId } from '../../domain/ProcessorSocketId'
 import { type ProcessorSocketName } from '../../domain/ProcessorSocketName'
+import { type ProcessorSocketDto } from '../../domain/ProcessorSocket.dto'
 
 export class ProcessorSocketModel
-	extends Model<ProcessorSocketPrimitives>
-	implements ProcessorSocketPrimitives
+	extends Model<ProcessorSocketDto>
+	implements ProcessorSocketDto
 {
 	declare id: Primitives<ProcessorSocketId>
 	declare name: Primitives<ProcessorSocketName>

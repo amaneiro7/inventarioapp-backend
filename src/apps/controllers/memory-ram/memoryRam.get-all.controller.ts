@@ -4,6 +4,7 @@ import { type MemoryRamTypeFinderAll } from '../../../Contexts/Features/MemoryRa
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { MemoryRamTypeDependencies } from '../../di/memory-ram/memory-ram-type.di'
+import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructure/criteria/CriteriaFromUrlConverter'
 
 export class MemoryRamTypeGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -11,7 +12,10 @@ export class MemoryRamTypeGetAllController implements Controller {
 			const getAll: MemoryRamTypeFinderAll = container.resolve(
 				MemoryRamTypeDependencies.FinderAll
 			)
-			const data = await getAll.run()
+			const convert = new CriteriaFromUrlConverter()
+			const query = convert.toCriteria(req)
+
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)
