@@ -1,30 +1,23 @@
 import * as http from 'node:http' // Import the http module
 import express, { json, urlencoded, type Request, type Response } from 'express' //
-import Router from 'express-promise-router'
 import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
-import errorHandler from 'errorhandler'
 import cors from 'cors'
 import { options } from './Middleware/cors'
 import helmet from 'helmet' // Protege contra ataques de seguridad
-
 import { limiter } from './Middleware/rateLimit' // Importa el middleware de limitacion de peticiones
-import httpStatus from '../Contexts/Shared/infrastructure/utils/http-status' // Importa el modulo de status de http
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
 import { morganLog } from './Middleware/morgan'
-
-import { config } from '../Contexts/Shared/infrastructure/config' // archivo donde se configurar las variables de entorno
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
+import swaggerUi from 'swagger-ui-express'
+import { swaggerDocs } from './Middleware/swagger'
 
 export class Server {
 	private express: express.Express
 	httpServer?: http.Server
 
-	constructor(
-		readonly port: string,
-		private readonly logger: Logger
-	) {
+	constructor(readonly port: string, private readonly logger: Logger) {
 		this.port = port
 		this.express = express()
 
@@ -74,29 +67,14 @@ export class Server {
 			res.send('Servidor de Inventario funcionando correctamente')
 		})
 
-		// Configuración de rutas
-		const router = Router()
-
-		if (!config.isProd) {
-			router.use(errorHandler())
-		}
-
-		this.express.use(router)
-		this.express.use('/api/v1/', router)
-
-		// Configuración de rutas
-		;(async () => {
-			await registerRoutes(router)
-		})()
-
-		// Manejo de errores global
-		router.use(
-			(err: Error, req: Request, res: Response, _next: () => void) => {
-				const errorMessage = `name: ${err.name} - message: ${err.message}`
-				this.logger.error(errorMessage)
-				res.status(httpStatus.BAD_REQUEST).send(err.message)
-			}
+		this.express.use(
+			'/api/v1/docs',
+			swaggerUi.serve,
+			swaggerUi.setup(swaggerDocs)
 		)
+
+		// Configuración de rutas
+		registerRoutes(this.express, this.logger)
 	}
 
 	async listen(): Promise<void> {

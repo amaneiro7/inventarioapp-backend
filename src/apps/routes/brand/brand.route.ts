@@ -7,6 +7,16 @@ import { type BrandPatchController } from '../../controllers/brand/brand.patch.c
 import { type BrandGetFinderController } from '../../controllers/brand/brand.get.controller'
 import { BrandDependencies } from '../../di/brand/brand.di'
 
+/**
+ * @swagger
+ *
+ * /brands:
+ *  get:
+ *   produces:
+ *    - application/json
+ *
+ */
+
 export const register = async (router: Router) => {
 	const getController: BrandGetFinderController = container.resolve(
 		BrandDependencies.GetController
