@@ -21,10 +21,13 @@ export class SequelizeUserRepository
 		super()
 	}
 	async searchAll(): Promise<UserPrimitivesOptional[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await UserModel.findAll({
-				include: ['role']
-			})
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			fetchFunction: async () => {
+				return await UserModel.findAll({
+					include: ['role']
+				})
+			}
 		})
 	}
 
@@ -65,13 +68,13 @@ export class SequelizeUserRepository
 			user.set({ ...payload })
 			await user.save()
 		}
-		await this.cache.removeCachedData(this.cacheKey)
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 		await this.searchAll()
 	}
 
 	async delete(id: Primitives<UserId>): Promise<void> {
 		await UserModel.destroy({ where: { id } })
-		await this.cache.removeCachedData(this.cacheKey)
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 		await this.searchAll()
 	}
 }

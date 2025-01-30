@@ -6,7 +6,6 @@ import { LocationDoesNotExistError } from '../../../Location/Location/domain/Loc
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { type Device } from './Device'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
-import { type LocationPrimitives } from '../../../Location/Location/domain/Location'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 export class DeviceLocation extends AcceptedNullValueObject<
@@ -113,8 +112,9 @@ export class DeviceLocation extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given location in the database
-		const deviceWithLocation: LocationPrimitives | null =
-			await repository.searchById(new LocationId(location).toString())
+		const deviceWithLocation = await repository.searchById(
+			new LocationId(location).toString()
+		)
 		// If a device with the given location exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given location
 		if (deviceWithLocation === null) {

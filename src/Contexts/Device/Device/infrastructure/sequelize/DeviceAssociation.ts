@@ -227,12 +227,14 @@ export class DeviceAssociation {
 			'macAddress'
 		]
 		firstLevelJoin.forEach(ele => {
-			if (criteria.searchValueInArray(ele)) {
+			if (options.where && criteria.searchValueInArray(ele)) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				options.include[5].where = {
-					...options.include[5].where,
-					[ele]: options.where[ele]
+					// @ts-expect-error
+					...options?.include[5]?.where,
+					// @ts-expect-error
+					[ele]: options?.where[ele]
 				}
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error

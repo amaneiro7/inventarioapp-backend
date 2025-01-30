@@ -6,7 +6,6 @@ import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Err
 import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
-import { type EmployeePrimitives } from '../../../employee/Employee/domain/Employee.ts.old'
 
 export class DeviceEmployee extends AcceptedNullValueObject<
 	Primitives<EmployeeId>
@@ -132,11 +131,12 @@ export class DeviceEmployee extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given empleado in the database
-		const deviceWithEmployee: EmployeePrimitives | null =
-			await repository.searchById(new EmployeeId(employee).toString())
+		const deviceWithEmployee = await repository.searchById(
+			new EmployeeId(employee).toString()
+		)
 		// If a device with the given empleado exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given empleado
-		if (deviceWithEmployee === null) {
+		if (!deviceWithEmployee) {
 			throw new EmployeeDoesNotExistError(employee)
 		}
 	}

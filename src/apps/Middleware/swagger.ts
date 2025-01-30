@@ -30,5 +30,5 @@ const options = {
 	apis: ['src/**/*.route.*']
 }
 
-swaggerAutogen()(outputFile, routes)
+swaggerAutogen()(outputFile, routes, doc)
 export const swaggerDocs = swaggerJsdoc(options)

@@ -1,5 +1,4 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type StatusPrimitives } from '../../Status/domain/Status'
 import { StatusDoesNotExistError } from '../../Status/domain/StatusDoesNotExistError'
 import { StatusId } from '../../Status/domain/StatusId'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
@@ -37,11 +36,12 @@ export class DeviceStatus extends StatusId {
 		status: Primitives<StatusId>
 	}): Promise<void> {
 		// Searches for a device with the given status in the database
-		const deviceWithStatus: StatusPrimitives | null =
-			await repository.searchById(new StatusId(status).toString())
+		const deviceWithStatus = await repository.searchById(
+			new StatusId(status).value
+		)
 		// If a device with the given status exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given status
-		if (deviceWithStatus === null) {
+		if (!deviceWithStatus) {
 			throw new StatusDoesNotExistError(status)
 		}
 	}

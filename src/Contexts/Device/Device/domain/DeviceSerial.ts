@@ -2,10 +2,9 @@ import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/Acc
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type Device, type DevicePrimitives } from './Device'
+import { type Device } from './Device'
 import { type Generic } from '../../../ModelSeries/ModelSeries/domain/Generic'
 import { type DeviceRepository } from './DeviceRepository'
-import { type Nullable } from '../../../Shared/domain/Nullable'
 
 export class DeviceSerial extends AcceptedNullValueObject<string> {
 	private readonly NAME_MAX_LENGTH = 100
@@ -114,8 +113,9 @@ export class DeviceSerial extends AcceptedNullValueObject<string> {
 			return
 		}
 		// Searches for a device with the given serial in the database
-		const deviceWithSerial: Nullable<DevicePrimitives> =
-			await repository.searchBySerial(new DeviceSerial(serial).toString())
+		const deviceWithSerial = await repository.searchBySerial(
+			new DeviceSerial(serial).value
+		)
 		// If a device with the given serial exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given serial
 		if (deviceWithSerial !== null) {

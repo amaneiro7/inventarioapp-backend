@@ -13,6 +13,7 @@ import { type LaptopModelsDto } from '../../../ModelCharacteristics/Computers/La
 import { type KeyboardModelsDto } from '../../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 import { type MonitorModelsDto } from '../../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
 import { type PrinteModelsDto } from '../../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
+import { MouseModelsDto } from '../../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
 
 export class ModelSeriesModel
 	extends Model<
@@ -25,6 +26,7 @@ export class ModelSeriesModel
 			| 'modelPrinter'
 			| 'modelKeyboard'
 			| 'modelMonitor'
+			| 'modelMouse'
 			| 'updatedAt'
 			| 'createdAt'
 		>
@@ -46,6 +48,7 @@ export class ModelSeriesModel
 	declare modelPrinter: PrinteModelsDto | null
 	declare modelKeyboard: KeyboardModelsDto | null
 	declare modelMonitor: MonitorModelsDto | null
+	declare modelMouse: MouseModelsDto | null
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Category, {

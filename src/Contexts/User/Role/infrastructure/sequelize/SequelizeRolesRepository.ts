@@ -13,8 +13,11 @@ export class SequelizeRolesRepository implements RoleRepository {
 	}
 
 	async searchAll(): Promise<RolePrimitives[]> {
-		return await this.cache.getCachedData(this.cacheKey, async () => {
-			return await RolesModel.findAll()
+		return await this.cache.getCachedData({
+			cacheKey: this.cacheKey,
+			fetchFunction: async () => {
+				return await RolesModel.findAll()
+			}
 		})
 	}
 }

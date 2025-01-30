@@ -16,10 +16,10 @@ import { type BrandDto } from '../../../Brand/domain/Brand.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 import { type LocationDto } from '../../../Location/Location/domain/Location.dto'
-import { DeviceComputerDto } from '../../../Features/Computer/domain/Computer.dto'
-import { MFPDto } from '../../../Features/MFP/domain/MFP.dto'
-import { DeviceHardDriveDto } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
-import { HistoryDto } from '../../../History/domain/History.dto'
+import { type DeviceComputerDto } from '../../../Features/Computer/domain/Computer.dto'
+import { type DeviceMFPDto } from '../../../Features/MFP/domain/MFP.dto'
+import { type DeviceHardDriveDto } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
+import { type HistoryDto } from '../../../History/domain/History.dto'
 
 export interface Device {
 	id: Primitives<DeviceId>
@@ -48,8 +48,8 @@ export type DeviceDto = Device & {
 	location: LocationDto
 	computer: DeviceComputerDto | null
 	hardDrive: DeviceHardDriveDto | null
-	mfp: MFPDto | null
-	history: HistoryDto
+	mfp: DeviceMFPDto | null
+	history: HistoryDto[]
 	updatedAt: Date
 	createdAt: Date
 }

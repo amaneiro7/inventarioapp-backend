@@ -1,5 +1,4 @@
 import { InputTypeId } from '../../../InputType/domain/InputTypeId'
-import { type InputTypePrimitives } from '../../../InputType/domain/InputType'
 import { type MouseModels } from './MouseModels'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type InputTypeRepository } from '../../../InputType/domain/InputTypeRepository'
@@ -30,9 +29,10 @@ export class ModelMouseInputType extends InputTypeId {
 		repository: InputTypeRepository
 		inputTypeId: Primitives<InputTypeId>
 	}): Promise<void> {
-		const isInputTypeExist: InputTypePrimitives | null =
-			await params.repository.searchById(params.inputTypeId)
-		if (isInputTypeExist === null) {
+		const isInputTypeExist = await params.repository.searchById(
+			params.inputTypeId
+		)
+		if (!isInputTypeExist) {
 			throw new Error('InputType does not exist')
 		}
 	}

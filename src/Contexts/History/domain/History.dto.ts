@@ -2,6 +2,7 @@ import { type DeviceDto } from '../../Device/Device/domain/Device.dto'
 import { type DeviceId } from '../../Device/Device/domain/DeviceId'
 import { type EmployeeDto } from '../../employee/Employee/domain/entity/Employee.dto'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type UserDto } from '../../User/user/domain/User.dto'
 import { type UserId } from '../../User/user/domain/UserId'
 import { type ActionType } from './HistoryAction'
 import { type HistoryEmployee } from './HistoryEmployee'
@@ -25,4 +26,5 @@ export type HistoryParams = Omit<History, 'id'>
 export type HistoryDto = History & {
 	employee: EmployeeDto
 	device: DeviceDto
+	user: UserDto
 }

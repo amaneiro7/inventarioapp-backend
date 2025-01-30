@@ -20,9 +20,9 @@ export class Filter {
 	// Esto es simplemente otra forma de instanciar nuestra clase
 	// La usamos cuando queremos hacer logica extra en nuestra instanciación
 	static fromValues(
-		field: Primitives<FilterField>,
-		operator: Primitives<FilterOperator>,
-		value: Primitives<FilterValue>
+		field: FiltersPrimitives['field'],
+		operator: FiltersPrimitives['operator'],
+		value: FiltersPrimitives['value']
 	): Filter {
 		return new Filter(
 			new FilterField(field),

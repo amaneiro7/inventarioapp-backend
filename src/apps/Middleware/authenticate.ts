@@ -6,12 +6,10 @@ export const authenticate = (
 	req: Request,
 	res: Response,
 	next: NextFunction
-): any => {
-	// passport.authenticate(StrategyOptions.JWTBEARER, { session: false })(
-	// 	req,
-	// 	res,
-	// 	next
-	// )
-
-	next()
+): void => {
+	passport.authenticate(StrategyOptions.JWTBEARER, { session: false })(
+		req,
+		res,
+		next
+	)
 }
