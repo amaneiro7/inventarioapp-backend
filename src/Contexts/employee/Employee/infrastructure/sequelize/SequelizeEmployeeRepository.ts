@@ -71,17 +71,15 @@ export class SequelizeEmployeeRepository
 
 	async matching(criteria: Criteria): Promise<ResponseDB<EmployeeDto>> {
 		const options = this.convert(criteria)
-		const locationJoin = new EmployeeAssociation().convertFilterLocation(
-			criteria,
-			options
-		)
+		console.log('sequelize', options)
+
 		return this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(
-					locationJoin
+					options
 				)
 				return {
 					data: rows,

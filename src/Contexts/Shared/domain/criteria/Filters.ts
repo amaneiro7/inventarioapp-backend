@@ -22,6 +22,7 @@ export class Filters {
 	}
 
 	isEmpty(): boolean {
+		console.log('isEmpty', this.value)
 		return this.value.length === 0
 	}
 }

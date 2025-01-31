@@ -7,8 +7,16 @@ export class CriteriaFromUrlConverter {
 		const searchParams = new URLSearchParams(
 			req.query as unknown as Record<string, string>
 		)
+		console.log('req.query', req.query)
+		// const url = new URL(
+		// 	'http://localhost:3000/api/users?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=Javi'
+		// )
 
-		const filters = this.parseFilters(searchParams)
+		// const { searchParams } = url
+
+		const filters = searchParams.get('filters') ?? []
+		console.log(filters)
+		// const filters = this.parseFilters(searchParams)
 
 		return Criteria.fromPrimitives(
 			filters,
@@ -31,9 +39,11 @@ export class CriteriaFromUrlConverter {
 
 	private parseFilters(searchParams: URLSearchParams): FiltersPrimitives[] {
 		const tempFilters: Record<string, Partial<FiltersPrimitives>> = {}
-
+		console.log('parseFilters', searchParams)
 		searchParams.forEach((value, key) => {
+			console.log('parseFilters forEach', key)
 			const match = key.match(/filters\[(\d+)]\[(.+)]/)
+			console.log('parseFilters Match', match)
 			if (match) {
 				const index = match[1]
 				const property = match[2] as keyof FiltersPrimitives

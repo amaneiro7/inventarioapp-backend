@@ -13,6 +13,7 @@ export class EmployeeSearchByCriteriaController implements Controller {
 				EmployeeDependencies.SearchByCriteria
 			)
 			const convert = new CriteriaFromUrlConverter()
+
 			const query = convert.toCriteria(req)
 
 			const data = await getByCriteria.run(query)

@@ -7,7 +7,6 @@ export type Mappings = { [key: string]: string }
 export class CriteriaToSequelizeConverter {
 	convert(criteria: Criteria, mappings: Mappings = {}): FindOptions {
 		const query: FindOptions = {}
-
 		if (criteria.hasFilters()) {
 			query.where = criteria.filters.value.reduce((acc, filter) => {
 				return { ...acc, ...this.generateWhereQuery(filter, mappings) }
