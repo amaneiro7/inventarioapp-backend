@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Primitives } from '../value-object/Primitives'
 import { FilterField } from './FilterField'
-import { FilterOperator, Operator } from './FilterOperator'
+import { FilterOperator } from './FilterOperator'
 import { FilterValue } from './FilterValue'
 
 export interface FiltersPrimitives {
@@ -19,15 +19,18 @@ export class Filter {
 
 	// Esto es simplemente otra forma de instanciar nuestra clase
 	// La usamos cuando queremos hacer logica extra en nuestra instanciación
-	static fromValues(
-		field: FiltersPrimitives['field'],
-		operator: FiltersPrimitives['operator'],
+	static fromValues({
+		field,
+		operator,
+		value
+	}: {
+		field: FiltersPrimitives['field']
+		operator: FiltersPrimitives['operator']
 		value: FiltersPrimitives['value']
-	): Filter {
+	}): Filter {
 		return new Filter(
 			new FilterField(field),
-			// FilterOperator.fromValue(operator),
-			new FilterOperator(Operator[operator as keyof typeof Operator]),
+			FilterOperator.fromValue(operator),
 			new FilterValue(value)
 		)
 	}

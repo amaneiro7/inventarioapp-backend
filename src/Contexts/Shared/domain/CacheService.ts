@@ -1,4 +1,5 @@
 import { type TimeTolive, type CacheRepository } from './CacheRepository'
+import { createHash } from 'node:crypto'
 import { type Criteria } from './criteria/Criteria'
 
 export class CacheService {
@@ -69,18 +70,10 @@ export class CacheService {
 			return cacheKey
 		}
 
-		let hashKey = cacheKey
-		if (!criteria?.filters.isEmpty()) {
-			hashKey += `-Filters:${criteria.filters.toPrimitives().join(',')}`
-		}
+		const queryString = JSON.stringify(criteria.toPrimitives())
 
-		if (criteria?.pageSize) {
-			hashKey += `-PageSize:${criteria.pageSize}`
-		}
-		if (criteria?.pageNumber) {
-			hashKey += `-PageNumber:${criteria.pageNumber}`
-		}
+		const hash = createHash('sha256').update(queryString).digest('hex')
 
-		return hashKey
+		return `${cacheKey}-Filter:${hash}`
 	}
 }

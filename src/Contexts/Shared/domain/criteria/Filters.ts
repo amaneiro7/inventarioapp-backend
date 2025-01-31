@@ -7,9 +7,9 @@ export class Filters {
 	// La usamos cuando queremos hacer logica extra en nuestra instanciación
 	static fromValues(filters: FiltersPrimitives[]): Filters {
 		return new Filters(
-			filters.map(filter =>
-				Filter.fromValues(filter.field, filter.operator, filter.value)
-			)
+			filters.map(({ field, operator, value }) => {
+				return Filter.fromValues({ field, operator, value })
+			})
 		)
 	}
 
@@ -22,7 +22,6 @@ export class Filters {
 	}
 
 	isEmpty(): boolean {
-		console.log('isEmpty', this.value)
 		return this.value.length === 0
 	}
 }

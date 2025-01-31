@@ -4,13 +4,23 @@ import { FilterField } from './FilterField'
 import { Filters } from './Filters'
 import { InvalidCriteria } from './InvalidCriteria'
 import { Order } from './Order'
+import { OrderBy } from './OrderBy'
+import { OrderType } from './OrderType'
+
+interface CriteriaPrimitives {
+	filters: FiltersPrimitives[]
+	orderBy?: Primitives<OrderBy>
+	orderType?: Primitives<OrderType>
+	pageSize?: number
+	pageNumber?: number
+}
 
 export class Criteria {
 	constructor(
 		public readonly filters: Filters,
 		public readonly order: Order,
-		public readonly pageSize?: number | null,
-		public readonly pageNumber?: number | null
+		public readonly pageSize?: number,
+		public readonly pageNumber?: number
 	) {
 		if (pageNumber !== null && !pageSize) {
 			throw new InvalidCriteria()
@@ -19,10 +29,10 @@ export class Criteria {
 
 	static fromPrimitives(
 		filters: FiltersPrimitives[],
-		orderBy: string | null,
-		orderType: string | null,
-		pageSize?: number | null,
-		pageNumber?: number | null
+		orderBy?: string,
+		orderType?: string,
+		pageSize?: number,
+		pageNumber?: number
 	): Criteria {
 		return new Criteria(
 			Filters.fromValues(filters),
@@ -30,6 +40,16 @@ export class Criteria {
 			pageSize,
 			pageNumber
 		)
+	}
+
+	toPrimitives(): CriteriaPrimitives {
+		return {
+			filters: this.filters.toPrimitives(),
+			orderBy: this.order.orderBy.value,
+			orderType: this.order.orderType.value,
+			pageSize: this.pageSize,
+			pageNumber: this.pageNumber
+		}
 	}
 
 	hasFilters(): boolean {
