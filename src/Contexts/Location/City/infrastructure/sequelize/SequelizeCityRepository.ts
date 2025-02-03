@@ -1,13 +1,14 @@
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type CityDto } from '../../domain/City.dto'
 import { type CityId } from '../../domain/CityId'
 import { type CityRepository } from '../../domain/CityRepository'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { CityModel } from './CitySchema'
+import { CityAssociation } from './CityAssociation'
 
 export class SequelizeCityRepository
 	extends CriteriaToSequelizeConverter
@@ -18,8 +19,10 @@ export class SequelizeCityRepository
 		super()
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CityDto>> {
-		const options = this.convert(criteria)
-		options.include = ['state']
+		const options = CityAssociation.converFilter(
+			criteria,
+			this.convert(criteria)
+		)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
