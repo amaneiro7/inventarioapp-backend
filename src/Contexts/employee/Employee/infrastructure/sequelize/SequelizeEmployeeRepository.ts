@@ -72,8 +72,6 @@ export class SequelizeEmployeeRepository
 	async matching(criteria: Criteria): Promise<ResponseDB<EmployeeDto>> {
 		const options = this.convert(criteria)
 
-		console.log(options.where)
-
 		return this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,

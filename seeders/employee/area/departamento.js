@@ -7204,8 +7204,3 @@ function capitalCadena(cadena) {
 		.join('. ')
 }
 
-// const capitalCase = upperCaseNames.map(element => {
-//     return capitalCadena(element)
-// })
-
-// console.log(capitalCase)
