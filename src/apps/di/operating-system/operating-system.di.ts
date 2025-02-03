@@ -1,7 +1,7 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { SequelizeOperatingSystemRepository } from '../../../Contexts/Features/OperatingSystem/OperatingSystem/infraesructure/sequelize/SequelizeOperatingSystemRepository'
 import { OperatingSystemFinderAll } from '../../../Contexts/Features/OperatingSystem/OperatingSystem/application/OperatingSystemFinderAll'
-import { OperatingSystemArqGetAllController } from '../../controllers/operating-system/operating-system-arq.get-all.controller'
+import { OperatingSystemGetAllController } from '../../controllers/operating-system/operating-system.get-all.controller'
 
 export enum OperatingSystemDependencies {
 	Repository = 'operatingSystemRepository',
@@ -16,7 +16,7 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		operatingSystemFinderAll: asClass(OperatingSystemFinderAll),
 		operatingSystemGetAllController: asClass(
-			OperatingSystemArqGetAllController
+			OperatingSystemGetAllController
 		)
 	})
 }
