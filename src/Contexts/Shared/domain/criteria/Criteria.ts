@@ -22,7 +22,7 @@ export class Criteria {
 		public readonly pageSize?: number,
 		public readonly pageNumber?: number
 	) {
-		if (pageNumber !== null && !pageSize) {
+		if (pageNumber && !pageSize) {
 			throw new InvalidCriteria()
 		}
 	}

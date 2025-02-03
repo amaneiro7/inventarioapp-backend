@@ -3,6 +3,8 @@ import { EnumValueObject } from '../value-object/EnumValueObject'
 
 export enum Operator {
 	EQUAL = '=',
+	OR = 'OR',
+	AND = 'AND',
 	NOT_EQUAL = '!=',
 	GREATER_THAN = '>',
 	GREATER_THAN_OR_EQUAL = '>=',
@@ -37,6 +39,13 @@ export class FilterOperator extends EnumValueObject<Operator> {
 			this.value !== Operator.NOT_EQUAL &&
 			this.value !== Operator.NOT_CONTAINS
 		)
+	}
+
+	isOR(): boolean {
+		return this.value.valueOf() === Operator.OR.valueOf()
+	}
+	isAND(): boolean {
+		return this.value.valueOf() === Operator.AND.valueOf()
 	}
 
 	isContains(): boolean {
