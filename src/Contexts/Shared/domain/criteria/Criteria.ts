@@ -37,8 +37,8 @@ export class Criteria {
 		return new Criteria(
 			Filters.fromValues(filters),
 			Order.fromValues(orderBy, orderType),
-			pageSize,
-			pageNumber
+			Number(pageSize),
+			Number(pageNumber)
 		)
 	}
 

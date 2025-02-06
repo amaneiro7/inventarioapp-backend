@@ -53,7 +53,7 @@ export class SequelizeCriteriaConverter {
 		}
 
 		if (criteria.pageSize && criteria.pageNumber) {
-			query.offset = criteria.pageNumber * criteria.pageSize
+			query.offset = (criteria.pageNumber - 1) * criteria.pageSize
 		}
 
 		return query
