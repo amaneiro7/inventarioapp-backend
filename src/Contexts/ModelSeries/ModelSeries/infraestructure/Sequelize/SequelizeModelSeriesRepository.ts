@@ -37,7 +37,10 @@ export class SequelizeModelSeriesRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
 		const options = this.convert(criteria)
 		options.include = [
-			'category',
+			{
+				association: 'category',
+				include: ['mainCategory']
+			},
 			'brand',
 			'modelPrinter',
 			'modelMonitor',

@@ -4,14 +4,49 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 export class ModelAssociation {
 	convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
-			'category',
-			'brand',
-			'modelPrinter',
-			'modelMonitor',
-			{ association: 'modelLaptop', include: ['memoryRamType'] },
-			{ association: 'modelComputer', include: ['memoryRamType'] },
-			{ association: 'modelKeyboard', include: ['inputType'] },
-			{ association: 'modelMouse', include: ['inputType'] }
+			{
+				association: 'category',
+				include: ['mainCategory']
+			},
+			{
+				association: 'brand',
+				attributes: ['id', 'name']
+			},
+			{ association: 'modelPrinter', attributes: ['cartridgeModel'] },
+			{ association: 'modelMonitor', attributes: ['screenSize', 'hasDVI', 'hasHDMI', 'hasVGA'] },
+			{
+				association: 'modelLaptop',
+				include: ['memoryRamType'],
+				attributes: [
+					'memoryRamTypeId',
+					'memoryRamSlotQuantity',
+					'hasBluetooth',
+					'hasWifiAdapter',
+					'hasDVI',
+					'hasHDMI',
+					'hasVGA',
+					'batteryModel'
+				]
+			},
+			{
+				association: 'modelComputer',
+				include: ['memoryRamType'],
+				attributes: [
+					'memoryRamTypeId',
+					'memoryRamSlotQuantity',
+					'hasBluetooth',
+					'hasWifiAdapter',
+					'hasDVI',
+					'hasHDMI',
+					'hasVGA'
+				]
+			},
+			{
+				association: 'modelKeyboard',
+				include: ['inputType'],
+				attributes: ['inputTypeId', 'hasFingerPrintReader']
+			},
+			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] }
 		]
 		return options
 	}
