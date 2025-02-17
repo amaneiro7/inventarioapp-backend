@@ -34,7 +34,7 @@ import { type HardDriveTypeRepository } from '../../../Features/HardDrive/HardDr
 import { type OperatingSystemRepository } from '../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type OperatingSystemArqRepository } from '../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
 import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
-import { type DevicesApiResponse } from '../infrastructure/sequelize/DeviceResponse'
+
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
@@ -85,7 +85,7 @@ export class DeviceUpdater {
 			DeviceComputer.isComputerCategory({ categoryId: device.categoryId })
 		) {
 			// Si el device es de tipo computadora, obtenemos los datos de la tabla computer
-			const { computer } = device as unknown as DevicesApiResponse
+			const { computer } = device
 			if (!computer) {
 				throw new InvalidArgumentError('Computer does not exist')
 			}
@@ -178,7 +178,7 @@ export class DeviceUpdater {
 			})
 		) {
 			// Si el device es de tipo hard drive, obtenemos los datos de la tabla hard_drive
-			const { hardDrive } = device as unknown as DevicesApiResponse
+			const { hardDrive } = device
 			if (!hardDrive) {
 				throw new InvalidArgumentError('HardDrive does not exist')
 			}

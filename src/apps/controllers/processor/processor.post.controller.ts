@@ -15,7 +15,7 @@ export class ProcessorPostController implements Controller {
 			)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado creado exitosamente'
+				message: 'Procesador creado exitosamente'
 			})
 		} catch (error) {
 			next(error)

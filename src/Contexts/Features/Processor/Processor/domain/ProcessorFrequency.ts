@@ -15,8 +15,8 @@ export class ProcessorFrequency {
 		if (typeof value === 'number') {
 			return value
 		} else if (typeof value === 'string') {
-			const numericString = value.replace(/\D/g, '') // Eliminar caracteres no numéricos
-			return parseInt(numericString, 10)
+			const numericString = value.replace(/[^\d.]/g, '') // Eliminar caracteres no numéricos
+			return parseFloat(numericString)
 		} else {
 			throw new Error('Invalid value type. Must be string or number.')
 		}

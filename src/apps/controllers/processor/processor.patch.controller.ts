@@ -16,7 +16,7 @@ export class ProcessorPatchController implements Controller {
 			)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado actualizado exitosamente'
+				message: 'Procesador actualizado exitosamente'
 			})
 		} catch (error) {
 			next(error)

@@ -36,17 +36,17 @@ export const register = async (router: Router) => {
 		getController.run.bind(getController)
 	)
 
+	router.patch(
+		'/processors/:id',
+		authenticate,
+		patchController.run.bind(patchController)
+	)
 	router.post(
 		'/processors/',
 		authenticate,
 		postController.run.bind(postController)
 	)
 
-	router.patch(
-		'/processors/:id',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
 	router.delete(
 		'/processors/:id',
 		authenticate,
