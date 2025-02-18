@@ -9,10 +9,7 @@ import { type MainCategoryDto } from '../../domain/MainCategory.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeMainCategoryRepository
-	extends CriteriaToSequelizeConverter
-	implements MainCategoryRepository
-{
+export class SequelizeMainCategoryRepository extends CriteriaToSequelizeConverter implements MainCategoryRepository {
 	private readonly cacheKey: string = 'mainCategories'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -20,19 +17,13 @@ export class SequelizeMainCategoryRepository
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<MainCategoryDto>> {
 		const options = this.convert(criteria)
-		options.include = [
-			{
-				include: ['category']
-			}
-		]
+		options.include = ['category']
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await MainCategoryModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await MainCategoryModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -41,9 +32,7 @@ export class SequelizeMainCategoryRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<MainCategoryId>
-	): Promise<MainCategoryDto | null> {
+	async searchById(id: Primitives<MainCategoryId>): Promise<MainCategoryDto | null> {
 		return (await MainCategoryModel.findByPk(id)) ?? null
 	}
 }

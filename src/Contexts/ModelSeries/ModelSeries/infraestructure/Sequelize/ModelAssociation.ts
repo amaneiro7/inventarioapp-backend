@@ -48,6 +48,12 @@ export class ModelAssociation {
 			},
 			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] }
 		]
+		if (options.where && 'mainCategoryId' in options.where) {
+			;(options.include[0] as any).where = {
+				mainCategoryId: options.where?.mainCategoryId
+			}
+			delete options.where.mainCategoryId
+		}
 		return options
 	}
 }
