@@ -37,29 +37,21 @@ export class DeviceCreator {
 		private readonly hardDriveValidation: HardDriveValidation
 	) {}
 
-	async run({
-		params,
-		user
-	}: {
-		params: DeviceParams
-		user?: JwtPayloadUser
-	}): Promise<void> {
+	async run({ params, user }: { params: DeviceParams; user?: JwtPayloadUser }): Promise<void> {
 		const { categoryId } = params
 		let device
+
 		// Si es computadora
 		if (DeviceComputer.isComputerCategory({ categoryId })) {
-			const computerParams = params as DeviceComputerParams
-			device = await this.computerValidation.run(computerParams)
+			device = await this.computerValidation.run(params as DeviceComputerParams)
 		}
 		// Si es Disco Duro
 		else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-			const hddParams = params as DeviceHardDriveParams
-			device = await this.hardDriveValidation.run(hddParams)
+			device = await this.hardDriveValidation.run(params as DeviceHardDriveParams)
 		}
 		// Si es Impresora Multifuncional
 		else if (MFP.isMFPCategory({ categoryId })) {
-			const mfpParams = params as DeviceMFPParams
-			device = MFP.create(mfpParams)
+			device = MFP.create(params as DeviceMFPParams)
 		}
 		// Si es otro
 		else {
@@ -71,37 +63,42 @@ export class DeviceCreator {
 			brand: params.brandId,
 			category: categoryId
 		})
-		await DeviceActivo.ensureActivoDoesNotExit({
-			repository: this.deviceRepository,
-			activo: params.activo
-		})
-		await DeviceStatus.ensureStatusExit({
-			repository: this.statusRepository,
-			status: params.statusId
-		})
-		await DeviceEmployee.ensureEmployeeExit({
-			repository: this.employeeRepository,
-			employee: params.employeeId
-		})
-		await DeviceLocation.ensureLocationExit({
-			repository: this.locationRepository,
-			location: params.locationId,
-			status: params.statusId
-		})
-		await DeviceSerial.ensureSerialDoesNotExit({
-			repository: this.deviceRepository,
-			serial: params.serial
-		})
-		await DeviceSerial.isSerialCanBeNull({
-			generic: generic,
-			serial: params.serial
-		})
+		await Promise.all([
+			DeviceActivo.ensureActivoDoesNotExit({
+				repository: this.deviceRepository,
+				activo: params.activo
+			}),
+			DeviceStatus.ensureStatusExit({
+				repository: this.statusRepository,
+				status: params.statusId
+			}),
+			DeviceEmployee.ensureEmployeeExit({
+				repository: this.employeeRepository,
+				employee: params.employeeId
+			}),
+			DeviceLocation.ensureLocationExit({
+				repository: this.locationRepository,
+				location: params.locationId,
+				status: params.statusId
+			}),
+			DeviceSerial.ensureSerialDoesNotExit({
+				repository: this.deviceRepository,
+				serial: params.serial
+			}),
+			DeviceSerial.isSerialCanBeNull({
+				generic: generic,
+				serial: params.serial
+			})
+		])
+		const devicePrimitives = device.toPrimitives()
 
-		await this.deviceRepository.save(device.toPrimitives()).then(() => {
+		try {
+			await this.deviceRepository.save(devicePrimitives)
 			if (!user?.sub) {
 				throw new InvalidArgumentError('user is required')
 			}
-			new HistoryCreator(this.historyRepository).run({
+
+			await new HistoryCreator(this.historyRepository).run({
 				deviceId: device.idValue,
 				userId: user?.sub,
 				employeeId: device.employeeeValue,
@@ -110,6 +107,8 @@ export class DeviceCreator {
 				oldData: {},
 				createdAt: new Date()
 			})
-		})
+		} catch (error) {
+			throw new Error('Error al guardar el dispositivo o crear el historial')
+		}
 	}
 }
