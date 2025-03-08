@@ -50,7 +50,7 @@ export class DeviceUpdater {
 		private readonly processorRepository: ProcessorRepository,
 		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
 		private readonly hardDriveTypeRepository: HardDriveTypeRepository,
-		private readonly operatingSystemVersionRepository: OperatingSystemRepository,
+		private readonly operatingSystemRepository: OperatingSystemRepository,
 		private readonly operatingSystemArqRepository: OperatingSystemArqRepository,
 		private readonly historyRepository: HistoryRepository,
 		private readonly statusRepository: StatusRepository,
@@ -81,9 +81,7 @@ export class DeviceUpdater {
 		// Creamos una instancia de la entidad Device a partir de los datos obtenidos
 		let deviceEntity
 		let oldDeviceEntity
-		if (
-			DeviceComputer.isComputerCategory({ categoryId: device.categoryId })
-		) {
+		if (DeviceComputer.isComputerCategory({ categoryId: device.categoryId })) {
 			// Si el device es de tipo computadora, obtenemos los datos de la tabla computer
 			const { computer } = device
 			if (!computer) {
@@ -155,7 +153,7 @@ export class DeviceUpdater {
 				entity: deviceEntity
 			})
 			await ComputerOperatingSystem.updateOperatingSystemField({
-				repository: this.operatingSystemVersionRepository,
+				repository: this.operatingSystemRepository,
 				operatingSystem: operatingSystemId,
 				entity: deviceEntity
 			})
@@ -202,8 +200,7 @@ export class DeviceUpdater {
 			oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
 
 			// Extraemos los parametros de la clase HardDrive
-			const { hardDriveCapacityId, hardDriveTypeId, health } =
-				params as DeviceHardDrivePrimitives
+			const { hardDriveCapacityId, hardDriveTypeId, health } = params as DeviceHardDrivePrimitives
 
 			// Actualizamos los campos principales del device
 			await this.updateMainDevice({ params, deviceEntity })
@@ -232,22 +229,20 @@ export class DeviceUpdater {
 			await this.updateMainDevice({ params, deviceEntity })
 		}
 		// Guardamos los cambios en la base de datos
-		await this.deviceRepository
-			.save(deviceEntity.toPrimitives())
-			.then(() => {
-				if (!user?.sub) {
-					throw new InvalidArgumentError('user is required')
-				}
-				new HistoryCreator(this.historyRepository).run({
-					deviceId: deviceEntity.idValue,
-					userId: user?.sub,
-					employeeId: deviceEntity.employeeeValue,
-					action: 'UPDATE',
-					newData: deviceEntity.toPrimitives(),
-					oldData: oldDeviceEntity,
-					createdAt: new Date()
-				})
+		await this.deviceRepository.save(deviceEntity.toPrimitives()).then(() => {
+			if (!user?.sub) {
+				throw new InvalidArgumentError('user is required')
+			}
+			new HistoryCreator(this.historyRepository).run({
+				deviceId: deviceEntity.idValue,
+				userId: user?.sub,
+				employeeId: deviceEntity.employeeeValue,
+				action: 'UPDATE',
+				newData: deviceEntity.toPrimitives(),
+				oldData: oldDeviceEntity,
+				createdAt: new Date()
 			})
+		})
 	}
 
 	/**
