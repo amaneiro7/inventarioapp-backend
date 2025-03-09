@@ -19,7 +19,12 @@ export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implem
 		options.include = [
 			{
 				association: 'city',
-				include: ['state']
+				include: [
+					{
+						association: 'state',
+						include: ['region']
+					}
+				]
 			}
 		]
 		return await this.cache.getCachedData({
