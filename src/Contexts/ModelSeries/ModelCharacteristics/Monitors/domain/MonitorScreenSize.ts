@@ -19,9 +19,7 @@ export class MonitorScreenSize extends NumberValueObject {
 
 	private ensureIsValidName(value: Primitives<MonitorScreenSize>): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid Monitor Screen Size`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid Monitor Screen Size`)
 		}
 	}
 

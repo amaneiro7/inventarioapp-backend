@@ -10,18 +10,10 @@ import { type UserRepository } from '../domain/UserRepository'
 export class UserFinderByEmail {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async run({
-		user,
-		email
-	}: {
-		user?: JwtPayloadUser
-		email: string
-	}): Promise<Omit<UserPrimitives, 'password'>> {
+	async run({ user, email }: { user?: JwtPayloadUser; email: string }): Promise<Omit<UserPrimitives, 'password'>> {
 		isSuperAdmin({ user })
 		const userEmail = new UserEmail(email)
-		const findUser = await this.userRepository.searchByEmail(
-			userEmail.value
-		)
+		const findUser = await this.userRepository.searchByEmail(userEmail.value)
 
 		if (findUser === null) {
 			throw new UserDoesNotExistError(userEmail.value)

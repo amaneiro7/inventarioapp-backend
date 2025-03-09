@@ -10,10 +10,7 @@ export class TypeOfSite {
 	) {}
 
 	static fromPrimitives(primitives: TypeOfSiteDto): TypeOfSite {
-		return new TypeOfSite(
-			new TypeOfSiteId(primitives.id),
-			new TypeOfSiteName(primitives.name)
-		)
+		return new TypeOfSite(new TypeOfSiteId(primitives.id), new TypeOfSiteName(primitives.name))
 	}
 
 	toPrimitive(): TypeOfSitePrimitives {

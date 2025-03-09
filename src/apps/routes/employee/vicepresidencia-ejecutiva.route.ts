@@ -8,38 +8,26 @@ import { authenticate } from '../../Middleware/authenticate'
 import { VicepresidenciaEjecutivaDependencies } from '../../di/employee/vicepresidencia-ejecutiva.di'
 
 export const register = async (router: Router) => {
-	const getAllController: VicepresidenciaEjecutivaGetAllController =
-		container.resolve(VicepresidenciaEjecutivaDependencies.GetAllController)
-	const getController: VicepresidenciaEjecutivaGetController =
-		container.resolve(VicepresidenciaEjecutivaDependencies.GetController)
-	const postController: VicepresidenciaEjecutivaPostController =
-		container.resolve(VicepresidenciaEjecutivaDependencies.PostController)
-	const patchController: VicepresidenciaEjecutivaPatchController =
-		container.resolve(VicepresidenciaEjecutivaDependencies.PatchController)
-
-	router.get(
-		'/vicepresidenciaejecutivas/',
-		authenticate,
-		getAllController.run.bind(getAllController)
+	const getAllController: VicepresidenciaEjecutivaGetAllController = container.resolve(
+		VicepresidenciaEjecutivaDependencies.GetAllController
+	)
+	const getController: VicepresidenciaEjecutivaGetController = container.resolve(
+		VicepresidenciaEjecutivaDependencies.GetController
+	)
+	const postController: VicepresidenciaEjecutivaPostController = container.resolve(
+		VicepresidenciaEjecutivaDependencies.PostController
+	)
+	const patchController: VicepresidenciaEjecutivaPatchController = container.resolve(
+		VicepresidenciaEjecutivaDependencies.PatchController
 	)
 
-	router.get(
-		'/vicepresidenciaejecutivas/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/vicepresidenciaejecutivas/', authenticate, getAllController.run.bind(getAllController))
+
+	router.get('/vicepresidenciaejecutivas/:id', authenticate, getController.run.bind(getController))
 
 	//post
-	router.post(
-		'/vicepresidenciaejecutivas/',
-		authenticate,
-		postController.run.bind(postController)
-	)
+	router.post('/vicepresidenciaejecutivas/', authenticate, postController.run.bind(postController))
 
 	// patch
-	router.patch(
-		'/vicepresidenciaejecutivas/:id',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/vicepresidenciaejecutivas/:id', authenticate, patchController.run.bind(patchController))
 }

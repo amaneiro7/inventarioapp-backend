@@ -1,9 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import {
-	type ProcessorDto,
-	type ProcessorParams,
-	type ProcessorPrimitives
-} from './Processor.dto'
+import { type ProcessorDto, type ProcessorParams, type ProcessorPrimitives } from './Processor.dto'
 import { ProcessorCores } from './ProcessorCores'
 import { ProcessorFrequency } from './ProcessorFrequency'
 import { ProcessorId } from './ProcessorId'
@@ -22,13 +18,7 @@ export class Processor {
 		private frequency: ProcessorFrequency
 	) {}
 
-	static create({
-		productCollection,
-		numberModel,
-		cores,
-		threads,
-		frequency
-	}: ProcessorParams): Processor {
+	static create({ productCollection, numberModel, cores, threads, frequency }: ProcessorParams): Processor {
 		const id = ProcessorId.random().value
 		return new Processor(
 			new ProcessorId(id),
@@ -40,12 +30,8 @@ export class Processor {
 		)
 	}
 
-	updateProductCollection(
-		productCollection: Primitives<ProcessorProductCollection>
-	): void {
-		this.productCollection = new ProcessorProductCollection(
-			productCollection
-		)
+	updateProductCollection(productCollection: Primitives<ProcessorProductCollection>): void {
+		this.productCollection = new ProcessorProductCollection(productCollection)
 	}
 
 	updateNumberModel(numberModel: Primitives<ProcessorNumberModel>): void {
@@ -92,11 +78,7 @@ export class Processor {
 	}
 
 	get nameValue(): Primitives<ProcessorName> {
-		return new ProcessorName(
-			this.productCollectionValue,
-			this.numberModelValue,
-			this.frequencyValue
-		).toPrimitives()
+		return new ProcessorName(this.productCollectionValue, this.numberModelValue, this.frequencyValue).toPrimitives()
 	}
 
 	get productCollectionValue(): Primitives<ProcessorProductCollection> {

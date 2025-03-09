@@ -9,10 +9,7 @@ import { type TypeOfSiteId } from '../../domain/TypeOfSiteId'
 import { type TypeOfSiteRepository } from '../../domain/TypeOfSiteRepository'
 import { TypeOfSiteModel } from './TypeOfSiteSchema'
 
-export class SequelizeTypeOfSiteRepository
-	extends CriteriaToSequelizeConverter
-	implements TypeOfSiteRepository
-{
+export class SequelizeTypeOfSiteRepository extends CriteriaToSequelizeConverter implements TypeOfSiteRepository {
 	private readonly cacheKey: string = 'typeOfSite'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -25,9 +22,7 @@ export class SequelizeTypeOfSiteRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await TypeOfSiteModel.findAndCountAll(
-					options
-				)
+				const { rows, count } = await TypeOfSiteModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -36,9 +31,7 @@ export class SequelizeTypeOfSiteRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<TypeOfSiteId>
-	): Promise<TypeOfSiteDto | null> {
+	async searchById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null> {
 		return (await TypeOfSiteModel.findByPk(id)) ?? null
 	}
 }

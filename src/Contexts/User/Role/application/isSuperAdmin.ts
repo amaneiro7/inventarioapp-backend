@@ -11,8 +11,6 @@ export function isSuperAdmin({ user }: { user?: JwtPayloadUser }): void {
 		throw new InvalidArgumentError('Error con el payload del usuario')
 	}
 	if (!User.isSuperAdmin({ roleId: user?.roleId })) {
-		throw new InvalidArgumentError(
-			'No tiene permisos para realizar esta operación'
-		)
+		throw new InvalidArgumentError('No tiene permisos para realizar esta operación')
 	}
 }

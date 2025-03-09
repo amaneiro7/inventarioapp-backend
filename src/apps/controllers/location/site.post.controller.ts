@@ -9,9 +9,7 @@ export class SitePostController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const create: SiteCreator = container.resolve(
-				SiteDependencies.Creator
-			)
+			const create: SiteCreator = container.resolve(SiteDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
 				message: 'Sitio creado exitosamente'

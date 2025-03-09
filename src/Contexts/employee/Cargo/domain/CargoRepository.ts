@@ -11,9 +11,7 @@ export abstract class CargoRepository {
 
 	abstract searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>>
 
-	abstract searchByName(
-		id: Primitives<CargoName>
-	): Promise<Nullable<CargoDto>>
+	abstract searchByName(id: Primitives<CargoName>): Promise<Nullable<CargoDto>>
 
 	abstract save(cargo: CargoParams): Promise<void>
 }

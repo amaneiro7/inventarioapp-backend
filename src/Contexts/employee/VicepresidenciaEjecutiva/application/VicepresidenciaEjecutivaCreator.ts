@@ -13,17 +13,13 @@ export class VicepresidenciaEjecutivaCreator {
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {
-		this.createVicepresidenciaEjecutivaUseCase =
-			new CreateVicepresidenciaEjecutivaUseCase(
-				this.vicepresidenciaEjecutivaRepository,
-				this.directivaRepository
-			)
+		this.createVicepresidenciaEjecutivaUseCase = new CreateVicepresidenciaEjecutivaUseCase(
+			this.vicepresidenciaEjecutivaRepository,
+			this.directivaRepository
+		)
 	}
 
-	async run({
-		name,
-		directivaId
-	}: VicepresidenciaEjecutivaParams): Promise<void> {
+	async run({ name, directivaId }: VicepresidenciaEjecutivaParams): Promise<void> {
 		await this.createVicepresidenciaEjecutivaUseCase.execute({
 			name,
 			directivaId
@@ -34,8 +30,6 @@ export class VicepresidenciaEjecutivaCreator {
 			directivaId
 		})
 
-		await this.vicepresidenciaEjecutivaRepository.save(
-			vicepresidenciaEjecutiva.toPrimitive()
-		)
+		await this.vicepresidenciaEjecutivaRepository.save(vicepresidenciaEjecutiva.toPrimitive())
 	}
 }

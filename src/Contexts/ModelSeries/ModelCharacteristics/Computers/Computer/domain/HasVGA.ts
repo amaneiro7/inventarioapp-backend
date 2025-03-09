@@ -16,9 +16,7 @@ export class HasVGA extends BooleanValueObject {
 
 	private ensureIsValid(value: boolean): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`This <${value}> is not a valid type`
-			)
+			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
 		}
 	}
 
@@ -26,10 +24,7 @@ export class HasVGA extends BooleanValueObject {
 		return typeof value === 'boolean'
 	}
 
-	static async updateVGAField(params: {
-		hasVGA: Primitives<HasVGA>
-		entity: ComputerModels
-	}): Promise<void> {
+	static async updateVGAField(params: { hasVGA: Primitives<HasVGA>; entity: ComputerModels }): Promise<void> {
 		if (params.hasVGA === undefined) {
 			return
 		}

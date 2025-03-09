@@ -23,10 +23,7 @@ export class BrandUpdater {
 		await this.brandRepository.save(brandEntity.toPrimitive())
 	}
 
-	private async ensureBrandDoesNotExist(
-		name: BrandName['value'],
-		entity: Brand
-	): Promise<void> {
+	private async ensureBrandDoesNotExist(name: BrandName['value'], entity: Brand): Promise<void> {
 		if (!(await this.brandRepository.searchByName(name))) {
 			throw new BrandAlreadyExistError(name)
 		}

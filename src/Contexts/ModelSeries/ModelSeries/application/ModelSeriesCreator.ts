@@ -35,13 +35,7 @@ export class ModelSeriesCreator {
 	) {}
 
 	// Define the run method to create model series
-	async run({
-		name,
-		categoryId,
-		brandId,
-		generic,
-		...otherParams
-	}: ModelSeriesParams): Promise<void> {
+	async run({ name, categoryId, brandId, generic, ...otherParams }: ModelSeriesParams): Promise<void> {
 		let modelSeries
 
 		// Create the model series based on the category

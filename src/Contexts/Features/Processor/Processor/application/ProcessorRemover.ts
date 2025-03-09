@@ -9,9 +9,7 @@ export class ProcessorRemover {
 		const { id } = params
 		const processorId = new ProcessorId(id)
 
-		const processor = await this.processorRepository.searchById(
-			processorId.value
-		)
+		const processor = await this.processorRepository.searchById(processorId.value)
 		if (processor === null) {
 			throw new ProcessorDoesNotExistError(id)
 		}

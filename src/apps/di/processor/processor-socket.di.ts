@@ -11,12 +11,8 @@ export enum ProcessorSocketDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		processorSocketRepository: asClass(
-			SequelizeProcessorSocketRepository
-		).singleton(),
+		processorSocketRepository: asClass(SequelizeProcessorSocketRepository).singleton(),
 		processorSocketFinderAll: asClass(ProcessorSocketFinderAll),
-		processorSocketGetAllController: asClass(
-			ProcessorSocketGetAllController
-		)
+		processorSocketGetAllController: asClass(ProcessorSocketGetAllController)
 	})
 }

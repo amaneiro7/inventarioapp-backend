@@ -1,8 +1,5 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import {
-	CategoryDefaultData,
-	type CategoryValues
-} from '../../../../Category/Category/domain/CategoryDefaultData'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
@@ -11,10 +8,7 @@ import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { ModelMouseInputType } from './ModelMouseInputType'
-import {
-	type MouseModelsPrimitives,
-	type MouseModelsParams
-} from './MouseModels.dto'
+import { type MouseModelsPrimitives, type MouseModelsParams } from './MouseModels.dto'
 
 export class MouseModels extends ModelSeries {
 	constructor(
@@ -40,11 +34,7 @@ export class MouseModels extends ModelSeries {
 		)
 	}
 
-	public static isMouseCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	public static isMouseCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const AcceptedMouseCategories: CategoryValues[] = ['Mouses']
 		return AcceptedMouseCategories.includes(CategoryDefaultData[categoryId])
 	}

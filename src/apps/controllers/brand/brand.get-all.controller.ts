@@ -11,9 +11,7 @@ export class BrandGetFinderAllController implements Controller {
 		try {
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
-			const getAll: BrandFinderAll = container.resolve(
-				BrandDependencies.FinderAll
-			)
+			const getAll: BrandFinderAll = container.resolve(BrandDependencies.FinderAll)
 			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

@@ -12,59 +12,30 @@ import { type DeviceDeleteController } from '../../controllers/device/device.del
 import { type DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 
 export const register = async (router: Router) => {
-	const getController: DeviceGetController = container.resolve(
-		DeviceDependencies.GetController
-	)
+	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
 	// const getAllController: DeviceGetAllController = container.resolve(DeviceDependencies.GetAllController)
-	const postController: DevicePostController = container.resolve(
-		DeviceDependencies.PostController
+	const postController: DevicePostController = container.resolve(DeviceDependencies.PostController)
+	const patchController: DevicePatchController = container.resolve(DeviceDependencies.PatchController)
+	const searchByCriteria: DeviceSearchByCriteriaController = container.resolve(
+		DeviceDependencies.GetByCriteriaController
 	)
-	const patchController: DevicePatchController = container.resolve(
-		DeviceDependencies.PatchController
-	)
-	const searchByCriteria: DeviceSearchByCriteriaController =
-		container.resolve(DeviceDependencies.GetByCriteriaController)
-	const deleteController: DeviceDeleteController = container.resolve(
-		DeviceDependencies.DeleteController
-	)
-	const download: DeviceDownloadExcelServiceController = container.resolve(
-		DeviceDependencies.ExcelDownloadController
-	)
+	const deleteController: DeviceDeleteController = container.resolve(DeviceDependencies.DeleteController)
+	const download: DeviceDownloadExcelServiceController = container.resolve(DeviceDependencies.ExcelDownloadController)
 
 	// get
-	router.get(
-		'/devices/',
-		authenticate,
-		searchByCriteria.run.bind(searchByCriteria)
-	)
+	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
 	router.get('/devices/download', authenticate, download.run.bind(download))
 
-	router.get(
-		'/devices/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/devices/:id', authenticate, getController.run.bind(getController))
 
 	//post
 
-	router.post(
-		'/devices/',
-		authenticate,
-		postController.run.bind(postController)
-	)
+	router.post('/devices/', authenticate, postController.run.bind(postController))
 
 	// patch
-	router.patch(
-		'/devices/:id',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/devices/:id', authenticate, patchController.run.bind(patchController))
 
 	// delete
-	router.delete(
-		'devices/:id',
-		authenticate,
-		deleteController.run.bind(deleteController)
-	)
+	router.delete('devices/:id', authenticate, deleteController.run.bind(deleteController))
 }

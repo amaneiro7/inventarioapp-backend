@@ -21,26 +21,17 @@ module.exports = {
 				)
 				await queryInterface.bulkInsert(
 					'model_monitors',
-					modelMonitor.map(
-						({
-							id,
-							categoryId,
-							screenSize,
-							hasDVI,
-							hasHDMI,
-							hasVGA
-						}) => ({
-							id,
-							model_series_id: id,
-							category_id: categoryId,
-							screen_size: screenSize,
-							has_dvi: hasDVI,
-							has_hdmi: hasHDMI,
-							has_vga: hasVGA,
-							created_at: new Date(),
-							updated_at: new Date()
-						})
-					),
+					modelMonitor.map(({ id, categoryId, screenSize, hasDVI, hasHDMI, hasVGA }) => ({
+						id,
+						model_series_id: id,
+						category_id: categoryId,
+						screen_size: screenSize,
+						has_dvi: hasDVI,
+						has_hdmi: hasHDMI,
+						has_vga: hasVGA,
+						created_at: new Date(),
+						updated_at: new Date()
+					})),
 					{ transaction: t }
 				)
 			})

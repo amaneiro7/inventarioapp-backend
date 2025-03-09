@@ -3,9 +3,7 @@ import { AcceptedNullValueObject } from '../../Shared/domain/value-object/Accept
 import { InvalidArgumentError } from '../../Shared/domain/value-object/InvalidArgumentError'
 import { Primitives } from '../../Shared/domain/value-object/Primitives'
 
-export class HistoryEmployee extends AcceptedNullValueObject<
-	Primitives<EmployeeId>
-> {
+export class HistoryEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
 	constructor(readonly value: Primitives<EmployeeId> | null) {
 		super(value)
 		this.ensureIsValidEmployeeId(value)

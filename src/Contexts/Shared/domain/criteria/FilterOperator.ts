@@ -28,17 +28,12 @@ export class FilterOperator extends EnumValueObject<Operator> {
 			}
 		}
 
-		throw new InvalidArgumentError(
-			`The filter operator ${value} is invalid`
-		)
+		throw new InvalidArgumentError(`The filter operator ${value} is invalid`)
 	}
 
 	// Condicional que evalua si mi operador es positivo
 	public isPositive(): boolean {
-		return (
-			this.value !== Operator.NOT_EQUAL &&
-			this.value !== Operator.NOT_CONTAINS
-		)
+		return this.value !== Operator.NOT_EQUAL && this.value !== Operator.NOT_CONTAINS
 	}
 
 	isOR(): boolean {
@@ -83,8 +78,6 @@ export class FilterOperator extends EnumValueObject<Operator> {
 
 	// Implementación de nuestro EnumValueObject
 	protected throwErrorForInvalidValue(value: Operator): void {
-		throw new InvalidArgumentError(
-			`The filter operator ${value} is invalid`
-		)
+		throw new InvalidArgumentError(`The filter operator ${value} is invalid`)
 	}
 }

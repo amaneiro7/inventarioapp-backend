@@ -24,9 +24,7 @@ export class LocationSubnet extends AcceptedNullValueObject<string> {
 	// Private method to ensure the provided value is a valid IP address
 	private ensureIsValid(value: Primitives<LocationSubnet>): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`this <${value}> is not a valid Subnet`
-			) // Throw an error if the value is not a valid IP address
+			throw new InvalidArgumentError(`this <${value}> is not a valid Subnet`) // Throw an error if the value is not a valid IP address
 		}
 	}
 

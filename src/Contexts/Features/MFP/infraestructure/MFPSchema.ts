@@ -6,14 +6,10 @@ import { type DeviceMFPPrimitives } from '../domain/MFP.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
 
-interface MFPCreationAttributes
-	extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
+interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
 	deviceId: Primitives<DeviceId>
 }
-export class DeviceMFPModel
-	extends Model<MFPCreationAttributes>
-	implements MFPCreationAttributes
-{
+export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPCreationAttributes {
 	declare deviceId: Primitives<DeviceId>
 	declare id: Primitives<DeviceId>
 	declare categoryId: Primitives<CategoryId>

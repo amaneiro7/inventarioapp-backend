@@ -2,11 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express'
 import { type ValidationError, validationResult } from 'express-validator'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 
-export function validateReqSchema(
-	req: Request,
-	res: Response,
-	next: NextFunction
-): any {
+export function validateReqSchema(req: Request, res: Response, next: NextFunction): any {
 	const validationErrors = validationResult(req)
 	if (validationErrors.isEmpty()) {
 		next()

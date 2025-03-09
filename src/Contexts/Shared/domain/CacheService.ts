@@ -35,15 +35,7 @@ export class CacheService {
 		return data
 	}
 
-	async setCachedData<T>({
-		cacheKey,
-		data,
-		ex
-	}: {
-		cacheKey: string
-		data: T
-		ex?: TimeTolive
-	}) {
+	async setCachedData<T>({ cacheKey, data, ex }: { cacheKey: string; data: T; ex?: TimeTolive }) {
 		try {
 			await this.cacheRepository.set(cacheKey, JSON.stringify(data), ex)
 		} catch (error) {

@@ -12,9 +12,7 @@ export class RedisRepository implements CacheRepository {
 	})
 
 	constructor(private readonly logger: Logger) {
-		this.client.on('error', error =>
-			this.logger.error(`'Redis Client Error', ${error}`)
-		)
+		this.client.on('error', error => this.logger.error(`'Redis Client Error', ${error}`))
 	}
 
 	async connect(): Promise<void> {

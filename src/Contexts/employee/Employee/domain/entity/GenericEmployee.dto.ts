@@ -1,10 +1,5 @@
 import { type EmployeeTypes } from '../valueObject/EmployeeType'
-import {
-	type Employee,
-	type EmployeeDto,
-	type EmployeeParams,
-	type EmployeePrimitives
-} from './Employee.dto'
+import { type Employee, type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
 
 export type GenericEmployee = Employee & {
 	type: EmployeeTypes.GENERIC

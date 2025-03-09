@@ -9,9 +9,7 @@ export class EmployeeGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: EmployeeFinder = container.resolve(
-				EmployeeDependencies.Finder
-			)
+			const get: EmployeeFinder = container.resolve(EmployeeDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

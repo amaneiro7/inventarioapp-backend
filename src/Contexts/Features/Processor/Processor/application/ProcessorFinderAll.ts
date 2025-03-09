@@ -10,9 +10,7 @@ export class ProcessorsFinderAll extends GetAllBaseService<ProcessorDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<ProcessorDto>> {
-		const { data, total } = await this.processorRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.processorRepository.searchAll(criteria)
 		return this.response({
 			data,
 			total,

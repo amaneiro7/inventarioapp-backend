@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class HardDriveTypeGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: HardDriveTypeFinderAll = container.resolve(
-				HardDriveTypeDependencies.FinderAll
-			)
+			const getAll: HardDriveTypeFinderAll = container.resolve(HardDriveTypeDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

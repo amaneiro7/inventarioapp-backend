@@ -7,19 +7,14 @@ import { type HardDriveTypeRepository } from '../../HardDrive/HardDriveType/doma
 import { type DeviceComputer } from './Computer'
 import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
 
-export class ComputerHardDriveType extends AcceptedNullValueObject<
-	Primitives<HardDriveTypeId>
-> {
+export class ComputerHardDriveType extends AcceptedNullValueObject<Primitives<HardDriveTypeId>> {
 	constructor(
 		readonly value: Primitives<HardDriveTypeId> | null,
 		readonly hardDriveCapacity: Primitives<ComputerHardDriveCapacity>
 	) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
-		this.ensureIfHardDriveisNullHardDriveTypeIsNullAsWell(
-			this.value,
-			this.hardDriveCapacity
-		)
+		this.ensureIfHardDriveisNullHardDriveTypeIsNullAsWell(this.value, this.hardDriveCapacity)
 		this.ensureIsValidHardDriveTypeId(value)
 	}
 
@@ -27,9 +22,7 @@ export class ComputerHardDriveType extends AcceptedNullValueObject<
 		return this.value
 	}
 
-	private ensureIsValidHardDriveTypeId(
-		id: Primitives<HardDriveTypeId> | null
-	): void {
+	private ensureIsValidHardDriveTypeId(id: Primitives<HardDriveTypeId> | null): void {
 		if (!this.isValid(id)) {
 			throw new InvalidArgumentError('EmployeeId is required')
 		}
@@ -40,14 +33,10 @@ export class ComputerHardDriveType extends AcceptedNullValueObject<
 		hardDriveCapacity: Primitives<ComputerHardDriveCapacity>
 	): void {
 		if (hardDriveCapacity !== null && hardDriveType === null) {
-			throw new InvalidArgumentError(
-				'HardDrive Type cannot have a value if hdd capacity is null'
-			)
+			throw new InvalidArgumentError('HardDrive Type cannot have a value if hdd capacity is null')
 		}
 		if (hardDriveCapacity === null && hardDriveType !== null) {
-			throw new InvalidArgumentError(
-				'Hard Drive type cannot be null if hdd capacity has a value'
-			)
+			throw new InvalidArgumentError('Hard Drive type cannot be null if hdd capacity has a value')
 		}
 	}
 

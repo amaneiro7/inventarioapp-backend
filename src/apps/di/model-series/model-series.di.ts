@@ -32,9 +32,7 @@ export enum ModelSeriesDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		modelSeriesRepository: asClass(
-			SequelizeModelSeriesRepository
-		).singleton(),
+		modelSeriesRepository: asClass(SequelizeModelSeriesRepository).singleton(),
 		modelSeriesFinder: asClass(ModelSeriesFinder),
 		modelSeriesFinderAll: asClass(ModelSeriesFinderAll),
 		modelSeriesCreator: asClass(ModelSeriesCreator),
@@ -45,11 +43,7 @@ export const register = (container: AwilixContainer) => {
 		modelSeriesGetAllController: asClass(ModelSeriesGetAllController),
 		modelSeriesPostController: asClass(ModelSeriesPostController),
 		modelSeriesPatchController: asClass(ModelSeriesPatchController),
-		modelSeriesGetByCriteria: asClass(
-			ModelSeriesSearchByCriteriaController
-		),
-		modelSeriesExcelDownload: asClass(
-			ModelSeriesDownloadExcelServiceController
-		)
+		modelSeriesGetByCriteria: asClass(ModelSeriesSearchByCriteriaController),
+		modelSeriesExcelDownload: asClass(ModelSeriesDownloadExcelServiceController)
 	})
 }

@@ -40,16 +40,12 @@ export class UserPassword extends StringValueObject {
 
 		// Check if the password contains at least one uppercase letter
 		if (!this.hasUppercase.test(value)) {
-			errors.push(
-				'La contraseña debe contener al menos una letra mayúscula.'
-			)
+			errors.push('La contraseña debe contener al menos una letra mayúscula.')
 		}
 
 		// Check if the password contains at least one lowercase letter
 		if (!this.hasLowercase.test(value)) {
-			errors.push(
-				'La contraseña debe contener al menos una letra minúscula.'
-			)
+			errors.push('La contraseña debe contener al menos una letra minúscula.')
 		}
 
 		// Check if the password contains at least one number
@@ -59,9 +55,7 @@ export class UserPassword extends StringValueObject {
 
 		// Check if the password contains at least one special character
 		if (!this.hasSpecialCharacter.test(value)) {
-			errors.push(
-				'La contraseña debe contener al menos un carácter especial.'
-			)
+			errors.push('La contraseña debe contener al menos un carácter especial.')
 		}
 
 		// If there are any validation errors, throw an InvalidArgumentError with the joined error messages

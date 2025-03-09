@@ -18,14 +18,10 @@ export class CodCentroCosto extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (!this.isNumeric(value)) {
-			throw new InvalidArgumentError(
-				'El código del centro costo debe ser numerico'
-			)
+			throw new InvalidArgumentError('El código del centro costo debe ser numerico')
 		}
 		if (!this.isCentroCostoLengthValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> no es un codigo de centro costo válido`
-			)
+			throw new InvalidArgumentError(`<${value}> no es un codigo de centro costo válido`)
 		}
 	}
 
@@ -34,9 +30,6 @@ export class CodCentroCosto extends StringValueObject {
 	}
 
 	private isCentroCostoLengthValid(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

@@ -27,12 +27,7 @@ export class User {
 		private password: UserPassword
 	) {}
 
-	static create({
-		email,
-		name,
-		lastName,
-		roleId
-	}: Omit<UserPrimitives, 'id' | 'password'>): User {
+	static create({ email, name, lastName, roleId }: Omit<UserPrimitives, 'id' | 'password'>): User {
 		const id = UserId.random().value
 		const password = UserPassword.defaultPassword
 		return new User(

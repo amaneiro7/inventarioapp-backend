@@ -59,8 +59,7 @@ const cargoOnlyNames = {
 	'EJECUTIVO DE NEGOCIOS COMERCIAL JR': 'Ejecutivo De Negocios Comercial Jr',
 	'GERENTE DE AGENCIA': 'Gerente De Agencia',
 	'GERENTE OPERATIVO Y SERVICIOS': 'Gerente Operativo Y Servicios',
-	'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE':
-		'Promotor(a) Integral De Atencion Al Cliente'
+	'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE': 'Promotor(a) Integral De Atencion Al Cliente'
 }
 
 const cargosData = [

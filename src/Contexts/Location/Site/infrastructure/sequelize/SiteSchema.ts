@@ -7,10 +7,7 @@ import { type SiteName } from '../../domain/SiteName'
 import { type SiteAddress } from '../../domain/SiteAddress'
 import { type CityDto } from '../../../City/domain/City.dto'
 
-export class SiteModels
-	extends Model<Omit<SiteDto, 'city'>>
-	implements SiteDto
-{
+export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto {
 	declare id: Primitives<SiteId>
 	declare cityId: Primitives<CityId>
 	declare address: Primitives<SiteAddress>

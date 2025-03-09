@@ -8,9 +8,7 @@ export class ProcessorsFinder {
 	async run(params: { id: string }): Promise<ProcessorDto> {
 		const { id } = params
 		const processorId = new ProcessorId(id)
-		const processor = await this.processorRepository.searchById(
-			processorId.value
-		)
+		const processor = await this.processorRepository.searchById(processorId.value)
 
 		if (!processor) {
 			throw new ProcessorDoesNotExistError(processorId.value)

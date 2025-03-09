@@ -22,9 +22,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<VicepresidenciaEjecutivaDto>> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<VicepresidenciaEjecutivaDto>> {
 		const options = this.convert(criteria)
 
 		options.include = ['directiva']
@@ -34,8 +32,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } =
-					await VicepresidenciaEjecutivaModel.findAndCountAll(options)
+				const { rows, count } = await VicepresidenciaEjecutivaModel.findAndCountAll(options)
 
 				return {
 					data: rows,
@@ -45,15 +42,11 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<DepartmentId>
-	): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return (await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<DepartmentName>
-	): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return (
 			(await VicepresidenciaEjecutivaModel.findOne({
 				where: { name }
@@ -63,8 +56,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 
 	async save(payload: VicepresidenciaEjecutivaPrimitives): Promise<void> {
 		const { id } = payload
-		const vicepresidenciaEjecutiva =
-			(await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
+		const vicepresidenciaEjecutiva = (await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
 		if (vicepresidenciaEjecutiva === null) {
 			await VicepresidenciaEjecutivaModel.create({ ...payload })
 		} else {

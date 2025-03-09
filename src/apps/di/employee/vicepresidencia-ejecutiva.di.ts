@@ -23,30 +23,14 @@ export enum VicepresidenciaEjecutivaDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		vicepresidenciaEjecutivaRepository: asClass(
-			SequelizeVicepresidenciaEjecutivaRepository
-		).singleton(),
-		vicepresidenciaEjecutivaFinderAll: asClass(
-			VicepresidenciaEjecutivaFinderAll
-		),
+		vicepresidenciaEjecutivaRepository: asClass(SequelizeVicepresidenciaEjecutivaRepository).singleton(),
+		vicepresidenciaEjecutivaFinderAll: asClass(VicepresidenciaEjecutivaFinderAll),
 		vicepresidenciaEjecutivaFinder: asClass(VicepresidenciaEjecutivaFinder),
-		vicepresidenciaEjecutivaCreator: asClass(
-			VicepresidenciaEjecutivaCreator
-		),
-		vicepresidenciaEjecutivaUpdater: asClass(
-			VicepresidenciaEjecutivaUpdater
-		),
-		vicepresidenciaEjecutivaGetAllController: asClass(
-			VicepresidenciaEjecutivaGetAllController
-		),
-		vicepresidenciaEjecutivaGetController: asClass(
-			VicepresidenciaEjecutivaGetController
-		),
-		vicepresidenciaEjecutivaPostController: asClass(
-			VicepresidenciaEjecutivaPostController
-		),
-		vicepresidenciaEjecutivaPatchController: asClass(
-			VicepresidenciaEjecutivaPatchController
-		)
+		vicepresidenciaEjecutivaCreator: asClass(VicepresidenciaEjecutivaCreator),
+		vicepresidenciaEjecutivaUpdater: asClass(VicepresidenciaEjecutivaUpdater),
+		vicepresidenciaEjecutivaGetAllController: asClass(VicepresidenciaEjecutivaGetAllController),
+		vicepresidenciaEjecutivaGetController: asClass(VicepresidenciaEjecutivaGetController),
+		vicepresidenciaEjecutivaPostController: asClass(VicepresidenciaEjecutivaPostController),
+		vicepresidenciaEjecutivaPatchController: asClass(VicepresidenciaEjecutivaPatchController)
 	})
 }

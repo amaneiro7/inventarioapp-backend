@@ -32,9 +32,7 @@ export class ProcessorFrequency {
 
 	private ensureIsValidName(value: number): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid processor frequency`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid processor frequency`)
 		}
 	}
 

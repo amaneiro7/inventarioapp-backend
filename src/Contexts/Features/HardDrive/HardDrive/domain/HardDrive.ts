@@ -15,14 +15,8 @@ import { InvalidArgumentError } from '../../../../Shared/domain/value-object/Inv
 import { DeviceStocknumber } from '../../../../Device/Device/domain/DeviceStock'
 import { DeviceLocation } from '../../../../Device/Device/domain/DeviceLocation'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-import {
-	CategoryDefaultData,
-	type CategoryValues
-} from '../../../../Category/Category/domain/CategoryDefaultData'
-import {
-	type DeviceHardDriveParams,
-	type DeviceHardDrivePrimitives
-} from './HardDrive.dto'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+import { type DeviceHardDriveParams, type DeviceHardDrivePrimitives } from './HardDrive.dto'
 export class DeviceHardDrive extends Device {
 	constructor(
 		id: DeviceId,
@@ -59,9 +53,7 @@ export class DeviceHardDrive extends Device {
 				categoryId: categoryId.value
 			})
 		) {
-			throw new InvalidArgumentError(
-				'No pertenece a la categoria de Disco duro'
-			)
+			throw new InvalidArgumentError('No pertenece a la categoria de Disco duro')
 		}
 	}
 
@@ -85,24 +77,16 @@ export class DeviceHardDrive extends Device {
 		)
 	}
 
-	static isHardDriveCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	static isHardDriveCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const AcceptedHardDriveCategories: CategoryValues[] = ['Discos Duros']
-		return AcceptedHardDriveCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+		return AcceptedHardDriveCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	updateHealth(newHealth: Primitives<HardDriveHealth>): void {
 		this.health = new HardDriveHealth(newHealth)
 	}
 
-	updateHardDriveCapacity(
-		newHardDriveCapacityId: Primitives<HDDCapacity>
-	): void {
+	updateHardDriveCapacity(newHardDriveCapacityId: Primitives<HDDCapacity>): void {
 		this.hardDriveCapacityId = new HDDCapacity(newHardDriveCapacityId)
 	}
 
@@ -110,9 +94,7 @@ export class DeviceHardDrive extends Device {
 		this.hardDriveTypeId = new HDDType(newHardDriveType)
 	}
 
-	static fromPrimitives(
-		primitives: DeviceHardDrivePrimitives
-	): DeviceHardDrive {
+	static fromPrimitives(primitives: DeviceHardDrivePrimitives): DeviceHardDrive {
 		return new DeviceHardDrive(
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),

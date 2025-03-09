@@ -26,14 +26,10 @@ export class ServiceEmployeePassword {
 		reTypePassword: Primitives<Password>
 	}): void {
 		if (oldPassword === newPassword) {
-			throw new InvalidArgumentError(
-				'La contraseña es igual a la anterior'
-			)
+			throw new InvalidArgumentError('La contraseña es igual a la anterior')
 		}
 		if (newPassword === reTypePassword) {
-			throw new InvalidArgumentError(
-				'La nueva contraseña y la contraseña de confirmación no coinciden'
-			)
+			throw new InvalidArgumentError('La nueva contraseña y la contraseña de confirmación no coinciden')
 		}
 		if (oldPassword !== newPassword) {
 			this.password = new Password(newPassword)

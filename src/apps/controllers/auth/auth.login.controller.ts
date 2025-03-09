@@ -15,8 +15,7 @@ export class AuthLoginController implements Controller {
 			const user = req.user as ReqUser
 			if (!user) throw new Error('User not found')
 
-			const { infoUser, refreshToken } =
-				await AuthUseCase.authenticaUser(user)
+			const { infoUser, refreshToken } = await AuthUseCase.authenticaUser(user)
 
 			res.status(httpStatus.OK)
 				.cookie('refreshToken', refreshToken, {

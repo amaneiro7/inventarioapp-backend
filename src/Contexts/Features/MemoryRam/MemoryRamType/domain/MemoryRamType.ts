@@ -1,8 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import {
-	type MemoryRamTypeDto,
-	type MemoryRamTypePrimitives
-} from './MemoryRam.dto'
+import { type MemoryRamTypeDto, type MemoryRamTypePrimitives } from './MemoryRam.dto'
 import { MemoryRamTypeId } from './MemoryRamTypeId'
 import { MemoryRamTypeName } from './MemoryRamTypeName'
 
@@ -13,10 +10,7 @@ export class MemoryRamType {
 	) {}
 
 	static fromPrimitives(primitives: MemoryRamTypeDto): MemoryRamType {
-		return new MemoryRamType(
-			new MemoryRamTypeId(primitives.id),
-			new MemoryRamTypeName(primitives.name)
-		)
+		return new MemoryRamType(new MemoryRamTypeId(primitives.id), new MemoryRamTypeName(primitives.name))
 	}
 
 	toPrimitive(): MemoryRamTypePrimitives {

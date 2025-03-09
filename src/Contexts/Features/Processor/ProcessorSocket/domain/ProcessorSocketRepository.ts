@@ -5,11 +5,7 @@ import { type ProcessorId } from '../../Processor/domain/ProcessorId'
 import { type ProcessorSocketDto } from './ProcessorSocket.dto'
 
 export abstract class ProcessorSocketRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<ProcessorSocketDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorSocketDto>>
 
-	abstract searchById(
-		id: Primitives<ProcessorId>
-	): Promise<ProcessorSocketDto | null>
+	abstract searchById(id: Primitives<ProcessorId>): Promise<ProcessorSocketDto | null>
 }

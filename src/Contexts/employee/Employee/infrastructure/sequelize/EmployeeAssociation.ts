@@ -2,10 +2,7 @@ import { FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class EmployeeAssociation {
-	convertFilterLocation(
-		criteria: Criteria,
-		options: FindOptions
-	): FindOptions {
+	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
 			{
 				association: 'devices',
@@ -52,14 +49,7 @@ export class EmployeeAssociation {
 				]
 			}
 		]
-		const firstLevelJoin = [
-			'locationId',
-			'categoryId',
-			'brandId',
-			'modelId',
-			'serial',
-			'activo'
-		]
+		const firstLevelJoin = ['locationId', 'categoryId', 'brandId', 'modelId', 'serial', 'activo']
 		firstLevelJoin.forEach(ele => {
 			if (criteria.searchValueInArray(ele)) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment

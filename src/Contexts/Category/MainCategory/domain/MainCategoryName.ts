@@ -17,16 +17,11 @@ export class MainCategoryName extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`Este <${value}> no es un nombre de categoria válido`
-			)
+			throw new InvalidArgumentError(`Este <${value}> no es un nombre de categoria válido`)
 		}
 	}
 
 	private isValid(name: string): boolean {
-		return (
-			name.length <= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length <= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

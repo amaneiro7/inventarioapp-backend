@@ -9,10 +9,7 @@ import { type SiteId } from '../../domain/SiteId'
 import { type SiteRepository } from '../../domain/SiteRepository'
 import { SiteModels } from './SiteSchema'
 
-export class SequelizeSiteRepository
-	extends CriteriaToSequelizeConverter
-	implements SiteRepository
-{
+export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implements SiteRepository {
 	private readonly cacheKey: string = 'sites'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -30,9 +27,7 @@ export class SequelizeSiteRepository
 			criteria,
 			ex: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
-				const { count, rows } = await SiteModels.findAndCountAll(
-					options
-				)
+				const { count, rows } = await SiteModels.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count

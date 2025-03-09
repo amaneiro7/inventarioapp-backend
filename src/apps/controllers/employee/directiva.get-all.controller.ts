@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class DirectivaGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: DirectivaFinderAll = container.resolve(
-				DirectivaDependencies.FinderAll
-			)
+			const getAll: DirectivaFinderAll = container.resolve(DirectivaDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

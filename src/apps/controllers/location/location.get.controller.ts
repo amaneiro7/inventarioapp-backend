@@ -9,9 +9,7 @@ export class LocationGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: LocationFinder = container.resolve(
-				LocationDependencies.Finder
-			)
+			const get: LocationFinder = container.resolve(LocationDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

@@ -8,10 +8,7 @@ import { DepartamentoModel } from './DepartamentoSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type DepartamentoDto,
-	type DepartamentoPrimitives
-} from '../../domain/Departamento.dto'
+import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/Departamento.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 export class SequelizeDepartamentoRepository
@@ -54,9 +51,7 @@ export class SequelizeDepartamentoRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await DepartamentoModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await DepartamentoModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -65,9 +60,7 @@ export class SequelizeDepartamentoRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<DepartmentId>
-	): Promise<Nullable<DepartamentoDto>> {
+	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
 		return (
 			(await DepartamentoModel.findByPk(id, {
 				attributes: ['id', 'name', 'createdAt', 'updatedAt'],
@@ -97,9 +90,7 @@ export class SequelizeDepartamentoRepository
 		)
 	}
 
-	async searchByName(
-		name: Primitives<CargoName>
-	): Promise<Nullable<DepartamentoDto>> {
+	async searchByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoDto>> {
 		return (await DepartamentoModel.findOne({ where: { name } })) ?? null
 	}
 

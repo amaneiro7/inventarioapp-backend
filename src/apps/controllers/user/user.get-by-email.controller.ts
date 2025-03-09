@@ -11,9 +11,7 @@ export class UserGetByEmailController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const { email } = req.body
-			const get: UserFinderByEmail = container.resolve(
-				UserDependencies.FinderByEmail
-			)
+			const get: UserFinderByEmail = container.resolve(UserDependencies.FinderByEmail)
 			const data = await get.run({ email, user })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

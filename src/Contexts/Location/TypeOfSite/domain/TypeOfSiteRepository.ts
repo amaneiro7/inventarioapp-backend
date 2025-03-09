@@ -7,7 +7,5 @@ import { type TypeOfSiteId } from './TypeOfSiteId'
 export abstract class TypeOfSiteRepository {
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<TypeOfSiteDto>>
 
-	abstract searchById(
-		id: Primitives<TypeOfSiteId>
-	): Promise<TypeOfSiteDto | null>
+	abstract searchById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null>
 }

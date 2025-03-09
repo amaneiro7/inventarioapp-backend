@@ -14,7 +14,5 @@ export abstract class LocationRepository {
 
 	abstract searchById(id: Primitives<LocationId>): Promise<LocationDto | null>
 
-	abstract searchByName(
-		name: Primitives<LocationName>
-	): Promise<LocationDto | null>
+	abstract searchByName(name: Primitives<LocationName>): Promise<LocationDto | null>
 }

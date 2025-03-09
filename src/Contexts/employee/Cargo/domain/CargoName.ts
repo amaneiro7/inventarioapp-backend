@@ -25,9 +25,7 @@ export class CargoName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> no es un nombre de cargo válido`
-			)
+			throw new InvalidArgumentError(`<${value}> no es un nombre de cargo válido`)
 		}
 	}
 
@@ -36,19 +34,10 @@ export class CargoName extends StringValueObject {
 	}
 
 	private isValidLength(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
-	static async updateNameField({
-		name,
-		entity
-	}: {
-		name?: Primitives<CargoName>
-		entity: Cargo
-	}): Promise<void> {
+	static async updateNameField({ name, entity }: { name?: Primitives<CargoName>; entity: Cargo }): Promise<void> {
 		if (!name) return
 
 		if (entity.nameValue === name) return

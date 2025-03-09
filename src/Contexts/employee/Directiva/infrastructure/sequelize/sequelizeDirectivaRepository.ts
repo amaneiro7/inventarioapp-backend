@@ -9,10 +9,7 @@ import { DirectivaModel } from './DirectivaSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type DirectivaDto,
-	type DirectivaPrimitives
-} from '../../domain/Directiva.dto'
+import { type DirectivaDto, type DirectivaPrimitives } from '../../domain/Directiva.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class SequelizeDirectivaRepository
@@ -30,9 +27,7 @@ export class SequelizeDirectivaRepository
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await DirectivaModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await DirectivaModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -41,15 +36,11 @@ export class SequelizeDirectivaRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<DepartmentId>
-	): Promise<Nullable<DirectivaDto>> {
+	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DirectivaDto>> {
 		return (await DirectivaModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<DepartmentName>
-	): Promise<Nullable<DirectivaDto>> {
+	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<DirectivaDto>> {
 		return (await DirectivaModel.findOne({ where: { name } })) ?? null
 	}
 

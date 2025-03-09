@@ -5,11 +5,7 @@ import { type OperatingSystemArqDto } from './OperatingSystemArq.dto'
 import { type OperatingSystemArqId } from './OperatingSystemArqID'
 
 export abstract class OperatingSystemArqRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<OperatingSystemArqDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<OperatingSystemArqDto>>
 
-	abstract searchById(
-		id: Primitives<OperatingSystemArqId>
-	): Promise<OperatingSystemArqDto | null>
+	abstract searchById(id: Primitives<OperatingSystemArqId>): Promise<OperatingSystemArqDto | null>
 }

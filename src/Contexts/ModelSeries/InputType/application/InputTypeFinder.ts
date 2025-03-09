@@ -10,9 +10,7 @@ export class InputTypeFinderAll extends GetAllBaseService<InputTypeDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<InputTypeDto>> {
-		const { data, total } = await this.inputTypeRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.inputTypeRepository.searchAll(criteria)
 		return this.response({
 			data,
 			total,

@@ -1,8 +1,5 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import {
-	CategoryDefaultData,
-	type CategoryValues
-} from '../../../../Category/Category/domain/CategoryDefaultData'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
@@ -10,10 +7,7 @@ import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
 import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
-import {
-	type MonitorModelsParams,
-	type MonitorModelsPrimitives
-} from './MonitoModels.dto'
+import { type MonitorModelsParams, type MonitorModelsPrimitives } from './MonitoModels.dto'
 import { MonitorHasDVI } from './MonitorHasDVI'
 import { MonitorHasHDMI } from './MonitorHasHDMI'
 import { MonitorHasVGA } from './MonitorHasVGA'
@@ -53,15 +47,9 @@ export class MonitorModels extends ModelSeries {
 		)
 	}
 
-	public static isMonitorCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	public static isMonitorCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const AcceptedMonitorCategories: CategoryValues[] = ['Monitores']
-		return AcceptedMonitorCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+		return AcceptedMonitorCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): MonitorModels {

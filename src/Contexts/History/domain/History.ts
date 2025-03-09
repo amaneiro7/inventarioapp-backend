@@ -5,11 +5,7 @@ import { Action, type ActionType } from './HistoryAction'
 import { CreatedAt } from './CreatedAt'
 import { HistoryEmployee } from './HistoryEmployee'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import {
-	type HistoryDto,
-	type HistoryParams,
-	type HistoryPrimitives
-} from './History.dto'
+import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
 
 export class History {
 	constructor(

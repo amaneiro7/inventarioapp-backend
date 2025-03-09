@@ -4,12 +4,8 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
 
 export class DeviceAssociation {
-	convertFilterLocation(
-		criteria: Criteria,
-		options: FindOptions
-	): FindOptions {
-		const mainCategoryId =
-			criteria.obtainFilterValue('mainCategoryId') ?? []
+	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
+		const mainCategoryId = criteria.obtainFilterValue('mainCategoryId') ?? []
 
 		options.include = [
 			{
@@ -44,12 +40,7 @@ export class DeviceAssociation {
 					},
 					{
 						association: 'modelMonitor', // 0 - 2
-						attributes: [
-							'screenSize',
-							'hasDVI',
-							'hasHDMI',
-							'hasVGA'
-						]
+						attributes: ['screenSize', 'hasDVI', 'hasHDMI', 'hasVGA']
 					},
 					{
 						association: 'modelPrinter', // 0 - 3
@@ -114,14 +105,7 @@ export class DeviceAssociation {
 				include: [
 					{
 						association: 'processor',
-						attributes: [
-							'productCollection',
-							'numberModel',
-							'name',
-							'frequency',
-							'cores',
-							'threads'
-						]
+						attributes: ['productCollection', 'numberModel', 'name', 'frequency', 'cores', 'threads']
 					}, // 5 - 0
 					{
 						association: 'hardDriveCapacity',
@@ -248,9 +232,7 @@ export class DeviceAssociation {
 			const value: string = ipAddress[symbol] as string
 
 			;(options.include[5] as any).where = {
-				ipAddress: sequelize.literal(
-					`ip_address::text ILIKE '%${value}%'`
-				)
+				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${value}%'`)
 			}
 
 			delete options.where.ipAddress
@@ -291,9 +273,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por estado
 		if (options.where && 'stateId' in options.where) {
-			;(
-				options.include[7] as any
-			).include[1].include[0].include[0].where = {
+			;(options.include[7] as any).include[1].include[0].include[0].where = {
 				id: options.where.stateId
 			}
 
@@ -302,9 +282,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por region
 		if (options.where && 'regionId' in options.where) {
-			;(
-				options.include[7] as any
-			).include[1].include[0].include[0].include[0].where = {
+			;(options.include[7] as any).include[1].include[0].include[0].include[0].where = {
 				id: (options.where as any)?.regionId
 			}
 

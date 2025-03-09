@@ -16,9 +16,7 @@ export class HasWifiAdapter extends BooleanValueObject {
 
 	private ensureIsValid(value: boolean): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`This <${value}> is not a valid type`
-			)
+			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
 		}
 	}
 

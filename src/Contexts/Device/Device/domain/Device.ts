@@ -68,10 +68,7 @@ export class Device {
 		this.brandId = new BrandId(newBrandId)
 	}
 
-	updateEmployee(
-		newEmployee: Primitives<DeviceEmployee>,
-		status: Primitives<DeviceStatus>
-	): void {
+	updateEmployee(newEmployee: Primitives<DeviceEmployee>, status: Primitives<DeviceStatus>): void {
 		this.employeeId = new DeviceEmployee(newEmployee, status)
 	}
 
@@ -83,10 +80,7 @@ export class Device {
 		this.observation = new DeviceObservation(observation)
 	}
 
-	updateStockNumber(
-		stockNumber: Primitives<DeviceStocknumber>,
-		status: Primitives<DeviceStatus>
-	): void {
+	updateStockNumber(stockNumber: Primitives<DeviceStocknumber>, status: Primitives<DeviceStatus>): void {
 		this.stockNumber = new DeviceStocknumber(stockNumber, status)
 	}
 

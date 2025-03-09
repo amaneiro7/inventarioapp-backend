@@ -6,10 +6,7 @@ import { type CityName } from '../../domain/CityName'
 import { type CityDto } from '../../domain/City.dto'
 import { type StateDto } from '../../../State/domain/State.dto'
 
-export class CityModel
-	extends Model<Omit<CityDto, 'state'>>
-	implements CityDto
-{
+export class CityModel extends Model<Omit<CityDto, 'state'>> implements CityDto {
 	declare id: Primitives<CityId>
 	declare stateId: Primitives<StateId>
 	declare name: Primitives<CityName>

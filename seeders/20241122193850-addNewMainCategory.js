@@ -16,10 +16,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		return await queryInterface.bulkDelete(
-			'main_categories',
-			{ id: '5' },
-			{}
-		)
+		return await queryInterface.bulkDelete('main_categories', { id: '5' }, {})
 	}
 }

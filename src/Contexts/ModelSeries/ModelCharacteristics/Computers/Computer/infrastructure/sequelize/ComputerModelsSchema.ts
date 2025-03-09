@@ -13,17 +13,13 @@ import { type CategoryId } from '../../../../../../Category/Category/domain/Cate
 import { type ComputerModelsDto } from '../../domain/ComputerModels.dto'
 import { type MemoryRamType } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 
-interface ComputerModelsCreationAttributes
-	extends Omit<ComputerModelsDto, 'memoryRamType'> {
+interface ComputerModelsCreationAttributes extends Omit<ComputerModelsDto, 'memoryRamType'> {
 	id: Primitives<ModelSeriesId>
 	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class ComputerModelsModel
-	extends Model<ComputerModelsCreationAttributes>
-	implements ComputerModelsDto
-{
+export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes> implements ComputerModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>
@@ -63,13 +59,7 @@ export class ComputerModelsModel
 					allowNull: false,
 					validate: {
 						isIn: {
-							args: [
-								[
-									CategoryValues.COMPUTADORAS,
-									CategoryValues.SERVIDORES,
-									CategoryValues.ALLINONE
-								]
-							],
+							args: [[CategoryValues.COMPUTADORAS, CategoryValues.SERVIDORES, CategoryValues.ALLINONE]],
 							msg: 'Solo puede pertenecer a la categoria de Computadoras, Servidores o All in One'
 						}
 					}

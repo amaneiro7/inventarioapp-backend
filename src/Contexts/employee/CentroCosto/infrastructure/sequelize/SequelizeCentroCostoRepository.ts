@@ -8,16 +8,10 @@ import { CentroCostoModel } from './CentroCostoSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type CentroCostoPrimitives,
-	type CentroCostoDto
-} from '../../domain/CentroCosto.dto'
+import { type CentroCostoPrimitives, type CentroCostoDto } from '../../domain/CentroCosto.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeCentroCostoRepository
-	extends CriteriaToSequelizeConverter
-	implements CentroCostoRepository
-{
+export class SequelizeCentroCostoRepository extends CriteriaToSequelizeConverter implements CentroCostoRepository {
 	private readonly cacheKey: string = 'CentroCostos'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -29,9 +23,7 @@ export class SequelizeCentroCostoRepository
 			criteria: criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await CentroCostoModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await CentroCostoModel.findAndCountAll(options)
 				return {
 					total: count,
 					data: rows
@@ -40,15 +32,11 @@ export class SequelizeCentroCostoRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<CodCentroCosto>
-	): Promise<Nullable<CentroCostoDto>> {
+	async searchById(id: Primitives<CodCentroCosto>): Promise<Nullable<CentroCostoDto>> {
 		return (await CentroCostoModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<CentroCostoName>
-	): Promise<Nullable<CentroCostoDto>> {
+	async searchByName(name: Primitives<CentroCostoName>): Promise<Nullable<CentroCostoDto>> {
 		return (await CentroCostoModel.findOne({ where: { name } })) ?? null
 	}
 

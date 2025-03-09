@@ -12,9 +12,7 @@ export class UserResetPasswordController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const { id } = req.body
-			const reset: UserResetPassword = container.resolve(
-				UserDependencies.ResetPassword
-			)
+			const reset: UserResetPassword = container.resolve(UserDependencies.ResetPassword)
 			await reset.run({
 				user,
 				id

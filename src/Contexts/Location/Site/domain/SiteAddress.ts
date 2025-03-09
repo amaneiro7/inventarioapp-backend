@@ -19,17 +19,12 @@ export class SiteAddress extends StringValueObject {
 
 	private ensureIsValidSerial(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid site address`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid site address`)
 		}
 	}
 
 	private isValid(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateAddressField({

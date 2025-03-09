@@ -6,10 +6,7 @@ import { type StateName } from '../../domain/StateName'
 import { type RegionId } from '../../../Region/domain/RegionId'
 import { type RegionDto } from '../../../Region/domain/Region.dto'
 
-export class StateModel
-	extends Model<Omit<StateDto, 'region'>>
-	implements StateDto
-{
+export class StateModel extends Model<Omit<StateDto, 'region'>> implements StateDto {
 	declare region: RegionDto
 	declare id: Primitives<StateId>
 	declare regionId: Primitives<RegionId>

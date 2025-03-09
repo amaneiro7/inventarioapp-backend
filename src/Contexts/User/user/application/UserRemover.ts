@@ -8,13 +8,7 @@ import { type UserRepository } from '../domain/UserRepository'
 export class UserRemover {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async run({
-		user,
-		id
-	}: {
-		user?: JwtPayloadUser
-		id: Primitives<UserId>
-	}): Promise<void> {
+	async run({ user, id }: { user?: JwtPayloadUser; id: Primitives<UserId> }): Promise<void> {
 		// Se valida que el usuario que realiza la accion esta autorizado
 		isSuperAdmin({ user })
 

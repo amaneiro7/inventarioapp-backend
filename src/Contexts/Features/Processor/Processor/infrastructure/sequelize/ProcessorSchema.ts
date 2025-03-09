@@ -8,10 +8,7 @@ import { type ProcessorCores } from '../../domain/ProcessorCores'
 import { type ProcessorHasThreads } from '../../domain/ProcessorIsThreads'
 import { type ProcessorFrequency } from '../../domain/ProcessorFrequency'
 
-export class ProcessorModel
-	extends Model<ProcessorDto>
-	implements ProcessorDto
-{
+export class ProcessorModel extends Model<ProcessorDto> implements ProcessorDto {
 	declare id: Primitives<ProcessorId>
 	declare productCollection: Primitives<ProcessorProductCollection>
 	declare numberModel: Primitives<ProcessorNumberModel>

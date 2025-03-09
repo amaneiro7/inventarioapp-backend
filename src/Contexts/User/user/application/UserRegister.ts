@@ -12,13 +12,7 @@ export class UserRegister {
 		private readonly roleRepository: RoleRepository
 	) {}
 
-	async run({
-		payload,
-		user
-	}: {
-		payload: UserPrimitives
-		user?: JwtPayloadUser
-	}): Promise<void> {
+	async run({ payload, user }: { payload: UserPrimitives; user?: JwtPayloadUser }): Promise<void> {
 		// Primero se valida si el usuario que esta realizando esta accion tiene permisos
 		isSuperAdmin({ user })
 

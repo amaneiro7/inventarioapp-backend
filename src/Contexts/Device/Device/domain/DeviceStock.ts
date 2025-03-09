@@ -21,30 +21,13 @@ export class DeviceStocknumber extends AcceptedNullValueObject<string> {
 		return this.value
 	}
 
-	private ensureIsValid(
-		value: Primitives<DeviceStocknumber>,
-		status: Primitives<DeviceStatus>
-	): void {
+	private ensureIsValid(value: Primitives<DeviceStocknumber>, status: Primitives<DeviceStatus>): void {
 		if (value === null) return
-		if (
-			!(
-				value?.length >= this.NAME_MIN_LENGTH &&
-				value?.length <= this.NAME_MAX_LENGTH
-			)
-		) {
-			throw new InvalidArgumentError(
-				`<${value}> exceeded the maximum length`
-			)
+		if (!(value?.length >= this.NAME_MIN_LENGTH && value?.length <= this.NAME_MAX_LENGTH)) {
+			throw new InvalidArgumentError(`<${value}> exceeded the maximum length`)
 		}
-		if (
-			![
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR
-			].includes(status)
-		) {
-			throw new InvalidArgumentError(
-				'The device cannot have a stock number if it is not in the warehouse'
-			)
+		if (![DeviceStatus.StatusOptions.INALMACEN, DeviceStatus.StatusOptions.PORDESINCORPORAR].includes(status)) {
+			throw new InvalidArgumentError('The device cannot have a stock number if it is not in the warehouse')
 		}
 	}
 

@@ -10,9 +10,7 @@ export class EmployeePatchController implements Controller {
 		try {
 			const params = req.body
 			const { id } = req.params
-			const update: EmployeeUpdater = container.resolve(
-				EmployeeDependencies.Updater
-			)
+			const update: EmployeeUpdater = container.resolve(EmployeeDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Empleado actualizado exitosamente'

@@ -7,9 +7,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CentroCostoParams } from '../domain/CentroCosto.dto'
 
 export class CentroCostoUpdater {
-	constructor(
-		private readonly centroCostoRepository: CentroCostoRepository
-	) {}
+	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
 
 	async run({
 		id,
@@ -20,9 +18,7 @@ export class CentroCostoUpdater {
 	}): Promise<void> {
 		const codCentroCosto = new CodCentroCosto(id)
 
-		const centroCosto = await this.centroCostoRepository.searchById(
-			codCentroCosto.value
-		)
+		const centroCosto = await this.centroCostoRepository.searchById(codCentroCosto.value)
 		if (!centroCosto) {
 			throw new CentroCostoDoesNotExistError()
 		}

@@ -11,9 +11,7 @@ export enum TypeOfSiteDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		typeOfSiteRepository: asClass(
-			SequelizeTypeOfSiteRepository
-		).singleton(),
+		typeOfSiteRepository: asClass(SequelizeTypeOfSiteRepository).singleton(),
 		typeOfSiteFinderAll: asClass(TypeOfSiteFinderAll),
 		typeOfSiteGetAllController: asClass(TypeOfSiteGetAllController)
 	})

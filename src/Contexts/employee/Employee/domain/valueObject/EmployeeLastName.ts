@@ -6,8 +6,7 @@ import { RegularEmployee } from '../entity/RegularEmployee'
 export class EmployeeLastName extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 50
 	private readonly NAME_MIN_LENGTH = 3
-	private readonly Regex =
-		/^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
+	private readonly Regex = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
 
 	constructor(readonly value: string) {
 		super(value)
@@ -19,14 +18,10 @@ export class EmployeeLastName extends StringValueObject {
 		// Create an empty array to store any validation errors
 		const errors = []
 		if (value.length < this.NAME_MIN_LENGTH) {
-			errors.push(
-				`El apellido debe ser mayor a ${this.NAME_MIN_LENGTH} caracteres`
-			)
+			errors.push(`El apellido debe ser mayor a ${this.NAME_MIN_LENGTH} caracteres`)
 		}
 		if (value.length > this.NAME_MAX_LENGTH) {
-			errors.push(
-				`El apellido debe ser menor a ${this.NAME_MAX_LENGTH} caracteres`
-			)
+			errors.push(`El apellido debe ser menor a ${this.NAME_MAX_LENGTH} caracteres`)
 		}
 		if (!this.Regex.test(value)) {
 			errors.push(

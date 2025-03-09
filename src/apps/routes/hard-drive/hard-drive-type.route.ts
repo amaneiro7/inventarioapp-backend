@@ -10,9 +10,5 @@ export const register = async (router: Router) => {
 		HardDriveTypeDependencies.GetAllController
 	)
 
-	router.get(
-		'/harddrivetypes/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/harddrivetypes/', authenticate, getAllController.run.bind(getAllController))
 }

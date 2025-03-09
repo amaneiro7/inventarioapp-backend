@@ -52,9 +52,7 @@ export class Extension extends StringValueObject {
 
 	private ensureIsValid(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid Extension Number`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid Extension Number`)
 		}
 	}
 

@@ -20,17 +20,11 @@ export class IDepartment {
 
 	static create(params: Omit<DepartmentPrimitives, 'id'>): IDepartment {
 		const id = DepartmentId.random().value
-		return new IDepartment(
-			new DepartmentId(id),
-			new DepartmentName(params.name)
-		)
+		return new IDepartment(new DepartmentId(id), new DepartmentName(params.name))
 	}
 
 	static fromPrimitives(primitives: DepartmentPrimitives): IDepartment {
-		return new IDepartment(
-			new DepartmentId(primitives.id),
-			new DepartmentName(primitives.name)
-		)
+		return new IDepartment(new DepartmentId(primitives.id), new DepartmentName(primitives.name))
 	}
 
 	toPrimitive(): DepartmentPrimitives {

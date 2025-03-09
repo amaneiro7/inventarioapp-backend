@@ -5,17 +5,12 @@ import { type HardDriveCapacityDto } from '../domain/HardDriveCapacity.dto'
 import { type HardDriveCapacityRepository } from '../domain/HardDriveCapacityRepository'
 
 export class HardDriveCapacityFinderAll extends GetAllBaseService<HardDriveCapacityDto> {
-	constructor(
-		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
-	) {
+	constructor(private readonly hardDriveCapacityRepository: HardDriveCapacityRepository) {
 		super()
 	}
 
-	async run(
-		criteria: Criteria
-	): Promise<ResponseService<HardDriveCapacityDto>> {
-		const { data, total } =
-			await this.hardDriveCapacityRepository.searchAll(criteria)
+	async run(criteria: Criteria): Promise<ResponseService<HardDriveCapacityDto>> {
+		const { data, total } = await this.hardDriveCapacityRepository.searchAll(criteria)
 		return this.response({
 			data,
 			total,

@@ -9,10 +9,7 @@ import { type HistoryEmployee } from '../../domain/HistoryEmployee'
 import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 
-export class HistoryModel
-	extends Model<Omit<HistoryDto, 'employee' | 'device'>>
-	implements HistoryDto
-{
+export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device'>> implements HistoryDto {
 	declare id: Primitives<HistoryId>
 	declare deviceId: Primitives<DeviceId>
 	declare userId: Primitives<UserId>

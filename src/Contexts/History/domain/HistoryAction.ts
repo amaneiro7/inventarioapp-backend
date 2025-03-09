@@ -22,9 +22,7 @@ export class Action extends StringValueObject {
 
 	private ensureIsValid(value: ActionType): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<this ${value}> is not a valid action type`
-			)
+			throw new InvalidArgumentError(`<this ${value}> is not a valid action type`)
 		}
 	}
 

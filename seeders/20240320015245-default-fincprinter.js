@@ -1,9 +1,7 @@
 'use strict'
 
 const { randomUUID } = require('crypto')
-const {
-	impresorasFinancieraAlmacen
-} = require('./deviceData/ImpFinancieraAlmacen')
+const { impresorasFinancieraAlmacen } = require('./deviceData/ImpFinancieraAlmacen')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

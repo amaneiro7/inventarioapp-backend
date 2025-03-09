@@ -6,9 +6,7 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
 
 export class UpdateDirectivaUseCase {
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	) {}
+	constructor(private readonly directivaRepository: DepartmentRepository<DirectivaDto>) {}
 
 	public async execute({
 		params: { name },

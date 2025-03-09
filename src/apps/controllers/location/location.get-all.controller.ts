@@ -10,9 +10,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class LocationGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: LocationFinderAll = container.resolve(
-				LocationDependencies.FinderAll
-			)
+			const getAll: LocationFinderAll = container.resolve(LocationDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

@@ -6,9 +6,7 @@ import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapac
 import { type DeviceComputer } from './Computer'
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 
-export class ComputerHardDriveCapacity extends AcceptedNullValueObject<
-	Primitives<HardDriveCapacityId>
-> {
+export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitives<HardDriveCapacityId>> {
 	constructor(
 		readonly value: Primitives<HardDriveCapacityId> | null,
 		readonly status: Primitives<DeviceStatus>
@@ -16,10 +14,7 @@ export class ComputerHardDriveCapacity extends AcceptedNullValueObject<
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIsValidHardDriveCapacityId(value)
-		this.ensureIfStatusIsInUseHardDriveMustHaveAValue(
-			this.value,
-			this.status
-		)
+		this.ensureIfStatusIsInUseHardDriveMustHaveAValue(this.value, this.status)
 	}
 
 	toPrimitives(): Primitives<HardDriveCapacityId> | null {
@@ -39,15 +34,11 @@ export class ComputerHardDriveCapacity extends AcceptedNullValueObject<
 			].includes(status) &&
 			hardDriveCapacity === null
 		) {
-			throw new InvalidArgumentError(
-				'If computer is in use, required an hard drive'
-			)
+			throw new InvalidArgumentError('If computer is in use, required an hard drive')
 		}
 	}
 
-	private ensureIsValidHardDriveCapacityId(
-		id: Primitives<HardDriveCapacityId> | null
-	): void {
+	private ensureIsValidHardDriveCapacityId(id: Primitives<HardDriveCapacityId> | null): void {
 		if (!this.isValid(id)) {
 			throw new InvalidArgumentError('HardDrive is required')
 		}

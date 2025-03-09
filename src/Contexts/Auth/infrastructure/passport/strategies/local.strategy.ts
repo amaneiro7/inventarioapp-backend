@@ -1,7 +1,4 @@
-import {
-	Strategy as LocalStrategy,
-	type IStrategyOptions
-} from 'passport-local'
+import { Strategy as LocalStrategy, type IStrategyOptions } from 'passport-local'
 import { type UserLoginLocal } from '../../../application/UserLoginLocal'
 
 export class LocalAuthStrategy extends LocalStrategy {

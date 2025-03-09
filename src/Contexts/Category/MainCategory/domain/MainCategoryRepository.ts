@@ -7,7 +7,5 @@ import { type MainCategoryId } from './MainCategoryId'
 export abstract class MainCategoryRepository {
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<MainCategoryDto>>
 
-	abstract searchById(
-		id: MainCategoryId['value']
-	): Promise<Nullable<MainCategoryDto>>
+	abstract searchById(id: MainCategoryId['value']): Promise<Nullable<MainCategoryDto>>
 }

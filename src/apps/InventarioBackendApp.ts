@@ -10,17 +10,13 @@ import { type Database } from '../Contexts/Shared/domain/Database'
 
 export class InventarioBackendApp {
 	server?: Server
-	private readonly logger: Logger = container.resolve(
-		SharedDependencies.Logger
-	)
+	private readonly logger: Logger = container.resolve(SharedDependencies.Logger)
 
 	async start(): Promise<void> {
 		const port = config.port
 		this.server = new Server(port, this.logger)
 
-		const passportManager: PassportManager = container.resolve(
-			AuthDependencies.PassportManager
-		)
+		const passportManager: PassportManager = container.resolve(AuthDependencies.PassportManager)
 		await passportManager.initialize()
 
 		await this.server.listen()
@@ -32,12 +28,8 @@ export class InventarioBackendApp {
 	}
 
 	async stop(): Promise<void> {
-		const cache: CacheRepository = container.resolve(
-			SharedDependencies.CacheRepository
-		)
-		const database: Database = container.resolve(
-			SharedDependencies.Database
-		)
+		const cache: CacheRepository = container.resolve(SharedDependencies.CacheRepository)
+		const database: Database = container.resolve(SharedDependencies.Database)
 		await database.close()
 		await cache.close()
 
@@ -45,12 +37,8 @@ export class InventarioBackendApp {
 	}
 
 	private async initializeDBStorage() {
-		const database: Database = container.resolve(
-			SharedDependencies.Database
-		)
-		const cache: CacheRepository = container.resolve(
-			SharedDependencies.CacheRepository
-		)
+		const database: Database = container.resolve(SharedDependencies.Database)
+		const cache: CacheRepository = container.resolve(SharedDependencies.CacheRepository)
 		await cache.connect()
 		await database.connet()
 	}

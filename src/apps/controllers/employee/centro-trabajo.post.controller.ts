@@ -9,9 +9,7 @@ export class CentroTrabajoPostController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const create: CentroTrabajoCreator = container.resolve(
-				CentroTrabajoDependencies.Creator
-			)
+			const create: CentroTrabajoCreator = container.resolve(CentroTrabajoDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
 				message: 'Empleado creado exitosamente'

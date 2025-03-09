@@ -3,17 +3,11 @@ import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { CriteriaToSequelizeConverter } from '../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import {
-	type HistoryDto,
-	type HistoryPrimitives
-} from '../../domain/History.dto'
+import { type HistoryDto, type HistoryPrimitives } from '../../domain/History.dto'
 import { type HistoryRepository } from '../../domain/HistoryRepository'
 import { HistoryModel } from './HistorySchema'
 
-export class SequelizeHistoryRepository
-	extends CriteriaToSequelizeConverter
-	implements HistoryRepository
-{
+export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter implements HistoryRepository {
 	private readonly cacheKey: string = 'histories'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -25,9 +19,7 @@ export class SequelizeHistoryRepository
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await HistoryModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await HistoryModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count

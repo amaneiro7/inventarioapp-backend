@@ -15,9 +15,7 @@ export enum MainCategoryDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		mainCategoryRepository: asClass(
-			SequelizeMainCategoryRepository
-		).singleton(),
+		mainCategoryRepository: asClass(SequelizeMainCategoryRepository).singleton(),
 		mainCategoryFinder: asClass(MainCategoriesFinder),
 		mainCategoryFinderAll: asClass(MainCategoriesFinderAll),
 		mainCategoryGetController: asClass(MainCategoryGetController),

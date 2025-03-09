@@ -9,15 +9,9 @@ import { LocationAssociation } from './LocationAssociation'
 import { LocationModel } from './LocationSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type LocationDto,
-	type LocationPrimitives
-} from '../../domain/Location.dto'
+import { type LocationDto, type LocationPrimitives } from '../../domain/Location.dto'
 
-export class SequelizeLocationRepository
-	extends CriteriaToSequelizeConverter
-	implements LocationRepository
-{
+export class SequelizeLocationRepository extends CriteriaToSequelizeConverter implements LocationRepository {
 	private readonly cacheKey: string = 'locations'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -48,9 +42,7 @@ export class SequelizeLocationRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await LocationModel.findAndCountAll(
-					options
-				)
+				const { rows, count } = await LocationModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -61,18 +53,13 @@ export class SequelizeLocationRepository
 
 	async matching(criteria: Criteria): Promise<ResponseDB<LocationDto>> {
 		const options = this.convert(criteria)
-		const locationOption = new LocationAssociation().convertFilterLocation(
-			criteria,
-			options
-		)
+		const locationOption = new LocationAssociation().convertFilterLocation(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await LocationModel.findAndCountAll(
-					locationOption
-				)
+				const { rows, count } = await LocationModel.findAndCountAll(locationOption)
 				return {
 					data: rows,
 					total: count
@@ -105,9 +92,7 @@ export class SequelizeLocationRepository
 		)
 	}
 
-	async searchByName(
-		name: Primitives<LocationName>
-	): Promise<LocationDto | null> {
+	async searchByName(name: Primitives<LocationName>): Promise<LocationDto | null> {
 		return (await LocationModel.findOne({ where: { name } })) ?? null
 	}
 

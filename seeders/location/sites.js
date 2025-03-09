@@ -271,8 +271,7 @@ const sites = [
 	{
 		id: '43f0cc5c-82c0-468d-a081-5c0f60cc9b65',
 		name: '(12) La Urbina',
-		address:
-			'Calle #9, Edf. Tasti, P.B, Urbanización La Urbina, Municipio Sucre, Estado Miranda.',
+		address: 'Calle #9, Edf. Tasti, P.B, Urbanización La Urbina, Municipio Sucre, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -287,50 +286,41 @@ const sites = [
 		name: '(14) Charallave',
 		address:
 			'Av. Cristóbal Rojas, Calle N° 12, C.C. Los Peñones, Locales 3-5, PB., antiguo Club Los Peñones. Charallave, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0].id
 	},
 	{
 		id: '9d6a523c-62e9-449a-b7eb-6845c5e6a390',
 		name: '(15) Ciudad Ojeda Centro',
-		address:
-			'Av. Bolívar Esquina Con Calle Sucre. Edificio B.O.D, Ciudad Ojeda, Estado Zulia',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.CIUDADOJEDA
-		)[0].id
+		address: 'Av. Bolívar Esquina Con Calle Sucre. Edificio B.O.D, Ciudad Ojeda, Estado Zulia',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CIUDADOJEDA)[0].id
 	},
 	{
 		id: 'a47bf4ee-bb54-46db-bc0c-a6dd0d09f3a1',
 		name: '(16) Los Taques Falcón',
 		address:
 			'Edif. Sede de la Sociedad Hafran Servicios Múltiples C.A., a 500 mts del Distribuidor El Taparo. Av. Intercomunal Alí Primera, Sector Judiban Municipio Los Taques, Punto Fijo, Estado\n                  Falcón.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0].id
 	},
 	{
 		id: '0a8426ad-8853-4a7e-a87d-f6c9c46751fe',
 		name: '(18) Santa Teresa del Tuy',
 		address:
 			'Av. Independencia con Calle Las Margaritas, C.C. Las Flores, PB, Urbanizacion Las Flores, Parroquia Santa Teresa Del Tuy, Municipio Independencia, Estado Miranda.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANTATERESA
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANTATERESA)[0].id
 	},
 	{
 		id: 'df2c9155-f39a-436a-9960-b33052bffb41',
 		name: '(19) Guarenas',
 		address:
 			'Av. Este, Cruce con Av. Intercomunal, Parcela C-1, C.C. Copacabana, Locales 4 y 5, Urbanizacion, La Vaquera, Guarenas, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.GUARENAS)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.GUARENAS)[0].id
 	},
 	{
 		id: '87910a94-6e32-422e-8301-04da34d207b2',
 		name: '(20) Palo Negro Súper Líder',
 		address:
 			'Carretera Nacional Palo Negro, Vía Magdaleno, C.C. Súper Líder, Local 4, Sector Palo Negro, Estado Aragua.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PALONEGRO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PALONEGRO)[0].id
 	},
 	{
 		id: 'c616e6d9-e949-4884-aadb-b33c29eed212',
@@ -342,65 +332,53 @@ const sites = [
 	{
 		id: 'ed5e943f-e3e4-4e4b-a71c-44c7ef505b30',
 		name: '(25) San Juan de Los Morros',
-		address:
-			'Av. Fermín Toro, Edif. N° 25. Municipio Juan Germán Roscio, San Juan De Los Morros, Estado Guárico.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANJUANDELOSMORROS
-		)[0].id
+		address: 'Av. Fermín Toro, Edif. N° 25. Municipio Juan Germán Roscio, San Juan De Los Morros, Estado Guárico.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANJUANDELOSMORROS)[0].id
 	},
 	{
 		id: 'd4a29b79-a868-47bd-9ebf-c3409c160837',
 		name: '(28) Casacoima Delta Amacuro',
 		address:
 			'Av. Bolívar con Calle Transversal I, Sector Brisas del Triunfo frente al Obelisco El Triunfo, Casacoima, Estado Delta Amacuro.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CASACOIMA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CASACOIMA)[0].id
 	},
 	{
 		id: '6468d553-1193-414c-9a14-95bce1085467',
 		name: '(29) Tucupido Guarico',
 		address:
 			'Calle Gavante con Calle Bolívar, Casa N°76, PB. Frente a la Plaza Bolívar, Municipio Ribas, Tucupido, Estado Guárico.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.TUCUPIDO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.TUCUPIDO)[0].id
 	},
 	{
 		id: '4017ad67-118b-4984-8386-ab60dab71d29',
 		name: '(30) Maracaibo Las Delicias',
 		address:
 			'Av. Las Delicias Con Calle 88, Nº 88-77, Local Nº 2, P.B., Sector Las Delicias, Municipio Maracaibo, Ciudad Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '48e6c0ac-24f5-4501-9173-76286bbcc846',
 		name: '(30) Taquilla Alcaldia de Maracaibo',
-		address:
-			'Alcaldía De Maracaibo, Avenida 4 Con Calle 96, Parroquia Bolívar, Municipio Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Alcaldía De Maracaibo, Avenida 4 Con Calle 96, Parroquia Bolívar, Municipio Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'db9601aa-26f3-468a-b182-956534bf1666',
 		name: '(31) Maracaibo II Bella Vista',
-		address:
-			'Av. 4 (Bella Vista) Entre Calles 79 Y 80, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Av. 4 (Bella Vista) Entre Calles 79 Y 80, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'ca62f769-734b-4c75-b159-c50fd9fe8dff',
 		name: '(32) La Limpia',
 		address:
 			'Av. La Limpia, Entre Avenidas 79-A Y 79-B, C.C. Ciudad Traki, Parroquia Raúl Leoni, Municipio Maracaibo, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '01e99f6f-d260-4ac4-8cb5-893e6ce3bd08',
 		name: '(35) El Hatillo',
-		address:
-			'Calle La Paz, N° 28 Frente A La Plaza Bolívar, El Hatillo, Edo. Miranda.',
+		address: 'Calle La Paz, N° 28 Frente A La Plaza Bolívar, El Hatillo, Edo. Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -415,35 +393,27 @@ const sites = [
 		name: '(40) San Cristóbal',
 		address:
 			'C.C. Tamá, P.B., Local Nº 33, Urb. Los Pirineos, Municipio San Cristóbal, San Cristóbal, Estado Táchira.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANCRISTOBAL
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANCRISTOBAL)[0].id
 	},
 	{
 		id: 'a2d084f5-50e2-4d32-b592-9d7e9420c57c',
 		name: '(42) Traki Valle de la Pascua',
 		address:
 			'Híper Galerías Traki Sector Jardín Planta Baja Local L-26, Av. Rómulo Gallegos Municipio Leonardo Infante, Valle De La Pascua, Estado Guárico.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.VALLEDELAPASCUA
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALLEDELAPASCUA)[0].id
 	},
 	{
 		id: '6108b00b-639c-4023-b26b-f8d2f9fd65e4',
 		name: '(43) San Antonio de Los Altos',
 		address:
 			'Av. Paseo Los Andes, Urb. Las Minas, C.C. La Colina, Local C1-09a, Municipio Los Salías, San Antonio De Los Altos, Estado Miranda',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANANTONIODELOSALTES
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANANTONIODELOSALTES)[0].id
 	},
 	{
 		id: '732f5bad-6afb-4ab3-abaf-c73f5bfd2d15',
 		name: '(44) San Felix',
-		address:
-			'Calle Sucre, C.C. Mariño (Frente A La Plaza Miranda), San Felix, Estado Bolívar.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANFELIZ)[0]
-			.id
+		address: 'Calle Sucre, C.C. Mariño (Frente A La Plaza Miranda), San Felix, Estado Bolívar.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANFELIZ)[0].id
 	},
 	{
 		id: '17e54fe7-d471-45d1-ba11-6273167eac2c',
@@ -455,19 +425,15 @@ const sites = [
 	{
 		id: '90ff1732-1690-4d33-8cf0-6f7d6947423d',
 		name: '(47) Altavista',
-		address:
-			'C.C. Traki, PB., Av. Las Américas, Sector Altavista, Puerto Ordaz, Estado Bolívar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOORDAZ
-		)[0].id
+		address: 'C.C. Traki, PB., Av. Las Américas, Sector Altavista, Puerto Ordaz, Estado Bolívar.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOORDAZ)[0].id
 	},
 	{
 		id: '9a20395d-990d-45a2-b7a6-2435bbd68eb1',
 		name: '(49) Aeropuerto Caracas',
 		address:
 			'Aeropuerto de Caracas "Oscar Machado Zuluaga", Autopista Regional del Centro, Charallave, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0].id
 	},
 	{
 		id: 'ddaa8e08-fc6f-4e94-a767-afdfe7d466e5',
@@ -521,10 +487,8 @@ const sites = [
 	{
 		id: '722ae278-8799-4d10-bbba-b96e197b3bc2',
 		name: '(56) La Guaira',
-		address:
-			'Av. Soublette, Edificio Contasa, P.B., Local Nº 1, Municipio Vargas, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0]
-			.id
+		address: 'Av. Soublette, Edificio Contasa, P.B., Local Nº 1, Municipio Vargas, Estado La Guaira.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0].id
 	},
 	{
 		id: 'c04a89af-8169-415a-a9fd-83656beefea5',
@@ -543,19 +507,14 @@ const sites = [
 	{
 		id: 'ea1e48bc-cdc7-4f7e-acf3-20e4d12661fe',
 		name: '(60) Capanaparo',
-		address:
-			'Av. Lara con Calle Capanaparo, C.C. Capanaparo, P.B. Local N°1, Barquisimeto, Estado Lara',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		address: 'Av. Lara con Calle Capanaparo, C.C. Capanaparo, P.B. Local N°1, Barquisimeto, Estado Lara',
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: 'ae191918-afda-4d45-9389-ad54a5ebf53f',
 		name: '(63) Acarigua',
-		address:
-			'Av. 31 (Libertador) Esq. Con Calle 34. Acarigua - Edo. Portuguesa.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.ACARIGUA)[0]
-			.id
+		address: 'Av. 31 (Libertador) Esq. Con Calle 34. Acarigua - Edo. Portuguesa.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.ACARIGUA)[0].id
 	},
 	{
 		id: '5fbbef50-3b4f-4573-89a7-16aa78c58844',
@@ -583,53 +542,40 @@ const sites = [
 		name: '(69) Barquisimeto Mercabar',
 		address:
 			'Av. Carlos Giffoni, Zona Industrial Iii, Mercado Mayorista De Barquisimeto, Zona Financiera, Parroquia Juan De Villegas, Municipio Iribarren, Barquisimeto, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: '606ffd38-6d67-435e-bbd6-160371a8a0d3',
 		name: '(71) Puerto Cabello',
 		address:
 			'Av. Plaza, C.C. Profesional Plaza, Local 10-I, Parroquia Fraternidad, Municipio Puerto Cabello, Estado Carabobo.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOCABELLO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOCABELLO)[0].id
 	},
 	{
 		id: '70736201-6c72-42a5-8d78-b2e25fab251b',
 		name: '(73) Av. Pedro León Torres',
 		address:
 			'Av. Pedro León Torres con Calle 59, Centro Comercial Locatel Oeste, Municipio Iribarren, Barquisimeto, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: '3ed5c03d-ab0d-43dd-add7-338969f28af3',
 		name: '(74) Ciudad Bolívar',
 		address:
 			'C.C. Ciudad Traki, Av. Libertador con Calle Los Nisperos, Municipio Heres, Ciudad Bolivar, Estado Bolivar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.CIUDADBOLIVAR
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CIUDADBOLIVAR)[0].id
 	},
 	{
 		id: '9d83864c-00c3-4bec-821a-536458efd823',
 		name: '(76) Valencia Sur',
-		address:
-			'Av. Industrial I, Centro Empresarial Punto Sur, Zona Industrial Sur, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		address: 'Av. Industrial I, Centro Empresarial Punto Sur, Zona Industrial Sur, Valencia, Estado Carabobo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '92ece1a7-e288-4fe1-a174-c54bc2eb9886',
 		name: '(79) San Sebastián de los Reyes',
-		address:
-			'Calle Bolívar frente a la Plaza los Tres Diputados, San Sebastian de los Reyes, Estado Aragua.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANSEBASTIAN
-		)[0].id
+		address: 'Calle Bolívar frente a la Plaza los Tres Diputados, San Sebastian de los Reyes, Estado Aragua.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANSEBASTIAN)[0].id
 	},
 	{
 		id: '30f81e69-4fc6-4cf1-a437-42cc977fdca4',
@@ -648,24 +594,20 @@ const sites = [
 	{
 		id: '5e72117c-7201-4ecb-bc08-5f064d194755',
 		name: '(82) Maracay Santos Michelena',
-		address:
-			'Av. Santos Michelena Oeste, PB Local Nro. 48-1, Maracay, Estado Aragua.',
+		address: 'Av. Santos Michelena Oeste, PB Local Nro. 48-1, Maracay, Estado Aragua.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAY)[0].id
 	},
 	{
 		id: '656e6628-b0f6-44e6-95e9-85719e0359d2',
 		name: '(83) Maracay Alcaldia',
-		address:
-			'Sede de la Alcaldía de Maracay (Girardot) PB. Maracay, Estado Aragua.',
+		address: 'Sede de la Alcaldía de Maracay (Girardot) PB. Maracay, Estado Aragua.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAY)[0].id
 	},
 	{
 		id: '8c5aa2af-d8bf-4e71-8d40-823987e52d7f',
 		name: '(85) Valencia Bolívar Norte',
-		address:
-			'Av. Bolívar Norte, Sector La Alegría, Torre Principal, PB, Local N° 1, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		address: 'Av. Bolívar Norte, Sector La Alegría, Torre Principal, PB, Local N° 1, Valencia, Estado Carabobo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: 'c2a6b5f3-3b5f-4cd9-925b-a7e6e8fbda5e',
@@ -677,8 +619,7 @@ const sites = [
 	{
 		id: '31abdf72-e039-402a-a2b3-dff5d7ca5d85',
 		name: '(89) Maracay Los Samanes',
-		address:
-			'Av. Mata Redonda, Hipermercado Súper Líder Los Samanes, Galpón 1, Municipio. Girardot, Estado Aragua',
+		address: 'Av. Mata Redonda, Hipermercado Súper Líder Los Samanes, Galpón 1, Municipio. Girardot, Estado Aragua',
 		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAY)[0].id
 	},
 	{
@@ -686,9 +627,7 @@ const sites = [
 		name: '(91) Villa de Cura',
 		address:
 			'Avenida Paradisi cruce con Calle Sucre, Centro Comercial Villa Hermosa, Locales PB1 y PB2, Villa de Cura, Estado Aragua.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.VILLADECURA
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VILLADECURA)[0].id
 	},
 	{
 		id: 'abbe5b78-53e5-41a3-98e6-72459b3120d3',
@@ -701,16 +640,14 @@ const sites = [
 		name: '(96) San Antonio del Táchira',
 		address:
 			'Calle 4, Entre Carreras 9, Sector Lagunitas, Municipio Bolívar, San Antonio Del Táchira, Estado Táchira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANANTONIO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANANTONIO)[0].id
 	},
 	{
 		id: 'c13b5cac-13e8-4046-b836-6ac8aeb4e9a7',
 		name: '(97) La Quizanda',
 		address:
 			'Prolongación Av. Michelena C.C. Atlas, Locales 8a Y 9a. Zona Industrial Norte, Valencia, Edo. Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: 'a28819d2-50d5-4f63-a453-65bd578ac953',
@@ -722,24 +659,20 @@ const sites = [
 	{
 		id: '07a5cd7a-ce8e-4ff0-b1ce-59a47591aabd',
 		name: '(99) Calabozo',
-		address:
-			'Av. Octavio Viana, al lado del Centro Comercial Climar, locales PB, Calabozo, Edo. Guárico.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CALABOZO)[0]
-			.id
+		address: 'Av. Octavio Viana, al lado del Centro Comercial Climar, locales PB, Calabozo, Edo. Guárico.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CALABOZO)[0].id
 	},
 	{
 		id: '69d68ee2-f2fc-45a2-9e1b-b3d7caad1555',
 		name: '(101) Maracaibo C.C. Gran Bazar',
 		address:
 			'Avenida Las Delicias, Cruce Con Avenida Libertador, Ciudad De Maracaibo, Parroquia Bolívar, Municipio Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'cfa640cf-721a-4cb3-8658-959dfcd6e7b2',
 		name: '(102) Coro Supermercado Eurofalcon',
-		address:
-			'Avenida Independencia de la Ciudad de Coro, Parroquia Santa Ana, Municipio Miranda, Estado Falcón.',
+		address: 'Avenida Independencia de la Ciudad de Coro, Parroquia Santa Ana, Municipio Miranda, Estado Falcón.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CORO)[0].id
 	},
 	{
@@ -747,9 +680,7 @@ const sites = [
 		name: '(103) Puerto La Cruz Av.Alberto Ravell',
 		address:
 			'Avenida Alberto Ravell entre Calles Carabobo y Las Flores, Edificio Nº 39, Parroquia Puerto La Cruz, Municipio Juan Antonio Sotillo, Estado Anzoátegui.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOLACRUZ
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOLACRUZ)[0].id
 	},
 	{
 		id: '69de91bd-fcf5-41e5-8149-b927436bfbaf',
@@ -763,30 +694,26 @@ const sites = [
 		name: '(106) Carúpano CC Cristal',
 		address:
 			'Centro Comercial Cristal Carúpano, calle Independencia, cruce con calle Acosta y calle Carabobo, Local A-12, Parroquia Santa Catalina, Municipio Bermúdez, Carúpano, Estado Sucre.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CARUPANO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CARUPANO)[0].id
 	},
 	{
 		id: '0893c9a4-59ea-436d-8e77-91d80cb29ae8',
 		name: '(107) Valencia C.C. Concepto La Granja',
 		address:
 			'Avenida Paseo Cabriales, Urbanización La Granja, Centro Comercial Concepto La Granja. Locales LPB-02,03,04. Parroquia Naguanagua, Municipio Naguanagua, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '7ac4866a-dd3d-4323-bdc6-c14820ac8baf',
 		name: '(108) Porlamar Alcaldía Mariño',
 		address:
 			'C.C. Bella Vista, Calle San Rafael, Alcaldía Municipio Mariño, Parroquía Mariño. Municipio Mariño. Porlamar, Estado Nueva Esparta.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0].id
 	},
 	{
 		id: 'd105e3f5-5d15-4020-91e7-112e93b5e1dc',
 		name: '(109) Bejuma Avenida Los Fundadores',
-		address:
-			'Av. Los Fundadores De La Ciudad de Bejuma, Municipio Bejuma, Estado Carabobo.',
+		address: 'Av. Los Fundadores De La Ciudad de Bejuma, Municipio Bejuma, Estado Carabobo.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.BEJUMA)[0].id
 	},
 	{
@@ -794,9 +721,7 @@ const sites = [
 		name: '(110) Puerto Ordaz Continental',
 		address:
 			'Edf. Torre Continental, PB. Locales 4 y 5, Av. Guayana con calle Cuchivero, Sector Altavista Norte, Municipio Caroní Puerto Ordaz, Estado Bolivar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOORDAZ
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOORDAZ)[0].id
 	},
 	{
 		id: '31557e6c-ccab-41d5-b57f-d7157de64bfe',
@@ -815,8 +740,7 @@ const sites = [
 	{
 		id: '9102457f-a925-467a-bd2f-b335cabac38a',
 		name: '(117) Valera',
-		address:
-			'Edificio Ferdinando, Calles 18 Y 19 De La Av. Bolívar, Local Nº 1, P.B., Valera, Estado Trujillo.',
+		address: 'Edificio Ferdinando, Calles 18 Y 19 De La Av. Bolívar, Local Nº 1, P.B., Valera, Estado Trujillo.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.VALERA)[0].id
 	},
 	{
@@ -824,8 +748,7 @@ const sites = [
 		name: '(119) Punto Fijo II',
 		address:
 			'Av. Ollarvides, Frente a la Bomba Libertad, Puerta Maraven, Municipio Carirubana, Punto Fijo, Estado Falcón.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0].id
 	},
 	{
 		id: 'f2aaf3e2-17de-49bd-8151-cd2cb34da41e',
@@ -838,64 +761,52 @@ const sites = [
 		id: '94a2b9fa-232b-440b-ad7d-d4d06cce9268',
 		name: '(123) Los Haticos',
 		address: 'Av. 17 Los Haticos, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'e16be78d-30f0-40ea-8b8f-0120f6964bb6',
 		name: '(124) C.C. Planeta Sotavento Maiquetía',
 		address:
 			'Avenida La Armada, Conjunto Residencial Sotavento 2, Centro Comercial Planeta Sotavento, PB, Parroquia Maiquetia, Municipio Vargas, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CATIALAMAR)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CATIALAMAR)[0].id
 	},
 	{
 		id: 'bef9e18f-2284-4382-8672-c697d65a870e',
 		name: '(125) Maracaibo 5 De Julio',
-		address:
-			'Edif Torre BNC, Calle 77 (5 De Julio) Esquina Av. 17 (Baralt) Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Edif Torre BNC, Calle 77 (5 De Julio) Esquina Av. 17 (Baralt) Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '51445e96-7f6c-4b09-bf5e-afe47cc83c8c',
 		name: '(126) Villa Del Rosario',
-		address:
-			'Calle Donaldo Blanco Garcia, Entre Calles Municipal Y Concepción. Rosario De Perijá - Edo. Zulia',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.VILLADELROSARIO
-		)[0].id
+		address: 'Calle Donaldo Blanco Garcia, Entre Calles Municipal Y Concepción. Rosario De Perijá - Edo. Zulia',
+		cityId: cities.filter(city => city.name === cityOnlyNames.VILLADELROSARIO)[0].id
 	},
 	{
 		id: '3a38955a-69f5-439b-bf10-82a07cd86625',
 		name: '(127) Valencia Camoruco',
 		address:
 			'Avenida Bolívar, Antigua Calle Constitución o Avenida Camoruco, Nro. 125-20, Municipio Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: 'f0268ec2-0ac7-4d61-a469-9336b2426dca',
 		name: '(128) Valencia Centro',
 		address:
 			'Av. Montes De Oca, Con Calle Independencia Centro Empresarial Torre Araujo, Local L-9. Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '53ba94be-83f0-4e85-8b9f-156d3188038d',
 		name: '(129) Ciudad Bolívar II',
 		address:
 			'Edif. Centro Financiero, Local P.B. 2, Paseo Heres cruce con Callejón Angostura, Sector Cruz Verde, Municipio Heres, Ciudad Bolivar, Estado Bolivar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.CIUDADBOLIVAR
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CIUDADBOLIVAR)[0].id
 	},
 	{
 		id: '54e5eb04-fcf0-4e2c-8bc6-ba212a8c7b2f',
 		name: '(130) Club La Lagunita',
-		address:
-			'Instalaciones de La Lagunita Country Club, El Hatillo. Municipio El Hatillo, Estado Miranda.',
+		address: 'Instalaciones de La Lagunita Country Club, El Hatillo. Municipio El Hatillo, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -917,9 +828,7 @@ const sites = [
 		name: '(137) Zona Industrialii Barquisimeto',
 		address:
 			'(*) Agencia Cerrada Temporalmente, sus Clientes serán Atendidos en la Agencia Metrópolis Barquisimeto C.C. Metrópolis, Av. Francisco Jimenez Y Av. La Salle, Municipio Irribarren,\n                  Parroquia Juan De Villegas, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: '5a9bf3b7-e2c5-48c9-aa78-50e01601bcb6',
@@ -933,24 +842,21 @@ const sites = [
 		name: '(144) La Victoria C.C. Palma Center',
 		address:
 			'Centro Comercial Palma Center, Calle Andrés Bello Sur, Nro. 20, Zona Centro de la Ciudad de la Victoria. Municipio Jose Félix Ribas, Estado Aragua.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAVICTORIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAVICTORIA)[0].id
 	},
 	{
 		id: '11fdac9b-b825-4530-b79e-ca8fabe324a7',
 		name: '(146) Porlamar - Margarita',
 		address:
 			'Av. Rómulo Betancourt, cruce con Calle Jesús Maria Patiño, Porlamar, Municipio Mariño, Porlamar, Estado Nueva Esparta.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0].id
 	},
 	{
 		id: 'f880f40f-dbcd-4309-b1ed-ae1e2adddde1',
 		name: '(148) Las Garcitas Valencia',
 		address:
 			'Parque Industrial Las Garcitas, Local Nº2, Carrtera Nacional Valencia-Caracas, Municipio Los Guayos, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LOSGUAYOS)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LOSGUAYOS)[0].id
 	},
 	{
 		id: '6fd76a31-1e89-4c37-b966-cbbafdd2f33e',
@@ -964,8 +870,7 @@ const sites = [
 		name: '(152) C.C. Babilón Centro Sur',
 		address:
 			'Av. Circunvalación Nº 2, C.C. Babilon Centro Sur, Nº 60.240, Sector Los Estanques, Parroquia Luis Hurtado Higuera, Municipio Autónomo Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '26d9ce41-4723-425a-84a6-90230c5d63fe',
@@ -986,9 +891,7 @@ const sites = [
 		name: '(155) Eurobuilding Puerto Ordaz',
 		address:
 			'Hotel Eurobuilding, Nivel Lobby, Locales 4 y 5, Plaza Guayana, Urbanizacion Altavista Norte, Municipio Caroní, Puerto Ordaz, Estado Bolivar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOORDAZ
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOORDAZ)[0].id
 	},
 	{
 		id: 'dcaacd36-4bc2-4070-86b5-4e763e81c5d4',
@@ -1000,52 +903,42 @@ const sites = [
 	{
 		id: 'fee0b3b3-b699-440e-91d7-3096dd92df57',
 		name: '(159) Club Puerto Azul',
-		address:
-			'Carretera Naiguatá, Frente A La Urb. Longa España, Club Puerto Azul, Naiguatá, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0]
-			.id
+		address: 'Carretera Naiguatá, Frente A La Urb. Longa España, Club Puerto Azul, Naiguatá, Estado La Guaira.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0].id
 	},
 	{
 		id: '907f1ce8-f759-4bf2-aa15-1cabf37720d7',
 		name: '(161) Porlamar Centro',
-		address:
-			'Calle Velasquez C/C Calle Fraternidad Porlamar. Edo. Nueva Esparta.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0]
-			.id
+		address: 'Calle Velasquez C/C Calle Fraternidad Porlamar. Edo. Nueva Esparta.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0].id
 	},
 	{
 		id: '9e56d085-b15b-4657-b3e5-86560fd7ae5d',
 		name: '(162) Ciudad Ojeda',
 		address:
 			'Av. Intercomunal Cabimas - Lagunillas, Edificio Zulia, Locales PB-1, PB-2, PB-3 Y PB-4, Jurisdicción Del Municipio Autónomo Lagunillas Del Estado Zulia, Parroquia De Ciudad Ojeda,\n                  Municipio Lagunillas, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.CIUDADOJEDA
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CIUDADOJEDA)[0].id
 	},
 	{
 		id: 'f2189c6d-a406-4e4f-bd7c-62f29fde72e0',
 		name: '(163) Centro Comercial Los Teques',
 		address:
 			'Centro Comercial Los Teques, Av. Pedro Russo Ferrer, Sector El Tambor, PB-A1, Los Teques, Municipio Guaicaipuro, Parroquia Los Teques, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LOSTEQUES)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LOSTEQUES)[0].id
 	},
 	{
 		id: '37a45692-ff33-410a-9f9f-faac57e1f158',
 		name: '(164) El Sombrero',
 		address:
 			'Residencias Virgen del Carmen, Calle Federación, Cruce con Calle El Descanso, Local 1, El Sombrero, Municipio Julián Mellado, Estado Guárico.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.ELSOMBRERO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.ELSOMBRERO)[0].id
 	},
 	{
 		id: 'ed3db184-0691-49ed-b62d-932daa08eeb0',
 		name: '(165) Centro Comercial Metrópolis',
 		address:
 			'C.C. Metropolis, Nivel El Sol, Locales N° 243 y 243 A, Av. Florencio Jimenez y Av. La Salle, Jurisdicción del Municipio Irribarren, Parroquia Juan de Villegas, Barquisimeto Estado\n                  Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: 'ec6e6ccd-698e-49a9-9dbf-33b3dd29376c',
@@ -1059,8 +952,7 @@ const sites = [
 		name: '(168) C.C. Metrópolis Valencia',
 		address:
 			'Centro Comercial Metrópolis, Nivel Agua Ancla 2, Local 1 A2-108, Autopista Regional del Centro, Municipio San Diego, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANDIEGO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANDIEGO)[0].id
 	},
 	{
 		id: '0979e30a-668a-4f4f-9bf8-a56588a75308',
@@ -1081,8 +973,7 @@ const sites = [
 		name: '(172) El Tigrito',
 		address:
 			'Avenida Principal de San José de Guanipa, antes Quinta Avenida y hoy denominada Fernández Padilla, cruce con Calle Urdaneta, Municipio Guanipa, Parroquia Guanipa, Sector La Paz, ubicado en San José de Guanipa, Estado Anzoátegui.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.ELTIGRITO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.ELTIGRITO)[0].id
 	},
 	{
 		id: 'a8866282-718a-48f0-a507-f9ea6d104693',
@@ -1096,8 +987,7 @@ const sites = [
 		name: '(176) Lecheria',
 		address:
 			'Centro Empresarial Bahía Lido, Planta Baja, Avenida Principal de Lechería, cruce con Carrera 5, Municipio Diego Bautista Urbaneja, Barcelona, Estado Anzoátegui.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LECHERIAS)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LECHERIAS)[0].id
 	},
 	{
 		id: '00aead93-10f8-4cc5-a7ba-67ad45b3b6a2',
@@ -1125,24 +1015,21 @@ const sites = [
 		name: '(185) El Viñedo',
 		address:
 			'Av. Bolívar Norte, Centro Comercial Multicentro Local B-96 Y B-97, El Viñedo, Municipio Valencia, Estado Carabobo',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '830959e2-84de-492f-a16e-20e745ab432c',
 		name: '(192) Maracaibo III',
 		address:
 			'Calle 74 (Antes Dr. Arévalo González), Entre Avenidas 3h Y 3y, Edificio 2000, Municipio Coquivacoa, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '34d5abbd-ad29-4310-9280-76f8db6a30fc',
 		name: '(194) San Felipe',
 		address:
 			'Av. Intercomunal San Felipe El Fuerte, Av. 4 entre Calles 2 y 3, sector complejo Industrial Agustin Rivero, Independencia, Estado Yaracuy.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANFELIPE)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANFELIPE)[0].id
 	},
 	{
 		id: 'fe3cf689-0692-4af3-86bf-c41ac3d50b22',
@@ -1156,8 +1043,7 @@ const sites = [
 		name: '(197) Charallave C.C. Súper Líder',
 		address:
 			'Centro Comercial Súper Líder, Avenida Tricentenaria, Urb. Industrial Albarenga, Sector Madosa, Parroquia Charallave, Municipio Cristóbal Rojas, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CHARAVALLE)[0].id
 	},
 	{
 		id: 'b61e21b7-f9de-4039-8477-943aa1fdde4a',
@@ -1171,66 +1057,53 @@ const sites = [
 		name: '(202) Yaritagua Hyper Líder',
 		address:
 			'Autopista Centro Occidental Cimarrón Andresote, Sector La Piedra, Local S/N, Supermercado Hyper Líder, Parroquia Yaritagua, Municipio Peña, Estado Yaracuy.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.YARITAGUA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.YARITAGUA)[0].id
 	},
 	{
 		id: 'eb9b35fd-18ff-4895-b7c9-03ccc4c2b754',
 		name: '(203) San Diego Supermercado Híper Líder',
 		address:
 			'Instalaciones del Supermercado Híper Líder, Avenida Intercomunal Don Julio Centeno, Parroquia San Diego, Municipio San Diego, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANDIEGO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANDIEGO)[0].id
 	},
 	{
 		id: 'd0c7cfd0-bcc8-443e-9924-01fe6aea41ec',
 		name: '(206) San Fernando de Apure',
 		address:
 			'Avenida Caracas con Avenida Girardot, Centro Comercial Villacenter, Nivel PB. Parroquia San Fernando de Apure, Estado Apure.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANFERNANDODEAPURE
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANFERNANDODEAPURE)[0].id
 	},
 	{
 		id: '42a15fe3-ce7f-46f6-8070-2ed9232d62a6',
 		name: '(207) Hiperlider Cabudare',
-		address:
-			'Hiperlider Cabudare, Av. Intercomunal Barquisimeto-Acarigua, Sector La Mora. Cabudare, Estado Lara.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CABUDARE)[0]
-			.id
+		address: 'Hiperlider Cabudare, Av. Intercomunal Barquisimeto-Acarigua, Sector La Mora. Cabudare, Estado Lara.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CABUDARE)[0].id
 	},
 	{
 		id: 'c10ecf1c-6a4d-4d67-b16d-c6119abab3d5',
 		name: '(208) San Carlos',
-		address:
-			'Avenida Independencia Cruce con Calle Federación, San Carlos, Estado Cojedes.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANCARLOS)[0]
-			.id
+		address: 'Avenida Independencia Cruce con Calle Federación, San Carlos, Estado Cojedes.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANCARLOS)[0].id
 	},
 	{
 		id: 'cff0093f-a2d5-43ed-aba5-9170d2a0cac2',
 		name: '(209) Tucupita Traki',
 		address:
 			'Avenida Orinoco con Avenida 1, Urbanización Rómulo Gallegos, Centro Comercial Traki, Parroquia José Vidal Marcano, Municipio Tucupita, Estado Delta Amacuro.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.TUCUPITA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.TUCUPITA)[0].id
 	},
 	{
 		id: '7d7be8bb-34e8-4d4e-8faa-a2944ee6c8f9',
 		name: '(210) Dabajuro II',
-		address:
-			'Edificio Salah, Calle los Andes, Municipio Dabajuro, Estado Falcón.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0]
-			.id
+		address: 'Edificio Salah, Calle los Andes, Municipio Dabajuro, Estado Falcón.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0].id
 	},
 	{
 		id: '41183b3a-dad1-4c5e-89b3-9aa95b0edced',
 		name: '(213) TRAKI San Fernando de Apure',
 		address:
 			'Avenida Intercomunal Los Centauros C.C. Hipergalerías San Fernando De Apure, Local I-19, Nivel PB, Parroquia Urbana San Fernando de Apure, Municipio San Fernando, Estado Apure.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANFERNANDODEAPURE
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANFERNANDODEAPURE)[0].id
 	},
 	{
 		id: '9a63ff4d-3146-464a-9ee5-ba355d255c25',
@@ -1244,8 +1117,7 @@ const sites = [
 		name: '(215) Sambil Valencia',
 		address:
 			'Centro Comercial El Sambil Valencia, Nivel Mañongo, Local MA-6, Av. 4, Urbanización Cuidad Jardín Mañongo ,Municipio Naguanagua ,Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '151e0a4d-f651-40c5-8d9e-9ddbcad77ced',
@@ -1264,19 +1136,15 @@ const sites = [
 	{
 		id: '160297f8-d642-4619-bc9f-f38ebb3c27e1',
 		name: '(218) C.C La Viña Valencia',
-		address:
-			'Av. Carabobo Con Calle Juan Uslar, Centro Corporativo La Viña Plaza Local N°11, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		address: 'Av. Carabobo Con Calle Juan Uslar, Centro Corporativo La Viña Plaza Local N°11, Estado Carabobo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '816bdc29-ee4f-4fd3-9db0-9eb72e69d836',
 		name: '(219) Hiper Lider Araure',
 		address:
 			'Calle 5 de la Municipalidad entre Avenida Eduardo Chollet y Trino Melean, intalaciones del Centro Comercial Hiper Lider Araure, Parroquia Capital Araure, Municipio Araure, Estado\n                  Portuguesa.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames['ACARIGUA-ANAURE']
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames['ACARIGUA-ANAURE'])[0].id
 	},
 	{
 		id: 'af6153d6-c6db-40a7-9bde-6f66295803a7',
@@ -1302,8 +1170,7 @@ const sites = [
 	{
 		id: 'ad1c07f3-2d21-4bd4-8776-5fc098857cc8',
 		name: '(231) Puerto PÍritu',
-		address:
-			'Calle Bolívar N° 32, Puerto Píritu, Municipio Píritu, Estado Anzoátegui.',
+		address: 'Calle Bolívar N° 32, Puerto Píritu, Municipio Píritu, Estado Anzoátegui.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.PIRITU)[0].id
 	},
 	{
@@ -1311,8 +1178,7 @@ const sites = [
 		name: '(233) Barcelona Centro',
 		address:
 			'Calle Eulalia Buroz (Frente A La Plaza Bolívar, Al Lado De Hidrócentro), Barcelona. Estado Anzoátegui.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.BARCELONA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARCELONA)[0].id
 	},
 	{
 		id: 'a56d0119-fe6b-4ff7-b069-9b701e5e7e95',
@@ -1326,8 +1192,7 @@ const sites = [
 		name: '(235) Lechería Centro Empresarial',
 		address:
 			'Centro Empresarial Lechería, Local PB 01. Municipio Diego Bautista Urbaneja, Lechería Estado Anzoátegui.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LECHERIAS)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LECHERIAS)[0].id
 	},
 	{
 		id: 'facaa3ce-2e01-44f2-89e6-77b209de02ea',
@@ -1355,21 +1220,18 @@ const sites = [
 		name: '(239) C.C. La Victoria',
 		address:
 			'Entre Calles Francisco Loreto y Rivas Dávila. Centro Comercial Victoria, Locales A1 Y A2, La Victoria Estado Aragua.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAVICTORIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAVICTORIA)[0].id
 	},
 	{
 		id: '7b19de9c-730f-4200-a106-b4fde87b4923',
 		name: '(240) La Morita Intercomunal',
-		address:
-			'Av. Intercomunal De Turmero. Centro Comercial Coche Aragua, Local 5 Pb. Maracay - Estado. Aragua',
+		address: 'Av. Intercomunal De Turmero. Centro Comercial Coche Aragua, Local 5 Pb. Maracay - Estado. Aragua',
 		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAY)[0].id
 	},
 	{
 		id: 'd6064e1b-a273-4b53-9bde-226ec44e95d4',
 		name: '(241) Alto Barinas',
-		address:
-			'C.C. Cima, Av. Los Andes Con Av. Andres Bello, Alto Barinas, Estado Barinas.',
+		address: 'C.C. Cima, Av. Los Andes Con Av. Andres Bello, Alto Barinas, Estado Barinas.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.BARINAS)[0].id
 	},
 	{
@@ -1377,9 +1239,7 @@ const sites = [
 		name: '(242) Puerto Ordaz Castillito',
 		address:
 			'Avenida Principal De Castillitos Vía Caracas Cruce Con Calle Topossi Edif. Banco Unión, Sector Castillitos, Puerto Ordaz, Estado Bolivar.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOORDAZ
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOORDAZ)[0].id
 	},
 	{
 		id: 'fe9f1815-eed3-4260-b536-39c1446166a0',
@@ -1392,79 +1252,65 @@ const sites = [
 		id: '797548b5-a308-4faa-bb86-e9de802118ad',
 		name: '(244) Tocuyito',
 		address: 'Calle Sucre Nro. 23 Tocuyito, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.TOCUYITO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.TOCUYITO)[0].id
 	},
 	{
 		id: '3cd86847-58be-486b-957d-589229432b9c',
 		name: '(245) Naguanagua Av. Universidad',
 		address:
 			'(*)Agencia Cerrada Temporalmente, sus Clientes serán Atendidos en la Agencia Valencia CC Concepto La Granja Avenida Paseo Cabriales, Urb. La Granja, C. C. Concepto La Granja, Ciudad\n                  De Valencia, Municipio Naguanagua, Edo Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.NAGUANAGUA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.NAGUANAGUA)[0].id
 	},
 	{
 		id: '9de0926c-d775-4150-b190-42926e97e73a',
 		name: '(246) Montalbán',
-		address:
-			'Calle Bolívar C/C Carabobo Edif. Centro Frente A Plaza Bolívar, Montalbán, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MONTALBAN)[0]
-			.id
+		address: 'Calle Bolívar C/C Carabobo Edif. Centro Frente A Plaza Bolívar, Montalbán, Estado Carabobo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MONTALBAN)[0].id
 	},
 	{
 		id: '2434c7f4-6622-41ab-836e-e1766d5e94ff',
 		name: '(247) Metroplaza',
 		address:
 			'Carretera Vía San Diego, Urbanizacion, Los Arales, C.C. Metro plaza, Locales Pb-02 Y Pm-02. Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: 'd0d26d81-1d5f-493e-931e-aee7fb4b7d12',
 		name: '(248) Santa Rosa',
-		address:
-			'Av. Las Ferias Edf. Polo Sur, Locales 1,2 Y 3. Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		address: 'Av. Las Ferias Edf. Polo Sur, Locales 1,2 Y 3. Valencia, Estado Carabobo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '543a621b-366e-426c-88a7-6afa87492ae2',
 		name: '(249) San Jose De Tarbes',
 		address:
 			'Urbanizacion San José De Tarbes, Av. 138 A Entre Calles 96 Y 97, Nº 138-41. Edificio Torre B.O.D. Planta Baja, Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '9caf2634-d67a-4849-a690-764cc9b05ac2',
 		name: '(251) Candelaria Valencia',
 		address:
 			'Av. Lisandro Alvarado Cruce Con Calle Benedetti, C.C. Torinoco, Locales N° 08-09-10. Valencia, Estado Carabobo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.VALENCIA)[0].id
 	},
 	{
 		id: '234860bf-68ed-41f7-9d17-a7b29952c6b7',
 		name: '(252) Instituto Autonomo El Puerto',
 		address:
 			'(*) Agencia cerrada temporalmente, sus clientes serán atendidos en la Agencia Puerto Cabello: Avenida Plaza, C.C. Profesional Plaza, Local N° 10-I, Parroquia Urbana Fraternidad. Edo.\n                  Carabobo',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOCABELLO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOCABELLO)[0].id
 	},
 	{
 		id: '71106c11-def6-4419-9783-c85e877b037c',
 		name: '(253) Tinaquillo',
-		address:
-			'Av. Miranda, Edf. Fátima, P.B. Local 2 N°6-14, Tinaquillo, Estado Cojedes.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.TINAQUILLO)[0]
-			.id
+		address: 'Av. Miranda, Edf. Fátima, P.B. Local 2 N°6-14, Tinaquillo, Estado Cojedes.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.TINAQUILLO)[0].id
 	},
 	{
 		id: '7d8a309d-07f6-4d26-a690-1e9fb6e056b4',
 		name: '(254) Av.Universidad',
-		address:
-			'Av. Universidad, Esq. Sociedad A Traposo, Edf. Santana, P.B. Caracas, Estado Distrito Capital.',
+		address: 'Av. Universidad, Esq. Sociedad A Traposo, Edf. Santana, P.B. Caracas, Estado Distrito Capital.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1477,8 +1323,7 @@ const sites = [
 	{
 		id: '1f85b8ee-dcf7-413f-b104-1162282b56dd',
 		name: '(256) Catia Av Sucre',
-		address:
-			'Av. Sucre Edf. La Industria Frente A La Estación Del Metro Agua Salud. Caracas, Distrito Capital.',
+		address: 'Av. Sucre Edf. La Industria Frente A La Estación Del Metro Agua Salud. Caracas, Distrito Capital.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1491,8 +1336,7 @@ const sites = [
 	{
 		id: '86f27ff5-4591-45a5-918f-0f8f7a2c8e05',
 		name: '(258) El Paraíso',
-		address:
-			'Av. José A. Paez, Entre Av. H Y D, Edf. El Triángulo, P.B., Caracas, Distrito Capital.',
+		address: 'Av. José A. Paez, Entre Av. H Y D, Edf. El Triángulo, P.B., Caracas, Distrito Capital.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1521,43 +1365,32 @@ const sites = [
 		name: '(262) Sambil Paraguaná',
 		address:
 			'Avenida Intercomunal Ali Primera, Sector Hato Nuevo Centro Comercial Sambil Paraguaná, Locales L-30 al L-32, Estado Falcón.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0].id
 	},
 	{
 		id: '69f06f8d-58a9-4494-bdbd-0b9cb2437fc4',
 		name: '(263) Punto Fijo Av Jacinto Lara',
-		address:
-			'Av. Jacinto Lara Entre Calles C Y D, Esquina Av. Pumarrosa, Punto Fijo, Estado Falcón.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0]
-			.id
+		address: 'Av. Jacinto Lara Entre Calles C Y D, Esquina Av. Pumarrosa, Punto Fijo, Estado Falcón.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.DABAJURO)[0].id
 	},
 	{
 		id: 'e4d19de7-22c3-4895-8324-345bd4c46d30',
 		name: '(264) Barquisimeto Av. Vargas',
-		address:
-			'Av. 20 Con Av. Vargas Torre Corp Banca, Planta Baja. Barquisimeto, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		address: 'Av. 20 Con Av. Vargas Torre Corp Banca, Planta Baja. Barquisimeto, Estado Lara.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: 'be1a32e6-14f6-4658-b864-53260b2f0387',
 		name: '(265) Sambil Barquisimeto',
 		address:
 			'Av. Venezuela con Argimiro Bracamonte. Centro Comercial Sambil, Locales L- 02. Barquisimeto, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: '16b4d06f-ec9d-4a3f-82c6-1a824f18412c',
 		name: '(266) Barquisimeto Zona Industrial',
-		address:
-			'Av. Las Industrias Vía Mercabar Zona Industrial II Barquisimeto, Estado Lara.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.BARQUISIMETO
-		)[0].id
+		address: 'Av. Las Industrias Vía Mercabar Zona Industrial II Barquisimeto, Estado Lara.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.BARQUISIMETO)[0].id
 	},
 	{
 		id: '78f45a10-3e99-48f1-99f6-7d2f6936f3bf',
@@ -1568,8 +1401,7 @@ const sites = [
 	{
 		id: '742a3faa-6075-4ab3-9bba-ee50a1b2a688',
 		name: '(268) Carora',
-		address:
-			'Av. Francisco De Miranda con Av. La Feria, Edif. Sorgo, Carora, Estado Lara.',
+		address: 'Av. Francisco De Miranda con Av. La Feria, Edif. Sorgo, Carora, Estado Lara.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARORA)[0].id
 	},
 	{
@@ -1582,15 +1414,13 @@ const sites = [
 	{
 		id: '8974dae5-0516-439a-865d-a46777785587',
 		name: '(270) Paseo Las Mercedes',
-		address:
-			'C.C. Paseo Las Mercedes, Nivel Mezzanina Local N1-B2. Las Mercedes, Caracas, Estado Miranda.',
+		address: 'C.C. Paseo Las Mercedes, Nivel Mezzanina Local N1-B2. Las Mercedes, Caracas, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
 		id: '4cc9c471-d016-4b60-b12d-38a582f0779a',
 		name: '(271) Cumbres De Curumo',
-		address:
-			'Av. Principal De Cumbres De Curumo, C.C. Cumbres De Curumo, Local C, P.B., Caracas, Estado Miranda.',
+		address: 'Av. Principal De Cumbres De Curumo, C.C. Cumbres De Curumo, Local C, P.B., Caracas, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1598,14 +1428,12 @@ const sites = [
 		name: '(272) C.C. La Cascada',
 		address:
 			'Carretera Panamericana Km 21, Centro Comercial La Cascada N° 17 Piso. 1 Local N-17, Carrizal, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CARRIZALES)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CARRIZALES)[0].id
 	},
 	{
 		id: '1e37dc9c-0a4b-4ea0-a74d-516741910914',
 		name: '(273) Sambil Caracas',
-		address:
-			'Centro Comercial Sambil, Plaza El Arte, Nivel Autopista, Local Ac-48, Municipio Chacao.',
+		address: 'Centro Comercial Sambil, Plaza El Arte, Nivel Autopista, Local Ac-48, Municipio Chacao.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1620,8 +1448,7 @@ const sites = [
 		name: '(275) Guarenas C.C. Miranda',
 		address:
 			'Urbanización Doña Menca De Leoni, Av. Martin Vera Guerra, C.C. Miranda Local 1, Guarenas, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.GUARENAS)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.GUARENAS)[0].id
 	},
 	{
 		id: 'a020e77d-3460-45f4-af16-9b22ca501620',
@@ -1633,8 +1460,7 @@ const sites = [
 	{
 		id: '6b6b64c4-b815-4f58-8e53-5f864bbb665e',
 		name: '(277) Macaracuay',
-		address:
-			'Centro Comercial Macaracuay Plaza, Nivel C1, Local 3, Caracas, Municipio Sucre, Estado Miranda.',
+		address: 'Centro Comercial Macaracuay Plaza, Nivel C1, Local 3, Caracas, Municipio Sucre, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1649,44 +1475,38 @@ const sites = [
 		name: '(280) Centro Comercial Parque Costa Azul',
 		address:
 			'Av. La Auyama, Urbanización Costa Azul, C.C. Parque Costa Azul local La1-03, Municipio Maneiro, Pampatar Nueva Esparta.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PAMPATAR)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PAMPATAR)[0].id
 	},
 	{
 		id: 'c8cf9594-e829-4c47-a4b8-7db719c1b0bf',
 		name: '(281) Sambil Margarita',
 		address:
 			'Av. Luisa Cáceres De Arismendi. Centro Comercial Sambil, Local Rs-21. Pampatar Isla De Margarita, Edo. Nueva Esparta',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PAMPATAR)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.PAMPATAR)[0].id
 	},
 	{
 		id: '27cc94eb-146f-4d7e-b208-7d6783629966',
 		name: '(282) Juan Griego',
 		address:
 			'Calle La Marina Entre Calles Bolívar Y Aurora, Edf. Banco Del Orinoco Juan Griego, Estado Nueva Esparta.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.JUANGRIEGO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.JUANGRIEGO)[0].id
 	},
 	{
 		id: '5a034792-33b9-4f18-a47b-fa2ae64fffb0',
 		name: '(283) Guanare',
-		address:
-			'Av. Unda Esquina Carrera 8, Al Lado C.C. Cada, Guanare, Estado Portuguesa.',
+		address: 'Av. Unda Esquina Carrera 8, Al Lado C.C. Cada, Guanare, Estado Portuguesa.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.GUANARE)[0].id
 	},
 	{
 		id: '1bd1efc9-b871-4911-8e84-7fc514bc4614',
 		name: '(284) Turen',
-		address:
-			'Av. Ricardo Perez Zambrano Edif. Corp Banca, Turen, Estado Portuguesa.',
+		address: 'Av. Ricardo Perez Zambrano Edif. Corp Banca, Turen, Estado Portuguesa.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.TUREN)[0].id
 	},
 	{
 		id: 'e3d63904-fa04-477d-9a8f-d2d8cb80b903',
 		name: '(285) Cumana',
-		address:
-			'Av. Bermúdez Con Av. Perimetral Edf. Don Jesus Nro. 21 (Frente Al Cada), Cumana. Estado Sucre.',
+		address: 'Av. Bermúdez Con Av. Perimetral Edf. Don Jesus Nro. 21 (Frente Al Cada), Cumana. Estado Sucre.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CUMANA)[0].id
 	},
 	{
@@ -1694,24 +1514,18 @@ const sites = [
 		name: '(286) Sambil San Cristobal',
 		address:
 			'Av. Libertador, Sector Sabana Larga, Centro Comercial Sambil, Nivel Autopista, Local T-17, San Cristóbal, Estado Táchira.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANCRISTOBAL
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANCRISTOBAL)[0].id
 	},
 	{
 		id: '194eabf9-5fac-4371-90a1-d212aa313efc',
 		name: '(287) San Cristobal 7ma. Avenida',
-		address:
-			'Entre Av. 7 Isaías Medina Angarita Y Carrera 8 Edif. B.O.D. San Cristóbal, Estado Táchira.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANCRISTOBAL
-		)[0].id
+		address: 'Entre Av. 7 Isaías Medina Angarita Y Carrera 8 Edif. B.O.D. San Cristóbal, Estado Táchira.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANCRISTOBAL)[0].id
 	},
 	{
 		id: '242de7bc-301a-4fac-9496-c3dc5ad6dbe6',
 		name: '(288) Bocono',
-		address:
-			'Calle Miranda, E/Calles Paez Y Vargas, Boconò, Estado Trujillo.',
+		address: 'Calle Miranda, E/Calles Paez Y Vargas, Boconò, Estado Trujillo.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.BOCONO)[0].id
 	},
 	{
@@ -1719,65 +1533,51 @@ const sites = [
 		name: '(289) Carvajal',
 		address:
 			'Av. Principal De Carvajal, Callejon No. 1 C.C, Vista Park, Locales Pb-05 Y Pb-06, Municipio San Rafael De Carvajal, Estado Trujillo.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANRAFAELDECARVAJAL
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANRAFAELDECARVAJAL)[0].id
 	},
 	{
 		id: '635e91ce-b2e8-4767-9d8b-6e62ef36611d',
 		name: '(290) Sabana De Mendoza',
-		address:
-			'Av. Las Flores Con Calle De La Estación, Edificio Don Camilo, Sabana De Mendoza, Estado Trujillo.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SABANADEMENDOZA
-		)[0].id
+		address: 'Av. Las Flores Con Calle De La Estación, Edificio Don Camilo, Sabana De Mendoza, Estado Trujillo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SABANADEMENDOZA)[0].id
 	},
 	{
 		id: 'd323b2d7-c66b-4f60-a7b6-bd0b80e747b2',
 		name: '(291) Trujillo',
-		address:
-			'Calle Comercio Con Calle Cruz Verde. Trujillo, Estado Trujillo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.TRUJILLO)[0]
-			.id
+		address: 'Calle Comercio Con Calle Cruz Verde. Trujillo, Estado Trujillo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.TRUJILLO)[0].id
 	},
 	{
 		id: '0b7c277c-decf-4fc6-9840-99e44f763552',
 		name: '(292) Valera La Plata',
-		address:
-			'Av. Bolívar C/C Calle 5 Sector La Plata, Edif. Corp Banca, Valera, Estado Trujillo.',
+		address: 'Av. Bolívar C/C Calle 5 Sector La Plata, Edif. Corp Banca, Valera, Estado Trujillo.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.VALERA)[0].id
 	},
 	{
 		id: 'd46a7824-510f-4520-8d2e-ca76b41abdd3',
 		name: '(293) Valera La Puerta',
-		address:
-			'Centro Comercial Valle Verde Local 7, La Puerta, Estado Trujillo.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAPUERTA)[0]
-			.id
+		address: 'Centro Comercial Valle Verde Local 7, La Puerta, Estado Trujillo.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAPUERTA)[0].id
 	},
 	{
 		id: '914893d0-dc4b-454a-bf71-1765044cda3a',
 		name: '(294) Catia La Mar',
-		address:
-			'Calle 10 esquina Calle 5, No. 233, Urbanización Balneario, Catia La Mar, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CATIALAMAR)[0]
-			.id
+		address: 'Calle 10 esquina Calle 5, No. 233, Urbanización Balneario, Catia La Mar, Estado La Guaira.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CATIALAMAR)[0].id
 	},
 	{
 		id: '979eeccb-0394-4dc6-a6dd-101181e6e3d4',
 		name: '(295) El Junquito',
 		address:
 			'Carretera El Junquito, Km 23 Calle Real, Lado Oeste De La Plaza Bolivar, El Junquito, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0].id
 	},
 	{
 		id: '8a7df78b-5189-402e-894a-06df99598b19',
 		name: '(296) Mene Grande',
 		address:
 			'Av. Independencia, Diagonal A La Guardia Nacional, Centro Comercial Petrolero Mene Grande, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MENEGRANDE)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MENEGRANDE)[0].id
 	},
 	{
 		id: '3464018a-af67-4275-86c6-3d59552b64e8',
@@ -1789,202 +1589,156 @@ const sites = [
 		id: 'c09ab640-fb98-40e6-8323-b3b81a31bd84',
 		name: '(298) Santa Bárbara',
 		address: 'Av. Bolívar Santa Bárbara, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANTABARBARADELZULIA
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANTABARBARADELZULIA)[0].id
 	},
 	{
 		id: 'ef316625-a3da-4c60-8266-8252a42404d1',
 		name: '(299) La Concepción',
-		address:
-			'Av. Principal La Concepción, Sector Los Cocos, La Concepción, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.LACONCEPCION
-		)[0].id
+		address: 'Av. Principal La Concepción, Sector Los Cocos, La Concepción, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LACONCEPCION)[0].id
 	},
 	{
 		id: 'b06501ee-ab94-416c-9b9c-a3698f06ce13',
 		name: '(300) Casigua',
-		address:
-			'Calle Venezuela (Frente Al Comando De La Guardia Nacional) Casigua, Estado Zulia',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Calle Venezuela (Frente Al Comando De La Guardia Nacional) Casigua, Estado Zulia',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'b01667ba-d7c6-409c-ba20-2f060a53ba84',
 		name: '(301) Machiques',
-		address:
-			'Calle Santa Teresa, Esquina Av. Bermúdez Machiques, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MACHIQUES)[0]
-			.id
+		address: 'Calle Santa Teresa, Esquina Av. Bermúdez Machiques, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MACHIQUES)[0].id
 	},
 	{
 		id: '942341a0-c13e-45d4-bdc4-9db42bfd28dc',
 		name: '(302) Carrasquero',
 		address:
 			'Calle Principal Carrasquero Esq. Av. Bolívar, Frente A La Plaza Bolívar, Al Lado De La Jefatura Civil, Carrasquero, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.CARRASQUERO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.CARRASQUERO)[0].id
 	},
 	{
 		id: 'd6133f76-31b0-44b2-bed5-86ba3f644aaf',
 		name: '(303) Maracaibo Norte',
 		address:
 			'Av. 15 Prolongación Delicias Norte, Edif. Corp Banca Frente Al C.C. Paseo Las Delicias, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '8c69473a-64fd-468d-ad4f-45a496feb236',
 		name: '(304) Indio Mara',
-		address:
-			'C.C. Indio Mara Av. 22 Con Calle 70, Locales 3 Al 9, Sector Indio Mara, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'C.C. Indio Mara Av. 22 Con Calle 70, Locales 3 Al 9, Sector Indio Mara, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '76b828a6-e6a5-4d54-9bd2-fbb70a96c276',
 		name: '(305) Galerías Mall - Mcbo',
-		address:
-			'Centro Comercial Galerias Mall, Nivel Pb, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Centro Comercial Galerias Mall, Nivel Pb, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '171e8689-c25b-46a2-88fb-225e74996c5d',
 		name: '(306) Centro Lago Mall',
-		address:
-			'Av. 2 El Milagro. Centro Comercial Lago Mall. Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Av. 2 El Milagro. Centro Comercial Lago Mall. Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '0ec55716-b1e0-4d9f-a862-0524104c265d',
 		name: '(307) Nautico',
 		address:
 			'(*)Agencia Cerrada Temporalmente, sus Clientes serán Atendidos en la Agencia Centro Lago Mall : Av. 2 El Milagro. Centro Comercial Lago Mall. Maracaibo - Edo. Zulia',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'e64ee8cf-9ba5-4aac-b042-c02c1ff0996b',
 		name: '(308) Curva De Molina',
 		address: 'Av. 28 (La Limpia) Con Calle 79, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '4363b144-b7c2-4153-8e7e-f79c2d301f70',
 		name: '(309) Sabaneta',
-		address:
-			'Av. Principal Sabaneta, Centro Comercial Centro Del Sol, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Av. Principal Sabaneta, Centro Comercial Centro Del Sol, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '1f046275-8974-4456-9255-69131e2253ad',
 		name: '(311) Calle 72',
-		address:
-			'Calle 72 Esquina Av. 3G Sector La Lago, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Calle 72 Esquina Av. 3G Sector La Lago, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '3c317a13-074b-40d5-b8ee-c80f622209fb',
 		name: '(312) San Miguel',
-		address:
-			'Circunvalación No. 2, Centro Comercial Ogaret Shopping Center Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Circunvalación No. 2, Centro Comercial Ogaret Shopping Center Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: '466397ac-e53b-4c1e-a0ea-ce90f06d478c',
 		name: '(313) Maracaibo Zona Industrial',
 		address:
 			'Av. Circunvalación 2, Diagonal Al Hotel Maruma, Frente A La Estación De Servicio Móvil Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'bc6f7dcb-54dc-48e7-8a2c-8bbadef6a82b',
 		name: '(314) Las Mercedes',
-		address:
-			'Av. Bella Vista, Esquina Av. Universidad Edificio Las Mercedes, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Av. Bella Vista, Esquina Av. Universidad Edificio Las Mercedes, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'ec477984-62dc-4ca0-9cc9-335981099876',
 		name: '(315) El Transito',
-		address:
-			'Av. 28 La Limpia, Antiguo Bambi, Sector Los Postes Negros, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Av. 28 La Limpia, Antiguo Bambi, Sector Los Postes Negros, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'f63d6f5a-fba9-4f58-9070-47a855ca8bdb',
 		name: '(316) Sambil Maracaibo',
 		address:
 			'Av. Guajira, Centro Sambil Maracaibo, Nivel Lago, Entrada Guajira, Locales L1 Y L2, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'b88d710d-885d-42a0-ad4b-bc1bf71e7dec',
 		name: '(317) Puertos De Altagracia',
-		address:
-			'Av. 6 Con Prolongación Calle 6 Los Puertos De Altagracia, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.PUERTOSDEALTAGRACIA
-		)[0].id
+		address: 'Av. 6 Con Prolongación Calle 6 Los Puertos De Altagracia, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.PUERTOSDEALTAGRACIA)[0].id
 	},
 	{
 		id: '8783ba45-fab8-4bd0-9c05-9e384f66b48e',
 		name: '(318) El Saman',
 		address:
 			'El Samán Entre Los Km. 9 Y 11, con Av. 50 Con Calle 200 De La Urbanización El Caujaro, San Francisco, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANFRANCISCOMARACAIBO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANFRANCISCOMARACAIBO)[0].id
 	},
 	{
 		id: '8ad78ad8-b77b-4988-a1c2-60c0f4f81381',
 		name: '(319) Mercamara',
-		address:
-			'Vía Palíto Blanco, Mercado De Mayorista, Maracaibo, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		address: 'Vía Palíto Blanco, Mercado De Mayorista, Maracaibo, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'c1f42684-74b1-497b-9fce-aeef8ac97e1a',
 		name: '(321) Santa Rita',
-		address:
-			'Av. Pedro Lucas Urribarri, Sede De La Alcaldía Del Municipio Santa Rita, Santa Rita, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.SANTARITA)[0]
-			.id
+		address: 'Av. Pedro Lucas Urribarri, Sede De La Alcaldía Del Municipio Santa Rita, Santa Rita, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANTARITA)[0].id
 	},
 	{
 		id: '49c2facc-1916-45c1-9c44-f82a439f338a',
 		name: '(322) Caja Seca',
-		address:
-			'Carretera Panamericana, Frente A La Plaza Silsa Caja Seca, Estado Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CAJASECA)[0]
-			.id
+		address: 'Carretera Panamericana, Frente A La Plaza Silsa Caja Seca, Estado Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CAJASECA)[0].id
 	},
 	{
 		id: '5f8337ab-1c1d-4d4a-85ed-926d1d505560',
 		name: '(323) El Mojan',
 		address: 'Av. 7 (Principal) Con Calle 24, El Moja, Estado Zulia.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANRAFAELDELMOJAN
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANRAFAELDELMOJAN)[0].id
 	},
 	{
 		id: 'a8302fd0-065e-4d11-8037-aae664ce8949',
 		name: '(324) Av. Blandin Chacao',
-		address:
-			'Torre La Castellana Edf. Anexo Entre Calle Mohedano Y Blandin Planta Baja La Castellana., Caracas.',
+		address: 'Torre La Castellana Edf. Anexo Entre Calle Mohedano Y Blandin Planta Baja La Castellana., Caracas.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
@@ -1997,74 +1751,59 @@ const sites = [
 	{
 		id: '52efb8c5-9864-437d-9f9c-1ff5188d15d4',
 		name: '(326) El Menito',
-		address:
-			'Sector El Menito. Edificio PDVSA. Módulo 1 Lagunillas - Edo. Zulia.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUNILLAS)[0]
-			.id
+		address: 'Sector El Menito. Edificio PDVSA. Módulo 1 Lagunillas - Edo. Zulia.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUNILLAS)[0].id
 	},
 	{
 		id: '7219917a-f158-4c73-9d81-ac8936cca59c',
 		name: '(327) Puerto De Maracaibo',
 		address:
 			'Av 2 El Milagro Puerto De Maracaibo, Parroquia Santa Lucia, Municipio Maracaibo, Maracaibo, Estado Zulia',
-		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0]
-			.id
+		cityId: cities.filter(city => city.name === cityOnlyNames.MARACAIBO)[0].id
 	},
 	{
 		id: 'a44c4c0a-3356-4ca5-8894-95e1dd3f9722',
 		name: '(328) Campo Alegre',
-		address:
-			'Av. Francisco De Miranda, Torre Europa, Mezz. Norte, Urb. Campo Alegre. Caracas, Estado Miranda.',
+		address: 'Av. Francisco De Miranda, Torre Europa, Mezz. Norte, Urb. Campo Alegre. Caracas, Estado Miranda.',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
 		id: '130fcc22-67bd-414a-aa36-7bca91e71bef',
 		name: '(328) Taquilla Alcaldia Chacao',
-		address:
-			'Av. Venezuela con Calle Sorocaima, Torre Atrium, PB El Rosal Municipio Chacao, Estado Miranda',
+		address: 'Av. Venezuela con Calle Sorocaima, Torre Atrium, PB El Rosal Municipio Chacao, Estado Miranda',
 		cityId: cities.filter(city => city.name === cityOnlyNames.CARACAS)[0].id
 	},
 	{
 		id: 'eb779aca-bfb6-4879-b67b-c06ca3c25f15',
 		name: '(534) Caucagua',
-		address:
-			'Calle Acevedo Al Lado De La Casa Parroquial, Caucagua, Estado Miranda.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.CAUCAGUA)[0]
-			.id
+		address: 'Calle Acevedo Al Lado De La Casa Parroquial, Caucagua, Estado Miranda.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.CAUCAGUA)[0].id
 	},
 	{
 		id: 'eac2e623-74c7-4a5f-8ff1-2ed574fb1b45',
 		name: '(535) Rio Chico',
 		address:
 			'Calle Bolívar Con Calle Junín N° 148, San José De Barlovento, Parroquia San José de Rio Chico, Estado Miranda.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANJOSEDERIOCHICO
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANJOSEDERIOCHICO)[0].id
 	},
 	{
 		id: '0f15df96-a244-4319-b9d1-2e05304fcf94',
 		name: '(541) La Vela',
-		address:
-			'C.C. La Vela C/Los Uveros Av. Guayacan Porlamar, Nueva Esparta',
-		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0]
-			.id
+		address: 'C.C. La Vela C/Los Uveros Av. Guayacan Porlamar, Nueva Esparta',
+		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0].id
 	},
 	{
 		id: '4a2a3f4e-c1ac-4177-9cd8-2e4900b6f2c0',
 		name: '(550) Santa Isabel',
 		address:
 			'Calle Principal De Santa Isabel, Edificio Don Joaquín P.B, Santa Isabel, Municipio Andrés Bello, Estado Trujillo.',
-		cityId: cities.filter(
-			city => city.name === cityOnlyNames.SANTAISABEL
-		)[0].id
+		cityId: cities.filter(city => city.name === cityOnlyNames.SANTAISABEL)[0].id
 	},
 	{
 		id: 'bed60787-5a8d-43e7-9236-959b4293ce16',
 		name: '(552) Naiguata',
-		address:
-			'Av. José María Vargas, Eificio Tina, P.B., Naiguatá, Estado La Guaira.',
-		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0]
-			.id
+		address: 'Av. José María Vargas, Eificio Tina, P.B., Naiguatá, Estado La Guaira.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAGUAIRA)[0].id
 	}
 ]
 

@@ -9,19 +9,14 @@ import { type DeviceComputer } from './Computer'
 
 import { type ComputerOperatingSystem } from './ComputerOperatingSystem'
 
-export class ComputerOperatingSystemArq extends AcceptedNullValueObject<
-	Primitives<OperatingSystemArqId>
-> {
+export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitives<OperatingSystemArqId>> {
 	constructor(
 		readonly value: Primitives<OperatingSystemArqId> | null,
 		readonly operatingSystem: Primitives<ComputerOperatingSystem>
 	) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
-		this.ensureIfOperatingSystemIsNullOperatingSystemArqIsNullAsWell(
-			this.value,
-			this.operatingSystem
-		)
+		this.ensureIfOperatingSystemIsNullOperatingSystemArqIsNullAsWell(this.value, this.operatingSystem)
 		this.ensureIsValidOperatingSystemArqId(value)
 	}
 
@@ -29,13 +24,9 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<
 		return this.value
 	}
 
-	private ensureIsValidOperatingSystemArqId(
-		id: Primitives<ComputerOperatingSystemArq>
-	): void {
+	private ensureIsValidOperatingSystemArqId(id: Primitives<ComputerOperatingSystemArq>): void {
 		if (!this.isValid(id)) {
-			throw new InvalidArgumentError(
-				'Operating System Arquitecture is required'
-			)
+			throw new InvalidArgumentError('Operating System Arquitecture is required')
 		}
 	}
 
@@ -44,14 +35,10 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<
 		operatingSystem: Primitives<ComputerOperatingSystem>
 	): void {
 		if (operatingSystem === null && operatingSystemArq !== null) {
-			throw new InvalidArgumentError(
-				'You cannot have operating system arquitecture without an operating system'
-			)
+			throw new InvalidArgumentError('You cannot have operating system arquitecture without an operating system')
 		}
 		if (operatingSystem !== null && operatingSystemArq === null) {
-			throw new InvalidArgumentError(
-				'You cannot have operating system without an operating system arquitecture'
-			)
+			throw new InvalidArgumentError('You cannot have operating system without an operating system arquitecture')
 		}
 	}
 

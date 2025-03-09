@@ -10,9 +10,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class OperatingSystemArqGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: OperatingSystemArqFinderAll = container.resolve(
-				OperatingSystemArqDependencies.FinderAll
-			)
+			const getAll: OperatingSystemArqFinderAll = container.resolve(OperatingSystemArqDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

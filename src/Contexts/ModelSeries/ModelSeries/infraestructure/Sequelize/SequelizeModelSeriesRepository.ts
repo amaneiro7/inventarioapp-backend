@@ -18,17 +18,11 @@ import { MouseModels } from '../../../ModelCharacteristics/Mouses/domain/MouseMo
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { clearModelDataset } from './clearModelDataset'
-import {
-	type ModelSeriesDto,
-	type ModelSeriesPrimitives
-} from '../../domain/ModelSeries.dto'
+import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeModelSeriesRepository
-	extends SequelizeCriteriaConverter
-	implements ModelSeriesRepository
-{
+export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
 	private readonly models = sequelize.models
 	private readonly cacheKey: string = 'modelSeries'
 	constructor(private readonly cache: CacheService) {
@@ -59,9 +53,7 @@ export class SequelizeModelSeriesRepository
 			criteria,
 			ex: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
-				const { rows, count } = await ModelSeriesModel.findAndCountAll(
-					options
-				)
+				const { rows, count } = await ModelSeriesModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -73,19 +65,14 @@ export class SequelizeModelSeriesRepository
 	async matching(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
 		const options = this.convert(criteria)
 
-		const modelOption = new ModelAssociation().convertFilter(
-			criteria,
-			options
-		)
+		const modelOption = new ModelAssociation().convertFilter(criteria, options)
 
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
-				const { rows, count } = await ModelSeriesModel.findAndCountAll(
-					modelOption
-				)
+				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
 					data: rows,
 					total: count
@@ -110,9 +97,7 @@ export class SequelizeModelSeriesRepository
 		)
 	}
 
-	async searchByCategory(
-		categoryId: Primitives<CategoryId>
-	): Promise<ModelSeriesDto[]> {
+	async searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesDto[]> {
 		return await ModelSeriesModel.findAll({
 			where: { categoryId },
 			include: ['category', 'brand']
@@ -187,8 +172,7 @@ export class SequelizeModelSeriesRepository
 		payload: ModelSeriesPrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const modelComputer =
-			(await this.models.ModelComputer.findByPk(id)) ?? null
+		const modelComputer = (await this.models.ModelComputer.findByPk(id)) ?? null
 		if (modelComputer === null) {
 			await this.models.ModelComputer.create({
 				modelSeriesId: id,
@@ -232,8 +216,7 @@ export class SequelizeModelSeriesRepository
 		payload: ModelSeriesPrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const modelMonitor =
-			(await this.models.ModelMonitor.findByPk(id)) ?? null
+		const modelMonitor = (await this.models.ModelMonitor.findByPk(id)) ?? null
 		if (modelMonitor === null) {
 			await this.models.ModelMonitor.create({
 				modelSeriesId: id,
@@ -255,8 +238,7 @@ export class SequelizeModelSeriesRepository
 		payload: ModelSeriesPrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const modelPrinter =
-			(await this.models.ModelPrinter.findByPk(id)) ?? null
+		const modelPrinter = (await this.models.ModelPrinter.findByPk(id)) ?? null
 		if (modelPrinter === null) {
 			await this.models.ModelPrinter.create({
 				modelSeriesId: id,
@@ -277,8 +259,7 @@ export class SequelizeModelSeriesRepository
 		payload: ModelSeriesPrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const modelKeyboard =
-			(await this.models.ModelKeyboard.findByPk(id)) ?? null
+		const modelKeyboard = (await this.models.ModelKeyboard.findByPk(id)) ?? null
 		if (modelKeyboard === null) {
 			await this.models.ModelKeyboard.create({
 				modelSeriesId: id,

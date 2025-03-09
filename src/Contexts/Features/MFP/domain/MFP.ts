@@ -71,15 +71,9 @@ export class MFP extends Device {
 		)
 	}
 
-	static isMFPCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	static isMFPCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const acceptedComputerCategories: CategoryValues[] = [CategoryNames.MFP]
-		return acceptedComputerCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+		return acceptedComputerCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	toPrimitives(): DeviceMFPPrimitives {
@@ -116,10 +110,7 @@ export class MFP extends Device {
 		)
 	}
 
-	updateIPAddress(
-		newIPAddress: Primitives<MFPIPAddress>,
-		status: Primitives<DeviceStatus>
-	): void {
+	updateIPAddress(newIPAddress: Primitives<MFPIPAddress>, status: Primitives<DeviceStatus>): void {
 		this.ipAddress = new MFPIPAddress(newIPAddress, status)
 	}
 

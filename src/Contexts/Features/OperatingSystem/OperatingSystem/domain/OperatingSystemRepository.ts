@@ -5,11 +5,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type OperatingSystemId } from './OperatingSystemId'
 
 export abstract class OperatingSystemRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<OperatingSystemDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<OperatingSystemDto>>
 
-	abstract searchById(
-		id: Primitives<OperatingSystemId>
-	): Promise<OperatingSystemDto | null>
+	abstract searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null>
 }

@@ -10,9 +10,7 @@ export class CentroTrabajoPatchController implements Controller {
 		try {
 			const params = req.body
 			const { id } = req.params
-			const update: CentroTrabajoUpdater = container.resolve(
-				CentroTrabajoDependencies.Updater
-			)
+			const update: CentroTrabajoUpdater = container.resolve(CentroTrabajoDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Empleado actualizado exitosamente'

@@ -9,9 +9,7 @@ import { RoleDependencies } from '../../di/roles/roles.di'
 export class RoleGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: RoleFinderAll = container.resolve(
-				RoleDependencies.FinderAll
-			)
+			const getAll: RoleFinderAll = container.resolve(RoleDependencies.FinderAll)
 			const data = await getAll.run()
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

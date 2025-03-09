@@ -1,7 +1,4 @@
-const {
-	departamentoOnlyNames,
-	departamentoData
-} = require('./area/departamento')
+const { departamentoOnlyNames, departamentoData } = require('./area/departamento')
 const { cargoOnlyNames, cargosData } = require('./cargo/cargos')
 
 function capitalCadena(cadena) {
@@ -11,10 +8,7 @@ function capitalCadena(cadena) {
 		.map(text =>
 			text
 				.split(' ')
-				.map(
-					palabra =>
-						palabra.charAt(0).toUpperCase() + palabra.slice(1)
-				)
+				.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
 				.join(' ')
 		)
 		.join('. ')
@@ -34,15 +28,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. ASUNTOS CORP. Y CONFIRMACIONES BANCARIAS'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. ASUNTOS CORP. Y CONFIRMACIONES BANCARIAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -59,13 +47,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. LIBERACIONES Y DOCUMENTACIÓN']
+			dep => dep.name === departamentoOnlyNames['COORD. LIBERACIONES Y DOCUMENTACIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -82,15 +66,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA CONSULTA, DE PRODUCTOS Y CONTRATOS ESPEC.'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA CONSULTA, DE PRODUCTOS Y CONTRATOS ESPEC.']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -107,13 +85,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CONTROL INSTITUCIONAL']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CONTROL INSTITUCIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -130,15 +104,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ÁREA LEGAL Y ORGANISMOS OFICIALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ÁREA LEGAL Y ORGANISMOS OFICIALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -155,15 +123,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ÁREA LEGAL Y ORGANISMOS OFICIALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ÁREA LEGAL Y ORGANISMOS OFICIALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ABOGADO SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -180,15 +142,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ATENCIÓN DE ORGANISMOS OFICIALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ATENCIÓN DE ORGANISMOS OFICIALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -205,13 +161,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -228,15 +180,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -253,15 +199,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -278,15 +218,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -303,15 +237,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -328,15 +256,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -353,13 +275,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
+			dep => dep.name === departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -376,13 +294,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -399,15 +313,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -424,15 +332,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -449,15 +351,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ÁREA DE INFRAESTRUCTURA Y MANTENIMIENT'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ÁREA DE INFRAESTRUCTURA Y MANTENIMIENT']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ARQUITECTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ARQUITECTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -474,13 +370,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -497,13 +389,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -520,13 +408,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -543,13 +427,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR SEMI SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR SEMI SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -566,13 +446,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR SEMI SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR SEMI SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -589,13 +465,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -612,13 +484,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -635,15 +503,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA DE AUDITORIA DE AGENCIAS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA DE AUDITORIA DE AGENCIAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUDITOR SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -660,13 +522,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['AUXILIAR DE MANTENIMIENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['AUXILIAR DE MANTENIMIENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -683,13 +541,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -706,13 +560,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -729,13 +579,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['CAJERO DE BOVEDA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -752,13 +598,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. PLATAFORMA DISTRIBUIDA']
+			dep => dep.name === departamentoOnlyNames['COORD. PLATAFORMA DISTRIBUIDA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -775,15 +617,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -800,15 +636,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACION ATENCIÓN AL CLIENTE Y OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACION ATENCIÓN AL CLIENTE Y OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -825,13 +655,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -848,13 +674,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -871,13 +693,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -894,13 +712,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. CORRESPONDENCIA OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. CORRESPONDENCIA OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -917,15 +731,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -942,15 +750,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -967,15 +769,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -992,12 +788,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACIÓN OCCIDENTE II']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN OCCIDENTE II']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1014,13 +807,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN ZONA OCCIDENTE I']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ZONA OCCIDENTE I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1037,13 +826,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
+			dep => dep.name === departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1060,12 +845,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1082,15 +864,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE PROYECTOS Y SOPORTE TECNICO'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE PROYECTOS Y SOPORTE TECNICO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1107,13 +883,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1130,15 +902,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'CORRD. SEGURIDAD FÍSICA REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['CORRD. SEGURIDAD FÍSICA REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1155,15 +921,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA SEGURIDAD INDUSTRIAL Y CONTINGENC'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA SEGURIDAD INDUSTRIAL Y CONTINGENC']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1180,13 +940,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. CANALES DIGITALES Y DISTRIBUIDOS']
+			dep => dep.name === departamentoOnlyNames['COORD. CANALES DIGITALES Y DISTRIBUIDOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1203,15 +959,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1228,12 +978,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1250,13 +997,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN BASES DE DATOS DISTRIBUIDA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN BASES DE DATOS DISTRIBUIDA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1273,13 +1016,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1296,13 +1035,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1319,13 +1054,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PROYECTOS TÉCNICOS']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PROYECTOS TÉCNICOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1342,15 +1073,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1367,13 +1092,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1390,15 +1111,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1415,15 +1130,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1440,15 +1149,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1465,13 +1168,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1488,13 +1187,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1510,12 +1205,8 @@ const updateEmployees_95_6 = [
 		cedula: 12695706,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['GERENCIA TELEFONÍA']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA TELEFONÍA'])[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1532,15 +1223,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD RECLAMOS DE CANALES ELECTRÓNICOS TDC ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD RECLAMOS DE CANALES ELECTRÓNICOS TDC ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1557,15 +1242,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1582,15 +1261,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE IVSS, NÓMINA Y DOMICILIACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1607,15 +1280,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1632,15 +1299,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1657,13 +1318,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
+			dep => dep.name === departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1680,12 +1337,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['GERENCIA SALUD OCUPACIONAL']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SALUD OCUPACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ENFERMERA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ENFERMERA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1702,13 +1356,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN INSPECCIÓN Y CAPACITACIÓN']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN INSPECCIÓN Y CAPACITACIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1725,15 +1375,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1750,13 +1394,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. GESTIÓN Y TRASLADO DE ACTIVOS']
+			dep => dep.name === departamentoOnlyNames['COORD. GESTIÓN Y TRASLADO DE ACTIVOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1773,13 +1413,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN IMPUESTOS MUNICIPALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1796,15 +1432,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1821,15 +1451,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1846,15 +1470,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1871,13 +1489,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
+			dep => dep.name === departamentoOnlyNames['COORDINACION GESTION DE PERSONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1894,13 +1508,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1917,13 +1527,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1940,15 +1546,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1965,13 +1565,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -1988,13 +1584,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
+			dep => dep.name === departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2011,15 +1603,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2036,15 +1622,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ANÁLISIS DE OPERACIONES FINANCIERAS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ANÁLISIS DE OPERACIONES FINANCIERAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2061,13 +1641,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION ADM DE ACCESO DE IDENTIDAD']
+			dep => dep.name === departamentoOnlyNames['COORDINACION ADM DE ACCESO DE IDENTIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2084,13 +1660,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION ADM DE ACCESO DE IDENTIDAD']
+			dep => dep.name === departamentoOnlyNames['COORDINACION ADM DE ACCESO DE IDENTIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2107,13 +1679,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
+			dep => dep.name === departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2130,13 +1698,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
+			dep => dep.name === departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2153,13 +1717,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
+			dep => dep.name === departamentoOnlyNames['COORDINACION DE CUMPLIMIENTO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2176,12 +1736,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACION PROVEEDORES']
+			dep => dep.name === departamentoOnlyNames['COORDINACION PROVEEDORES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2198,12 +1755,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACION PROVEEDORES']
+			dep => dep.name === departamentoOnlyNames['COORDINACION PROVEEDORES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2219,12 +1773,9 @@ const updateEmployees_95_6 = [
 		cedula: 13244969,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2240,12 +1791,9 @@ const updateEmployees_95_6 = [
 		cedula: 17412167,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2261,12 +1809,9 @@ const updateEmployees_95_6 = [
 		cedula: 13006547,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2282,12 +1827,9 @@ const updateEmployees_95_6 = [
 		cedula: 15411589,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['COORDINACION SERVICIOS'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2304,13 +1846,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2327,13 +1865,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2350,13 +1884,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2373,13 +1903,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2396,13 +1922,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2419,13 +1941,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2442,13 +1960,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2465,13 +1979,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2488,13 +1998,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2511,13 +2017,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2534,13 +2036,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2557,13 +2055,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2580,15 +2074,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE DESARROLLO Y GESTIÓN COMERCIAL'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE DESARROLLO Y GESTIÓN COMERCIAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2605,13 +2093,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2628,13 +2112,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA MANTENIMENTO FISICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2651,15 +2131,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2676,15 +2150,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2701,13 +2169,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2724,13 +2188,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2747,13 +2207,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2770,13 +2226,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2793,13 +2245,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2816,13 +2264,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2839,13 +2283,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2862,13 +2302,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2885,13 +2321,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2908,13 +2340,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2931,13 +2359,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORD. ATENCIÓN INTERNA CAI OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2954,15 +2378,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -2979,15 +2397,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3004,15 +2416,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. DIGITALIZACIÓN Y CTROL DE ARCH. ARAGUA I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3029,15 +2435,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3054,15 +2454,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3079,15 +2473,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3104,15 +2492,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3129,15 +2511,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3154,15 +2530,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. REGISTRO DE CLIENTEES REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3179,13 +2549,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE CONTROL Y GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3202,13 +2568,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE EFICIENCIA COMERCIAL']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE EFICIENCIA COMERCIAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3225,15 +2587,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA DEF.  DE MODELOS DE CALIDAD'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA DEF.  DE MODELOS DE CALIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3250,15 +2606,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA EVAL. DE INDICADORES DE CALIDAD'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA EVAL. DE INDICADORES DE CALIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3275,13 +2625,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SEGURIDAD Y SALUD LABORAL']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SEGURIDAD Y SALUD LABORAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3298,13 +2644,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3321,13 +2663,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN INVESTIGACIONES MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3344,15 +2682,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'CORRD. SEGURIDAD FÍSICA REGIÓN OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['CORRD. SEGURIDAD FÍSICA REGIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3369,15 +2701,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3394,15 +2720,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3419,15 +2739,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3444,15 +2758,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3469,15 +2777,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3494,15 +2796,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA SOPORTE INV. TECNO. DE SEGURIDAD BANCARIA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE INV. TECNO. DE SEGURIDAD BANCARIA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3519,15 +2815,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3544,15 +2834,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3569,15 +2853,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3594,15 +2872,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ADMINISTRACIÓN DE AMBIENTES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3619,12 +2891,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3641,12 +2910,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN ARQUITECTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3663,13 +2929,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PLATAFORMA CENTRALIZADA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PLATAFORMA CENTRALIZADA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3686,13 +2948,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3709,13 +2967,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PLATAFORMA MEDIA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3732,13 +2986,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3755,13 +3005,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3778,13 +3024,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3801,13 +3043,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PRODUCCIÓN OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3824,13 +3062,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN PROYECTOS TÉCNICOS']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN PROYECTOS TÉCNICOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3847,15 +3081,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3872,15 +3100,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3897,15 +3119,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3922,15 +3138,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3947,15 +3157,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN REDES Y COMUNICACIONES OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3972,13 +3176,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -3995,13 +3195,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN SISTEMAS POSTILLION']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4018,13 +3214,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA BI Y REGULATORIOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4041,15 +3233,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4066,15 +3252,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4091,15 +3271,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4116,15 +3290,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4141,15 +3309,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECTOS CANALES DIGITALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS CANALES DIGITALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4166,15 +3328,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECTOS CANALES DIGITALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS CANALES DIGITALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4191,15 +3347,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECTOS CORE BANCARIO'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS CORE BANCARIO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4216,13 +3366,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4239,13 +3385,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4262,13 +3404,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4285,13 +3423,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4308,13 +3442,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4331,15 +3461,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4356,15 +3480,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4381,15 +3499,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4406,15 +3518,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4431,15 +3537,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE MONITOREO TELCO E INFRAESTRUCTURA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4456,13 +3556,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4479,13 +3575,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4502,13 +3594,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4525,13 +3613,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4548,13 +3632,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4571,15 +3651,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD RECLAMOS DE CANALES ELECTRÓNICOS TDC ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD RECLAMOS DE CANALES ELECTRÓNICOS TDC ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4596,15 +3670,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4621,15 +3689,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD RECLAMOS DE CANALES ELECTRÓNICOS TDD ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4646,15 +3708,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4671,15 +3727,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4696,15 +3746,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE LOGÍSTICA MONEDA NACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4721,15 +3765,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4746,15 +3784,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4771,15 +3803,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4796,15 +3822,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DE REPORTARÍA Y MONITOREO DE OPERACIONES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4821,13 +3841,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4844,15 +3860,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE APLICACIONES DE COBRO Y PROCE MASIVOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE APLICACIONES DE COBRO Y PROCE MASIVOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4869,13 +3879,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4892,13 +3898,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4915,13 +3917,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
+			dep => dep.name === departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4938,13 +3936,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
+			dep => dep.name === departamentoOnlyNames['COODINACIÓN DE ATENCIÓN POST VENTA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4961,15 +3955,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORDINACIÓN DESARROLLO DE CANALES DIGITALES'
-				]
+			dep => dep.name === departamentoOnlyNames['COORDINACIÓN DESARROLLO DE CANALES DIGITALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -4986,15 +3974,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5011,15 +3993,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA SENIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5036,15 +4012,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GCIA. DE NEGOCIOS SECT AGROPECUARIO RG. OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GCIA. DE NEGOCIOS SECT AGROPECUARIO RG. OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5061,13 +4031,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5084,13 +4050,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE NEGOCIOS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5107,13 +4069,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA DE SISTEMAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5130,13 +4088,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA AUDITORIA FINANCIERA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5153,13 +4107,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ARA DE CONTRALORÍA DE DATOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5176,13 +4126,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL DE GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5199,13 +4145,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA CONTROL FINANCIERO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5222,15 +4164,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA DEF.  DE MODELOS DE CALIDAD'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA DEF.  DE MODELOS DE CALIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5247,15 +4183,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA GESTION DE SERVICIOS AL PERSONAL'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA GESTION DE SERVICIOS AL PERSONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5272,15 +4202,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA BI Y SISTEMAS REGULATORIOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5297,12 +4221,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['GERENCIA DE AREA ENERGÍA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA ENERGÍA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5319,15 +4240,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PLATAFORMA ESPECIALIZADA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PLATAFORMA ESPECIALIZADA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5344,15 +4259,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECT DE INTEGRAC DE PLATAFORMA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5369,15 +4278,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECTOS CANALES DIGITALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS CANALES DIGITALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5394,15 +4297,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE AREA PROYECTOS DE SEGURIDAD TI'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS DE SEGURIDAD TI']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5419,13 +4316,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE AREA PROYECTOS POS ATMS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5442,13 +4335,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA GESTIÓN DE INFORMACIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA GESTIÓN DE INFORMACIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5465,15 +4354,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA ESTADÍSTICA SOBRE METODOLOGÍA DE RIESGO'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA ESTADÍSTICA SOBRE METODOLOGÍA DE RIESGO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5490,15 +4373,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ANÁLISIS DE OPERACIONES FINANCIERAS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ANÁLISIS DE OPERACIONES FINANCIERAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5515,15 +4392,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE ADMINISTRACIÓN ACCESO IDENTIDAD'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ADMINISTRACIÓN ACCESO IDENTIDAD']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5540,12 +4411,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['GERENCIA DE CUMPLIMIENTO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE CUMPLIMIENTO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5562,15 +4430,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA PROYECTO ESPECIAL CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5587,13 +4449,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE CONTROL Y GESTIÓN']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE CONTROL Y GESTIÓN']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5610,15 +4468,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA MONITOREO Y ANTI FRAUDE OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5635,15 +4487,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA SOPORTE INV. TECNO. DE SEGURIDAD BANCARIA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE INV. TECNO. DE SEGURIDAD BANCARIA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5660,13 +4506,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ENERGÍA MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5683,12 +4525,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['GERENCIA DE PROYECTOS TI']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE PROYECTOS TI']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5705,13 +4544,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE SOPORTE TECNICO OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5728,13 +4563,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5751,13 +4582,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
+			dep => dep.name === departamentoOnlyNames['GERENCIA CENTRO DE ACOPIO MARACAIBO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5774,15 +4601,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE APLICACIONES DE COBRO Y PROCE MASIVOS'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE APLICACIONES DE COBRO Y PROCE MASIVOS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5799,15 +4620,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE PROCESOS ESPECIALES Y REPORTERÍA'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE PROCESOS ESPECIALES Y REPORTERÍA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5824,13 +4639,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE PRODUCCIÓN AMEX']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5847,13 +4658,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA OPERACIONES ESPECIALIZADAS']
+			dep => dep.name === departamentoOnlyNames['GERENCIA OPERACIONES ESPECIALIZADAS']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5870,15 +4677,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA RECLAMOS DE CANALES ELECTRONICOS ZONA 2'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA RECLAMOS DE CANALES ELECTRONICOS ZONA 2']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5895,15 +4696,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA CONSULTA, DE PRODUCTOS Y CONTRATOS ESPEC.'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA CONSULTA, DE PRODUCTOS Y CONTRATOS ESPEC.']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5920,13 +4715,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA GESTIÓN ADMINISTRATIVA']
+			dep => dep.name === departamentoOnlyNames['GERENCIA GESTIÓN ADMINISTRATIVA']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5943,15 +4734,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA AFILIACIÓN AL SERVICIO POS INTERIOR']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5968,15 +4753,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA DE DESARROLLO DE CANALES DIGITALES'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE DESARROLLO DE CANALES DIGITALES']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -5993,13 +4772,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6016,13 +4791,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6039,13 +4810,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE NEGOCIOS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6062,15 +4829,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'GERENCIA REGIONAL OPERACION DE AGENCIAS OCCIDENTE'
-				]
+			dep => dep.name === departamentoOnlyNames['GERENCIA REGIONAL OPERACION DE AGENCIAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE REGIONAL OPERATIVO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE REGIONAL OPERATIVO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6087,13 +4848,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN I']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN I']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6110,13 +4867,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN II']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN II']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6133,13 +4886,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN IV']
+			dep => dep.name === departamentoOnlyNames['GERENCIA DE ZONA ZULIA FALCÓN IV']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE ZONA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6156,12 +4905,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['GERENCIA SALUD OCUPACIONAL']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SALUD OCUPACIONAL']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['MEDICO']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['MEDICO'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6178,12 +4924,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6200,12 +4943,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6222,12 +4962,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6244,12 +4981,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6266,12 +5000,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6288,12 +5019,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
+			dep => dep.name === departamentoOnlyNames['COORD. (OCCIDENTE - ANDES)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE CONSOLA'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6310,15 +5038,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames[
-					'COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)'
-				]
+			dep => dep.name === departamentoOnlyNames['COORD. ALMACÉN Y PROVEEDURÍA (OCCIDENTE)']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['OPERADOR DE ALMACEN']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['OPERADOR DE ALMACEN'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6335,13 +5057,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['GERENCIA SOPORTE POS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['TECNICO POS JUNIOR']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['TECNICO POS JUNIOR'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6357,12 +5075,8 @@ const updateEmployees_95_6 = [
 		cedula: 13741865,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['V.P. DE CONTRALORÍA']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE CONTRALORÍA'])[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6379,12 +5093,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name === departamentoOnlyNames['V.P. CALIDAD DE SERVICIO']
+			dep => dep.name === departamentoOnlyNames['V.P. CALIDAD DE SERVICIO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6401,13 +5112,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. OPERACIONES DE EFECTIVO']
+			dep => dep.name === departamentoOnlyNames['V.P. OPERACIONES DE EFECTIVO']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6423,12 +5130,9 @@ const updateEmployees_95_6 = [
 		cedula: 20442877,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['V.P. ASUNTOS LEGALES']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. ASUNTOS LEGALES'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6445,13 +5149,9 @@ const updateEmployees_95_6 = [
 		centroTrabajoId: '95_6',
 		locationId: null,
 		departamentoId: departamentoData.filter(
-			dep =>
-				dep.name ===
-				departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
+			dep => dep.name === departamentoOnlyNames['V.P. BANCA EMPRESAS OCCIDENTE']
 		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE DE NEGOCIOS']
-		)[0].id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE DE NEGOCIOS'])[0].id,
 		extension: [],
 		phone: []
 	},
@@ -6467,12 +5167,9 @@ const updateEmployees_95_6 = [
 		cedula: 7774837,
 		centroTrabajoId: '95_6',
 		locationId: null,
-		departamentoId: departamentoData.filter(
-			dep => dep.name === departamentoOnlyNames['V.P. REGIÓN OCCIDENTE']
-		)[0].id,
-		cargoId: cargosData.filter(
-			cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE REGIONAL']
-		)[0].id,
+		departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. REGIÓN OCCIDENTE'])[0]
+			.id,
+		cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE REGIONAL'])[0].id,
 		extension: [],
 		phone: []
 	}

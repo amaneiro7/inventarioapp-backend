@@ -10,13 +10,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 export class UserResetPassword {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async run({
-		id,
-		user
-	}: {
-		id: Primitives<UserId>
-		user?: JwtPayloadUser
-	}): Promise<void> {
+	async run({ id, user }: { id: Primitives<UserId>; user?: JwtPayloadUser }): Promise<void> {
 		// se valida que el usuario que esta realizando esta operacion tiene privilegios
 		isSuperAdmin({ user })
 

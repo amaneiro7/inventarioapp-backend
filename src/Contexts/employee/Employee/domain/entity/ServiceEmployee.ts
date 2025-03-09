@@ -62,9 +62,7 @@ export class ServiceEmployee extends Employee {
 
 	private ensureTypeIsService(): void {
 		if (this.typeValue !== EmployeeTypes.SERVICE) {
-			throw new InvalidArgumentError(
-				'Un empleado Service solo puede tener el tipo Service'
-			)
+			throw new InvalidArgumentError('Un empleado Service solo puede tener el tipo Service')
 		}
 	}
 	static create(params: ServiceEmployeeParams): ServiceEmployee {

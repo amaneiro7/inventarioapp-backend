@@ -9,7 +9,5 @@ export abstract class CategoryRepository {
 
 	abstract searchById(id: CategoryId['value']): Promise<CategoryDto | null>
 
-	abstract searchByName(
-		name: CategoryName['value']
-	): Promise<CategoryDto | null>
+	abstract searchByName(name: CategoryName['value']): Promise<CategoryDto | null>
 }

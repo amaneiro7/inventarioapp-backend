@@ -11,12 +11,8 @@ export enum OperatingSystemArqDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		operatingSystemArqRepository: asClass(
-			SequelizeOperatingSystemArqRepository
-		).singleton(),
+		operatingSystemArqRepository: asClass(SequelizeOperatingSystemArqRepository).singleton(),
 		operatingSystemArqFinderAll: asClass(OperatingSystemArqFinderAll),
-		operatingSystemArqGetAllController: asClass(
-			OperatingSystemArqGetAllController
-		)
+		operatingSystemArqGetAllController: asClass(OperatingSystemArqGetAllController)
 	})
 }

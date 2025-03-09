@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class MainCategoryGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: MainCategoriesFinderAll = container.resolve(
-				MainCategoryDependencies.FinderAll
-			)
+			const getAll: MainCategoriesFinderAll = container.resolve(MainCategoryDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

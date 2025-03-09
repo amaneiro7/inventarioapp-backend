@@ -9,9 +9,7 @@ export class DepartamentoGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: DepartamentoFinder = container.resolve(
-				DepartamentoDependencies.Finder
-			)
+			const get: DepartamentoFinder = container.resolve(DepartamentoDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

@@ -14,10 +14,7 @@ export class CreateCargoUseCase {
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>
 	) {}
 
-	public async execute({
-		name,
-		departamentos
-	}: Omit<CargoPrimitives, 'id'>): Promise<void> {
+	public async execute({ name, departamentos }: Omit<CargoPrimitives, 'id'>): Promise<void> {
 		// Se verifica que el cargo no exista
 		await this.ensureCargoDoesNotExist(name)
 
@@ -25,25 +22,16 @@ export class CreateCargoUseCase {
 		await this.ensureDepartamentosExists(departamentos)
 	}
 
-	private async ensureCargoDoesNotExist(
-		name: Primitives<CargoName>
-	): Promise<void> {
+	private async ensureCargoDoesNotExist(name: Primitives<CargoName>): Promise<void> {
 		if ((await this.cargoRepository.searchByName(name)) !== null) {
 			throw new CargoAlreadyExistError(name)
 		}
 	}
 
-	private async ensureDepartamentosExists(
-		departamentos: Primitives<DepartmentId>[]
-	): Promise<void> {
+	private async ensureDepartamentosExists(departamentos: Primitives<DepartmentId>[]): Promise<void> {
 		for (const departmentId of departamentos) {
-			if (
-				(await this.departamentoRepository.searchById(departmentId)) ===
-				null
-			) {
-				throw new DepartmentDoesNotExistError(
-					'La gerencia, coordinación o departamento'
-				)
+			if ((await this.departamentoRepository.searchById(departmentId)) === null) {
+				throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 			}
 		}
 	}

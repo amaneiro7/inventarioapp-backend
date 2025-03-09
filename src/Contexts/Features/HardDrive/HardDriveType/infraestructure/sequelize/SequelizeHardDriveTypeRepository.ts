@@ -9,10 +9,7 @@ import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
-export class SequelizeHardDriveTypeRepository
-	extends CriteriaToSequelizeConverter
-	implements HardDriveTypeRepository
-{
+export class SequelizeHardDriveTypeRepository extends CriteriaToSequelizeConverter implements HardDriveTypeRepository {
 	private readonly cacheKey: string = 'hardDriveType'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -24,8 +21,7 @@ export class SequelizeHardDriveTypeRepository
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { rows, count } =
-					await HardDriveTypeModel.findAndCountAll(options)
+				const { rows, count } = await HardDriveTypeModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -34,9 +30,7 @@ export class SequelizeHardDriveTypeRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<HardDriveTypeId>
-	): Promise<HardDriveTypeDto | null> {
+	async searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null> {
 		return (await HardDriveTypeModel.findByPk(id)) ?? null
 	}
 }

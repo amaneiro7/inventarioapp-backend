@@ -8,17 +8,13 @@ import { type CategoryId } from '../../../../../Category/Category/domain/Categor
 import { KeyboardModelsDto } from '../../domain/KeyboardModels.dto'
 import { InputType } from '../../../../InputType/domain/InputType.dto'
 
-interface KeyboardModelsCreationAttributes
-	extends Omit<KeyboardModelsDto, 'inputType'> {
+interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsDto, 'inputType'> {
 	id: Primitives<ModelSeriesId>
 	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class KeyboardModelsModel
-	extends Model<KeyboardModelsCreationAttributes>
-	implements KeyboardModelsDto
-{
+export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes> implements KeyboardModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>

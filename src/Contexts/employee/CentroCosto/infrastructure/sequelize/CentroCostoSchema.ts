@@ -4,10 +4,7 @@ import { type CodCentroCosto } from '../../domain/CodCentroCosto'
 import { type CentroCostoName } from '../../domain/CentroCostoName'
 import { type CentroCostoDto } from '../../domain/CentroCosto.dto'
 
-export class CentroCostoModel
-	extends Model<CentroCostoDto>
-	implements CentroCostoDto
-{
+export class CentroCostoModel extends Model<CentroCostoDto> implements CentroCostoDto {
 	declare id: Primitives<CodCentroCosto>
 	declare name: Primitives<CentroCostoName>
 

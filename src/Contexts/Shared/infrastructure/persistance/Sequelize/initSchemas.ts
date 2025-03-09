@@ -30,10 +30,7 @@ async function initModels(path: string, sequelize: Sequelize): Promise<void> {
 }
 
 // Define associations between different Sequelize models
-export async function defineAssociations(
-	path: string,
-	models: Sequelize['models']
-): Promise<void> {
+export async function defineAssociations(path: string, models: Sequelize['models']): Promise<void> {
 	const routePath: IModelinstance = require(resolve(path))
 	const [_, instance] = Object.entries(routePath)[0]
 	// Verifica si la instancia tiene el metodo initialize y si es una funcion

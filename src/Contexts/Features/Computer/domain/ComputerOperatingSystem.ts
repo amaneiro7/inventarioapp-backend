@@ -9,9 +9,7 @@ import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingS
 import { type DeviceComputer } from './Computer'
 import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
 
-export class ComputerOperatingSystem extends AcceptedNullValueObject<
-	Primitives<OperatingSystemId>
-> {
+export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<OperatingSystemId>> {
 	constructor(
 		readonly value: Primitives<OperatingSystemId> | null,
 		readonly hardDriveCapacity: Primitives<ComputerHardDriveCapacity>,
@@ -19,14 +17,8 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 	) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
-		this.ensureIfHardDriveisNullOperatingSystemIsNullAsWell(
-			this.value,
-			this.hardDriveCapacity
-		)
-		this.ensureIfStatusIsInUseOperatingSystemMustHaveAValue(
-			this.value,
-			this.status
-		)
+		this.ensureIfHardDriveisNullOperatingSystemIsNullAsWell(this.value, this.hardDriveCapacity)
+		this.ensureIfStatusIsInUseOperatingSystemMustHaveAValue(this.value, this.status)
 		this.ensureIsValidOperatingSystemId(value)
 	}
 
@@ -34,9 +26,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 		return this.value
 	}
 
-	private ensureIsValidOperatingSystemId(
-		id: Primitives<ComputerOperatingSystem>
-	): void {
+	private ensureIsValidOperatingSystemId(id: Primitives<ComputerOperatingSystem>): void {
 		if (!this.isValid(id)) {
 			throw new InvalidArgumentError('Operating System is required')
 		}
@@ -47,9 +37,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 		hardDriveCapacity: Primitives<ComputerHardDriveCapacity>
 	): void {
 		if (hardDriveCapacity === null && operatingSystem !== null) {
-			throw new InvalidArgumentError(
-				'You cannot have operating system if you dont have hard drive'
-			)
+			throw new InvalidArgumentError('You cannot have operating system if you dont have hard drive')
 		}
 	}
 
@@ -66,9 +54,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 			].includes(status) &&
 			operatingSystem === null
 		) {
-			throw new InvalidArgumentError(
-				'If computer is in use, required an operaing system'
-			)
+			throw new InvalidArgumentError('If computer is in use, required an operaing system')
 		}
 
 		if (
@@ -79,9 +65,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 			].includes(status) &&
 			operatingSystem !== null
 		) {
-			throw new InvalidArgumentError(
-				'If computer is not use, cannot have an operaing system'
-			)
+			throw new InvalidArgumentError('If computer is not use, cannot have an operaing system')
 		}
 	}
 
@@ -135,8 +119,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given valor del Sistema Operativo in the database
-		const deviceWithOperatingSystem: OperatingSystemPrimitives | null =
-			await repository.searchById(operatingSystem)
+		const deviceWithOperatingSystem: OperatingSystemPrimitives | null = await repository.searchById(operatingSystem)
 		// If a device with the given valor del Sistema Operativo exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor del Sistema Operativo
 		if (deviceWithOperatingSystem === null) {

@@ -41,15 +41,11 @@ export class UpdateEmployeeUseCase {
 		entity,
 		params
 	}: {
-		params: Partial<
-			Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>
-		>
+		params: Partial<Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>>
 		entity: Employee
 	}): Promise<void> {
 		if (EmployeeTypes.GENERIC === entity.typeValue) {
-			throw new Error(
-				'Los usuarios genericos no se les puede actualizar sus propiedades'
-			)
+			throw new Error('Los usuarios genericos no se les puede actualizar sus propiedades')
 		}
 		if (entity.isStillWorkingValue === false) {
 			throw new Error(
@@ -107,20 +103,12 @@ export class UpdateEmployeeUseCase {
 		]
 		const criteria = await CreateCriteria.execute({ filters: query })
 		if ((await this.employeeRepository.searchByQuery(criteria)) !== null) {
-			throw new EmployeeAlreadyExistError(
-				'Ya existe un usuario con el nombre de usuario: ' + userName
-			)
+			throw new EmployeeAlreadyExistError('Ya existe un usuario con el nombre de usuario: ' + userName)
 		}
 		entity.updateUserName(userName)
 	}
 
-	private async updateNameUseCase({
-		entity,
-		name
-	}: {
-		name?: Nullable<Primitives<EmployeeName>>
-		entity: Employee
-	}) {
+	private async updateNameUseCase({ entity, name }: { name?: Nullable<Primitives<EmployeeName>>; entity: Employee }) {
 		if (!name) return
 		if (entity.nameValue === name) return
 		entity.updateName(name)
@@ -162,9 +150,7 @@ export class UpdateEmployeeUseCase {
 		]
 		const criteria = await CreateCriteria.execute({ filters: query })
 		if ((await this.employeeRepository.searchByQuery(criteria)) !== null) {
-			throw new EmployeeAlreadyExistError(
-				'Ya existe un usuario con la dirección de correo: ' + email
-			)
+			throw new EmployeeAlreadyExistError('Ya existe un usuario con la dirección de correo: ' + email)
 		}
 		entity.updateEmail(email)
 	}
@@ -193,10 +179,7 @@ export class UpdateEmployeeUseCase {
 	}): Promise<void> {
 		if (!centroTrabajoId) return
 		if (entity.centroTrabajoValue === centroTrabajoId) return
-		if (
-			(await this.centroTrabajoRepository.searchById(centroTrabajoId)) ===
-			null
-		) {
+		if ((await this.centroTrabajoRepository.searchById(centroTrabajoId)) === null) {
 			throw new CentroCostoDoesNotExistError()
 		}
 		entity.updateCentroTrabajo(centroTrabajoId)
@@ -226,13 +209,8 @@ export class UpdateEmployeeUseCase {
 	}): Promise<void> {
 		if (!departamentoId) return
 		if (entity.departamentoValue === departamentoId) return
-		if (
-			(await this.departamentoRepository.searchById(departamentoId)) ===
-			null
-		) {
-			throw new DepartmentDoesNotExistError(
-				'La gerencia, coordinación o departamento'
-			)
+		if ((await this.departamentoRepository.searchById(departamentoId)) === null) {
+			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 		}
 		entity.updateDepartamento(departamentoId)
 	}

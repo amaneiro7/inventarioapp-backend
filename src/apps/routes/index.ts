@@ -1,10 +1,4 @@
-import {
-	Router,
-	type Express,
-	type NextFunction,
-	type Request,
-	type Response
-} from 'express'
+import { Router, type Express, type NextFunction, type Request, type Response } from 'express'
 import { type Logger } from '../../Contexts/Shared/domain/Logger'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import errorHandler from 'errorhandler'
@@ -39,18 +33,12 @@ function register(routePath: string, router: Router) {
 	route.register(router)
 }
 
-export function validateReqSchema(
-	req: Request,
-	res: Response,
-	next: NextFunction
-) {
+export function validateReqSchema(req: Request, res: Response, next: NextFunction) {
 	const validationErrors = validationResult(req)
 	if (validationErrors.isEmpty()) {
 		return next()
 	}
-	const errors = validationErrors
-		.array()
-		.map((err: ValidationError) => ({ [err.type]: err.msg }))
+	const errors = validationErrors.array().map((err: ValidationError) => ({ [err.type]: err.msg }))
 
 	return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
 		errors

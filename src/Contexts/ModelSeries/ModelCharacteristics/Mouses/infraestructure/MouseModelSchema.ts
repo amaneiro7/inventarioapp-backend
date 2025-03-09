@@ -7,17 +7,13 @@ import { type CategoryId } from '../../../../Category/Category/domain/CategoryId
 import { type MouseModelsDto } from '../domain/MouseModels.dto'
 import { type InputTypeDto } from '../../../InputType/domain/InputType.dto'
 
-interface MouseModelsCreationAttributes
-	extends Omit<MouseModelsDto, 'inputType'> {
+interface MouseModelsCreationAttributes extends Omit<MouseModelsDto, 'inputType'> {
 	id: Primitives<ModelSeriesId>
 	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class MouseModelsModel
-	extends Model<MouseModelsCreationAttributes>
-	implements MouseModelsDto
-{
+export class MouseModelsModel extends Model<MouseModelsCreationAttributes> implements MouseModelsDto {
 	declare inputType: InputTypeDto
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>

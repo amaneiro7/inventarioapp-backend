@@ -17,17 +17,14 @@ export class SequelizeHardDriveCapacityRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<HardDriveCapacityDto>> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<HardDriveCapacityDto>> {
 		const options = this.convert(criteria)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { rows, count } =
-					await HardDriveCapacityModel.findAndCountAll(options)
+				const { rows, count } = await HardDriveCapacityModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -36,9 +33,7 @@ export class SequelizeHardDriveCapacityRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<HardDriveCapacityId>
-	): Promise<HardDriveCapacityDto | null> {
+	async searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null> {
 		return (await HardDriveCapacityModel.findByPk(id)) ?? null
 	}
 }

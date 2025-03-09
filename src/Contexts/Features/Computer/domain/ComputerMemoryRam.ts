@@ -9,9 +9,7 @@ export class ComputerMemoryRam {
 		return this.value.map(memValue => memValue.value)
 	}
 	static fromPrimitives(memoryRamValues: Primitives<MemoryRamValues>[]) {
-		return new ComputerMemoryRam(
-			memoryRamValues.map(MemoryRamValues.fromValues)
-		)
+		return new ComputerMemoryRam(memoryRamValues.map(MemoryRamValues.fromValues))
 	}
 
 	isEmpty(): boolean {
@@ -40,9 +38,7 @@ export class ComputerMemoryRam {
 		if (memoryRam === undefined) {
 			return
 		}
-		if (
-			JSON.stringify(entity.memoryRamValue) === JSON.stringify(memoryRam)
-		) {
+		if (JSON.stringify(entity.memoryRamValue) === JSON.stringify(memoryRam)) {
 			return
 		}
 		entity.updateMemoryRam(memoryRam)

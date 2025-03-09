@@ -10,9 +10,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class TypeOfSiteGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: TypeOfSiteFinderAll = container.resolve(
-				TypeOfSiteDependencies.FinderAll
-			)
+			const getAll: TypeOfSiteFinderAll = container.resolve(TypeOfSiteDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

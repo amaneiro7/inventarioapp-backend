@@ -21,9 +21,7 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 		super(id, name)
 	}
 
-	static create(
-		params: VicepresidenciaEjecutivaParams
-	): VicepresidenciaEjecutiva {
+	static create(params: VicepresidenciaEjecutivaParams): VicepresidenciaEjecutiva {
 		const id = DepartmentId.random().value
 		return new VicepresidenciaEjecutiva(
 			new DepartmentId(id),
@@ -32,9 +30,7 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 		)
 	}
 
-	static fromPrimitives(
-		primitives: VicepresidenciaEjecutivaDto
-	): VicepresidenciaEjecutiva {
+	static fromPrimitives(primitives: VicepresidenciaEjecutivaDto): VicepresidenciaEjecutiva {
 		return new VicepresidenciaEjecutiva(
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),

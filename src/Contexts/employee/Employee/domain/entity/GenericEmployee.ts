@@ -48,9 +48,7 @@ export class GenericEmployee extends Employee {
 
 	private ensureTypeIsGeneric(): void {
 		if (this.typeValue !== EmployeeTypes.GENERIC) {
-			throw new InvalidArgumentError(
-				'Un empleado genérico solo puede tener el tipo genérico'
-			)
+			throw new InvalidArgumentError('Un empleado genérico solo puede tener el tipo genérico')
 		}
 	}
 	static create(params: GenericEmployeeParams): GenericEmployee {

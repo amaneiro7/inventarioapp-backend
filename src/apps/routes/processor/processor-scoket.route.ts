@@ -10,9 +10,5 @@ export const register = async (router: Router) => {
 		ProcessorSocketDependencies.GetAllController
 	)
 
-	router.get(
-		'/processorsockets/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/processorsockets/', authenticate, getAllController.run.bind(getAllController))
 }

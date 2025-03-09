@@ -9,10 +9,7 @@ import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { StateModel } from './StateSchema'
 
-export class SequelizeStateRepository
-	extends CriteriaToSequelizeConverter
-	implements StateRepository
-{
+export class SequelizeStateRepository extends CriteriaToSequelizeConverter implements StateRepository {
 	private readonly cacheKey: string = 'states'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -25,9 +22,7 @@ export class SequelizeStateRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await StateModel.findAndCountAll(
-					options
-				)
+				const { rows, count } = await StateModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count

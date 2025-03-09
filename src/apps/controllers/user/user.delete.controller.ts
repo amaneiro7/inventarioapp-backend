@@ -12,9 +12,7 @@ export class UserDeleteController implements Controller {
 		try {
 			const { id } = req.params
 			const user = req.user as JwtPayloadUser
-			const remover: UserRemover = container.resolve(
-				UserDependencies.Remover
-			)
+			const remover: UserRemover = container.resolve(UserDependencies.Remover)
 			await remover.run({ id, user })
 			res.status(httpStatus.OK).send({
 				message: 'Usuario eliminado exitosamente'

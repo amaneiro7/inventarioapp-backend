@@ -23,9 +23,7 @@ export enum DepartamentoDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		departamentoRepository: asClass(
-			SequelizeDepartamentoRepository
-		).singleton(),
+		departamentoRepository: asClass(SequelizeDepartamentoRepository).singleton(),
 		departamentoFinderAll: asClass(DepartamentoFinderAll),
 		departamentoFinder: asClass(DepartamentoFinder),
 		departamentoCreator: asClass(DepartamentoCreator),

@@ -4,10 +4,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type OperatingSystemId } from '../../domain/OperatingSystemId'
 import { type OperatingSystemVersion } from '../../domain/OperatingSystemVersion'
 
-export class OperatingSystemModel
-	extends Model<OperatingSystemDto>
-	implements OperatingSystemDto
-{
+export class OperatingSystemModel extends Model<OperatingSystemDto> implements OperatingSystemDto {
 	declare id: Primitives<OperatingSystemId>
 	declare name: Primitives<OperatingSystemVersion>
 

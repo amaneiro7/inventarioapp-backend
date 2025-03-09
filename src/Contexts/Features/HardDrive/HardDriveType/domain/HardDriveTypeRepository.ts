@@ -5,11 +5,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type HardDriveTypeId } from './HardDriveTypeId'
 
 export abstract class HardDriveTypeRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<HardDriveTypeDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<HardDriveTypeDto>>
 
-	abstract searchById(
-		id: Primitives<HardDriveTypeId>
-	): Promise<HardDriveTypeDto | null>
+	abstract searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null>
 }

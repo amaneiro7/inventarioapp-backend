@@ -17,7 +17,10 @@ export class Server {
 	private express: express.Express
 	httpServer?: http.Server
 
-	constructor(readonly port: string, private readonly logger: Logger) {
+	constructor(
+		readonly port: string,
+		private readonly logger: Logger
+	) {
 		this.port = port
 		this.express = express()
 
@@ -67,11 +70,7 @@ export class Server {
 			res.send('Servidor de Inventario funcionando correctamente')
 		})
 
-		this.express.use(
-			'/api/v1/docs',
-			swaggerUi.serve,
-			swaggerUi.setup(swaggerDocs)
-		)
+		this.express.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 		// Configuración de rutas
 		registerRoutes(this.express, this.logger)
@@ -81,9 +80,7 @@ export class Server {
 		await new Promise<void>(resolve => {
 			const env = this.express.get('env') as string
 			this.httpServer = this.express.listen(this.port, () => {
-				this.logger.info(
-					`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`
-				)
+				this.logger.info(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
 				this.logger.info('  Press CTRL-C to stop\n')
 				resolve()
 			})

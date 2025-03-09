@@ -139,14 +139,8 @@ export class DeviceModel
 					allowNull: true,
 					validate: {
 						onlyNullIf(value: Primitives<DeviceLocation>) {
-							if (
-								this.statusId !==
-									StatusId.StatusOptions.DESINCORPORADO &&
-								value === null
-							) {
-								throw new Error(
-									'Solo puede estar vacío si el estatus esta marcado como desincoporado'
-								)
+							if (this.statusId !== StatusId.StatusOptions.DESINCORPORADO && value === null) {
+								throw new Error('Solo puede estar vacío si el estatus esta marcado como desincoporado')
 							}
 						}
 					}

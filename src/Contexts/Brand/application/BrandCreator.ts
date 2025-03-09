@@ -14,9 +14,7 @@ export class BrandCreator {
 		await this.brandRepository.save(brand.toPrimitive())
 	}
 
-	private async ensureBrandDoesNotExist(
-		name: BrandParams['name']
-	): Promise<void> {
+	private async ensureBrandDoesNotExist(name: BrandParams['name']): Promise<void> {
 		if ((await this.brandRepository.searchByName(name)) !== null) {
 			throw new BrandAlreadyExistError(name)
 		}

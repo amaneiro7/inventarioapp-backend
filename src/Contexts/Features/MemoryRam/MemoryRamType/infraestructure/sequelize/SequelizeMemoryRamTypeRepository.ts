@@ -9,10 +9,7 @@ import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
-export class SequelizeMemoryRamTypeRepository
-	extends CriteriaToSequelizeConverter
-	implements MemoryRamTypeRepository
-{
+export class SequelizeMemoryRamTypeRepository extends CriteriaToSequelizeConverter implements MemoryRamTypeRepository {
 	private readonly cacheKey: string = 'memoryRamType'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -24,8 +21,7 @@ export class SequelizeMemoryRamTypeRepository
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } =
-					await MemoryRamTypeModel.findAndCountAll(options)
+				const { count, rows } = await MemoryRamTypeModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -34,9 +30,7 @@ export class SequelizeMemoryRamTypeRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<MemoryRamTypeId>
-	): Promise<MemoryRamTypeDto | null> {
+	async searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null> {
 		return (await MemoryRamTypeModel.findByPk(id)) ?? null
 	}
 }

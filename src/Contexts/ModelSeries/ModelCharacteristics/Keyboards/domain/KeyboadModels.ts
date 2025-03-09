@@ -1,8 +1,5 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import {
-	CategoryDefaultData,
-	type CategoryValues
-} from '../../../../Category/Category/domain/CategoryDefaultData'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
@@ -11,10 +8,7 @@ import { ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { HasFingerPrintReader } from './HasFingerPrintReader'
-import {
-	KeyboardModelsParams,
-	KeyboardModelsPrimitives
-} from './KeyboardModels.dto'
+import { KeyboardModelsParams, KeyboardModelsPrimitives } from './KeyboardModels.dto'
 import { ModelKeyboardInputType } from './ModelKeyboardInputType'
 
 export class KeyboardModels extends ModelSeries {
@@ -43,15 +37,9 @@ export class KeyboardModels extends ModelSeries {
 		)
 	}
 
-	public static isKeyboardCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	public static isKeyboardCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const AcceptedKeyboardCategories: CategoryValues[] = ['Teclados']
-		return AcceptedKeyboardCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+		return AcceptedKeyboardCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): KeyboardModels {
@@ -65,9 +53,7 @@ export class KeyboardModels extends ModelSeries {
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
 			new ModelKeyboardInputType(primitives.modelKeyboard.inputTypeId),
-			new HasFingerPrintReader(
-				primitives.modelKeyboard.hasFingerPrintReader
-			)
+			new HasFingerPrintReader(primitives.modelKeyboard.hasFingerPrintReader)
 		)
 	}
 
@@ -90,9 +76,7 @@ export class KeyboardModels extends ModelSeries {
 		return this.hasFingerPrintReader.value
 	}
 
-	updateHasFingerPrintReader(
-		newValue: Primitives<HasFingerPrintReader>
-	): void {
+	updateHasFingerPrintReader(newValue: Primitives<HasFingerPrintReader>): void {
 		this.hasFingerPrintReader = new HasFingerPrintReader(newValue)
 	}
 	updateInputType(newValue: Primitives<ModelKeyboardInputType>): void {

@@ -49,18 +49,10 @@ export class ModelSeriesUpdater {
 		private readonly brandRepository: BrandRepository
 	) {}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<ModelSeriesParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
 		const modelSeriesId = new ModelSeriesId(id).value
 
-		const modelSeries = await this.modelSeriesRepository.searchById(
-			modelSeriesId
-		)
+		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
 
 		if (!modelSeries) {
 			throw new ModelSeriesDoesNotExistError(id)

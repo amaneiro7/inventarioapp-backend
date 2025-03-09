@@ -28,9 +28,7 @@ export class MFPIPAddress extends AcceptedNullValueObject<string> {
 	// Private method to ensure the provided value is a valid IP address
 	private ensureIsValid(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid IP Address`
-			) // Throw an error if the value is not a valid IP address
+			throw new InvalidArgumentError(`<${value}> is not a valid IP Address`) // Throw an error if the value is not a valid IP address
 		}
 	}
 
@@ -39,9 +37,7 @@ export class MFPIPAddress extends AcceptedNullValueObject<string> {
 		ipAddress: Primitives<MFPIPAddress>
 	): void {
 		if (status === DeviceStatus.StatusOptions.INUSE && ipAddress === null) {
-			throw new InvalidArgumentError(
-				'IP Address is required when status is in use'
-			) // Throw an error if IP Address is null when computer status is in use
+			throw new InvalidArgumentError('IP Address is required when status is in use') // Throw an error if IP Address is null when computer status is in use
 		}
 	}
 

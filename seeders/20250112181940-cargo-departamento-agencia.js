@@ -1,8 +1,6 @@
 'use strict'
 
-const {
-	cargoDepartamentoAgenciaData
-} = require('./employee/area/cargoDepartamento')
+const { cargoDepartamentoAgenciaData } = require('./employee/area/cargoDepartamento')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

@@ -36,9 +36,7 @@ export class DeviceStatus extends StatusId {
 		status: Primitives<StatusId>
 	}): Promise<void> {
 		// Searches for a device with the given status in the database
-		const deviceWithStatus = await repository.searchById(
-			new StatusId(status).value
-		)
+		const deviceWithStatus = await repository.searchById(new StatusId(status).value)
 		// If a device with the given status exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given status
 		if (!deviceWithStatus) {

@@ -6,21 +6,9 @@ import { authenticate } from '../../Middleware/authenticate'
 import { CategoryDependencies } from '../../di/category/category.di'
 
 export const register = async (router: Router) => {
-	const getController: CategoryGetController = container.resolve(
-		CategoryDependencies.GetController
-	)
-	const getAllController: CategoryGetAllController = container.resolve(
-		CategoryDependencies.GetAllController
-	)
+	const getController: CategoryGetController = container.resolve(CategoryDependencies.GetController)
+	const getAllController: CategoryGetAllController = container.resolve(CategoryDependencies.GetAllController)
 
-	router.get(
-		'/categories/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
-	router.get(
-		'/categories/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/categories/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/categories/:id', authenticate, getController.run.bind(getController))
 }

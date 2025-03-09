@@ -10,9 +10,7 @@ export class UserRole extends RoleId {
 	constructor(value: Primitives<RoleId>) {
 		super(value)
 		if (value === RoleId.Options.ADMIN) {
-			throw new InvalidArgumentError(
-				'No se puede asignar un rol de administrador'
-			)
+			throw new InvalidArgumentError('No se puede asignar un rol de administrador')
 		}
 	}
 	static async updateStatusField({
@@ -46,9 +44,7 @@ export class UserRole extends RoleId {
 		role: Primitives<RoleId>
 	}): Promise<void> {
 		// Buscar for un rol con el role dado in la base de datos
-		const rolToFind: RolePrimitives | null = await repository.searchById(
-			new RoleId(role).value
-		)
+		const rolToFind: RolePrimitives | null = await repository.searchById(new RoleId(role).value)
 		// Si el rol no existe,
 		// se arroja un {@link RoleDoesNotExistError}
 		if (rolToFind === null) {

@@ -9,10 +9,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'c11d727c-f6b7-4ddf-a597-a6b1c1d06c1c',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'f17b4901-346a-4099-889b-4e46b804755a',
@@ -32,10 +29,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'c11d727c-f6b7-4ddf-a597-a6b1c1d06c1c',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'f17b4901-346a-4099-889b-4e46b804755a',
@@ -55,10 +49,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '1aa81dee-015b-4999-80f5-a5ecac793bca',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'f0788dd7-ae62-48b7-9ef2-d5455adaeadc',
@@ -78,10 +69,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '1aa81dee-015b-4999-80f5-a5ecac793bca',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'f0788dd7-ae62-48b7-9ef2-d5455adaeadc',
@@ -101,10 +89,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -124,10 +109,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -147,10 +129,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -170,10 +149,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -193,10 +169,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -216,10 +189,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -239,10 +209,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -262,10 +229,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -285,10 +249,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -308,10 +269,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -331,10 +289,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -354,10 +309,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -377,10 +329,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '731b7cc5-5a97-47b2-898e-320a4001dffb',
@@ -400,10 +349,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -423,10 +369,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '21969859-daa0-4916-a554-edff77e8f9ac',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ae641ecb-838a-45bb-8d30-9a2df9a4560f',
@@ -446,10 +389,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -469,10 +409,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -492,10 +429,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'b3a3224c-9b77-4653-944f-bc991e411917',
@@ -515,10 +449,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -538,10 +469,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -561,10 +489,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -584,10 +509,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -607,10 +529,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'b3a3224c-9b77-4653-944f-bc991e411917',
@@ -630,10 +549,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '731b7cc5-5a97-47b2-898e-320a4001dffb',
@@ -653,10 +569,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -676,10 +589,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -699,10 +609,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -722,10 +629,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '7f3ad88a-6ba7-46c9-93c8-b527fa47d444',
@@ -745,10 +649,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañado',
 		computerName: null,
 		processorId: null,
@@ -768,10 +669,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -791,10 +689,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -814,10 +709,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -837,10 +729,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -860,10 +749,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -883,10 +769,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Puerto VGA Dañado',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -906,10 +789,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -929,10 +809,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -952,10 +829,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -975,10 +849,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Sin Fuente',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -998,10 +869,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -1021,10 +889,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '83c38f9b-a0ac-4350-9204-886ea8e4e967',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañado',
 		computerName: null,
 		processorId: null,
@@ -1044,10 +909,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -1067,10 +929,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañado',
 		computerName: null,
 		processorId: null,
@@ -1090,10 +949,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -1113,10 +969,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -1136,10 +989,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '42081811-67fa-497b-9c54-ccb473a50ed4',
@@ -1159,10 +1009,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -1182,10 +1029,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -1205,10 +1049,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ebeb94f8-c476-4ddc-829f-5bca0f8d211e',
@@ -1228,10 +1069,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -1251,10 +1089,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ebeb94f8-c476-4ddc-829f-5bca0f8d211e',
@@ -1274,10 +1109,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '9b43fe74-aa96-477e-8a25-cf3506742ccd',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'ebeb94f8-c476-4ddc-829f-5bca0f8d211e',
@@ -1297,10 +1129,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'ec9e560a-318d-42a7-85cb-ad6fc08e57d9',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '1229f9dd-9039-45b9-8eef-e1ac7a4aeef4',
@@ -1320,10 +1149,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'ec9e560a-318d-42a7-85cb-ad6fc08e57d9',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '1229f9dd-9039-45b9-8eef-e1ac7a4aeef4',
@@ -1343,10 +1169,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'ba260f98-0042-4be7-9d9d-1c6dca5010c3',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '1229f9dd-9039-45b9-8eef-e1ac7a4aeef4',
@@ -1366,10 +1189,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: 'ba260f98-0042-4be7-9d9d-1c6dca5010c3',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '1229f9dd-9039-45b9-8eef-e1ac7a4aeef4',
@@ -1389,10 +1209,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1412,10 +1229,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañado',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1435,10 +1249,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1458,10 +1269,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1481,10 +1289,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1504,10 +1309,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1527,10 +1329,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1550,10 +1349,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '4096012f-bed6-4975-a17c-6496c5573785',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
@@ -1573,10 +1369,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1596,10 +1389,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1619,10 +1409,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1642,10 +1429,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1665,10 +1449,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1688,10 +1469,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1711,10 +1489,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1734,10 +1509,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1757,10 +1529,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1780,10 +1549,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañada',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1803,10 +1569,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañada',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1826,10 +1589,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1849,10 +1609,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: 'Dañada',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1872,10 +1629,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1895,10 +1649,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1918,10 +1669,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',
@@ -1941,10 +1689,7 @@ const lenovoDevice = [
 		brandId: '412c0a12-1642-4ce7-a95e-e038cd1e6ed6',
 		modelId: '5da772a9-0e01-4689-9afb-717ccf68cf3f',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: 'e55d3e4b-60e2-49bb-ada9-fa73ffa8d0ec',

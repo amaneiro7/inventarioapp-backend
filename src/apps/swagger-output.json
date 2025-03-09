@@ -1,26 +1,17 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "Inventario APP",
-    "description": "Portal de soporte técnico para el manejo de inventarios de equipos de computación",
-    "host": "localhost:5000/api/v1",
-    "basePath": "/",
-    "schemes": [
-      "http",
-      "https"
-    ],
-    "consumes": [
-      "application/json"
-    ],
-    "produces": [
-      "application/json"
-    ],
-    "version": "1.0.0"
-  },
-  "host": "localhost:3000",
-  "basePath": "/",
-  "schemes": [
-    "http"
-  ],
-  "paths": {}
+	"swagger": "2.0",
+	"info": {
+		"title": "Inventario APP",
+		"description": "Portal de soporte técnico para el manejo de inventarios de equipos de computación",
+		"host": "localhost:5000/api/v1",
+		"basePath": "/",
+		"schemes": ["http", "https"],
+		"consumes": ["application/json"],
+		"produces": ["application/json"],
+		"version": "1.0.0"
+	},
+	"host": "localhost:3000",
+	"basePath": "/",
+	"schemes": ["http"],
+	"paths": {}
 }

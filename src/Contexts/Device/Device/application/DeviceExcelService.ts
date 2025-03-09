@@ -20,10 +20,7 @@ export class DeviceExcelService {
 				new FilterValue(filter.value)
 			)
 		})
-		const order = Order.fromValues(
-			query.orderBy ?? 'locationId',
-			query.orderType
-		)
+		const order = Order.fromValues(query.orderBy ?? 'locationId', query.orderType)
 		const criteria = new Criteria(new Filters(filters), order)
 
 		return await this.deviceRepository.donwload(criteria)

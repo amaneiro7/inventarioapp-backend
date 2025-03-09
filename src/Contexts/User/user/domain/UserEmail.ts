@@ -60,8 +60,7 @@ export class UserEmail extends StringValueObject {
 		email: Primitives<UserEmail>
 	}): Promise<void> {
 		// Searches for a device with the given Email in the database
-		const userWithEmail: UserPrimitives | null =
-			await repository.searchByEmail(new UserEmail(email).value)
+		const userWithEmail: UserPrimitives | null = await repository.searchByEmail(new UserEmail(email).value)
 		// If a device with the given Email exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given Email
 		if (userWithEmail !== null) {

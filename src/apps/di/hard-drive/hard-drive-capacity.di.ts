@@ -11,12 +11,8 @@ export enum HardDriveCapacityDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		hardDriveCapacityRepository: asClass(
-			SequelizeHardDriveCapacityRepository
-		).singleton(),
+		hardDriveCapacityRepository: asClass(SequelizeHardDriveCapacityRepository).singleton(),
 		hardDriveCapacityFinderAll: asClass(HardDriveCapacityFinderAll),
-		hardDriveCapacityGetAllController: asClass(
-			HardDriveCapacityGetAllController
-		)
+		hardDriveCapacityGetAllController: asClass(HardDriveCapacityGetAllController)
 	})
 }

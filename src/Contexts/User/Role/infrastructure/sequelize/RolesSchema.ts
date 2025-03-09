@@ -4,10 +4,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type RoleId } from '../../domain/RoleId'
 import { type RoleName } from '../../domain/RoleName'
 
-export class RolesModel
-	extends Model<RolePrimitives>
-	implements RolePrimitives
-{
+export class RolesModel extends Model<RolePrimitives> implements RolePrimitives {
 	declare id: Primitives<RoleId>
 	declare name: Primitives<RoleName>
 	static async associate(models: Sequelize['models']): Promise<void> {

@@ -12,9 +12,7 @@ export class UserChangePasswordController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const { password, newPassword, reTypePassword } = req.body
-			const changePassword: UserChangePassword = container.resolve(
-				UserDependencies.ChangePassword
-			)
+			const changePassword: UserChangePassword = container.resolve(UserDependencies.ChangePassword)
 			await changePassword.run({
 				payload: user,
 				password,

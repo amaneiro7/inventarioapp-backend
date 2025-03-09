@@ -24,9 +24,7 @@ export class CentroTrabajoUpdater {
 	}): Promise<void> {
 		const centroTrabajoId = new CentroTrabajoId(id)
 
-		const centroTrabajo = await this.centroTrabajoRepository.searchById(
-			centroTrabajoId.value
-		)
+		const centroTrabajo = await this.centroTrabajoRepository.searchById(centroTrabajoId.value)
 		if (!centroTrabajo) {
 			throw new CentroTrabajoDoesNotExistError()
 		}
@@ -41,9 +39,7 @@ export class CentroTrabajoUpdater {
 			entity: centroTrabajoEntity
 		})
 
-		await this.centroTrabajoRepository.save(
-			centroTrabajoEntity.toPrimitive()
-		)
+		await this.centroTrabajoRepository.save(centroTrabajoEntity.toPrimitive())
 	}
 
 	private async updateCentroTrabajoUseCase({
@@ -69,10 +65,7 @@ export class CentroTrabajoUpdater {
 		if (!centroCostoId) return
 
 		if (entity.centroCostoValue === centroCostoId) return
-		if (
-			(await this.centroCostoRepository.searchById(centroCostoId)) ===
-			null
-		) {
+		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
 			throw new CentroCostoDoesNotExistError()
 		}
 

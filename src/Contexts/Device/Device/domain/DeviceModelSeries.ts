@@ -31,13 +31,12 @@ export class DeviceModelSeries extends ModelSeriesId {
 			return
 		}
 		// Verifica que el model no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el model pasado
-		const { brandId, categoryId } =
-			await DeviceModelSeries.ensureModelSeriesExit({
-				repository,
-				modelSeries,
-				category,
-				brand
-			})
+		const { brandId, categoryId } = await DeviceModelSeries.ensureModelSeriesExit({
+			repository,
+			modelSeries,
+			category,
+			brand
+		})
 		// Actualiza el campo model de la entidad {@link Device} con el nuevo model
 		entity.updateCategoryId(categoryId)
 		entity.updateBrandId(brandId)
@@ -56,9 +55,7 @@ export class DeviceModelSeries extends ModelSeriesId {
 		brand?: Primitives<BrandId>
 	}): Promise<ModelSeriesDto> {
 		// Searches for a device with the given model in the database
-		const deviceWithModel = await repository.searchById(
-			new ModelSeriesId(modelSeries).toString()
-		)
+		const deviceWithModel = await repository.searchById(new ModelSeriesId(modelSeries).toString())
 		// If a device with the given model exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given model
 		if (!deviceWithModel) {
@@ -66,9 +63,7 @@ export class DeviceModelSeries extends ModelSeriesId {
 		}
 		const { brandId, categoryId } = deviceWithModel
 		if (brandId !== brand || categoryId !== category) {
-			throw new InvalidArgumentError(
-				'the category and branch do not match for this model.'
-			)
+			throw new InvalidArgumentError('the category and branch do not match for this model.')
 		}
 		return deviceWithModel
 	}

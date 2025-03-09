@@ -3,34 +3,19 @@ import { Directiva } from '../domain/Directiva'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { UpdateDirectivaUseCase } from '../domain/UpdateDirectivaUseCase'
-import {
-	type DirectivaParams,
-	type DirectivaDto
-} from '../domain/Directiva.dto'
+import { type DirectivaParams, type DirectivaDto } from '../domain/Directiva.dto'
 
 export class DirectivaUpdater {
 	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	) {
-		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(
-			directivaRepository
-		)
+	constructor(private readonly directivaRepository: DepartmentRepository<DirectivaDto>) {
+		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(directivaRepository)
 	}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<DirectivaParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: string; params: Partial<DirectivaParams> }): Promise<void> {
 		const { name } = params
 		const directivaId = new DepartmentId(id)
 
-		const directiva = await this.directivaRepository.searchById(
-			directivaId.value
-		)
+		const directiva = await this.directivaRepository.searchById(directivaId.value)
 		if (!directiva) {
 			throw new DepartmentDoesNotExistError('La Directiva')
 		}

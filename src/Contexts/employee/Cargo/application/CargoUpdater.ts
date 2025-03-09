@@ -13,19 +13,10 @@ export class CargoUpdater {
 		private readonly cargoRepository: CargoRepository,
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>
 	) {
-		this.updateCargoUseCase = new UpdateCargoUseCase(
-			this.cargoRepository,
-			this.departamentoRepository
-		)
+		this.updateCargoUseCase = new UpdateCargoUseCase(this.cargoRepository, this.departamentoRepository)
 	}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<CargoParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: string; params: Partial<CargoParams> }): Promise<void> {
 		const { name, departamentos } = params
 		const cargoId = new CargoId(id)
 

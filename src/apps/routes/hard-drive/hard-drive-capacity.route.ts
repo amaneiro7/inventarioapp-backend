@@ -6,12 +6,9 @@ import { authenticate } from '../../Middleware/authenticate'
 import { HardDriveCapacityDependencies } from '../../di/hard-drive/hard-drive-capacity.di'
 
 export const register = async (router: Router) => {
-	const getAllController: HardDriveCapacityGetAllController =
-		container.resolve(HardDriveCapacityDependencies.GetAllController)
-
-	router.get(
-		'/harddrivecapacities/',
-		authenticate,
-		getAllController.run.bind(getAllController)
+	const getAllController: HardDriveCapacityGetAllController = container.resolve(
+		HardDriveCapacityDependencies.GetAllController
 	)
+
+	router.get('/harddrivecapacities/', authenticate, getAllController.run.bind(getAllController))
 }

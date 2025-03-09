@@ -1,11 +1,7 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { SiteId } from '../../Site/domain/SiteId'
 import { TypeOfSiteId } from '../../TypeOfSite/domain/TypeOfSiteId'
-import {
-	type LocationDto,
-	type LocationParams,
-	type LocationPrimitives
-} from './Location.dto'
+import { type LocationDto, type LocationParams, type LocationPrimitives } from './Location.dto'
 import { LocationId } from './LocationId'
 import { LocationName } from './LocationName'
 import { LocationSite } from './LocationSite'

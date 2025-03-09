@@ -20,17 +20,12 @@ export class CartridgeModel extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid cartridge mode`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid cartridge mode`)
 		}
 	}
 
 	private isValid(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateCartridgeModelField(params: {

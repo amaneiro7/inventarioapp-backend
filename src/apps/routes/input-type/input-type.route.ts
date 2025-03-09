@@ -6,13 +6,7 @@ import { authenticate } from '../../Middleware/authenticate'
 import { InputTypeDependencies } from '../../di/input-type/input-type.di'
 
 export const register = async (router: Router) => {
-	const getAllController: InputTypeGetAllController = container.resolve(
-		InputTypeDependencies.GetAllController
-	)
+	const getAllController: InputTypeGetAllController = container.resolve(InputTypeDependencies.GetAllController)
 
-	router.get(
-		'/inputtypes/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/inputtypes/', authenticate, getAllController.run.bind(getAllController))
 }

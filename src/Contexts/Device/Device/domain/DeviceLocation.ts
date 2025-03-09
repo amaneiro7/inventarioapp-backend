@@ -8,9 +8,7 @@ import { type Device } from './Device'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
-export class DeviceLocation extends AcceptedNullValueObject<
-	Primitives<LocationId>
-> {
+export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationId>> {
 	constructor(value: Primitives<LocationId> | null) {
 		super(value)
 		this.ensureIsValidLocationId(this.value)
@@ -45,28 +43,16 @@ export class DeviceLocation extends AcceptedNullValueObject<
 			].includes(status) &&
 			typeOfSite === TypeOfSiteId.TypeOfSiteOptions.ALMACEN
 		) {
-			throw new InvalidArgumentError(
-				'The device is in use and cannot be in the warehouse'
-			)
+			throw new InvalidArgumentError('The device is in use and cannot be in the warehouse')
 		}
 		if (
-			[
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR
-			].includes(status) &&
+			[DeviceStatus.StatusOptions.INALMACEN, DeviceStatus.StatusOptions.PORDESINCORPORAR].includes(status) &&
 			typeOfSite !== TypeOfSiteId.TypeOfSiteOptions.ALMACEN
 		) {
-			throw new InvalidArgumentError(
-				'The device is not in use can only be located in the warehouse'
-			)
+			throw new InvalidArgumentError('The device is not in use can only be located in the warehouse')
 		}
-		if (
-			[DeviceStatus.StatusOptions.DESINCORPORADO].includes(status) &&
-			typeOfSite !== null
-		) {
-			throw new InvalidArgumentError(
-				'The device cannot have a location if status is desincorporated'
-			)
+		if ([DeviceStatus.StatusOptions.DESINCORPORADO].includes(status) && typeOfSite !== null) {
+			throw new InvalidArgumentError('The device cannot have a location if status is desincorporated')
 		}
 	}
 
@@ -112,18 +98,13 @@ export class DeviceLocation extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given location in the database
-		const deviceWithLocation = await repository.searchById(
-			new LocationId(location).toString()
-		)
+		const deviceWithLocation = await repository.searchById(new LocationId(location).toString())
 		// If a device with the given location exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given location
 		if (deviceWithLocation === null) {
 			throw new LocationDoesNotExistError(location)
 		}
 		const typeOfSite = deviceWithLocation.typeOfSiteId
-		this.ensureDeviceBelongsToAppropiateLocationDependsOfStatus(
-			typeOfSite,
-			status
-		)
+		this.ensureDeviceBelongsToAppropiateLocationDependsOfStatus(typeOfSite, status)
 	}
 }

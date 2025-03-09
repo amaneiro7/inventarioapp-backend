@@ -10,57 +10,31 @@ import { type ModelSeriesSearchByCriteriaController } from '../../controllers/mo
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
 
 export const register = async (router: Router) => {
-	const getController: ModelSeriesGetController = container.resolve(
-		ModelSeriesDependencies.GetController
+	const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)
+	const getAllController: ModelSeriesGetAllController = container.resolve(ModelSeriesDependencies.GetAllController)
+	const postController: ModelSeriesPostController = container.resolve(ModelSeriesDependencies.PostController)
+	const patchController: ModelSeriesPatchController = container.resolve(ModelSeriesDependencies.PatchController)
+	const searchByCriteria: ModelSeriesSearchByCriteriaController = container.resolve(
+		ModelSeriesDependencies.GetByCriteriaController
 	)
-	const getAllController: ModelSeriesGetAllController = container.resolve(
-		ModelSeriesDependencies.GetAllController
-	)
-	const postController: ModelSeriesPostController = container.resolve(
-		ModelSeriesDependencies.PostController
-	)
-	const patchController: ModelSeriesPatchController = container.resolve(
-		ModelSeriesDependencies.PatchController
-	)
-	const searchByCriteria: ModelSeriesSearchByCriteriaController =
-		container.resolve(ModelSeriesDependencies.GetByCriteriaController)
 
-	const download: ModelSeriesDownloadExcelServiceController =
-		container.resolve(ModelSeriesDependencies.ExcelDownloadController)
+	const download: ModelSeriesDownloadExcelServiceController = container.resolve(
+		ModelSeriesDependencies.ExcelDownloadController
+	)
 
 	// get
-	router.get(
-		'/models/',
-		authenticate,
-		searchByCriteria.run.bind(searchByCriteria)
-	)
+	router.get('/models/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
-	router.get(
-		'/models/all',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/models/all', authenticate, getAllController.run.bind(getAllController))
 
 	router.get('/models/download', authenticate, download.run.bind(download))
 
-	router.get(
-		'/models/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/models/:id', authenticate, getController.run.bind(getController))
 
 	//post
 
-	router.post(
-		'/models/',
-		authenticate,
-		postController.run.bind(postController)
-	)
+	router.post('/models/', authenticate, postController.run.bind(postController))
 
 	// patch
-	router.patch(
-		'/models/:id',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/models/:id', authenticate, patchController.run.bind(patchController))
 }

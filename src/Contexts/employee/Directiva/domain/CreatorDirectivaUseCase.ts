@@ -5,16 +5,12 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
 
 export class CreateDirectivaUseCase {
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	) {}
+	constructor(private readonly directivaRepository: DepartmentRepository<DirectivaDto>) {}
 
 	public async execute({ name }: DirectivaParams): Promise<void> {
 		await this.ensureDirectivaDoesNotExist(name)
 	}
-	private async ensureDirectivaDoesNotExist(
-		name: Primitives<DepartmentName>
-	): Promise<void> {
+	private async ensureDirectivaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
 		if ((await this.directivaRepository.searchByName(name)) !== null) {
 			throw new DepartmentAlreadyExistError('La directiva')
 		}

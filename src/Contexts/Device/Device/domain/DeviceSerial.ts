@@ -30,38 +30,25 @@ export class DeviceSerial extends AcceptedNullValueObject<string> {
 
 	private ensureIsValidSerial(value: string | null): void {
 		if (!this.isDeviceSerialValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> ${this.errors.join(' ')}`
-			)
+			throw new InvalidArgumentError(`<${value}> ${this.errors.join(' ')}`)
 		}
 	}
 
 	private isDeviceSerialValid(serial: string | null): boolean {
 		if (serial === null) return true
-		const isHasNotSpecialCharacterOnlyGuiones =
-			this.notSpecialCharacterOnlyGuiones.test(serial)
+		const isHasNotSpecialCharacterOnlyGuiones = this.notSpecialCharacterOnlyGuiones.test(serial)
 		if (!isHasNotSpecialCharacterOnlyGuiones) {
-			this.errors.push(
-				`${serial}: El serial no puede contener caracteres especiales`
-			)
+			this.errors.push(`${serial}: El serial no puede contener caracteres especiales`)
 		}
 		const isNotHasLowerCharacter = this.notLowerCase.test(serial)
 		if (!isNotHasLowerCharacter) {
 			this.errors.push('El serial debe estar en mayúsculas')
 		}
-		const isNameValidLength =
-			serial.length >= this.NAME_MIN_LENGTH &&
-			serial.length <= this.NAME_MAX_LENGTH
+		const isNameValidLength = serial.length >= this.NAME_MIN_LENGTH && serial.length <= this.NAME_MAX_LENGTH
 		if (!isNameValidLength) {
-			this.errors.push(
-				`El Serial debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`
-			)
+			this.errors.push(`El Serial debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`)
 		}
-		return (
-			isHasNotSpecialCharacterOnlyGuiones &&
-			isNotHasLowerCharacter &&
-			isNameValidLength
-		)
+		return isHasNotSpecialCharacterOnlyGuiones && isNotHasLowerCharacter && isNameValidLength
 	}
 
 	static async isSerialCanBeNull({
@@ -72,9 +59,7 @@ export class DeviceSerial extends AcceptedNullValueObject<string> {
 		serial: Primitives<DeviceSerial>
 	}) {
 		if (!generic && !serial) {
-			throw new InvalidArgumentError(
-				'El serial es obligatorio, excepto para los modelos de fabricante genérico'
-			)
+			throw new InvalidArgumentError('El serial es obligatorio, excepto para los modelos de fabricante genérico')
 		}
 	}
 
@@ -113,9 +98,7 @@ export class DeviceSerial extends AcceptedNullValueObject<string> {
 			return
 		}
 		// Searches for a device with the given serial in the database
-		const deviceWithSerial = await repository.searchBySerial(
-			new DeviceSerial(serial).value
-		)
+		const deviceWithSerial = await repository.searchBySerial(new DeviceSerial(serial).value)
 		// If a device with the given serial exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given serial
 		if (deviceWithSerial !== null) {

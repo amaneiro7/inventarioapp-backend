@@ -12,17 +12,11 @@ interface TransformerFunction<T, K> {
 }
 
 export class SequelizeCriteriaConverter {
-	private filterTransformers: Map<
-		Operator,
-		TransformerFunction<FiltersPrimitives, FindOptions['where']>
-	>
+	private filterTransformers: Map<Operator, TransformerFunction<FiltersPrimitives, FindOptions['where']>>
 	constructor() {
 		//Se crea un map dónde la key es de tipo Operator, El enum generico que creamos para para nuestra clase FilterOperator
 		//el valor es la función que recibe la claseFilter y el tipo SequelizeFilter
-		this.filterTransformers = new Map<
-			Operator,
-			TransformerFunction<FiltersPrimitives, FindOptions['where']>
-		>([
+		this.filterTransformers = new Map<Operator, TransformerFunction<FiltersPrimitives, FindOptions['where']>>([
 			[Operator.EQUAL, this.equalFilter], // [Operador, función]
 			[Operator.NOT_EQUAL, this.notEqualFilter], // [Operador, función]
 			[Operator.GREATER_THAN, this.greaterThanFilter], // [Operador, función]
@@ -43,9 +37,7 @@ export class SequelizeCriteriaConverter {
 		}
 
 		if (criteria.hasOrder()) {
-			query.order = [
-				[criteria.order.orderBy.value, criteria.order.orderType.value]
-			]
+			query.order = [[criteria.order.orderBy.value, criteria.order.orderType.value]]
 		}
 
 		if (criteria.pageSize) {
@@ -85,14 +77,10 @@ export class SequelizeCriteriaConverter {
 		// Recorre todos los filtros a transformar
 		const filter = filters.value.map(filter => {
 			// A traves de lal Map obtengo la función por el tipo de operador generico pasado como parametro
-			const transformer = this.filterTransformers.get(
-				filter.operator.value
-			) //Operador generico de la calse FilterOperator
+			const transformer = this.filterTransformers.get(filter.operator.value) //Operador generico de la calse FilterOperator
 
 			if (!transformer) {
-				throw Error(
-					`Unexpected operator value ${filter.operator.value}`
-				)
+				throw Error(`Unexpected operator value ${filter.operator.value}`)
 			}
 
 			// Ejecuto la función directament con el filtro
@@ -123,11 +111,9 @@ export class SequelizeCriteriaConverter {
 		}, {})
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
-		const finalOutputData = Object.entries(outputData).map(
-			([key, value]) => ({
-				[key]: value
-			})
-		)
+		const finalOutputData = Object.entries(outputData).map(([key, value]) => ({
+			[key]: value
+		}))
 
 		return Object.assign({}, ...finalOutputData)
 	}
@@ -149,18 +135,14 @@ export class SequelizeCriteriaConverter {
 	private greaterThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.gt]: filter.value } }
 	}
-	private greaterThanOrEqualFilter(
-		filter: FiltersPrimitives
-	): FindOptions['where'] {
+	private greaterThanOrEqualFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.gte]: filter.value } }
 	}
 
 	private lowerThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.lt]: filter.value } }
 	}
-	private lowerThanOrEqualFilter(
-		filter: FiltersPrimitives
-	): FindOptions['where'] {
+	private lowerThanOrEqualFilter(filter: FiltersPrimitives): FindOptions['where'] {
 		return { [filter.field]: { [Op.lte]: filter.value } }
 	}
 

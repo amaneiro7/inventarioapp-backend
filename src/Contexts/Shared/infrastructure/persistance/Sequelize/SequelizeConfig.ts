@@ -43,12 +43,8 @@ export class SequelizeConfig implements Database {
 	async connet(): Promise<void> {
 		try {
 			this.sequelizeConnection.authenticate()
-			this.logger.info(
-				'Connection to database has been established successfully.'
-			)
-			this.logger.info(
-				`dbHost: ${host}, dbPort: ${port}, dbName: ${dbName}`
-			)
+			this.logger.info('Connection to database has been established successfully.')
+			this.logger.info(`dbHost: ${host}, dbPort: ${port}, dbName: ${dbName}`)
 		} catch (error) {
 			this.logger.error(`Unable to connect to the database:, ${error}`)
 		}

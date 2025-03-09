@@ -22,9 +22,6 @@ export class CategoryName extends StringValueObject {
 	}
 
 	private isCategoryNameValid(name: string): boolean {
-		return (
-			name.length <= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length <= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

@@ -10,9 +10,7 @@ export class TypeOfSiteFinderAll extends GetAllBaseService<TypeOfSiteDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<TypeOfSiteDto>> {
-		const { data, total } = await this.typeOfSiteRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.typeOfSiteRepository.searchAll(criteria)
 		return this.response({
 			data,
 			total,

@@ -1,28 +1,36 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CityDto, type CityPrimitives } from './City.dto'
-import { StateId } from '../../State/domain/StateId'
+import { CityParams, type CityDto, type CityPrimitives } from './City.dto'
 import { CityId } from './CityId'
 import { CityName } from './CityName'
+import { CityState } from './CityState'
 
 export class City {
 	constructor(
 		private readonly id: CityId,
-		private readonly stateId: StateId,
-		private readonly name: CityName
+		private stateId: CityState,
+		private name: CityName
 	) {}
 
+	static create(params: CityParams): City {
+		const id = CityId.random().value
+		return new City(new CityId(id), new CityState(params.stateId), new CityName(params.name))
+	}
+
+	updateName(name: CityName['value']): void {
+		this.name = new CityName(name)
+	}
+	updateState(newState: CityState['value']): void {
+		this.stateId = new CityState(newState)
+	}
+
 	static fromPrimitives(primitives: CityDto): City {
-		return new City(
-			new CityId(primitives.id),
-			new StateId(primitives.stateId),
-			new CityName(primitives.name)
-		)
+		return new City(new CityId(primitives.id), new CityState(primitives.stateId), new CityName(primitives.name))
 	}
 
 	toPrimitive(): CityPrimitives {
 		return {
 			id: this.idValue,
-			stateId: this.stateIdValue,
+			stateId: this.stateValue,
 			name: this.nameValue
 		}
 	}
@@ -35,7 +43,7 @@ export class City {
 		return this.name.value
 	}
 
-	get stateIdValue(): Primitives<StateId> {
+	get stateValue(): Primitives<CityState> {
 		return this.stateId.value
 	}
 }

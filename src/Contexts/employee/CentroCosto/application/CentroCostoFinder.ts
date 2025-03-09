@@ -5,18 +5,12 @@ import { CodCentroCosto } from '../domain/CodCentroCosto'
 import { CentroCostoDoesNotExistError } from '../domain/CentroCostoDoesNotExistError'
 
 export class CentroCostoFinder {
-	constructor(
-		private readonly centroCostoRepository: CentroCostoRepository
-	) {}
+	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
 
-	async run(params: {
-		id: Primitives<CodCentroCosto>
-	}): Promise<CentroCostoDto> {
+	async run(params: { id: Primitives<CodCentroCosto> }): Promise<CentroCostoDto> {
 		const { id } = params
 		const codCentroCosto = new CodCentroCosto(id)
-		const centroCosto = await this.centroCostoRepository.searchById(
-			codCentroCosto.value
-		)
+		const centroCosto = await this.centroCostoRepository.searchById(codCentroCosto.value)
 
 		if (!centroCosto) {
 			throw new CentroCostoDoesNotExistError()

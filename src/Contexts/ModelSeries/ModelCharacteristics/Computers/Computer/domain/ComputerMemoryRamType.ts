@@ -30,8 +30,7 @@ export class ComputerMemoryRamType extends MemoryRamTypeId {
 		repository: MemoryRamTypeRepository
 		memoryRamTypeId: Primitives<MemoryRamTypeId>
 	}): Promise<void> {
-		const isExist: MemoryRamTypePrimitives | null =
-			await params.repository.searchById(params.memoryRamTypeId)
+		const isExist: MemoryRamTypePrimitives | null = await params.repository.searchById(params.memoryRamTypeId)
 		if (isExist === null) {
 			throw new Error('InputType does not exist')
 		}

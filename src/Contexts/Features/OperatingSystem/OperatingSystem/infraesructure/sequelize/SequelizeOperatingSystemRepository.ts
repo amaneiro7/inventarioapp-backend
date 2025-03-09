@@ -17,17 +17,14 @@ export class SequelizeOperatingSystemRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<OperatingSystemDto>> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<OperatingSystemDto>> {
 		const options = this.convert(criteria)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { rows, count } =
-					await OperatingSystemModel.findAndCountAll(options)
+				const { rows, count } = await OperatingSystemModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -36,9 +33,7 @@ export class SequelizeOperatingSystemRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<OperatingSystemId>
-	): Promise<OperatingSystemDto | null> {
+	async searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null> {
 		return (await OperatingSystemModel.findByPk(id)) ?? null
 	}
 }

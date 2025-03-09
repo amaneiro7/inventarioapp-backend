@@ -9,9 +9,7 @@ export class CentroCostoGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: CentroCostoFinder = container.resolve(
-				CentroCostoDependencies.Finder
-			)
+			const get: CentroCostoFinder = container.resolve(CentroCostoDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

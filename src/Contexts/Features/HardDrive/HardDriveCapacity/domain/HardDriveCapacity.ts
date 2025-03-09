@@ -1,8 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import {
-	type HardDriveCapacityDto,
-	type HardDriveCapacityPrimitives
-} from './HardDriveCapacity.dto'
+import { type HardDriveCapacityDto, type HardDriveCapacityPrimitives } from './HardDriveCapacity.dto'
 import { HardDriveCapacityId } from './HardDriveCapacityId'
 import { HardDriveCapacityValue } from './HardDriveCapacityValue'
 export class HardDriveCapacity {

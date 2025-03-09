@@ -9,10 +9,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeInputTypeRepository
-	extends CriteriaToSequelizeConverter
-	implements InputTypeRepository
-{
+export class SequelizeInputTypeRepository extends CriteriaToSequelizeConverter implements InputTypeRepository {
 	private readonly cacheKey: string = 'inputTypes'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -24,9 +21,7 @@ export class SequelizeInputTypeRepository
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await InputTypeModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await InputTypeModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -35,9 +30,7 @@ export class SequelizeInputTypeRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<InputTypeId>
-	): Promise<InputTypeDto | null> {
+	async searchById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null> {
 		return (await InputTypeModel.findByPk(id)) ?? null
 	}
 }

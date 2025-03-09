@@ -13,86 +13,38 @@ import { type UserChangePasswordController } from '../../controllers/user/user.c
 import { type UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
 
 export const register = async (router: Router) => {
-	const getController: UserGetController = container.resolve(
-		UserDependencies.GetController
+	const getController: UserGetController = container.resolve(UserDependencies.GetController)
+	const getAllController: UserGetAllController = container.resolve(UserDependencies.GetAllController)
+	const postController: UserPostController = container.resolve(UserDependencies.PostController)
+	const patchController: UserPatchController = container.resolve(UserDependencies.PatchController)
+	const searchByCriteria: UserSearchByCriteriaController = container.resolve(UserDependencies.GetByCriteriaController)
+	const deleteController: UserDeleteController = container.resolve(UserDependencies.DeleteController)
+	const getByEmailController: UserGetByEmailController = container.resolve(UserDependencies.GetByEmailController)
+	const changePaswwordController: UserChangePasswordController = container.resolve(
+		UserDependencies.ChangePasswordController
 	)
-	const getAllController: UserGetAllController = container.resolve(
-		UserDependencies.GetAllController
+	const resetPasswordController: UserResetPasswordController = container.resolve(
+		UserDependencies.ResetPasswordController
 	)
-	const postController: UserPostController = container.resolve(
-		UserDependencies.PostController
-	)
-	const patchController: UserPatchController = container.resolve(
-		UserDependencies.PatchController
-	)
-	const searchByCriteria: UserSearchByCriteriaController = container.resolve(
-		UserDependencies.GetByCriteriaController
-	)
-	const deleteController: UserDeleteController = container.resolve(
-		UserDependencies.DeleteController
-	)
-	const getByEmailController: UserGetByEmailController = container.resolve(
-		UserDependencies.GetByEmailController
-	)
-	const changePaswwordController: UserChangePasswordController =
-		container.resolve(UserDependencies.ChangePasswordController)
-	const resetPasswordController: UserResetPasswordController =
-		container.resolve(UserDependencies.ResetPasswordController)
 
 	// get
-	router.get(
-		'/users/',
-		authenticate,
-		searchByCriteria.run.bind(searchByCriteria)
-	)
+	router.get('/users/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
-	router.get(
-		'/users/all',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/users/all', authenticate, getAllController.run.bind(getAllController))
 
-	router.get(
-		'/users/by-email',
-		authenticate,
-		getByEmailController.run.bind(getByEmailController)
-	)
+	router.get('/users/by-email', authenticate, getByEmailController.run.bind(getByEmailController))
 
-	router.get(
-		'/users/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/users/:id', authenticate, getController.run.bind(getController))
 
 	//post
 
-	router.post(
-		'/users/register',
-		authenticate,
-		postController.run.bind(postController)
-	)
+	router.post('/users/register', authenticate, postController.run.bind(postController))
 
 	// patch
-	router.patch(
-		'/users/update',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
-	router.patch(
-		'/users/change-password',
-		authenticate,
-		changePaswwordController.run.bind(changePaswwordController)
-	)
-	router.patch(
-		'/users/reset-password',
-		authenticate,
-		resetPasswordController.run.bind(resetPasswordController)
-	)
+	router.patch('/users/update', authenticate, patchController.run.bind(patchController))
+	router.patch('/users/change-password', authenticate, changePaswwordController.run.bind(changePaswwordController))
+	router.patch('/users/reset-password', authenticate, resetPasswordController.run.bind(resetPasswordController))
 
 	// delete
-	router.delete(
-		'users/',
-		authenticate,
-		deleteController.run.bind(deleteController)
-	)
+	router.delete('users/', authenticate, deleteController.run.bind(deleteController))
 }

@@ -20,9 +20,7 @@ export class PhoneNumber extends StringValueObject {
 
 	private ensureIsValid(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid phone number.`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid phone number.`)
 		}
 	}
 

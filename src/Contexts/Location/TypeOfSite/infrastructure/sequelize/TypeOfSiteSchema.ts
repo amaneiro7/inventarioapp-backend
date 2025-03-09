@@ -4,10 +4,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type TypeOfSiteId } from '../../domain/TypeOfSiteId'
 import { type TypeOfSiteName } from '../../domain/TypeOfSiteName'
 
-export class TypeOfSiteModel
-	extends Model<TypeOfSiteDto>
-	implements TypeOfSiteDto
-{
+export class TypeOfSiteModel extends Model<TypeOfSiteDto> implements TypeOfSiteDto {
 	declare id: Primitives<TypeOfSiteId>
 	declare name: Primitives<TypeOfSiteName>
 

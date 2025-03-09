@@ -7,9 +7,7 @@ import { ProcessorId } from '../../Processor/Processor/domain/ProcessorId'
 import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'
 import { type DeviceComputer } from './Computer'
 
-export class ComputerProcessor extends AcceptedNullValueObject<
-	Primitives<ProcessorId>
-> {
+export class ComputerProcessor extends AcceptedNullValueObject<Primitives<ProcessorId>> {
 	constructor(readonly value: Primitives<ProcessorId> | null) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
@@ -71,8 +69,9 @@ export class ComputerProcessor extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given valor del procesador in the database
-		const deviceWithProcessor: ProcessorPrimitives | null =
-			await repository.searchById(new ProcessorId(processor).toString())
+		const deviceWithProcessor: ProcessorPrimitives | null = await repository.searchById(
+			new ProcessorId(processor).toString()
+		)
 		// If a device with the given valor del procesador exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor del procesador
 		if (deviceWithProcessor === null) {

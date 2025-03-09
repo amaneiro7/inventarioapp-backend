@@ -9,9 +9,7 @@ export class VicepresidenciaEjecutivaGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: VicepresidenciaEjecutivaFinder = container.resolve(
-				VicepresidenciaEjecutivaDependencies.Finder
-			)
+			const get: VicepresidenciaEjecutivaFinder = container.resolve(VicepresidenciaEjecutivaDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

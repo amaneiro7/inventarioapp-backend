@@ -9,8 +9,9 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class ModelSeriesSearchByCriteriaController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getByCriteria: ModelSeriesSearchByCriteria =
-				container.resolve(ModelSeriesDependencies.SearchByCriteria)
+			const getByCriteria: ModelSeriesSearchByCriteria = container.resolve(
+				ModelSeriesDependencies.SearchByCriteria
+			)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

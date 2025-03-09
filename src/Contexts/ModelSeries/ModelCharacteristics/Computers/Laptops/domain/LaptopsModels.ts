@@ -1,8 +1,5 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
-import {
-	type CategoryValues,
-	CategoryDefaultData
-} from '../../../../../Category/Category/domain/CategoryDefaultData'
+import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/Category/domain/CategoryDefaultData'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
@@ -18,10 +15,7 @@ import { HasVGA } from '../../Computer/domain/HasVGA'
 import { HasWifiAdapter } from '../../Computer/domain/HasWifiAdapter'
 import { MemoryRamSlotQuantity } from '../../Computer/domain/MemoryRamSlotQuantity'
 import { BatteryModelName } from './BatteryModelName'
-import {
-	type LaptopModelsParams,
-	type LaptopModelsPrimitives
-} from './LaptopsModels.dto'
+import { type LaptopModelsParams, type LaptopModelsPrimitives } from './LaptopsModels.dto'
 
 export class LaptopsModels extends ComputerModels {
 	constructor(
@@ -74,22 +68,14 @@ export class LaptopsModels extends ComputerModels {
 		)
 	}
 
-	public static isLaptopCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
+	public static isLaptopCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
 		const AcceptedComputerCategories: CategoryValues[] = ['Laptops']
-		return AcceptedComputerCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): LaptopsModels {
 		if (!primitives.modelLaptop) {
-			throw new Error(
-				'Error al cargar la información de modelos de Laptos'
-			)
+			throw new Error('Error al cargar la información de modelos de Laptos')
 		}
 		return new LaptopsModels(
 			new ModelSeriesId(primitives.id),
@@ -98,9 +84,7 @@ export class LaptopsModels extends ComputerModels {
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
 			new MemoryRamTypeId(primitives.modelLaptop.memoryRamTypeId),
-			new MemoryRamSlotQuantity(
-				primitives.modelLaptop.memoryRamSlotQuantity
-			),
+			new MemoryRamSlotQuantity(primitives.modelLaptop.memoryRamSlotQuantity),
 			new HasBluetooth(primitives.modelLaptop.hasBluetooth),
 			new HasWifiAdapter(primitives.modelLaptop.hasWifiAdapter),
 			new HasDVI(primitives.modelLaptop.hasDVI),

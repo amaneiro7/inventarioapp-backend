@@ -10,10 +10,7 @@ import { type CategoryDto } from '../../domain/Category.dto'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeCategoryRepository
-	extends SequelizeCriteriaConverter
-	implements CategoryRepository
-{
+export class SequelizeCategoryRepository extends SequelizeCriteriaConverter implements CategoryRepository {
 	private readonly cacheKey: string = 'categories'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -26,9 +23,7 @@ export class SequelizeCategoryRepository
 			criteria: criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await CategoryModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await CategoryModel.findAndCountAll(options)
 
 				return {
 					data: rows,
@@ -42,9 +37,7 @@ export class SequelizeCategoryRepository
 		return (await CategoryModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<CategoryName>
-	): Promise<CategoryDto | null> {
+	async searchByName(name: Primitives<CategoryName>): Promise<CategoryDto | null> {
 		return (await CategoryModel.findOne({ where: { name } })) ?? null
 	}
 }

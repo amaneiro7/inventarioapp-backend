@@ -7,10 +7,7 @@ import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persi
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 
-export class SequelizeBrandRepository
-	extends SequelizeCriteriaConverter
-	implements BrandRepository
-{
+export class SequelizeBrandRepository extends SequelizeCriteriaConverter implements BrandRepository {
 	private readonly cacheKey: string = 'brands'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -23,9 +20,7 @@ export class SequelizeBrandRepository
 			criteria: criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await BrandModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await BrandModel.findAndCountAll(options)
 
 				return {
 					total: count,

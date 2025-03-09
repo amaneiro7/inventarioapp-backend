@@ -18,11 +18,6 @@ export class CreateCriteria {
 				)
 		)
 		const order = Order.fromValues(query.orderBy, query.orderType)
-		return new Criteria(
-			new Filters(filters),
-			order,
-			query.limit,
-			query.offset
-		)
+		return new Criteria(new Filters(filters), order, query.limit, query.offset)
 	}
 }

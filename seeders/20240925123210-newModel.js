@@ -1,20 +1,13 @@
 'use strict'
 
-const {
-	categoryData,
-	categoryOnlyNames
-} = require('./categoryData/categoryData')
+const { categoryData, categoryOnlyNames } = require('./categoryData/categoryData')
 const { modelBAM: models } = require('./modelsSeries/modelBram')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
 		const mouseModel = models.filter(model =>
-			categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.MOUSE
-				)[0]
-				.id.includes(model.categoryId)
+			categoryData.filter(category => category.name === categoryOnlyNames.MOUSE)[0].id.includes(model.categoryId)
 		)
 		try {
 			return await queryInterface.sequelize.transaction(async t => {
@@ -50,37 +43,29 @@ module.exports = {
 
 	async down(queryInterface, Sequelize) {
 		const mouseModel = models.filter(model =>
-			categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.MOUSE
-				)[0]
-				.id.includes(model.categoryId)
+			categoryData.filter(category => category.name === categoryOnlyNames.MOUSE)[0].id.includes(model.categoryId)
 		)
 		try {
-			return await queryInterface.sequelize.transaction(
-				async transaction => {
-					await queryInterface.bulkDelete(
-						'models',
-						{
-							id: {
-								[Sequelize.Op.in]: models.map(model => model.id)
-							}
-						},
-						{ transaction }
-					)
-					await queryInterface.bulkDelete(
-						'model_mouses',
-						{
-							id: {
-								[Sequelize.Op.in]: mouseModel.map(
-									mouse => mouse.id
-								)
-							}
-						},
-						{ transaction }
-					)
-				}
-			)
+			return await queryInterface.sequelize.transaction(async transaction => {
+				await queryInterface.bulkDelete(
+					'models',
+					{
+						id: {
+							[Sequelize.Op.in]: models.map(model => model.id)
+						}
+					},
+					{ transaction }
+				)
+				await queryInterface.bulkDelete(
+					'model_mouses',
+					{
+						id: {
+							[Sequelize.Op.in]: mouseModel.map(mouse => mouse.id)
+						}
+					},
+					{ transaction }
+				)
+			})
 		} catch (error) {
 			throw new Error(error)
 		}

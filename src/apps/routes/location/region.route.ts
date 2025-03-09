@@ -5,13 +5,7 @@ import { authenticate } from '../../Middleware/authenticate'
 import { RegionDependencies } from '../../di/location/region.di'
 
 export const register = async (router: Router) => {
-	const getAllController: RegionGetAllController = container.resolve(
-		RegionDependencies.GetAllController
-	)
+	const getAllController: RegionGetAllController = container.resolve(RegionDependencies.GetAllController)
 
-	router.get(
-		'/regions/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/regions/', authenticate, getAllController.run.bind(getAllController))
 }

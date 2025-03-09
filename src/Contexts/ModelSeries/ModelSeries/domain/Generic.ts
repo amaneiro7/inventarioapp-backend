@@ -16,9 +16,7 @@ export class Generic extends BooleanValueObject {
 
 	private ensureIsValid(value: boolean): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`This <${value}> is not a valid type`
-			)
+			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
 		}
 	}
 
@@ -26,10 +24,7 @@ export class Generic extends BooleanValueObject {
 		return typeof value === 'boolean'
 	}
 
-	static async updateGenericField(params: {
-		generic?: Primitives<Generic>
-		entity: ModelSeries
-	}): Promise<void> {
+	static async updateGenericField(params: { generic?: Primitives<Generic>; entity: ModelSeries }): Promise<void> {
 		if (!params.generic) {
 			return
 		}

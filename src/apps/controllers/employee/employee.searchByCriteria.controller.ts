@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class EmployeeSearchByCriteriaController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getByCriteria: EmployeeSearchByCriteria = container.resolve(
-				EmployeeDependencies.SearchByCriteria
-			)
+			const getByCriteria: EmployeeSearchByCriteria = container.resolve(EmployeeDependencies.SearchByCriteria)
 			const convert = new CriteriaFromUrlConverter()
 
 			const query = convert.toCriteria(req)

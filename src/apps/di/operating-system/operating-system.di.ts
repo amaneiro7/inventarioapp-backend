@@ -11,12 +11,8 @@ export enum OperatingSystemDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		operatingSystemRepository: asClass(
-			SequelizeOperatingSystemRepository
-		).singleton(),
+		operatingSystemRepository: asClass(SequelizeOperatingSystemRepository).singleton(),
 		operatingSystemFinderAll: asClass(OperatingSystemFinderAll),
-		operatingSystemGetAllController: asClass(
-			OperatingSystemGetAllController
-		)
+		operatingSystemGetAllController: asClass(OperatingSystemGetAllController)
 	})
 }

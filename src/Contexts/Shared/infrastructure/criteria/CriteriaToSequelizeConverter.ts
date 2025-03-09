@@ -8,20 +8,15 @@ export class CriteriaToSequelizeConverter {
 	convert(criteria: Criteria, mappings: Mappings = {}): FindOptions {
 		const query: FindOptions = {}
 		if (criteria.hasFilters()) {
-			query.where = criteria.filters.value.reduce(
-				(acc: WhereOptions, filter) => {
-					return {
-						...acc,
-						...this.generateWhereQuery(filter, mappings, acc)
-					}
-				},
-				{}
-			)
+			query.where = criteria.filters.value.reduce((acc: WhereOptions, filter) => {
+				return {
+					...acc,
+					...this.generateWhereQuery(filter, mappings, acc)
+				}
+			}, {})
 		}
 		if (criteria.hasOrder()) {
-			query.order = [
-				[criteria.order.orderBy.value, criteria.order.orderType.value]
-			]
+			query.order = [[criteria.order.orderBy.value, criteria.order.orderType.value]]
 		}
 
 		if (criteria.pageSize) {
@@ -36,11 +31,7 @@ export class CriteriaToSequelizeConverter {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-	private generateWhereQuery(
-		filter: Filter,
-		mappings: Mappings = {},
-		acc: WhereOptions
-	): WhereOptions {
+	private generateWhereQuery(filter: Filter, mappings: Mappings = {}, acc: WhereOptions): WhereOptions {
 		const field = mappings[filter.field.value] ?? filter.field.value
 
 		const value = filter.value.value
@@ -48,10 +39,7 @@ export class CriteriaToSequelizeConverter {
 		if (filter.operator.isOR()) {
 			return {
 				...acc,
-				[Op.or]: [
-					...(acc?.[Op.or] || []),
-					{ [field]: { [Op.iLike]: `%${value}%` } }
-				]
+				[Op.or]: [...(acc?.[Op.or] || []), { [field]: { [Op.iLike]: `%${value}%` } }]
 			}
 		}
 		if (filter.operator.isAND()) {

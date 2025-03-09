@@ -9,47 +9,17 @@ import { type ProcessorGetAllController } from '../../controllers/processor/proc
 import { type ProcessorDeleteController } from '../../controllers/processor/processor.delete.controller'
 
 export const register = async (router: Router) => {
-	const getController: ProcessorGetController = container.resolve(
-		ProcessorDependencies.GetController
-	)
-	const getAllController: ProcessorGetAllController = container.resolve(
-		ProcessorDependencies.GetAllController
-	)
-	const postController: ProcessorPostController = container.resolve(
-		ProcessorDependencies.PostController
-	)
-	const patchController: ProcessorPatchController = container.resolve(
-		ProcessorDependencies.PatchController
-	)
-	const deleteController: ProcessorDeleteController = container.resolve(
-		ProcessorDependencies.DeleteController
-	)
+	const getController: ProcessorGetController = container.resolve(ProcessorDependencies.GetController)
+	const getAllController: ProcessorGetAllController = container.resolve(ProcessorDependencies.GetAllController)
+	const postController: ProcessorPostController = container.resolve(ProcessorDependencies.PostController)
+	const patchController: ProcessorPatchController = container.resolve(ProcessorDependencies.PatchController)
+	const deleteController: ProcessorDeleteController = container.resolve(ProcessorDependencies.DeleteController)
 
-	router.get(
-		'/processors/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
-	router.get(
-		'/processors/:id',
-		authenticate,
-		getController.run.bind(getController)
-	)
+	router.get('/processors/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/processors/:id', authenticate, getController.run.bind(getController))
 
-	router.patch(
-		'/processors/:id',
-		authenticate,
-		patchController.run.bind(patchController)
-	)
-	router.post(
-		'/processors/',
-		authenticate,
-		postController.run.bind(postController)
-	)
+	router.patch('/processors/:id', authenticate, patchController.run.bind(patchController))
+	router.post('/processors/', authenticate, postController.run.bind(postController))
 
-	router.delete(
-		'/processors/:id',
-		authenticate,
-		deleteController.run.bind(deleteController)
-	)
+	router.delete('/processors/:id', authenticate, deleteController.run.bind(deleteController))
 }

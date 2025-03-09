@@ -9,9 +9,7 @@ export class DeviceGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: DeviceFinder = container.resolve(
-				DeviceDependencies.Finder
-			)
+			const get: DeviceFinder = container.resolve(DeviceDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

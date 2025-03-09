@@ -18,8 +18,7 @@ export class HardDriveTypeId extends StringValueObject {
 			return
 		}
 		// Searches for a device with the given hard drive type value in the database
-		const deviceWithHardDriveType: HardDriveTypePrimitives | null =
-			await repository.searchById(hardDriveType)
+		const deviceWithHardDriveType: HardDriveTypePrimitives | null = await repository.searchById(hardDriveType)
 		// If a device with the given hard drive type value exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given hard drive type value
 		if (deviceWithHardDriveType === null) {

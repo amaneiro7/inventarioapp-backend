@@ -12,11 +12,7 @@ export class State {
 	) {}
 
 	static fromPrimitives(primitives: StateDto): State {
-		return new State(
-			new StateId(primitives.id),
-			new RegionId(primitives.regionId),
-			new StateName(primitives.name)
-		)
+		return new State(new StateId(primitives.id), new RegionId(primitives.regionId), new StateName(primitives.name))
 	}
 
 	toPrimitive(): StatePrimitives {

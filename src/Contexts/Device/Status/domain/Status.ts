@@ -10,10 +10,7 @@ export class Status {
 	) {}
 
 	static fromPrimitives(primitives: StatusDto): Status {
-		return new Status(
-			new StatusId(primitives.id),
-			new StatusName(primitives.name)
-		)
+		return new Status(new StatusId(primitives.id), new StatusName(primitives.name))
 	}
 
 	toPrimitive(): StatusPrimitives {

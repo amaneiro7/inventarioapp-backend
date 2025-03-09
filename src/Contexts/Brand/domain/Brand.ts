@@ -2,7 +2,10 @@ import { type BrandParams, type BrandPrimitives } from './Brand.dto'
 import { BrandId } from './BrandId'
 import { BrandName } from './BrandName'
 export class Brand {
-	constructor(private readonly id: BrandId, private name: BrandName) {}
+	constructor(
+		private readonly id: BrandId,
+		private name: BrandName
+	) {}
 
 	static create(params: BrandParams): Brand {
 		const id = BrandId.random().value
@@ -14,10 +17,7 @@ export class Brand {
 	}
 
 	static fromPrimitives(primitives: BrandPrimitives): Brand {
-		return new Brand(
-			new BrandId(primitives.id),
-			new BrandName(primitives.name)
-		)
+		return new Brand(new BrandId(primitives.id), new BrandName(primitives.name))
 	}
 
 	toPrimitive(): BrandPrimitives {

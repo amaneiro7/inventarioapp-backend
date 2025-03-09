@@ -18,14 +18,10 @@ export class CentroTrabajoId extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (!this.isNumeric(value)) {
-			throw new InvalidArgumentError(
-				'El código del centro costo debe ser numerico o con guiones'
-			)
+			throw new InvalidArgumentError('El código del centro costo debe ser numerico o con guiones')
 		}
 		if (!this.isCentroTrabajoLengthValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> no es un codigo de centro costo válido`
-			)
+			throw new InvalidArgumentError(`<${value}> no es un codigo de centro costo válido`)
 		}
 	}
 
@@ -34,9 +30,6 @@ export class CentroTrabajoId extends StringValueObject {
 	}
 
 	private isCentroTrabajoLengthValid(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

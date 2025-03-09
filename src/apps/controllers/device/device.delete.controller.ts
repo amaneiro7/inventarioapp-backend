@@ -10,9 +10,7 @@ export class DeviceDeleteController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const remover: DeviceRemover = container.resolve(
-				DeviceDependencies.Remover
-			)
+			const remover: DeviceRemover = container.resolve(DeviceDependencies.Remover)
 			await remover.run({ id })
 			res.status(httpStatus.OK).send({
 				message: 'Dispositivo eliminado exitosamente'

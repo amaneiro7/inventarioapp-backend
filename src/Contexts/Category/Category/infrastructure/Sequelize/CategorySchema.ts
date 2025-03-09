@@ -6,10 +6,7 @@ import { type MainCategoryId } from '../../../MainCategory/domain/MainCategoryId
 import { type CategoryDto } from '../../domain/Category.dto'
 import { type MainCategoryDto } from '../../../MainCategory/domain/MainCategory.dto'
 
-export class CategoryModel
-	extends Model<Omit<CategoryDto, 'mainCategory'>>
-	implements CategoryDto
-{
+export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> implements CategoryDto {
 	declare id: Primitives<CategoryId>
 	declare name: Primitives<CategoryName>
 	declare mainCategoryId: Primitives<MainCategoryId>

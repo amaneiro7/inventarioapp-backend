@@ -10,10 +10,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { CargoModel } from './CargoSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 
-export class SequelizeCargoRepository
-	extends CriteriaToSequelizeConverter
-	implements CargoRepository
-{
+export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -24,9 +21,7 @@ export class SequelizeCargoRepository
 			cacheKey: this.cacheKey,
 			criteria: criteria,
 			fetchFunction: async () => {
-				const { count, rows } = await CargoModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await CargoModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -39,9 +34,7 @@ export class SequelizeCargoRepository
 		return (await CargoModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<CargoName>
-	): Promise<Nullable<CargoDto>> {
+	async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
 		return (await CargoModel.findOne({ where: { name } })) ?? null
 	}
 

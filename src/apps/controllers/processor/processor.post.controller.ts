@@ -10,9 +10,7 @@ export class ProcessorPostController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const create: ProcessorCreator = container.resolve(
-				ProcessorDependencies.Creator
-			)
+			const create: ProcessorCreator = container.resolve(ProcessorDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
 				message: 'Procesador creado exitosamente'

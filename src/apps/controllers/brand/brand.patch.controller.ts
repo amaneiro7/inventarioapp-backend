@@ -14,20 +14,14 @@ interface BrandRequest extends Request {
 }
 
 export class BrandPatchController implements Controller {
-	async run(
-		req: BrandRequest,
-		res: Response,
-		next: NextFunction
-	): Promise<void> {
+	async run(req: BrandRequest, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { name } = req.body
 			const { id } = req.params
-			const update: BrandUpdater = container.resolve(
-				BrandDependencies.Updater
-			)
+			const update: BrandUpdater = container.resolve(BrandDependencies.Updater)
 			await update.run({ id, newName: name })
 			res.status(httpStatus.CREATED).json({
-				message: 'Marca creada exitosamente'
+				message: 'Marca actualizada exitosamente'
 			})
 		} catch (error) {
 			next(error)

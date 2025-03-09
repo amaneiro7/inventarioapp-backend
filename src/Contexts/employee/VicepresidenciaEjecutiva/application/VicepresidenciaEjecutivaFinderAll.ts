@@ -11,11 +11,8 @@ export class VicepresidenciaEjecutivaFinderAll extends GetAllBaseService<Vicepre
 		super()
 	}
 
-	async run(
-		criteria: Criteria
-	): Promise<ResponseService<VicepresidenciaEjecutivaDto>> {
-		const { data, total } =
-			await this.vicepresidenciaEjecutivaRepository.searchAll(criteria)
+	async run(criteria: Criteria): Promise<ResponseService<VicepresidenciaEjecutivaDto>> {
+		const { data, total } = await this.vicepresidenciaEjecutivaRepository.searchAll(criteria)
 
 		return this.response({
 			data,

@@ -10,10 +10,7 @@ export class InputType {
 	) {}
 
 	static fromPrimitives(primitives: InputTypeDto): InputType {
-		return new InputType(
-			new InputTypeId(primitives.id),
-			new InputTypeName(primitives.name)
-		)
+		return new InputType(new InputTypeId(primitives.id), new InputTypeName(primitives.name))
 	}
 
 	toPrimitive(): InputTypePrimitives {

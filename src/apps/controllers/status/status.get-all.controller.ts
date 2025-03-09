@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class StatusGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: StatusFinderAll = container.resolve(
-				StatusDependencies.FinderAll
-			)
+			const getAll: StatusFinderAll = container.resolve(StatusDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 			const data = await getAll.run(query)

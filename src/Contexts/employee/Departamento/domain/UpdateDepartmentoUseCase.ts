@@ -12,10 +12,7 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { CargoDoesNotExistError } from '../../Cargo/domain/CargoDoesNotExistError'
 import { CentroCostoDoesNotExistError } from '../../CentroCosto/domain/CentroCostoDoesNotExistError'
-import {
-	type DepartamentoDto,
-	type DepartamentoParams
-} from './Departamento.dto'
+import { type DepartamentoDto, type DepartamentoParams } from './Departamento.dto'
 
 export class UpdateDepartamentoUseCase {
 	constructor(
@@ -60,9 +57,7 @@ export class UpdateDepartamentoUseCase {
 		if (entity.nameValue === name) return
 
 		if ((await this.departamentoRepository.searchByName(name)) !== null) {
-			throw new DepartmentAlreadyExistError(
-				'La gerencia, coordinación o departamento'
-			)
+			throw new DepartmentAlreadyExistError('La gerencia, coordinación o departamento')
 		}
 		entity.updateName(name)
 	}
@@ -76,17 +71,10 @@ export class UpdateDepartamentoUseCase {
 	}): Promise<void> {
 		if (!vicepresidenciaEjecutivaId) return
 
-		if (entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId)
-			return
+		if (entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId) return
 
-		if (
-			(await this.vicepresidenciaEjecutivaRepository.searchById(
-				vicepresidenciaEjecutivaId
-			)) === null
-		) {
-			throw new DepartmentDoesNotExistError(
-				'La vicepresidencia ejecutiva'
-			)
+		if ((await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)) === null) {
+			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
 		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId)
 	}
@@ -101,10 +89,7 @@ export class UpdateDepartamentoUseCase {
 
 		if (entity.centroCostoValue === centroCostoId) return
 
-		if (
-			(await this.centroCostoRepository.searchById(centroCostoId)) ===
-			null
-		) {
+		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
 			throw new CentroCostoDoesNotExistError()
 		}
 		entity.updateCodCentroCosto(centroCostoId)
@@ -124,10 +109,7 @@ export class UpdateDepartamentoUseCase {
 		const currentCargoIds = entity.CargosValue
 
 		// Se crea una nueva lista con los cargos nuevos, que no estan en la lista actual
-		const newCargos = this.newCargosToAdd(
-			currentCargoIds,
-			arraySinDuplicados
-		)
+		const newCargos = this.newCargosToAdd(currentCargoIds, arraySinDuplicados)
 
 		// Si la lista es 0, no hay cargos nuevos
 		if (newCargos.length === 0) return

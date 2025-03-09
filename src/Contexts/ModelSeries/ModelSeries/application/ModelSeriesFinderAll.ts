@@ -10,9 +10,7 @@ export class ModelSeriesFinderAll extends GetAllBaseService<ModelSeriesDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<ModelSeriesDto>> {
-		const { data, total } = await this.modelSeriesRepository.matching(
-			criteria
-		)
+		const { data, total } = await this.modelSeriesRepository.matching(criteria)
 
 		return this.response({
 			data,

@@ -1,8 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import {
-	type ProcessorSocketDto,
-	type ProcessorSocketPrimitives
-} from './ProcessorSocket.dto'
+import { type ProcessorSocketDto, type ProcessorSocketPrimitives } from './ProcessorSocket.dto'
 import { ProcessorSocketId } from './ProcessorSocketId'
 import { ProcessorSocketName } from './ProcessorSocketName'
 
@@ -13,10 +10,7 @@ export class ProcessorSocket {
 	) {}
 
 	static fromPrimitives(primitives: ProcessorSocketDto): ProcessorSocket {
-		return new ProcessorSocket(
-			new ProcessorSocketId(primitives.id),
-			new ProcessorSocketName(primitives.name)
-		)
+		return new ProcessorSocket(new ProcessorSocketId(primitives.id), new ProcessorSocketName(primitives.name))
 	}
 
 	toPrimitive(): ProcessorSocketPrimitives {

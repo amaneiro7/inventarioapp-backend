@@ -4,10 +4,7 @@ import { type InputTypeId } from '../../domain/InputTypeId'
 import { type InputTypeName } from '../../domain/InputTypeName'
 import { type InputTypeDto } from '../../domain/InputType.dto'
 
-export class InputTypeModel
-	extends Model<InputTypeDto>
-	implements InputTypeDto
-{
+export class InputTypeModel extends Model<InputTypeDto> implements InputTypeDto {
 	declare id: Primitives<InputTypeId>
 	declare name: Primitives<InputTypeName>
 

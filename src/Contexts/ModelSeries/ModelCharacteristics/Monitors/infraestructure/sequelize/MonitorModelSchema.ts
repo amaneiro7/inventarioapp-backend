@@ -15,10 +15,7 @@ interface MonitorModelsCreationAttributes extends MonitorModelsDto {
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class MonitorModelsModel
-	extends Model<MonitorModelsCreationAttributes>
-	implements MonitorModelsDto
-{
+export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> implements MonitorModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>

@@ -25,9 +25,7 @@ export class SiteName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid site name`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid site name`)
 		}
 	}
 
@@ -36,19 +34,10 @@ export class SiteName extends StringValueObject {
 	}
 
 	private isValidLength(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
-	static async updateNameField({
-		name,
-		entity
-	}: {
-		name?: Primitives<SiteName>
-		entity: Site
-	}): Promise<void> {
+	static async updateNameField({ name, entity }: { name?: Primitives<SiteName>; entity: Site }): Promise<void> {
 		if (name === undefined) {
 			return
 		}

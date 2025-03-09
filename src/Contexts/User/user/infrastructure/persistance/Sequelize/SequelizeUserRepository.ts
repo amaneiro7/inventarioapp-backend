@@ -3,19 +3,13 @@ import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import {
-	UserPrimitivesOptional,
-	type UserPrimitives
-} from '../../../domain/User'
+import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
 
 import { UserModel } from './UserSchema'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { UsersAssociation } from './UsersAssociation'
 
-export class SequelizeUserRepository
-	extends CriteriaToSequelizeConverter
-	implements UserRepository
-{
+export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
 	private readonly cacheKey: string = 'users'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -33,13 +27,8 @@ export class SequelizeUserRepository
 
 	async matching(criteria: Criteria): Promise<UserPrimitivesOptional[]> {
 		const options = this.convert(criteria)
-		const opt = new UsersAssociation().convertFilterLocation(
-			criteria,
-			options
-		)
-		return await UserModel.findAll(opt).then(user =>
-			JSON.parse(JSON.stringify(user))
-		)
+		const opt = new UsersAssociation().convertFilterLocation(criteria, options)
+		return await UserModel.findAll(opt).then(user => JSON.parse(JSON.stringify(user)))
 	}
 
 	async searchByEmail(userEmail: string): Promise<UserPrimitives | null> {

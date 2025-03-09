@@ -9,9 +9,7 @@ export class MainCategoryGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: MainCategoriesFinder = container.resolve(
-				MainCategoryDependencies.Finder
-			)
+			const get: MainCategoriesFinder = container.resolve(MainCategoryDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

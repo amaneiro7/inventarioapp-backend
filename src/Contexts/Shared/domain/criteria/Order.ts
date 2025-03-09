@@ -11,16 +11,10 @@ export class Order {
 		return new Order(new OrderBy(''), new OrderType(OrderTypes.NONE))
 	}
 
-	public static fromValues(
-		orderBy?: string | null,
-		orderType?: string | null
-	): Order {
+	public static fromValues(orderBy?: string | null, orderType?: string | null): Order {
 		return !orderBy
 			? Order.none()
-			: new Order(
-					new OrderBy(orderBy),
-					OrderType.fromValue(orderType ?? OrderTypes.ASC)
-			  )
+			: new Order(new OrderBy(orderBy), OrderType.fromValue(orderType ?? OrderTypes.ASC))
 	}
 
 	public isNone(): boolean {
@@ -28,10 +22,6 @@ export class Order {
 	}
 
 	public hasOrder(): boolean {
-		return (
-			this.orderType !== undefined &&
-			this.orderType !== null &&
-			!this.orderType.isNone()
-		)
+		return this.orderType !== undefined && this.orderType !== null && !this.orderType.isNone()
 	}
 }

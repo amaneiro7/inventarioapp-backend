@@ -865,9 +865,7 @@ module.exports = {
 				return await queryInterface.bulkUpdate(
 					'device_computers',
 					{
-						memory_ram_capacity: memory_ram.reduce(
-							(pre, curr) => pre + curr
-						),
+						memory_ram_capacity: memory_ram.reduce((pre, curr) => pre + curr),
 						memory_ram
 					},
 					{

@@ -28,11 +28,7 @@ export class Filter {
 		operator: FiltersPrimitives['operator']
 		value: FiltersPrimitives['value']
 	}): Filter {
-		return new Filter(
-			new FilterField(field),
-			FilterOperator.fromValue(operator),
-			new FilterValue(value)
-		)
+		return new Filter(new FilterField(field), FilterOperator.fromValue(operator), new FilterValue(value))
 	}
 
 	toPrimitives(): FiltersPrimitives {

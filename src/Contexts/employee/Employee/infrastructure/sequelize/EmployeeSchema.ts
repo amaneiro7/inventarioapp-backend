@@ -1,12 +1,6 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import {
-	EmployeeTypes,
-	type EmployeeType
-} from '../../domain/valueObject/EmployeeType'
-import {
-	Nationalities,
-	type EmployeeNationality
-} from '../../domain/valueObject/EmployeeNationality'
+import { EmployeeTypes, type EmployeeType } from '../../domain/valueObject/EmployeeType'
+import { Nationalities, type EmployeeNationality } from '../../domain/valueObject/EmployeeNationality'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
 import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
@@ -29,12 +23,7 @@ import { CentroTrabajoDto } from '../../../CentroTrabajo/domain/CentroTrabajo.dt
 import { DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 
 export class EmployeeModel
-	extends Model<
-		Omit<
-			EmployeeDto,
-			'centroTrabajo' | 'location' | 'departamento' | 'cargo'
-		>
-	>
+	extends Model<Omit<EmployeeDto, 'centroTrabajo' | 'location' | 'departamento' | 'cargo'>>
 	implements EmployeeDto
 {
 	declare id: Primitives<EmployeeId>
@@ -94,11 +83,7 @@ export class EmployeeModel
 					unique: false
 				},
 				type: {
-					type: DataTypes.ENUM(
-						EmployeeTypes.GENERIC,
-						EmployeeTypes.REGULAR,
-						EmployeeTypes.SERVICE
-					),
+					type: DataTypes.ENUM(EmployeeTypes.GENERIC, EmployeeTypes.REGULAR, EmployeeTypes.SERVICE),
 					allowNull: false,
 					defaultValue: EmployeeTypes.REGULAR
 				},

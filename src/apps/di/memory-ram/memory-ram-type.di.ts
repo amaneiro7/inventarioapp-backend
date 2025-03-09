@@ -11,9 +11,7 @@ export enum MemoryRamTypeDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		memoryRamTypeRepository: asClass(
-			SequelizeMemoryRamTypeRepository
-		).singleton(),
+		memoryRamTypeRepository: asClass(SequelizeMemoryRamTypeRepository).singleton(),
 		memoryRamTypeFinderAll: asClass(MemoryRamTypeFinderAll),
 		memoryRamTypeGetAllController: asClass(MemoryRamTypeGetAllController)
 	})

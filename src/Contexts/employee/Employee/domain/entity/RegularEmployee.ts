@@ -61,9 +61,7 @@ export class RegularEmployee extends Employee {
 
 	private ensureTypeIsRegular(): void {
 		if (this.typeValue !== EmployeeTypes.REGULAR) {
-			throw new InvalidArgumentError(
-				'Un empleado regular solo puede tener el tipo REGULAR'
-			)
+			throw new InvalidArgumentError('Un empleado regular solo puede tener el tipo REGULAR')
 		}
 	}
 	static create(params: RegularEmployeeParams): RegularEmployee {

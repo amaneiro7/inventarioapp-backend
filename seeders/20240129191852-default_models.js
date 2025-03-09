@@ -1,9 +1,6 @@
 'use strict'
 
-const {
-	categoryData,
-	categoryOnlyNames
-} = require('./categoryData/categoryData')
+const { categoryData, categoryOnlyNames } = require('./categoryData/categoryData')
 const { modelComputer: models } = require('./modelsSeries/modelComputer')
 
 /** @type {import('sequelize-cli').Migration} */
@@ -11,19 +8,13 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		const modelComputer = models.filter(model => {
 			const computer = categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.COMPUTADORAS
-				)[0]
+				.filter(category => category.name === categoryOnlyNames.COMPUTADORAS)[0]
 				.id.includes(model.categoryId)
 			const servidores = categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.SERVIDORES
-				)[0]
+				.filter(category => category.name === categoryOnlyNames.SERVIDORES)[0]
 				.id.includes(model.categoryId)
 			const allInOne = categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.ALLINONE
-				)[0]
+				.filter(category => category.name === categoryOnlyNames.ALLINONE)[0]
 				.id.includes(model.categoryId)
 			return {
 				computer,
@@ -33,9 +24,7 @@ module.exports = {
 		})
 		const modelLaptop = models.filter(model =>
 			categoryData
-				.filter(
-					category => category.name === categoryOnlyNames.LAPTOPS
-				)[0]
+				.filter(category => category.name === categoryOnlyNames.LAPTOPS)[0]
 				.id.includes(model.categoryId)
 		)
 		try {

@@ -29,9 +29,7 @@ export class ProcessorSocketName extends StringValueObject {
 	// Ensure the validity of the Processor Socket value
 	private ensureIsValidName(value: string): void {
 		if (this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`${value} is not a valid Processor Socket name`
-			)
+			throw new InvalidArgumentError(`${value} is not a valid Processor Socket name`)
 		}
 	}
 

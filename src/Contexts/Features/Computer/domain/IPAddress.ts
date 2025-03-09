@@ -28,9 +28,7 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 	// Private method to ensure the provided value is a valid IP address
 	private ensureIsValid(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid IP Address`
-			) // Throw an error if the value is not a valid IP address
+			throw new InvalidArgumentError(`<${value}> is not a valid IP Address`) // Throw an error if the value is not a valid IP address
 		}
 	}
 
@@ -40,9 +38,7 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 	): void {
 		if ([DeviceStatus.StatusOptions.INUSE].includes(status) && !ipAddress) {
 			// Throw an error if IP Address is null when computer status is in use
-			throw new InvalidArgumentError(
-				'IP Address is required when status is in use'
-			)
+			throw new InvalidArgumentError('IP Address is required when status is in use')
 		}
 		if (
 			[
@@ -53,9 +49,7 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 			!!ipAddress
 		) {
 			// Throw an error if IP Address is not null when computer status is in werehouse
-			throw new InvalidArgumentError(
-				'IP Address is not required when status is in use'
-			)
+			throw new InvalidArgumentError('IP Address is not required when status is in use')
 		}
 	}
 

@@ -28,8 +28,7 @@ export const CategoryDefaultData: TypeCategoryDefaultData = {
 } as const
 
 export type CategoryKeys = keyof typeof CategoryDefaultData
-export type CategoryValues =
-	(typeof CategoryDefaultData)[keyof typeof CategoryDefaultData]
+export type CategoryValues = (typeof CategoryDefaultData)[keyof typeof CategoryDefaultData]
 
 export const CategoryOptions = {
 	COMPUTER: '1',

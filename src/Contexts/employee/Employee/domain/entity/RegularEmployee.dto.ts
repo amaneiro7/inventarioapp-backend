@@ -10,12 +10,7 @@ import { type EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { type EmployeeName } from '../valueObject/EmployeeName'
 import { type EmployeeNationality } from '../valueObject/EmployeeNationality'
 import { type EmployeeTypes } from '../valueObject/EmployeeType'
-import {
-	type Employee,
-	type EmployeeDto,
-	type EmployeeParams,
-	type EmployeePrimitives
-} from './Employee.dto'
+import { type Employee, type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
 
 export type RegularEmployee = Employee & {
 	type: EmployeeTypes.REGULAR

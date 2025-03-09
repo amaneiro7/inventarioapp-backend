@@ -13,9 +13,7 @@ export class AuthRefreshTokenController implements Controller {
 			const jwtToken = req?.user as JwtPayloadUser
 			if (!jwtToken) throw new Error('Token not provided')
 
-			const refreshToken: AuthRefreshTokenUseCase = container.resolve(
-				AuthDependencies.RefreshTokenUseCase
-			)
+			const refreshToken: AuthRefreshTokenUseCase = container.resolve(AuthDependencies.RefreshTokenUseCase)
 			const { infoUser } = await refreshToken.run(jwtToken)
 
 			res.status(httpStatus.OK).send({

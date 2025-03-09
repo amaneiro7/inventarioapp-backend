@@ -5,16 +5,10 @@ import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type EmployeePrimitives,
-	type EmployeeDto
-} from '../../domain/entity/Employee.dto'
+import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeEmployeeRepository
-	extends CriteriaToSequelizeConverter
-	implements EmployeeRepository
-{
+export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
 	private readonly cacheKey: string = 'employees'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -58,9 +52,7 @@ export class SequelizeEmployeeRepository
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await EmployeeModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await EmployeeModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -77,9 +69,7 @@ export class SequelizeEmployeeRepository
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await EmployeeModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await EmployeeModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -94,13 +84,7 @@ export class SequelizeEmployeeRepository
 				include: [
 					{
 						association: 'devices',
-						include: [
-							'category',
-							'brand',
-							'model',
-							'location',
-							'computer'
-						]
+						include: ['category', 'brand', 'model', 'location', 'computer']
 					}
 				]
 			})) ?? null

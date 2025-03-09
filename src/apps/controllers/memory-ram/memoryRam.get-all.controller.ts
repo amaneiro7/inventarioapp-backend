@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class MemoryRamTypeGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: MemoryRamTypeFinderAll = container.resolve(
-				MemoryRamTypeDependencies.FinderAll
-			)
+			const getAll: MemoryRamTypeFinderAll = container.resolve(MemoryRamTypeDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

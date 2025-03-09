@@ -10,9 +10,7 @@ export class LocationFinderAll extends GetAllBaseService<LocationDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<LocationDto>> {
-		const { data, total } = await this.locationRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.locationRepository.searchAll(criteria)
 		return this.response({
 			data,
 			total,

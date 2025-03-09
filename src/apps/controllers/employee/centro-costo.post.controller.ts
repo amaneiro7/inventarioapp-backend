@@ -9,9 +9,7 @@ export class CentroCostoPostController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const create: CentroCostoCreator = container.resolve(
-				CentroCostoDependencies.Creator
-			)
+			const create: CentroCostoCreator = container.resolve(CentroCostoDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
 				message: 'Empleado creado exitosamente'

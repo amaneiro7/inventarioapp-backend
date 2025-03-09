@@ -13,14 +13,8 @@ export class Cargo {
 
 	static create(params: CargoParams): Cargo {
 		const id = CargoId.random().value
-		const Departamentos = params.departamentos.map(
-			deps => new DepartmentId(deps)
-		)
-		return new Cargo(
-			new CargoId(id),
-			new CargoName(params.name),
-			Departamentos
-		)
+		const Departamentos = params.departamentos.map(deps => new DepartmentId(deps))
+		return new Cargo(new CargoId(id), new CargoName(params.name), Departamentos)
 	}
 
 	static fromPrimitives(primitives: CargoDto): Cargo {

@@ -10,13 +10,9 @@ export abstract class ProcessorRepository {
 
 	abstract save(payload: ProcessorPrimitives): Promise<void>
 
-	abstract searchById(
-		id: Primitives<ProcessorId>
-	): Promise<ProcessorDto | null>
+	abstract searchById(id: Primitives<ProcessorId>): Promise<ProcessorDto | null>
 
-	abstract searchByNumberModel(
-		numberModel: Primitives<ProcessorNumberModel>
-	): Promise<ProcessorDto | null>
+	abstract searchByNumberModel(numberModel: Primitives<ProcessorNumberModel>): Promise<ProcessorDto | null>
 
 	abstract remove(id: Primitives<ProcessorId>): Promise<void>
 }

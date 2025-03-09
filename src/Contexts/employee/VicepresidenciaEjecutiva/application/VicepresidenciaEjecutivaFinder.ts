@@ -12,9 +12,7 @@ export class VicepresidenciaEjecutivaFinder {
 		const { id } = params
 		const vicepresidenciaEjecutivaId = new DepartmentId(id).value
 		const vicepresidenciaEjecutiva =
-			await this.vicepresidenciaEjecutivaRepository.searchById(
-				vicepresidenciaEjecutivaId
-			)
+			await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)
 
 		if (!vicepresidenciaEjecutiva) {
 			throw new DepartmentDoesNotExistError('La vicepresidenciaEjecutiva')

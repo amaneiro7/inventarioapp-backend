@@ -19,9 +19,7 @@ export class MemoryRamSlotQuantity extends NumberValueObject {
 
 	private ensureIsValidRange(value: number): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`this value <${value}> is not a valid`
-			)
+			throw new InvalidArgumentError(`this value <${value}> is not a valid`)
 		}
 	}
 
@@ -37,10 +35,7 @@ export class MemoryRamSlotQuantity extends NumberValueObject {
 			return
 		}
 
-		if (
-			params.entity.memoryRamSlotQuantityValue ===
-			params.memoryRamSlotQuantity
-		) {
+		if (params.entity.memoryRamSlotQuantityValue === params.memoryRamSlotQuantity) {
 			return
 		}
 

@@ -24,9 +24,7 @@ export class TypeOfSiteName extends StringValueObject {
 	// Ensure the validity of the name
 	private ensureIsValidName(value: string): void {
 		if (this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid type of site`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid type of site`)
 		}
 	}
 

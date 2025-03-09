@@ -4,11 +4,7 @@ import { CargoId } from '../../Cargo/domain/CargoId'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
-import {
-	type DepartamentoDto,
-	type DepartamentoParams,
-	type DepartamentoPrimitives
-} from './Departamento.dto'
+import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
 
 export class Departamento extends IDepartment {
 	constructor(
@@ -69,12 +65,8 @@ export class Departamento extends IDepartment {
 		return cargoId.map(cargo => new CargoId(cargo))
 	}
 
-	updateVicepresidenciaEjecutiva(
-		vicepresidenciaEjecutivaId: Primitives<DepartmentId>
-	): void {
-		this.vicepresidenciaEjecutivaId = new DepartmentId(
-			vicepresidenciaEjecutivaId
-		)
+	updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId: Primitives<DepartmentId>): void {
+		this.vicepresidenciaEjecutivaId = new DepartmentId(vicepresidenciaEjecutivaId)
 	}
 	updateCodCentroCosto(codCentroCosto: Primitives<CodCentroCosto>): void {
 		this.centroCostoId = new CodCentroCosto(codCentroCosto)

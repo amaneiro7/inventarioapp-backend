@@ -27,9 +27,7 @@ export class LocationName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid site name`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid site name`)
 		}
 	}
 
@@ -38,10 +36,7 @@ export class LocationName extends StringValueObject {
 	}
 
 	private isValidLength(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateNameField({

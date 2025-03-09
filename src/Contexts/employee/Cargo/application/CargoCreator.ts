@@ -11,16 +11,11 @@ export class CargoCreator {
 		private readonly cargoRepository: CargoRepository,
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>
 	) {
-		this.createCargoUseCase = new CreateCargoUseCase(
-			this.cargoRepository,
-			this.departamentoRepository
-		)
+		this.createCargoUseCase = new CreateCargoUseCase(this.cargoRepository, this.departamentoRepository)
 	}
 
 	async run({ name, departamentos }: CargoParams): Promise<void> {
-		const arraySinDuplicados: CargoParams['departamentos'] = Array.from(
-			new Set(departamentos)
-		)
+		const arraySinDuplicados: CargoParams['departamentos'] = Array.from(new Set(departamentos))
 		await this.createCargoUseCase.execute({
 			name,
 			departamentos: arraySinDuplicados

@@ -23,9 +23,7 @@ export class CentroCostoName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> no es un nombre de centro de costo valido`
-			)
+			throw new InvalidArgumentError(`<${value}> no es un nombre de centro de costo valido`)
 		}
 	}
 
@@ -34,9 +32,6 @@ export class CentroCostoName extends StringValueObject {
 	}
 
 	private isValidLength(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

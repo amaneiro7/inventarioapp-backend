@@ -8,10 +8,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -31,10 +28,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -54,10 +48,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -77,10 +68,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -100,10 +88,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -123,10 +108,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -146,10 +128,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -169,10 +148,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -192,10 +168,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',
@@ -215,10 +188,7 @@ const HP6300 = [
 		brandId: '56a07947-0a09-488b-a597-64ef3e365c32',
 		modelId: '4cb2e608-5f28-44af-af75-59cb2ca2fbab',
 		employeeId: null,
-		locationId: locations.filter(
-			location =>
-				location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1
-		)[0].id,
+		locationId: locations.filter(location => location.name === almacenName.TORREBNC5DEJULIOALMACENPISO1)[0].id,
 		observation: '',
 		computerName: null,
 		processorId: '0a787f22-2325-49a5-b7c6-8446a3abdab0',

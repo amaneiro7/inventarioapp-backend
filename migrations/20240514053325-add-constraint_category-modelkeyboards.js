@@ -42,18 +42,9 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.removeConstraint(
-			'model_keyboards',
-			'model_keyboards_category_id_fkey'
-		)
-		await queryInterface.removeConstraint(
-			'model_keyboards',
-			'model_keyboards_model_series_id_fkey'
-		)
-		await queryInterface.removeConstraint(
-			'model_keyboards',
-			'model_keyboards_input_type_id_fkey'
-		)
+		await queryInterface.removeConstraint('model_keyboards', 'model_keyboards_category_id_fkey')
+		await queryInterface.removeConstraint('model_keyboards', 'model_keyboards_model_series_id_fkey')
+		await queryInterface.removeConstraint('model_keyboards', 'model_keyboards_input_type_id_fkey')
 		return
 	}
 }

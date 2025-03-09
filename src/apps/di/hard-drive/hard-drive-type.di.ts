@@ -11,9 +11,7 @@ export enum HardDriveTypeDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		hardDriveTypeRepository: asClass(
-			SequelizeHardDriveTypeRepository
-		).singleton(),
+		hardDriveTypeRepository: asClass(SequelizeHardDriveTypeRepository).singleton(),
 		hardDriveTypeFinderAll: asClass(HardDriveTypeFinderAll),
 		hardDriveTypeGetAllController: asClass(HardDriveTypeGetAllController)
 	})

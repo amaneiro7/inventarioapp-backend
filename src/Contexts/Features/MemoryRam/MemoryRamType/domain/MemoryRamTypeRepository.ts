@@ -5,11 +5,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type MemoryRamTypeId } from './MemoryRamTypeId'
 
 export abstract class MemoryRamTypeRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<MemoryRamTypeDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<MemoryRamTypeDto>>
 
-	abstract searchById(
-		id: Primitives<MemoryRamTypeId>
-	): Promise<MemoryRamTypeDto | null>
+	abstract searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null>
 }

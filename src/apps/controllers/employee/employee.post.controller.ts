@@ -8,9 +8,7 @@ export class EmployeePostController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const create: EmployeeCreator = container.resolve(
-				EmployeeDependencies.Creator
-			)
+			const create: EmployeeCreator = container.resolve(EmployeeDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
 				message: 'Empleado creado exitosamente'

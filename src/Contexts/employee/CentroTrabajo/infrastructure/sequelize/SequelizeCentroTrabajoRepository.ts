@@ -6,18 +6,12 @@ import { type CentroTrabajoName } from '../../domain/CentroTrabajoName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { CentroTrabajoModel } from './CentroTrabajoSchema'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import {
-	type CentroTrabajoDto,
-	type CentroTrabajoPrimitives
-} from '../../domain/CentroTrabajo.dto'
+import { type CentroTrabajoDto, type CentroTrabajoPrimitives } from '../../domain/CentroTrabajo.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
-export class SequelizeCentroTrabajoRepository
-	extends CriteriaToSequelizeConverter
-	implements CentroTrabajoRepository
-{
+export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConverter implements CentroTrabajoRepository {
 	private readonly cacheKey: string = 'CentroTrabajos'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -29,8 +23,7 @@ export class SequelizeCentroTrabajoRepository
 			criteria: criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } =
-					await CentroTrabajoModel.findAndCountAll(options)
+				const { count, rows } = await CentroTrabajoModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -39,15 +32,11 @@ export class SequelizeCentroTrabajoRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<CentroTrabajoId>
-	): Promise<Nullable<CentroTrabajoDto>> {
+	async searchById(id: Primitives<CentroTrabajoId>): Promise<Nullable<CentroTrabajoDto>> {
 		return (await CentroTrabajoModel.findByPk(id)) ?? null
 	}
 
-	async searchByName(
-		name: Primitives<CentroTrabajoName>
-	): Promise<Nullable<CentroTrabajoDto>> {
+	async searchByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>> {
 		return (await CentroTrabajoModel.findOne({ where: { name } })) ?? null
 	}
 

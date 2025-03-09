@@ -25,9 +25,7 @@ export class DepartmentName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> no es un nombre de area válido`
-			)
+			throw new InvalidArgumentError(`<${value}> no es un nombre de area válido`)
 		}
 	}
 
@@ -36,10 +34,7 @@ export class DepartmentName extends StringValueObject {
 	}
 
 	private isValidLength(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateNameField({

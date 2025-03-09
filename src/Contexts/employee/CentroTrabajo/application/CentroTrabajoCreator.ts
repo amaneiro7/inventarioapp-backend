@@ -14,11 +14,7 @@ export class CentroTrabajoCreator {
 		private readonly centroCostoRepository: CentroCostoRepository
 	) {}
 
-	async run({
-		params: { id, name, centroCostoId }
-	}: {
-		params: CentroTrabajoParams
-	}): Promise<void> {
+	async run({ params: { id, name, centroCostoId } }: { params: CentroTrabajoParams }): Promise<void> {
 		await this.ensureCentroTrabajoDoesNotExist({ id })
 		await this.ensureCentroCostoDoesNotExist({ centroCostoId })
 
@@ -27,11 +23,7 @@ export class CentroTrabajoCreator {
 		await this.centroTrabajoRepository.save(centroTrabajo.toPrimitive())
 	}
 
-	private async ensureCentroTrabajoDoesNotExist({
-		id
-	}: {
-		id: Primitives<CentroTrabajoId>
-	}): Promise<void> {
+	private async ensureCentroTrabajoDoesNotExist({ id }: { id: Primitives<CentroTrabajoId> }): Promise<void> {
 		if ((await this.centroTrabajoRepository.searchById(id)) !== null) {
 			throw new CentroTrabajoAlreadyExistError()
 		}
@@ -41,10 +33,7 @@ export class CentroTrabajoCreator {
 	}: {
 		centroCostoId: Primitives<CodCentroCosto>
 	}): Promise<void> {
-		if (
-			(await this.centroCostoRepository.searchById(centroCostoId)) !==
-			null
-		) {
+		if ((await this.centroCostoRepository.searchById(centroCostoId)) !== null) {
 			throw new CentroCostoAlreadyExistError()
 		}
 	}

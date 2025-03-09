@@ -49,9 +49,7 @@ export class CreateEmployeeUseCase {
 		await this.ensureDepartamentoExist(params?.departamentoId)
 	}
 
-	private async ensureIsStillWorkingUserNameDoesNotExis(
-		userName: Primitives<EmployeeUserName>
-	) {
+	private async ensureIsStillWorkingUserNameDoesNotExis(userName: Primitives<EmployeeUserName>) {
 		const query: FiltersPrimitives[] = [
 			{
 				field: 'userName',
@@ -67,13 +65,9 @@ export class CreateEmployeeUseCase {
 		const criteria = await CreateCriteria.execute({ filters: query })
 		await this.employeeRepository.searchByQuery(criteria)
 	}
-	private async ensureEmailDoesNotExis(
-		email?: Nullable<Primitives<EmployeeEmail>>
-	) {
+	private async ensureEmailDoesNotExis(email?: Nullable<Primitives<EmployeeEmail>>) {
 		if (!email) {
-			throw new Error(
-				'Email cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Email cannot be null or undefined for non-generic employees')
 		}
 		const query: FiltersPrimitives[] = [
 			{
@@ -85,13 +79,9 @@ export class CreateEmployeeUseCase {
 		const criteria = await CreateCriteria.execute({ filters: query })
 		await this.employeeRepository.searchByQuery(criteria)
 	}
-	private async ensureEmployeeCodeDoesNotExis(
-		emloyeeCode?: Nullable<Primitives<EmployeeCode>>
-	) {
+	private async ensureEmployeeCodeDoesNotExis(emloyeeCode?: Nullable<Primitives<EmployeeCode>>) {
 		if (!emloyeeCode) {
-			throw new Error(
-				'Employee code cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Employee code cannot be null or undefined for non-generic employees')
 		}
 		const query: FiltersPrimitives[] = [
 			{
@@ -103,13 +93,9 @@ export class CreateEmployeeUseCase {
 		const criteria = await CreateCriteria.execute({ filters: query })
 		await this.employeeRepository.searchByQuery(criteria)
 	}
-	private async ensureCedulaDoesNotExis(
-		cedula?: Nullable<Primitives<EmployeeCedula>>
-	) {
+	private async ensureCedulaDoesNotExis(cedula?: Nullable<Primitives<EmployeeCedula>>) {
 		if (!cedula) {
-			throw new Error(
-				'Cedula cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Cedula cannot be null or undefined for non-generic employees')
 		}
 		const query: FiltersPrimitives[] = [
 			{
@@ -122,62 +108,39 @@ export class CreateEmployeeUseCase {
 		await this.employeeRepository.searchByQuery(criteria)
 	}
 
-	private async ensureCargoExist(
-		cargoId?: Nullable<Primitives<CargoId>>
-	): Promise<void> {
+	private async ensureCargoExist(cargoId?: Nullable<Primitives<CargoId>>): Promise<void> {
 		if (!cargoId) {
-			throw new Error(
-				'Cargo cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Cargo cannot be null or undefined for non-generic employees')
 		}
 		if ((await this.cargoRepository.searchById(cargoId)) === null) {
 			throw new CargoDoesNotExistError()
 		}
 	}
 
-	private async ensureCentroCostoExist(
-		centroCosto?: Nullable<Primitives<CodCentroCosto>>
-	): Promise<void> {
+	private async ensureCentroCostoExist(centroCosto?: Nullable<Primitives<CodCentroCosto>>): Promise<void> {
 		if (!centroCosto) {
-			throw new Error(
-				'Centro Costo cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Centro Costo cannot be null or undefined for non-generic employees')
 		}
-		if (
-			(await this.centroCostoRepository.searchById(centroCosto)) === null
-		) {
+		if ((await this.centroCostoRepository.searchById(centroCosto)) === null) {
 			throw new CentroCostoDoesNotExistError()
 		}
 	}
 
-	private async ensureLocationExist(
-		locationId?: Nullable<Primitives<EmployeeLocationId>>
-	): Promise<void> {
+	private async ensureLocationExist(locationId?: Nullable<Primitives<EmployeeLocationId>>): Promise<void> {
 		if (!locationId) {
-			throw new Error(
-				'Location cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Location cannot be null or undefined for non-generic employees')
 		}
 		if ((await this.locationRepository.searchById(locationId)) === null) {
 			throw new LocationDoesNotExistError(locationId)
 		}
 	}
 
-	private async ensureDepartamentoExist(
-		departamento?: Nullable<Primitives<DepartmentId>>
-	): Promise<void> {
+	private async ensureDepartamentoExist(departamento?: Nullable<Primitives<DepartmentId>>): Promise<void> {
 		if (!departamento) {
-			throw new Error(
-				'Deparment cannot be null or undefined for non-generic employees'
-			)
+			throw new Error('Deparment cannot be null or undefined for non-generic employees')
 		}
-		if (
-			(await this.departamentoRepository.searchById(departamento)) ===
-			null
-		) {
-			throw new DepartmentDoesNotExistError(
-				'La gerencia, coordinación o departamento'
-			)
+		if ((await this.departamentoRepository.searchById(departamento)) === null) {
+			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 		}
 	}
 }

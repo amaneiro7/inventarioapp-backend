@@ -20,10 +20,7 @@ import { type DevicePrimitives, type DeviceDto } from '../../domain/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
-export class SequelizeDeviceRepository
-	extends SequelizeCriteriaConverter
-	implements DeviceRepository
-{
+export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
 	private readonly models = sequelize.models
 	private readonly cacheKey: string = 'devices'
 	constructor(private readonly cache: CacheService) {
@@ -37,9 +34,7 @@ export class SequelizeDeviceRepository
 			criteria: criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await DeviceModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await DeviceModel.findAndCountAll(options)
 				return {
 					total: count,
 					data: rows
@@ -51,17 +46,13 @@ export class SequelizeDeviceRepository
 	async matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
 
-		const deviceOptions = new DeviceAssociation().convertFilterLocation(
-			criteria,
-			options
-		)
+		const deviceOptions = new DeviceAssociation().convertFilterLocation(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count: total, rows: data } =
-					await DeviceModel.findAndCountAll(deviceOptions)
+				const { count: total, rows: data } = await DeviceModel.findAndCountAll(deviceOptions)
 
 				return {
 					total,
@@ -154,18 +145,8 @@ export class SequelizeDeviceRepository
 	async save(payload: DevicePrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
-			const {
-				id,
-				serial,
-				activo,
-				statusId,
-				categoryId,
-				brandId,
-				modelId,
-				locationId,
-				observation,
-				employeeId
-			} = payload // Destructure the payload
+			const { id, serial, activo, statusId, categoryId, brandId, modelId, locationId, observation, employeeId } =
+				payload // Destructure the payload
 			const device = (await DeviceModel.findByPk(id)) ?? null // Find the device by its id, if it does not exist, device will be null
 			if (!device) {
 				// If the device does not exist
@@ -209,11 +190,7 @@ export class SequelizeDeviceRepository
 			}
 			if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
 				// If the device category is a computer category
-				await this.creareDeviceHardDriveIfCategoryMatches(
-					id,
-					payload,
-					t
-				) // Create a new DeviceComputer entity with the given payload
+				await this.creareDeviceHardDriveIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
 			}
 			if (MFP.isMFPCategory({ categoryId })) {
 				// If the device category is a computer category
@@ -235,15 +212,9 @@ export class SequelizeDeviceRepository
 	): Promise<void> {
 		const computer = (await this.models.DeviceComputer.findByPk(id)) ?? null
 		if (computer === null) {
-			await this.models.DeviceComputer.create(
-				{ deviceId: id, ...payload },
-				{ transaction }
-			)
+			await this.models.DeviceComputer.create({ deviceId: id, ...payload }, { transaction })
 		} else {
-			await this.models.DeviceComputer.update(
-				{ ...payload },
-				{ where: { id }, transaction }
-			)
+			await this.models.DeviceComputer.update({ ...payload }, { where: { id }, transaction })
 		}
 	}
 	private async creareDeviceHardDriveIfCategoryMatches(
@@ -251,18 +222,11 @@ export class SequelizeDeviceRepository
 		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const hardDrive =
-			(await this.models.DeviceHardDrive.findByPk(id)) ?? null
+		const hardDrive = (await this.models.DeviceHardDrive.findByPk(id)) ?? null
 		if (hardDrive === null) {
-			await this.models.DeviceHardDrive.create(
-				{ deviceId: id, ...payload },
-				{ transaction }
-			)
+			await this.models.DeviceHardDrive.create({ deviceId: id, ...payload }, { transaction })
 		} else {
-			await this.models.DeviceHardDrive.update(
-				{ ...payload },
-				{ where: { id }, transaction }
-			)
+			await this.models.DeviceHardDrive.update({ ...payload }, { where: { id }, transaction })
 		}
 	}
 	private async creareDeviceMFPIfCategoryMatches(
@@ -272,15 +236,9 @@ export class SequelizeDeviceRepository
 	): Promise<void> {
 		const mfp = (await this.models.DeviceMFP.findByPk(id)) ?? null
 		if (mfp === null) {
-			await this.models.DeviceMFP.create(
-				{ deviceId: id, ...payload },
-				{ transaction }
-			)
+			await this.models.DeviceMFP.create({ deviceId: id, ...payload }, { transaction })
 		} else {
-			await this.models.DeviceMFP.update(
-				{ ...payload },
-				{ where: { id }, transaction }
-			)
+			await this.models.DeviceMFP.update({ ...payload }, { where: { id }, transaction })
 		}
 	}
 

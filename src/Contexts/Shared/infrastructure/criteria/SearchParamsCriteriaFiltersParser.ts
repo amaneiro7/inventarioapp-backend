@@ -10,19 +10,13 @@ export interface FilterType {
 	field: string
 }
 export class SearchParamsCriteriaFiltersParser {
-	static parseFilters(
-		params: FilterType[] | undefined
-	): Filter[] | Array<Map<string, string>> {
+	static parseFilters(params: FilterType[] | undefined): Filter[] | Array<Map<string, string>> {
 		if (params === undefined) {
 			return new Array<Map<string, string>>()
 		}
 
 		return params.map(({ field, operator, value }) => {
-			return new Filter(
-				new FilterField(field),
-				FilterOperator.fromValue(operator),
-				new FilterValue(value)
-			)
+			return new Filter(new FilterField(field), FilterOperator.fromValue(operator), new FilterValue(value))
 		})
 	}
 }

@@ -17,11 +17,7 @@ import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
-import {
-	type EmployeeDto,
-	type EmployeeParams,
-	type EmployeePrimitives
-} from './Employee.dto'
+import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
 
 export class Employee {
 	constructor(
@@ -48,34 +44,18 @@ export class Employee {
 			userName: new EmployeeUserName(params.userName),
 			type: new EmployeeType(params.type),
 			name: params?.name ? new EmployeeName(params.name) : null,
-			lastName: params?.lastName
-				? new EmployeeLastName(params.lastName)
-				: null,
+			lastName: params?.lastName ? new EmployeeLastName(params.lastName) : null,
 			email: params?.email ? new EmployeeEmail(params.email) : null,
 			isStillWorking: new EmployeeIsStillWorking(params.isStillWorking),
-			employeeCode: params?.employeeCode
-				? new EmployeeCode(params.employeeCode)
-				: null,
-			nationality: params?.nationality
-				? new EmployeeNationality(params.nationality)
-				: null,
+			employeeCode: params?.employeeCode ? new EmployeeCode(params.employeeCode) : null,
+			nationality: params?.nationality ? new EmployeeNationality(params.nationality) : null,
 			cedula: params?.cedula ? new EmployeeCedula(params.cedula) : null,
-			CentroTrabajoId: params?.centroTrabajoId
-				? new CentroTrabajoId(params.centroTrabajoId)
-				: null,
-			locationId: params?.locationId
-				? new EmployeeLocationId(params.locationId)
-				: null,
-			departamentoId: params?.departamentoId
-				? new DepartmentId(params.departamentoId)
-				: null,
+			CentroTrabajoId: params?.centroTrabajoId ? new CentroTrabajoId(params.centroTrabajoId) : null,
+			locationId: params?.locationId ? new EmployeeLocationId(params.locationId) : null,
+			departamentoId: params?.departamentoId ? new DepartmentId(params.departamentoId) : null,
 			cargoId: params?.cargoId ? new CargoId(params.cargoId) : null,
-			extension: params?.extension
-				? params.extension.map(ext => new Extension(ext))
-				: [],
-			phone: params?.phone
-				? params.phone.map(phone => new PhoneNumber(phone))
-				: []
+			extension: params?.extension ? params.extension.map(ext => new Extension(ext)) : [],
+			phone: params?.phone ? params.phone.map(phone => new PhoneNumber(phone)) : []
 		}
 	}
 
@@ -205,18 +185,14 @@ export class Employee {
 	updateType(type: EmployeeTypes): void {
 		const notAllowedTypes = [EmployeeTypes.GENERIC]
 		if (notAllowedTypes.includes(type)) {
-			throw new InvalidArgumentError(
-				`Type ${type} is not allowed for update.`
-			)
+			throw new InvalidArgumentError(`Type ${type} is not allowed for update.`)
 		}
 		this.type = new EmployeeType(type)
 	}
 	updateEmail(newEmail: Primitives<EmployeeEmail>): void {
 		this.email = new EmployeeEmail(newEmail)
 	}
-	updateIsStillWorking(
-		newIsStillWorking: Primitives<EmployeeIsStillWorking>
-	): void {
+	updateIsStillWorking(newIsStillWorking: Primitives<EmployeeIsStillWorking>): void {
 		this.isStillWorking = new EmployeeIsStillWorking(newIsStillWorking)
 	}
 	updateCentroTrabajo(newCentroTrabajoId: Primitives<CentroTrabajoId>): void {

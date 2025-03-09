@@ -9,9 +9,7 @@ export class ProcessorDeleteController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const remover: ProcessorRemover = container.resolve(
-				ProcessorDependencies.Remover
-			)
+			const remover: ProcessorRemover = container.resolve(ProcessorDependencies.Remover)
 			await remover.run({ id })
 			res.status(httpStatus.OK).send({
 				message: 'Empleado eliminado exitosamente'

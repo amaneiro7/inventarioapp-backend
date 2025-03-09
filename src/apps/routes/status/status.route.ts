@@ -5,13 +5,7 @@ import { authenticate } from '../../Middleware/authenticate'
 import { StatusDependencies } from '../../di/status/status.di'
 
 export const register = async (router: Router) => {
-	const getAllController: StatusGetAllController = container.resolve(
-		StatusDependencies.GetAllController
-	)
+	const getAllController: StatusGetAllController = container.resolve(StatusDependencies.GetAllController)
 
-	router.get(
-		'/status/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/status/', authenticate, getAllController.run.bind(getAllController))
 }

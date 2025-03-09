@@ -13,9 +13,7 @@ export class DeviceSearchByCriteriaController implements Controller {
 		try {
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
-			const getByCriteria: DeviceSearchByCriteria = container.resolve(
-				DeviceDependencies.SearchByCriteria
-			)
+			const getByCriteria: DeviceSearchByCriteria = container.resolve(DeviceDependencies.SearchByCriteria)
 			const data = await getByCriteria.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

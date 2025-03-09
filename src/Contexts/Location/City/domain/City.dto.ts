@@ -9,6 +9,8 @@ export interface City {
 	name: Primitives<CityName>
 	stateId: Primitives<StateId>
 }
+
+export type CityParams = Omit<City, 'id'>
 export type CityPrimitives = City
 
 export type CityDto = City & {

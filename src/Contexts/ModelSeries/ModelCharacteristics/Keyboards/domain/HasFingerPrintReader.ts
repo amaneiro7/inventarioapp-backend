@@ -16,9 +16,7 @@ export class HasFingerPrintReader extends BooleanValueObject {
 
 	private ensureIsValid(value: boolean): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`This <${value}> is not a valid type`
-			)
+			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
 		}
 	}
 
@@ -35,10 +33,7 @@ export class HasFingerPrintReader extends BooleanValueObject {
 			return
 		}
 		// Verifica que si el actual y el nuevo valor son iguales no realice una busqueda en el repositorio
-		if (
-			params.entity.hasFingerPrintReaderValue ===
-			params.hasFingerPrintReader
-		) {
+		if (params.entity.hasFingerPrintReaderValue === params.hasFingerPrintReader) {
 			return
 		}
 		// Actualiza el campo hasFingerPrintReader de la entidad {@link ModelSeries} con el nuevo valor del lector de huella

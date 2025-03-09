@@ -4,10 +4,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type OperatingSystemArqId } from '../../domain/OperatingSystemArqID'
 import { type OperatingSystemArqName } from '../../domain/OperatingSystemArqName'
 
-export class OperatingSystemArqModel
-	extends Model<OperatingSystemArqDto>
-	implements OperatingSystemArqDto
-{
+export class OperatingSystemArqModel extends Model<OperatingSystemArqDto> implements OperatingSystemArqDto {
 	declare id: Primitives<OperatingSystemArqId>
 	declare name: Primitives<OperatingSystemArqName>
 

@@ -9,10 +9,7 @@ export class Region {
 	) {}
 
 	static fromPrimitives(primitives: RegionDto): Region {
-		return new Region(
-			new RegionId(primitives.id),
-			new RegionName(primitives.name)
-		)
+		return new Region(new RegionId(primitives.id), new RegionName(primitives.name))
 	}
 
 	toPrimitive(): RegionPrimitives {

@@ -18,18 +18,13 @@ export class DeviceDownloadExcelServiceController implements Controller {
 				limit ? Number(limit) : undefined,
 				offset ? Number(offset) : undefined
 			)
-			const downloadExcel: DeviceExcelService = container.resolve(
-				DeviceDependencies.ExcelService
-			)
+			const downloadExcel: DeviceExcelService = container.resolve(DeviceDependencies.ExcelService)
 			const buf = await downloadExcel.run(query)
 			const now = new Date()
 
 			const filename = `Reporte-Inventario${now.toLocaleDateString().replace(/[/:]/g, '-')}.xlsx`
 			res.status(httpStatus.OK)
-				.setHeader(
-					'Content-Disposition',
-					`attachment filename=${filename}`
-				)
+				.setHeader('Content-Disposition', `attachment filename=${filename}`)
 				.setHeader('Content-Type', 'application/vnd.ms-excel')
 				.send(buf)
 		} catch (error) {

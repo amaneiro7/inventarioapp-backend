@@ -17,17 +17,14 @@ export class SequelizeProcessorSocketRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<ProcessorSocketDto>> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorSocketDto>> {
 		const options = this.convert(criteria)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { rows, count } =
-					await ProcessorSocketModel.findAndCountAll(options)
+				const { rows, count } = await ProcessorSocketModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -36,9 +33,7 @@ export class SequelizeProcessorSocketRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<ProcessorSocketId>
-	): Promise<ProcessorSocketDto | null> {
+	async searchById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null> {
 		return (await ProcessorSocketModel.findByPk(id)) ?? null
 	}
 }

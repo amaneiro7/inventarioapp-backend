@@ -18,15 +18,7 @@ export class UserUpdater {
 		private readonly roleRepository: RoleRepository
 	) {}
 
-	async run({
-		user,
-		id,
-		payload
-	}: {
-		user?: JwtPayloadUser
-		id: string
-		payload: Partial<Payload>
-	}): Promise<void> {
+	async run({ user, id, payload }: { user?: JwtPayloadUser; id: string; payload: Partial<Payload> }): Promise<void> {
 		// se valida que el usuario que esta realizando esta operacion tiene privilegios
 		isSuperAdmin({ user })
 

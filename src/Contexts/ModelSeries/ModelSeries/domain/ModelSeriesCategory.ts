@@ -40,9 +40,7 @@ export class ModelSeriesCategory extends CategoryId {
 		repository: CategoryRepository
 		categoryId: Primitives<CategoryId>
 	}): Promise<void> {
-		const isCategoryExist = await params.repository.searchById(
-			params.categoryId
-		)
+		const isCategoryExist = await params.repository.searchById(params.categoryId)
 		if (!isCategoryExist) {
 			throw new Error('Category does not exist')
 		}

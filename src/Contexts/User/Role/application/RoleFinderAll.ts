@@ -7,9 +7,7 @@ export class RoleFinderAll {
 
 	async run(): Promise<RolePrimitives[]> {
 		const data = await this.roleRepository.searchAll()
-		const dataWithoutAdmin = data.filter(
-			elem => elem.id !== RoleId.Options.ADMIN
-		)
+		const dataWithoutAdmin = data.filter(elem => elem.id !== RoleId.Options.ADMIN)
 		return dataWithoutAdmin
 	}
 }

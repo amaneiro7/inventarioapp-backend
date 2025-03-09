@@ -4,10 +4,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type HardDriveCapacityDto } from '../../domain/HardDriveCapacity.dto'
 import { type HardDriveCapacityValue } from '../../domain/HardDriveCapacityValue'
 
-export class HardDriveCapacityModel
-	extends Model<HardDriveCapacityDto>
-	implements HardDriveCapacityDto
-{
+export class HardDriveCapacityModel extends Model<HardDriveCapacityDto> implements HardDriveCapacityDto {
 	declare id: Primitives<HardDriveCapacityId>
 	declare name: Primitives<HardDriveCapacityValue>
 

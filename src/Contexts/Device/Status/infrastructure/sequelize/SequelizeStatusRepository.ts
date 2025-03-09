@@ -9,10 +9,7 @@ import { type StatusDto } from '../../domain/Status.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
-export class SequelizeStatusRepository
-	extends CriteriaToSequelizeConverter
-	implements StatusRepository
-{
+export class SequelizeStatusRepository extends CriteriaToSequelizeConverter implements StatusRepository {
 	private readonly cacheKey: string = 'status'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -24,9 +21,7 @@ export class SequelizeStatusRepository
 			cacheKey: this.cacheKey,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await StatusModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await StatusModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count

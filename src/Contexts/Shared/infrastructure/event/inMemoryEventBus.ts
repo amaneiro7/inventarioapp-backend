@@ -28,9 +28,7 @@ export class InMemoryEventBus implements EventBus {
 		})
 	}
 
-	private registerSubscribers(
-		subscribers: Array<DomainEventSubscriber<DomainEvent>>
-	): void {
+	private registerSubscribers(subscribers: Array<DomainEventSubscriber<DomainEvent>>): void {
 		subscribers.forEach(subscriber => {
 			subscriber.subscribedTo().forEach(event => {
 				this.subscribe(event.eventName, subscriber)
@@ -38,10 +36,7 @@ export class InMemoryEventBus implements EventBus {
 		})
 	}
 
-	private subscribe(
-		eventName: string,
-		subscriber: DomainEventSubscriber<DomainEvent>
-	): void {
+	private subscribe(eventName: string, subscriber: DomainEventSubscriber<DomainEvent>): void {
 		const currentSubscriptions = this.subscriptions.get(eventName)
 		const subscription = subscriber.on.bind(subscriber)
 

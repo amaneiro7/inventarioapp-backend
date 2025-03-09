@@ -4,18 +4,12 @@ import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import {
-	type ProcessorDto,
-	type ProcessorPrimitives
-} from '../../domain/Processor.dto'
+import { type ProcessorDto, type ProcessorPrimitives } from '../../domain/Processor.dto'
 import { type ProcessorNumberModel } from '../../domain/ProcessorNumberModel'
 import { type ProcessorRepository } from '../../domain/ProcessorRepository'
 import { ProcessorModel } from './ProcessorSchema'
 
-export class SequelizeProcessorRepository
-	extends CriteriaToSequelizeConverter
-	implements ProcessorRepository
-{
+export class SequelizeProcessorRepository extends CriteriaToSequelizeConverter implements ProcessorRepository {
 	private readonly cacheKey: string = 'processors'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -27,9 +21,7 @@ export class SequelizeProcessorRepository
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await ProcessorModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await ProcessorModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -42,12 +34,8 @@ export class SequelizeProcessorRepository
 		return (await ProcessorModel.findByPk(id)) ?? null
 	}
 
-	async searchByNumberModel(
-		numberModel: Primitives<ProcessorNumberModel>
-	): Promise<ProcessorDto | null> {
-		return (
-			(await ProcessorModel.findOne({ where: { numberModel } })) ?? null
-		)
+	async searchByNumberModel(numberModel: Primitives<ProcessorNumberModel>): Promise<ProcessorDto | null> {
+		return (await ProcessorModel.findOne({ where: { numberModel } })) ?? null
 	}
 
 	async save(payload: ProcessorPrimitives): Promise<void> {

@@ -4,10 +4,7 @@ import { type MainCategoryDto } from '../../domain/MainCategory.dto'
 import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryName } from '../../domain/MainCategoryName'
 
-export class MainCategoryModel
-	extends Model<MainCategoryDto>
-	implements MainCategoryDto
-{
+export class MainCategoryModel extends Model<MainCategoryDto> implements MainCategoryDto {
 	declare id: Primitives<MainCategoryId>
 	declare name: Primitives<MainCategoryName>
 

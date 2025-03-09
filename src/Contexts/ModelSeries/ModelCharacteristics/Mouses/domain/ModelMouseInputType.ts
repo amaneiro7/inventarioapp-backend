@@ -29,9 +29,7 @@ export class ModelMouseInputType extends InputTypeId {
 		repository: InputTypeRepository
 		inputTypeId: Primitives<InputTypeId>
 	}): Promise<void> {
-		const isInputTypeExist = await params.repository.searchById(
-			params.inputTypeId
-		)
+		const isInputTypeExist = await params.repository.searchById(params.inputTypeId)
 		if (!isInputTypeExist) {
 			throw new Error('InputType does not exist')
 		}

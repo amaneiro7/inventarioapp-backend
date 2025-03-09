@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class CentroTrabajoGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: CentroTrabajoFinderAll = container.resolve(
-				CentroTrabajoDependencies.FinderAll
-			)
+			const getAll: CentroTrabajoFinderAll = container.resolve(CentroTrabajoDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

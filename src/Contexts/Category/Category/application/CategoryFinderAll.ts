@@ -10,9 +10,7 @@ export class CategoriesFinderAll extends GetAllBaseService<CategoryDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<CategoryDto>> {
-		const { data, total } = await this.categoryRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.categoryRepository.searchAll(criteria)
 
 		return this.response({
 			data,

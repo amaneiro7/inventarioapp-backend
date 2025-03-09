@@ -23,38 +23,25 @@ export class DeviceActivo extends AcceptedNullValueObject<string> {
 
 	private ensureIsValidActivo(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> ${this.errors.join(' ')}`
-			)
+			throw new InvalidArgumentError(`<${value}> ${this.errors.join(' ')}`)
 		}
 	}
 
 	private isValid(name: string | null): boolean {
 		if (name === null) return true
-		const isHasNotSpecialCharacterOnlyGuiones =
-			this.notSpecialCharacterOnlyGuiones.test(name)
+		const isHasNotSpecialCharacterOnlyGuiones = this.notSpecialCharacterOnlyGuiones.test(name)
 		if (!isHasNotSpecialCharacterOnlyGuiones) {
-			this.errors.push(
-				`${name}: El Activo no puede contener caracteres especiales`
-			)
+			this.errors.push(`${name}: El Activo no puede contener caracteres especiales`)
 		}
 		const isNotHasLowerCharacter = this.notLowerCase.test(name)
 		if (!isNotHasLowerCharacter) {
 			this.errors.push('El Activo debe estar en mayúsculas')
 		}
-		const isNameValidLength =
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
+		const isNameValidLength = name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 		if (!isNameValidLength) {
-			this.errors.push(
-				`El Activo debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`
-			)
+			this.errors.push(`El Activo debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`)
 		}
-		return (
-			isHasNotSpecialCharacterOnlyGuiones &&
-			isNotHasLowerCharacter &&
-			isNameValidLength
-		)
+		return isHasNotSpecialCharacterOnlyGuiones && isNotHasLowerCharacter && isNameValidLength
 	}
 
 	static async updateActivoField({
@@ -92,9 +79,7 @@ export class DeviceActivo extends AcceptedNullValueObject<string> {
 			return
 		}
 		// Searches for a device with the given activo in the database
-		const deviceWithActivo = await repository.searchByActivo(
-			new DeviceActivo(activo).toString()
-		)
+		const deviceWithActivo = await repository.searchByActivo(new DeviceActivo(activo).toString())
 		// If a device with the given activo exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given activo
 		if (deviceWithActivo !== null) {

@@ -7,14 +7,8 @@ import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { CartridgeModel } from './CartridgeModel'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-import {
-	CategoryDefaultData,
-	type CategoryValues
-} from '../../../../Category/Category/domain/CategoryDefaultData'
-import {
-	type PrinteModelsParams,
-	type PrinteModelsPrimitives
-} from './ModelPrinters.dto'
+import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+import { type PrinteModelsParams, type PrinteModelsPrimitives } from './ModelPrinters.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 
 export class ModelPrinters extends ModelSeries {
@@ -31,9 +25,7 @@ export class ModelPrinters extends ModelSeries {
 
 	static create(params: PrinteModelsParams): ModelPrinters {
 		if (!this.isPrinterCategory({ categoryId: params.categoryId })) {
-			throw new Error(
-				'Invalid category for printer model The category must be "printer"'
-			)
+			throw new Error('Invalid category for printer model The category must be "printer"')
 		}
 		const id = ModelSeriesId.random().value
 		return new ModelPrinters(
@@ -46,18 +38,9 @@ export class ModelPrinters extends ModelSeries {
 		)
 	}
 
-	public static isPrinterCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = [
-			'Impresoras Laser',
-			'Impresoras Tinta'
-		]
-		return AcceptedComputerCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+	public static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		const AcceptedComputerCategories: CategoryValues[] = ['Impresoras Laser', 'Impresoras Tinta']
+		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ModelPrinters {

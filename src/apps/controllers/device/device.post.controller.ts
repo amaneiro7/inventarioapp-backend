@@ -11,9 +11,7 @@ export class DevicePostController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const params = req.body
-			const create: DeviceCreator = container.resolve(
-				DeviceDependencies.Creator
-			)
+			const create: DeviceCreator = container.resolve(DeviceDependencies.Creator)
 			await create.run({ params, user })
 			res.status(httpStatus.CREATED).send({
 				message: 'Dispositivo creado exitosamente'

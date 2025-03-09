@@ -10,9 +10,5 @@ export const register = async (router: Router) => {
 		OperatingSystemDependencies.GetAllController
 	)
 
-	router.get(
-		'/operatingsystems/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/operatingsystems/', authenticate, getAllController.run.bind(getAllController))
 }

@@ -2,11 +2,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { CentroTrabajoName } from './CentroTrabajoName'
 import { CentroTrabajoId } from './CentroTrabajoId'
-import {
-	type CentroTrabajoDto,
-	type CentroTrabajoParams,
-	type CentroTrabajoPrimitives
-} from './CentroTrabajo.dto'
+import { type CentroTrabajoDto, type CentroTrabajoParams, type CentroTrabajoPrimitives } from './CentroTrabajo.dto'
 
 export class CentroTrabajo {
 	constructor(
@@ -15,11 +11,7 @@ export class CentroTrabajo {
 		private centroCostoId: CodCentroCosto
 	) {}
 
-	static create({
-		name,
-		id,
-		centroCostoId
-	}: CentroTrabajoParams): CentroTrabajo {
+	static create({ name, id, centroCostoId }: CentroTrabajoParams): CentroTrabajo {
 		return new CentroTrabajo(
 			new CentroTrabajoId(id),
 			new CentroTrabajoName(name),

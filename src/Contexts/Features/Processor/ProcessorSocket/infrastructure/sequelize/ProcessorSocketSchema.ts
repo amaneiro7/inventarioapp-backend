@@ -4,10 +4,7 @@ import { type ProcessorSocketId } from '../../domain/ProcessorSocketId'
 import { type ProcessorSocketName } from '../../domain/ProcessorSocketName'
 import { type ProcessorSocketDto } from '../../domain/ProcessorSocket.dto'
 
-export class ProcessorSocketModel
-	extends Model<ProcessorSocketDto>
-	implements ProcessorSocketDto
-{
+export class ProcessorSocketModel extends Model<ProcessorSocketDto> implements ProcessorSocketDto {
 	declare id: Primitives<ProcessorSocketId>
 	declare name: Primitives<ProcessorSocketName>
 

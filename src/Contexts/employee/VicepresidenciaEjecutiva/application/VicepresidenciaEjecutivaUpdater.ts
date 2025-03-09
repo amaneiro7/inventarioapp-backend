@@ -15,26 +15,17 @@ export class VicepresidenciaEjecutivaUpdater {
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	) {
-		this.updateVicepresidenciaEjecutivaUseCase =
-			new UpdateVicepresidenciaEjecutivaUseCase(
-				this.vicepresidenciaEjecutivaRepository,
-				this.directivaRepository
-			)
+		this.updateVicepresidenciaEjecutivaUseCase = new UpdateVicepresidenciaEjecutivaUseCase(
+			this.vicepresidenciaEjecutivaRepository,
+			this.directivaRepository
+		)
 	}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<VicepresidenciaEjecutivaParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: string; params: Partial<VicepresidenciaEjecutivaParams> }): Promise<void> {
 		const { name, directivaId } = params
 		const vpeId = new DepartmentId(id)
 
-		const vpe = await this.vicepresidenciaEjecutivaRepository.searchById(
-			vpeId.value
-		)
+		const vpe = await this.vicepresidenciaEjecutivaRepository.searchById(vpeId.value)
 		if (!vpe) {
 			throw new DepartmentDoesNotExistError('La vicepresidenciaEjecutiva')
 		}
@@ -46,8 +37,6 @@ export class VicepresidenciaEjecutivaUpdater {
 			entity: vpeEntity
 		})
 
-		await this.vicepresidenciaEjecutivaRepository.save(
-			vpeEntity.toPrimitive()
-		)
+		await this.vicepresidenciaEjecutivaRepository.save(vpeEntity.toPrimitive())
 	}
 }

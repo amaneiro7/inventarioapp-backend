@@ -14,24 +14,15 @@ import { type DepartamentoModel } from '../../../Departamento/infrastructure/seq
 import { type CargoDto } from '../../domain/Cargo.dto'
 import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 
-export class CargoModel
-	extends Model<Omit<CargoDto, 'departamentos'>>
-	implements CargoDto
-{
+export class CargoModel extends Model<Omit<CargoDto, 'departamentos'>> implements CargoDto {
 	declare id: Primitives<CargoId>
 	declare name: Primitives<CargoName>
 	declare departamentos: DepartamentoDto[]
 
 	// Métodos de asociación
 	public getDeparments!: BelongsToManyGetAssociationsMixin<DepartamentoModel>
-	public addDeparments!: BelongsToManyAddAssociationsMixin<
-		DepartamentoModel,
-		Primitives<DepartmentId>
-	>
-	public setDeparments!: BelongsToManySetAssociationsMixin<
-		DepartamentoModel,
-		Primitives<DepartmentId>
-	>
+	public addDeparments!: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
+	public setDeparments!: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsToMany(models.Departamento, {

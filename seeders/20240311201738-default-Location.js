@@ -1,10 +1,6 @@
 'use strict'
 
-const {
-	siteMCBOlocation,
-	agenciasSite,
-	almacenes
-} = require('./location/locations')
+const { siteMCBOlocation, agenciasSite, almacenes } = require('./location/locations')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

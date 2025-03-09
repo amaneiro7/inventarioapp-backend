@@ -20,5 +20,4 @@ export const CategoryDefault = {
 	MIC: 'Micrófono'
 } as const
 
-export type CategoryDefaultValues =
-	(typeof CategoryDefault)[keyof typeof CategoryDefault]
+export type CategoryDefaultValues = (typeof CategoryDefault)[keyof typeof CategoryDefault]

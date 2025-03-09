@@ -10,9 +10,7 @@ export class UserGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const user = req.user as JwtPayloadUser
-			const getAll: UserFinderAll = container.resolve(
-				UserDependencies.FinderAll
-			)
+			const getAll: UserFinderAll = container.resolve(UserDependencies.FinderAll)
 			const data = await getAll.run({ user })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

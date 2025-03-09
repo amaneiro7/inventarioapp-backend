@@ -1,8 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import {
-	type HardDriveTypeDto,
-	type HardDriveTypePrimitives
-} from './HardDriveType.dto'
+import { type HardDriveTypeDto, type HardDriveTypePrimitives } from './HardDriveType.dto'
 import { HardDriveTypeId } from './HardDriveTypeId'
 import { HardDriveTypeName } from './HardDriveTypeName'
 
@@ -13,10 +10,7 @@ export class HardDriveType {
 	) {}
 
 	static fromPrimitives(primitives: HardDriveTypeDto): HardDriveType {
-		return new HardDriveType(
-			new HardDriveTypeId(primitives.id),
-			new HardDriveTypeName(primitives.name)
-		)
+		return new HardDriveType(new HardDriveTypeId(primitives.id), new HardDriveTypeName(primitives.name))
 	}
 
 	toPrimitive(): HardDriveTypePrimitives {

@@ -4,10 +4,7 @@ import { type HardDriveTypeName } from '../../domain/HardDriveTypeName'
 import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
 import { type HardDriveTypeDto } from '../../domain/HardDriveType.dto'
 
-export class HardDriveTypeModel
-	extends Model<HardDriveTypeDto>
-	implements HardDriveTypeDto
-{
+export class HardDriveTypeModel extends Model<HardDriveTypeDto> implements HardDriveTypeDto {
 	declare id: Primitives<HardDriveTypeId>
 	declare name: Primitives<HardDriveTypeName>
 

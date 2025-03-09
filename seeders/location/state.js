@@ -23,9 +23,7 @@ const states = [
 	{
 		id: '5',
 		name: 'Barinas',
-		regionId: regions.filter(
-			region => region.name === 'Centro Occidente'
-		)[0].id
+		regionId: regions.filter(region => region.name === 'Centro Occidente')[0].id
 	},
 	{
 		id: '6',
@@ -65,9 +63,7 @@ const states = [
 	{
 		id: '13',
 		name: 'Lara',
-		regionId: regions.filter(
-			region => region.name === 'Centro Occidente'
-		)[0].id
+		regionId: regions.filter(region => region.name === 'Centro Occidente')[0].id
 	},
 	{
 		id: '14',
@@ -92,9 +88,7 @@ const states = [
 	{
 		id: '18',
 		name: 'Portuguesa',
-		regionId: regions.filter(
-			region => region.name === 'Centro Occidente'
-		)[0].id
+		regionId: regions.filter(region => region.name === 'Centro Occidente')[0].id
 	},
 	{
 		id: '19',
@@ -119,9 +113,7 @@ const states = [
 	{
 		id: '23',
 		name: 'Yaracuy',
-		regionId: regions.filter(
-			region => region.name === 'Centro Occidente'
-		)[0].id
+		regionId: regions.filter(region => region.name === 'Centro Occidente')[0].id
 	},
 	{
 		id: '24',

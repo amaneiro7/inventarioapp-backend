@@ -18,10 +18,7 @@ export class MainCategory {
 	) {}
 
 	static fromPrimitives(primitives: MainCategoryPrimitives): MainCategory {
-		return new MainCategory(
-			new MainCategoryId(primitives.id),
-			new MainCategoryName(primitives.name)
-		)
+		return new MainCategory(new MainCategoryId(primitives.id), new MainCategoryName(primitives.name))
 	}
 
 	toPrimitive(): MainCategoryPrimitives {

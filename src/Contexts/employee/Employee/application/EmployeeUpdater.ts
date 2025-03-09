@@ -29,13 +29,7 @@ export class EmployeeUpdater {
 		)
 	}
 
-	async run({
-		id,
-		params
-	}: {
-		id: Primitives<EmployeeId>
-		params: Partial<EmployeeParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: Primitives<EmployeeId>; params: Partial<EmployeeParams> }): Promise<void> {
 		const employeeId = new EmployeeId(id).value
 		const employee = await this.employeeRepository.searchById(employeeId)
 

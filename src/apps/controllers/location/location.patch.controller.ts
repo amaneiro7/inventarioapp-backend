@@ -10,9 +10,7 @@ export class LocationPatchController implements Controller {
 		try {
 			const params = req.body
 			const { id } = req.params
-			const update: LocationUpdater = container.resolve(
-				LocationDependencies.Updater
-			)
+			const update: LocationUpdater = container.resolve(LocationDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Ubicación actualizada exitosamente'

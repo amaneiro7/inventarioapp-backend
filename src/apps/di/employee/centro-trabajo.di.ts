@@ -23,9 +23,7 @@ export enum CentroTrabajoDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		centroTrabajoRepository: asClass(
-			SequelizeCentroTrabajoRepository
-		).singleton(),
+		centroTrabajoRepository: asClass(SequelizeCentroTrabajoRepository).singleton(),
 		centroTrabajoFinderAll: asClass(CentroTrabajoFinderAll),
 		centroTrabajoFinder: asClass(CentroTrabajoFinder),
 		centroTrabajoCreator: asClass(CentroTrabajoCreator),

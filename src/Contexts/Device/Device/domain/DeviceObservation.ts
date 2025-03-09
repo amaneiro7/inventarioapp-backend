@@ -19,18 +19,13 @@ export class DeviceObservation extends AcceptedNullValueObject<string> {
 
 	private ensureIsValidActivo(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> exceeded the maximum length`
-			)
+			throw new InvalidArgumentError(`<${value}> exceeded the maximum length`)
 		}
 	}
 
 	private isValid(name: string | null): boolean {
 		if (name === null) return true
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	// TODO cambiar que observation no acepte null pero si string vacios

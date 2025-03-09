@@ -7,13 +7,7 @@ import { type ProcessorRepository } from '../domain/ProcessorRepository'
 export class ProcessorCreator {
 	constructor(private readonly processorRepository: ProcessorRepository) {}
 
-	async run({
-		productCollection,
-		numberModel,
-		cores,
-		threads,
-		frequency
-	}: ProcessorParams): Promise<void> {
+	async run({ productCollection, numberModel, cores, threads, frequency }: ProcessorParams): Promise<void> {
 		const processor = Processor.create({
 			productCollection,
 			numberModel,
@@ -26,13 +20,9 @@ export class ProcessorCreator {
 		await this.processorRepository.save(processor.toPrimitive())
 	}
 
-	private async ensureProcessorNameDoesNotExist(
-		numberModel: string
-	): Promise<void> {
+	private async ensureProcessorNameDoesNotExist(numberModel: string): Promise<void> {
 		if (
-			(await this.processorRepository.searchByNumberModel(
-				new ProcessorNumberModel(numberModel).value
-			)) !== null
+			(await this.processorRepository.searchByNumberModel(new ProcessorNumberModel(numberModel).value)) !== null
 		) {
 			throw new ProcessorAlreadyExistError(numberModel)
 		}

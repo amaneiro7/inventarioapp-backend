@@ -5,18 +5,12 @@ import { CentroTrabajoDoesNotExistError } from '../domain/CentroTrabajoDoesNotEx
 import { type CentroTrabajoDto } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoFinder {
-	constructor(
-		private readonly centroTrabajoRepository: CentroTrabajoRepository
-	) {}
+	constructor(private readonly centroTrabajoRepository: CentroTrabajoRepository) {}
 
-	async run(params: {
-		id: Primitives<CentroTrabajoId>
-	}): Promise<CentroTrabajoDto> {
+	async run(params: { id: Primitives<CentroTrabajoId> }): Promise<CentroTrabajoDto> {
 		const { id } = params
 		const centroTrabajoId = new CentroTrabajoId(id)
-		const centroTrabajo = await this.centroTrabajoRepository.searchById(
-			centroTrabajoId.value
-		)
+		const centroTrabajo = await this.centroTrabajoRepository.searchById(centroTrabajoId.value)
 
 		if (!centroTrabajo) {
 			throw new CentroTrabajoDoesNotExistError()

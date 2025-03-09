@@ -16,9 +16,7 @@ export class MonitorHasHDMI extends BooleanValueObject {
 
 	private ensureIsValid(value: boolean): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`This <${value}> is not a valid type`
-			)
+			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
 		}
 	}
 
@@ -26,10 +24,7 @@ export class MonitorHasHDMI extends BooleanValueObject {
 		return typeof value === 'boolean'
 	}
 
-	static async updateDVIField(params: {
-		hasHDMI: Primitives<MonitorHasHDMI>
-		entity: MonitorModels
-	}): Promise<void> {
+	static async updateDVIField(params: { hasHDMI: Primitives<MonitorHasHDMI>; entity: MonitorModels }): Promise<void> {
 		if (params.hasHDMI === undefined) {
 			return
 		}

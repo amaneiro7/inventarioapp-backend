@@ -11,11 +11,7 @@ import { CategoryValues } from '../../../../../Category/Category/domain/Category
 interface DeviceHardDriveCreationAttributes
 	extends Pick<
 		DeviceHardDrivePrimitives,
-		| 'id'
-		| 'categoryId'
-		| 'health'
-		| 'hardDriveCapacityId'
-		| 'hardDriveTypeId'
+		'id' | 'categoryId' | 'health' | 'hardDriveCapacityId' | 'hardDriveTypeId'
 	> {
 	deviceId: Primitives<DeviceId>
 }

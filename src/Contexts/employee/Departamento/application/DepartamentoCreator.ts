@@ -4,10 +4,7 @@ import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCosto
 import { CreateDepartamentoUseCase } from '../domain/CreateDepartmentoUseCase'
 import { Departamento } from '../domain/Departamento'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import {
-	type DepartamentoDto,
-	type DepartamentoParams
-} from '../domain/Departamento.dto'
+import { type DepartamentoDto, type DepartamentoParams } from '../domain/Departamento.dto'
 
 export class DepartamentoCreator {
 	private readonly createDepartamentoUseCase: CreateDepartamentoUseCase
@@ -25,12 +22,7 @@ export class DepartamentoCreator {
 		)
 	}
 
-	async run({
-		name,
-		vicepresidenciaEjecutivaId,
-		centroCostoId,
-		cargos
-	}: DepartamentoParams): Promise<void> {
+	async run({ name, vicepresidenciaEjecutivaId, centroCostoId, cargos }: DepartamentoParams): Promise<void> {
 		const arraySinDuplicados = Array.from(new Set(cargos))
 
 		await this.createDepartamentoUseCase.execute({

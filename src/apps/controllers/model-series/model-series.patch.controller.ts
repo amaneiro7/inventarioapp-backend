@@ -10,9 +10,7 @@ export class ModelSeriesPatchController implements Controller {
 		try {
 			const params = req.body
 			const { id } = req.params
-			const update: ModelSeriesUpdater = container.resolve(
-				ModelSeriesDependencies.Updater
-			)
+			const update: ModelSeriesUpdater = container.resolve(ModelSeriesDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Modelo actualizado exitosamente'

@@ -17,17 +17,14 @@ export class SequelizeOperatingSystemArqRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<OperatingSystemArqDto>> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<OperatingSystemArqDto>> {
 		const options = this.convert(criteria)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } =
-					await OperatingSystemArqModel.findAndCountAll(options)
+				const { count, rows } = await OperatingSystemArqModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count
@@ -36,9 +33,7 @@ export class SequelizeOperatingSystemArqRepository
 		})
 	}
 
-	async searchById(
-		id: Primitives<OperatingSystemArqId>
-	): Promise<OperatingSystemArqDto | null> {
+	async searchById(id: Primitives<OperatingSystemArqId>): Promise<OperatingSystemArqDto | null> {
 		return (await OperatingSystemArqModel.findByPk(id)) ?? null
 	}
 }

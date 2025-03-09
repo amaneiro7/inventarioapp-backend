@@ -5,11 +5,7 @@ import { type HardDriveCapacityDto } from './HardDriveCapacity.dto'
 import { type HardDriveCapacityId } from './HardDriveCapacityId'
 
 export abstract class HardDriveCapacityRepository {
-	abstract searchAll(
-		criteria: Criteria
-	): Promise<ResponseDB<HardDriveCapacityDto>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<HardDriveCapacityDto>>
 
-	abstract searchById(
-		id: Primitives<HardDriveCapacityId>
-	): Promise<HardDriveCapacityDto | null>
+	abstract searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null>
 }

@@ -9,9 +9,7 @@ import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructur
 export class ProcessorGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: ProcessorsFinderAll = container.resolve(
-				ProcessorDependencies.FinderAll
-			)
+			const getAll: ProcessorsFinderAll = container.resolve(ProcessorDependencies.FinderAll)
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 

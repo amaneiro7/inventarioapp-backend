@@ -22,17 +22,12 @@ export class ModelSeriesName extends StringValueObject {
 
 	private ensureIsValid(value: Primitives<ModelSeriesName>): void {
 		if (this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid model series name`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid model series name`)
 		}
 	}
 
 	private isValid(name: Primitives<ModelSeriesName>): boolean {
-		return (
-			name.length <= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length <= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateNameField({

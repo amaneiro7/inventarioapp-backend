@@ -59,33 +59,22 @@ export class UpdateCargoUseCase {
 		const currentDepartamentoIds = entity.departamentosValue
 
 		// Se crea una nueva lista con los departamentos nuevos, que no estan en la lista actual
-		const newDepartamentos = this.newDepartamentosToAdd(
-			currentDepartamentoIds,
-			arraySinDuplicados
-		)
+		const newDepartamentos = this.newDepartamentosToAdd(currentDepartamentoIds, arraySinDuplicados)
 
 		// Si la lista es 0, no hay cargos nuevos
 		if (newDepartamentos.length === 0) return
 
 		// Se verifica que cada departamento exista
 		for (const departmentId of newDepartamentos) {
-			if (
-				(await this.departamentoRepository.searchById(departmentId)) ===
-				null
-			) {
-				throw new DepartmentDoesNotExistError(
-					'La gerencia, coordinación o departamento'
-				)
+			if ((await this.departamentoRepository.searchById(departmentId)) === null) {
+				throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 			}
 		}
 		entity.updateDepartamentos(departamentos)
 	}
 
 	// Funcion para filtrar solo los cargos nuevos que no estan en la lista actual
-	private newDepartamentosToAdd(
-		currentList: string[],
-		newList: string[]
-	): string[] {
+	private newDepartamentosToAdd(currentList: string[], newList: string[]): string[] {
 		return newList.filter(list => !currentList.includes(list))
 	}
 }

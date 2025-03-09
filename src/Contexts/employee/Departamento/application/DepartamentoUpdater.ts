@@ -5,10 +5,7 @@ import { UpdateDepartamentoUseCase } from '../domain/UpdateDepartmentoUseCase'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
-import {
-	type DepartamentoParams,
-	type DepartamentoDto
-} from '../domain/Departamento.dto'
+import { type DepartamentoParams, type DepartamentoDto } from '../domain/Departamento.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class DepartamentoUpdater {
@@ -27,24 +24,13 @@ export class DepartamentoUpdater {
 		)
 	}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<DepartamentoParams>
-	}): Promise<void> {
-		const { name, cargos, vicepresidenciaEjecutivaId, centroCostoId } =
-			params
+	async run({ id, params }: { id: string; params: Partial<DepartamentoParams> }): Promise<void> {
+		const { name, cargos, vicepresidenciaEjecutivaId, centroCostoId } = params
 		const departamentoId = new DepartmentId(id)
 
-		const departamento = await this.departamentoRepository.searchById(
-			departamentoId.value
-		)
+		const departamento = await this.departamentoRepository.searchById(departamentoId.value)
 		if (!departamento) {
-			throw new DepartmentDoesNotExistError(
-				'La gerencia, coordinación o departamento'
-			)
+			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 		}
 
 		const departamentoEntity = Departamento.fromPrimitives(departamento)

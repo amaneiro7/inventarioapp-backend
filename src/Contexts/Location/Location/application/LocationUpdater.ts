@@ -18,13 +18,7 @@ export class LocationUpdater {
 		private readonly siteRepository: SiteRepository
 	) {}
 
-	async run({
-		id,
-		params
-	}: {
-		id: Primitives<LocationId>
-		params: Partial<LocationParams>
-	}): Promise<void> {
+	async run({ id, params }: { id: Primitives<LocationId>; params: Partial<LocationParams> }): Promise<void> {
 		const locationId = new LocationId(id).value
 		const location = await this.locationRepository.searchById(locationId)
 		if (location === null) {

@@ -5,23 +5,15 @@ import { MemoryRamCapacity } from '../../MemoryRam/MemoryRamCapacity/MemoryRamCa
 import { type DeviceComputer } from './Computer'
 
 export class ComputerMemoryRamCapacity extends MemoryRamCapacity {
-	constructor(
-		value: Primitives<ComputerMemoryRamCapacity>,
-		status: Primitives<DeviceStatus>
-	) {
+	constructor(value: Primitives<ComputerMemoryRamCapacity>, status: Primitives<DeviceStatus>) {
 		super(value)
 
 		this.deviceIsInUse(value, status)
 	}
 
-	private deviceIsInUse(
-		memoryRam: Primitives<ComputerMemoryRamCapacity>,
-		status: Primitives<DeviceStatus>
-	): void {
+	private deviceIsInUse(memoryRam: Primitives<ComputerMemoryRamCapacity>, status: Primitives<DeviceStatus>): void {
 		if (status === DeviceStatus.StatusOptions.INUSE && memoryRam === 0) {
-			throw new InvalidArgumentError(
-				'Memory Ram cannot be 0 when computer is in use'
-			)
+			throw new InvalidArgumentError('Memory Ram cannot be 0 when computer is in use')
 		}
 	}
 

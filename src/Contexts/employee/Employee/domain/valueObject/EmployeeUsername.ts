@@ -19,9 +19,7 @@ export class EmployeeUserName extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid userName ${this.errors.join(' ')}`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid userName ${this.errors.join(' ')}`)
 		}
 	}
 
@@ -30,9 +28,7 @@ export class EmployeeUserName extends StringValueObject {
 		if (!isNotHasSpecialCharacters) {
 			this.errors.push('Username should not contain special characters.')
 		}
-		const validNameLength =
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
+		const validNameLength = name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 		if (!validNameLength) {
 			this.errors.push(
 				`Username length should be between ${this.NAME_MIN_LENGTH} and ${this.NAME_MAX_LENGTH} characters.`

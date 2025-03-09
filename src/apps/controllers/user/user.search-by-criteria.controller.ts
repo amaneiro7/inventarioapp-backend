@@ -21,9 +21,7 @@ export class UserSearchByCriteriaController implements Controller {
 				limit ? Number(limit) : undefined,
 				offset ? Number(offset) : undefined
 			)
-			const getByCriteria: UserSearchByCriteria = container.resolve(
-				UserDependencies.SearchByCriteria
-			)
+			const getByCriteria: UserSearchByCriteria = container.resolve(UserDependencies.SearchByCriteria)
 			const data = await getByCriteria.run({ query, user })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

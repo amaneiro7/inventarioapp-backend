@@ -21,9 +21,7 @@ export interface JwtPayloadUser extends JwtPayload {
 const accessTokenExpiresIn: string = '15m'
 const refreshTokenExpiresIn: string = '10h'
 
-export function generateAceessTokens(
-	user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>
-): string {
+export function generateAceessTokens(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
 	const { id, email, roleId } = user
 	const token: JwtPayloadUser = {
 		sub: id,
@@ -34,9 +32,7 @@ export function generateAceessTokens(
 	const secret = config.accessTokenSecret
 	return sign(token, secret, { expiresIn: accessTokenExpiresIn })
 }
-export function generateRefreshToken(
-	user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>
-): string {
+export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
 	const { id, email, roleId } = user
 	const token: JwtPayloadUser = {
 		sub: id,

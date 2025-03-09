@@ -30,8 +30,7 @@ export class ModelKeyboardInputType extends InputTypeId {
 		repository: InputTypeRepository
 		inputTypeId: Primitives<InputTypeId>
 	}): Promise<void> {
-		const isInputTypeExist: InputTypePrimitives | null =
-			await params.repository.searchById(params.inputTypeId)
+		const isInputTypeExist: InputTypePrimitives | null = await params.repository.searchById(params.inputTypeId)
 		if (isInputTypeExist === null) {
 			throw new Error('InputType does not exist')
 		}

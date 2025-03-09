@@ -9,10 +9,7 @@ import { type RegionId } from '../../domain/RegionId'
 import { type RegionRepository } from '../../domain/RegionRepository'
 import { RegionModel } from './RegionSchema'
 
-export class SequelizeRegionRepository
-	extends CriteriaToSequelizeConverter
-	implements RegionRepository
-{
+export class SequelizeRegionRepository extends CriteriaToSequelizeConverter implements RegionRepository {
 	private readonly cacheKey: string = 'regions'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -25,9 +22,7 @@ export class SequelizeRegionRepository
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await RegionModel.findAndCountAll(
-					options
-				)
+				const { count, rows } = await RegionModel.findAndCountAll(options)
 				return {
 					data: rows,
 					total: count

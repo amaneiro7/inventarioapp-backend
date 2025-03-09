@@ -19,17 +19,12 @@ export class BatteryModelName extends StringValueObject {
 
 	private ensureIsValidName(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid battery model name`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid battery model name`)
 		}
 	}
 
 	private isValid(name: string): boolean {
-		return (
-			name.length >= this.NAME_MIN_LENGTH &&
-			name.length <= this.NAME_MAX_LENGTH
-		)
+		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
 	static async updateBatteryModelField(params: {

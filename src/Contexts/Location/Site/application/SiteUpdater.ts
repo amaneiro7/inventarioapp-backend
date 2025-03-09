@@ -8,13 +8,7 @@ import { type SiteRepository } from '../domain/SiteRepository'
 export class SiteUpdater {
 	constructor(private readonly siteRepository: SiteRepository) {}
 
-	async run({
-		id,
-		params
-	}: {
-		id: string
-		params: Partial<Omit<SitePrimitives, 'id'>>
-	}): Promise<void> {
+	async run({ id, params }: { id: string; params: Partial<Omit<SitePrimitives, 'id'>> }): Promise<void> {
 		const siteId = new SiteId(id).value
 		const site = await this.siteRepository.searchById(siteId)
 

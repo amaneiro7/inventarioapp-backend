@@ -9,9 +9,7 @@ export class ProcessorGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: ProcessorsFinder = container.resolve(
-				ProcessorDependencies.Finder
-			)
+			const get: ProcessorsFinder = container.resolve(ProcessorDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {

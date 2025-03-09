@@ -4,9 +4,7 @@ import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DirectivaDto } from '../domain/Directiva.dto'
 
 export class DirectivaFinder {
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	) {}
+	constructor(private readonly directivaRepository: DepartmentRepository<DirectivaDto>) {}
 
 	async run(params: { id: string }): Promise<DirectivaDto> {
 		const { id } = params

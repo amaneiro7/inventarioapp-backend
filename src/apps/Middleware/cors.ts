@@ -18,10 +18,5 @@ export const options: CorsOptions = {
 		'Access-Control-Allow-Credentials',
 		'Access-Control-Allow-Origin'
 	],
-	exposedHeaders: [
-		'Content-Type',
-		'Authorization',
-		'Access-Control-Allow-Credentials',
-		'Access-Control-Allow-Origin'
-	]
+	exposedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials', 'Access-Control-Allow-Origin']
 }

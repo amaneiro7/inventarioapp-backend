@@ -12,10 +12,7 @@ interface ModelPrinterCreationAttributes extends PrinteModelsDto {
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class ModelPrinterModel
-	extends Model<ModelPrinterCreationAttributes>
-	implements PrinteModelsDto
-{
+export class ModelPrinterModel extends Model<ModelPrinterCreationAttributes> implements PrinteModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare cartridgeModel: Primitives<CartridgeModel>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -46,12 +43,7 @@ export class ModelPrinterModel
 					allowNull: false,
 					validate: {
 						isIn: {
-							args: [
-								[
-									CategoryValues.LASERPRINTER,
-									CategoryValues.INKPRINTER
-								]
-							],
+							args: [[CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]],
 							msg: 'Solo puede pertenecer a la categoria de Impresoras Laser e Impresoras Tinta'
 						}
 					}

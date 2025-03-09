@@ -14,17 +14,13 @@ import { type CategoryId } from '../../../../../../Category/Category/domain/Cate
 import { type LaptopModelsDto } from '../../domain/LaptopsModels.dto'
 import { type MemoryRamTypeDto } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 
-interface LaptopModelsCreationAttributes
-	extends Omit<LaptopModelsDto, 'memoryRamType'> {
+interface LaptopModelsCreationAttributes extends Omit<LaptopModelsDto, 'memoryRamType'> {
 	id: Primitives<ModelSeriesId>
 	categoryId: Primitives<CategoryId>
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
-export class LaptopModelsModel
-	extends Model<LaptopModelsCreationAttributes>
-	implements LaptopModelsDto
-{
+export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> implements LaptopModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>

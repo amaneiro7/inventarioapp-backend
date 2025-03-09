@@ -23,9 +23,7 @@ export enum CentroCostoDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		centroCostoRepository: asClass(
-			SequelizeCentroCostoRepository
-		).singleton(),
+		centroCostoRepository: asClass(SequelizeCentroCostoRepository).singleton(),
 		centroCostoFinderAll: asClass(CentroCostoFinderAll),
 		centroCostoFinder: asClass(CentroCostoFinder),
 		centroCostoCreator: asClass(CentroCostoCreator),

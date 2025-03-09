@@ -29,9 +29,7 @@ export class ComputerValidation {
 		return DeviceComputer.create(params)
 	}
 
-	private async ensureValidation(
-		params: DeviceComputerParams
-	): Promise<void> {
+	private async ensureValidation(params: DeviceComputerParams): Promise<void> {
 		await ComputerName.ensuerComputerNameDoesNotExit({
 			repository: this.deviceRepository,
 			computerName: params.computerName

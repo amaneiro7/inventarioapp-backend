@@ -4,10 +4,7 @@ import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
 import { type MemoryRamTypeName } from '../../domain/MemoryRamTypeName'
 import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
 
-export class MemoryRamTypeModel
-	extends Model<MemoryRamTypeDto>
-	implements MemoryRamTypeDto
-{
+export class MemoryRamTypeModel extends Model<MemoryRamTypeDto> implements MemoryRamTypeDto {
 	declare id: Primitives<MemoryRamTypeId>
 	declare name: Primitives<MemoryRamTypeName>
 

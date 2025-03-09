@@ -10,9 +10,6 @@ if (!fs.existsSync(logDirectory)) {
 	fs.mkdirSync(logDirectory, { recursive: true })
 }
 
-const accessLogStream = fs.createWriteStream(
-	path.join(logDirectory, 'access.log'),
-	{ flags: 'a' }
-)
+const accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' })
 
 export const morganLog = morgan('combined', { stream: accessLogStream })

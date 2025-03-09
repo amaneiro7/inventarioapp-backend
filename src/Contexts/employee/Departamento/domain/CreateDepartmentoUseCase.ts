@@ -10,10 +10,7 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { CargoDoesNotExistError } from '../../Cargo/domain/CargoDoesNotExistError'
 import { CentroCostoDoesNotExistError } from '../../CentroCosto/domain/CentroCostoDoesNotExistError'
-import {
-	type DepartamentoDto,
-	type DepartamentoParams
-} from './Departamento.dto'
+import { type DepartamentoDto, type DepartamentoParams } from './Departamento.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class CreateDepartamentoUseCase {
@@ -31,9 +28,7 @@ export class CreateDepartamentoUseCase {
 		cargos
 	}: DepartamentoParams): Promise<void> {
 		// Se verifica que el departamento 2 exista
-		await this.ensureVicepresidenciaEjecutivaExists(
-			vicepresidenciaEjecutivaId
-		)
+		await this.ensureVicepresidenciaEjecutivaExists(vicepresidenciaEjecutivaId)
 
 		// Se verifica que el centro de costo exista
 		await this.ensureCentroCostoExists(centroCostoId)
@@ -45,43 +40,26 @@ export class CreateDepartamentoUseCase {
 		await this.ensureCargoExists(cargos)
 	}
 
-	private async ensureDepartamentoDoesNotExist(
-		name: Primitives<DepartmentName>
-	): Promise<void> {
+	private async ensureDepartamentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
 		if ((await this.departamentoRepository.searchByName(name)) !== null) {
-			throw new DepartmentAlreadyExistError(
-				'La Genrecia, coordinación o departamento'
-			)
+			throw new DepartmentAlreadyExistError('La Genrecia, coordinación o departamento')
 		}
 	}
 
 	private async ensureVicepresidenciaEjecutivaExists(
 		vicepresidenciaEjecutivaId: Primitives<DepartmentId>
 	): Promise<void> {
-		if (
-			(await this.vicepresidenciaEjecutivaRepository.searchById(
-				vicepresidenciaEjecutivaId
-			)) === null
-		) {
-			throw new DepartmentDoesNotExistError(
-				'La vicepresidencia ejecutiva'
-			)
+		if ((await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)) === null) {
+			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
 	}
-	private async ensureCentroCostoExists(
-		centroCostoId: Primitives<CodCentroCosto>
-	): Promise<void> {
-		if (
-			(await this.centroCostoRepository.searchById(centroCostoId)) ===
-			null
-		) {
+	private async ensureCentroCostoExists(centroCostoId: Primitives<CodCentroCosto>): Promise<void> {
+		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
 			throw new CentroCostoDoesNotExistError()
 		}
 	}
 
-	private async ensureCargoExists(
-		cargos: Primitives<CargoId>[]
-	): Promise<void> {
+	private async ensureCargoExists(cargos: Primitives<CargoId>[]): Promise<void> {
 		for (const cargoId of cargos) {
 			if ((await this.cargoRepository.searchById(cargoId)) === null) {
 				throw new CargoDoesNotExistError()

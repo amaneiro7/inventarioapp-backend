@@ -6,10 +6,7 @@ import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type VicepresidenciaEjecutiva } from './VicepresidenciaEjecutiva'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import {
-	type VicepresidenciaEjecutivaParams,
-	type VicepresidenciaEjecutivaDto
-} from './VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaEjecutivaParams, type VicepresidenciaEjecutivaDto } from './VicepresidenciaEjecutiva.dto'
 
 export class UpdateVicepresidenciaEjecutivaUseCase {
 	constructor(
@@ -39,11 +36,7 @@ export class UpdateVicepresidenciaEjecutivaUseCase {
 
 		if (entity.nameValue === name) return
 
-		if (
-			(await this.vicepresidenciaEjecutivaaRepository.searchByName(
-				name
-			)) !== null
-		) {
+		if ((await this.vicepresidenciaEjecutivaaRepository.searchByName(name)) !== null) {
 			throw new DepartmentAlreadyExistError('La vicepresidenciaEjecutiva')
 		}
 		entity.updateName(name)

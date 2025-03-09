@@ -1,9 +1,6 @@
 import { type RolePrimitives } from '../../User/Role/domain/Role'
 import { type UserPrimitives } from '../../User/user/domain/User'
-import {
-	generateAceessTokens,
-	generateRefreshToken
-} from '../domain/GenerateToken'
+import { generateAceessTokens, generateRefreshToken } from '../domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../domain/SendUserWithoutPassword'
 
 type ReqUser = UserPrimitives & {

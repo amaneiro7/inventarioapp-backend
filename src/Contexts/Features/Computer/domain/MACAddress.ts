@@ -6,8 +6,7 @@ import { type DeviceComputer } from './Computer'
 // Define a class for MACAddress that extends the StringValueObject class
 export class MACAddress extends AcceptedNullValueObject<string> {
 	// Define a regular expression for MAC address validation
-	private readonly macAddressRegex =
-		/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
+	private readonly macAddressRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
 
 	// Constructor for MACAddress class
 	constructor(readonly value: string | null) {
@@ -25,9 +24,7 @@ export class MACAddress extends AcceptedNullValueObject<string> {
 	// Ensure that the provided MAC address is a valid name
 	private ensureIsValid(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(
-				`<${value}> is not a valid MAC Adress`
-			)
+			throw new InvalidArgumentError(`<${value}> is not a valid MAC Adress`)
 		}
 	}
 

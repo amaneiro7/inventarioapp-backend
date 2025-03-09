@@ -7,9 +7,7 @@ import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 
-export class DeviceEmployee extends AcceptedNullValueObject<
-	Primitives<EmployeeId>
-> {
+export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
 	constructor(
 		readonly value: Primitives<EmployeeId> | null,
 		private readonly status: Primitives<DeviceStatus>
@@ -49,37 +47,23 @@ export class DeviceEmployee extends AcceptedNullValueObject<
 		employee: Primitives<EmployeeId> | null
 		status: Primitives<DeviceStatus>
 	}): void {
-		if (
-			status === DeviceStatus.StatusOptions.PRESTAMO &&
-			employee === null
-		) {
+		if (status === DeviceStatus.StatusOptions.PRESTAMO && employee === null) {
 			throw new InvalidArgumentError(
 				'El dispositivo debe estar asignado a un usuario si el estatus es en préstamo'
 			)
 		}
-		if (
-			status === DeviceStatus.StatusOptions.CONTINGENCIA &&
-			employee === null
-		) {
+		if (status === DeviceStatus.StatusOptions.CONTINGENCIA && employee === null) {
 			throw new InvalidArgumentError(
 				'El dispositivo debe estar asignado a un usuario si el estatus es en contingencia'
 			)
 		}
-		if (
-			status === DeviceStatus.StatusOptions.GUARDIA &&
-			employee === null
-		) {
+		if (status === DeviceStatus.StatusOptions.GUARDIA && employee === null) {
 			throw new InvalidArgumentError(
 				'El dispositivo debe estar asignado a un usuario si el estatus es en guardia'
 			)
 		}
-		if (
-			status === DeviceStatus.StatusOptions.DISPONIBLE &&
-			employee !== null
-		) {
-			throw new InvalidArgumentError(
-				'The device cannot have an employee if it is in Available status'
-			)
+		if (status === DeviceStatus.StatusOptions.DISPONIBLE && employee !== null) {
+			throw new InvalidArgumentError('The device cannot have an employee if it is in Available status')
 		}
 		if (
 			[
@@ -89,9 +73,7 @@ export class DeviceEmployee extends AcceptedNullValueObject<
 			].includes(status) &&
 			employee !== null
 		) {
-			throw new InvalidArgumentError(
-				'The device cannot have an employee if it is not in use'
-			)
+			throw new InvalidArgumentError('The device cannot have an employee if it is not in use')
 		}
 	}
 
@@ -131,9 +113,7 @@ export class DeviceEmployee extends AcceptedNullValueObject<
 			return
 		}
 		// Searches for a device with the given empleado in the database
-		const deviceWithEmployee = await repository.searchById(
-			new EmployeeId(employee).toString()
-		)
+		const deviceWithEmployee = await repository.searchById(new EmployeeId(employee).toString())
 		// If a device with the given empleado exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given empleado
 		if (!deviceWithEmployee) {

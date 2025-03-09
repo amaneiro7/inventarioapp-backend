@@ -11,9 +11,7 @@ export class ProcessorPatchController implements Controller {
 		try {
 			const params = req.body
 			const { id } = req.params
-			const update: ProcessorUpdater = container.resolve(
-				ProcessorDependencies.Updater
-			)
+			const update: ProcessorUpdater = container.resolve(ProcessorDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Procesador actualizado exitosamente'

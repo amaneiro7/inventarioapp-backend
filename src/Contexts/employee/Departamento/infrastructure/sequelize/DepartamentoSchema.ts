@@ -18,12 +18,7 @@ import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class DepartamentoModel
-	extends Model<
-		Omit<
-			DepartamentoDto,
-			'cargos' | 'vicepresiednciaEjecutiva' | 'centroCosto'
-		>
-	>
+	extends Model<Omit<DepartamentoDto, 'cargos' | 'vicepresiednciaEjecutiva' | 'centroCosto'>>
 	implements DepartamentoDto
 {
 	declare id: Primitives<DepartmentId>
@@ -36,14 +31,8 @@ export class DepartamentoModel
 
 	// Métodos de asociación
 	public getCargos!: BelongsToManyGetAssociationsMixin<CargoModel>
-	public addCargos!: BelongsToManyAddAssociationsMixin<
-		CargoModel,
-		Primitives<CargoId>
-	>
-	public setCargos!: BelongsToManySetAssociationsMixin<
-		CargoModel,
-		Primitives<CargoId>
-	>
+	public addCargos!: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
+	public setCargos!: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.VicepresidenciaEjecutiva, {

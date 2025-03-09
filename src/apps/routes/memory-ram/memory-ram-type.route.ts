@@ -10,9 +10,5 @@ export const register = async (router: Router) => {
 		MemoryRamTypeDependencies.GetAllController
 	)
 
-	router.get(
-		'/memoryramtypes/',
-		authenticate,
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/memoryramtypes/', authenticate, getAllController.run.bind(getAllController))
 }

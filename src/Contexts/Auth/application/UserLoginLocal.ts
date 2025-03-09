@@ -7,13 +7,7 @@ import { type UserRepository } from '../../User/user/domain/UserRepository'
 export class UserLoginLocal {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async run({
-		email,
-		password
-	}: {
-		email: string
-		password: string
-	}): Promise<UserPrimitives> {
+	async run({ email, password }: { email: string; password: string }): Promise<UserPrimitives> {
 		const userEmail = new UserEmail(email)
 
 		const user = await this.userRepository.searchByEmail(userEmail.value)

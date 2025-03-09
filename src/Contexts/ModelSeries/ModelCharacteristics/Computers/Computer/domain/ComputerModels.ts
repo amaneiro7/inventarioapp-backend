@@ -1,9 +1,6 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import {
-	type CategoryValues,
-	CategoryDefaultData
-} from '../../../../../Category/Category/domain/CategoryDefaultData'
+import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/Category/domain/CategoryDefaultData'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../../ModelSeries/domain/ModelSeries'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
@@ -16,10 +13,7 @@ import { HasVGA } from './HasVGA'
 import { HasWifiAdapter } from './HasWifiAdapter'
 import { MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import {
-	type ComputerModelsParams,
-	type ComputerModelsPrimitives
-} from './ComputerModels.dto'
+import { type ComputerModelsParams, type ComputerModelsPrimitives } from './ComputerModels.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 
 export class ComputerModels extends ModelSeries {
@@ -58,26 +52,14 @@ export class ComputerModels extends ModelSeries {
 		)
 	}
 
-	public static isComputerCategory({
-		categoryId
-	}: {
-		categoryId: Primitives<CategoryId>
-	}): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = [
-			'Computadoras',
-			'All in One',
-			'Servidores'
-		]
-		return AcceptedComputerCategories.includes(
-			CategoryDefaultData[categoryId]
-		)
+	public static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		const AcceptedComputerCategories: CategoryValues[] = ['Computadoras', 'All in One', 'Servidores']
+		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ComputerModels {
 		if (!primitives.modelComputer) {
-			throw new Error(
-				'Error al extraer los datos de modelos de computadora'
-			)
+			throw new Error('Error al extraer los datos de modelos de computadora')
 		}
 		return new ComputerModels(
 			new ModelSeriesId(primitives.id),
@@ -86,9 +68,7 @@ export class ComputerModels extends ModelSeries {
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
 			new ComputerMemoryRamType(primitives.modelComputer.memoryRamTypeId),
-			new MemoryRamSlotQuantity(
-				primitives.modelComputer.memoryRamSlotQuantity
-			),
+			new MemoryRamSlotQuantity(primitives.modelComputer.memoryRamSlotQuantity),
 			new HasBluetooth(primitives.modelComputer.hasBluetooth),
 			new HasWifiAdapter(primitives.modelComputer.hasWifiAdapter),
 			new HasDVI(primitives.modelComputer.hasDVI),
@@ -142,18 +122,12 @@ export class ComputerModels extends ModelSeries {
 		return this.hasVGA.value
 	}
 
-	updateMemoryRamTypeId(
-		memoryRamTypeId: Primitives<ComputerMemoryRamType>
-	): void {
+	updateMemoryRamTypeId(memoryRamTypeId: Primitives<ComputerMemoryRamType>): void {
 		this.memoryRamTypeId = new ComputerMemoryRamType(memoryRamTypeId)
 	}
 
-	updateMemoryRamSlotQuantity(
-		memoryRamSlotQuantity: Primitives<MemoryRamSlotQuantity>
-	): void {
-		this.memoryRamSlotQuantity = new MemoryRamSlotQuantity(
-			memoryRamSlotQuantity
-		)
+	updateMemoryRamSlotQuantity(memoryRamSlotQuantity: Primitives<MemoryRamSlotQuantity>): void {
+		this.memoryRamSlotQuantity = new MemoryRamSlotQuantity(memoryRamSlotQuantity)
 	}
 
 	updateHasBluetooth(hasBluetooth: Primitives<HasBluetooth>): void {

@@ -10,9 +10,7 @@ export class CentroCostoFinderAll extends GetAllBaseService<CentroCostoDto> {
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<CentroCostoDto>> {
-		const { data, total } = await this.centroCostoRepository.searchAll(
-			criteria
-		)
+		const { data, total } = await this.centroCostoRepository.searchAll(criteria)
 
 		return this.response({
 			total,

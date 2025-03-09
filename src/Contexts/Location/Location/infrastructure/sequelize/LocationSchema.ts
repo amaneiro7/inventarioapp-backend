@@ -9,10 +9,7 @@ import { type LocationDto } from '../../domain/Location.dto'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
 import { type TypeOfSite } from '../../../TypeOfSite/domain/TypeOfSite.dto'
 
-export class LocationModel
-	extends Model<Omit<LocationDto, 'site' | 'typeOfSite'>>
-	implements LocationDto
-{
+export class LocationModel extends Model<Omit<LocationDto, 'site' | 'typeOfSite'>> implements LocationDto {
 	declare typeOfSite: TypeOfSite
 	declare site: SiteDto
 	declare id: Primitives<LocationId>
