@@ -1,5 +1,6 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { SequelizeSiteRepository } from '../../../Contexts/Location/Site/infrastructure/sequelize/SequelizeSiteRepository'
+import { SiteFinder } from '../../../Contexts/Location/Site/application/SiteFinder'
 import { SiteFinderAll } from '../../../Contexts/Location/Site/application/SiteFinderAll'
 import { SiteGetAllController } from '../../controllers/location/site.get-all.controller'
 import { SiteUpdater } from '../../../Contexts/Location/Site/application/SiteUpdater'
@@ -27,7 +28,7 @@ export const register = (container: AwilixContainer) => {
 	container.register({
 		siteRepository: asClass(SequelizeSiteRepository).singleton(),
 		siteFinderAll: asClass(SiteFinderAll),
-		siteFinder: asClass(SiteFinderAll),
+		siteFinder: asClass(SiteFinder),
 		siteCreator: asClass(SiteCreator),
 		siteUpdater: asClass(SiteUpdater),
 		siteGetAllController: asClass(SiteGetAllController),
