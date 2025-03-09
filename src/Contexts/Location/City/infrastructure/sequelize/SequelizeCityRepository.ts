@@ -18,6 +18,7 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CityDto>> {
 		const options = CityAssociation.converFilter(criteria, this.convert(criteria))
+		options.include = ['state']
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
@@ -33,7 +34,11 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 	}
 
 	async searchById(id: Primitives<CityId>): Promise<CityDto | null> {
-		return (await CityModel.findByPk(id)) ?? null
+		return (
+			(await CityModel.findByPk(id, {
+				include: ['state']
+			})) ?? null
+		)
 	}
 	async searchByName(name: Primitives<CityName>): Promise<CityDto | null> {
 		return (
