@@ -25,7 +25,7 @@ export class Generic extends BooleanValueObject {
 	}
 
 	static async updateGenericField(params: { generic?: Primitives<Generic>; entity: ModelSeries }): Promise<void> {
-		if (!params.generic) {
+		if (params.generic === undefined) {
 			return
 		}
 

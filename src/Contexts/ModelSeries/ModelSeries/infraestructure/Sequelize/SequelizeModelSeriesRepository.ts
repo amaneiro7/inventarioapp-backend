@@ -129,7 +129,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 				})
 			} else {
 				await ModelSeriesModel.update(
-					{ name, categoryId, brandId },
+					{ name, categoryId, brandId, generic },
 					{
 						where: { id },
 						transaction: t
