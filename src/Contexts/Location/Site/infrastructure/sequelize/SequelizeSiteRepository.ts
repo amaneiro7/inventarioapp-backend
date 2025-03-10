@@ -8,6 +8,7 @@ import { type SiteRepository } from '../../domain/SiteRepository'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { SiteModels } from './SiteSchema'
+import { SiteAssociation } from './SiteAssociation'
 
 export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implements SiteRepository {
 	private readonly cacheKey: string = 'sites'
@@ -15,18 +16,7 @@ export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implem
 		super()
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<SiteDto>> {
-		const options = this.convert(criteria)
-		options.include = [
-			{
-				association: 'city',
-				include: [
-					{
-						association: 'state',
-						include: ['region']
-					}
-				]
-			}
-		]
+		const options = SiteAssociation.converFilter(criteria, this.convert(criteria))
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
