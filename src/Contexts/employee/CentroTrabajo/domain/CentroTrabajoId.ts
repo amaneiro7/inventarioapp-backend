@@ -4,7 +4,7 @@ import { StringValueObject } from '../../../Shared/domain/value-object/StringVal
 export class CentroTrabajoId extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 8
 	private readonly NAME_MIN_LENGTH = 1
-	private readonly REGEX = /^[\d-]+$/ // Regex para validar el codigo, que acepte numeros y guiones
+	private readonly REGEX = /^[\d_]+$/ // Regex para validar el codigo, que acepte numeros y guiones
 
 	constructor(readonly value: string) {
 		super(value)
