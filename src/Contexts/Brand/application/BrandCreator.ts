@@ -1,5 +1,5 @@
 import { Brand } from '../domain/Brand'
-import { BrandAlreadyExistError } from '../domain/BrandAlreadyExistError'
+import { BrandName } from '../domain/BrandName'
 import { type BrandRepository } from '../domain/BrandRepository'
 import { type BrandParams } from '../domain/Brand.dto'
 
@@ -7,16 +7,10 @@ export class BrandCreator {
 	constructor(private readonly brandRepository: BrandRepository) {}
 
 	async run(params: BrandParams): Promise<void> {
-		await this.ensureBrandDoesNotExist(params.name)
+		await BrandName.ensureBrandNameDoesNotExist({ name: params.name, repository: this.brandRepository })
 
-		const brand = Brand.create(params)
+		const brand = Brand.create(params).toPrimitive()
 
-		await this.brandRepository.save(brand.toPrimitive())
-	}
-
-	private async ensureBrandDoesNotExist(name: BrandParams['name']): Promise<void> {
-		if ((await this.brandRepository.searchByName(name)) !== null) {
-			throw new BrandAlreadyExistError(name)
-		}
+		await this.brandRepository.save(brand)
 	}
 }

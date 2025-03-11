@@ -1,8 +1,7 @@
 import { Brand } from '../domain/Brand'
-import { BrandAlreadyExistError } from '../domain/BrandAlreadyExistError'
 import { BrandDoesNotExistError } from '../domain/BrandDoesNotExistError'
 import { BrandId } from '../domain/BrandId'
-import { type BrandName } from '../domain/BrandName'
+import { BrandName } from '../domain/BrandName'
 import { type BrandRepository } from '../domain/BrandRepository'
 
 export class BrandUpdater {
@@ -14,19 +13,12 @@ export class BrandUpdater {
 
 		const brand = await this.brandRepository.searchById(brandId.value)
 		if (!brand) {
-			throw new BrandDoesNotExistError(newName)
+			throw new BrandDoesNotExistError(id)
 		}
 
 		const brandEntity = Brand.fromPrimitives(brand)
-		await this.ensureBrandDoesNotExist(newName, brandEntity)
+		await BrandName.updateNameField({ entity: brandEntity, repository: this.brandRepository, name: newName })
 
 		await this.brandRepository.save(brandEntity.toPrimitive())
-	}
-
-	private async ensureBrandDoesNotExist(name: BrandName['value'], entity: Brand): Promise<void> {
-		if (!(await this.brandRepository.searchByName(name))) {
-			throw new BrandAlreadyExistError(name)
-		}
-		entity.updateName(name)
 	}
 }
