@@ -2,8 +2,8 @@ import { CreateCargoUseCase } from '../domain/CreateCargoUseCase'
 import { Cargo } from '../domain/Cargo'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CargoRepository } from '../domain/CargoRepository'
-import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
-import { CargoParams } from '../domain/Cargo.dto'
+import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento.dto'
+import { type CargoParams } from '../domain/Cargo.dto'
 
 export class CargoCreator {
 	private readonly createCargoUseCase: CreateCargoUseCase

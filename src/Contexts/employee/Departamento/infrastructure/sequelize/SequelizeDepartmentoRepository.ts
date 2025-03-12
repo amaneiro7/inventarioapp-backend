@@ -10,6 +10,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/Departamento.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { DepartamentoAssociation } from './DepartamentoAssociation'
 
 export class SequelizeDepartamentoRepository
 	extends CriteriaToSequelizeConverter
@@ -21,37 +22,13 @@ export class SequelizeDepartamentoRepository
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DepartamentoDto>> {
 		const options = this.convert(criteria)
-		options.include = {
-			attributes: ['id', 'name', 'createdAt', 'updatedAt'],
-			include: [
-				{
-					association: 'vicepresidenciaEjecutiva',
-					attributes: ['name'],
-					include: [
-						{
-							association: 'directiva',
-							attributes: ['id', 'name']
-						}
-					]
-				},
-				{
-					association: 'centroCosto',
-					attributes: ['id', 'name']
-				},
-				{
-					association: 'cargos',
-					attributes: ['id', 'name'],
-					through: { attributes: [] }
-				},
-				'employee'
-			]
-		}
+		const opt = DepartamentoAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await DepartamentoModel.findAndCountAll(options)
+				const { count, rows } = await DepartamentoModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count

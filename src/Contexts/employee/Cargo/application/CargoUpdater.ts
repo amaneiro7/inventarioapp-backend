@@ -1,11 +1,11 @@
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type CargoRepository } from '../domain/CargoRepository'
-import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
 import { Cargo } from '../domain/Cargo'
 import { CargoId } from '../domain/CargoId'
 import { CargoDoesNotExistError } from '../domain/CargoDoesNotExistError'
+import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { type CargoRepository } from '../domain/CargoRepository'
 import { UpdateCargoUseCase } from '../domain/UpdateCargoUseCase'
 import { type CargoParams } from '../domain/Cargo.dto'
+import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento.dto'
 
 export class CargoUpdater {
 	private readonly updateCargoUseCase: UpdateCargoUseCase
