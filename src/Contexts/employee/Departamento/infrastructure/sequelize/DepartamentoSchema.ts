@@ -27,12 +27,13 @@ export class DepartamentoModel
 	declare centroCostoId: Primitives<CodCentroCosto>
 	declare vicepresiednciaEjecutiva: VicepresidenciaEjecutivaDto
 	declare centroCosto: CentroCostoDto
-	declare cargos: string[] & Omit<CargoDto, 'departamentos'>[]
+	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
-	// Métodos de asociación
-	public getCargos!: BelongsToManyGetAssociationsMixin<CargoModel>
-	public addCargos!: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
-	public setCargos!: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
+	// // Métodos de asociación
+	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>
+	declare addCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
+	declare setCargo: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
+	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.VicepresidenciaEjecutiva, {

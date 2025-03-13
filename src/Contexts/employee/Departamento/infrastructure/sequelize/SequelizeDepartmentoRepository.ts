@@ -11,6 +11,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/Departamento.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DepartamentoAssociation } from './DepartamentoAssociation'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeDepartamentoRepository
 	extends CriteriaToSequelizeConverter
@@ -72,20 +73,31 @@ export class SequelizeDepartamentoRepository
 	}
 
 	async save(payload: DepartamentoPrimitives): Promise<void> {
-		const { id, cargos, ...restPayload } = payload
-		const departamento = (await DepartamentoModel.findByPk(id)) ?? null
-		if (departamento === null) {
-			const newDepartmentso = await DepartamentoModel.create({
-				...restPayload,
-				id
-			})
-			await newDepartmentso.setCargos(cargos)
-		} else {
-			departamento.set({ ...restPayload })
-			await departamento.save()
-			await departamento.setCargos(cargos)
+		const transaction = await sequelize.transaction()
+		try {
+			const { id, cargos, ...restPayload } = payload
+			const departamento = (await DepartamentoModel.findByPk(id)) ?? null
+			if (departamento === null) {
+				const newDepartmentso = await DepartamentoModel.create(
+					{
+						...restPayload,
+						id
+					},
+					{ transaction }
+				)
+				console.log(newDepartmentso)
+				await newDepartmentso.addCargo(cargos, { transaction })
+			} else {
+				departamento.set({ ...restPayload })
+				await departamento.save({ transaction })
+				await departamento.addCargo(cargos, { transaction })
+			}
+			await transaction.commit()
+			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		} catch (error) {
+			await transaction.rollback()
+			throw error
 		}
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 
 	async remove(id: Primitives<DepartmentId>): Promise<void> {

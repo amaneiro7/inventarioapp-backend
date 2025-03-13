@@ -3,9 +3,8 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class DepartamentoAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options = {
-			attributes: ['id', 'name', 'createdAt', 'updatedAt'],
-			include: [
+		;(options.attributes = ['id', 'name', 'createdAt', 'updatedAt']),
+			(options.include = [
 				{
 					association: 'vicepresidenciaEjecutiva',
 					attributes: ['name'],
@@ -26,8 +25,7 @@ export class DepartamentoAssociation {
 					through: { attributes: [] }
 				},
 				'employee'
-			]
-		}
+			])
 
 		return options
 	}
