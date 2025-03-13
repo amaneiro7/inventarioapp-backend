@@ -85,7 +85,6 @@ export class SequelizeDepartamentoRepository
 					},
 					{ transaction }
 				)
-				console.log(newDepartmentso)
 				await newDepartmentso.addCargo(cargos, { transaction })
 			} else {
 				departamento.set({ ...restPayload })
