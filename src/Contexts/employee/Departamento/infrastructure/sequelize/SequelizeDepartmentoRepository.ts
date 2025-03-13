@@ -45,7 +45,7 @@ export class SequelizeDepartamentoRepository
 				include: [
 					{
 						association: 'vicepresidenciaEjecutiva',
-						attributes: ['name'],
+						attributes: ['id', 'name'],
 						include: [
 							{
 								association: 'directiva',
