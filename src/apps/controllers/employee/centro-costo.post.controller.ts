@@ -12,7 +12,7 @@ export class CentroCostoPostController implements Controller {
 			const create: CentroCostoCreator = container.resolve(CentroCostoDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado creado exitosamente'
+				message: 'Centro de costo creado exitosamente'
 			})
 		} catch (error) {
 			next(error)

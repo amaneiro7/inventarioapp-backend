@@ -15,7 +15,7 @@ export class VicepresidenciaEjecutivaPatchController implements Controller {
 			)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado actualizado exitosamente'
+				message: 'Vicepresidencia ejecutiva actualizado exitosamente'
 			})
 		} catch (error) {
 			next(error)

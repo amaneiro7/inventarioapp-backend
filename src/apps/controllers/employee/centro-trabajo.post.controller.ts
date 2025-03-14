@@ -12,7 +12,7 @@ export class CentroTrabajoPostController implements Controller {
 			const create: CentroTrabajoCreator = container.resolve(CentroTrabajoDependencies.Creator)
 			await create.run(params)
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado creado exitosamente'
+				message: 'Centro de trabajo creado exitosamente'
 			})
 		} catch (error) {
 			next(error)

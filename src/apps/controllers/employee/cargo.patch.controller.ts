@@ -13,7 +13,7 @@ export class CargoPatchController implements Controller {
 			const update: CargoUpdater = container.resolve(CargoDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado actualizado exitosamente'
+				message: 'Cargo actualizado exitosamente'
 			})
 		} catch (error) {
 			next(error)

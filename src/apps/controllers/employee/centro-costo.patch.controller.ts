@@ -13,7 +13,7 @@ export class CentroCostoPatchController implements Controller {
 			const update: CentroCostoUpdater = container.resolve(CentroCostoDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus.CREATED).send({
-				message: 'Empleado actualizado exitosamente'
+				message: 'Centro de costo actualizado exitosamente'
 			})
 		} catch (error) {
 			next(error)
