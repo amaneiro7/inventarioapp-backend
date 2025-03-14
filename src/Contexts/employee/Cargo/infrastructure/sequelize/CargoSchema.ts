@@ -20,9 +20,9 @@ export class CargoModel extends Model<Omit<CargoDto, 'departamentos'>> implement
 	declare departamentos: DepartamentoDto[]
 
 	// Métodos de asociación
-	public getDeparments!: BelongsToManyGetAssociationsMixin<DepartamentoModel>
-	public addDeparments!: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
-	public setDeparments!: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
+	declare getDepartamentos: BelongsToManyGetAssociationsMixin<DepartamentoModel>
+	declare addDepartamentos: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
+	declare setDepartamentos: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsToMany(models.Departamento, {

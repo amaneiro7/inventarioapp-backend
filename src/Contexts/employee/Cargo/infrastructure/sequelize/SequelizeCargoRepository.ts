@@ -9,6 +9,8 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { CargoModel } from './CargoSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { CargoAssociation } from './CargoAssociation'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
@@ -17,11 +19,12 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CargoDto>> {
 		const options = this.convert(criteria)
+		const opt = CargoAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
 			fetchFunction: async () => {
-				const { count, rows } = await CargoModel.findAndCountAll(options)
+				const { count, rows } = await CargoModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count
@@ -31,7 +34,18 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 	}
 
 	async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
-		return (await CargoModel.findByPk(id)) ?? null
+		return (
+			(await CargoModel.findByPk(id, {
+				include: [
+					{
+						association: 'departamentos',
+						attributes: ['id', 'name'],
+						through: { attributes: [] }
+					},
+					'employee'
+				]
+			})) ?? null
+		)
 	}
 
 	async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
@@ -39,19 +53,30 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 	}
 
 	async save(payload: CargoPrimitives): Promise<void> {
-		const { id, departamentos, ...restPayload } = payload
-		const cargo = (await CargoModel.findByPk(id)) ?? null
-		if (cargo === null) {
-			const newCargo = await CargoModel.create({
-				...restPayload,
-				id
-			})
-			await newCargo.setDeparments(departamentos)
-		} else {
-			cargo.set({ ...restPayload })
-			await cargo.save()
-			await cargo.setDeparments(departamentos)
+		const transaction = await sequelize.transaction()
+		try {
+			const { id, departamentos, ...restPayload } = payload
+			const cargo = (await CargoModel.findByPk(id)) ?? null
+			if (cargo === null) {
+				const newCargo = await CargoModel.create(
+					{
+						...restPayload,
+						id
+					},
+					{ transaction }
+				)
+				console.log('', newCargo)
+				await newCargo.setDepartamentos(departamentos)
+			} else {
+				cargo.set({ ...restPayload })
+				await cargo.save({ transaction })
+				await cargo.setDepartamentos(departamentos, { transaction })
+			}
+			await transaction.commit()
+			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		} catch (error) {
+			await transaction.rollback()
+			throw error
 		}
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

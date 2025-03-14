@@ -77,14 +77,14 @@ export class SequelizeDepartamentoRepository
 			const { id, cargos, ...restPayload } = payload
 			const departamento = (await DepartamentoModel.findByPk(id)) ?? null
 			if (departamento === null) {
-				const newDepartmentso = await DepartamentoModel.create(
+				const newDepartament = await DepartamentoModel.create(
 					{
 						...restPayload,
 						id
 					},
 					{ transaction }
 				)
-				await newDepartmentso.addCargo(cargos, { transaction })
+				await newDepartament.addCargo(cargos, { transaction })
 			} else {
 				departamento.set({ ...restPayload })
 				await departamento.save({ transaction })
