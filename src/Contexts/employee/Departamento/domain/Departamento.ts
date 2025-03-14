@@ -5,6 +5,7 @@ import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
+import { type Cargo } from '../../Cargo/domain/Cargo.dto'
 
 export class Departamento extends IDepartment {
 	constructor(
@@ -61,8 +62,8 @@ export class Departamento extends IDepartment {
 		return this.cargos.map(cargo => cargo.value)
 	}
 
-	private static addCargoIds(cargoId: Primitives<CargoId>[]): CargoId[] {
-		return cargoId.map(cargo => new CargoId(cargo))
+	private static addCargoIds(cargos: Cargo[]): CargoId[] {
+		return cargos.map(cargo => new CargoId(cargo.id))
 	}
 
 	updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId: Primitives<DepartmentId>): void {
@@ -73,6 +74,7 @@ export class Departamento extends IDepartment {
 	}
 
 	updateCargos(cargoIds: Primitives<CargoId>[]): void {
+		console.log(cargoIds)
 		this.cargos = cargoIds.map(cargo => new CargoId(cargo))
 	}
 }

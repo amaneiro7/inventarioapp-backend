@@ -25,9 +25,7 @@ export class DepartamentoUpdater {
 	}
 
 	async run({ id, params }: { id: string; params: Partial<DepartamentoParams> }): Promise<void> {
-		const { name, cargos, vicepresidenciaEjecutivaId, centroCostoId } = params
 		const departamentoId = new DepartmentId(id)
-
 		const departamento = await this.departamentoRepository.searchById(departamentoId.value)
 		if (!departamento) {
 			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
@@ -37,7 +35,7 @@ export class DepartamentoUpdater {
 
 		await this.updateDepartamentoUseCase.execute({
 			entity: departamentoEntity,
-			params: { name, cargos, vicepresidenciaEjecutivaId, centroCostoId }
+			params
 		})
 
 		await this.departamentoRepository.save(departamentoEntity.toPrimitive())

@@ -23,20 +23,20 @@ export class DepartamentoCreator {
 	}
 
 	async run({ name, vicepresidenciaEjecutivaId, centroCostoId, cargos }: DepartamentoParams): Promise<void> {
-		const arraySinDuplicados = Array.from(new Set(cargos))
+		const uniqueCargos = Array.from(new Set(cargos))
 
 		await this.createDepartamentoUseCase.execute({
 			name,
 			vicepresidenciaEjecutivaId,
 			centroCostoId,
-			cargos: arraySinDuplicados
+			cargos: uniqueCargos
 		})
 
 		const departamento = Departamento.create({
 			name,
 			vicepresidenciaEjecutivaId,
 			centroCostoId,
-			cargos: arraySinDuplicados
+			cargos: uniqueCargos
 		})
 
 		await this.departamentoRepository.save(departamento.toPrimitive())

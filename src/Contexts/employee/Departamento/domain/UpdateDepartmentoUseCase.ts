@@ -29,20 +29,12 @@ export class UpdateDepartamentoUseCase {
 		entity: Departamento
 		params: Partial<DepartamentoParams>
 	}): Promise<void> {
-		// Se verifica que la vicepresidencia exista
-		await this.ensureVicepresidenciaEjecutivaExists({
-			vicepresidenciaEjecutivaId,
-			entity
-		})
-
-		// Se verifica que el centro de costo exista
-		await this.ensureCentroCostoExists({ centroCostoId, entity })
-
-		// Se verifica que el departamento no exista para no duplicar
-		await this.ensureDepartamentoDoesNotExist({ name, entity })
-
-		// Se verifica que los cargos existan
-		await this.ensureCargoExists({ cargos, entity })
+		await Promise.all([
+			this.ensureVicepresidenciaEjecutivaExists({ vicepresidenciaEjecutivaId, entity }),
+			this.ensureCentroCostoExists({ centroCostoId, entity }),
+			this.ensureDepartamentoDoesNotExist({ name, entity }),
+			this.ensureCargoExists({ cargos, entity })
+		])
 	}
 
 	private async ensureDepartamentoDoesNotExist({
@@ -52,9 +44,7 @@ export class UpdateDepartamentoUseCase {
 		name?: Primitives<DepartmentName>
 		entity: Departamento
 	}): Promise<void> {
-		if (!name) return
-
-		if (entity.nameValue === name) return
+		if (!name || entity.nameValue === name) return
 
 		if ((await this.departamentoRepository.searchByName(name)) !== null) {
 			throw new DepartmentAlreadyExistError('La gerencia, coordinación o departamento')
@@ -69,9 +59,7 @@ export class UpdateDepartamentoUseCase {
 		vicepresidenciaEjecutivaId?: Primitives<DepartmentId>
 		entity: Departamento
 	}): Promise<void> {
-		if (!vicepresidenciaEjecutivaId) return
-
-		if (entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId) return
+		if (!vicepresidenciaEjecutivaId || entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId) return
 
 		if ((await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)) === null) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
@@ -85,9 +73,7 @@ export class UpdateDepartamentoUseCase {
 		centroCostoId?: Primitives<CodCentroCosto>
 		entity: Departamento
 	}): Promise<void> {
-		if (!centroCostoId) return
-
-		if (entity.centroCostoValue === centroCostoId) return
+		if (!centroCostoId || entity.centroCostoValue === centroCostoId) return
 
 		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
 			throw new CentroCostoDoesNotExistError()
@@ -105,26 +91,26 @@ export class UpdateDepartamentoUseCase {
 		if (!cargos) return
 
 		// Asegurarse que no existan valores duplicados
-		const arraySinDuplicados = Array.from(new Set(cargos))
-		const currentCargoIds = entity.CargosValue
-
+		const uniqueCargos = Array.from(new Set(cargos))
 		// Se crea una nueva lista con los cargos nuevos, que no estan en la lista actual
-		const newCargos = this.newCargosToAdd(currentCargoIds, arraySinDuplicados)
+		const newCargos = this.getNewCargos(entity.CargosValue, uniqueCargos)
 
 		// Si la lista es 0, no hay cargos nuevos
 		if (newCargos.length === 0) return
 
 		// Se verifica que cada cargo exista
-		for (const cargoId of newCargos) {
-			if ((await this.cargoRepository.searchById(cargoId)) === null) {
-				throw new CargoDoesNotExistError()
-			}
-		}
+		await Promise.all(
+			newCargos.map(async cargoId => {
+				if ((await this.cargoRepository.searchById(cargoId)) === null) {
+					throw new CargoDoesNotExistError()
+				}
+			})
+		)
 		entity.updateCargos(cargos)
 	}
 
 	// Funcion para filtrar solo los cargos nuevos que no estan en la lista actual
-	private newCargosToAdd(currentList: string[], newList: string[]): string[] {
-		return newList.filter(list => !currentList.includes(list))
+	private getNewCargos(currentList: string[], newList: string[]): string[] {
+		return newList.filter(cargoId => !currentList.includes(cargoId))
 	}
 }

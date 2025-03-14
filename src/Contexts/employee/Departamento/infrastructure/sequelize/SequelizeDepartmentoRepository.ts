@@ -41,7 +41,6 @@ export class SequelizeDepartamentoRepository
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
 		return (
 			(await DepartamentoModel.findByPk(id, {
-				attributes: ['id', 'name', 'createdAt', 'updatedAt'],
 				include: [
 					{
 						association: 'vicepresidenciaEjecutiva',
