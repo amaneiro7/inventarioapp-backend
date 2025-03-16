@@ -65,7 +65,6 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 					},
 					{ transaction }
 				)
-				console.log('', newCargo)
 				await newCargo.setDepartamentos(departamentos)
 			} else {
 				cargo.set({ ...restPayload })

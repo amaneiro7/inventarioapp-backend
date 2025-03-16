@@ -75,20 +75,13 @@ export class SequelizeDepartamentoRepository
 		const transaction = await sequelize.transaction()
 		try {
 			const { id, cargos, ...restPayload } = payload
-			const departamento = (await DepartamentoModel.findByPk(id)) ?? null
-			if (departamento === null) {
-				const newDepartament = await DepartamentoModel.create(
-					{
-						...restPayload,
-						id
-					},
-					{ transaction }
-				)
-				await newDepartament.addCargo(cargos, { transaction })
+			const departamento = (await DepartamentoModel.findByPk(id, { transaction })) ?? null
+			if (departamento) {
+				await departamento.update(restPayload, { transaction })
+				await departamento.setCargos(cargos, { transaction })
 			} else {
-				departamento.set({ ...restPayload })
-				await departamento.save({ transaction })
-				await departamento.addCargo(cargos, { transaction })
+				const newDepartament = await DepartamentoModel.create({ ...restPayload, id }, { transaction })
+				await newDepartament.setCargos(cargos, { transaction })
 			}
 			await transaction.commit()
 			await this.cache.removeCachedData({ cacheKey: this.cacheKey })

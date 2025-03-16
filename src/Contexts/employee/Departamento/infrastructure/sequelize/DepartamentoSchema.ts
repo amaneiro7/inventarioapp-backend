@@ -32,7 +32,7 @@ export class DepartamentoModel
 	// // Métodos de asociación
 	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>
 	declare addCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
-	declare setCargo: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
+	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
