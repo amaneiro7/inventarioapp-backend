@@ -53,31 +53,33 @@ export class UpdateEmployeeUseCase {
 			)
 		}
 
-		await this.updateUserNameUseCase({ userName: params?.userName, entity })
-		await this.updateNameUseCase({ entity, name: params?.name })
-		await this.updateLastNameUseCase({ entity, lastName: params?.lastName })
-		await this.updateEmailUseCase({ email: params?.email, entity })
-		await this.updateCentroTrabajoUseCase({
-			entity,
-			centroTrabajoId: params?.centroTrabajoId
-		})
-		await this.updateLocationUseCase({
-			entity,
-			locationId: params?.locationId
-		})
-		await this.updateDepartamentoUseCase({
-			entity,
-			departamentoId: params?.departamentoId
-		})
-		await this.updateCargoUseCase({ cargoId: params?.cargoId, entity })
-		await this.updateExtensionUseCase({
-			entity,
-			extension: params?.extension
-		})
-		await this.updatePhoneNumberUseCase({
-			entity,
-			phoneNumber: params?.phone
-		})
+		await Promise.all([
+			this.updateUserNameUseCase({ userName: params?.userName, entity }),
+			this.updateNameUseCase({ entity, name: params?.name }),
+			this.updateLastNameUseCase({ entity, lastName: params?.lastName }),
+			this.updateEmailUseCase({ email: params?.email, entity }),
+			this.updateCentroTrabajoUseCase({
+				entity,
+				centroTrabajoId: params?.centroTrabajoId
+			}),
+			this.updateLocationUseCase({
+				entity,
+				locationId: params?.locationId
+			}),
+			this.updateDepartamentoUseCase({
+				entity,
+				departamentoId: params?.departamentoId
+			}),
+			this.updateCargoUseCase({ cargoId: params?.cargoId, entity }),
+			this.updateExtensionUseCase({
+				entity,
+				extension: params?.extension
+			}),
+			this.updatePhoneNumberUseCase({
+				entity,
+				phoneNumber: params?.phone
+			})
+		])
 	}
 
 	private async updateUserNameUseCase({
@@ -233,6 +235,6 @@ export class UpdateEmployeeUseCase {
 		entity: Employee
 	}): Promise<void> {
 		if (!phoneNumber) return
-		entity.updateExtension(phoneNumber)
+		entity.updatePhone(phoneNumber)
 	}
 }

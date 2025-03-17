@@ -37,9 +37,11 @@ enum AreaCode {
 }
 
 export class Extension extends StringValueObject {
-	private readonly numberLenght = 7
-	private readonly extension = `^(${Object.values(AreaCode).join('|')})\\d{${this.numberLenght}}$`
-	private readonly phoneRegex = new RegExp(this.extension)
+	private readonly areaCodes = Object.values(AreaCode)
+	private readonly numberLength = 7
+	private readonly totalLength = 11 // 4 dígitos de área + 7 dígitos del número
+	private readonly phoneRegex = new RegExp(`^(${this.areaCodes.join('|')})\\d{${this.numberLength}}$`)
+	private errorMessage = ''
 
 	constructor(readonly value: string) {
 		super(value)
@@ -52,11 +54,21 @@ export class Extension extends StringValueObject {
 
 	private ensureIsValid(value: string): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid Extension Number`)
+			throw new InvalidArgumentError(this.errorMessage)
 		}
 	}
 
 	private isValid(name: string): boolean {
-		return this.phoneRegex.test(name)
+		if (name.length !== this.totalLength) {
+			this.errorMessage = `La extensión ${name} no tiene la longitud correcta. Debe tener ${this.totalLength} dígitos.`
+			return false
+		}
+		if (!this.phoneRegex.test(name)) {
+			this.errorMessage = `${name} no es un número de extensión válido. Debe comenzar con ${this.areaCodes.join(
+				', '
+			)} y tener ${this.numberLength} dígitos adicionales.`
+			return false
+		}
+		return true
 	}
 }

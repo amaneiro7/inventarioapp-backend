@@ -12,6 +12,14 @@ export class CargoAssociation {
 			'employee'
 		]
 
+		// FIlrar por departamentos
+		if (options.where && 'departamentoId' in options.where) {
+			;(options.include[0] as any).where = {
+				id: options.where.departamentoId
+			}
+			delete options.where.departamentoId
+		}
+
 		return options
 	}
 }
