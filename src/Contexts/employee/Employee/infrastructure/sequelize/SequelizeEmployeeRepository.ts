@@ -15,44 +15,13 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<EmployeeDto>> {
 		const options = this.convert(criteria)
-		options.include = [
-			{
-				association: 'centroTrabajo',
-				attributes: ['id', 'name'],
-				include: [
-					{
-						association: 'centroCosto',
-						attributes: ['id', 'name']
-					}
-				]
-			},
-			{
-				association: 'departamento',
-				attributes: ['id', 'name'],
-				include: [
-					{
-						association: 'vicepresidenciaEjecutiva',
-						attributes: ['id', 'name'],
-						include: [
-							{
-								association: 'directiva',
-								attributes: ['id', 'name']
-							}
-						]
-					}
-				]
-			},
-			{
-				association: 'cargo',
-				attributes: ['id', 'name']
-			}
-		]
+		const opt = EmployeeAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await EmployeeModel.findAndCountAll(options)
+				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count
@@ -63,13 +32,13 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 
 	async matching(criteria: Criteria): Promise<ResponseDB<EmployeeDto>> {
 		const options = this.convert(criteria)
-
+		const opt = EmployeeAssociation.convertFilter(criteria, options)
 		return this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await EmployeeModel.findAndCountAll(options)
+				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count
