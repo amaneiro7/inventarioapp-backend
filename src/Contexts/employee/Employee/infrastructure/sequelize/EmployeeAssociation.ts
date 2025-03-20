@@ -36,7 +36,7 @@ export class EmployeeAssociation {
 			},
 			{
 				association: 'location', // 7
-				required: true,
+				// required: true,
 				include: [
 					'typeOfSite', // 7 - 0
 					{
