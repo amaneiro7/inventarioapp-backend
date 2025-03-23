@@ -86,15 +86,15 @@ export class DeviceAssociation {
 				],
 				include: [
 					{
-						association: 'cargo',
+						association: 'cargo', // 4 - 0
 						attributes: ['id', 'name']
 					},
 					{
-						association: 'departamento',
+						association: 'departamento', // 4 - 1
 						attributes: ['id', 'name']
 					},
 					{
-						association: 'centroTrabajo',
+						association: 'centroTrabajo', // 4 - 2
 						attributes: ['id', 'name']
 					}
 				]
@@ -252,6 +252,23 @@ export class DeviceAssociation {
 				typeOfSiteId: (options.where as any)?.typeOfSiteId
 			}
 			delete options.where?.typeOfSiteId
+		}
+
+		//Filtrar por departamento
+		if (options.where && 'departamentoId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[1].where = {
+				id: (options.where as any)?.departamentoId
+			}
+			delete options.where?.departamentoId
+		}
+		//Filtrar por departamento
+		if (options.where && 'cargoId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[0].where = {
+				id: (options.where as any)?.cargoId
+			}
+			delete options.where?.cargoId
 		}
 
 		// Poder filtrar por ubicacion - por sitio

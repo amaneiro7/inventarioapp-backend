@@ -18,31 +18,14 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationDto>> {
 		const options = this.convert(criteria)
-
-		options.include = [
-			'typeOfSite',
-			{
-				association: 'site',
-				include: [
-					{
-						association: 'city',
-						include: [
-							{
-								association: 'state',
-								include: ['region']
-							}
-						]
-					}
-				]
-			}
-		]
+		const opt = LocationAssociation.convertFilter(criteria, options)
 
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await LocationModel.findAndCountAll(options)
+				const { rows, count } = await LocationModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count
@@ -53,13 +36,13 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 
 	async matching(criteria: Criteria): Promise<ResponseDB<LocationDto>> {
 		const options = this.convert(criteria)
-		const locationOption = new LocationAssociation().convertFilterLocation(criteria, options)
+		const opt = LocationAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await LocationModel.findAndCountAll(locationOption)
+				const { rows, count } = await LocationModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count

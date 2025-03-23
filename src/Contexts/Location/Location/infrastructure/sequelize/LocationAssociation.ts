@@ -2,57 +2,56 @@ import { FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class LocationAssociation {
-	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
+	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
-			'typeOfSite',
 			{
-				association: 'site',
+				association: 'site', // 0
+				required: true,
 				include: [
 					{
-						association: 'city',
+						association: 'city', // 0 - 0
+						required: true,
 						include: [
 							{
-								association: 'state',
-								include: ['region']
+								association: 'state', // 0 - 0 - 0
+								required: true,
+								include: [
+									{
+										association: 'region' // 0 - 0 - 0 - 0
+									}
+								]
 							}
 						]
 					}
 				]
-			}
+			},
+			'typeOfSite' // 1
 		]
-		if (criteria.searchValueInArray('cityId')) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			options.include[1].where = {
-				...options.include[1].where,
-				cityId: options.where.cityId
+		// Poder filtrar por ciudad
+		if (options.where && 'cityId' in options.where) {
+			;(options.include[0] as any).include[0].where = {
+				id: options.where.cityId
 			}
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			delete options.where.cityId
+
+			delete options.where?.cityId
 		}
-		if (criteria.searchValueInArray('stateId')) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			options.include[1].include[0].where = {
-				...options.include[1].include[0].where,
-				stateId: options.where.stateId
+		// Poder filtrar por estado
+		if (options.where && 'stateId' in options.where) {
+			;(options.include[0] as any).include[0].include[0].where = {
+				id: options.where.stateId
 			}
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			delete options.where.stateId
+
+			delete options.where?.stateId
 		}
-		if (criteria.searchValueInArray('regionId')) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			options.include[1].include[0].include[0].where = {
-				...options.include[1].include[0].include[0].where,
-				regionId: options.where.regionId
+		// Poder filtrar por region
+		if (options.where && 'regionId' in options.where) {
+			;(options.include[0] as any).include[0].include[0].include[0].where = {
+				id: options.where.regionId
 			}
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			delete options.where.regionId
+
+			delete options.where?.regionId
 		}
+
 		return options
 	}
 }
