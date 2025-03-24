@@ -306,6 +306,24 @@ export class DeviceAssociation {
 			delete options.where?.regionId
 		}
 
+		const newOrder = this.transformarOrder(options.order)
+
+		options.order = newOrder
+		console.log(options.order)
+
 		return options
+	}
+
+	transformarOrder(order: FindOptions['order']) {
+		if (!order) return
+		return order?.map(([orderBy, orderType]) => {
+			if (orderBy === 'ipAddress') {
+				return ['computer', 'ipAddress', orderType]
+			}
+			if (orderBy === 'computerName') {
+				return ['computer', 'computerName', orderType]
+			}
+			return [orderBy, orderType]
+		})
 	}
 }
