@@ -8,8 +8,9 @@ import { type UserId } from '../../../User/user/domain/UserId'
 import { type HistoryEmployee } from '../../domain/HistoryEmployee'
 import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
+import { type UserDto } from '../../../User/user/domain/User.dto'
 
-export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device'>> implements HistoryDto {
+export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' | 'user'>> implements HistoryDto {
 	declare id: Primitives<HistoryId>
 	declare deviceId: Primitives<DeviceId>
 	declare userId: Primitives<UserId>
@@ -21,6 +22,7 @@ export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device'>>
 	// joins
 	declare employee: EmployeeDto
 	declare device: DeviceDto
+	declare user: UserDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.User, { as: 'user', foreignKey: 'userId' }) // A history belongs to a user

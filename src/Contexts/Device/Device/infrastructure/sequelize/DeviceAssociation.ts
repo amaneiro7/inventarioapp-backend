@@ -317,6 +317,9 @@ export class DeviceAssociation {
 		const orderMap: Record<string, string[]> = {
 			employeeId: ['employee', 'userName'],
 			locationId: ['location', 'name'],
+			cityId: ['location', 'site', 'city', 'name'],
+			stateId: ['location', 'site', 'city', 'state', 'name'],
+			regionId: ['location', 'site', 'city', 'state', 'region', 'name'],
 			ipAddress: ['computer', 'ipAddress'],
 			categoryId: ['category', 'name'],
 			computerName: ['computer', 'computerName'],

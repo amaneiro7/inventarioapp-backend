@@ -5,6 +5,7 @@ import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { CriteriaToSequelizeConverter } from '../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type HistoryDto, type HistoryPrimitives } from '../../domain/History.dto'
 import { type HistoryRepository } from '../../domain/HistoryRepository'
+import { HistoryAssociation } from './HistoryAssociation'
 import { HistoryModel } from './HistorySchema'
 
 export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter implements HistoryRepository {
@@ -14,12 +15,13 @@ export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter imp
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<HistoryDto>> {
 		const options = this.convert(criteria)
+		const opt = HistoryAssociation.converFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await HistoryModel.findAndCountAll(options)
+				const { count, rows } = await HistoryModel.findAndCountAll(opt)
 				return {
 					data: rows,
 					total: count
