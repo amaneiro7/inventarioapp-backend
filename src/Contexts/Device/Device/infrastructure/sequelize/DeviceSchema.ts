@@ -65,7 +65,7 @@ export class DeviceModel
 	declare computer: DeviceComputerDto | null
 	declare hardDrive: DeviceHardDriveDto | null
 	declare mfp: DeviceMFPDto | null
-	declare history: HistoryDto
+	declare history: HistoryDto[]
 	declare updatedAt: Date
 	declare createdAt: Date
 

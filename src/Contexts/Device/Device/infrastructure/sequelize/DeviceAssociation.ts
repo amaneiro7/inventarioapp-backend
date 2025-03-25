@@ -306,24 +306,33 @@ export class DeviceAssociation {
 			delete options.where?.regionId
 		}
 
-		const newOrder = this.transformarOrder(options.order)
-
-		options.order = newOrder
-		console.log(options.order)
+		options.order = this.transformOrder(options.order)
 
 		return options
 	}
 
-	transformarOrder(order: FindOptions['order']) {
-		if (!order) return
-		return order?.map(([orderBy, orderType]) => {
-			if (orderBy === 'ipAddress') {
-				return ['computer', 'ipAddress', orderType]
-			}
-			if (orderBy === 'computerName') {
-				return ['computer', 'computerName', orderType]
-			}
-			return [orderBy, orderType]
+	private transformOrder(order: FindOptions['order']): FindOptions['order'] {
+		if (!order || !Array.isArray(order)) return undefined
+
+		const orderMap: Record<string, string[]> = {
+			employeeId: ['employee', 'userName'],
+			locationId: ['location', 'name'],
+			ipAddress: ['computer', 'ipAddress'],
+			categoryId: ['category', 'name'],
+			computerName: ['computer', 'computerName'],
+			memoryRamCapacity: ['computer', 'memoryRamCapacity'],
+			processorId: ['computer', 'processor', 'name'],
+			operatingSystemId: ['computer', 'operatingSystem', 'name'],
+			operatingSystemArqId: ['computer', 'operatingSystemArq', 'name'],
+			hardDriveCapacityId: ['computer', 'hardDriveCapacity', 'name'],
+			hardDriveTypeId: ['computer', 'hardDriveType', 'name'],
+			brandId: ['brand', 'name'],
+			modelId: ['model', 'name']
+		}
+		// @ts-ignore
+		return order.map(([orderBy, orderType]) => {
+			const mappedOrder = orderMap[orderBy]
+			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
 		})
 	}
 }
