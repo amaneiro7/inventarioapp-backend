@@ -91,7 +91,8 @@ export class DeviceAssociation {
 					},
 					{
 						association: 'departamento', // 4 - 1
-						attributes: ['id', 'name']
+						attributes: ['id', 'name'],
+						include: [{ association: 'vicepresidenciaEjecutiva', include: ['directiva'] }]
 					},
 					{
 						association: 'centroTrabajo', // 4 - 2
@@ -316,6 +317,8 @@ export class DeviceAssociation {
 
 		const orderMap: Record<string, string[]> = {
 			employeeId: ['employee', 'userName'],
+			departamentoId: ['employee', 'departamento', 'name'],
+			cargoId: ['employee', 'cargo', 'name'],
 			locationId: ['location', 'name'],
 			cityId: ['location', 'site', 'city', 'name'],
 			stateId: ['location', 'site', 'city', 'state', 'name'],
