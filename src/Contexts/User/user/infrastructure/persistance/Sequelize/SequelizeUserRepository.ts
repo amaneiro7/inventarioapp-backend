@@ -8,27 +8,26 @@ import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/Use
 import { UserModel } from './UserSchema'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { UsersAssociation } from './UsersAssociation'
+import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 
 export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
 	private readonly cacheKey: string = 'users'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async searchAll(): Promise<UserPrimitivesOptional[]> {
+	async searchAll(criteria: Criteria): Promise<ResponseDB<UserPrimitivesOptional>> {
+		const options = this.convert(criteria)
+		options.include = ['role']
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			fetchFunction: async () => {
-				return await UserModel.findAll({
-					include: ['role']
-				})
+				const { count, rows } = await UserModel.findAndCountAll(options)
+				return {
+					data: rows,
+					total: count
+				}
 			}
 		})
-	}
-
-	async matching(criteria: Criteria): Promise<UserPrimitivesOptional[]> {
-		const options = this.convert(criteria)
-		const opt = new UsersAssociation().convertFilterLocation(criteria, options)
-		return await UserModel.findAll(opt).then(user => JSON.parse(JSON.stringify(user)))
 	}
 
 	async searchByEmail(userEmail: string): Promise<UserPrimitives | null> {
@@ -58,12 +57,10 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 			await user.save()
 		}
 		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		await this.searchAll()
 	}
 
 	async delete(id: Primitives<UserId>): Promise<void> {
 		await UserModel.destroy({ where: { id } })
 		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		await this.searchAll()
 	}
 }

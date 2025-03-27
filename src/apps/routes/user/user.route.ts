@@ -2,7 +2,6 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { UserDependencies } from '../../di/user/user.di'
-import { type UserSearchByCriteriaController } from '../../controllers/user/user.search-by-criteria.controller'
 import { type UserGetController } from '../../controllers/user/user.get.controller'
 import { type UserGetAllController } from '../../controllers/user/user.get-all.controller'
 import { type UserPostController } from '../../controllers/user/user.post.controller'
@@ -17,7 +16,6 @@ export const register = async (router: Router) => {
 	const getAllController: UserGetAllController = container.resolve(UserDependencies.GetAllController)
 	const postController: UserPostController = container.resolve(UserDependencies.PostController)
 	const patchController: UserPatchController = container.resolve(UserDependencies.PatchController)
-	const searchByCriteria: UserSearchByCriteriaController = container.resolve(UserDependencies.GetByCriteriaController)
 	const deleteController: UserDeleteController = container.resolve(UserDependencies.DeleteController)
 	const getByEmailController: UserGetByEmailController = container.resolve(UserDependencies.GetByEmailController)
 	const changePaswwordController: UserChangePasswordController = container.resolve(
@@ -28,9 +26,7 @@ export const register = async (router: Router) => {
 	)
 
 	// get
-	router.get('/users/', authenticate, searchByCriteria.run.bind(searchByCriteria))
-
-	router.get('/users/all', authenticate, getAllController.run.bind(getAllController))
+	router.get('/users/', authenticate, getAllController.run.bind(getAllController))
 
 	router.get('/users/by-email', authenticate, getByEmailController.run.bind(getByEmailController))
 

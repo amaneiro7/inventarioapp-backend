@@ -1,4 +1,4 @@
-import { FindOptions } from 'sequelize'
+import { FindOptions, Op } from 'sequelize'
 import { Criteria } from '../../../Shared/domain/criteria/Criteria'
 
 export class HistoryAssociation {
@@ -27,7 +27,17 @@ export class HistoryAssociation {
 			}
 			delete options.where.categoryId
 		}
+		if (options.where && 'startDate' in options.where && 'endDate' in options.where) {
+			options.where = {
+				updatedAt: {
+					[Op.between]: [options.where.startDate, options.where.endDate]
+				}
+			}
+			delete options.where.startDate
+			delete options.where.endDate
+		}
 		options.order = this.transformOrder(options.order)
+		console.log('update', options)
 		return options
 	}
 
@@ -35,22 +45,8 @@ export class HistoryAssociation {
 		if (!order || !Array.isArray(order)) return undefined
 
 		const orderMap: Record<string, string[]> = {
-			employeeId: ['employee', 'userName'],
-			locationId: ['location', 'name'],
-			cityId: ['location', 'site', 'city', 'name'],
-			stateId: ['location', 'site', 'city', 'state', 'name'],
-			regionId: ['location', 'site', 'city', 'state', 'region', 'name'],
-			ipAddress: ['computer', 'ipAddress'],
-			categoryId: ['category', 'name'],
-			computerName: ['computer', 'computerName'],
-			memoryRamCapacity: ['computer', 'memoryRamCapacity'],
-			processorId: ['computer', 'processor', 'name'],
-			operatingSystemId: ['computer', 'operatingSystem', 'name'],
-			operatingSystemArqId: ['computer', 'operatingSystemArq', 'name'],
-			hardDriveCapacityId: ['computer', 'hardDriveCapacity', 'name'],
-			hardDriveTypeId: ['computer', 'hardDriveType', 'name'],
-			brandId: ['brand', 'name'],
-			modelId: ['model', 'name']
+			serial: ['device', 'serial'],
+			categoryId: ['device', 'category', 'name']
 		}
 		// @ts-ignore
 		return order.map(([orderBy, orderType]) => {
