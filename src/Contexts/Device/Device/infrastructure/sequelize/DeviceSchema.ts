@@ -158,7 +158,8 @@ export class DeviceModel
 				modelName: 'Device',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ unique: true, fields: ['serial'] }]
 			}
 		)
 	}

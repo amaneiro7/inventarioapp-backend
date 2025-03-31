@@ -37,7 +37,6 @@ export class HistoryAssociation {
 			delete options.where.endDate
 		}
 		options.order = this.transformOrder(options.order)
-		console.log('update', options)
 		return options
 	}
 

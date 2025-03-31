@@ -74,7 +74,6 @@ export class Departamento extends IDepartment {
 	}
 
 	updateCargos(cargoIds: Primitives<CargoId>[]): void {
-		console.log(cargoIds)
 		this.cargos = cargoIds.map(cargo => new CargoId(cargo))
 	}
 }

@@ -2,6 +2,7 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { DeviceDependencies } from '../../di/device/device.di'
+import { ComputerDashboardDependencies } from '../../di/device/computerDashboard.di'
 
 // import { type DeviceGetAllController } from '../controllers/device/device.getAll.controller'
 import { type DevicePatchController } from '../../controllers/device/device.patch.controller'
@@ -10,6 +11,7 @@ import { type DevicePostController } from '../../controllers/device/device.post.
 import { type DeviceSearchByCriteriaController } from '../../controllers/device/device.search-by-criteria.controller'
 import { type DeviceDeleteController } from '../../controllers/device/device.delete.controller'
 import { type DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
+import { type ComputerDashboardGetController } from '../../controllers/device/device-computer-dashboard.controller'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -21,11 +23,15 @@ export const register = async (router: Router) => {
 	)
 	const deleteController: DeviceDeleteController = container.resolve(DeviceDependencies.DeleteController)
 	const download: DeviceDownloadExcelServiceController = container.resolve(DeviceDependencies.ExcelDownloadController)
+	const computerDashboard: ComputerDashboardGetController = container.resolve(
+		ComputerDashboardDependencies.ComputerDashboardGetController
+	)
 
 	// get
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
 	router.get('/devices/download', authenticate, download.run.bind(download))
+	router.get('/devices/dashboard/computer', computerDashboard.run.bind(computerDashboard))
 
 	router.get('/devices/:id', authenticate, getController.run.bind(getController))
 

@@ -147,7 +147,6 @@ export class DeviceAssociation {
 			},
 			{
 				association: 'location', // 7
-				required: true,
 				include: [
 					'typeOfSite', // 7 - 0
 					{
@@ -274,6 +273,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por ubicacion - por sitio
 		if (options.where && 'siteId' in options.where) {
+			;(options.include[7] as any).required = true
 			;(options.include[7] as any).include[1].where = {
 				id: (options.where as any)?.siteId
 			}
@@ -282,6 +282,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por ciudad
 		if (options.where && 'cityId' in options.where) {
+			;(options.include[7] as any).required = true
 			;(options.include[7] as any).include[1].include[0].where = {
 				id: options.where.cityId
 			}
@@ -291,6 +292,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por estado
 		if (options.where && 'stateId' in options.where) {
+			;(options.include[7] as any).required = true
 			;(options.include[7] as any).include[1].include[0].include[0].where = {
 				id: options.where.stateId
 			}
@@ -300,6 +302,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por region
 		if (options.where && 'regionId' in options.where) {
+			;(options.include[7] as any).required = true
 			;(options.include[7] as any).include[1].include[0].include[0].include[0].where = {
 				id: (options.where as any)?.regionId
 			}

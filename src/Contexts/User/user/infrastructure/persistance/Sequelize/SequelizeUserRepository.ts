@@ -4,10 +4,8 @@ import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
-
 import { UserModel } from './UserSchema'
 import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import { UsersAssociation } from './UsersAssociation'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 
 export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
