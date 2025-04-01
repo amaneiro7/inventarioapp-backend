@@ -35,21 +35,24 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 			fetchFunction: async () => {
 				const result = await DeviceModel.findAll({
 					attributes: [
-						[sequelize.col('computer.hardDriveCapacity.name'), 'hddCapacity'],
-						[sequelize.col('computer.hardDriveType.name'), 'hddType'],
+						[sequelize.col('computer.hardDriveCapacity.name'), 'hddCapacityName'],
+						[sequelize.col('computer.hardDriveType.name'), 'hddTypeName'],
 						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 					],
 					include: [
 						{
 							association: 'computer',
 							attributes: [],
+							required: true,
 							include: [
 								{
 									association: 'hardDriveCapacity',
+									required: true,
 									attributes: []
 								},
 								{
 									association: 'hardDriveType',
+									required: true,
 									attributes: []
 								}
 							]
@@ -63,9 +66,42 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						}
 					],
 					group: ['computer.hardDriveCapacity.name', 'computer.hardDriveType.name'],
+					order: [[sequelize.col('computer.hardDriveCapacity.name'), 'ASC']],
 					raw: true
 				})
-				// return result.map((hddCapacity: any) => ({ name: hddCapacity.name, count: Number(hddCapacity.count) }))
+				const hddCapacityMap = new Map()
+				result.forEach((item: any) => {
+					const { hddCapacityName, hddTypeName, count } = item
+					const countAsNumber = Number(count)
+					const hddCapacityNameWithGB = `${hddCapacityName}GB`
+
+					if (!hddCapacityMap.has(hddCapacityNameWithGB)) {
+						hddCapacityMap.set(hddCapacityNameWithGB, {
+							name: hddCapacityNameWithGB,
+							count: 0,
+							hddType: new Map()
+						})
+					}
+					const hddCapacity = hddCapacityMap.get(hddCapacityNameWithGB)
+					hddCapacity.count += countAsNumber
+
+					if (!hddCapacity.hddType.has(hddTypeName)) {
+						hddCapacity.hddType.set(hddTypeName, {
+							name: hddTypeName,
+							count: countAsNumber
+						})
+					} else {
+						hddCapacity.hddType.get(hddTypeName).count += countAsNumber
+					}
+				})
+
+				// convertir los mapas a arrays
+				const transformedData = Array.from(hddCapacityMap.values()).map((hddCapacity: any) => ({
+					...hddCapacity,
+					hddType: Array.from(hddCapacity.hddType.values())
+				}))
+
+				return transformedData
 			}
 		})
 	}
