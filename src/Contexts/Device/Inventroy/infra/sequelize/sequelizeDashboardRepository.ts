@@ -407,6 +407,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 					],
 					group: [
 						'location.name',
+						'location.typeOfSite.name',
 						'location.site.name',
 						'location.site.city.name',
 						'location.site.city.state.name',
