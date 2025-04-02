@@ -73,7 +73,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				result.forEach((item: any) => {
 					const { hddCapacityName, hddTypeName, count } = item
 					const countAsNumber = Number(count)
-					const hddCapacityNameWithGB = `${hddCapacityName}GB`
+					const hddCapacityNameWithGB = `${hddCapacityName} GB`
 
 					if (!hddCapacityMap.has(hddCapacityNameWithGB)) {
 						hddCapacityMap.set(hddCapacityNameWithGB, {
