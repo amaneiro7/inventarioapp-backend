@@ -7,4 +7,5 @@ export abstract class ComputerDashboardRepository {
 	abstract countByBrand(): Promise<{}>
 	abstract countByRegion(): Promise<{}>
 	abstract countTotalHDD(): Promise<{}>
+	abstract countTotalOperatingSystem(): Promise<{}>
 }

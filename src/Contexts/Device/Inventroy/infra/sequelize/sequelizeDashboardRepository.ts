@@ -339,7 +339,9 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 			fetchFunction: async () => {
 				const result = await DeviceModel.findAll({
 					attributes: [
-						[sequelize.col('location.name'), 'name'],
+						[sequelize.col('computer.operatingSystem.name'), 'osName'],
+						[sequelize.col('location.name'), 'locationName'],
+						[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
 						[sequelize.col('location.site.name'), 'siteName'],
 						[sequelize.col('location.site.city.name'), 'cityName'],
 						[sequelize.col('location.site.city.state.name'), 'stateName'],
@@ -353,6 +355,18 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 							where: {
 								mainCategoryId: MainCategoryList.COMPUTER
 							}
+						},
+						{
+							association: 'computer',
+							attributes: [],
+							required: true,
+							include: [
+								{
+									association: 'operatingSystem',
+									required: true,
+									attributes: []
+								}
+							]
 						},
 						{
 							association: 'location',
@@ -396,7 +410,8 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						'location.site.name',
 						'location.site.city.name',
 						'location.site.city.state.name',
-						'location.site.city.state.region.name'
+						'location.site.city.state.region.name',
+						'computer.operatingSystem.name'
 					],
 					order: [
 						[sequelize.col('location.site.city.state.region.name'), 'ASC'],
@@ -409,12 +424,13 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				})
 				const regionMap = new Map()
 				result.forEach((item: any) => {
-					const { regionName, stateName, cityName, siteName, name, count } = item
+					const { regionName, stateName, cityName, siteName, locationName, typeOfSiteName, osName, count } =
+						item
 					const countNumber = Number(count) // Convertir a número entero
 
 					if (!regionMap.has(regionName)) {
 						regionMap.set(regionName, {
-							regionName,
+							name: regionName,
 							count: 0,
 							states: new Map()
 						})
@@ -425,7 +441,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 
 					if (!region.states.has(stateName)) {
 						region.states.set(stateName, {
-							stateName,
+							name: stateName,
 							count: 0,
 							cities: new Map()
 						})
@@ -436,7 +452,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 
 					if (!state.cities.has(cityName)) {
 						state.cities.set(cityName, {
-							cityName,
+							name: cityName,
 							count: 0,
 							sites: new Map()
 						})
@@ -447,21 +463,32 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 
 					if (!city.sites.has(siteName)) {
 						city.sites.set(siteName, {
-							siteName,
+							name: siteName,
 							count: 0,
-							names: new Map()
+							locations: new Map()
 						})
 					}
 					const site = city.sites.get(siteName)
 					site.count += countNumber
 
-					if (!site.names.has(name)) {
-						site.names.set(name, {
-							name,
+					if (!site.locations.has(locationName)) {
+						site.locations.set(locationName, {
+							name: locationName,
+							typeOfSite: typeOfSiteName,
+							count: 0,
+							operatingSystem: new Map()
+						})
+					}
+					const location = site.locations.get(locationName)
+					location.count += countNumber
+
+					if (!location.operatingSystem.has(osName)) {
+						location.operatingSystem.set(osName, {
+							name: osName,
 							count: countNumber
 						})
 					} else {
-						site.names.get(name).count += countNumber
+						location.operatingSystem.get(osName).count += countNumber
 					}
 				})
 
@@ -474,10 +501,90 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 							...city,
 							sites: Array.from(city.sites.values()).map((site: any) => ({
 								...site,
-								names: Array.from(site.names.values())
+								locations: Array.from(site.locations.values()).map((location: any) => ({
+									...location,
+									operatingSystem: Array.from(location.operatingSystem.values())
+								}))
 							}))
 						}))
 					}))
+				}))
+
+				return transformedData
+			}
+		})
+	}
+
+	async countTotalOperatingSystem(): Promise<{}> {
+		return await this.cache.getCachedData({
+			cacheKey: `computer-os-${this.cacheKey}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const result = await DeviceModel.findAll({
+					attributes: [
+						[sequelize.col('computer.operatingSystem.name'), 'osName'],
+						[sequelize.col('computer.operatingSystemArq.name'), 'arqName'],
+						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
+					],
+					include: [
+						{
+							association: 'computer',
+							attributes: [],
+							required: true,
+							include: [
+								{
+									association: 'operatingSystem',
+									required: true,
+									attributes: []
+								},
+								{
+									association: 'operatingSystemArq',
+									required: true,
+									attributes: []
+								}
+							]
+						},
+						{
+							association: 'category',
+							attributes: [],
+							where: {
+								mainCategoryId: MainCategoryList.COMPUTER
+							}
+						}
+					],
+					group: ['computer.operatingSystem.name', 'computer.operatingSystemArq.name'],
+					order: [[sequelize.col('computer.operatingSystem.name'), 'ASC']],
+					raw: true
+				})
+				const operatingSystemMap = new Map()
+				result.forEach((item: any) => {
+					const { osName, arqName, count } = item
+					const countAsNumber = Number(count)
+
+					if (!operatingSystemMap.has(osName)) {
+						operatingSystemMap.set(osName, {
+							name: osName,
+							count: 0,
+							arq: new Map()
+						})
+					}
+					const operatingSystem = operatingSystemMap.get(osName)
+					operatingSystem.count += countAsNumber
+
+					if (!operatingSystem.arq.has(arqName)) {
+						operatingSystem.arq.set(arqName, {
+							name: arqName,
+							count: countAsNumber
+						})
+					} else {
+						operatingSystem.arq.get(arqName).count += countAsNumber
+					}
+				})
+
+				// convertir los mapas a arrays
+				const transformedData = Array.from(operatingSystemMap.values()).map((operatingSystem: any) => ({
+					...operatingSystem,
+					arq: Array.from(operatingSystem.arq.values())
 				}))
 
 				return transformedData
