@@ -339,7 +339,6 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 			fetchFunction: async () => {
 				const result = await DeviceModel.findAll({
 					attributes: [
-						[sequelize.col('computer.operatingSystem.name'), 'osName'],
 						[sequelize.col('location.name'), 'locationName'],
 						[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
 						[sequelize.col('location.site.name'), 'siteName'],
@@ -355,18 +354,6 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 							where: {
 								mainCategoryId: MainCategoryList.COMPUTER
 							}
-						},
-						{
-							association: 'computer',
-							attributes: [],
-							required: true,
-							include: [
-								{
-									association: 'operatingSystem',
-									required: true,
-									attributes: []
-								}
-							]
 						},
 						{
 							association: 'location',
@@ -411,8 +398,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						'location.site.name',
 						'location.site.city.name',
 						'location.site.city.state.name',
-						'location.site.city.state.region.name',
-						'computer.operatingSystem.name'
+						'location.site.city.state.region.name'
 					],
 					order: [
 						[sequelize.col('location.site.city.state.region.name'), 'ASC'],
@@ -425,8 +411,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				})
 				const regionMap = new Map()
 				result.forEach((item: any) => {
-					const { regionName, stateName, cityName, siteName, locationName, typeOfSiteName, osName, count } =
-						item
+					const { regionName, stateName, cityName, siteName, locationName, typeOfSiteName, count } = item
 					const countNumber = Number(count) // Convertir a número entero
 
 					if (!regionMap.has(regionName)) {
@@ -476,20 +461,10 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						site.locations.set(locationName, {
 							name: locationName,
 							typeOfSite: typeOfSiteName,
-							count: 0,
-							operatingSystem: new Map()
-						})
-					}
-					const location = site.locations.get(locationName)
-					location.count += countNumber
-
-					if (!location.operatingSystem.has(osName)) {
-						location.operatingSystem.set(osName, {
-							name: osName,
 							count: countNumber
 						})
 					} else {
-						location.operatingSystem.get(osName).count += countNumber
+						site.locations.get(locationName).count += countNumber
 					}
 				})
 
@@ -502,10 +477,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 							...city,
 							sites: Array.from(city.sites.values()).map((site: any) => ({
 								...site,
-								locations: Array.from(site.locations.values()).map((location: any) => ({
-									...location,
-									operatingSystem: Array.from(location.operatingSystem.values())
-								}))
+								locations: Array.from(site.locations.values())
 							}))
 						}))
 					}))
