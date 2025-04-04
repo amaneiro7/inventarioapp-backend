@@ -1,10 +1,12 @@
 import { type ComputerDashboardRepository } from '../domain/ComputerDashboardRepository'
+import { type ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepositoyr'
 import { type CountOSByRegionRepository } from '../domain/CountOSByRegionRepository'
 
 export class ComputerDashboard {
 	constructor(
 		private readonly computerDashboardRepository: ComputerDashboardRepository,
-		private readonly countOSByRegionRepository: CountOSByRegionRepository
+		private readonly countOSByRegionRepository: CountOSByRegionRepository,
+		private readonly computerMemoryRamRepository: ComputerMemoryRamRepository
 	) {}
 
 	async run(): Promise<{}> {
@@ -18,6 +20,7 @@ export class ComputerDashboard {
 			totalAgencies,
 			hardDrive,
 			operatingSystem,
+			memoryRamCapacity,
 			operatingSystemByRegion
 		] = await Promise.all([
 			this.computerDashboardRepository.countTotal(),
@@ -29,6 +32,7 @@ export class ComputerDashboard {
 			this.computerDashboardRepository.countTotalAgencies(),
 			this.computerDashboardRepository.countTotalHDD(),
 			this.computerDashboardRepository.countTotalOperatingSystem(),
+			this.computerMemoryRamRepository.run(),
 			this.countOSByRegionRepository.run()
 		])
 		return {
@@ -41,6 +45,7 @@ export class ComputerDashboard {
 			region,
 			hardDrive,
 			operatingSystem,
+			memoryRamCapacity,
 			operatingSystemByRegion
 		}
 	}

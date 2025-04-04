@@ -51,8 +51,6 @@ export class DeviceComputerModel
 	declare macAddress: Primitives<MACAddress>
 	declare ipAddress: Primitives<IPAddress>
 
-	/*************  ✨ Codeium Command ⭐  *************/
-	/******  fd91fc70-6ac1-4a58-b07c-8ae3b465c9d8  *******/
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Category, {
 			as: 'category',
