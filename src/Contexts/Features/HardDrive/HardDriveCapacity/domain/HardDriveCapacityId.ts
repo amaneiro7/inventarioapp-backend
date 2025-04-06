@@ -18,9 +18,8 @@ export class HardDriveCapacityId extends StringValueObject {
 			return
 		}
 		// Searches for a device with the given valor de la capacidad del Disco Duro in the database
-		const deviceWithHardDriveCapacity: HardDriveCapacityPrimitives | null = await repository.searchById(
-			hardDriveCapacity
-		)
+		const deviceWithHardDriveCapacity: HardDriveCapacityPrimitives | null =
+			await repository.searchById(hardDriveCapacity)
 		// If a device with the given valor de la capacidad del Disco Duro exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor de la capacidad del Disco Duro
 		if (deviceWithHardDriveCapacity === null) {
