@@ -30,7 +30,7 @@ export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRe
 						},
 						{
 							association: 'computer',
-							attributes: ['memoryRamCapacity']
+							attributes: []
 						},
 						{
 							association: 'location',
@@ -56,7 +56,7 @@ export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRe
 				result.forEach((item: any) => {
 					const { memoryRamTotal, typeOfSiteName, count } = item
 					const countNumber = Number(count) // Convertir a número entero
-					const memoryRamName = `${memoryRamTotal} Gb`
+					const memoryRamName = memoryRamTotal !== '0' ? `${memoryRamTotal} Gb` : 'Sin Memoria'
 
 					if (!typeOfSiteMap.has(typeOfSiteName)) {
 						typeOfSiteMap.set(typeOfSiteName, {

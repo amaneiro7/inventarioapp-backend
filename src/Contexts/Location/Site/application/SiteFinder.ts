@@ -1,6 +1,6 @@
 import { SiteId } from '../domain/SiteId'
 import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
-import { type SitePrimitives } from '../domain/Site'
+import { type SitePrimitives } from '../domain/Site.dto'
 import { type SiteRepository } from '../domain/SiteRepository'
 
 export class SiteFinder {

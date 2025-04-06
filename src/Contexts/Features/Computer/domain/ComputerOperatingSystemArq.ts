@@ -1,7 +1,7 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemArqPrimitives } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArq'
+import { type OperatingSystemArqPrimitives } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArq.dto'
 import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqDoesNotExist'
 import { OperatingSystemArqId } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqID'
 import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
@@ -92,8 +92,9 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitiv
 			return
 		}
 		// Searches for a device with the given valor del Sistema Operativo in the database
-		const deviceWithOperatingSystemArq: OperatingSystemArqPrimitives | null =
-			await repository.searchById(operatingSystemArq)
+		const deviceWithOperatingSystemArq: OperatingSystemArqPrimitives | null = await repository.searchById(
+			operatingSystemArq
+		)
 		// If a device with the given valor del Sistema Operativo exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor del Sistema Operativo
 		if (deviceWithOperatingSystemArq === null) {

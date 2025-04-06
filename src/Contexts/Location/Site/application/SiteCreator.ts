@@ -1,4 +1,5 @@
-import { Site, type SitePrimitives } from '../domain/Site'
+import { Site } from '../domain/Site'
+import { type SitePrimitives } from '../domain/Site.dto'
 import { type SiteRepository } from '../domain/SiteRepository'
 
 export class SiteCreator {

@@ -54,6 +54,22 @@ export class ModelAssociation {
 			}
 			delete options.where.mainCategoryId
 		}
+		options.order = this.transformOrder(options.order)
 		return options
+	}
+
+	private transformOrder(order: FindOptions['order']): FindOptions['order'] {
+		if (!order || !Array.isArray(order)) return undefined
+
+		const orderMap: Record<string, string[]> = {
+			categoryId: ['category', 'name'],
+			brandId: ['brand', 'name'],
+			mainCategoryId: ['category', 'mainCategory', 'name']
+		}
+		// @ts-ignore
+		return order.map(([orderBy, orderType]) => {
+			const mappedOrder = orderMap[orderBy]
+			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
+		})
 	}
 }

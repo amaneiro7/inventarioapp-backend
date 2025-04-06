@@ -7,6 +7,9 @@ import { EmployeeAssociation } from './EmployeeAssociation'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { Nullable } from '../../../../Shared/domain/Nullable'
+import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
 
 export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
 	private readonly cacheKey: string = 'employees'
@@ -45,6 +48,16 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 				}
 			}
 		})
+	}
+
+	async searchByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>> {
+		return (
+			(await EmployeeModel.findOne({
+				where: {
+					email
+				}
+			})) ?? null
+		)
 	}
 
 	async searchById(id: string): Promise<EmployeeDto | null> {

@@ -1,10 +1,11 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CargoRepository } from './CargoRepository'
-import { type CargoPrimitives } from './Cargo'
-import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento'
+
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type CargoName } from './CargoName'
+import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento.dto'
+import { type CargoPrimitives } from './Cargo.dto'
 import { CargoAlreadyExistError } from './CargoAlreadyExistError'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 

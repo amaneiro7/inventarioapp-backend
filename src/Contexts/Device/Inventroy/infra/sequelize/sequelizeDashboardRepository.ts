@@ -174,7 +174,9 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 					order: [[sequelize.col('status.name'), 'ASC']],
 					raw: true
 				})
-				return result.map((status: any) => ({ name: status.name, count: Number(status.count) }))
+				return result
+					.map((status: any) => ({ name: status.name, count: Number(status.count) }))
+					.sort((a, b) => b.count - a.count)
 			}
 		})
 	}

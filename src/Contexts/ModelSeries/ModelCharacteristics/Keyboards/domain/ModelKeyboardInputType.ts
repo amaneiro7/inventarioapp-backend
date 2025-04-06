@@ -1,5 +1,5 @@
 import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { InputTypePrimitives } from '../../../InputType/domain/InputType'
+import { InputTypePrimitives } from '../../../InputType/domain/InputType.dto'
 import { InputTypeId } from '../../../InputType/domain/InputTypeId'
 import { InputTypeRepository } from '../../../InputType/domain/InputTypeRepository'
 import { KeyboardModels } from './KeyboadModels'

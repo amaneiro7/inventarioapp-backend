@@ -1,4 +1,5 @@
-import { Site, SitePrimitives } from '../domain/Site'
+import { Site } from '../domain/Site'
+import { type SitePrimitives } from '../domain/Site.dto'
 import { SiteAddress } from '../domain/SiteAddress'
 import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
 import { SiteId } from '../domain/SiteId'

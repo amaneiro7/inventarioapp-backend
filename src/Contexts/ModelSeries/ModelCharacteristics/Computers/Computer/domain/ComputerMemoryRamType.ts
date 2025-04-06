@@ -1,9 +1,9 @@
-import { MemoryRamTypePrimitives } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamType'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
-import { MemoryRamTypeRepository } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
-import { Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { LaptopsModels } from '../../Laptops/domain/LaptopsModels'
-import { ComputerModels } from './ComputerModels'
+import { type MemoryRamTypePrimitives } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { type MemoryRamTypeRepository } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type LaptopsModels } from '../../Laptops/domain/LaptopsModels'
+import { type ComputerModels } from './ComputerModels'
 
 export class ComputerMemoryRamType extends MemoryRamTypeId {
 	static async updateInputTypeField(params: {

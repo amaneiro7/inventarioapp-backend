@@ -4,6 +4,7 @@ import { SequelizeComputerDashboardRepository } from '../../../Contexts/Device/I
 import { ComputerDashboardGetController } from '../../controllers/device/device-computer-dashboard.controller'
 import { SequelizeCountOSByRegionRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountOSByRegionRepository'
 import { SequelizeComputerMemoryRamRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeComputerMemoryRamRepository'
+import { SequelizeComputerMemoryRamModulesRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeComputerMemoryRamModulesRepository'
 
 export enum ComputerDashboardDependencies {
 	Repository = 'computerDashboardRepository',
@@ -16,6 +17,7 @@ export const register = (container: AwilixContainer) => {
 		computerDashboardRepository: asClass(SequelizeComputerDashboardRepository).singleton(),
 		countOSByRegionRepository: asClass(SequelizeCountOSByRegionRepository).singleton(),
 		computerMemoryRamRepository: asClass(SequelizeComputerMemoryRamRepository).singleton(),
+		computerMemoryRamModulesRepository: asClass(SequelizeComputerMemoryRamModulesRepository).singleton(),
 		computerDashboard: asClass(ComputerDashboard),
 		computerDashboardGetController: asClass(ComputerDashboardGetController)
 	})

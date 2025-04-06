@@ -1,7 +1,7 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ProcessorPrimitives } from '../../Processor/Processor/domain/Processor'
+import { type ProcessorPrimitives } from '../../Processor/Processor/domain/Processor.dto'
 import { ProcessorDoesNotExistError } from '../../Processor/Processor/domain/ProcessorDoesNotExistError'
 import { ProcessorId } from '../../Processor/Processor/domain/ProcessorId'
 import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'

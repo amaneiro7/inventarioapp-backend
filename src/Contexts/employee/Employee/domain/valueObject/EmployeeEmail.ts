@@ -1,10 +1,10 @@
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
+import { type EmployeePrimitives } from '../entity/Employee.dto'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
-import { EmployeePrimitives } from '../entity/Employee'
 import { RegularEmployee } from '../entity/RegularEmployee'
 
 export class EmployeeEmail extends StringValueObject {
