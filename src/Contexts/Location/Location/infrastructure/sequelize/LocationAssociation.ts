@@ -17,7 +17,9 @@ export class LocationAssociation {
 								required: true,
 								include: [
 									{
-										association: 'region' // 0 - 0 - 0 - 0
+										association: 'region', // 0 - 0 - 0 - 0
+										required: true,
+										include: ['administrativeRegion']
 									}
 								]
 							}

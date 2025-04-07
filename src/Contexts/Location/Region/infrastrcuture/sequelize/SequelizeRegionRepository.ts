@@ -1,13 +1,13 @@
+import { RegionModel } from './RegionSchema'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import { type RegionDto } from '../../domain/Region.dto'
+import { type RegionPrimitives, type RegionDto } from '../../domain/Region.dto'
 import { type RegionId } from '../../domain/RegionId'
 import { type RegionRepository } from '../../domain/RegionRepository'
-import { RegionModel } from './RegionSchema'
 
 export class SequelizeRegionRepository extends CriteriaToSequelizeConverter implements RegionRepository {
 	private readonly cacheKey: string = 'regions'
@@ -33,5 +33,17 @@ export class SequelizeRegionRepository extends CriteriaToSequelizeConverter impl
 
 	async searchById(id: Primitives<RegionId>): Promise<RegionDto | null> {
 		return (await RegionModel.findByPk(id)) ?? null
+	}
+
+	async save(payload: RegionPrimitives): Promise<void> {
+		const { id } = payload
+		const region = (await RegionModel.findByPk(id)) ?? null
+		if (!region) {
+			await RegionModel.create({ ...payload })
+		} else {
+			region.set({ ...payload })
+			await region.save()
+		}
+		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 }

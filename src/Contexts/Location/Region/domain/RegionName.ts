@@ -29,12 +29,12 @@ export class RegionName extends StringValueObject {
 
 	// Ensure the validity of the name
 	private ensureIsValidName(value: string): void {
-		if (this.isValid(value)) {
+		if (!this.isValid(value)) {
 			throw new InvalidArgumentError(`<${value}> is not a valid Region`)
 		}
 	}
 
-	// Check if the Operating System Version value is valid
+	// Check if the region value is valid
 	private isValid(value: string): boolean {
 		// Check if the value is in the accepted values
 		return Object.values(this.ACCEPTED_VALUES).includes(value)

@@ -4,11 +4,13 @@ import { type RegionDto } from '../../domain/Region.dto'
 import { type RegionId } from '../../domain/RegionId'
 import { type RegionName } from '../../domain/RegionName'
 import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/AdministrativeRegionId'
+import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/AdministrativeRegion.dto'
 
-export class RegionModel extends Model<RegionDto> implements RegionDto {
+export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> implements RegionDto {
 	declare id: Primitives<RegionId>
 	declare name: Primitives<RegionName>
 	declare administrativeRegionId: Primitives<AdministrativeRegionId>
+	declare administrativeRegion: AdministrativeRegionDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.AdministrativeRegion, {

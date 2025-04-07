@@ -1,5 +1,5 @@
 export class CityDoesNotExistError extends Error {
 	constructor(public readonly value: string) {
-		super(`La marca ${value} no existe`)
+		super(`La ciudad ${value} no existe`)
 	}
 }

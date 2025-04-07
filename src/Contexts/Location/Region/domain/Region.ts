@@ -1,20 +1,20 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type RegionDto, type RegionPrimitives } from './Region.dto'
-import { AdministrativeRegionId } from '../../AdministrativeRegion/domain/AdministrativeRegionId'
 import { RegionId } from './RegionId'
 import { RegionName } from './RegionName'
+import { AdmRegionRegion } from './AdministrativeRegion'
 export class Region {
 	constructor(
 		private readonly id: RegionId,
 		private readonly name: RegionName,
-		private readonly administrativeRegionId: AdministrativeRegionId
+		private administrativeRegionId: AdmRegionRegion
 	) {}
 
 	static fromPrimitives(primitives: RegionDto): Region {
 		return new Region(
 			new RegionId(primitives.id),
 			new RegionName(primitives.name),
-			new AdministrativeRegionId(primitives.administrativeRegionId)
+			new AdmRegionRegion(primitives.administrativeRegionId)
 		)
 	}
 
@@ -24,6 +24,10 @@ export class Region {
 			name: this.nameValue,
 			administrativeRegionId: this.administrativeRegionValue
 		}
+	}
+
+	updateAdmRegion(newAdmRegion: Primitives<AdmRegionRegion>): void {
+		this.administrativeRegionId = new AdmRegionRegion(newAdmRegion)
 	}
 
 	get idValue(): Primitives<RegionId> {
