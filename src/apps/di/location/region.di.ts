@@ -1,5 +1,5 @@
 import { asClass, type AwilixContainer } from 'awilix'
-import { SequelizeRegionRepository } from '../../../Contexts/Location/Region/infrastrcuture/sequelize/SequelizeCityRepository'
+import { SequelizeRegionRepository } from '../../../Contexts/Location/Region/infrastrcuture/sequelize/SequelizeRegionRepository'
 import { RegionFinderAll } from '../../../Contexts/Location/Region/application/RegionFinderAll'
 import { RegionGetAllController } from '../../controllers/location/region.get-all.controller'
 
