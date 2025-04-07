@@ -347,6 +347,10 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						[sequelize.col('location.site.city.name'), 'cityName'],
 						[sequelize.col('location.site.city.state.name'), 'stateName'],
 						[sequelize.col('location.site.city.state.region.name'), 'regionName'],
+						[
+							sequelize.col('location.site.city.state.region.administrativeRegion.name'),
+							'administrativeRegionName'
+						],
 						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 					],
 					include: [
@@ -382,7 +386,10 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 													include: [
 														{
 															association: 'region',
-															attributes: []
+															attributes: [],
+															include: [
+																{ association: 'administrativeRegion', attributes: [] }
+															]
 														}
 													]
 												}
@@ -400,9 +407,11 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						'location.site.name',
 						'location.site.city.name',
 						'location.site.city.state.name',
-						'location.site.city.state.region.name'
+						'location.site.city.state.region.name',
+						'location.site.city.state.region.administrativeRegion.name'
 					],
 					order: [
+						[sequelize.col('location.site.city.state.region.administrativeRegion.name'), 'ASC'],
 						[sequelize.col('location.site.city.state.region.name'), 'ASC'],
 						[sequelize.col('location.site.city.state.name'), 'ASC'],
 						[sequelize.col('location.site.city.name'), 'ASC'],
@@ -413,18 +422,38 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				})
 				const regionMap = new Map()
 				result.forEach((item: any) => {
-					const { regionName, stateName, cityName, siteName, locationName, typeOfSiteName, count } = item
+					const {
+						administrativeRegionName,
+						regionName,
+						stateName,
+						cityName,
+						siteName,
+						locationName,
+						typeOfSiteName,
+						count
+					} = item
 					const countNumber = Number(count) // Convertir a número entero
 
-					if (!regionMap.has(regionName)) {
-						regionMap.set(regionName, {
+					if (!regionMap.has(administrativeRegionName)) {
+						regionMap.set(administrativeRegionName, {
+							name: administrativeRegionName,
+							count: 0,
+							regions: new Map()
+						})
+					}
+
+					const administrativeRegion = regionMap.get(administrativeRegionName)
+					administrativeRegion.count += countNumber
+
+					if (!administrativeRegion.regions.has(regionName)) {
+						administrativeRegion.regions.set(regionName, {
 							name: regionName,
 							count: 0,
 							states: new Map()
 						})
 					}
 
-					const region = regionMap.get(regionName)
+					const region = administrativeRegion.regions.get(regionName)
 					region.count += countNumber
 
 					if (!region.states.has(stateName)) {
@@ -471,15 +500,18 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				})
 
 				// Convertir los mapas a arrays
-				const transformedData = Array.from(regionMap.values()).map((region: any) => ({
-					...region,
-					states: Array.from(region.states.values()).map((state: any) => ({
-						...state,
-						cities: Array.from(state.cities.values()).map((city: any) => ({
-							...city,
-							sites: Array.from(city.sites.values()).map((site: any) => ({
-								...site,
-								locations: Array.from(site.locations.values())
+				const transformedData = Array.from(regionMap.values()).map((administrativeRegion: any) => ({
+					...administrativeRegion,
+					regions: Array.from(administrativeRegion.regions.values()).map((region: any) => ({
+						...region,
+						states: Array.from(region.states.values()).map((state: any) => ({
+							...state,
+							cities: Array.from(state.cities.values()).map((city: any) => ({
+								...city,
+								sites: Array.from(city.sites.values()).map((site: any) => ({
+									...site,
+									locations: Array.from(site.locations.values())
+								}))
 							}))
 						}))
 					}))
