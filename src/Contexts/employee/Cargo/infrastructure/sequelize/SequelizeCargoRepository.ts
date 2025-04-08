@@ -55,21 +55,21 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 	async save(payload: CargoPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, departamentos, ...restPayload } = payload
+			const { id, departamentos, directivas, vicepresidenciasEjecutivas, vicepresidencias, ...restPayload } =
+				payload
 			const cargo = (await CargoModel.findByPk(id)) ?? null
-			if (cargo === null) {
-				const newCargo = await CargoModel.create(
-					{
-						...restPayload,
-						id
-					},
-					{ transaction }
-				)
-				await newCargo.setDepartamentos(departamentos)
+			if (cargo) {
+				await cargo.update(restPayload, { transaction })
+				await cargo.setDirectivas(directivas, { transaction })
+				await cargo.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
+				await cargo.setVicepresidencias(vicepresidencias, { transaction })
+				await cargo.setDepartamentos(directivas, { transaction })
 			} else {
-				cargo.set({ ...restPayload })
-				await cargo.save({ transaction })
-				await cargo.setDepartamentos(departamentos, { transaction })
+				const newCargo = await CargoModel.create({ ...restPayload, id }, { transaction })
+				await newCargo.setDirectivas(directivas, { transaction })
+				await newCargo.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
+				await newCargo.setVicepresidencias(vicepresidencias, { transaction })
+				await newCargo.setDepartamentos(directivas, { transaction })
 			}
 			await transaction.commit()
 			await this.cache.removeCachedData({ cacheKey: this.cacheKey })

@@ -8,21 +8,26 @@ import {
 	type VicepresidenciaEjecutivaParams
 } from '../domain/VicepresidenciaEjecutiva.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 
 export class VicepresidenciaEjecutivaUpdater {
 	private readonly updateVicepresidenciaEjecutivaUseCase: UpdateVicepresidenciaEjecutivaUseCase
 	constructor(
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
+		private readonly centroCostoRepository: CentroCostoRepository,
+		private readonly cargoRepository: CargoRepository
 	) {
 		this.updateVicepresidenciaEjecutivaUseCase = new UpdateVicepresidenciaEjecutivaUseCase(
 			this.vicepresidenciaEjecutivaRepository,
-			this.directivaRepository
+			this.directivaRepository,
+			this.centroCostoRepository,
+			this.cargoRepository
 		)
 	}
 
 	async run({ id, params }: { id: string; params: Partial<VicepresidenciaEjecutivaParams> }): Promise<void> {
-		const { name, directivaId } = params
 		const vpeId = new DepartmentId(id)
 
 		const vpe = await this.vicepresidenciaEjecutivaRepository.searchById(vpeId.value)
@@ -33,7 +38,7 @@ export class VicepresidenciaEjecutivaUpdater {
 		const vpeEntity = VicepresidenciaEjecutiva.fromPrimitives(vpe)
 		// Se verifica que el departamento nivel 1 exista, y se actualize
 		await this.updateVicepresidenciaEjecutivaUseCase.execute({
-			params: { name, directivaId },
+			params,
 			entity: vpeEntity
 		})
 

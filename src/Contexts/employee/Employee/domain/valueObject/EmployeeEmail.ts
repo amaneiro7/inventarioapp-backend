@@ -1,34 +1,35 @@
-import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
-import { type EmployeePrimitives } from '../entity/Employee.dto'
+import { type Employee } from '../entity/Employee'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
-import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
-import { RegularEmployee } from '../entity/RegularEmployee'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 
-export class EmployeeEmail extends StringValueObject {
-	private readonly validEmailRegExp =
+export class EmployeeEmail extends AcceptedNullValueObject<string> {
+	private static readonly VALID_EMAIL_REGEX =
 		/^(?=.*[@](?:bnc\.com\.ve)$)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[a-zA-Z0-9_-]*$/
 
-	constructor(readonly value: string) {
+	constructor(value: string | null) {
 		super(value)
 
+		this.normalizeValue()
 		this.ensureIsValidEmail(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
-	private ensureIsValidEmail(value: string): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid email`)
+	private normalizeValue(): void {
+		if (this.value !== null) {
+			this.value = this.value.toLowerCase().trim()
 		}
 	}
 
-	private isValid(name: string): boolean {
-		return this.validEmailRegExp.test(name)
+	toPrimitives(): string | null {
+		return this.value
+	}
+
+	private ensureIsValidEmail(email: string | null): void {
+		if (email !== null && !EmployeeEmail.VALID_EMAIL_REGEX.test(email)) {
+			throw new InvalidArgumentError(`<${email}> no es un correo electrónico válido`)
+		}
 	}
 
 	static async updateEmailField({
@@ -38,31 +39,27 @@ export class EmployeeEmail extends StringValueObject {
 	}: {
 		repository: EmployeeRepository
 		email?: Primitives<EmployeeEmail>
-		entity: RegularEmployee
+		entity: Employee
 	}): Promise<void> {
-		// Si se ha pasado un nuevo correo y es diferente al actual se actualiza
-		if (!!email && entity.emailValue !== email) {
-			// Verifica que el Email no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el Email pasado
-			await EmployeeEmail.ensureEmailDoesNotExit({ repository, email })
-			// Actualiza el campo Email de la entidad {@link Device} con el nuevo Email
-			entity.updateEmail(email)
+		if (email === undefined || email === entity.emailValue) {
+			return
 		}
+		await EmployeeEmail.ensureEmailDoesNotExist({ repository, email })
+		entity.updateEmail(email)
 	}
 
-	static async ensureEmailDoesNotExit({
+	static async ensureEmailDoesNotExist({
 		repository,
 		email
 	}: {
 		repository: EmployeeRepository
 		email: Primitives<EmployeeEmail>
 	}): Promise<void> {
-		// Searches for a device with the given Email in the database
-		const userWithEmail: Nullable<EmployeePrimitives> = await repository.searchByEmail(
-			new EmployeeEmail(email).value
-		)
-		// If a device with the given Email exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given Email
-		if (userWithEmail !== null) {
+		if (email === null) {
+			return
+		}
+		const existingEmployee = await repository.searchByEmail(new EmployeeEmail(email).value)
+		if (existingEmployee !== null) {
 			throw new EmployeeAlreadyExistError(email)
 		}
 	}

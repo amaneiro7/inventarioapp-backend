@@ -1,9 +1,9 @@
 import { IDepartment } from '../../IDepartment/IDeparment'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
-import { type CargoId } from '../../Cargo/domain/CargoId'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
-import { DirectivaDto } from './Directiva.dto'
+import { type CargoId } from '../../Cargo/domain/CargoId'
+import { type DirectivaDto } from './Directiva.dto'
 
 /**
  * Esta clase es el nivel mas alto del organigrama laboral

@@ -13,7 +13,7 @@ export class DirectivaCreator {
 		private readonly cargoRepository: CargoRepository
 	) {
 		this.createDirectivaUseCase = new CreateDirectivaUseCase(
-			directivaRepository,
+			this.directivaRepository,
 			this.centroCostoRepository,
 			this.cargoRepository
 		)

@@ -9,6 +9,18 @@ export class CentroCostoModel extends Model<CentroCostoDto> implements CentroCos
 	declare name: Primitives<CentroCostoName>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
+		this.hasMany(models.Directiva, {
+			as: 'directiva',
+			foreignKey: 'centroCostoId'
+		}) // Un CentroCosto puede tener muchas directiva
+		this.hasMany(models.VicepresidenciaEjecutiva, {
+			as: 'vicepresidenciaEjecutiva',
+			foreignKey: 'centroCostoId'
+		}) // Un CentroCosto puede tener muchas Vicepresidencia Ejecutiva
+		this.hasMany(models.Vicepresidencia, {
+			as: 'vicepresidencia',
+			foreignKey: 'centroCostoId'
+		}) // Un CentroCosto puede tener muchos Vicepresidencia
 		this.hasMany(models.Departamento, {
 			as: 'departamento',
 			foreignKey: 'centroCostoId'

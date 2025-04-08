@@ -1,27 +1,79 @@
+import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
+import { FiltersPrimitives } from '../../../../Shared/domain/criteria/Filter'
+import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
-import { NumberValueObject } from '../../../../Shared/domain/value-object/NumberValueObject'
+import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
+import { EmployeeRepository } from '../Repository/EmployeeRepository'
+// import { Employee } from '../entity/Employee'
+import { EmployeeType, EmployeeTypes } from './EmployeeType'
 
-export class EmployeeCedula extends NumberValueObject {
-	private readonly MAX = 200000000
-	private readonly MIN = 1
+interface EmployeeCedulaProps {
+	value: number | null
+	type: Primitives<EmployeeType>
+}
+export class EmployeeCedula extends AcceptedNullValueObject<number> {
+	private static readonly MAX_CEDULA = 200000000
+	private static readonly MIN_CEDULA = 1
 
-	constructor(readonly value: number) {
+	constructor(value: number | null, private readonly type: Primitives<EmployeeType>) {
 		super(value)
 
-		this.ensureIsValidName(value)
+		this.ensureIsValidCedula({ value, type: this.type })
 	}
 
-	toPrimitives(): number {
-		return this.value
-	}
+	private ensureIsValidCedula({ value, type }: EmployeeCedulaProps): void {
+		if (type !== EmployeeTypes.GENERIC && value === null) {
+			throw new InvalidArgumentError('La cédula del empleado es requerida para este tipo de empleado.')
+		}
 
-	private ensureIsValidName(value: number): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+		if (
+			value !== null &&
+			(!Number.isInteger(value) || value < EmployeeCedula.MIN_CEDULA || value > EmployeeCedula.MAX_CEDULA)
+		) {
+			throw new InvalidArgumentError(
+				`<${value}> no es una cédula válida. Debe ser un número entero entre ${EmployeeCedula.MIN_CEDULA} y ${EmployeeCedula.MAX_CEDULA}.`
+			)
 		}
 	}
 
-	private isValid(cedula: number): boolean {
-		return cedula >= this.MIN && cedula <= this.MAX
+	static async ensureCedulaDoesNotExis({
+		cedula,
+		repository
+	}: {
+		cedula?: Primitives<EmployeeCedula>
+		repository: EmployeeRepository
+	}) {
+		if (!cedula) {
+			return
+		}
+		const query: FiltersPrimitives[] = [
+			{
+				field: 'cedula',
+				operator: Operator.EQUAL,
+				value: cedula
+			}
+		]
+		const criteria = await CreateCriteria.execute({ filters: query })
+		const existingCedula = await repository.searchByQuery(criteria)
+		if (existingCedula !== null) {
+			throw new EmployeeAlreadyExistError(`el empleado con la cedula ${cedula} ya existe`)
+		}
 	}
+
+	// static async updateCedulaField({
+	// 	cedula,
+	// 	entity
+	// }: {
+	// 	cedula?: Primitives<EmployeeCedula>
+	// 	entity: {
+	// 		updateCedula: Employee
+	// 		cedulaValue: Primitives<EmployeeCedula> | null
+	// 	}
+	// }): Promise<void> {
+	// 	if (cedula !== undefined && cedula !== entity.cedulaValue) {
+	// 		entity.updateCedula(cedula)
+	// 	}
+	// }
 }

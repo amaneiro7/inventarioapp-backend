@@ -11,6 +11,9 @@ export type GenericEmployee = Employee & {
 	cedula: null
 	centroTrabajoId: null
 	locationId: null
+	directivaId: null
+	vicepresidenciaEjecutivaId: null
+	vicepresidenciaId: null
 	departamentoId: null
 	cargoId: null
 	extension: []
@@ -27,6 +30,9 @@ export type GenericEmployeePrimitives = EmployeePrimitives & {
 	cedula: null
 	centroTrabajoId: null
 	locationId: null
+	directivaId: null
+	vicepresidenciaEjecutivaId: null
+	vicepresidenciaId: null
 	departamentoId: null
 	cargoId: null
 	extension: []
@@ -43,6 +49,9 @@ export type GenericEmployeeParams = EmployeeParams & {
 	cedula: null
 	centroTrabajoId: null
 	locationId: null
+	directivaId: null
+	vicepresidenciaEjecutivaId: null
+	vicepresidenciaId: null
 	departamentoId: null
 	cargoId: null
 	extension: []
@@ -59,6 +68,9 @@ export type GenericEmployeeDto = EmployeeDto & {
 	cedula: null
 	centroTrabajoId: null
 	locationId: null
+	directivaId: null
+	vicepresidenciaEjecutivaId: null
+	vicepresidenciaId: null
 	departamentoId: null
 	cargoId: null
 	extension: []

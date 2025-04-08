@@ -1,17 +1,17 @@
+import { DepartamentoModel } from './DepartamentoSchema'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { DepartamentoAssociation } from './DepartamentoAssociation'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoName } from '../../../Cargo/domain/CargoName'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { DepartamentoModel } from './DepartamentoSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/Departamento.dto'
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { DepartamentoAssociation } from './DepartamentoAssociation'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeDepartamentoRepository
 	extends CriteriaToSequelizeConverter

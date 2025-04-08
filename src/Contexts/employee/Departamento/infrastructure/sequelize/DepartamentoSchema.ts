@@ -24,12 +24,12 @@ export class DepartamentoModel
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
 	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
-	declare centroCostoId: Primitives<CodCentroCosto>
 	declare vicepresiednciaEjecutiva: VicepresidenciaEjecutivaDto
+	declare centroCostoId: Primitives<CodCentroCosto>
 	declare centroCosto: CentroCostoDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
-	// // Métodos de asociación
+	// Métodos de asociación
 	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>
 	declare addCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>

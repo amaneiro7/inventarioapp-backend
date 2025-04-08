@@ -13,6 +13,7 @@ import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeVicepresidenciaEjecutivaRepository
 	extends CriteriaToSequelizeConverter
@@ -43,7 +44,22 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	}
 
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
-		return (await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
+		return (
+			(await VicepresidenciaEjecutivaModel.findByPk(id, {
+				include: [
+					{
+						association: 'centroCosto',
+						attributes: ['id', 'name']
+					},
+					{
+						association: 'cargos',
+						attributes: ['id', 'name'],
+						through: { attributes: [] }
+					},
+					'employee'
+				]
+			})) ?? null
+		)
 	}
 
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
@@ -55,15 +71,23 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	}
 
 	async save(payload: VicepresidenciaEjecutivaPrimitives): Promise<void> {
-		const { id } = payload
-		const vicepresidenciaEjecutiva = (await VicepresidenciaEjecutivaModel.findByPk(id)) ?? null
-		if (vicepresidenciaEjecutiva === null) {
-			await VicepresidenciaEjecutivaModel.create({ ...payload })
-		} else {
-			vicepresidenciaEjecutiva.set({ ...payload })
-			await vicepresidenciaEjecutiva.save()
+		const transaction = await sequelize.transaction()
+		try {
+			const { id, cargos, ...restPayload } = payload
+			const vicepresidenciaEjecutiva = (await VicepresidenciaEjecutivaModel.findByPk(id, { transaction })) ?? null
+			if (vicepresidenciaEjecutiva) {
+				await vicepresidenciaEjecutiva.update(restPayload, { transaction })
+				await vicepresidenciaEjecutiva.setCargos(cargos, { transaction })
+			} else {
+				const newVPE = await VicepresidenciaEjecutivaModel.create({ ...payload, id }, { transaction })
+				await newVPE.setCargos(cargos, { transaction })
+			}
+			await transaction.commit()
+			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		} catch (error) {
+			await transaction.rollback()
+			throw error
 		}
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 	}
 
 	async remove(id: Primitives<DepartmentId>): Promise<void> {

@@ -23,7 +23,10 @@ export type ServiceEmployee = Employee & {
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -38,7 +41,10 @@ export type ServiceEmployeePrimitives = EmployeePrimitives & {
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -53,7 +59,10 @@ export type ServiceEmployeeParams = EmployeeParams & {
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -68,6 +77,9 @@ export type ServiceEmployeeDto = EmployeeDto & {
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }

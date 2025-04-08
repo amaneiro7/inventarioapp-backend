@@ -5,17 +5,16 @@ import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
-import { type Cargo } from '../../Cargo/domain/Cargo.dto'
 
 export class Departamento extends IDepartment {
 	constructor(
 		id: DepartmentId,
 		name: DepartmentName,
-		private vicepresidenciaEjecutivaId: DepartmentId,
-		private centroCostoId: CodCentroCosto,
-		private cargos: CargoId[]
+		centroCostoId: CodCentroCosto,
+		cargos: CargoId[],
+		private vicepresidenciaEjecutivaId: DepartmentId
 	) {
-		super(id, name)
+		super(id, name, centroCostoId, cargos)
 	}
 
 	static create(params: DepartamentoParams): Departamento {
@@ -24,9 +23,9 @@ export class Departamento extends IDepartment {
 		return new Departamento(
 			new DepartmentId(id),
 			new DepartmentName(params.name),
-			new DepartmentId(params.vicepresidenciaEjecutivaId),
 			new CodCentroCosto(params.centroCostoId),
-			cargos
+			cargos,
+			new DepartmentId(params.vicepresidenciaEjecutivaId)
 		)
 	}
 
@@ -34,9 +33,9 @@ export class Departamento extends IDepartment {
 		return new Departamento(
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),
-			new DepartmentId(primitives.vicepresidenciaEjecutivaId),
 			new CodCentroCosto(primitives.centroCostoId),
-			this.addCargoIds(primitives.cargos)
+			this.addCargoIds(primitives.cargos),
+			new DepartmentId(primitives.vicepresidenciaEjecutivaId)
 		)
 	}
 
@@ -54,26 +53,7 @@ export class Departamento extends IDepartment {
 		return this.vicepresidenciaEjecutivaId.value
 	}
 
-	get centroCostoValue(): Primitives<CodCentroCosto> {
-		return this.centroCostoId.value
-	}
-
-	get CargosValue(): Primitives<CargoId>[] {
-		return this.cargos.map(cargo => cargo.value)
-	}
-
-	private static addCargoIds(cargos: Cargo[]): CargoId[] {
-		return cargos.map(cargo => new CargoId(cargo.id))
-	}
-
 	updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId: Primitives<DepartmentId>): void {
 		this.vicepresidenciaEjecutivaId = new DepartmentId(vicepresidenciaEjecutivaId)
-	}
-	updateCodCentroCosto(codCentroCosto: Primitives<CodCentroCosto>): void {
-		this.centroCostoId = new CodCentroCosto(codCentroCosto)
-	}
-
-	updateCargos(cargoIds: Primitives<CargoId>[]): void {
-		this.cargos = cargoIds.map(cargo => new CargoId(cargo))
 	}
 }

@@ -16,13 +16,16 @@ export type RegularEmployee = Employee & {
 	type: EmployeeTypes.REGULAR
 	name: Primitives<EmployeeName>
 	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
+	email: Primitives<EmployeeEmail> | null
 	employeeCode: Primitives<EmployeeCode>
 	nationality: Primitives<EmployeeNationality>
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -30,13 +33,16 @@ export type RegularEmployeePrimitives = EmployeePrimitives & {
 	type: EmployeeTypes.REGULAR
 	name: Primitives<EmployeeName>
 	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
+	email: Primitives<EmployeeEmail> | null
 	employeeCode: Primitives<EmployeeCode>
 	nationality: Primitives<EmployeeNationality>
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -44,13 +50,16 @@ export type RegularEmployeeParams = EmployeeParams & {
 	type: EmployeeTypes.REGULAR
 	name: Primitives<EmployeeName>
 	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
+	email: Primitives<EmployeeEmail> | null
 	employeeCode: Primitives<EmployeeCode>
 	nationality: Primitives<EmployeeNationality>
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
 
@@ -58,12 +67,15 @@ export type RegularEmployeeDto = EmployeeDto & {
 	type: EmployeeTypes.REGULAR
 	name: Primitives<EmployeeName>
 	lastName: Primitives<EmployeeLastName>
-	email: Primitives<EmployeeEmail>
+	email: Primitives<EmployeeEmail> | null
 	employeeCode: Primitives<EmployeeCode>
 	nationality: Primitives<EmployeeNationality>
 	cedula: Primitives<EmployeeCedula>
 	centroTrabajoId: Primitives<CentroTrabajoId>
 	locationId: Primitives<EmployeeLocationId>
-	departamentoId: Primitives<DepartmentId>
+	directivaId: Primitives<DepartmentId>
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartmentId> | null
 	cargoId: Primitives<CargoId>
 }
