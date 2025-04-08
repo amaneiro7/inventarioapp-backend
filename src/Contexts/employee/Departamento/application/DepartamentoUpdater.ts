@@ -1,7 +1,7 @@
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { Departamento } from '../domain/Departamento'
 import { UpdateDepartamentoUseCase } from '../domain/UpdateDepartmentoUseCase'
+import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'

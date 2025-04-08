@@ -27,17 +27,19 @@ export class CreateDepartamentoUseCase {
 		centroCostoId,
 		cargos
 	}: DepartamentoParams): Promise<void> {
-		// Se verifica que el departamento 2 exista
-		await this.ensureVicepresidenciaEjecutivaExists(vicepresidenciaEjecutivaId)
+		await Promise.all([
+			// Se verifica que el departamento 2 exista
+			this.ensureVicepresidenciaEjecutivaExists(vicepresidenciaEjecutivaId),
 
-		// Se verifica que el centro de costo exista
-		await this.ensureCentroCostoExists(centroCostoId)
+			// Se verifica que el centro de costo exista
+			this.ensureCentroCostoExists(centroCostoId),
 
-		// Se verifica que el departamento 3 no exista
-		await this.ensureDepartamentoDoesNotExist(name)
+			// Se verifica que el departamento 3 no exista
+			this.ensureDepartamentoDoesNotExist(name),
 
-		// Se verifica que los cargos existan
-		await this.ensureCargoExists(cargos)
+			// Se verifica que los cargos existan
+			this.ensureCargoExists(cargos)
+		])
 	}
 
 	private async ensureDepartamentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {

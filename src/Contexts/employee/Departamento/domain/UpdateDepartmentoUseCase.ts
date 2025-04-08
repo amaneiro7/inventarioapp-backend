@@ -31,8 +31,8 @@ export class UpdateDepartamentoUseCase {
 	}): Promise<void> {
 		await Promise.all([
 			this.ensureVicepresidenciaEjecutivaExists({ vicepresidenciaEjecutivaId, entity }),
-			this.ensureCentroCostoExists({ centroCostoId, entity }),
 			this.ensureDepartamentoDoesNotExist({ name, entity }),
+			this.ensureCentroCostoExists({ centroCostoId, entity }),
 			this.ensureCargoExists({ cargos, entity })
 		])
 	}
