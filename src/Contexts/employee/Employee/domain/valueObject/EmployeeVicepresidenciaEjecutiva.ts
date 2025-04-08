@@ -6,7 +6,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
-import { VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 interface EmployeeVicepresidenciaEjecutivaProps {
 	value: Primitives<DepartmentId> | null
