@@ -5,36 +5,22 @@ import { DepartmentDoesNotExistError } from '../../../IDepartment/DepartmentDoes
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type Employee } from '../entity/Employee'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 interface EmployeeVicepresidenciaEjecutivaProps {
 	value: Primitives<DepartmentId> | null
-	type: Primitives<EmployeeType>
 	directivaId: Primitives<DepartmentId> | null
 }
 export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Primitives<DepartmentId>> {
-	constructor(
-		value: Primitives<DepartmentId> | null,
-		private readonly type: Primitives<EmployeeType>,
-		private readonly directivaId: Primitives<DepartmentId> | null
-	) {
+	constructor(value: Primitives<DepartmentId> | null, private readonly directivaId: Primitives<DepartmentId> | null) {
 		super(value)
-		this.ensureIsValidVicepresidenciaEjecutiva({ value, type: this.type, directivaId: this.directivaId })
+		this.ensureIsValidVicepresidenciaEjecutiva({ value, directivaId: this.directivaId })
 	}
 
-	private ensureIsValidVicepresidenciaEjecutiva({
-		value,
-		type,
-		directivaId
-	}: EmployeeVicepresidenciaEjecutivaProps): void {
-		if (type !== EmployeeTypes.GENERIC && value === null) {
-			throw new InvalidArgumentError('La vicepresidencia ejecutiva es requerida para este tipo de empleado.')
-		}
-
-		if (value !== null && directivaId === null) {
+	private ensureIsValidVicepresidenciaEjecutiva({ value, directivaId }: EmployeeVicepresidenciaEjecutivaProps): void {
+		if (directivaId === null && value !== null) {
 			throw new InvalidArgumentError(
-				'Si la Vicepresidencia Ejecutiva está asignada, la Directiva Jerárquica también es requerida.'
+				'Si la directiva jerárquica no ha sido asignada, no se puede asignar una vicepresidencia ejecutiva'
 			)
 		}
 

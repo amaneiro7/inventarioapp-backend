@@ -5,37 +5,30 @@ import { DepartmentDoesNotExistError } from '../../../IDepartment/DepartmentDoes
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type Employee } from '../entity/Employee'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 
 interface EmployeeVicepresidenciaProps {
 	value: Primitives<DepartmentId> | null
-	type: Primitives<EmployeeType>
-	directivaId: Primitives<DepartmentId> | null
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
 }
 export class EmployeeVicepresidencia extends AcceptedNullValueObject<Primitives<DepartmentId>> {
 	constructor(
 		value: Primitives<DepartmentId> | null,
-		private readonly type: Primitives<EmployeeType>,
-		private readonly directivaId: Primitives<DepartmentId> | null
+		private readonly vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
 	) {
 		super(value)
-		this.ensureIsValidVicepresidencia({ value, type: this.type, directivaId: this.directivaId })
+		this.ensureIsValidVicepresidencia({ value, vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaId })
 	}
 
-	private ensureIsValidVicepresidencia({ value, type, directivaId }: EmployeeVicepresidenciaProps): void {
-		if (type === EmployeeTypes.GENERIC && value !== null) {
-			throw new InvalidArgumentError('La vicepresidencia no es requerida para este tipo de usuario.')
-		}
-
-		if (value !== null && directivaId === null) {
+	private ensureIsValidVicepresidencia({ value, vicepresidenciaEjecutivaId }: EmployeeVicepresidenciaProps): void {
+		if (vicepresidenciaEjecutivaId === null && value !== null) {
 			throw new InvalidArgumentError(
-				'Si la Vicepresidencia  está asignada, la Directiva Jerárquica también es requerida.'
+				'Si la vicepresidencia ejecutiva no ha sido asignada, no se puede asignar una vicepresidencia'
 			)
 		}
 
 		if (value !== null && !(new DepartmentId(value) instanceof DepartmentId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de vicepresidencia  válido.`)
+			throw new InvalidArgumentError(`<${value}> no es un ID de vicepresidencia válido.`)
 		}
 	}
 	static async updateVicepresidenciaField({

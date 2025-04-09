@@ -1,24 +1,25 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
-import { CargoId } from '../../../Cargo/domain/CargoId'
-import { DepartmentId } from '../../../IDepartment/DepartmentId'
-import { EmployeeCedula } from '../valueObject/EmployeeCedula'
-import { EmployeeEmail } from '../valueObject/EmployeeEmail'
 import { EmployeeId } from '../valueObject/EmployeeId'
-import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
-import { EmployeeLastName } from '../valueObject/EmployeeLastName'
-import { EmployeeName } from '../valueObject/EmployeeName'
-import { EmployeeNationality } from '../valueObject/EmployeeNationality'
-import { EmployeeType, EmployeeTypes } from '../valueObject/EmployeeType'
 import { EmployeeUserName } from '../valueObject/EmployeeUsername'
-import { Extension } from '../valueObject/Extension'
-import { PhoneNumber } from '../valueObject/PhoneNumber'
+import { EmployeeType, EmployeeTypes } from '../valueObject/EmployeeType'
+import { EmployeeName } from '../valueObject/EmployeeName'
+import { EmployeeLastName } from '../valueObject/EmployeeLastName'
+import { EmployeeEmail } from '../valueObject/EmployeeEmail'
+import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { EmployeeCode } from '../valueObject/EmployeCode'
-import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
-import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
-import { EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
+import { EmployeeNationality } from '../valueObject/EmployeeNationality'
+import { EmployeeCedula } from '../valueObject/EmployeeCedula'
 import { EmployeCentroTrabajo } from '../valueObject/EmployeeCentroTrabajo'
+import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
+import { EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
 import { EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
+import { EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
+import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
+import { CargoId } from '../../../Cargo/domain/CargoId'
+import { PhoneNumber } from '../valueObject/PhoneNumber'
+import { Extension } from '../valueObject/Extension'
+import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
 
 export class Employee {
 	constructor(
@@ -36,8 +37,8 @@ export class Employee {
 		private locationId: EmployeeLocationId,
 		private directivaId: EmployeeDirectiva,
 		private vicepresidenciaEjecutivaId: EmployeeVicepresidenciaEjecutiva,
-		private vicepresidenciaId: DepartmentId,
-		private departamentoId: EmployeeDirectiva,
+		private vicepresidenciaId: EmployeeVicepresidencia,
+		private departamentoId: EmployeeDepartamento,
 		private cargoId: CargoId,
 		private extension: Extension[],
 		private phone: PhoneNumber[]
@@ -59,36 +60,35 @@ export class Employee {
 			new EmployeCentroTrabajo(params.centroTrabajoId, params.type),
 			new EmployeeLocationId(params.locationId),
 			new EmployeeDirectiva(params.directivaId, params.type),
-			new EmployeeVicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId, params.type, params.directivaId),
-			new EmployeeDirectiva(params.vicepresidenciaId),
-			new EmployeeDirectiva(params.departamentoId),
+			new EmployeeVicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId, params.directivaId),
+			new EmployeeVicepresidencia(params.vicepresidenciaId, params.vicepresidenciaEjecutivaId),
+			new EmployeeDepartamento(params.departamentoId, params.vicepresidenciaId),
 			new CargoId(params.cargoId),
 			params.extension?.map(ext => new Extension(ext)),
 			params.phone?.map(phone => new PhoneNumber(phone))
 		)
 	}
 	static fromPrimitives(primitives: EmployeeDto): Employee {
-		const values = this.assignValues(primitives)
 		return new Employee(
 			new EmployeeId(primitives.id),
-			values.userName,
-			values.type,
-			values.name,
-			values.lastName,
-			values.email,
-			values.isStillWorking,
-			values.employeeCode,
-			values.nationality,
-			values.cedula,
-			values.CentroTrabajoId,
-			values.locationId,
-			values.directivaId,
-			values.vicepresidenciaEjecutivaId,
-			values.vicepresidenciaId,
-			values.departamentoId,
-			values.cargoId,
-			values.extension,
-			values.phone
+			new EmployeeUserName(primitives.userName),
+			new EmployeeType(primitives.type),
+			new EmployeeName(primitives.name, primitives.type),
+			new EmployeeLastName(primitives.lastName, primitives.type),
+			new EmployeeEmail(primitives.email),
+			new EmployeeIsStillWorking(primitives.isStillWorking),
+			new EmployeeCode(primitives.employeeCode, primitives.type),
+			new EmployeeNationality(primitives.nationality, primitives.type),
+			new EmployeeCedula(primitives.cedula, primitives.type),
+			new EmployeCentroTrabajo(primitives.centroTrabajoId, primitives.type),
+			new EmployeeLocationId(primitives.locationId),
+			new EmployeeDirectiva(primitives.directivaId, primitives.type),
+			new EmployeeVicepresidenciaEjecutiva(primitives.vicepresidenciaEjecutivaId, primitives.directivaId),
+			new EmployeeVicepresidencia(primitives.vicepresidenciaId, primitives.vicepresidenciaEjecutivaId),
+			new EmployeeDepartamento(primitives.departamentoId, primitives.vicepresidenciaId),
+			new CargoId(primitives.cargoId),
+			primitives.extension?.map(ext => new Extension(ext)),
+			primitives.phone?.map(phone => new PhoneNumber(phone))
 		)
 	}
 
@@ -154,17 +154,17 @@ export class Employee {
 	get locationValue(): Primitives<EmployeeLocationId> {
 		return this.locationId?.value
 	}
-	get directivaValue(): Primitives<DepartmentId> {
+	get directivaValue(): Primitives<EmployeeDirectiva> {
 		return this.directivaId?.value
 	}
-	get vicepresidenciaEjecutivaValue(): Primitives<DepartmentId> {
+	get vicepresidenciaEjecutivaValue(): Primitives<EmployeeVicepresidenciaEjecutiva> {
 		return this.vicepresidenciaEjecutivaId?.value
 	}
-	get vicepresidenciaValue(): Primitives<DepartmentId> {
+	get vicepresidenciaValue(): Primitives<EmployeeVicepresidencia> {
 		return this.vicepresidenciaId?.value
 	}
-	get departamentoValue(): Primitives<DepartmentId> {
-		return this.departamentoId?.value
+	get departamentoValue(): Primitives<EmployeeDepartamento> {
+		return this.departamentoId.value
 	}
 	get cargoValue(): Primitives<CargoId> {
 		return this.cargoId?.value
@@ -208,11 +208,11 @@ export class Employee {
 	updateVicepresidenciaEjecutiva(newVicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>): void {
 		this.vicepresidenciaEjecutivaId = new EmployeeVicepresidenciaEjecutiva(newVicepresidenciaEjecutivaId)
 	}
-	updateVicepresidencia(newVicepresidenciaId: Primitives<DepartmentId>): void {
-		this.vicepresidenciaId = new DepartmentId(newVicepresidenciaId)
+	updateVicepresidencia(newVicepresidenciaId: Primitives<EmployeeVicepresidencia>): void {
+		this.vicepresidenciaId = new EmployeeVicepresidencia(newVicepresidenciaId)
 	}
-	updateDepartamento(newDepartamentoId: Primitives<DepartmentId>): void {
-		this.departamentoId = new DepartmentId(newDepartamentoId)
+	updateDepartamento(newDepartamentoId: Primitives<EmployeeDepartamento>): void {
+		this.departamentoId = new EmployeeDepartamento(newDepartamentoId)
 	}
 	updateCargo(newCargoId: Primitives<CargoId>): void {
 		this.cargoId = new CargoId(newCargoId)

@@ -7,7 +7,6 @@ import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type EmployeeCode } from '../valueObject/EmployeCode'
 import { type EmployeeCedula } from '../valueObject/EmployeeCedula'
 import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
@@ -24,6 +23,8 @@ import { type PhoneNumber } from '../valueObject/PhoneNumber'
 import { type EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
 import { type EmployeCentroTrabajo } from '../valueObject/EmployeeCentroTrabajo'
 import { type EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
+import { type EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
+import { type EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
 
 export type Employee = {
 	id: Primitives<EmployeeId>
@@ -40,8 +41,8 @@ export type Employee = {
 	locationId: Primitives<EmployeeLocationId>
 	directivaId: Primitives<EmployeeDirectiva>
 	vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
-	vicepresidenciaId: Primitives<DepartmentId>
-	departamentoId: Primitives<DepartmentId>
+	vicepresidenciaId: Primitives<EmployeeVicepresidencia>
+	departamentoId: Primitives<EmployeeDepartamento>
 	cargoId: Primitives<CargoId>
 	extension: Primitives<Extension>[]
 	phone: Primitives<PhoneNumber>[]
