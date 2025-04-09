@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up (queryInterface, Sequelize) {
-		await queryInterface.createTable('directivas', {
+		await queryInterface.createTable('vicepresidencias', {
 			id: {
 				type: Sequelize.UUID,
 				primaryKey: true,
@@ -13,6 +13,16 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 				unique: true
+			},
+			vicepresidencia_ejecutiva_id: {
+				type: Sequelize.UUID,
+				allowNull: false,
+				references: {
+					model: 'vicepresidencia_ejecutivas',
+					key: 'id'
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE'
 			},
 			centro_costo_id: {
 				type: Sequelize.STRING,
@@ -34,6 +44,6 @@ module.exports = {
 	},
 
 	async down (queryInterface, Sequelize) {
-		await queryInterface.dropTable('directivas')
+		await queryInterface.dropTable('vicepresidencias')
 	}
 }

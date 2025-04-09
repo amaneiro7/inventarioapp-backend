@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		await queryInterface.addColumn('employees', 'type', {
 			type: Sequelize.ENUM('generic', 'regular', 'service'),
 			allowNull: false,
@@ -26,7 +26,7 @@ module.exports = {
 		await queryInterface.addColumn('employees', 'is_still_working', {
 			type: Sequelize.BOOLEAN,
 			allowNull: false,
-			defaultValue: true
+			defaultValue: false
 		})
 		await queryInterface.addColumn('employees', 'employee_code', {
 			type: Sequelize.INTEGER,
@@ -67,6 +67,39 @@ module.exports = {
 			onUpdate: 'CASCADE',
 			onDelete: 'CASCADE'
 		})
+		await queryInterface.addColumn('employees', 'directiva_id', {
+			type: Sequelize.UUID,
+			allowNull: true,
+			defaultValue: null,
+			references: {
+				model: 'directivas',
+				key: 'id'
+			},
+			onUpdate: 'CASCADE',
+			onDelete: 'CASCADE'
+		})
+		await queryInterface.addColumn('employees', 'vicepresidencia_ejecutiva_id', {
+			type: Sequelize.UUID,
+			allowNull: true,
+			defaultValue: null,
+			references: {
+				model: 'vicepresidencia_ejecutivas',
+				key: 'id'
+			},
+			onUpdate: 'CASCADE',
+			onDelete: 'CASCADE'
+		})
+		await queryInterface.addColumn('employees', 'vicepresidencia_id', {
+			type: Sequelize.UUID,
+			allowNull: true,
+			defaultValue: null,
+			references: {
+				model: 'vicepresidencias',
+				key: 'id'
+			},
+			onUpdate: 'CASCADE',
+			onDelete: 'CASCADE'
+		})
 		await queryInterface.addColumn('employees', 'departamento_id', {
 			type: Sequelize.UUID,
 			allowNull: true,
@@ -99,7 +132,7 @@ module.exports = {
 		})
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		await queryInterface.removeColumn('employees', 'type')
 		await queryInterface.removeColumn('employees', 'name')
 		await queryInterface.removeColumn('employees', 'last_name')

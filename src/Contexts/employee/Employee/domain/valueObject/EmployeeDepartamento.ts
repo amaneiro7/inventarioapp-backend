@@ -6,15 +6,16 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type Employee } from '../entity/Employee'
 import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type EmployeeVicepresidencia } from './EmployeeVicepresidencia'
 
 interface EmployeeDepartamentoProps {
 	value: Primitives<DepartmentId> | null
-	vicepresidenciaId: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<EmployeeVicepresidencia>
 }
 export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<DepartmentId>> {
 	constructor(
 		value: Primitives<DepartmentId> | null,
-		private readonly vicepresidenciaId: Primitives<DepartmentId> | null
+		private readonly vicepresidenciaId: Primitives<EmployeeVicepresidencia>
 	) {
 		super(value)
 		this.ensureIsValidDepartamento({ value, vicepresidenciaId: this.vicepresidenciaId })
@@ -44,7 +45,7 @@ export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<Dep
 			return
 		}
 		await this.ensureDepartamentoExists({ repository, departamentoId })
-		entity.updateDepartamento(departamentoId)
+		entity.updateDepartamento(departamentoId, entity.vicepresidenciaValue)
 	}
 
 	static async ensureDepartamentoExists({

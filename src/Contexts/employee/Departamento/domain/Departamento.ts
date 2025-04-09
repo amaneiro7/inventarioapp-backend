@@ -3,18 +3,11 @@ import { IDepartment } from '../../IDepartment/IDeparment'
 import { CargoId } from '../../Cargo/domain/CargoId'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
-import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
 
 export class Departamento extends IDepartment {
-	constructor(
-		id: DepartmentId,
-		name: DepartmentName,
-		centroCostoId: CodCentroCosto,
-		cargos: CargoId[],
-		private vicepresidenciaEjecutivaId: DepartmentId
-	) {
-		super(id, name, centroCostoId, cargos)
+	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[], private vicepresidenciaId: DepartmentId) {
+		super(id, name, cargos)
 	}
 
 	static create(params: DepartamentoParams): Departamento {
@@ -23,9 +16,8 @@ export class Departamento extends IDepartment {
 		return new Departamento(
 			new DepartmentId(id),
 			new DepartmentName(params.name),
-			new CodCentroCosto(params.centroCostoId),
 			cargos,
-			new DepartmentId(params.vicepresidenciaEjecutivaId)
+			new DepartmentId(params.vicepresidenciaId)
 		)
 	}
 
@@ -33,9 +25,8 @@ export class Departamento extends IDepartment {
 		return new Departamento(
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),
-			new CodCentroCosto(primitives.centroCostoId),
 			this.addCargoIds(primitives.cargos),
-			new DepartmentId(primitives.vicepresidenciaEjecutivaId)
+			new DepartmentId(primitives.vicepresidenciaId)
 		)
 	}
 
@@ -43,17 +34,16 @@ export class Departamento extends IDepartment {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
-			centroCostoId: this.centroCostoValue,
+			vicepresidenciaId: this.vicepresidenciaValue,
 			cargos: this.CargosValue
 		}
 	}
 
-	get vicepresidenciaEjecutivaValue(): Primitives<DepartmentId> {
-		return this.vicepresidenciaEjecutivaId.value
+	get vicepresidenciaValue(): Primitives<DepartmentId> {
+		return this.vicepresidenciaId.value
 	}
 
-	updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId: Primitives<DepartmentId>): void {
-		this.vicepresidenciaEjecutivaId = new DepartmentId(vicepresidenciaEjecutivaId)
+	updateVicepresidencia(vicepresidenciaId: Primitives<DepartmentId>): void {
+		this.vicepresidenciaId = new DepartmentId(vicepresidenciaId)
 	}
 }

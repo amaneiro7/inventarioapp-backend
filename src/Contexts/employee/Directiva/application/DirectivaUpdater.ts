@@ -5,20 +5,14 @@ import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNot
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DirectivaParams, type DirectivaDto } from '../domain/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 
 export class DirectivaUpdater {
 	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
 	constructor(
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {
-		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(
-			this.directivaRepository,
-			this.centroCostoRepository,
-			this.cargoRepository
-		)
+		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
 	}
 
 	async run({ id, params }: { id: string; params: Partial<DirectivaParams> }): Promise<void> {

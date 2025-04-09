@@ -8,29 +8,27 @@ import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Vicepresidencia } from './Vicepresidencia'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaParams, type VicepresidenciaDto } from './Vicepresidencia.dto'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
 export class UpdateVicepresidenciaUseCase {
 	constructor(
 		private readonly vicepresidenciaaRepository: DepartmentRepository<VicepresidenciaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
 	public async execute({
-		params: { name, directivaId, cargos, centroCostoId },
+		params: { name, directivaId, cargos },
 		entity
 	}: {
 		entity: Vicepresidencia
 		params: Partial<VicepresidenciaParams>
 	}): Promise<void> {
-		const updateIDeparmentUseCase = new UpdateIDeparmentUseCase(this.centroCostoRepository, this.cargoRepository)
+		const updateIDeparmentUseCase = new UpdateIDeparmentUseCase(this.cargoRepository)
 		await Promise.all([
 			this.ensureVicepresidenciaDoesNotExist({ name, entity }),
 			this.ensureDirectivaExists({ directivaId, entity }),
-			updateIDeparmentUseCase.execute({ params: { cargos, centroCostoId }, entity })
+			updateIDeparmentUseCase.execute({ params: { cargos }, entity })
 		])
 	}
 

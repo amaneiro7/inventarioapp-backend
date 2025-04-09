@@ -3,7 +3,6 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
@@ -14,20 +13,16 @@ export class CreateVicepresidenciaEjecutivaUseCase {
 	constructor(
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
-	public async execute({ name, directivaId, cargos, centroCostoId }: VicepresidenciaEjecutivaParams): Promise<void> {
-		const createIDepartementUseCase = new CreateIDepartementUseCase(
-			this.centroCostoRepository,
-			this.cargoRepository
-		)
+	public async execute({ name, directivaId, cargos }: VicepresidenciaEjecutivaParams): Promise<void> {
+		const createIDepartementUseCase = new CreateIDepartementUseCase(this.cargoRepository)
 
 		await Promise.all([
 			this.ensureVicepresidenciaEjecutivaDoesNotExist(name),
 			this.ensuredirectivaExists(directivaId),
-			createIDepartementUseCase.execute({ cargos, centroCostoId })
+			createIDepartementUseCase.execute({ cargos })
 		])
 	}
 	private async ensureVicepresidenciaEjecutivaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {

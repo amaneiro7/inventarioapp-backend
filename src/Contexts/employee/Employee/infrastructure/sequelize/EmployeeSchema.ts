@@ -10,20 +10,29 @@ import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
 import { type EmployeeIsStillWorking } from '../../domain/valueObject/EmployeeIsStillWorking'
 import { type EmployeeCedula } from '../../domain/valueObject/EmployeeCedula'
 import { type EmployeeLastName } from '../../domain/valueObject/EmployeeLastName'
-import { type CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
 import { type EmployeeLocationId } from '../../domain/valueObject/EmployeeLocation'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
 import { type Extension } from '../../domain/valueObject/Extension'
 import { type PhoneNumber } from '../../domain/valueObject/PhoneNumber'
-import { EmployeeDto } from '../../domain/entity/Employee.dto'
-import { LocationDto } from '../../../../Location/Location/domain/Location.dto'
-import { CargoDto } from '../../../Cargo/domain/Cargo.dto'
-import { CentroTrabajoDto } from '../../../CentroTrabajo/domain/CentroTrabajo.dto'
-import { DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type EmployeeDto } from '../../domain/entity/Employee.dto'
+import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
+import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type EmployeeDirectiva } from '../../domain/valueObject/EmployeeDirectiva'
+import { type EmployeeVicepresidenciaEjecutiva } from '../../domain/valueObject/EmployeeVicepresidenciaEjecutiva'
+import { type EmployeeVicepresidencia } from '../../domain/valueObject/EmployeeVicepresidencia'
+import { type EmployeeDepartamento } from '../../domain/valueObject/EmployeeDepartamento'
+import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class EmployeeModel
-	extends Model<Omit<EmployeeDto, 'centroTrabajo' | 'location' | 'departamento' | 'cargo'>>
+	extends Model<
+		Omit<
+			EmployeeDto,
+			'location' | 'vicepresidencia' | 'directiva' | 'vicepresidenciaEjecutiva' | 'departamento' | 'cargo'
+		>
+	>
 	implements EmployeeDto
 {
 	declare id: Primitives<EmployeeId>
@@ -36,17 +45,21 @@ export class EmployeeModel
 	declare employeeCode: Primitives<EmployeeCode>
 	declare nationality: Primitives<EmployeeNationality>
 	declare cedula: Primitives<EmployeeCedula>
-	declare centroTrabajoId: Primitives<CentroTrabajoId>
 	declare locationId: Primitives<EmployeeLocationId>
-	declare departamentoId: Primitives<DepartmentId>
+	declare directivaId: Primitives<EmployeeDirectiva>
+	declare vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
+	declare vicepresidenciaId: Primitives<EmployeeVicepresidencia>
+	declare departamentoId: Primitives<EmployeeDepartamento>
 	declare cargoId: Primitives<CargoId>
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
 	// joins
-	declare centroTrabajo: CentroTrabajoDto
 	declare location: LocationDto
+	declare directiva: Omit<DirectivaDto, 'cargos'>
+	declare vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
+	declare vicepresidencia: Omit<VicepresidenciaDto, 'cargos'>
 	declare departamento: Omit<DepartamentoDto, 'cargos'>
-	declare cargo: Omit<CargoDto, 'departamentos'>
+	declare cargo: Omit<CargoDto, 'departamentos' | 'vicepresidencias' | 'vicepresidenciaEjecutivas' | 'directivas'>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
@@ -54,14 +67,22 @@ export class EmployeeModel
 			as: 'location',
 			foreignKey: 'locationId'
 		}) // An employee belongs to a location
+		this.belongsTo(models.Directiva, {
+			as: 'directiva',
+			foreignKey: 'directivaId'
+		}) // An employee belongs to a departamento
+		this.belongsTo(models.VicepresidenciaEjecutiva, {
+			as: 'vicepresidenciaEjecutiva',
+			foreignKey: 'vicepresidenciaEjecutivaId'
+		}) // An employee belongs to a departamento
+		this.belongsTo(models.Vicepresidencia, {
+			as: 'vicepresidencia',
+			foreignKey: 'vicepresidenciaId'
+		}) // An employee belongs to a departamento
 		this.belongsTo(models.Departamento, {
 			as: 'departamento',
 			foreignKey: 'departamentoId'
 		}) // An employee belongs to a departamento
-		this.belongsTo(models.CentroTrabajo, {
-			as: 'centroTrabajo',
-			foreignKey: 'centroTrabajoId'
-		}) // An employee belongs to a centro de trabajo
 		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' }) // An employee has many devices
 		this.hasMany(models.History, {
 			as: 'history',
@@ -121,11 +142,19 @@ export class EmployeeModel
 					allowNull: true,
 					unique: true
 				},
-				centroTrabajoId: {
-					type: DataTypes.STRING,
+				locationId: {
+					type: DataTypes.UUID,
 					allowNull: true
 				},
-				locationId: {
+				directivaId: {
+					type: DataTypes.UUID,
+					allowNull: true
+				},
+				vicepresidenciaEjecutivaId: {
+					type: DataTypes.UUID,
+					allowNull: true
+				},
+				vicepresidenciaId: {
 					type: DataTypes.UUID,
 					allowNull: true
 				},

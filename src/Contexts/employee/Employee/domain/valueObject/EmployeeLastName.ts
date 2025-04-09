@@ -49,7 +49,7 @@ export class EmployeeLastName extends AcceptedNullValueObject<string> {
 	}): Promise<void> {
 		// Solo si se ha pasado un nuevo apellido y es diferente al actual se actualiza
 		if (lastName !== undefined && entity.lastNameValue !== lastName) {
-			entity.updateLastName(lastName)
+			entity.updateLastName(lastName, entity.typeValue)
 		}
 	}
 }

@@ -3,22 +3,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up (queryInterface, Sequelize) {
-		await queryInterface.createTable('directivas', {
-			id: {
+		await queryInterface.createTable('cargo_directiva', {
+			cargo_id: {
 				type: Sequelize.UUID,
-				primaryKey: true,
-				allowNull: false
-			},
-			name: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				unique: true
-			},
-			centro_costo_id: {
-				type: Sequelize.STRING,
 				allowNull: false,
 				references: {
-					model: 'centro_costos',
+					model: 'cargos',
+					key: 'id'
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE'
+			},
+			directiva_id: {
+				type: Sequelize.UUID,
+				allowNull: false,
+				references: {
+					model: 'directivas',
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',
@@ -34,6 +34,6 @@ module.exports = {
 	},
 
 	async down (queryInterface, Sequelize) {
-		await queryInterface.dropTable('directivas')
+		await queryInterface.dropTable('cargo_directiva')
 	}
 }

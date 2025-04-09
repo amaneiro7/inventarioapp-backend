@@ -40,7 +40,7 @@ export class EmployeeDirectiva extends AcceptedNullValueObject<Primitives<Depart
 			return
 		}
 		await this.ensureDirectivaExists({ repository, directivaId })
-		entity.updateDirectiva(directivaId)
+		entity.updateDirectiva(directivaId, entity.typeValue)
 	}
 
 	static async ensureDirectivaExists({

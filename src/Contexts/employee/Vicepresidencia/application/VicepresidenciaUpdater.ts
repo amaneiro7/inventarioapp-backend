@@ -5,7 +5,6 @@ import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNot
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type VicepresidenciaDto, type VicepresidenciaParams } from '../domain/Vicepresidencia.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
 export class VicepresidenciaUpdater {
@@ -13,13 +12,11 @@ export class VicepresidenciaUpdater {
 	constructor(
 		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {
 		this.updateVicepresidenciaUseCase = new UpdateVicepresidenciaUseCase(
 			this.vicepresidenciaRepository,
 			this.directivaRepository,
-			this.centroCostoRepository,
 			this.cargoRepository
 		)
 	}

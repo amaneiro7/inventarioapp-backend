@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		await queryInterface.createTable('departamentos', {
 			id: {
 				type: Sequelize.UUID,
@@ -14,11 +14,11 @@ module.exports = {
 				allowNull: false,
 				unique: true
 			},
-			vicepresidencia_ejecutiva_id: {
+			vicepresidencia_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
 				references: {
-					model: 'vicepresidencia_ejecutivas',
+					model: 'vicepresidencias',
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',
@@ -43,7 +43,7 @@ module.exports = {
 		})
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		await queryInterface.dropTable('departamentos')
 	}
 }

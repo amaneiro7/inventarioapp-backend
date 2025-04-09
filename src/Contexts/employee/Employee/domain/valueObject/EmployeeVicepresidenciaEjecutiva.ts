@@ -44,7 +44,7 @@ export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Pr
 			return
 		}
 		await this.ensureVicepresidenciaEjecutivaExists({ repository, vicepresidenciaEjecutivaId })
-		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId)
+		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId, entity.directivaValue)
 	}
 
 	static async ensureVicepresidenciaEjecutivaExists({

@@ -8,13 +8,12 @@ import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeNationality } from '../valueObject/EmployeeNationality'
 import { EmployeeCedula } from '../valueObject/EmployeeCedula'
-import { EmployeCentroTrabajo } from '../valueObject/EmployeeCentroTrabajo'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
 import { EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
 import { EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
 import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
-import { CargoId } from '../../../Cargo/domain/CargoId'
+import { EmployeeCargo } from '../valueObject/EmployeeCargo'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
@@ -33,13 +32,12 @@ export class Employee {
 		private readonly employeeCode: EmployeeCode,
 		private readonly nationality: EmployeeNationality,
 		private readonly cedula: EmployeeCedula,
-		private centroTrabajoId: EmployeCentroTrabajo,
 		private locationId: EmployeeLocationId,
 		private directivaId: EmployeeDirectiva,
 		private vicepresidenciaEjecutivaId: EmployeeVicepresidenciaEjecutiva,
 		private vicepresidenciaId: EmployeeVicepresidencia,
 		private departamentoId: EmployeeDepartamento,
-		private cargoId: CargoId,
+		private cargoId: EmployeeCargo,
 		private extension: Extension[],
 		private phone: PhoneNumber[]
 	) {}
@@ -57,13 +55,12 @@ export class Employee {
 			new EmployeeCode(params.employeeCode, params.type),
 			new EmployeeNationality(params.nationality, params.type),
 			new EmployeeCedula(params.cedula, params.type),
-			new EmployeCentroTrabajo(params.centroTrabajoId, params.type),
 			new EmployeeLocationId(params.locationId),
 			new EmployeeDirectiva(params.directivaId, params.type),
 			new EmployeeVicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId, params.directivaId),
 			new EmployeeVicepresidencia(params.vicepresidenciaId, params.vicepresidenciaEjecutivaId),
 			new EmployeeDepartamento(params.departamentoId, params.vicepresidenciaId),
-			new CargoId(params.cargoId),
+			new EmployeeCargo(params.cargoId, params.type),
 			params.extension?.map(ext => new Extension(ext)),
 			params.phone?.map(phone => new PhoneNumber(phone))
 		)
@@ -80,13 +77,12 @@ export class Employee {
 			new EmployeeCode(primitives.employeeCode, primitives.type),
 			new EmployeeNationality(primitives.nationality, primitives.type),
 			new EmployeeCedula(primitives.cedula, primitives.type),
-			new EmployeCentroTrabajo(primitives.centroTrabajoId, primitives.type),
 			new EmployeeLocationId(primitives.locationId),
 			new EmployeeDirectiva(primitives.directivaId, primitives.type),
 			new EmployeeVicepresidenciaEjecutiva(primitives.vicepresidenciaEjecutivaId, primitives.directivaId),
 			new EmployeeVicepresidencia(primitives.vicepresidenciaId, primitives.vicepresidenciaEjecutivaId),
 			new EmployeeDepartamento(primitives.departamentoId, primitives.vicepresidenciaId),
-			new CargoId(primitives.cargoId),
+			new EmployeeCargo(primitives.cargoId, primitives.type),
 			primitives.extension?.map(ext => new Extension(ext)),
 			primitives.phone?.map(phone => new PhoneNumber(phone))
 		)
@@ -104,7 +100,6 @@ export class Employee {
 			employeeCode: this.employeeCodeValue,
 			nationality: this.nationalityValue,
 			cedula: this.cedulaValue,
-			centroTrabajoId: this.centroTrabajoValue,
 			locationId: this.locationValue,
 			directivaId: this.directivaValue,
 			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
@@ -148,9 +143,7 @@ export class Employee {
 	get cedulaValue(): Primitives<EmployeeCedula> {
 		return this.cedula?.value
 	}
-	get centroTrabajoValue(): Primitives<EmployeCentroTrabajo> {
-		return this.centroTrabajoId.value
-	}
+
 	get locationValue(): Primitives<EmployeeLocationId> {
 		return this.locationId?.value
 	}
@@ -166,8 +159,8 @@ export class Employee {
 	get departamentoValue(): Primitives<EmployeeDepartamento> {
 		return this.departamentoId.value
 	}
-	get cargoValue(): Primitives<CargoId> {
-		return this.cargoId?.value
+	get cargoValue(): Primitives<EmployeeCargo> {
+		return this.cargoId.value
 	}
 	get extensionValue(): Primitives<Extension>[] {
 		return this.extension.map(extension => extension.value)
@@ -176,19 +169,21 @@ export class Employee {
 		return this.phone.map(phone => phone.value)
 	}
 
-	updateName(newName: Primitives<EmployeeName>): void {
-		this.name = new EmployeeName(newName)
+	updateName(newName: Primitives<EmployeeName>, type: Primitives<EmployeeType>): void {
+		this.name = new EmployeeName(newName, type)
 	}
-	updateLastName(newLastName: Primitives<EmployeeLastName>): void {
-		this.lastName = new EmployeeLastName(newLastName)
+	updateLastName(newLastName: Primitives<EmployeeLastName>, type: Primitives<EmployeeType>): void {
+		this.lastName = new EmployeeLastName(newLastName, type)
 	}
 
-	updateType(type: EmployeeTypes): void {
-		const notAllowedTypes = [EmployeeTypes.GENERIC]
-		if (notAllowedTypes.includes(type)) {
-			throw new InvalidArgumentError(`Type ${type} is not allowed for update.`)
+	updateType(newType: EmployeeTypes): void {
+		if (this.typeValue === EmployeeTypes.GENERIC && newType !== EmployeeTypes.GENERIC) {
+			throw new InvalidArgumentError(`El tipo de empleado GENERIC no puede ser cambiado a ${newType}.`)
 		}
-		this.type = new EmployeeType(type)
+		if (this.typeValue !== EmployeeTypes.GENERIC && newType === EmployeeTypes.GENERIC) {
+			throw new InvalidArgumentError(`El tipo de empleado no GENERIC no puede ser cambiado a GENERIC.`)
+		}
+		this.type = new EmployeeType(newType)
 	}
 	updateEmail(newEmail: Primitives<EmployeeEmail>): void {
 		this.email = new EmployeeEmail(newEmail)
@@ -196,26 +191,35 @@ export class Employee {
 	updateIsStillWorking(newIsStillWorking: Primitives<EmployeeIsStillWorking>): void {
 		this.isStillWorking = new EmployeeIsStillWorking(newIsStillWorking)
 	}
-	updateCentroTrabajo(newCentroTrabajoId: Primitives<EmployeCentroTrabajo>): void {
-		this.centroTrabajoId = new EmployeCentroTrabajo(newCentroTrabajoId)
-	}
 	updateLocation(newLocationId: Primitives<EmployeeLocationId>): void {
 		this.locationId = new EmployeeLocationId(newLocationId)
 	}
-	updateDirectiva(newDirectivaId: Primitives<EmployeeDirectiva>): void {
-		this.directivaId = new EmployeeDirectiva(newDirectivaId)
+	updateDirectiva(newDirectivaId: Primitives<EmployeeDirectiva>, type: Primitives<EmployeeType>): void {
+		this.directivaId = new EmployeeDirectiva(newDirectivaId, type)
 	}
-	updateVicepresidenciaEjecutiva(newVicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>): void {
-		this.vicepresidenciaEjecutivaId = new EmployeeVicepresidenciaEjecutiva(newVicepresidenciaEjecutivaId)
+	updateVicepresidenciaEjecutiva(
+		newVicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>,
+		directivaId: Primitives<EmployeeDirectiva>
+	): void {
+		this.vicepresidenciaEjecutivaId = new EmployeeVicepresidenciaEjecutiva(
+			newVicepresidenciaEjecutivaId,
+			directivaId
+		)
 	}
-	updateVicepresidencia(newVicepresidenciaId: Primitives<EmployeeVicepresidencia>): void {
-		this.vicepresidenciaId = new EmployeeVicepresidencia(newVicepresidenciaId)
+	updateVicepresidencia(
+		newVicepresidenciaId: Primitives<EmployeeVicepresidencia>,
+		vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
+	): void {
+		this.vicepresidenciaId = new EmployeeVicepresidencia(newVicepresidenciaId, vicepresidenciaEjecutivaId)
 	}
-	updateDepartamento(newDepartamentoId: Primitives<EmployeeDepartamento>): void {
-		this.departamentoId = new EmployeeDepartamento(newDepartamentoId)
+	updateDepartamento(
+		newDepartamentoId: Primitives<EmployeeDepartamento>,
+		vicepresidenciaId: Primitives<EmployeeVicepresidencia>
+	): void {
+		this.departamentoId = new EmployeeDepartamento(newDepartamentoId, vicepresidenciaId)
 	}
-	updateCargo(newCargoId: Primitives<CargoId>): void {
-		this.cargoId = new CargoId(newCargoId)
+	updateCargo(newCargoId: Primitives<EmployeeCargo>, type: Primitives<EmployeeType>): void {
+		this.cargoId = new EmployeeCargo(newCargoId, type)
 	}
 	updateExtension(extensionIds: Primitives<Extension>[]): void {
 		this.extension = extensionIds.map(extension => new Extension(extension))

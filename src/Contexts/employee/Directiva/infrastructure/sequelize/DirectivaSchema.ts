@@ -12,15 +12,11 @@ import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type DirectivaDto } from '../../domain/Directiva.dto'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
-import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
-import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
 
-export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos' | 'centroCosto'>> implements DirectivaDto {
+export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos'>> implements DirectivaDto {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
-	declare centroCostoId: Primitives<CodCentroCosto>
-	declare centroCosto: CentroCostoDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// // Métodos de asociación
@@ -34,18 +30,14 @@ export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos' | 'centroC
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'directivaId'
 		}) // Un Directiva pertenece a una VicepresidenciaEjecutiva
-		this.belongsTo(models.CentroCosto, {
-			as: 'centroCosto',
-			foreignKey: 'centroCostoId'
-		}) // Un Directiva pertenece a un CentroCosto
 		this.hasMany(models.Employee, {
 			as: 'employee',
-			foreignKey: 'departamentoId'
+			foreignKey: 'directivaId'
 		}) // Un Directiva pertenece a un Employee
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
-			through: 'cargo_departamento',
-			foreignKey: 'departamentoId',
+			through: 'cargo_directiva',
+			foreignKey: 'directviaId',
 			otherKey: 'cargoId'
 		}) // Un Directiva tiene muchos Cargos
 	}
@@ -62,10 +54,6 @@ export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos' | 'centroC
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true
-				},
-				centroCostoId: {
-					type: DataTypes.STRING,
-					allowNull: false
 				}
 			},
 			{

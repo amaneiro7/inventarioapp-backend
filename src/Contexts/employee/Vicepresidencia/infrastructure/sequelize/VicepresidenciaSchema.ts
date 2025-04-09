@@ -11,22 +11,18 @@ import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type VicepresidenciaDto } from '../../domain/Vicepresidencia.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
-import { CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
-import { CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
 import { CargoDto } from '../../../Cargo/domain/Cargo.dto'
 import { CargoId } from '../../../Cargo/domain/CargoId'
 import { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 
 export class VicepresidenciaModel
-	extends Model<Omit<VicepresidenciaDto, 'directiva' | 'cargos' | 'centroCosto'>>
+	extends Model<Omit<VicepresidenciaDto, 'directiva' | 'cargos'>>
 	implements VicepresidenciaDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
 	declare directivaId: Primitives<DepartmentId>
 	declare directiva: DirectivaDto
-	declare centroCostoId: Primitives<CodCentroCosto>
-	declare centroCosto: CentroCostoDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// // Métodos de asociación
@@ -36,26 +32,22 @@ export class VicepresidenciaModel
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Directiva, {
-			as: 'directiva',
-			foreignKey: 'directivaId'
+		this.belongsTo(models.VicepresidenciaEjecutiva, {
+			as: 'vicepresidenciaEjecutiva',
+			foreignKey: 'vicepresidenciaEjecutivaId'
 		})
 		this.hasMany(models.Departamento, {
 			as: 'departamento',
 			foreignKey: 'vicepresidenciaId'
 		})
-		this.belongsTo(models.CentroCosto, {
-			as: 'centroCosto',
-			foreignKey: 'centroCostoId'
-		}) // Un Directiva pertenece a un CentroCosto
 		this.hasMany(models.Employee, {
 			as: 'employee',
-			foreignKey: 'departamentoId'
+			foreignKey: 'vicepresidenciaId'
 		}) // Un Directiva pertenece a un Employee
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
-			through: 'cargo_departamento',
-			foreignKey: 'departamentoId',
+			through: 'cargo_vicepresidencia',
+			foreignKey: 'vicepresidenciaId',
 			otherKey: 'cargoId'
 		}) // Un Directiva tiene muchos Cargos
 	}
@@ -75,10 +67,6 @@ export class VicepresidenciaModel
 				},
 				directivaId: {
 					type: DataTypes.UUID,
-					allowNull: false
-				},
-				centroCostoId: {
-					type: DataTypes.STRING,
 					allowNull: false
 				}
 			},

@@ -11,22 +11,18 @@ import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type VicepresidenciaEjecutivaDto } from '../../domain/VicepresidenciaEjecutiva.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
-import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
-import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 
 export class VicepresidenciaEjecutivaModel
-	extends Model<Omit<VicepresidenciaEjecutivaDto, 'directiva' | 'cargos' | 'centroCosto'>>
+	extends Model<Omit<VicepresidenciaEjecutivaDto, 'directiva' | 'cargos'>>
 	implements VicepresidenciaEjecutivaDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
 	declare directivaId: Primitives<DepartmentId>
 	declare directiva: DirectivaDto
-	declare centroCostoId: Primitives<CodCentroCosto>
-	declare centroCosto: CentroCostoDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// // Métodos de asociación
@@ -40,22 +36,22 @@ export class VicepresidenciaEjecutivaModel
 			as: 'directiva',
 			foreignKey: 'directivaId'
 		})
-		this.hasMany(models.Departamento, {
-			as: 'departamento',
-			foreignKey: 'vicepresidenciaEjecutivaId'
-		})
 		this.belongsTo(models.CentroCosto, {
 			as: 'centroCosto',
 			foreignKey: 'centroCostoId'
 		}) // Un Directiva pertenece a un CentroCosto
+		this.hasMany(models.Vicepresidencia, {
+			as: 'vicepresidencia',
+			foreignKey: 'vicepresidenciaEjecutivaId'
+		})
 		this.hasMany(models.Employee, {
 			as: 'employee',
-			foreignKey: 'departamentoId'
+			foreignKey: 'vicepresidenciaEjecutivaId'
 		}) // Un Directiva pertenece a un Employee
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
-			through: 'cargo_departamento',
-			foreignKey: 'departamentoId',
+			through: 'cargo_vicepresidencia_ejecutiva',
+			foreignKey: 'vicepresidenciaEjecutivaId',
 			otherKey: 'cargoId'
 		}) // Un Directiva tiene muchos Cargos
 	}
@@ -75,10 +71,6 @@ export class VicepresidenciaEjecutivaModel
 				},
 				directivaId: {
 					type: DataTypes.UUID,
-					allowNull: false
-				},
-				centroCostoId: {
-					type: DataTypes.STRING,
 					allowNull: false
 				}
 			},

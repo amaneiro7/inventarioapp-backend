@@ -1,7 +1,7 @@
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type Cargo } from '../Cargo/domain/Cargo.dto'
 import { CargoId } from '../Cargo/domain/CargoId'
-import { CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
+// import { CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
 import { DepartmentId } from './DepartmentId'
 import { DepartmentName } from './DepartmentName'
 
@@ -13,34 +13,22 @@ import { DepartmentName } from './DepartmentName'
 export interface DepartmentPrimitives {
 	id: Primitives<DepartmentId>
 	name: Primitives<DepartmentName>
-	centroCostoId: Primitives<CodCentroCosto>
 	cargos: Primitives<CargoId>[]
 }
 
 export class IDepartment {
-	constructor(
-		private readonly id: DepartmentId,
-		private name: DepartmentName,
-		private centroCostoId: CodCentroCosto,
-		private cargos: CargoId[]
-	) {}
+	constructor(private readonly id: DepartmentId, private name: DepartmentName, private cargos: CargoId[]) {}
 
 	static create(params: Omit<DepartmentPrimitives, 'id'>): IDepartment {
 		const id = DepartmentId.random().value
 		const cargos = params.cargos.map(cargo => new CargoId(cargo))
-		return new IDepartment(
-			new DepartmentId(id),
-			new DepartmentName(params.name),
-			new CodCentroCosto(params.centroCostoId),
-			cargos
-		)
+		return new IDepartment(new DepartmentId(id), new DepartmentName(params.name), cargos)
 	}
 
 	toPrimitive(): DepartmentPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			centroCostoId: this.centroCostoValue,
 			cargos: this.CargosValue
 		}
 	}
@@ -53,9 +41,9 @@ export class IDepartment {
 		return this.name.value
 	}
 
-	get centroCostoValue(): Primitives<CodCentroCosto> {
-		return this.centroCostoId.value
-	}
+	// get centroCostoValue(): Primitives<CodCentroCosto> {
+	// 	return this.centroCostoId.value
+	// }
 
 	get CargosValue(): Primitives<CargoId>[] {
 		return this.cargos.map(cargo => cargo.value)
@@ -69,9 +57,9 @@ export class IDepartment {
 		this.name = new DepartmentName(name)
 	}
 
-	updateCodCentroCosto(codCentroCosto: Primitives<CodCentroCosto>): void {
-		this.centroCostoId = new CodCentroCosto(codCentroCosto)
-	}
+	// updateCodCentroCosto(codCentroCosto: Primitives<CodCentroCosto>): void {
+	// 	this.centroCostoId = new CodCentroCosto(codCentroCosto)
+	// }
 
 	updateCargos(cargoIds: Primitives<CargoId>[]): void {
 		this.cargos = cargoIds.map(cargo => new CargoId(cargo))

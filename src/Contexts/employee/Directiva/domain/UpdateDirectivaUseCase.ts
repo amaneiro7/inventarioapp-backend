@@ -5,27 +5,25 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
 export class UpdateDirectivaUseCase {
 	constructor(
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
 	public async execute({
-		params: { name, cargos, centroCostoId },
+		params: { name, cargos },
 		entity
 	}: {
 		entity: Directiva
 		params: Partial<DirectivaParams>
 	}): Promise<void> {
-		const updateIDeparmentUseCase = new UpdateIDeparmentUseCase(this.centroCostoRepository, this.cargoRepository)
+		const updateIDeparmentUseCase = new UpdateIDeparmentUseCase(this.cargoRepository)
 		await Promise.all([
 			this.ensureDirectivaDoesNotExist({ name, entity }),
-			updateIDeparmentUseCase.execute({ params: { cargos, centroCostoId }, entity })
+			updateIDeparmentUseCase.execute({ params: { cargos }, entity })
 		])
 	}
 

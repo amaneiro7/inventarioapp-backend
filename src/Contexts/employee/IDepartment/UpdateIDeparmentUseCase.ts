@@ -1,48 +1,41 @@
 import { IDepartment } from './IDeparment'
 import { CargoDoesNotExistError } from '../Cargo/domain/CargoDoesNotExistError'
-import { CentroCostoDoesNotExistError } from '../CentroCosto/domain/CentroCostoDoesNotExistError'
+// import { CentroCostoDoesNotExistError } from '../CentroCosto/domain/CentroCostoDoesNotExistError'
 import { type CargoRepository } from '../Cargo/domain/CargoRepository'
 import { type CargoId } from '../Cargo/domain/CargoId'
-import { type CentroCostoRepository } from '../CentroCosto/domain/CentroCostoRepository'
+// import { type CentroCostoRepository } from '../CentroCosto/domain/CentroCostoRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
+// import { type CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
 
 export class UpdateIDeparmentUseCase {
-	constructor(
-		private readonly centroCostoRepository: CentroCostoRepository,
-		private readonly cargoRepository: CargoRepository
-	) {}
+	constructor(private readonly cargoRepository: CargoRepository) {}
 
 	public async execute({
-		params: { cargos, centroCostoId },
+		params: { cargos },
 		entity
 	}: {
 		entity: IDepartment
 		params: Partial<{
-			centroCostoId: Primitives<CodCentroCosto>
 			cargos: Primitives<CargoId>[]
 		}>
 	}): Promise<void> {
-		await Promise.all([
-			this.ensureCentroCostoExists({ centroCostoId, entity }),
-			this.ensureCargoExists({ cargos, entity })
-		])
+		await Promise.all([this.ensureCargoExists({ cargos, entity })])
 	}
 
-	private async ensureCentroCostoExists({
-		entity,
-		centroCostoId
-	}: {
-		centroCostoId?: Primitives<CodCentroCosto>
-		entity: IDepartment
-	}): Promise<void> {
-		if (!centroCostoId || entity.centroCostoValue === centroCostoId) return
+	// private async ensureCentroCostoExists({
+	// 	entity,
+	// 	centroCostoId
+	// }: {
+	// 	centroCostoId?: Primitives<CodCentroCosto>
+	// 	entity: IDepartment
+	// }): Promise<void> {
+	// 	if (!centroCostoId || entity.centroCostoValue === centroCostoId) return
 
-		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
-			throw new CentroCostoDoesNotExistError()
-		}
-		entity.updateCodCentroCosto(centroCostoId)
-	}
+	// 	if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
+	// 		throw new CentroCostoDoesNotExistError()
+	// 	}
+	// 	entity.updateCodCentroCosto(centroCostoId)
+	// }
 
 	private async ensureCargoExists({
 		entity,

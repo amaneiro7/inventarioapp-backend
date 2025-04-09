@@ -50,7 +50,7 @@ export class EmployeeName extends AcceptedNullValueObject<string> {
 	}): Promise<void> {
 		// Solo si se ha pasado un nuevo nombre y es diferente al actual se actualiza
 		if (name !== undefined && entity.nameValue !== name) {
-			entity.updateName(name)
+			entity.updateName(name, entity.typeValue)
 		}
 	}
 }

@@ -70,13 +70,13 @@ export class CargoModel
 		})
 		this.belongsToMany(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutivas',
-			through: 'cargo_vicepresidenciaEjecutivas',
+			through: 'cargo_vicepresidencia_ejecutiva',
 			foreignKey: 'cargoId',
 			otherKey: 'vicepresidenciaEjecutivaId'
 		})
 		this.belongsToMany(models.Vicepresidencia, {
 			as: 'vicepresidencias',
-			through: 'cargo_vicepresidencias',
+			through: 'cargo_vicepresidencia',
 			foreignKey: 'cargoId',
 			otherKey: 'vicepresidenciaId'
 		})

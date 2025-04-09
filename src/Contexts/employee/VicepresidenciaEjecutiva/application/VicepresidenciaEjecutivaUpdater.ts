@@ -9,20 +9,17 @@ import {
 } from '../domain/VicepresidenciaEjecutiva.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 
 export class VicepresidenciaEjecutivaUpdater {
 	private readonly updateVicepresidenciaEjecutivaUseCase: UpdateVicepresidenciaEjecutivaUseCase
 	constructor(
 		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly cargoRepository: CargoRepository
 	) {
 		this.updateVicepresidenciaEjecutivaUseCase = new UpdateVicepresidenciaEjecutivaUseCase(
 			this.vicepresidenciaEjecutivaRepository,
 			this.directivaRepository,
-			this.centroCostoRepository,
 			this.cargoRepository
 		)
 	}

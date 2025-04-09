@@ -1,6 +1,5 @@
 import { IDepartment } from '../../IDepartment/IDeparment'
 import { CargoId } from '../../Cargo/domain/CargoId'
-import { CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -15,14 +14,8 @@ import {
  */
 
 export class VicepresidenciaEjecutiva extends IDepartment {
-	constructor(
-		id: DepartmentId,
-		name: DepartmentName,
-		centroCostoId: CodCentroCosto,
-		cargos: CargoId[],
-		private directivaId: DepartmentId
-	) {
-		super(id, name, centroCostoId, cargos)
+	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[], private directivaId: DepartmentId) {
+		super(id, name, cargos)
 	}
 
 	static create(params: VicepresidenciaEjecutivaParams): VicepresidenciaEjecutiva {
@@ -31,7 +24,6 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 		return new VicepresidenciaEjecutiva(
 			new DepartmentId(id),
 			new DepartmentName(params.name),
-			new CodCentroCosto(params.centroCostoId),
 			cargos,
 			new DepartmentId(params.directivaId)
 		)
@@ -41,7 +33,6 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 		return new VicepresidenciaEjecutiva(
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),
-			new CodCentroCosto(primitives.centroCostoId),
 			this.addCargoIds(primitives.cargos),
 			new DepartmentId(primitives.directivaId)
 		)
@@ -52,7 +43,6 @@ export class VicepresidenciaEjecutiva extends IDepartment {
 			id: this.idValue,
 			name: this.nameValue,
 			directivaId: this.directivaValue,
-			centroCostoId: this.centroCostoValue,
 			cargos: this.CargosValue
 		}
 	}

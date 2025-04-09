@@ -5,6 +5,8 @@ import { CentroCostoDoesNotExistError } from '../../../CentroCosto/domain/Centro
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 import { type CentroCostoRepository } from '../../../CentroCosto/domain/CentroCostoRepository'
+import { type CentroTrabajoRepository } from '../../../CentroTrabajo/domain/CentroTrabajoRepository'
+import { type Employee } from '../entity/Employee'
 
 interface EmployeCentroTrabajoProps {
 	value: Primitives<CentroTrabajoId> | null
@@ -27,6 +29,22 @@ export class EmployeCentroTrabajo extends AcceptedNullValueObject<Primitives<Cen
 		}
 	}
 
+	static async updateCentroTrabajoIdField({
+		repository,
+		centroTrabajoId,
+		entity
+	}: {
+		repository: CentroTrabajoRepository
+		centroTrabajoId?: Primitives<EmployeCentroTrabajo>
+		entity: Employee
+	}): Promise<void> {
+		if (centroTrabajoId === undefined || centroTrabajoId === entity.centroTrabajoValue) {
+			return
+		}
+		await this.ensureCentroCostoExist({ centroCosto: centroTrabajoId, repository })
+		entity.updateCentroTrabajo(centroTrabajoId, entity.typeValue)
+	}
+
 	static async ensureCentroCostoExist({
 		centroCosto,
 		repository
@@ -36,21 +54,6 @@ export class EmployeCentroTrabajo extends AcceptedNullValueObject<Primitives<Cen
 	}): Promise<void> {
 		if (centroCosto && (await repository.searchById(centroCosto)) === null) {
 			throw new CentroCostoDoesNotExistError()
-		}
-	}
-
-	static async updateCentroTrabajoIdField({
-		centroTrabajoId,
-		entity
-	}: {
-		centroTrabajoId?: Primitives<EmployeCentroTrabajo>
-		entity: {
-			updateCentroTrabajoId: (centroTrabajoId: Primitives<EmployeCentroTrabajo> | null) => void
-			centroTrabajoIdValue: Primitives<EmployeCentroTrabajo> | null
-		}
-	}): Promise<void> {
-		if (centroTrabajoId !== undefined && centroTrabajoId !== entity.centroTrabajoIdValue) {
-			entity.updateCentroTrabajoId(centroTrabajoId)
 		}
 	}
 }

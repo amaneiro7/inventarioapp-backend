@@ -10,23 +10,19 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
-import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import { type DepartamentoDto } from '../../domain/Departamento.dto'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
-import { type CentroCostoDto } from '../../../CentroCosto/domain/CentroCosto.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 
 export class DepartamentoModel
-	extends Model<Omit<DepartamentoDto, 'cargos' | 'vicepresiednciaEjecutiva' | 'centroCosto'>>
+	extends Model<Omit<DepartamentoDto, 'cargos' | 'vicepresiedncia'>>
 	implements DepartamentoDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
-	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
-	declare vicepresiednciaEjecutiva: VicepresidenciaEjecutivaDto
-	declare centroCostoId: Primitives<CodCentroCosto>
-	declare centroCosto: CentroCostoDto
+	declare vicepresidenciaId: Primitives<DepartmentId>
+	declare vicepresiedncia: VicepresidenciaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// Métodos de asociación
@@ -36,13 +32,9 @@ export class DepartamentoModel
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.VicepresidenciaEjecutiva, {
-			as: 'vicepresidenciaEjecutiva',
-			foreignKey: 'vicepresidenciaEjecutivaId'
-		})
-		this.belongsTo(models.CentroCosto, {
-			as: 'centroCosto',
-			foreignKey: 'centroCostoId'
+		this.belongsTo(models.Vicepresidencia, {
+			as: 'vicepresidencia',
+			foreignKey: 'vicepresidenciaId'
 		})
 		this.hasMany(models.Employee, {
 			as: 'employee',
@@ -69,12 +61,8 @@ export class DepartamentoModel
 					allowNull: false,
 					unique: true
 				},
-				vicepresidenciaEjecutivaId: {
+				vicepresidenciaId: {
 					type: DataTypes.UUID,
-					allowNull: false
-				},
-				centroCostoId: {
-					type: DataTypes.STRING,
 					allowNull: false
 				}
 			},
