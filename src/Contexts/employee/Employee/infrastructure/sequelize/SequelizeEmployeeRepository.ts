@@ -69,7 +69,6 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 						include: ['category', 'brand', 'model', 'location', 'computer']
 					},
 					'cargo',
-					'centroTrabajo',
 					'location',
 					'departamento'
 				]

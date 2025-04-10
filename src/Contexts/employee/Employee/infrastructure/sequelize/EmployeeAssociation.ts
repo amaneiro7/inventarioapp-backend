@@ -5,53 +5,43 @@ export class EmployeeAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
 			{
-				association: 'centroTrabajo', // 0
-				attributes: ['id', 'name'],
-				include: [
-					{
-						association: 'centroCosto', // 0 - 0
-						attributes: ['id', 'name']
-					}
-				]
-			},
-			{
-				association: 'departamento', // 1
-				attributes: ['id', 'name'],
-				include: [
-					{
-						association: 'vicepresidenciaEjecutiva', // 1 - 0
-						attributes: ['id', 'name'],
-						include: [
-							{
-								association: 'directiva', // 1 - 0 - 0
-								attributes: ['id', 'name']
-							}
-						]
-					}
-				]
-			},
-			{
-				association: 'cargo', // 2
+				association: 'directiva', // 0
 				attributes: ['id', 'name']
 			},
 			{
-				association: 'location', // 3
+				association: 'vicepresidenciaEjecutiva', // 1
+				attributes: ['id', 'name']
+			},
+			{
+				association: 'vicepresidencia', // 2
+				attributes: ['id', 'name']
+			},
+			{
+				association: 'departamento', // 3
+				attributes: ['id', 'name']
+			},
+			{
+				association: 'cargo', // 4
+				attributes: ['id', 'name']
+			},
+			{
+				association: 'location', // 5
 				include: [
-					'typeOfSite', // 3 - 0
+					'typeOfSite', // 5 - 0
 					{
-						association: 'site', // 3 - 1
+						association: 'site', // 5 - 1
 						required: true,
 						include: [
 							{
-								association: 'city', // 3 - 1 - 0
+								association: 'city', // 5 - 1 - 0
 								required: true,
 								include: [
 									{
-										association: 'state', // 3 - 1 - 0 - 0
+										association: 'state', // 5 - 1 - 0 - 0
 										required: true,
 										include: [
 											{
-												association: 'region', // 3 - 1 - 0 - 0 - 0
+												association: 'region', // 5 - 1 - 0 - 0 - 0
 												required: true
 											}
 										]
@@ -63,58 +53,34 @@ export class EmployeeAssociation {
 				]
 			}
 		]
-
-		// Filtrar por centro de Costo
-		if (options.where && 'centroCostoId' in options.where) {
-			;(options.include[0] as any).include[0].where = {
-				id: options.where.centroCostoId
-			}
-			delete options.where.centroCostoId
-		}
-		// Filtrar por vicepresidencia ejecutiva
-		if (options.where && 'vicepresidenciaEjecutivaId' in options.where) {
-			;(options.include[1] as any).required = true
-			;(options.include[1] as any).include[0].where = {
-				id: options.where.vicepresidenciaEjecutivaId
-			}
-			delete options.where.vicepresidenciaEjecutivaId
-		}
-		// Filtrar por directiva
-		if (options.where && 'directivaId' in options.where) {
-			;(options.include[1] as any).required = true
-			;(options.include[1] as any).include[0].include[0].where = {
-				id: options.where.directivaId
-			}
-			delete options.where.directivaId
-		}
 		// Filtrar por sitio
 		if (options.where && 'siteId' in options.where) {
-			;(options.include[3] as any).required = true
-			;(options.include[3] as any).include[1].where = {
+			;(options.include[5] as any).required = true
+			;(options.include[5] as any).include[1].where = {
 				id: options.where.siteId
 			}
 			delete options.where.siteId
 		}
 		// Filtrar por ciudad
 		if (options.where && 'cityId' in options.where) {
-			;(options.include[3] as any).required = true
-			;(options.include[3] as any).include[1].include[0].where = {
+			;(options.include[5] as any).required = true
+			;(options.include[5] as any).include[1].include[0].where = {
 				id: options.where.cityId
 			}
 			delete options.where.cityId
 		}
 		// Filtrar por estado
 		if (options.where && 'stateId' in options.where) {
-			;(options.include[3] as any).required = true
-			;(options.include[3] as any).include[1].include[0].include[0].where = {
+			;(options.include[5] as any).required = true
+			;(options.include[5] as any).include[1].include[0].include[0].where = {
 				id: options.where.stateId
 			}
 			delete options.where.stateId
 		}
 		// Filtrar por región
 		if (options.where && 'regionId' in options.where) {
-			;(options.include[3] as any).required = true
-			;(options.include[3] as any).include[1].include[0].include[0].include[0].where = {
+			;(options.include[5] as any).required = true
+			;(options.include[5] as any).include[1].include[0].include[0].include[0].where = {
 				id: options.where.regionId
 			}
 			delete options.where.regionId

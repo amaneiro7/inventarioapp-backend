@@ -18,7 +18,8 @@ const VPEOnlyNames = {
 	'V.P.E. INGENIERIA TECNOLÓGICA': 'V.P.E. Ingenieria tecnológica',
 	'V.P.E. OPERACIONES CENTRALIZADAS': 'V.P.E. Operaciones centralizadas',
 	'V.P.E. SERVICIOS JURÍDICOS': 'V.P.E. Servicios jurídicos',
-	'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES': 'V.P.E. Soluciones de clientes y serv. digitales'
+	'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES': 'V.P.E. Soluciones de clientes y serv. digitales',
+	'V.P.E. BANCA CORPORATIVA EMPRESAS E INSTITUCIONES': 'V.P.E. Banca Corporativa, Empresas e Instituciones'
 }
 
 const VPEData = [
@@ -134,6 +135,13 @@ const VPEData = [
 	{
 		id: 'e984baae-c75c-4d0a-8389-0548bd729eb0',
 		name: 'V.P.E. Soluciones de clientes y serv. digitales',
+		directivaId: directivaData.filter(
+			directiva => directiva.name === directivaOnlyNames['PRESIDENCIA EJECUTIVA']
+		)[0].id
+	},
+	{
+		id: 'a2241c01-1c76-4384-882f-73b800c41b54',
+		name: 'V.P.E. Banca Corporativa, Empresas e Instituciones',
 		directivaId: directivaData.filter(
 			directiva => directiva.name === directivaOnlyNames['PRESIDENCIA EJECUTIVA']
 		)[0].id

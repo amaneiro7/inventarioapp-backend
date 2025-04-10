@@ -1,9 +1,7 @@
 const { cargosData, cargoOnlyNames } = require('../cargo/cargos')
 const { VPOnlyNames, VPData } = require('./vicepresidencia')
 
-
-
-const cargoVPEata = [
+const cargoVPData = [
     {
         vicepresidenciaId: VPData.filter(dep => dep.name === VPOnlyNames['GERENCIA DE AREA DE AUDITORIA DE AGENCIAS'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id
@@ -109,7 +107,7 @@ const cargoVPEata = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA DE NEGOCIOS'])[0].id
     },
     {
-        vicepresidenciaId: VPData.filter(dep => dep.name === VPOnlyNames['GCIA DE ÁREA PROYECTOS DE DESARROLLO SOSTENIBLE'])[0].id,
+        vicepresidenciaId: VPData.filter(dep => dep.name === VPOnlyNames['GERENCIA DE ÁREA PROYECTOS DE DESARROLLO SOSTENIBLE'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA'])[0].id
     },
     {
@@ -458,4 +456,4 @@ const cargoVPEata = [
     },
 ]
 
-module.exports = { cargoVPEata }
+module.exports = { cargoVPData }

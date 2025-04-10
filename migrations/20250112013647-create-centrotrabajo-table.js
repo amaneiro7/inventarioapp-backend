@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		await queryInterface.createTable('centro_trabajos', {
 			id: {
 				type: Sequelize.STRING,
@@ -32,7 +32,8 @@ module.exports = {
 		})
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
+		await queryInterface.removeColumn('employees', 'centro_trabajo_id')
 		await queryInterface.dropTable('centro_trabajos')
 	}
 }

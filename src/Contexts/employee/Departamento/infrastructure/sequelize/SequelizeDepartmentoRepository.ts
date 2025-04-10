@@ -43,17 +43,7 @@ export class SequelizeDepartamentoRepository
 			(await DepartamentoModel.findByPk(id, {
 				include: [
 					{
-						association: 'vicepresidenciaEjecutiva',
-						attributes: ['id', 'name'],
-						include: [
-							{
-								association: 'directiva',
-								attributes: ['id', 'name']
-							}
-						]
-					},
-					{
-						association: 'centroCosto',
+						association: 'vicepresidencia',
 						attributes: ['id', 'name']
 					},
 					{

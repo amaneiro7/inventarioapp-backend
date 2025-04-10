@@ -1,11 +1,13 @@
 'use strict'
 
-const { updateEmployees_Res_ADM } = require('./employee/newDataEmployeeResAdm')
+const { restoCuartaParte } = require('./employee/resto_cuarta_parte')
+
+
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
-		for (const employee of updateEmployees_Res_ADM) {
+	async up (queryInterface, Sequelize) {
+		for (const employee of restoCuartaParte) {
 			employee.phone = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
 			employee.extension = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
 			const existingEmployee = await queryInterface.rawSelect(
@@ -33,8 +35,10 @@ module.exports = {
 						employee_code: employee.employeeCode,
 						nationality: employee.nationality,
 						cedula: employee.cedula,
-						centro_trabajo_id: employee.centroTrabajoId,
 						location_id: employee.locationId,
+						directiva_id: employee.directivaId,
+						vicepresidencia_ejecutiva_id: employee.vicepresidenciaEjecutivaId,
+						vicepresidencia_id: employee.vicepresidenciaId,
 						departamento_id: employee.departamentoId,
 						cargo_id: employee.cargoId,
 						extension: employee.extension,
@@ -58,8 +62,10 @@ module.exports = {
 						employee_code: employee.employeeCode,
 						nationality: employee.nationality,
 						cedula: employee.cedula,
-						centro_trabajo_id: employee.centroTrabajoId,
 						location_id: employee.locationId,
+						directiva_id: employee.directivaId,
+						vicepresidencia_ejecutiva_id: employee.vicepresidenciaEjecutivaId,
+						vicepresidencia_id: employee.vicepresidenciaId,
 						departamento_id: employee.departamentoId,
 						cargo_id: employee.cargoId,
 						extension: employee.extension,
@@ -72,7 +78,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		/**
 		 * Add commands to revert seed here.
 		 *

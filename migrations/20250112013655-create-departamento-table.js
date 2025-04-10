@@ -12,23 +12,13 @@ module.exports = {
 			name: {
 				type: Sequelize.STRING,
 				allowNull: false,
-				unique: true
+				unique: false
 			},
 			vicepresidencia_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
 				references: {
 					model: 'vicepresidencias',
-					key: 'id'
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE'
-			},
-			centro_costo_id: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				references: {
-					model: 'centro_costos',
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',

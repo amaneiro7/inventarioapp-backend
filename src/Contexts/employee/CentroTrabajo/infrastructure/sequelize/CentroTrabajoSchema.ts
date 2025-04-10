@@ -18,10 +18,10 @@ export class CentroTrabajoModel extends Model<Omit<CentroTrabajoDto, 'centroCost
 			as: 'centroCosto',
 			foreignKey: 'centroCostoId'
 		}) // Un CentroTrabajo pertenece a un CentroCosto
-		this.hasMany(models.Employee, {
-			as: 'employee',
-			foreignKey: 'centroTrabajoId'
-		})
+		// this.hasMany(models.Employee, {
+		// 	as: 'employee',
+		// 	foreignKey: 'centroTrabajoId'
+		// })
 	}
 
 	static async initialize(sequelize: Sequelize): Promise<void> {

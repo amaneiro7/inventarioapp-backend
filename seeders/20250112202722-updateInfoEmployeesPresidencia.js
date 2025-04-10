@@ -1,11 +1,12 @@
 'use strict'
 
-const { updateEmployees_Agencia } = require('./employee/newDataEmployeeRes')
+const { presidenciaEmployee } = require('./employee/presidenciaEmployee')
+
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
-		for (const employee of updateEmployees_Agencia) {
+	async up (queryInterface, Sequelize) {
+		for (const employee of presidenciaEmployee) {
 			employee.phone = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
 			employee.extension = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
 			const existingEmployee = await queryInterface.rawSelect(
@@ -19,7 +20,6 @@ module.exports = {
 				},
 				['id']
 			)
-
 			if (existingEmployee) {
 				await queryInterface.bulkUpdate(
 					'employees',
@@ -33,8 +33,10 @@ module.exports = {
 						employee_code: employee.employeeCode,
 						nationality: employee.nationality,
 						cedula: employee.cedula,
-						centro_trabajo_id: employee.centroTrabajoId,
 						location_id: employee.locationId,
+						directiva_id: employee.directivaId,
+						vicepresidencia_ejecutiva_id: employee.vicepresidenciaEjecutivaId,
+						vicepresidencia_id: employee.vicepresidenciaId,
 						departamento_id: employee.departamentoId,
 						cargo_id: employee.cargoId,
 						extension: employee.extension,
@@ -58,8 +60,10 @@ module.exports = {
 						employee_code: employee.employeeCode,
 						nationality: employee.nationality,
 						cedula: employee.cedula,
-						centro_trabajo_id: employee.centroTrabajoId,
 						location_id: employee.locationId,
+						directiva_id: employee.directivaId,
+						vicepresidencia_ejecutiva_id: employee.vicepresidenciaEjecutivaId,
+						vicepresidencia_id: employee.vicepresidenciaId,
 						departamento_id: employee.departamentoId,
 						cargo_id: employee.cargoId,
 						extension: employee.extension,
@@ -72,7 +76,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		/**
 		 * Add commands to revert seed here.
 		 *

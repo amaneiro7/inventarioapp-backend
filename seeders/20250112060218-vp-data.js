@@ -1,16 +1,18 @@
 'use strict'
 
-const { departamentoData } = require('./employee/area/departamento')
+const { VPData } = require('./employee/area/vicepresidencia')
+
+
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up (queryInterface, Sequelize) {
 		return queryInterface.bulkInsert(
-			'departamentos',
-			departamentoData.map(({ id, name, vicepresidenciaId }) => ({
+			'vicepresidencias',
+			VPData.map(({ id, name, vicepresidenciaEjecutivaId }) => ({
 				id,
 				name,
-				vicepresidencia_id: vicepresidenciaId,
+				vicepresidencia_ejecutiva_id: vicepresidenciaEjecutivaId,
 				created_at: new Date(),
 				updated_at: new Date()
 			}))
@@ -18,6 +20,6 @@ module.exports = {
 	},
 
 	async down (queryInterface, Sequelize) {
-		return queryInterface.bulkDelete('departamentos', null, {})
+		return queryInterface.bulkDelete('vicepresidencias', null, {})
 	}
 }

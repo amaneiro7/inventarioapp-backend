@@ -1,13 +1,15 @@
 'use strict'
 
-const { cargoDepartamentoTorreData } = require('./employee/area/cargoDepartamentoTorres')
+const { cargoDepartamentoData } = require('./employee/area/cargoDepts')
+
+
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		return queryInterface.bulkInsert(
 			'cargo_departamento',
-			cargoDepartamentoTorreData.map(({ cargoId, departamentoId }) => ({
+			cargoDepartamentoData.map(({ cargoId, departamentoId }) => ({
 				departamento_id: departamentoId,
 				cargo_id: cargoId,
 				created_at: new Date(),
@@ -16,7 +18,7 @@ module.exports = {
 		)
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		return queryInterface.bulkDelete('cargo_departamento', null, {})
 	}
 }

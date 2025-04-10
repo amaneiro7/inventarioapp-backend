@@ -1,5 +1,4 @@
 const { VPData, VPOnlyNames } = require("./vicepresidencia")
-
 const departamentoOnlyNames = {
 	'COORDINACIÓN ATENCIÓN AL ACCIONISTA': 'Coordinación Atención Al Accionista',
 	'COORDINACION OPERACIONES ACCIONARIAS': 'Coordinacion Operaciones Accionarias',
@@ -44,25 +43,25 @@ const departamentoOnlyNames = {
 	'GERENCIA DE AREA DE NEGOCIOS CORPORATIVA II': 'Gerencia De Area De Negocios Corporativa II',
 	'GERENCIA REGIONAL DE NEGOCIOS SECTOR AGROPECUARIO': 'Gerencia Regional De Negocios Sector Agropecuario',
 	'GERENCIA DE NEGOCIOS SECTOR SEGUROS': 'Gerencia De Negocios Sector Seguros',
-	'GERENCIA CONTROL Y SEGUIMIENTO': 'Gerencia Control Y Seguimiento',
+	'GERENCIA CONTROL Y SEGUIMIENTO (BEI)': 'Gerencia Control Y Seguimiento (BEI)',
 	'GERENCIA DE AREA DE NEGOCIOS CORPORATIVA CENTRO': 'Gerencia De Area De Negocios Corporativa Centro',
 	'GERENCIA DE AREA DE NEGOCIOS CORPORATIVA I': 'Gerencia De Area De Negocios Corporativa I',
 	'GERENCIA DE AREA DE NEGOCIOS TELECOMUNICACIONES': 'Gerencia De Area De Negocios Telecomunicaciones',
 	'GERENCIA DE NEGOCIOS CAPITAL III': 'Gerencia De Negocios Capital III',
-	'GERENCIA DE NEGOCIOS I': 'Gerencia De Negocios I',
+	'GERENCIA DE NEGOCIOS (BEI) I': 'Gerencia De Negocios (BEI) I',
 	'GERENCIA DE NEGOCIOS SECTOR CASA DE BOLSA': 'Gerencia De Negocios Sector Casa De Bolsa',
-	'GERENCIA DE NEGOCIOS II': 'Gerencia De Negocios II',
+	'GERENCIA DE NEGOCIOS (BEI) II': 'Gerencia De Negocios (BEI) II',
 	'GERENCIA DE NEGOCIOS CAPITAL I': 'Gerencia De Negocios Capital I',
-	'GERENCIA DE NEGOCIOS CAPITAL II': 'Gerencia De Negocios Capital II',
+	'GERENCIA DE NEGOCIOS CAPITAL (BEI) II': 'Gerencia De Negocios Capital (BEI) II',
 	'GERENCIA REGIONAL DE NEGOCIOS SECTOR PÚBLICO I': 'Gerencia Regional De Negocios Sector Público I',
 	'GERENCIA DE NEGOCIOS I': 'Gerencia De Negocios I',
 	'GERENCIA DE NEGOCIOS CAPITAL II': 'Gerencia De Negocios Capital II',
 	'GCIA. REGIONAL DE NEGOCIOS SECTOR PÚBLICO CENTRO': 'Gcia. Regional De Negocios Sector Público Centro',
 	'GERENCIA DE NEGOCIOS OCCIDENTE': 'Gerencia De Negocios Occidente',
-	'GERENCIA DE NEGOCIOS ORIENTE': 'Gerencia De Negocios Oriente',
+	'GERENCIA DE NEGOCIOS ORIENTE (BEI)': 'Gerencia De Negocios Oriente (BEI)',
 	'GERENCIA DE NEGOCIOS ARAGUA': 'Gerencia De Negocios Aragua',
 	'GERENCIA CONTROL Y SEGUIMIENTO': 'Gerencia Control Y Seguimiento',
-	'GERENCIA DE NEGOCIOS III': 'Gerencia De Negocios III',
+	'GERENCIA DE NEGOCIOS (BEI) III': 'Gerencia De Negocios (BEI) III',
 	'GERENCIA DE NEGOCIOS LOS ANDES': 'Gerencia De Negocios Los Andes',
 	'GERENCIA DE NEGOCIOS ORIENTE': 'Gerencia De Negocios Oriente',
 	'GERENCIA DE NEGOCIOS CARABOBO I': 'Gerencia De Negocios Carabobo I',
@@ -71,23 +70,23 @@ const departamentoOnlyNames = {
 	'GERENCIA DE ÁREA PREV Y CONTROL DE LC-FT-FPADM': 'Gerencia De Área Prev Y Control De Lc-ft-fpadm',
 	'V.P. REGIÓN ARAGUA - LOS LLANOS': 'V.P. Región Aragua - Los Llanos',
 	'V.P. ZONA CARABOBO': 'V.P. Zona Carabobo',
-	'V.P. DE ZONA II ADMINISTRACION DE AGENCIAS II': 'V.P. De Zona II Administracion De Agencias II',
+	'V.P. DE ZONA II ADMINISTRACION DE AGENCIAS II (ADM)': 'V.P. De Zona II Administracion De Agencias II (adm)',
 	'V.P. ZONA CENTRO OCCIDENTE': 'V.P. Zona Centro Occidente',
 	'V.P. DE NEGOCIOS ZONA III': 'V.P. De Negocios Zona III',
 	'V.P. ZONA ARAGUA': 'V.P. Zona Aragua',
-	'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I': 'V.P. De Zona I Administracion De Agencias I',
-	'V.P. DE NEGOCIOS ZONA I': 'V.P. De Negocios Zona I',
-	'V.P. DE NEGOCIOS ZONA I': 'V.P. De Negocios Zona I',
+	'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS (ADM) I': 'V.P. De Zona I Administracion De Agencias (adm) I',
+	'V.P. DE NEGOCIOS ZONA IA': 'V.P. De Negocios Zona IA',
+	'V.P. DE NEGOCIOS ZONA IB': 'V.P. De Negocios Zona IB',
 	'V.P ZONA ORIENTE': 'V.P. Zona Oriente',
 	'COORDINACION CONTROL Y REGISTRO DE OPERACIONES': 'Coordinacion Control Y Registro De Operaciones',
 	'V.P. ZONA ZULIA FALCÓN': 'V.P. Zona Zulia Falcón',
 	'V.P. ZONA LOS LLANOS': 'V.P. Zona Los Llanos',
-	'V.P. DE NEGOCIOS ZONA II': 'V.P. De Negocios Zona II',
+	'V.P. DE NEGOCIOS ZONA IIA': 'V.P. De Negocios Zona IIA',
 	'GERENCIA DIGITALIZACIÓN, CTROL ARCHIV. Y CORRESPONDENCIA': 'Gerencia Digitalización, Ctrol Archiv. Y Correspondencia',
 	'V.P ZONA INSULAR': 'V.P. Zona Insular',
-	'V.P. DE NEGOCIOS ZONA II': 'V.P. De Negocios Zona II',
+	'V.P. DE NEGOCIOS ZONA IIB': 'V.P. De Negocios Zona IIB',
 	'V.P. ZONA LOS ANDES': 'V.P. Zona Los Andes',
-	'GERENCIA DE ÁREA BACK OFFICE REGISTRO DE CLIENTE': 'Gerencia De Área Back Office Registro De Cliente',
+	'GERENCIA DE ÁREA BACK OFFICE REGISTRO DE CLIENTE (ADM)': 'Gerencia De Área Back Office Registro De Cliente (adm)',
 	'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I': 'V.P. De Zona I Administracion De Agencias I',
 	'GERENCIA DE EFICIENCIA COMERCIAL': 'Gerencia De Eficiencia Comercial',
 	'GERENCIA DE CONTROL Y GESTIÓN': 'Gerencia De Control Y Gestión',
@@ -185,7 +184,7 @@ const departamentoOnlyNames = {
 	'GERENCIA DE INNOVACIÓN Y PRODUCTOS': 'Gerencia De Innovación Y Productos',
 	'GERENCIA DE ÁREA DE COMUNICACIONES CORPORATIVAS': 'Gerencia De Área De Comunicaciones Corporativas',
 	'COORDINACIÓN DISEÑO GRÁFICO': 'Coordinación Diseño Gráfico',
-	'GERENCIA ANALÍTICA DIGITAL		': 'Gerencia Analítica Digital',
+	'GERENCIA ANALÍTICA DIGITAL': 'Gerencia Analítica Digital',
 }
 
 const departamentoData = [
@@ -406,7 +405,7 @@ const departamentoData = [
 	},
 	{
 		id: 'f1a804a5-690e-44c5-97cb-82f226c71ea9',
-		name: 'Gerencia Control Y Seguimiento',
+		name: 'Gerencia Control Y Seguimiento (BEI)',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. CORPORATIVA BEI SECTOR AGROPECUARIO'])[0].id,
 	},
 	{
@@ -441,7 +440,7 @@ const departamentoData = [
 	},
 	{
 		id: '4af87601-bcb1-4e0a-a273-d8d1d8c640b7',
-		name: 'Gerencia De Negocios II',
+		name: 'Gerencia De Negocios (BEI) II',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. BEI II'])[0].id,
 	},
 	{
@@ -451,7 +450,7 @@ const departamentoData = [
 	},
 	{
 		id: '1a0a7f37-ce02-485a-ae52-94ba353d06c4',
-		name: 'Gerencia De Negocios Capital II',
+		name: 'Gerencia De Negocios Capital (BEI) II',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. BEI I'])[0].id,
 	},
 	{
@@ -461,7 +460,7 @@ const departamentoData = [
 	},
 	{
 		id: '5012098b-ece5-4f05-9f9c-e939ab72648e',
-		name: 'Gerencia De Negocios I',
+		name: 'Gerencia De Negocios (BEI) I',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. BEI II'])[0].id,
 	},
 	{
@@ -496,7 +495,7 @@ const departamentoData = [
 	},
 	{
 		id: 'b2aa4796-4602-4e26-ba54-c196731ad5ef',
-		name: 'Gerencia De Negocios III',
+		name: 'Gerencia De Negocios (BEI) III',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. BEI II'])[0].id,
 	},
 	{
@@ -506,7 +505,7 @@ const departamentoData = [
 	},
 	{
 		id: '07c66938-4c8c-4af4-94b5-efbdaeea7822',
-		name: 'Gerencia De Negocios Oriente',
+		name: 'Gerencia De Negocios Oriente (BEI)',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. BEI I'])[0].id,
 	},
 	{
@@ -566,12 +565,12 @@ const departamentoData = [
 	},
 	{
 		id: '1db0e8a8-73e1-4285-b622-481efdbb1a8c',
-		name: 'V.P. De Negocios Zona I',
+		name: 'V.P. De Negocios Zona IA',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P REGIONAL REGIÓN CAPITAL I'])[0].id,
 	},
 	{
 		id: '9c28d6ed-a017-4af3-8a77-929d194ccae0',
-		name: 'V.P. De Negocios Zona I',
+		name: 'V.P. De Negocios Zona IB',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P REGIONAL REGIÓN CAPITAL II'])[0].id,
 	},
 	{
@@ -596,7 +595,7 @@ const departamentoData = [
 	},
 	{
 		id: 'e9278213-4fca-447b-8b50-e083b338165e',
-		name: 'V.P. De Negocios Zona II',
+		name: 'V.P. De Negocios Zona IIB',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P REGIONAL REGIÓN CAPITAL II'])[0].id,
 	},
 	{
@@ -611,7 +610,7 @@ const departamentoData = [
 	},
 	{
 		id: '7e9d576d-72aa-4c3d-b704-0469b472faaf',
-		name: 'V.P. De Negocios Zona II',
+		name: 'V.P. De Negocios Zona IIA',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P REGIONAL REGIÓN CAPITAL I'])[0].id,
 	},
 	{
@@ -626,7 +625,7 @@ const departamentoData = [
 	},
 	{
 		id: '6211bfea-995c-4242-b107-410cec53ad18',
-		name: 'V.P. De Zona I Administracion De Agencias I',
+		name: 'V.P. De Zona I Administracion De Agencias (adm) I',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. REGIONAL ADMINISTRACIÓN DE AGENCIAS'])[0].id,
 	},
 	{
@@ -641,12 +640,12 @@ const departamentoData = [
 	},
 	{
 		id: '1fb66b7b-7f8a-45d5-9e85-7fe934b347dc',
-		name: 'Gerencia De Área Back Office Registro De Cliente',
+		name: 'Gerencia De Área Back Office Registro De Cliente (adm)',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. REGIONAL ADMINISTRACIÓN DE AGENCIAS'])[0].id,
 	},
 	{
 		id: '0b83c7c0-09b8-4722-801f-683720dcc472',
-		name: 'V.P. De Zona II Administracion De Agencias II',
+		name: 'V.P. De Zona II Administracion De Agencias II (adm)',
 		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. REGIONAL ADMINISTRACIÓN DE AGENCIAS'])[0].id,
 	},
 	{

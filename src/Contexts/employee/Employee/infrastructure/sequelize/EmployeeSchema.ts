@@ -70,15 +70,15 @@ export class EmployeeModel
 		this.belongsTo(models.Directiva, {
 			as: 'directiva',
 			foreignKey: 'directivaId'
-		}) // An employee belongs to a departamento
+		}) // An employee belongs to a directvia
 		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
-		}) // An employee belongs to a departamento
+		}) // An employee belongs to a vicepresidenciaEjecutiva
 		this.belongsTo(models.Vicepresidencia, {
 			as: 'vicepresidencia',
 			foreignKey: 'vicepresidenciaId'
-		}) // An employee belongs to a departamento
+		})
 		this.belongsTo(models.Departamento, {
 			as: 'departamento',
 			foreignKey: 'departamentoId'

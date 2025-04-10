@@ -52,11 +52,11 @@ const cargoVPEData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASISTENTE EJECUTIVA'])[0].id
     },
     {
-        vicepresidenciaEjecutivaId: VPEData.filter(dep => dep.name === VPEOnlyNames['V.P.E. BANCA CORPORATIVA, EMPRESAS E INSTITUCIONES'])[0].id,
+        vicepresidenciaEjecutivaId: VPEData.filter(dep => dep.name === VPEOnlyNames['V.P.E. BANCA CORPORATIVA EMPRESAS E INSTITUCIONES'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE EJECUTIVO DE NEGOCIOS'])[0].id
     },
     {
-        vicepresidenciaEjecutivaId: VPEData.filter(dep => dep.name === VPEOnlyNames['V.P.E. BANCA CORPORATIVA, EMPRESAS E INSTITUCIONES'])[0].id,
+        vicepresidenciaEjecutivaId: VPEData.filter(dep => dep.name === VPEOnlyNames['V.P.E. BANCA CORPORATIVA EMPRESAS E INSTITUCIONES'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASISTENTE EJECUTIVA'])[0].id
     },
     {

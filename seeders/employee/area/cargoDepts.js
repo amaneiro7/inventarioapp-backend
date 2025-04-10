@@ -447,6 +447,10 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AREA DE NEGOCIOS'])[0].id
     },
     {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS (BEI) II'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
+    },
+    {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS II'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
     },
@@ -465,6 +469,10 @@ const cargoDepartamentoData = [
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS SECTOR SEGUROS'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA CONTROL Y SEGUIMIENTO (BEI)'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE DEPARTAMENTO'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA CONTROL Y SEGUIMIENTO'])[0].id,
@@ -531,6 +539,10 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
     },
     {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS CAPITAL (BEI) II'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
+    },
+    {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS CAPITAL II'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
     },
@@ -539,7 +551,7 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS (BEI) I'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
     },
     {
@@ -563,6 +575,10 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
     },
     {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS CAPITAL (BEI) II'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
+    },
+    {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GCIA. REGIONAL DE NEGOCIOS SECTOR PÚBLICO CENTRO'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE REGIONAL DE NEGOCIOS'])[0].id
     },
@@ -573,6 +589,10 @@ const cargoDepartamentoData = [
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GCIA. REGIONAL DE NEGOCIOS SECTOR PÚBLICO CENTRO'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS ORIENTE (BEI)'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS ORIENTE'])[0].id,
@@ -587,12 +607,20 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR'])[0].id
     },
     {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA CONTROL Y SEGUIMIENTO (BEI)'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR'])[0].id
+    },
+    {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA CONTROL Y SEGUIMIENTO'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO JR'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS ARAGUA'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS ORIENTE (BEI)'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS ORIENTE'])[0].id,
@@ -607,11 +635,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE NEGOCIOS'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS III'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS (BEI) III'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIO SR'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS III'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE NEGOCIOS (BEI) III'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ANALISTA JUNIOR'])[0].id
     },
     {
@@ -735,11 +763,19 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE'])[0].id
     },
     {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS (ADM) I'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE'])[0].id
+    },
+    {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE REGIONAL OPERATIVO'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
     },
     {
@@ -751,7 +787,7 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE DE ZONA'])[0].id
     },
     {
@@ -764,6 +800,10 @@ const cargoDepartamentoData = [
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR INTEGRAL OPERATIVO'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS (ADM) I'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR INTEGRAL OPERATIVO'])[0].id
     },
     {
@@ -780,6 +820,10 @@ const cargoDepartamentoData = [
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA II ADMINISTRACION DE AGENCIAS II'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA II ADMINISTRACION DE AGENCIAS II (ADM)'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE'])[0].id
     },
     {
@@ -811,7 +855,7 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA II'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE DE ZONA'])[0].id
     },
     {
@@ -831,7 +875,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA II'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
     },
     {
@@ -839,7 +887,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE REGIONAL OPERATIVO'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL JR'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL JR'])[0].id
     },
     {
@@ -847,7 +899,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA II'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['GERENTE DE AGENCIA'])[0].id
     },
     {
@@ -855,7 +911,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL SR'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL SR'])[0].id
     },
     {
@@ -891,11 +951,19 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['COORDINADOR(A)'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA II'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIA'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL SR'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA II'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIB'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL SR'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL JR'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IIB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL JR'])[0].id
     },
     {
@@ -907,7 +975,11 @@ const cargoDepartamentoData = [
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['EJECUTIVO DE NEGOCIOS COMERCIAL JR'])[0].id
     },
     {
-        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA I'])[0].id,
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IA'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE NEGOCIOS ZONA IB'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
     },
     {
@@ -949,6 +1021,10 @@ const cargoDepartamentoData = [
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P ZONA INSULAR'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ASESOR DE NEGOCIOS'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE ÁREA BACK OFFICE REGISTRO DE CLIENTE (ADM)'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['ESPECIALISTA JUNIOR'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DE ÁREA BACK OFFICE REGISTRO DE CLIENTE'])[0].id,
@@ -1013,6 +1089,10 @@ const cargoDepartamentoData = [
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['GERENCIA DIGITALIZACIÓN, CTROL ARCHIV. Y CORRESPONDENCIA'])[0].id,
         cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['MENSAJERO INTERNO'])[0].id
+    },
+    {
+        departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS (ADM) I'])[0].id,
+        cargoId: cargosData.filter(cargo => cargo.name === cargoOnlyNames['VICEPRESIDENTE DE ZONA'])[0].id
     },
     {
         departamentoId: departamentoData.filter(dep => dep.name === departamentoOnlyNames['V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I'])[0].id,
@@ -2161,3 +2241,5 @@ const cargoDepartamentoData = [
 ]
 
 module.exports = { cargoDepartamentoData }
+
+

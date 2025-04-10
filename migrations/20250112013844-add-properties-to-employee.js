@@ -45,17 +45,6 @@ module.exports = {
 			unique: true,
 			defaultValue: null
 		})
-		await queryInterface.addColumn('employees', 'centro_trabajo_id', {
-			type: Sequelize.STRING,
-			allowNull: true,
-			defaultValue: null,
-			references: {
-				model: 'centro_trabajos',
-				key: 'id'
-			},
-			onUpdate: 'CASCADE',
-			onDelete: 'CASCADE'
-		})
 		await queryInterface.addColumn('employees', 'location_id', {
 			type: Sequelize.UUID,
 			allowNull: true,
@@ -141,8 +130,10 @@ module.exports = {
 		await queryInterface.removeColumn('employees', 'employee_code')
 		await queryInterface.removeColumn('employees', 'nationality')
 		await queryInterface.removeColumn('employees', 'cedula')
-		await queryInterface.removeColumn('employees', 'centro_trabajo_id')
 		await queryInterface.removeColumn('employees', 'location_id')
+		await queryInterface.removeColumn('employees', 'directiva_id')
+		await queryInterface.removeColumn('employees', 'vicepresidencia_ejecutiva_id')
+		await queryInterface.removeColumn('employees', 'vicepresidencia_id')
 		await queryInterface.removeColumn('employees', 'departamento_id')
 		await queryInterface.removeColumn('employees', 'cargo_id')
 		await queryInterface.removeColumn('employees', 'extension')

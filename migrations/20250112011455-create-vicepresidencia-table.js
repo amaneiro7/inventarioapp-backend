@@ -24,16 +24,6 @@ module.exports = {
 				onUpdate: 'CASCADE',
 				onDelete: 'CASCADE'
 			},
-			centro_costo_id: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				references: {
-					model: 'centro_costos',
-					key: 'id'
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE'
-			},
 			created_at: {
 				type: Sequelize.DATE
 			},

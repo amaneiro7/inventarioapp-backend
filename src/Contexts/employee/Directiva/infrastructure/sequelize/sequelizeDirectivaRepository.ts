@@ -41,10 +41,6 @@ export class SequelizeDirectivaRepository
 			(await DirectivaModel.findByPk(id, {
 				include: [
 					{
-						association: 'centroCosto',
-						attributes: ['id', 'name']
-					},
-					{
 						association: 'cargos',
 						attributes: ['id', 'name'],
 						through: { attributes: [] }

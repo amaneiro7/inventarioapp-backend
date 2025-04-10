@@ -5,18 +5,8 @@ export class DepartamentoAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
 			{
-				association: 'vicepresidenciaEjecutiva',
-				attributes: ['name'],
-				include: [
-					{
-						association: 'directiva',
-						attributes: ['id', 'name']
-					}
-				]
-			},
-			{
-				association: 'centroCosto',
-				attributes: ['id', 'name']
+				association: 'vicepresidencia',
+				attributes: ['name']
 			},
 			{
 				association: 'cargos',
