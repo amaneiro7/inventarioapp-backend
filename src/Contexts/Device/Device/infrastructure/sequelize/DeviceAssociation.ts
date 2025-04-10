@@ -90,12 +90,19 @@ export class DeviceAssociation {
 						attributes: ['id', 'name']
 					},
 					{
-						association: 'departamento', // 4 - 1
-						attributes: ['id', 'name'],
-						include: [{ association: 'vicepresidenciaEjecutiva', include: ['directiva'] }]
+						association: 'directiva', // 4 - 1
+						attributes: ['id', 'name']
 					},
 					{
-						association: 'centroTrabajo', // 4 - 2
+						association: 'vicepresidenciaEjecutiva', // 4 - 2
+						attributes: ['id', 'name']
+					},
+					{
+						association: 'vicepresidencia', // 4 - 3
+						attributes: ['id', 'name']
+					},
+					{
+						association: 'departamento', // 4 - 4
 						attributes: ['id', 'name']
 					}
 				]

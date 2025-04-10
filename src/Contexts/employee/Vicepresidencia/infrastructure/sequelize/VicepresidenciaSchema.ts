@@ -32,7 +32,6 @@ export class VicepresidenciaModel
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static async associate(models: Sequelize['models']): Promise<void> {
-		console.log('VicepresidenciaModel.associate')
 		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
@@ -74,6 +73,7 @@ export class VicepresidenciaModel
 			{
 				sequelize,
 				modelName: 'Vicepresidencia',
+				tableName: 'vicepresidencias',
 				timestamps: true,
 				underscored: true
 			}

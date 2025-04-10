@@ -36,10 +36,10 @@ export class VicepresidenciaEjecutivaModel
 			as: 'directiva',
 			foreignKey: 'directivaId'
 		})
-		this.belongsTo(models.CentroCosto, {
-			as: 'centroCosto',
-			foreignKey: 'centroCostoId'
-		}) // Un Directiva pertenece a un CentroCosto
+		// this.belongsTo(models.CentroCosto, {
+		// 	as: 'centroCosto',
+		// 	foreignKey: 'centroCostoId'
+		// }) // Un Directiva pertenece a un CentroCosto
 		this.hasMany(models.Vicepresidencia, {
 			as: 'vicepresidencia',
 			foreignKey: 'vicepresidenciaEjecutivaId'
