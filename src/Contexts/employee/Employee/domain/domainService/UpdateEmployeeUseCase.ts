@@ -1,41 +1,39 @@
-import { Employee } from '../entity/Employee'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { EmployeeTypes } from '../valueObject/EmployeeType'
+import { EmployeeName } from '../valueObject/EmployeeName'
+import { EmployeeLastName } from '../valueObject/EmployeeLastName'
+import { EmployeeUserName } from '../valueObject/EmployeeUsername'
+import { EmployeeEmail } from '../valueObject/EmployeeEmail'
+import { EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
+import { EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
+import { EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
+import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
+import { EmployeeCargo } from '../valueObject/EmployeeCargo'
+import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type Employee } from '../entity/Employee'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../../Location/Location/domain/LocationRepository'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
-import { type CargoId } from '../../../Cargo/domain/CargoId'
-import { type CodCentroCosto } from '../../../CentroCosto/domain/CodCentroCosto'
-import { type EmployeeLocationId } from '../valueObject/EmployeeLocation'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type CargoRepository } from '../../../Cargo/domain/CargoRepository'
-import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
-import { type EmployeeUserName } from '../valueObject/EmployeeUsername'
-import { type Nullable } from '../../../../Shared/domain/Nullable'
-import { type CentroTrabajoRepository } from '../../../CentroTrabajo/domain/CentroTrabajoRepository'
-import { type FiltersPrimitives } from '../../../../Shared/domain/criteria/Filter'
-import { type Extension } from '../valueObject/Extension'
-import { type PhoneNumber } from '../valueObject/PhoneNumber'
-import { type EmployeeName } from '../valueObject/EmployeeName'
-import { type EmployeeLastName } from '../valueObject/EmployeeLastName'
 import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 import { type EmployeeParams } from '../entity/Employee.dto'
-import { EmployeeTypes } from '../valueObject/EmployeeType'
-import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
-import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
-import { CargoDoesNotExistError } from '../../../Cargo/domain/CargoDoesNotExistError'
-import { CentroCostoDoesNotExistError } from '../../../CentroCosto/domain/CentroCostoDoesNotExistError'
-import { LocationDoesNotExistError } from '../../../../Location/Location/domain/LocationDoesNotExistError'
-import { DepartmentDoesNotExistError } from '../../../IDepartment/DepartmentDoesNotExistError'
-import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
+import { PhoneNumber } from '../valueObject/PhoneNumber'
+import { Extension } from '../valueObject/Extension'
+import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 
+interface UpdateEmployeeRepositories {
+	readonly employeeRepository: EmployeeRepository
+	readonly locationRepository: LocationRepository
+	readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	readonly vocepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	readonly cargoRepository: CargoRepository
+}
 export class UpdateEmployeeUseCase {
-	constructor(
-		private readonly employeeRepository: EmployeeRepository,
-		private readonly centroTrabajoRepository: CentroTrabajoRepository,
-		private readonly locationRepository: LocationRepository,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
-		private readonly cargoRepository: CargoRepository
-	) {}
+	constructor(private readonly repository: UpdateEmployeeRepositories) {}
 
 	public async execute({
 		entity,
@@ -54,187 +52,52 @@ export class UpdateEmployeeUseCase {
 		}
 
 		await Promise.all([
-			this.updateUserNameUseCase({ userName: params?.userName, entity }),
-			this.updateNameUseCase({ entity, name: params?.name }),
-			this.updateLastNameUseCase({ entity, lastName: params?.lastName }),
-			this.updateEmailUseCase({ email: params?.email, entity }),
-			this.updateCentroTrabajoUseCase({
-				entity,
-				centroTrabajoId: params?.centroTrabajoId
+			EmployeeUserName.updateUserNameField({
+				userName: params.userName,
+				repository: this.repository.employeeRepository,
+				entity
 			}),
-			this.updateLocationUseCase({
-				entity,
-				locationId: params?.locationId
+			EmployeeIsStillWorking.updateIsStillWorkingFieldField({ isStillWorking: params.isStillWorking, entity }),
+			EmployeeName.updateNameField({ name: params.name, entity }),
+			EmployeeLastName.updateLastNameField({ lastName: params.lastName, entity }),
+			EmployeeEmail.updateEmailField({
+				email: params.email,
+				repository: this.repository.employeeRepository,
+				entity
 			}),
-			this.updateDepartamentoUseCase({
-				entity,
-				departamentoId: params?.departamentoId
+			EmployeeLocationId.updateLocationField({
+				locationId: params.locationId,
+				repository: this.repository.locationRepository,
+				entity
 			}),
-			this.updateCargoUseCase({ cargoId: params?.cargoId, entity }),
-			this.updateExtensionUseCase({
-				entity,
-				extension: params?.extension
+			EmployeeCargo.updateCargoField({
+				cargoId: params.cargoId,
+				repository: this.repository.cargoRepository,
+				entity
 			}),
-			this.updatePhoneNumberUseCase({
-				entity,
-				phoneNumber: params?.phone
-			})
+
+			EmployeeDirectiva.updateDirectivaField({
+				directivaId: params.directivaId,
+				repository: this.repository.directivaRepository,
+				entity
+			}),
+			EmployeeVicepresidencia.updateVicepresidenciaField({
+				vicepresidenciaId: params.vicepresidenciaId,
+				repository: this.repository.vicepresidenciaRepository,
+				entity
+			}),
+			EmployeeVicepresidenciaEjecutiva.updateVicepresidenciaEjecutivaField({
+				vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
+				repository: this.repository.vocepresidenciaEjecutivaRepository,
+				entity
+			}),
+			EmployeeDepartamento.updateDepartamentoField({
+				departamentoId: params.departamentoId,
+				repository: this.repository.departamentoRepository,
+				entity
+			}),
+			PhoneNumber.updatePhoneNumber({ phoneNumber: params.phone, entity }),
+			Extension.updateExtension({ entity, extension: params.extension })
 		])
-	}
-
-	private async updateUserNameUseCase({
-		entity,
-		userName
-	}: {
-		userName?: Primitives<EmployeeUserName>
-		entity: Employee
-	}) {
-		if (!userName) return
-		if (entity.userNameValue === userName) return
-		const query: FiltersPrimitives[] = [
-			{
-				field: 'userName',
-				operator: Operator.EQUAL,
-				value: userName
-			},
-			{
-				field: 'isStillWorking',
-				operator: Operator.EQUAL,
-				value: true
-			}
-		]
-		const criteria = await CreateCriteria.execute({ filters: query })
-		if ((await this.employeeRepository.searchByQuery(criteria)) !== null) {
-			throw new EmployeeAlreadyExistError('Ya existe un usuario con el nombre de usuario: ' + userName)
-		}
-		entity.updateUserName(userName)
-	}
-
-	private async updateNameUseCase({ entity, name }: { name?: Nullable<Primitives<EmployeeName>>; entity: Employee }) {
-		if (!name) return
-		if (entity.nameValue === name) return
-		entity.updateName(name)
-	}
-	private async updateLastNameUseCase({
-		entity,
-		lastName
-	}: {
-		lastName?: Nullable<Primitives<EmployeeLastName>>
-		entity: Employee
-	}) {
-		if (!lastName) return
-		if (entity.lastNameValue === lastName) return
-		entity.updateLastName(lastName)
-	}
-
-	private async updateEmailUseCase({
-		email,
-		entity
-	}: {
-		email?: Nullable<Primitives<EmployeeEmail>>
-		entity: Employee
-	}) {
-		if (!email) return
-
-		if (entity.emailValue === email) return
-
-		const query: FiltersPrimitives[] = [
-			{
-				field: 'email',
-				operator: Operator.EQUAL,
-				value: email
-			},
-			{
-				field: 'isStillWorking',
-				operator: Operator.EQUAL,
-				value: true
-			}
-		]
-		const criteria = await CreateCriteria.execute({ filters: query })
-		if ((await this.employeeRepository.searchByQuery(criteria)) !== null) {
-			throw new EmployeeAlreadyExistError('Ya existe un usuario con la dirección de correo: ' + email)
-		}
-		entity.updateEmail(email)
-	}
-
-	private async updateCargoUseCase({
-		cargoId,
-		entity
-	}: {
-		cargoId?: Nullable<Primitives<CargoId>>
-		entity: Employee
-	}): Promise<void> {
-		if (!cargoId) return
-		if (entity.cargoValue === cargoId) return
-		if ((await this.cargoRepository.searchById(cargoId)) === null) {
-			throw new CargoDoesNotExistError()
-		}
-		entity.updateCargo(cargoId)
-	}
-
-	private async updateCentroTrabajoUseCase({
-		entity,
-		centroTrabajoId
-	}: {
-		centroTrabajoId?: Nullable<Primitives<CodCentroCosto>>
-		entity: Employee
-	}): Promise<void> {
-		if (!centroTrabajoId) return
-		if (entity.centroTrabajoValue === centroTrabajoId) return
-		if ((await this.centroTrabajoRepository.searchById(centroTrabajoId)) === null) {
-			throw new CentroCostoDoesNotExistError()
-		}
-		entity.updateCentroTrabajo(centroTrabajoId)
-	}
-
-	private async updateLocationUseCase({
-		entity,
-		locationId
-	}: {
-		locationId?: Nullable<Primitives<EmployeeLocationId>>
-		entity: Employee
-	}): Promise<void> {
-		if (!locationId) return
-		if (entity.locationValue === locationId) return
-		if ((await this.locationRepository.searchById(locationId)) === null) {
-			throw new LocationDoesNotExistError(locationId)
-		}
-		entity.updateLocation(locationId)
-	}
-
-	private async updateDepartamentoUseCase({
-		entity,
-		departamentoId
-	}: {
-		departamentoId?: Nullable<Primitives<DepartmentId>>
-		entity: Employee
-	}): Promise<void> {
-		if (!departamentoId) return
-		if (entity.departamentoValue === departamentoId) return
-		if ((await this.departamentoRepository.searchById(departamentoId)) === null) {
-			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
-		}
-		entity.updateDepartamento(departamentoId)
-	}
-
-	private async updateExtensionUseCase({
-		entity,
-		extension
-	}: {
-		extension?: Nullable<Primitives<Extension>[]>
-		entity: Employee
-	}): Promise<void> {
-		if (!extension) return
-		entity.updateExtension(extension)
-	}
-	private async updatePhoneNumberUseCase({
-		entity,
-		phoneNumber
-	}: {
-		phoneNumber?: Nullable<Primitives<PhoneNumber>[]>
-		entity: Employee
-	}): Promise<void> {
-		if (!phoneNumber) return
-		entity.updatePhone(phoneNumber)
 	}
 }

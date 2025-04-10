@@ -1,5 +1,7 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Employee } from '../entity/Employee'
 
 export class PhoneNumber extends StringValueObject {
 	private readonly areaCodes = ['0414', '0424', '0412', '0416', '0426']
@@ -35,5 +37,16 @@ export class PhoneNumber extends StringValueObject {
 			return false
 		}
 		return true
+	}
+	static async updatePhoneNumber({
+		phoneNumber,
+		entity
+	}: {
+		phoneNumber?: Primitives<PhoneNumber>[]
+		entity: Employee
+	}): Promise<void> {
+		if (phoneNumber !== undefined) {
+			entity.updatePhone(phoneNumber)
+		}
 	}
 }

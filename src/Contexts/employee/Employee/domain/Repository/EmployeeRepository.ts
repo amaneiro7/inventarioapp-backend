@@ -15,7 +15,7 @@ export abstract class EmployeeRepository {
 
 	abstract searchByQuery(criteria: Criteria): Promise<Nullable<EmployeeDto>>
 
-	abstract searchById(employeeId: Primitives<EmployeeId>): Promise<Nullable<EmployeeDto>>
+	abstract searchById(employeeId: Primitives<EmployeeId>): Promise<EmployeeDto | null>
 
 	abstract searchByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>>
 

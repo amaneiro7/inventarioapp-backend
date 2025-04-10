@@ -40,7 +40,7 @@ export class EmployeeLastName extends AcceptedNullValueObject<string> {
 		}
 	}
 
-	static async updateNameField({
+	static async updateLastNameField({
 		lastName,
 		entity
 	}: {

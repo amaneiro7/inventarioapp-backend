@@ -1,36 +1,41 @@
+import { CreateEmployeeUseCase } from '../domain/domainService/createEmployeeUseCase'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
-import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCostoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type EmployeeParams } from '../domain/entity/Employee.dto'
 import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { CreateEmployeeUseCase } from '../domain/domainService/createEmployeeUseCase'
-import { EmployeeUseCase } from '../domain/domainService/EmployeeDomainService'
+import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { Employee } from '../domain/entity/Employee'
 
 export class EmployeeCreator {
 	private readonly createEmployeeUseCase: CreateEmployeeUseCase
-	private readonly employeeUseCase: EmployeeUseCase = new EmployeeUseCase()
 	constructor(
 		private readonly employeeRepository: EmployeeRepository,
-		private readonly centroCostoRepository: CentroCostoRepository,
 		private readonly locationRepository: LocationRepository,
+		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
+		private readonly vocepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
+		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
 		private readonly cargoRepository: CargoRepository
 	) {
-		this.createEmployeeUseCase = new CreateEmployeeUseCase(
-			this.employeeRepository,
-			this.centroCostoRepository,
-			this.locationRepository,
-			this.departamentoRepository,
-			this.cargoRepository
-		)
+		this.createEmployeeUseCase = new CreateEmployeeUseCase({
+			employeeRepository: this.employeeRepository,
+			locationRepository: this.locationRepository,
+			directivaRepository: this.directivaRepository,
+			vocepresidenciaEjecutivaRepository: this.vocepresidenciaEjecutivaRepository,
+			vicepresidenciaRepository: this.vicepresidenciaRepository,
+			cargoRepository: this.cargoRepository,
+			departamentoRepository: this.departamentoRepository
+		})
 	}
 
 	async run(params: EmployeeParams): Promise<void> {
 		await this.createEmployeeUseCase.execute(params)
 
-		const employee = this.employeeUseCase.execute(params)
+		const employee = Employee.create(params)
 
 		await this.employeeRepository.save(employee.toPrimitive())
 	}

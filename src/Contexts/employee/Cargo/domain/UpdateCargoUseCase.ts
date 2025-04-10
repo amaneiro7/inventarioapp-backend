@@ -1,33 +1,68 @@
+import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
+import { CargoAlreadyExistError } from './CargoAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type Cargo } from './Cargo'
 import { type CargoName } from './CargoName'
 import { type CargoRepository } from './CargoRepository'
-import { type DepartamentoPrimitives } from '../../Departamento/domain/Departamento.dto'
+import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
 import { type CargoPrimitives } from './Cargo.dto'
+import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { CargoAlreadyExistError } from './CargoAlreadyExistError'
+interface DepartmentRepositories {
+	readonly cargoRepository: CargoRepository
+	readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+}
+
+interface UpdateCargoParams {
+	params: Partial<Omit<CargoPrimitives, 'id'>>
+	entity: Cargo
+}
 
 export class UpdateCargoUseCase {
-	constructor(
-		private readonly cargoRepository: CargoRepository,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoPrimitives>
-	) {}
+	constructor(private readonly repository: DepartmentRepositories) {}
 
 	public async execute({
-		params: { name, departamentos },
+		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas },
 		entity
-	}: {
-		entity: Cargo
-		params: Partial<Omit<CargoPrimitives, 'id'>>
-	}): Promise<void> {
-		// Se verifica que el cargo no exista
-		await this.ensureCargoDoesNotExist({ name, entity })
-
-		// Se verifica que los departamentos existan
-		await this.ensureDepartamentosExists({ departamentos, entity })
+	}: UpdateCargoParams): Promise<void> {
+		await Promise.all([
+			this.ensureCargoDoesNotExist({ name, entity }),
+			this.ensureDepartmentsExist({
+				departmentType: 'directiva',
+				departmentIds: directivas,
+				currentDepartmentIds: entity.directivasValue,
+				repository: this.repository.directivaRepository,
+				entity
+			}),
+			this.ensureDepartmentsExist({
+				departmentType: 'vicepresidencia',
+				departmentIds: vicepresidencias,
+				currentDepartmentIds: entity.vicepresidenciasValue,
+				repository: this.repository.vicepresidenciaRepository,
+				entity
+			}),
+			this.ensureDepartmentsExist({
+				departmentType: 'vicepresidencia ejecutiva',
+				departmentIds: vicepresidenciasEjecutivas,
+				currentDepartmentIds: entity.vicepresidenciasEjecutivasValue,
+				repository: this.repository.vicepresidenciaEjecutivaRepository,
+				entity
+			}),
+			this.ensureDepartmentsExist({
+				departmentType: 'gerencia, coordinación o departamento',
+				departmentIds: departamentos,
+				currentDepartmentIds: entity.departamentosValue,
+				repository: this.repository.departamentoRepository,
+				entity
+			})
+		])
 	}
 
 	private async ensureCargoDoesNotExist({
@@ -37,46 +72,55 @@ export class UpdateCargoUseCase {
 		name?: Primitives<CargoName>
 		entity: Cargo
 	}): Promise<void> {
-		if (!name) return
-
-		if (entity.nameValue === name) return
-
-		if ((await this.cargoRepository.searchByName(name)) !== null) {
+		if (!name || entity.nameValue === name) return
+		const existingCargo = await this.repository.cargoRepository.searchByName(name)
+		if (existingCargo !== null) {
 			throw new CargoAlreadyExistError(name)
 		}
 		entity.updateName(name)
 	}
 
-	private async ensureDepartamentosExists({
-		entity,
-		departamentos
+	private async ensureDepartmentsExist<T>({
+		departmentType,
+		departmentIds,
+		currentDepartmentIds,
+		repository,
+		entity
 	}: {
-		departamentos?: Primitives<DepartmentId>[]
+		departmentType: string
+		departmentIds: Primitives<DepartmentId>[] | undefined
+		currentDepartmentIds: string[]
+		repository: DepartmentRepository<T>
 		entity: Cargo
 	}): Promise<void> {
-		if (!departamentos) return
+		if (!departmentIds) return
 
-		// Asegurarse que no existan valores duplicados
-		const arraySinDuplicados = Array.from(new Set(departamentos))
-		const currentDepartamentoIds = entity.departamentosValue
+		const uniqueDepartmentIds = Array.from(new Set(departmentIds))
+		const newDepartmentIds = uniqueDepartmentIds.filter(id => !currentDepartmentIds.includes(id))
 
-		// Se crea una nueva lista con los departamentos nuevos, que no estan en la lista actual
-		const newDepartamentos = this.newDepartamentosToAdd(currentDepartamentoIds, arraySinDuplicados)
+		if (newDepartmentIds.length === 0) return
 
-		// Si la lista es 0, no hay cargos nuevos
-		if (newDepartamentos.length === 0) return
+		await Promise.all(
+			newDepartmentIds.map(async departmentId => {
+				if ((await repository.searchById(departmentId)) === null) {
+					throw new DepartmentDoesNotExistError(`La ${departmentType}`)
+				}
+			})
+		)
 
-		// Se verifica que cada departamento exista
-		for (const departmentId of newDepartamentos) {
-			if ((await this.departamentoRepository.searchById(departmentId)) === null) {
-				throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
-			}
+		switch (departmentType) {
+			case 'gerencia, coordinación o departamento':
+				entity.updateDepartamentos(departmentIds)
+				break
+			case 'directiva':
+				entity.updateDirectivas(departmentIds)
+				break
+			case 'vicepresidencia':
+				entity.updateVicepresidencias(departmentIds)
+				break
+			case 'vicepresidencia ejecutiva':
+				entity.updateVicepresidenciaEjecutivas(departmentIds)
+				break
 		}
-		entity.updateDepartamentos(departamentos)
-	}
-
-	// Funcion para filtrar solo los cargos nuevos que no estan en la lista actual
-	private newDepartamentosToAdd(currentList: string[], newList: string[]): string[] {
-		return newList.filter(list => !currentList.includes(list))
 	}
 }

@@ -4,6 +4,8 @@ import { type Employee } from '../entity/Employee'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
+import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 
 export class EmployeeEmail extends AcceptedNullValueObject<string> {
 	private static readonly VALID_EMAIL_REGEX =
@@ -44,8 +46,12 @@ export class EmployeeEmail extends AcceptedNullValueObject<string> {
 		if (email === undefined || email === entity.emailValue) {
 			return
 		}
-		await EmployeeEmail.ensureEmailDoesNotExist({ repository, email })
-		entity.updateEmail(email)
+		if (email !== null) {
+			await EmployeeEmail.ensureEmailDoesNotExist({ repository, email })
+			entity.updateEmail(email)
+		} else if (entity.emailValue !== null) {
+			entity.updateEmail(null)
+		}
 	}
 
 	static async ensureEmailDoesNotExist({
@@ -58,7 +64,13 @@ export class EmployeeEmail extends AcceptedNullValueObject<string> {
 		if (email === null) {
 			return
 		}
-		const existingEmployee = await repository.searchByEmail(new EmployeeEmail(email).value)
+		const criteria = await CreateCriteria.execute({
+			filters: [
+				{ field: 'email', operator: Operator.EQUAL, value: email },
+				{ field: 'isStillWorking', operator: Operator.EQUAL, value: true }
+			]
+		})
+		const existingEmployee = await repository.searchByQuery(criteria)
 		if (existingEmployee !== null) {
 			throw new EmployeeAlreadyExistError(email)
 		}

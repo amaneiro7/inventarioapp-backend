@@ -1,5 +1,7 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Employee } from '../entity/Employee'
 
 enum AreaCode {
 	CARACAS = '0212',
@@ -70,5 +72,17 @@ export class Extension extends StringValueObject {
 			return false
 		}
 		return true
+	}
+
+	static async updateExtension({
+		extension,
+		entity
+	}: {
+		extension?: Primitives<Extension>[]
+		entity: Employee
+	}): Promise<void> {
+		if (extension !== undefined) {
+			entity.updateExtension(extension)
+		}
 	}
 }

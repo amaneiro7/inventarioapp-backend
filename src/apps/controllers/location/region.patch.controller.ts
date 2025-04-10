@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type RegionUpdater } from '../../../Contexts/Location/Region/application/rEGIONUpdater'
+import { type RegionUpdater } from '../../../Contexts/Location/Region/application/RegionUpdater'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
