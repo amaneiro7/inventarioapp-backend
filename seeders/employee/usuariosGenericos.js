@@ -5,6 +5,11 @@ const genericsUsers = [
 		isStillWorking: true
 	},
 	{
+		userName: 'recepcion'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
 		userName: 'CCI2'.trim().toLowerCase(),
 		type: 'generic',
 		isStillWorking: true
@@ -61,6 +66,11 @@ const genericsUsers = [
 	},
 	{
 		userName: 'sbelloso'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'juntasbnc'.trim().toLowerCase(),
 		type: 'generic',
 		isStillWorking: true
 	}

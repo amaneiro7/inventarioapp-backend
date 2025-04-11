@@ -1,121 +1,48 @@
+const modelName = [
+	'HP All-in-One 24-df0xxx',
+	'HP ProDesk 600 G1 SFF',
+	'HP Laptop 15t-dy200',
+	'HP Compaq Pro 6300 SFF',
+	'HP Compaq 6000 Pro SFF PC',
+	'ThinkCentre M71e',
+	'HP Compaq dc5800 Small Form Factor',
+	'ThinkCentre M700',
+	'G41D3C',
+	'HP EliteDesk 800 G4 SFF',
+	'HP EliteBook x360 830 G6',
+	'ThinkCentre M73z',
+	'ThinkCentre M72e',
+	'HP Compaq 8000 Elite SFF PC',
+	'H61MLV',
+	'HP 200 G1 MT',
+	'ThinkCentre M82',
+	'HP ProDesk 600 G4 DM (TAA)',
+	'HP EliteDesk 800 G4 DM 35W',
+	'HP Compaq dc7800p Small Form Factor',
+	'BYTE4',
+	'HP EliteDesk 800 G1 SFF',
+	'ThinkCentre M81',
+	'HP Compaq 6200 Pro SFF PC',
+	'HP ProDesk 600 G1 Base Model Small Form Factor PC',
+	'HP EliteDesk 800 G4 DM 35W (TAA)',
+	'HP Compaq Elite 8300 SFF',
+	'HP ProDesk 400 G1 SFF',
+	'ThinkCentre M83',
+	'System Product Name',
+	'ThinkCentre M720q',
+	'HP EliteBook 840 G8 Notebook PC',
+	'HP Z4 G4 Workstation',
+	'HP Pavilion Laptop 15t-eg000',
+	'ThinkCentre M70e',
+	'HP Compaq Pro 4300 SFF PC',
+	'HP ZBook 15u G5',
+	'HP EliteDesk 800 G4 DM 65W (TAA)',
+	'HP EliteBook 850 G7 Notebook PC',
+	'HP ZBook 15 G3',
+]
 
-// const modelName = {
-// 	TS430: 'ThinkServer TS430',
-// 	EDGE: 'ThinkPad Edge',
-// 	M70E: 'ThinkCentre M70e',
-// 	M71E: 'ThinkCentre M71e',
-// 	M72E: 'ThinkCentre M72e',
-// 	M73Z: 'ThinkCentre M73z',
-// 	C260: 'Lenovo C260',
-// 	M700: 'ThinkCentre M700',
-// 	M710S: 'ThinkCentre M710S',
-// 	M720Q: 'ThinkCentre M720q',
-// 	M720S: 'ThinkCentre M720s',
-// 	M810Z: 'ThinkCentre M810Z',
-// 	M91P: 'ThinkCentre M91p',
-// 	M81: 'ThinkCentre M81',
-// 	M82: 'ThinkCentre M82',
-// 	M83: 'ThinkCentre M83',
-// 	AD4: 'ThinkCentre AD4',
-// 	HP8300: 'HP Compaq Elite 8300 SFF',
-// 	HP8000: 'HP Compaq Elite 8000 SFF',
-// 	HP800G1: 'HP EliteDesk 800 G1 SFF',
-// 	HP800G4: 'HP EliteDesk 800 G4 SFF',
-// 	HP4300: 'HP Compaq Pro 4300 SFF PC',
-// 	HP6300: 'HP Compaq Pro 6300 SFF',
-// 	HP6000: 'HP Compaq 6000 Pro SFF PC',
-// 	HP6200: 'HP Compaq 6200 Pro SFF PC',
-// 	HP5700: 'HP Compaq dc5700 Small Form Factor',
-// 	HPML110GEN9: 'HP Proliant ML110 Gen9',
-// 	HP5800: 'HP Compaq dc5800 Small Form Factor',
-// 	HP5100: 'HP Compaq dc5100 Small Form Factor',
-// 	HP200G1MT: 'HP 200 G1 MT',
-// 	HP8470P: 'HP EliteBook 8470p',
-// 	'HP360-1030G3': 'HP EliteBook x360 1030 G3',
-// 	'HP360-830G6': 'HP EliteBook x360 830 G6',
-// 	HP15TDY200: 'HP Laptop 15t dy200',
-// 	HP1040G4: 'HP EliteBook 1040 G4',
-// 	HP4440S: 'HP ProBook 4440s',
-// 	LATITUDE5300: 'Latitude 5300 2-in-1',
-// 	LATITUDE5400: 'Latitude 5400',
-// 	MACBOOKPRORETINA: 'MacBook Pro Retina',
-// 	DV4NOTEBOOKPC: 'HP Pavilion dv4 Notebook PC',
-// 	HPPAVILIONG4: 'HP Pavilion G4-1388la',
-// 	E49: 'Lenovo E49',
-// 	G480: 'Lenovo G480',
-// 	G5070: 'Lenovo G50-70',
-// 	L412: 'ThinkPad L412',
-// 	SL400: 'ThinkPad SL400',
-// 	SL410: 'ThinkPad SL410',
-// 	T61: 'ThinkPad T61',
-// 	V33014IKB: 'Lenovo V330-14IKB',
-// 	X230: 'ThinkPad X230',
-// 	X17TH: 'ThinkPad X1 Carbon 7th',
-// 	X15TH: 'ThinkPad X1 Carbon 5th',
-// 	BYTE4: 'BYTE4',
-// 	G41D3C: 'G41D3C',
-// 	H61MLV: 'H61MLV',
-// 	HP24: 'HP All-in-One 24-e0XX',
-// 	HP7800MT: 'HP Compaq dc7800 Convertible Minitower',
-// 	HPD220: 'HP d220 MT (DV667A)',
-// 	HP850G7: 'HP EliteBook 850 G7 Notebook PC',
-// 	HP800G4DM35: 'HP EliteDesk 800 G4 DM 35W (TAA)',
-// 	HP800G4DM65: 'HP EliteDesk 800 G4 DM 65W (TAA)',
-// 	HP400G1: 'HP ProDesk 400 G1 SFF',
-// 	HP600G1: 'HP ProDesk 600 G1 SFF',
-// 	HP600G4: 'HP ProDesk 600 G4 DM (TAA)',
-// 	HPZ4G4: 'HP Z4 G4 Workstation',
-// 	HPZ15G3: 'HP ZBook 15 G3',
-// 	HPZ15G5: 'HP ZBook 15u G5',
-// 	Inspire: 'Inspire',
-// 	SLIC: 'SLIC-BPC'
-// }
-const modelName = {
-	'BYTE4': 'BYTE4',
-	'C8T89AV#186': 'C8T89AV#186',
-	'G41D3C': 'G41D3C',
-	'H61MLV': 'H61MLV',
-	'HP 200 G1 MT': 'HP 200 G1 MT',
-	'HP All-in-One 24-df0xxx': 'HP All-in-One 24-df0xxx',
-	'HP Compaq 6000 Pro SFF PC': 'HP Compaq 6000 Pro SFF PC',
-	'HP Compaq 6200 Pro SFF PC': 'HP Compaq 6200 Pro SFF PC',
-	'HP Compaq 8000 Elite SFF PC': 'HP Compaq 8000 Elite SFF PC',
-	'HP Compaq dc5800 Small Form Factor': 'HP Compaq dc5800 Small Form Factor',
-	'HP Compaq dc7800p Small Form Factor': 'HP Compaq dc7800p Small Form Factor',
-	'HP Compaq Elite 8300 SFF': 'HP Compaq Elite 8300 SFF',
-	'HP Compaq Pro 4300 SFF PC': 'HP Compaq Pro 4300 SFF PC',
-	'HP Compaq Pro 6300 SFF': 'HP Compaq Pro 6300 SFF',
-	'HP EliteBook 840 G8 Notebook PC': 'HP EliteBook 840 G8 Notebook PC',
-	'HP EliteBook 850 G7 Notebook PC': 'HP EliteBook 850 G7 Notebook PC',
-	'HP EliteBook x360 830 G6': 'HP EliteBook x360 830 G6',
-	'HP EliteDesk 800 G1 SFF': 'HP EliteDesk 800 G1 SFF',
-	'HP EliteDesk 800 G4 DM 35W': 'HP EliteDesk 800 G4 DM 35W',
-	'HP EliteDesk 800 G4 DM 35W (TAA)': 'HP EliteDesk 800 G4 DM 35W (TAA)',
-	'HP EliteDesk 800 G4 DM 65W (TAA)': 'HP EliteDesk 800 G4 DM 65W (TAA)',
-	'HP EliteDesk 800 G4 SFF': 'HP EliteDesk 800 G4 SFF',
-	'HP Laptop 15t-dy200': 'HP Laptop 15t-dy200',
-	'HP Pavilion Laptop 15t-eg000': 'HP Pavilion Laptop 15t-eg000',
-	'HP ProDesk 400 G1 SFF': 'HP ProDesk 400 G1 SFF',
-	'HP PRODESK 600 G1': 'HP PRODESK 600 G1',
-	'HP ProDesk 600 G1 SFF': 'HP ProDesk 600 G1 SFF',
-	'HP ProDesk 600 G4 DM (TAA)': 'HP ProDesk 600 G4 DM (TAA)',
-	'HP Z4 G4 Workstation': 'HP Z4 G4 Workstation',
-	'HP ZBook 15 G3': 'HP ZBook 15 G3',
-	'HP ZBook 15u G5': 'HP ZBook 15u G5',
-	'Lenovo Product': 'Lenovo Product',
-	'OEM': 'OEM',
-	'ThinkCentre M700': 'ThinkCentre M700',
-	'ThinkCentre M70e': 'ThinkCentre M70e',
-	'ThinkCentre M71e': 'ThinkCentre M71e',
-	'ThinkCentre M720q': 'ThinkCentre M720q',
-	'ThinkCentre M72e': 'ThinkCentre M72e',
-	'ThinkCentre M73z': 'ThinkCentre M73z',
-	'ThinkCentre M81': 'ThinkCentre M81',
-	'ThinkCentre M82': 'ThinkCentre M82',
-	'ThinkCentre M83	': 'ThinkCentre M83',
-}
 
-const modelComputer = [,
+const modelComputer = [
 	{
 		id: '21969859-daa0-4916-a554-edff77e8f9ac',
 		name: 'ThinkCentre M70e'
@@ -178,7 +105,7 @@ const modelComputer = [,
 	},
 	{
 		id: '78e6fc44-7d45-47e6-9d78-aecc66ed74d4',
-		name: 'HP Compaq Elite 8000 SFF'
+		name: 'HP Compaq 8000 Elite SFF'
 	},
 	{
 		id: 'b67c290e-c186-4ab7-9fd3-92689e1bcbaa',
@@ -230,7 +157,7 @@ const modelComputer = [,
 	},
 	{
 		id: 'a1a929ed-1be1-46fd-9da9-e7207b4f3dbc',
-		name: 'HP Laptop 15t dy200'
+		name: 'HP Laptop 15t-dy200'
 	},
 	{
 		id: '3fdb6958-f036-47e7-a583-89956e7f9d78',
@@ -392,6 +319,41 @@ const modelComputer = [,
 	{
 		id: '53d44ea1-5b9c-4b72-ab38-6d61358cf892',
 		name: 'OEM'
-	}
+	},
+	{
+		id: '4ea66d3d-6117-4587-9507-6e87fef0a339',
+		name: 'HP All-in-One 24-df0xxx',
+	},
+	{
+		id: '2f4993bc-d1b5-4c53-9e92-a3c38dd75040',
+		name: 'HP EliteDesk 800 G4 DM 35W',
+	},
+	{
+		id: 'bf983eed-1209-4c4e-a691-70e5bf61e076',
+		name: 'HP Compaq dc7800p Small Form Factor',
+	},
+	{
+		id: '8b0befb9-5d83-4cfe-8f4b-717adae0e6b0',
+		name: 'HP EliteBook 840 G8 Notebook PC',
+	},
+	{
+		id: 'ba04c276-164a-4fe2-9f80-5909b1560c08',
+		name: 'HP Pavilion Laptop 15t-eg000',
+	},
 ]
+
+// Crear un Set de los nombres de procesador del segundo array para una búsqueda eficiente
+const existingModels = new Set(modelComputer.map(p => {
+	// Normalizar la cadena para una comparación más precisa	
+	return modelName.find(pn => pn === p.name);
+}).filter(Boolean)); // Filter out null or undefined if no match is found
+
+// Filtrar el primer array para obtener los nombres que no existen en el segundo
+const missingModels = modelName.filter(name => {
+	// Normalizar la cadena del primer array para la comparación
+	return ![...existingModels].some(existingName => existingName && name.includes(existingName));
+})
+
+//console.log(modelComputer.find(processor => processor.name === "HP EliteBook 850 G7 Notebook PC").id);
+
 module.exports = { modelComputer, modelName }

@@ -1,6 +1,6 @@
 const osName = {
 	'Microsoft Windows 10 Pro': 'Windows 10',
-	'Microsoft Windows 7 Professional ': 'Windows 7',
+	'Microsoft Windows 7 Professional': 'Windows 7',
 	'Microsoft Windows 11 Pro': 'Windows 11',
 	'Microsoft Windows 10 Pro for Workstations': 'Windows 10',
 	'Microsoft Windows 10 Enterprise LTSC': 'Windows 10',

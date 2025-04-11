@@ -1,5 +1,6 @@
 const hddCapacitiesName = {
 	40: 40,
+	64: 64,
 	80: 80,
 	120: 120,
 	160: 160,
@@ -16,6 +17,7 @@ const hddCapacitiesName = {
 
 const hddCapacities = [
 	{ id: '1', name: 40 },
+	{ id: '14', name: 64 },
 	{ id: '2', name: 80 },
 	{ id: '3', name: 120 },
 	{ id: '4', name: 160 },
@@ -27,7 +29,7 @@ const hddCapacities = [
 	{ id: '10', name: 768 },
 	{ id: '11', name: 1000 },
 	{ id: '12', name: 2000 },
-	{ id: '13', name: 4000 }
+	{ id: '13', name: 4000 },
 ]
 
 module.exports = { hddCapacities, hddCapacitiesName }

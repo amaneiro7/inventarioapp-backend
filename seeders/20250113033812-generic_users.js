@@ -4,7 +4,7 @@ const { genericsUsers } = require('./employee/usuariosGenericos')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		for (const employee of genericsUsers) {
 			employee.phone = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
 			employee.extension = Sequelize.literal(`ARRAY[]::VARCHAR[]`)
@@ -33,8 +33,10 @@ module.exports = {
 						employee_code: null,
 						nationality: null,
 						cedula: null,
-						centro_trabajo_id: null,
 						location_id: null,
+						directiva_id: null,
+						vicepresidencia_ejecutiva_id: null,
+						vicepresidencia_id: null,
 						departamento_id: null,
 						cargo_id: null,
 						extension: null,
@@ -58,8 +60,10 @@ module.exports = {
 						employee_code: null,
 						nationality: null,
 						cedula: null,
-						centro_trabajo_id: null,
 						location_id: null,
+						directiva_id: null,
+						vicepresidencia_ejecutiva_id: null,
+						vicepresidencia_id: null,
 						departamento_id: null,
 						cargo_id: null,
 						extension: null,
@@ -72,7 +76,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		/**
 		 * Add commands to revert seed here.
 		 *

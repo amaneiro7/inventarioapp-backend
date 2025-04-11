@@ -1,71 +1,4 @@
-// const processorName = {
-// 	J1800: 'J1800',
-// 	J4125: 'J4125',
-// 	I32100: '2100',
-// 	I32120: '2120',
-// 	I32130: '2130',
-// 	I32370M: '2370M',
-// 	I33110M: '3110M',
-// 	I33120M: '3120M',
-// 	I33220: '3220',
-// 	I33240: '3240',
-// 	I34030U: '4030U',
-// 	I34150: '4150',
-// 	I3M380: 'M380',
 
-// 	I54570: '4570',
-// 	I58500T: '8500T',
-// 	I57200U: '7200U',
-// 	I52400: '2400',
-// 	I52450M: '2450M',
-// 	I53210M: '3210M',
-// 	I53230M: '3230M',
-// 	I53470: '3470',
-// 	I54430S: '4430S',
-// 	I56400: '6400',
-// 	I54460: '4460',
-// 	I54590: '4590',
-// 	I58365U: '8365U',
-// 	I5M520: 'M520',
-// 	I58400T: '8400T',
-// 	915: '915',
-// 	945: '945',
-// 	I77600U: '7600U',
-// 	I78550U: '8550U',
-// 	I78565U: '8565U',
-// 	I78650U: '8650U ',
-// 	I78665U: '8665U',
-// 	I71165G7: '1165G7',
-// 	I710510U: '10510U',
-// 	I72600: '2600',
-// 	I74770: '4770',
-// 	I74790: '4790',
-// 	I76820HQ: '6820HQ',
-// 	I78700: '8700',
-// 	I78700T: '8700T',
-
-// 	E4600: 'E4600',
-// 	E7200: 'E7200',
-// 	E7500: 'E7500',
-// 	E7400: 'E7400',
-// 	E8400: 'E8400',
-// 	G630: 'G630',
-// 	G620: 'G620',
-// 	P7450: 'P7450',
-// 	T5670: 'T5670',
-// 	T6670: 'T6670',
-// 	T1700: 'T1700',
-// 	E2180: 'E2180',
-// 	E31230V2: 'E3-1230 V2',
-// 	E52603V4: 'E5-2603 V4',
-// 	A99400: 'A9-9400',
-// 	Q8400: 'Q8400',
-// 	G640: 'G640',
-// 	W2133: 'W-2133',
-// 	E2200: 'E2200',
-// 	E5300: 'E5300',
-// 	E5500: 'E5500'
-// }
 const processorName = [
 	'AMD Athlon Silver 3050U with Radeon Graphics',
 	'AMD Ryzen 3 3250U with Radeon Graphics',
@@ -614,7 +547,42 @@ const processors = [
 		frequency: '2.40GHz',
 		cores: 4,
 		threads: false
-	}
+	},
+
+	// por agregar
+	{
+		id: '8c3255a1-bbae-44c9-ad5f-7b62a65f9676',
+		product_collection: 'AMD Athlon Silver',
+		number_model: '3050U',
+		frequency: '2.30GHz',
+		cores: 2,
+		threads: false
+	},
+	{
+		id: 'fdb4b53d-e2a0-47d5-8978-15e187113150',
+		product_collection: 'AMD Ryzen 3',
+		number_model: '3250U',
+		frequency: '2.60GHz',
+		cores: 2,
+		threads: true
+	},
+	{
+		id: 'ec898a3c-86db-4100-8c08-ef277f214e78',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '1145G7',
+		frequency: '2.60GHz',
+		cores: 4,
+		threads: true
+	},
+	{
+		id: '0e3ce31e-7206-4cce-9474-8a972a997415',
+		product_collection: 'Intel(R) Celeron(R)',
+		number_model: 'G1610',
+		frequency: '2.60GHz',
+		cores: 2,
+		threads: false
+	},
+
 ]
 
 // Crear un Set de los nombres de procesador del segundo array para una búsqueda eficiente
@@ -630,6 +598,11 @@ const missingProcessors = processorName.filter(name => {
 	return ![...existingProcessorNames].some(existingName => existingName && name.includes(existingName.split(' ').slice(0, -2).join(' ')));
 });
 
-console.log(missingProcessors)
+//console.log(processors.find(process => 'Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz'.includes(process.number_model)).id)
 
 module.exports = { processors, processorName }
+
+// for (let index = 0; index < 4; index++) {
+// 	console.log(crypto.randomUUID())
+
+// }

@@ -11,3 +11,5 @@ const categoriesData = [
     { id: '3', name: 'Laptops' },
     { id: '4', name: 'All in One' }
 ]
+
+module.exports = { categoryNames, categoriesData }
