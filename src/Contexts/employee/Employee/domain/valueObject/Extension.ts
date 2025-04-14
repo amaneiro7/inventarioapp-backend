@@ -2,44 +2,10 @@ import { InvalidArgumentError } from '../../../../Shared/domain/value-object/Inv
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
-
-enum AreaCode {
-	CARACAS = '0212',
-	VALENCIA = '0241',
-	MARACAY = '0243',
-	BARCELONA = '0281',
-	CIUDADBOLIVAR = '0285',
-	MARACAIBO = '0261',
-	BARINAS = '0273',
-	BARQUISIMETO = '0251',
-	MERIDA = '0274',
-	PUERTOLACRUZ = '0281',
-	SANCRISTOBAL = '0273',
-	CIUDADGUAYANA = '0285',
-	GUARENAS = '0212',
-	GUATIRE = '0212',
-	LOSTEQUES = '0212',
-	LAGUAIRA = '0212',
-	NAGUANAGUA = '0241',
-	TOCUYITO = '0241',
-	GUACARA = '0242',
-	GUANARE = '0272',
-	CIUDADOJEDA = '0263',
-	CORO = '0257',
-	PUNTOFIJO = '0263',
-	SANFELIPE = '0257',
-	BARUTA = '0212',
-	CHACAO = '0212',
-	CATIALAMAR = '0212',
-	LOSGUAYOS = '0241',
-	COJEDES = '0249',
-	TINAQUILLO = '0258',
-	SANCARLOS = '0249',
-	TUCUPITA = '0248'
-}
+import { codigosAreaVenezuela } from './codigosAreaVenezuela'
 
 export class Extension extends StringValueObject {
-	private readonly areaCodes = Object.values(AreaCode)
+	private readonly areaCodes = codigosAreaVenezuela.map(areaCode => areaCode.codigo)
 	private readonly numberLength = 7
 	private readonly totalLength = 11 // 4 dígitos de área + 7 dígitos del número
 	private readonly phoneRegex = new RegExp(`^(${this.areaCodes.join('|')})\\d{${this.numberLength}}$`)

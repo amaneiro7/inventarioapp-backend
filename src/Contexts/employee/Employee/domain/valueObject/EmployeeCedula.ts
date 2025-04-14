@@ -1,13 +1,13 @@
 import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
-import { FiltersPrimitives } from '../../../../Shared/domain/criteria/Filter'
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
-import { EmployeeRepository } from '../Repository/EmployeeRepository'
+import { type FiltersPrimitives } from '../../../../Shared/domain/criteria/Filter'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 // import { Employee } from '../entity/Employee'
-import { EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 
 interface EmployeeCedulaProps {
 	value: number | null
@@ -24,6 +24,9 @@ export class EmployeeCedula extends AcceptedNullValueObject<number> {
 	}
 
 	private ensureIsValidCedula({ value, type }: EmployeeCedulaProps): void {
+		if (type === EmployeeTypes.GENERIC && value !== null) {
+			throw new InvalidArgumentError('La cédula del empleado no es requerida para este tipo de empleado.')
+		}
 		if (type !== EmployeeTypes.GENERIC && value === null) {
 			throw new InvalidArgumentError('La cédula del empleado es requerida para este tipo de empleado.')
 		}
