@@ -434,7 +434,17 @@ const modelComputer = [
 	},
 	{
 		id: '53d44ea1-5b9c-4b72-ab38-6d61358cf892',
+		name: 'To Be Filled By O.E.M.',
+		slots: 2
+	},
+	{
+		id: '53d44ea1-5b9c-4b72-ab38-6d61358cf892',
 		name: 'O.E.M',
+		slots: 2
+	},
+	{
+		id: '53d44ea1-5b9c-4b72-ab38-6d61358cf892',
+		name: 'System Product Name',
 		slots: 2
 	},
 	// Boleita

@@ -9,7 +9,7 @@ const { operatingSystemArq, osArqName } = require("./operatingSystemArq");
 const { processors } = require("./processors");
 const { agenciasSite, agenciaName } = require('../location/locations');
 
-const torreBoleita = [
+const agenciaOriente = [
     {
         serial: 'MXJ90607GV',
         activo: null,
@@ -32,7 +32,7 @@ const torreBoleita = [
         ipAddress: '192.168.66.131'
     },
     {
-        serial: 'To be filled by O.E.M.',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -158,7 +158,7 @@ const torreBoleita = [
         ipAddress: '192.168.66.139'
     },
     {
-        serial: 'OEM',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -200,7 +200,7 @@ const torreBoleita = [
         ipAddress: '192.168.130.195'
     },
     {
-        serial: 'None',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -347,7 +347,7 @@ const torreBoleita = [
         ipAddress: '10.100.115.10'
     },
     {
-        serial: 'OEM',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -494,7 +494,7 @@ const torreBoleita = [
         ipAddress: '192.168.73.206'
     },
     {
-        serial: 'None',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -767,7 +767,7 @@ const torreBoleita = [
         ipAddress: '10.50.48.53'
     },
     {
-        serial: 'To Be Filled By O.E.M.',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -830,7 +830,7 @@ const torreBoleita = [
         ipAddress: '10.100.178.13'
     },
     {
-        serial: 'To Be Filled By O.E.M.',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -893,7 +893,7 @@ const torreBoleita = [
         ipAddress: '10.100.178.16'
     },
     {
-        serial: 'System Serial Number',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -1691,7 +1691,7 @@ const torreBoleita = [
         ipAddress: '192.168.154.31'
     },
     {
-        serial: 'None',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -1796,7 +1796,7 @@ const torreBoleita = [
         ipAddress: '10.102.85.16'
     },
     {
-        serial: 'OEM',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -1817,7 +1817,7 @@ const torreBoleita = [
         ipAddress: '10.102.85.17'
     },
     {
-        serial: 'To Be Filled By O.E.M.',
+        serial: null,
         activo: null,
         statusId: '1', // En Uso
         categoryId: categoriesData.find(cat => cat.name === categoryNames['Desktop']).id,
@@ -1870,4 +1870,4 @@ function transformarStringToArray (input, targetSize) {
     return numbers.slice(0, targetSize)
 }
 
-module.exports = { torreBoleita }
+module.exports = { agenciaOriente }

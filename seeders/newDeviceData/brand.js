@@ -5,7 +5,11 @@ const brandOnlyName = {
 	'BIOSTAR Group': 'Biostar Group',
 	'Azulle': 'Azulle',
 	'System manufacturer': 'OEM',
-	'To be filled by O.E.M.': 'OEM'
+	'O.E.M': 'OEM',
+	'OEM': 'OEM',
+	'To be filled by O.E.M.': 'OEM',
+	'To Be Filled By O.E.M.': 'OEM',
+	'Foxconn': 'Foxconn'
 
 }
 
@@ -47,7 +51,9 @@ const brandsData = [
 	{ id: 'bd28692c-b578-4e6d-9b6a-bdbbf174af18', name: 'ViewSonic' },
 	{ id: '3a0a6b01-2df3-4f28-82f1-1ec2b3e04a00', name: 'Azulle' },
 	{ id: '025f694f-f72d-49ab-a5bc-92895c39c69a', name: 'OEM' },
-	{ id: '28b7410b-ebeb-4195-b1fd-3d626f91313b', name: 'Asus' }
+	{ id: '28b7410b-ebeb-4195-b1fd-3d626f91313b', name: 'Asus' },
+	{ id: '16707e4e-5dfc-400a-9c6c-1ac8a2829f5f', name: 'Foxconn' },
 ]
+
 
 module.exports = { brandsData, brandOnlyName }
