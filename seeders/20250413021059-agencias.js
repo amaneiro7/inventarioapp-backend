@@ -7,12 +7,13 @@ const { agenciaInsular } = require('./newDeviceData/agenciasInsular')
 const { agenciaLlanos } = require('./newDeviceData/agenciasLlanos')
 const { agenciaCarabobo } = require('./newDeviceData/agenciasCarabobo')
 const { agenciaOriente } = require('./newDeviceData/agenciasOriente')
+const { agenciaCentroOccidente } = require('./newDeviceData/agenciasCentroOccidente')
 
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const agencias = agenciaGuayana.concat(agenciaCapital, agenciaInsular, agenciaLlanos, agenciaCarabobo, agenciaOriente)
+    const agencias = agenciaGuayana.concat(agenciaCapital, agenciaInsular, agenciaLlanos, agenciaCarabobo, agenciaOriente, agenciaCentroOccidente)
     return queryInterface.sequelize.transaction(async (transaction) => {
       const devicesWithResolvedEmployeeds = await Promise.all(
         agencias.map(async (device) => {

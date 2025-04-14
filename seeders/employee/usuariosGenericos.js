@@ -5544,5 +5544,505 @@ const genericsUsers = [
 		type: 'generic',
 		isStillWorking: true
 	},
+	{
+		userName: 'dsuarez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'dcaracuzzi'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'egalindez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mmorales'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'lfarias'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'eespinoza'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'lrodriguez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'acordero'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mafernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'angutierrez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jceballos'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'sperez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'echirema'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'adgonzalez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ncardenas'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'dpinero'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mvalera'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ftorres'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'erchirinos'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yomedina'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mlopez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mcamacaro'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'anescalona'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'sescalona'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yearojas'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'rudvargas'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jperaza'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'hlopez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mgarcia'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mvanegas'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mdasilva'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'dtorres'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'zalconini'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'murdaneta'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yarellano'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mbracho'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'carlopez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ytorres'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'marondon'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ycazano'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yfernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mamaya'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mameza'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ceperez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mrivas'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jeigonzalez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'bgaray'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'zparedes'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jdorante'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'cchavez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ilatini'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jbecerra'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jeescalona'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'cahernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'carteaga'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'igimenez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ifernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'kduarte'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'santequera'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ancastro'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mariagomez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jaranguren'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'tsoto'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jaserrano'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'clatorre'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'anarvaez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jlinarez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'acolmenarez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'raguilar'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'fbustos'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'japostol'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'josehernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'glhernandez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'cgranda'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'kgutierrez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yjimenez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'Maflores'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'laygomez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'laurodriguez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ecortez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yriera'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'Kpernalete'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'agallardo'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'daarroyo'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'anagarcia'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'smartinez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yerlopez'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'amatute'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'yladino'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'hgalvis'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'ycorrea'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mmontilla'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'miecheverria'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mereu'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'jcastaneda'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'alcolmenares'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'mybarra'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'llobo'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'pangulo'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
+	{
+		userName: 'nmontilla'.trim().toLowerCase(),
+		type: 'generic',
+		isStillWorking: true
+	},
 ]
 module.exports = { genericsUsers }
