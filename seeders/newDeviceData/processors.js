@@ -1,39 +1,35 @@
 
 const processorName = [
-	'AMD Athlon Silver 3050U with Radeon Graphics',
-	'AMD Ryzen 3 3250U with Radeon Graphics',
-	'Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz',
-	'11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz',
-	'Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz',
-	'Intel(R) Core(TM)2 Quad CPU    Q8400  @ 2.66GHz',
-	'Intel(R) Pentium(R) CPU G630 @ 2.70GHz',
 	'Intel(R) Core(TM)2 Duo CPU     E4600  @ 2.40GHz',
-	'Intel(R) Core(TM) i5-6400 CPU @ 2.70GHz',
-	'Pentium(R) Dual-Core  CPU      E5500  @ 2.80GHz',
-	'Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz',
-	'Intel(R) Core(TM) i7-8665U CPU @ 1.90GHz',
-	'Intel(R) Core(TM)2 Duo CPU     E7500  @ 2.93GHz',
-	'Intel(R) Core(TM) i5-4430S CPU @ 2.70GHz',
-	'Intel(R) Core(TM) i3-2100 CPU @ 3.10GHz',
-	'Intel(R) Core(TM)2 Duo CPU     E8400  @ 3.00GHz',
-	'Intel(R) Core(TM) i3-2120 CPU @ 3.30GHz',
-	'Intel(R) Celeron(R) CPU  J1800  @ 2.41GHz',
-	'Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz',
-	'Intel(R) Core(TM) i5-8500T CPU @ 2.10GHz',
-	'Intel(R) Celeron(R) J4125 CPU @ 2.00GHz',
-	'Intel(R) Core(TM) i3-2130 CPU @ 3.40GHz',
-	'Intel(R) Core(TM) i7-4790 CPU @ 3.60GHz',
-	'Intel(R) Core(TM) i5-2400 CPU @ 3.10GHz',
-	'Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz',
-	'Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz',
-	'Intel(R) Celeron(R) CPU G1610 @ 2.60GHz',
+	'Intel(R) Pentium(R) CPU G620 @ 2.60GHz',
 	'Intel(R) Core(TM) i5-8400T CPU @ 1.70GHz',
-	'Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz',
-	'11th Gen Intel(R) Core(TM) i5-1145G7 @ 2.60GHz',
-	'Intel(R) Xeon(R) W-2133 CPU @ 3.60GHz',
-	'Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz',
-	'Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz',
-	'Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz',
+	'Intel(R) Core(TM)2 Duo CPU     E7400  @ 2.80GHz',
+	'Intel(R) Core(TM) i5-6400 CPU @ 2.70GHz',
+	'Intel(R) Pentium(R) Dual  CPU  E2220  @ 2.40GHz',
+	'Intel(R) Pentium(R) CPU G630 @ 2.70GHz',
+	'Pentium(R) Dual-Core  CPU      E5500  @ 2.80GHz',
+	'Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz',
+	'Intel(R) Core(TM)2 Duo CPU     E8400  @ 3.00GHz',
+	'Intel(R) Pentium(R) Dual  CPU  E2180  @ 2.00GHz',
+	'Intel(R) Pentium(R) D CPU 820 2.80GHz',
+	'Intel(R) Core(TM)2 Duo CPU     E7500  @ 2.93GHz',
+	'Intel(R) Core(TM) i3-3240 CPU @ 3.40GHz',
+	'Intel(R) Celeron(R) CPU G1610 @ 2.60GHz',
+	'Intel(R) Core(TM) i3-2100 CPU @ 3.10GHz',
+	'Intel(R) Pentium(R) 4 650 CPU 3.40GHz',
+	'Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz',
+	'Pentium(R) Dual-Core  CPU      E5300  @ 2.60GHz',
+	'Intel(R) Core(TM)2 Duo CPU     E7200  @ 2.53GHz',
+	'Intel(R) Core(TM) i3-2120 CPU @ 3.30GHz',
+	'Intel(R) Pentium(R) CPU G640 @ 2.80GHz',
+	'Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz',
+	'Intel(R) Celeron(R) CPU  J1800  @ 2.41GHz',
+	'Intel(R) Celeron(R) CPU          420  @ 1.60GHz',
+	'Intel(R) Core(TM) i3-2130 CPU @ 3.40GHz',
+	'Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz',
+	'Intel(R) Core(TM)2 Quad CPU    Q8400  @ 2.66GHz',
+	'Intel(R) Core(TM) i5-8500T CPU @ 2.10GHz',
+	'Intel(R) Pentium(R) D 945 CPU 3.40GHz',
 ]
 const processors = [
 	{
@@ -582,6 +578,64 @@ const processors = [
 		cores: 2,
 		threads: false
 	},
+	// de Boleita	
+	{
+		id: '10603d93-fb0d-489e-bc66-33acf7ec6437',
+		product_collection: 'Intel(R) Core(TM) i5',
+		number_model: '650',
+		frequency: '3.20GHz',
+		cores: 2,
+		threads: true
+	},
+	{
+		id: 'ccf3a235-b43f-4fcf-be12-99bf441dd989',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '7700',
+		frequency: '3.60GHz',
+		cores: 4,
+		threads: true
+	},
+	// resto de agencia
+	{
+		id: 'f69229af-efcf-40a7-bfd4-a4848fbda639',
+		product_collection: 'Intel(R) Pentium(R) Dual-Core',
+		number_model: 'E2220',
+		frequency: '2.40GHz',
+		cores: 2,
+		threads: false
+	},
+	{
+		id: '2452b822-8e2c-420c-91b0-7d63889cb3f2',
+		product_collection: 'Intel(R) Pentium(R) D',
+		number_model: '820',
+		frequency: '2.80GHz',
+		cores: 2,
+		threads: false
+	},
+	{
+		id: 'eaab0158-63e1-44bc-8abb-64940b1a5674',
+		product_collection: 'Intel(R) Pentium(R) 4',
+		number_model: '550',
+		frequency: '3.40GHz',
+		cores: 1,
+		threads: true
+	},
+	{
+		id: 'f0effa9b-ca8d-4db3-b4f7-afc73486c5ef',
+		product_collection: 'Intel(R) Celeron(R)',
+		number_model: '420',
+		frequency: '1.60GHz',
+		cores: 1,
+		threads: false
+	},
+	// {
+	// 	id: 'ef612fd7-15a6-47fe-97af-0ae4c4e6318f',
+	// 	product_collection: 'Intel(R) Pentium(R) D',
+	// 	number_model: '945',
+	// 	frequency: '3.40GHz',
+	// 	cores: 2,
+	// 	threads: false
+	// },
 
 ]
 
@@ -598,11 +652,10 @@ const missingProcessors = processorName.filter(name => {
 	return ![...existingProcessorNames].some(existingName => existingName && name.includes(existingName.split(' ').slice(0, -2).join(' ')));
 });
 
-//console.log(processors.find(process => 'Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz'.includes(process.number_model)).id)
+// console.log(missingProcessors)
 
 module.exports = { processors, processorName }
 
-// for (let index = 0; index < 4; index++) {
+// for (let index = 0; index < 2; index++) {
 // 	console.log(crypto.randomUUID())
-
 // }

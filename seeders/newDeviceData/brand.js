@@ -5,6 +5,7 @@ const brandOnlyName = {
 	'BIOSTAR Group': 'Biostar Group',
 	'Azulle': 'Azulle',
 	'System manufacturer': 'OEM',
+	'To be filled by O.E.M.': 'OEM'
 
 }
 
