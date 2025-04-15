@@ -8,7 +8,7 @@ import { type CentroCostoParams } from '../domain/CentroCosto.dto'
 export class CentroCostoCreator {
 	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
 
-	async run({ id, name }: CentroCostoParams): Promise<void> {
+	async run({ params: { id, name } }: { params: CentroCostoParams }): Promise<void> {
 		await this.ensureCentroCostoDoesNotExist({ id })
 
 		const centroCosto = CentroCosto.create({ id, name })

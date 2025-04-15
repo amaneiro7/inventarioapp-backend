@@ -19,7 +19,7 @@ export class DepartamentoCreator {
 		)
 	}
 
-	async run({ name, vicepresidenciaId, cargos }: DepartamentoParams): Promise<void> {
+	async run({ params: { name, vicepresidenciaId, cargos } }: { params: DepartamentoParams }): Promise<void> {
 		const uniqueCargos = Array.from(new Set(cargos))
 
 		await this.createDepartamentoUseCase.execute({

@@ -27,12 +27,10 @@ export class CargoCreator {
 	}
 
 	async run({
-		name,
-		departamentos,
-		directivas,
-		vicepresidencias,
-		vicepresidenciasEjecutivas
-	}: CargoParams): Promise<void> {
+		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas }
+	}: {
+		params: CargoParams
+	}): Promise<void> {
 		const departamentosSinDuplicados: CargoParams['departamentos'] = Array.from(new Set(departamentos))
 		const directivasSinDuplicados: CargoParams['directivas'] = Array.from(new Set(directivas))
 		const vicepresidenciasSinDuplicados: CargoParams['vicepresidencias'] = Array.from(new Set(vicepresidencias))

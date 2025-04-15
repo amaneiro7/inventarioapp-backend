@@ -41,7 +41,27 @@ export class SequelizeVicepresidenciaRepository
 	}
 
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaDto>> {
-		return (await VicepresidenciaModel.findByPk(id)) ?? null
+		return (
+			(await VicepresidenciaModel.findByPk(id, {
+				include: [
+					{
+						association: 'vicepresidenciaEjecutiva',
+						attributes: ['id', 'name'],
+						include: [
+							{
+								association: 'directiva',
+								attributes: ['id', 'name']
+							}
+						]
+					},
+					{
+						association: 'cargos',
+						attributes: ['id', 'name'],
+						through: { attributes: [] }
+					}
+				]
+			})) ?? null
+		)
 	}
 
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaDto>> {

@@ -44,14 +44,26 @@ export class SequelizeDepartamentoRepository
 				include: [
 					{
 						association: 'vicepresidencia',
-						attributes: ['id', 'name']
+						attributes: ['id', 'name'],
+						include: [
+							{
+								association: 'vicepresidenciaEjecutiva',
+								attributes: ['id', 'name'],
+								include: [
+									{
+										association: 'directiva',
+										attributes: ['id', 'name']
+									}
+								]
+							}
+						]
 					},
 					{
 						association: 'cargos',
 						attributes: ['id', 'name'],
 						through: { attributes: [] }
-					},
-					'employee'
+					}
+					// 'employee'
 				]
 			})) ?? null
 		)

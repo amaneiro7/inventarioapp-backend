@@ -37,7 +37,7 @@ export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos'>> implemen
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
 			through: 'cargo_directiva',
-			foreignKey: 'directviaId',
+			foreignKey: 'directivaId',
 			otherKey: 'cargoId'
 		}) // Un Directiva tiene muchos Cargos
 	}

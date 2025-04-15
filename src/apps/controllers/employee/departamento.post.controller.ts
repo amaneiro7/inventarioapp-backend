@@ -10,7 +10,7 @@ export class DepartamentoPostController implements Controller {
 		try {
 			const params = req.body
 			const create: DepartamentoCreator = container.resolve(DepartamentoDependencies.Creator)
-			await create.run(params)
+			await create.run({ params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Departamento creado exitosamente'
 			})

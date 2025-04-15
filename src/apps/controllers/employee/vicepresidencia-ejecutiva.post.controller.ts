@@ -12,7 +12,7 @@ export class VicepresidenciaEjecutivaPostController implements Controller {
 			const create: VicepresidenciaEjecutivaCreator = container.resolve(
 				VicepresidenciaEjecutivaDependencies.Creator
 			)
-			await create.run(params)
+			await create.run({ params })
 			res.status(httpStatus.CREATED).send({
 				message: 'Vicepresidencia ejecutiva creado exitosamente'
 			})

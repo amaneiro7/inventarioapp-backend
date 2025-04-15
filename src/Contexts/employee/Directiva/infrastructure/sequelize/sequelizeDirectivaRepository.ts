@@ -44,8 +44,8 @@ export class SequelizeDirectivaRepository
 						association: 'cargos',
 						attributes: ['id', 'name'],
 						through: { attributes: [] }
-					},
-					'employee'
+					}
+					// 'employee'
 				]
 			})) ?? null
 		)

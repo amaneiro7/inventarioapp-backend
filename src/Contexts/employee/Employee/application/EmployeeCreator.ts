@@ -32,7 +32,7 @@ export class EmployeeCreator {
 		})
 	}
 
-	async run(params: EmployeeParams): Promise<void> {
+	async run({ params }: { params: EmployeeParams }): Promise<void> {
 		await this.createEmployeeUseCase.execute(params)
 
 		const employee = Employee.create(params)

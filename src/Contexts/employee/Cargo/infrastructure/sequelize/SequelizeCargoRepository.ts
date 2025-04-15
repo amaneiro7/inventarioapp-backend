@@ -11,6 +11,7 @@ import { CargoModel } from './CargoSchema'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { CargoAssociation } from './CargoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
@@ -23,6 +24,7 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
+			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CargoModel.findAndCountAll(opt)
 				return {

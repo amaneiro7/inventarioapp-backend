@@ -19,8 +19,11 @@ export class VicepresidenciaCreator {
 		)
 	}
 
-	async run({ params }: { params: VicepresidenciaParams }): Promise<void> {
-		const { cargos, vicepresidenciaEjecutivaId, name } = params
+	async run({
+		params: { name, vicepresidenciaEjecutivaId, cargos }
+	}: {
+		params: VicepresidenciaParams
+	}): Promise<void> {
 		const uniqueCargos = Array.from(new Set(cargos))
 		await this.createVicepresidenciaUseCase.execute({
 			name,

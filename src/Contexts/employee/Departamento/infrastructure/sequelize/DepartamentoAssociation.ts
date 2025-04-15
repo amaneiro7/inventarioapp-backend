@@ -6,7 +6,19 @@ export class DepartamentoAssociation {
 		options.include = [
 			{
 				association: 'vicepresidencia',
-				attributes: ['name']
+				attributes: ['id', 'name'],
+				include: [
+					{
+						association: 'vicepresidenciaEjecutiva',
+						attributes: ['id', 'name'],
+						include: [
+							{
+								association: 'directiva',
+								attributes: ['id', 'name']
+							}
+						]
+					}
+				]
 			},
 			{
 				association: 'cargos',
