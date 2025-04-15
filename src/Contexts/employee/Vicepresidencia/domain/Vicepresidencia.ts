@@ -14,7 +14,12 @@ import {
  */
 
 export class Vicepresidencia extends IDepartment {
-	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[], private directivaId: DepartmentId) {
+	constructor(
+		id: DepartmentId,
+		name: DepartmentName,
+		cargos: CargoId[],
+		private vicepresidenciaEjecutivaId: DepartmentId
+	) {
 		super(id, name, cargos)
 	}
 
@@ -25,7 +30,7 @@ export class Vicepresidencia extends IDepartment {
 			new DepartmentId(id),
 			new DepartmentName(params.name),
 			cargos,
-			new DepartmentId(params.directivaId)
+			new DepartmentId(params.vicepresidenciaEjecutivaId)
 		)
 	}
 
@@ -34,7 +39,7 @@ export class Vicepresidencia extends IDepartment {
 			new DepartmentId(primitives.id),
 			new DepartmentName(primitives.name),
 			this.addCargoIds(primitives.cargos),
-			new DepartmentId(primitives.directivaId)
+			new DepartmentId(primitives.vicepresidenciaEjecutivaId)
 		)
 	}
 
@@ -42,16 +47,16 @@ export class Vicepresidencia extends IDepartment {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			directivaId: this.directivaValue,
+			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
 			cargos: this.CargosValue
 		}
 	}
 
-	get directivaValue(): Primitives<DepartmentId> {
-		return this.directivaId.value
+	get vicepresidenciaEjecutivaValue(): Primitives<DepartmentId> {
+		return this.vicepresidenciaEjecutivaId.value
 	}
 
-	updateDirectiva(newDirectivaId: Primitives<DepartmentId>): void {
-		this.directivaId = new DepartmentId(newDirectivaId)
+	updateVicepresidenciaEjecutiva(newVicepresidenciaEjecutivaId: Primitives<DepartmentId>): void {
+		this.vicepresidenciaEjecutivaId = new DepartmentId(newVicepresidenciaEjecutivaId)
 	}
 }

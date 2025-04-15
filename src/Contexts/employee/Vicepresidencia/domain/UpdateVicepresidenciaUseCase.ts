@@ -6,19 +6,19 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Vicepresidencia } from './Vicepresidencia'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaParams, type VicepresidenciaDto } from './Vicepresidencia.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class UpdateVicepresidenciaUseCase {
 	constructor(
 		private readonly vicepresidenciaaRepository: DepartmentRepository<VicepresidenciaDto>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
 	public async execute({
-		params: { name, directivaId, cargos },
+		params: { name, vicepresidenciaEjecutivaId, cargos },
 		entity
 	}: {
 		entity: Vicepresidencia
@@ -27,7 +27,7 @@ export class UpdateVicepresidenciaUseCase {
 		const updateIDeparmentUseCase = new UpdateIDeparmentUseCase(this.cargoRepository)
 		await Promise.all([
 			this.ensureVicepresidenciaDoesNotExist({ name, entity }),
-			this.ensureDirectivaExists({ directivaId, entity }),
+			this.ensureVicepresidenciaEjecutivaExists({ vicepresidenciaEjecutivaId, entity }),
 			updateIDeparmentUseCase.execute({ params: { cargos }, entity })
 		])
 	}
@@ -49,20 +49,20 @@ export class UpdateVicepresidenciaUseCase {
 		entity.updateName(name)
 	}
 
-	private async ensureDirectivaExists({
+	private async ensureVicepresidenciaEjecutivaExists({
 		entity,
-		directivaId
+		vicepresidenciaEjecutivaId
 	}: {
-		directivaId?: Primitives<DepartmentId>
+		vicepresidenciaEjecutivaId?: Primitives<DepartmentId>
 		entity: Vicepresidencia
 	}): Promise<void> {
-		if (!directivaId) return
+		if (!vicepresidenciaEjecutivaId) return
 
-		if (entity.directivaValue !== directivaId) return
+		if (entity.vicepresidenciaEjecutivaValue !== vicepresidenciaEjecutivaId) return
 
-		if ((await this.directivaRepository.searchById(directivaId)) === null) {
-			throw new DepartmentDoesNotExistError('La directiva')
+		if ((await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)) === null) {
+			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
-		entity.updateDirectiva(directivaId)
+		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId)
 	}
 }

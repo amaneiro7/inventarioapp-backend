@@ -10,19 +10,19 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type VicepresidenciaDto } from '../../domain/Vicepresidencia.dto'
-import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
-import { CargoDto } from '../../../Cargo/domain/Cargo.dto'
-import { CargoId } from '../../../Cargo/domain/CargoId'
-import { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
+import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { type CargoId } from '../../../Cargo/domain/CargoId'
+import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class VicepresidenciaModel
-	extends Model<Omit<VicepresidenciaDto, 'directiva' | 'cargos'>>
+	extends Model<Omit<VicepresidenciaDto, 'vicepresidenciaEjecutiva' | 'cargos'>>
 	implements VicepresidenciaDto
 {
 	declare id: Primitives<DepartmentId>
 	declare name: Primitives<DepartmentName>
-	declare directivaId: Primitives<DepartmentId>
-	declare directiva: DirectivaDto
+	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
+	declare vicepresidenciaEjecutiva: VicepresidenciaEjecutivaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// // Métodos de asociación
@@ -65,7 +65,7 @@ export class VicepresidenciaModel
 					allowNull: false,
 					unique: true
 				},
-				directivaId: {
+				vicepresidenciaEjecutivaId: {
 					type: DataTypes.UUID,
 					allowNull: false
 				}

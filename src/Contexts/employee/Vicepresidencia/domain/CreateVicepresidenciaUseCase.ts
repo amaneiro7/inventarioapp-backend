@@ -6,33 +6,35 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type VicepresidenciaParams, type VicepresidenciaDto } from './Vicepresidencia.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 export class CreateVicepresidenciaUseCase {
 	constructor(
 		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly cargoRepository: CargoRepository
 	) {}
 
-	public async execute({ name, directivaId, cargos }: VicepresidenciaParams): Promise<void> {
+	public async execute({ name, vicepresidenciaEjecutivaId, cargos }: VicepresidenciaParams): Promise<void> {
 		const createIDepartementUseCase = new CreateIDepartementUseCase(this.cargoRepository)
 		await Promise.all([
 			this.ensureVicepresidenciaDoesNotExist(name),
-			this.ensuredirectivaExists(directivaId),
+			this.ensureVicepresidenciaEjecutivaExists(vicepresidenciaEjecutivaId),
 			createIDepartementUseCase.execute({ cargos })
 		])
 	}
 	private async ensureVicepresidenciaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
 		if ((await this.vicepresidenciaRepository.searchByName(name)) !== null) {
-			throw new DepartmentAlreadyExistError('La vicepresidencia ejecutiva')
+			throw new DepartmentAlreadyExistError('La vicepresidencia')
 		}
 	}
 
-	private async ensuredirectivaExists(directivaId: Primitives<DepartmentId>): Promise<void> {
-		if ((await this.directivaRepository.searchById(directivaId)) === null) {
-			throw new DepartmentDoesNotExistError('La directiva')
+	private async ensureVicepresidenciaEjecutivaExists(
+		vicepresidenciaEjecutivaId: Primitives<DepartmentId>
+	): Promise<void> {
+		if ((await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)) === null) {
+			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
 	}
 }
