@@ -52,16 +52,17 @@ export class UpdateIDeparmentUseCase {
 		const newCargos = this.getNewCargos(entity.CargosValue, uniqueCargos)
 
 		// Si la lista es 0, no hay cargos nuevos
-		if (newCargos.length === 0) return
+		if (newCargos.length > 0) {
+			// Se verifica que cada cargo exista
+			await Promise.all(
+				newCargos.map(async cargoId => {
+					if ((await this.cargoRepository.searchById(cargoId)) === null) {
+						throw new CargoDoesNotExistError()
+					}
+				})
+			)
+		}
 
-		// Se verifica que cada cargo exista
-		await Promise.all(
-			newCargos.map(async cargoId => {
-				if ((await this.cargoRepository.searchById(cargoId)) === null) {
-					throw new CargoDoesNotExistError()
-				}
-			})
-		)
 		entity.updateCargos(cargos)
 	}
 
