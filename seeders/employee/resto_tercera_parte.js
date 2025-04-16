@@ -8968,7 +8968,7 @@ const restoTerceraParte = [
 		phone: []
 	},
 	{
-		userName: 'anmaneiro'.toLowerCase(),
+		userName: 'amaneiro'.toLowerCase(),
 		name: capitalCadena('ANDRES EDUARDO'),
 		lastName: capitalCadena('MANEIRO ANTUNEZ'),
 		type: 'regular',
