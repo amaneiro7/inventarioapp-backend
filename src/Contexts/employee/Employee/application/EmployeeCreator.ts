@@ -16,7 +16,7 @@ export class EmployeeCreator {
 		private readonly employeeRepository: EmployeeRepository,
 		private readonly locationRepository: LocationRepository,
 		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly vocepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
+		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
 		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
 		private readonly cargoRepository: CargoRepository
@@ -25,7 +25,7 @@ export class EmployeeCreator {
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,
 			directivaRepository: this.directivaRepository,
-			vocepresidenciaEjecutivaRepository: this.vocepresidenciaEjecutivaRepository,
+			vicepresidenciaEjecutivaRepository: this.vicepresidenciaEjecutivaRepository,
 			vicepresidenciaRepository: this.vicepresidenciaRepository,
 			cargoRepository: this.cargoRepository,
 			departamentoRepository: this.departamentoRepository

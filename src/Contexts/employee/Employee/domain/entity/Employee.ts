@@ -61,8 +61,8 @@ export class Employee {
 			new EmployeeVicepresidencia(params.vicepresidenciaId, params.vicepresidenciaEjecutivaId),
 			new EmployeeDepartamento(params.departamentoId, params.vicepresidenciaId),
 			new EmployeeCargo(params.cargoId, params.type),
-			params.extension?.map(ext => new Extension(ext)),
-			params.phone?.map(phone => new PhoneNumber(phone))
+			Extension.fromValues(params.extension),
+			PhoneNumber.fromValues(params.phone)
 		)
 	}
 	static fromPrimitives(primitives: EmployeeDto): Employee {
@@ -83,8 +83,8 @@ export class Employee {
 			new EmployeeVicepresidencia(primitives.vicepresidenciaId, primitives.vicepresidenciaEjecutivaId),
 			new EmployeeDepartamento(primitives.departamentoId, primitives.vicepresidenciaId),
 			new EmployeeCargo(primitives.cargoId, primitives.type),
-			primitives.extension?.map(ext => new Extension(ext)),
-			primitives.phone?.map(phone => new PhoneNumber(phone))
+			Extension.fromValues(primitives.extension),
+			PhoneNumber.fromValues(primitives.phone)
 		)
 	}
 
@@ -222,10 +222,10 @@ export class Employee {
 		this.cargoId = new EmployeeCargo(newCargoId, type)
 	}
 	updateExtension(extensionIds: Primitives<Extension>[]): void {
-		this.extension = extensionIds.map(extension => new Extension(extension))
+		this.extension = Extension.fromValues(extensionIds)
 	}
 	updatePhone(phoneIds: Primitives<PhoneNumber>[]): void {
-		this.phone = phoneIds.map(phone => new PhoneNumber(phone))
+		this.phone = PhoneNumber.fromValues(phoneIds)
 	}
 	updateUserName(newUserName: Primitives<EmployeeUserName>): void {
 		this.userName = new EmployeeUserName(newUserName)

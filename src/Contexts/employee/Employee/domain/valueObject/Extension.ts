@@ -20,6 +20,10 @@ export class Extension extends StringValueObject {
 		return this.value
 	}
 
+	public static fromValues(extensions: Primitives<Extension>[]): Extension[] {
+		return extensions.filter(Boolean).map(ext => new Extension(ext)) ?? []
+	}
+
 	private ensureIsValid(value: string): void {
 		if (!this.isValid(value)) {
 			throw new InvalidArgumentError(this.errorMessage)

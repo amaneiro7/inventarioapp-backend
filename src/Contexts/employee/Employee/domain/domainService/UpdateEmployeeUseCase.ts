@@ -27,7 +27,7 @@ interface UpdateEmployeeRepositories {
 	readonly employeeRepository: EmployeeRepository
 	readonly locationRepository: LocationRepository
 	readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	readonly vocepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	readonly cargoRepository: CargoRepository
@@ -88,7 +88,7 @@ export class UpdateEmployeeUseCase {
 			}),
 			EmployeeVicepresidenciaEjecutiva.updateVicepresidenciaEjecutivaField({
 				vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
-				repository: this.repository.vocepresidenciaEjecutivaRepository,
+				repository: this.repository.vicepresidenciaEjecutivaRepository,
 				entity
 			}),
 			EmployeeDepartamento.updateDepartamentoField({

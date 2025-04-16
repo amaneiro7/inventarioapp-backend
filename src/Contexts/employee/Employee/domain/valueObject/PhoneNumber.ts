@@ -19,6 +19,10 @@ export class PhoneNumber extends StringValueObject {
 		return this.value
 	}
 
+	public static fromValues(phones: Primitives<PhoneNumber>[]): PhoneNumber[] {
+		return phones.filter(Boolean).map(phone => new PhoneNumber(phone)) ?? []
+	}
+
 	private ensureIsValid(value: string): void {
 		if (!this.isValid(value)) {
 			throw new InvalidArgumentError(this.errorMessage)
