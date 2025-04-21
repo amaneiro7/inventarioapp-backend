@@ -11,7 +11,7 @@ export class HistoryAssociation {
 			'employee', // 1
 			{
 				association: 'device', // 2
-				include: ['category']
+				include: ['category', 'brand', 'model']
 			}
 		]
 

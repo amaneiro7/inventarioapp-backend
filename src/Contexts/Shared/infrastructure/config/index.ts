@@ -28,6 +28,8 @@ const {
 	REDIS_PASSWORD: redisPassword = 'Man12345*',
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
+	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15m',
+	REFRESH_TOKEN_EXPIRES_IN: refreshTokenExpiresIn = '30d',
 	REFRESH_TOKEN_SECRET: refreshTokenSecret = 'refresh_token_scret',
 	SMTP_EMAIL: smtpEmail = 'jaasnavas0811@gmail.com',
 	SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx'
@@ -54,6 +56,8 @@ type Config = {
 	signedCookie: string
 	accessTokenSecret: string
 	refreshTokenSecret: string
+	accessTokenExpiresIn: string
+	refreshTokenExpiresIn: string
 	smtpEmail: string
 	smtpPassword: string
 }
@@ -79,6 +83,8 @@ export const config: Config = {
 	signedCookie,
 	accessTokenSecret,
 	refreshTokenSecret,
+	accessTokenExpiresIn,
+	refreshTokenExpiresIn,
 	smtpEmail,
 	smtpPassword
 }

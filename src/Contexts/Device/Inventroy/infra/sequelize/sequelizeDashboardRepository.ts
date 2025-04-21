@@ -6,27 +6,10 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { Op } from 'sequelize'
 import { type ComputerDashboardRepository } from '../../domain/ComputerDashboardRepository'
-import { StatusList } from '../../../Status/domain/StatusList'
-import { LocationModel } from '../../../../Location/Location/infrastructure/sequelize/LocationSchema'
-import { EmployeeModel } from '../../../../employee/Employee/infrastructure/sequelize/EmployeeSchema'
 
 export class SequelizeComputerDashboardRepository implements ComputerDashboardRepository {
 	private readonly cacheKey: string = 'dashboard'
 	constructor(private readonly cache: CacheService) {}
-
-	async countTotalAgencies(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-totalAgency-${this.cacheKey}`,
-			ex: TimeTolive.SHORT,
-			fetchFunction: async () => {
-				return await LocationModel.count({
-					where: {
-						typeOfSiteId: TypeOfSiteList.AGENCIA
-					}
-				})
-			}
-		})
-	}
 
 	async countTotalHDD(): Promise<{}> {
 		return await this.cache.getCachedData({
@@ -102,48 +85,6 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 				}))
 
 				return transformedData
-			}
-		})
-	}
-	async countActiveEmployees(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-activeEmployees-${this.cacheKey}`,
-			ex: TimeTolive.SHORT,
-			fetchFunction: async () => {
-				return await EmployeeModel.count({
-					where: {
-						isStillWorking: true
-					}
-				})
-			}
-		})
-	}
-
-	async countTotal(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-total-${this.cacheKey}`,
-			ex: TimeTolive.SHORT,
-			fetchFunction: async () => {
-				return await DeviceModel.count({
-					include: [
-						{
-							association: 'category',
-							attributes: [],
-							where: {
-								mainCategoryId: MainCategoryList.COMPUTER
-							}
-						},
-						{
-							association: 'status',
-							attributes: [],
-							where: {
-								[Op.not]: {
-									id: StatusList.DESINCORPORADO
-								}
-							}
-						}
-					]
-				})
 			}
 		})
 	}

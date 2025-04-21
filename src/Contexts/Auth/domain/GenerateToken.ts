@@ -16,31 +16,34 @@ export interface JwtPayloadUser extends JwtPayload {
 	sub: Primitives<UserId>
 	email: Primitives<UserEmail>
 	roleId: Primitives<RoleId>
+	iss: 'SoporteTecnicoBNC'
 }
 
-const accessTokenExpiresIn: string = '15m'
-const refreshTokenExpiresIn: string = '10h'
+const accessTokenExpiresIn = config.accessTokenExpiresIn
+const refreshTokenExpiresIn = config.refreshTokenExpiresIn
+const issuer = 'SoporteTecnicoBNC'
+const accessTokenSecret = config.accessTokenSecret
+const refreshTokenSecret = config.refreshTokenSecret
 
-export function generateAceessTokens(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
-	const { id, email, roleId } = user
-	const token: JwtPayloadUser = {
+function generateTokens(
+	payload: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>,
+	secret: string,
+	expiresIn: string
+): string {
+	const { id, email, roleId } = payload
+	const tokenPayload: JwtPayloadUser = {
 		sub: id,
 		email,
 		roleId,
-		iss: 'SoporteTecnicoBNC'
+		iss: issuer
 	}
-	const secret = config.accessTokenSecret
-	return sign(token, secret, { expiresIn: accessTokenExpiresIn })
+	return sign(tokenPayload, secret, { expiresIn })
 }
+
+export function generateAceessToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
+	return generateTokens(user, accessTokenSecret, accessTokenExpiresIn)
+}
+
 export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
-	const { id, email, roleId } = user
-	const token: JwtPayloadUser = {
-		sub: id,
-		email,
-		roleId,
-		iss: 'SoporteTecnicoBNC'
-	}
-	const secret = config.refreshTokenSecret
-
-	return sign(token, secret, { expiresIn: refreshTokenExpiresIn })
+	return generateTokens(user, refreshTokenSecret, refreshTokenExpiresIn)
 }

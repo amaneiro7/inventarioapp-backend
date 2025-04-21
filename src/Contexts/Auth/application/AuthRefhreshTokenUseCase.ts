@@ -3,7 +3,7 @@ import { type UserPrimitives } from '../../User/user/domain/User'
 import { UserDoesNotExistError } from '../../User/user/domain/UserDoesNotExistError'
 import { UserId } from '../../User/user/domain/UserId'
 import { type UserRepository } from '../../User/user/domain/UserRepository'
-import { generateAceessTokens, type JwtPayloadUser } from '../domain/GenerateToken'
+import { generateAceessToken, type JwtPayloadUser } from '../domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../domain/SendUserWithoutPassword'
 
 export class AuthRefreshTokenUseCase {
@@ -18,7 +18,7 @@ export class AuthRefreshTokenUseCase {
 			throw new UserDoesNotExistError(id.value)
 		}
 
-		const accessToken = generateAceessTokens(user)
+		const accessToken = generateAceessToken(user)
 		const infoUser = SendUserWithoutPassowrd(user, accessToken)
 
 		return {
