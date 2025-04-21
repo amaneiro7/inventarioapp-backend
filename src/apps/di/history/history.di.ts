@@ -3,12 +3,17 @@ import { SequelizeHistoryRepository } from '../../../Contexts/History/infrastruc
 import { HistoryFinderAll } from '../../../Contexts/History/application/HistoryFinderAll'
 import { HistoryCreator } from '../../../Contexts/History/application/HistoryCreator'
 import { HistoryGetAllController } from '../../controllers/history/history.get-all.controller'
+import { SequelizeTotalChangeLastThreMonthsByCategoryRepository } from '../../../Contexts/History/infrastructure/sequelize/SequelizeTotalChangeLastThreMonthsByCategory'
+import { HistoryDashboard } from '../../../Contexts/History/application/HistroyDashboard'
+import { HistoryDashboardGetController } from '../../controllers/history/history-dashboard.controller'
 
 export enum HistoryDependencies {
 	Repository = 'historyRepository',
 	FinderAll = 'historyFinderAll',
 	Creator = 'historyCreator',
-	GetAllController = 'historyGetAllController'
+	GetAllController = 'historyGetAllController',
+	HistoryDashboard = 'historyDashboard',
+	HistoryDashboardGetController = 'historyDashboardGetController'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -16,6 +21,11 @@ export const register = (container: AwilixContainer) => {
 		historyRepository: asClass(SequelizeHistoryRepository).singleton(),
 		historyFinderAll: asClass(HistoryFinderAll),
 		historyCreator: asClass(HistoryCreator),
-		historyGetAllController: asClass(HistoryGetAllController)
+		historyGetAllController: asClass(HistoryGetAllController),
+		totalChangeLastThreMonthsByCategoryRepository: asClass(
+			SequelizeTotalChangeLastThreMonthsByCategoryRepository
+		).singleton(),
+		historyDashboard: asClass(HistoryDashboard),
+		historyDashboardGetController: asClass(HistoryDashboardGetController)
 	})
 }

@@ -73,7 +73,6 @@ export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' |
 			{
 				modelName: 'History',
 				underscored: true,
-				createdAt: true,
 				sequelize
 			}
 		)
