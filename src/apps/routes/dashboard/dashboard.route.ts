@@ -10,5 +10,5 @@ export const register = async (router: Router) => {
 	)
 
 	// get
-	router.get('/dashboard/', generalDashboard.run.bind(generalDashboard))
+	router.get('/dashboard/', authenticate, generalDashboard.run.bind(generalDashboard))
 }
