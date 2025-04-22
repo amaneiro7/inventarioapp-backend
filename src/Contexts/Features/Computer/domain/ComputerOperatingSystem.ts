@@ -8,6 +8,7 @@ import { type OperatingSystemPrimitives } from '../../OperatingSystem/OperatingS
 import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type DeviceComputer } from './Computer'
 import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 
 export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<OperatingSystemId>> {
 	constructor(

@@ -7,6 +7,7 @@ import { InvalidArgumentError } from '../../../Shared/domain/value-object/Invali
 import { type Device } from './Device'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { StatusOptions } from '../../Status/domain/StatusOptions'
 
 export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationId>> {
 	constructor(value: Primitives<LocationId> | null) {

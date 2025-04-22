@@ -2,6 +2,7 @@ import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/Acc
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type DeviceComputer } from './Computer'

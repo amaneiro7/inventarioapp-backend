@@ -6,6 +6,7 @@ import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Err
 import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
+import { StatusOptions } from '../../Status/domain/StatusOptions'
 
 export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
 	constructor(readonly value: Primitives<EmployeeId> | null, private readonly status: Primitives<DeviceStatus>) {

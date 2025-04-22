@@ -1,4 +1,5 @@
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
