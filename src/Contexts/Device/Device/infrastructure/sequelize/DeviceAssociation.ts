@@ -261,21 +261,45 @@ export class DeviceAssociation {
 			delete options.where?.typeOfSiteId
 		}
 
-		//Filtrar por departamento
-		if (options.where && 'departamentoId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[1].where = {
-				id: (options.where as any)?.departamentoId
-			}
-			delete options.where?.departamentoId
-		}
-		//Filtrar por departamento
+		//Filtrar por Cargo
 		if (options.where && 'cargoId' in options.where) {
 			;(options.include[4] as any).required = true
 			;(options.include[4] as any).include[0].where = {
 				id: (options.where as any)?.cargoId
 			}
 			delete options.where?.cargoId
+		}
+		//Filtrar por directiva
+		if (options.where && 'directivaId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[1].where = {
+				id: (options.where as any)?.directivaId
+			}
+			delete options.where?.directivaId
+		}
+		//Filtrar por VPE
+		if (options.where && 'vicepresidenciaEjecutivaId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[2].where = {
+				id: (options.where as any)?.vicepresidenciaEjecutivaId
+			}
+			delete options.where?.vicepresidenciaEjecutivaId
+		}
+		//Filtrar por VP
+		if (options.where && 'vicepresidenciaId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[3].where = {
+				id: (options.where as any)?.vicepresidenciaId
+			}
+			delete options.where?.vicepresidenciaId
+		}
+		//Filtrar por departamento
+		if (options.where && 'departamentoId' in options.where) {
+			;(options.include[4] as any).required = true
+			;(options.include[4] as any).include[4].where = {
+				id: (options.where as any)?.departamentoId
+			}
+			delete options.where?.departamentoId
 		}
 
 		// Poder filtrar por ubicacion - por sitio
@@ -327,8 +351,11 @@ export class DeviceAssociation {
 
 		const orderMap: Record<string, string[]> = {
 			employeeId: ['employee', 'userName'],
-			departamentoId: ['employee', 'departamento', 'name'],
 			cargoId: ['employee', 'cargo', 'name'],
+			directivaId: ['employee', 'directiva', 'name'],
+			vicepresidenciaEjecutivaId: ['employee', 'vicepresidenciaEjecutiva', 'name'],
+			vicepresidenciaId: ['employee', 'vicepresidencia', 'name'],
+			departamentoId: ['employee', 'departamento', 'name'],
 			locationId: ['location', 'name'],
 			cityId: ['location', 'site', 'city', 'name'],
 			stateId: ['location', 'site', 'city', 'state', 'name'],
