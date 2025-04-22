@@ -11,10 +11,7 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 		/^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3}$/
 
 	// Constructor that takes a value and ensures it is a valid IP address
-	constructor(
-		readonly value: string | null,
-		private readonly status: Primitives<DeviceStatus>
-	) {
+	constructor(readonly value: string | null, private readonly status: Primitives<DeviceStatus>) {
 		super(value) // Call the constructor of the parent class
 		this.ensureIsStatusIsInUseIPAddressIsRequired(this.status, this.value)
 		this.ensureIsValid(value) // Ensure the provided value is a valid IP address
@@ -36,16 +33,15 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 		status: Primitives<DeviceStatus>,
 		ipAddress: Primitives<IPAddress>
 	): void {
-		if ([DeviceStatus.StatusOptions.INUSE].includes(status) && !ipAddress) {
+		if (status === StatusOptions.INUSE && !ipAddress) {
 			// Throw an error if IP Address is null when computer status is in use
 			throw new InvalidArgumentError('IP Address is required when status is in use')
 		}
 		if (
-			[
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.DESINCORPORADO,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR
-			].includes(status) &&
+			(status === StatusOptions.INALMACEN ||
+				status === StatusOptions.DESINCORPORADO ||
+				status === StatusOptions.JORNADA ||
+				status === StatusOptions.PORDESINCORPORAR) &&
 			!!ipAddress
 		) {
 			// Throw an error if IP Address is not null when computer status is in werehouse

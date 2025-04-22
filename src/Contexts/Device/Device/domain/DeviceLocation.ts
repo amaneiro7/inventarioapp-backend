@@ -34,24 +34,23 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 		status: Primitives<DeviceStatus>
 	): void {
 		if (
-			[
-				DeviceStatus.StatusOptions.INUSE,
-				DeviceStatus.StatusOptions.PRESTAMO,
-				DeviceStatus.StatusOptions.CONTINGENCIA,
-				DeviceStatus.StatusOptions.GUARDIA,
-				DeviceStatus.StatusOptions.DISPONIBLE
-			].includes(status) &&
+			(status === StatusOptions.INUSE ||
+				status === StatusOptions.PRESTAMO ||
+				status === StatusOptions.CONTINGENCIA ||
+				status === StatusOptions.GUARDIA ||
+				status === StatusOptions.DISPONIBLE ||
+				status === StatusOptions.JORNADA) &&
 			typeOfSite === TypeOfSiteId.TypeOfSiteOptions.ALMACEN
 		) {
-			throw new InvalidArgumentError('The device is in use and cannot be in the warehouse')
+			throw new InvalidArgumentError('Si el dispositivo esta en uso no puede estar en el almacén')
 		}
 		if (
-			[DeviceStatus.StatusOptions.INALMACEN, DeviceStatus.StatusOptions.PORDESINCORPORAR].includes(status) &&
+			(status === StatusOptions.INALMACEN, status === StatusOptions.PORDESINCORPORAR) &&
 			typeOfSite !== TypeOfSiteId.TypeOfSiteOptions.ALMACEN
 		) {
 			throw new InvalidArgumentError('The device is not in use can only be located in the warehouse')
 		}
-		if ([DeviceStatus.StatusOptions.DESINCORPORADO].includes(status) && typeOfSite !== null) {
+		if (status === StatusOptions.DESINCORPORADO && typeOfSite !== null) {
 			throw new InvalidArgumentError('The device cannot have a location if status is desincorporated')
 		}
 	}

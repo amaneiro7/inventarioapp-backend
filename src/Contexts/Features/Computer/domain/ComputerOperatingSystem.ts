@@ -1,10 +1,10 @@
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemPrimitives } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'
 import { OperatingSystemDoesNotExistError } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemDoesNotExist'
 import { OperatingSystemId } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemId'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type OperatingSystemPrimitives } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'
 import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type DeviceComputer } from './Computer'
 import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
@@ -46,23 +46,20 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<
 		status: Primitives<DeviceStatus>
 	): void {
 		if (
-			[
-				DeviceStatus.StatusOptions.INUSE,
-				DeviceStatus.StatusOptions.PRESTAMO,
-				DeviceStatus.StatusOptions.CONTINGENCIA,
-				DeviceStatus.StatusOptions.GUARDIA
-			].includes(status) &&
+			(status === StatusOptions.INUSE ||
+				status === StatusOptions.PRESTAMO ||
+				status === StatusOptions.CONTINGENCIA ||
+				status === StatusOptions.JORNADA ||
+				status === StatusOptions.GUARDIA) &&
 			operatingSystem === null
 		) {
 			throw new InvalidArgumentError('If computer is in use, required an operaing system')
 		}
 
 		if (
-			[
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR,
-				DeviceStatus.StatusOptions.DESINCORPORADO
-			].includes(status) &&
+			(status === StatusOptions.INALMACEN ||
+				status === StatusOptions.PORDESINCORPORAR ||
+				status === StatusOptions.DESINCORPORADO) &&
 			operatingSystem !== null
 		) {
 			throw new InvalidArgumentError('If computer is not use, cannot have an operaing system')

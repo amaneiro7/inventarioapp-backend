@@ -12,10 +12,7 @@ export class ComputerName extends AcceptedNullValueObject<string> {
 	private readonly notSpecialCharacterOnlyGuiones = /^[^\W_]*-?[^\W_]*$/
 	private errors: string[] = []
 
-	constructor(
-		readonly value: string | null,
-		private readonly statusId: Primitives<DeviceStatus>
-	) {
+	constructor(readonly value: string | null, private readonly statusId: Primitives<DeviceStatus>) {
 		super(value)
 
 		// Convertir el valor a mayúsculas si no es nulo
@@ -34,23 +31,20 @@ export class ComputerName extends AcceptedNullValueObject<string> {
 	private ensureIfStatusIsInUse(value: Primitives<ComputerName>, statusId: Primitives<DeviceStatus>): void {
 		// Si el estatus pertenece a que esta en almace, desincorporado por desincorporar, no puede tener nombre de equipo
 		if (
-			[
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.DESINCORPORADO,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR
-			].includes(statusId) &&
+			(statusId === StatusOptions.INALMACEN ||
+				statusId === StatusOptions.DESINCORPORADO ||
+				statusId === StatusOptions.PORDESINCORPORAR) &&
 			value !== null
 		) {
 			throw new InvalidArgumentError('Computer name can only be stablished when the device is in use')
 		}
 		// Si el estatus pertenece a que esta en uso, a prestamo, contigencia o en guardia, debe tener nombre de equipo
 		if (
-			[
-				DeviceStatus.StatusOptions.INUSE,
-				DeviceStatus.StatusOptions.PRESTAMO,
-				DeviceStatus.StatusOptions.CONTINGENCIA,
-				DeviceStatus.StatusOptions.GUARDIA
-			].includes(statusId) &&
+			(statusId === StatusOptions.INUSE ||
+				statusId === StatusOptions.PRESTAMO ||
+				statusId === StatusOptions.CONTINGENCIA ||
+				statusId === StatusOptions.GUARDIA ||
+				statusId === StatusOptions.JORNADA) &&
 			value === null
 		) {
 			throw new InvalidArgumentError('Computer must have a computer name')

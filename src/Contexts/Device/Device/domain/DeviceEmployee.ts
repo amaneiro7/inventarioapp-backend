@@ -8,10 +8,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 
 export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
-	constructor(
-		readonly value: Primitives<EmployeeId> | null,
-		private readonly status: Primitives<DeviceStatus>
-	) {
+	constructor(readonly value: Primitives<EmployeeId> | null, private readonly status: Primitives<DeviceStatus>) {
 		super(value)
 		this.ensureEmployeeConditionDependsOfStatus({
 			employee: this.value,
@@ -47,33 +44,34 @@ export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeI
 		employee: Primitives<EmployeeId> | null
 		status: Primitives<DeviceStatus>
 	}): void {
-		if (status === DeviceStatus.StatusOptions.PRESTAMO && employee === null) {
+		if (status === StatusOptions.PRESTAMO && employee === null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en préstamo'
+				'El dispositivo debe estar asignado a un usuario si el estatus es en "préstamo"'
 			)
 		}
-		if (status === DeviceStatus.StatusOptions.CONTINGENCIA && employee === null) {
+		if (status === StatusOptions.CONTINGENCIA && employee === null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en contingencia'
+				'El dispositivo debe estar asignado a un usuario si el estatus es en "contingencia"'
 			)
 		}
-		if (status === DeviceStatus.StatusOptions.GUARDIA && employee === null) {
+		if (status === StatusOptions.GUARDIA && employee === null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en guardia'
+				'El dispositivo debe estar asignado a un usuario si el estatus es en "guardia"'
 			)
 		}
-		if (status === DeviceStatus.StatusOptions.DISPONIBLE && employee !== null) {
-			throw new InvalidArgumentError('The device cannot have an employee if it is in Available status')
+		if (status === StatusOptions.DISPONIBLE && employee !== null) {
+			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus es "disponible"')
+		}
+		if (status === StatusOptions.JORNADA && employee !== null) {
+			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus es "jornada"')
 		}
 		if (
-			[
-				DeviceStatus.StatusOptions.INALMACEN,
-				DeviceStatus.StatusOptions.DESINCORPORADO,
-				DeviceStatus.StatusOptions.PORDESINCORPORAR
-			].includes(status) &&
+			(status === StatusOptions.INALMACEN ||
+				status === StatusOptions.DESINCORPORADO ||
+				status === StatusOptions.PORDESINCORPORAR) &&
 			employee !== null
 		) {
-			throw new InvalidArgumentError('The device cannot have an employee if it is not in use')
+			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus no está en uso')
 		}
 	}
 

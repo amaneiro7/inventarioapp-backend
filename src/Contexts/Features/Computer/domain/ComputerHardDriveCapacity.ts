@@ -1,16 +1,13 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
+import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type DeviceComputer } from './Computer'
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 
 export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitives<HardDriveCapacityId>> {
-	constructor(
-		readonly value: Primitives<HardDriveCapacityId> | null,
-		readonly status: Primitives<DeviceStatus>
-	) {
+	constructor(readonly value: Primitives<HardDriveCapacityId> | null, readonly status: Primitives<DeviceStatus>) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIsValidHardDriveCapacityId(value)
@@ -26,12 +23,11 @@ export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitive
 		status: Primitives<DeviceStatus>
 	): void {
 		if (
-			[
-				DeviceStatus.StatusOptions.INUSE,
-				DeviceStatus.StatusOptions.PRESTAMO,
-				DeviceStatus.StatusOptions.CONTINGENCIA,
-				DeviceStatus.StatusOptions.GUARDIA
-			].includes(status) &&
+			(status === StatusOptions.INUSE ||
+				status === StatusOptions.PRESTAMO ||
+				status === StatusOptions.CONTINGENCIA ||
+				status === StatusOptions.JORNADA ||
+				status === StatusOptions.GUARDIA) &&
 			hardDriveCapacity === null
 		) {
 			throw new InvalidArgumentError('If computer is in use, required an hard drive')
