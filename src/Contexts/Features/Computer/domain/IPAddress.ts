@@ -41,7 +41,6 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 		if (
 			(status === StatusOptions.INALMACEN ||
 				status === StatusOptions.DESINCORPORADO ||
-				status === StatusOptions.JORNADA ||
 				status === StatusOptions.PORDESINCORPORAR) &&
 			!!ipAddress
 		) {
