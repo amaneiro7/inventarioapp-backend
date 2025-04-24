@@ -1,4 +1,5 @@
 import * as http from 'node:http' // Import the http module
+import * as https from 'node:https' // Import the http module
 import express, { json, urlencoded, type Request, type Response } from 'express' //
 import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
@@ -12,15 +13,16 @@ import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerDocs } from './Middleware/swagger'
+import fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
+import path from 'node:path' // Importa el módulo path para construir rutas
 
 export class Server {
 	private express: express.Express
-	httpServer?: http.Server
+	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key') // Ruta por defecto a la clave privada
+	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt') // Ruta por defecto al certificado
+	httpServer?: http.Server | https.Server
 
-	constructor(
-		readonly port: string,
-		private readonly logger: Logger
-	) {
+	constructor(readonly port: string, private readonly logger: Logger) {
 		this.port = port
 		this.express = express()
 
@@ -76,15 +78,52 @@ export class Server {
 		registerRoutes(this.express, this.logger)
 	}
 
-	async listen(): Promise<void> {
+	private async startHTTPS(): Promise<void> {
+		try {
+			const privateKey = await fs.readFile(this.sslKeyPath, 'utf8')
+			const certificate = await fs.readFile(this.sslCertPath, 'utf8')
+			const credentials = { key: privateKey, cert: certificate }
+
+			await new Promise<void>(resolve => {
+				const env = this.express.get('env') as string
+				this.httpServer = https.createServer(credentials, this.express).listen(this.port, () => {
+					this.logger.info(
+						`  Inventario Backend app is running at https://localhost:${this.port} in ${env} mode (HTTPS)`
+					)
+					this.logger.info('  Press CTRL-C to stop\n')
+					resolve()
+				})
+			})
+		} catch (error) {
+			this.logger.error(`Error al cargar los certificados HTTPS: ${error}. Iniciando servidor HTTP.`)
+			await this.startHTTP()
+		}
+	}
+
+	private async startHTTP(): Promise<void> {
 		await new Promise<void>(resolve => {
 			const env = this.express.get('env') as string
 			this.httpServer = this.express.listen(this.port, () => {
-				this.logger.info(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
-				this.logger.info('  Press CTRL-C to stop\n')
+				this.logger.info(
+					`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode (HTTP)`
+				)
+				this.logger.info('  Press CTRL-C to stop\n')
 				resolve()
 			})
 		})
+	}
+
+	async listen(): Promise<void> {
+		// Intenta iniciar con HTTPS primero
+		await this.startHTTPS()
+		// await new Promise<void>(resolve => {
+		// 	const env = this.express.get('env') as string
+		// 	this.httpServer = this.express.listen(this.port, () => {
+		// 		this.logger.info(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
+		// 		this.logger.info('  Press CTRL-C to stop\n')
+		// 		resolve()
+		// 	})
+		// })
 	}
 
 	getHTTPServer(): Server['httpServer'] {
