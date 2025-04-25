@@ -7,6 +7,10 @@ import { HistoryEmployee } from './HistoryEmployee'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
 
+interface Cambio {
+	oldValue: any
+	newValue: any
+}
 export class History {
 	constructor(
 		private readonly id: HistoryId,
@@ -89,5 +93,54 @@ export class History {
 
 	get newDataValue(): object {
 		return this.newData
+	}
+
+	public static compararDatos(newData: Record<string, any>, oldData: Record<string, any>): Record<string, Cambio> {
+		const cambios: Record<string, Cambio> = {}
+
+		for (const key in newData) {
+			if (Object.prototype.hasOwnProperty.call(newData, key)) {
+				if (Array.isArray(newData[key]) && Array.isArray(oldData[key])) {
+					if (!History.arraysIguales(newData[key], oldData[key])) {
+						cambios[key] = {
+							oldValue: oldData[key],
+							newValue: newData[key]
+						}
+					}
+				} else if (this.normalizarValor(newData[key]) !== this.normalizarValor(oldData[key])) {
+					cambios[key] = {
+						oldValue: oldData[key],
+						newValue: newData[key]
+					}
+				}
+			}
+		}
+
+		return cambios
+	}
+
+	private static normalizarValor(valor: any) {
+		if (valor === undefined || valor === null || valor === '') {
+			return null // Normaliza a null para la comparación
+		}
+		return valor
+	}
+
+	private static arraysIguales(arr1: any[], arr2: any[]) {
+		if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+			return false
+		}
+
+		if (arr1.length !== arr2.length) {
+			return false
+		}
+
+		for (let i = 0; i < arr1.length; i++) {
+			if (this.normalizarValor(arr1[i]) !== this.normalizarValor(arr2[i])) {
+				return false
+			}
+		}
+
+		return true
 	}
 }

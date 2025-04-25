@@ -245,6 +245,14 @@ export class DeviceAssociation {
 			delete options.where.ipAddress
 		}
 
+		// Poder filtrar por typo de memoria ram
+		if (options.where && 'memoryRamTypeId' in options.where) {
+			;(options.include[0] as any).required = true
+			;(options.include[0] as any).include[0].where = {
+				memoryRamTypeId: options.where.memoryRamTypeId
+			}
+			delete options.where.memoryRamTypeId
+		}
 		// Poder filtrar por nombre de procesador
 		if (options.where && 'processor' in options.where) {
 			;(options.include[5] as any).include[0].where = {

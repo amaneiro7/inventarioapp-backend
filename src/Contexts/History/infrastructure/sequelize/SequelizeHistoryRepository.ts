@@ -23,7 +23,7 @@ export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter imp
 			fetchFunction: async () => {
 				const { count, rows } = await HistoryModel.findAndCountAll(opt)
 				return {
-					data: rows,
+					data: JSON.parse(JSON.stringify(rows)),
 					total: count
 				}
 			}
