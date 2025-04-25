@@ -198,6 +198,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			}
 
 			await t.commit() // Commit the transaction
+			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 		} catch (error: any) {
 			// If there is an error
 			await t.rollback() // Rollback the transaction
