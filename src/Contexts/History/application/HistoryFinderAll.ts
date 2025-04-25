@@ -110,7 +110,7 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 					const hardDriveCapacityOld = await this.hardDriveCapacityRepository.searchById(
 						cambios.hardDriveCapacityId.oldValue
 					)
-					cambios.hardDriveCapacityId.oldValue = hardDriveCapacityOld?.name
+					cambios.hardDriveCapacityId.oldValue = `${hardDriveCapacityOld?.name} Gb`
 				}
 				// Buscar el name del sistema operativo
 				if (cambios?.operatingSystemId?.newValue) {
