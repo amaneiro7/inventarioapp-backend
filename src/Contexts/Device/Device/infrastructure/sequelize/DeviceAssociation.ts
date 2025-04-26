@@ -170,7 +170,13 @@ export class DeviceAssociation {
 										include: [
 											{
 												association: 'region', // 7 - 1 - 1 - 0
-												required: true
+												required: true,
+												include: [
+													{
+														association: 'administrativeRegion', // 7 - 1 - 1 - 0 - 0
+														required: true
+													}
+												]
 											}
 										]
 									}
@@ -348,6 +354,15 @@ export class DeviceAssociation {
 
 			delete options.where?.regionId
 		}
+		// Poder filtrar por region administrativa
+		if (options.where && 'administrativeRegionId' in options.where) {
+			;(options.include[7] as any).required = true
+			;(options.include[7] as any).include[1].include[0].include[0].include[0].include[0].where = {
+				id: (options.where as any)?.administrativeRegionId
+			}
+
+			delete options.where?.administrativeRegionId
+		}
 
 		options.order = this.transformOrder(options.order)
 
@@ -368,6 +383,7 @@ export class DeviceAssociation {
 			cityId: ['location', 'site', 'city', 'name'],
 			stateId: ['location', 'site', 'city', 'state', 'name'],
 			regionId: ['location', 'site', 'city', 'state', 'region', 'name'],
+			administrativeRegionId: ['location', 'site', 'city', 'state', 'region', 'administrativeRegion', 'name'],
 			ipAddress: ['computer', 'ipAddress'],
 			categoryId: ['category', 'name'],
 			computerName: ['computer', 'computerName'],
