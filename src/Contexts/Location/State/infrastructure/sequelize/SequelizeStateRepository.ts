@@ -8,6 +8,7 @@ import { type StateRepository } from '../../domain/StateRepository'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { StateModel } from './StateSchema'
+import { StateAssociation } from './StateAssociation'
 
 export class SequelizeStateRepository extends CriteriaToSequelizeConverter implements StateRepository {
 	private readonly cacheKey: string = 'states'
@@ -15,7 +16,7 @@ export class SequelizeStateRepository extends CriteriaToSequelizeConverter imple
 		super()
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<StateDto>> {
-		const options = this.convert(criteria)
+		const options = StateAssociation.converFilter(criteria, this.convert(criteria))
 
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
