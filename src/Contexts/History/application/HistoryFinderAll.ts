@@ -104,7 +104,7 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 					const hardDriveCapacityNew = await this.hardDriveCapacityRepository.searchById(
 						cambios.hardDriveCapacityId.newValue
 					)
-					cambios.hardDriveCapacityId.newValue = hardDriveCapacityNew?.name
+					cambios.hardDriveCapacityId.newValue = `${hardDriveCapacityNew?.name} Gb`
 				}
 				if (cambios?.hardDriveCapacityId?.oldValue) {
 					const hardDriveCapacityOld = await this.hardDriveCapacityRepository.searchById(
@@ -155,6 +155,14 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 				if (cambios?.processorId?.oldValue) {
 					const processorOld = await this.processorRepository.searchById(cambios.processorId.oldValue)
 					cambios.processorId.oldValue = processorOld?.name
+				}
+
+				if (cambios?.memoryRamCapacity.oldValue && cambios?.memoryRamCapacity.newValue) {
+					const memoryRamCapacityNew = Number(cambios?.memoryRamCapacity.newValue)
+					const memoryRamCapacityOld = Number(cambios?.memoryRamCapacity.oldValue)
+					if (memoryRamCapacityNew === memoryRamCapacityOld) {
+						delete cambios?.memoryRamCapacity
+					}
 				}
 
 				if (cambios?.id) {
