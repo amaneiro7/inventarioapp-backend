@@ -13,10 +13,7 @@ import { type UserRepository } from '../domain/UserRepository'
 
 interface Payload extends Omit<UserPrimitives, 'id' | 'password'> {}
 export class UserUpdater {
-	constructor(
-		private readonly userRepository: UserRepository,
-		private readonly roleRepository: RoleRepository
-	) {}
+	constructor(private readonly userRepository: UserRepository, private readonly roleRepository: RoleRepository) {}
 
 	async run({ user, id, payload }: { user?: JwtPayloadUser; id: string; payload: Partial<Payload> }): Promise<void> {
 		// se valida que el usuario que esta realizando esta operacion tiene privilegios

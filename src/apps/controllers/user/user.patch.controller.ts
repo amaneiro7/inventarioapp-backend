@@ -10,8 +10,8 @@ export class UserPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const user = req.user as JwtPayloadUser
-			const payload = req.body
-			const { id } = req.params
+			const { id, payload } = req.body
+
 			const update: UserUpdater = container.resolve(UserDependencies.Updater)
 			await update.run({ id, payload, user })
 			res.status(httpStatus.CREATED).send({
