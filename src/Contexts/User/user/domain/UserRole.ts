@@ -1,5 +1,5 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type RolePrimitives } from '../../Role/domain/Role'
+import { type RolePrimitives } from '../../Role/domain/Role.dto'
 import { RoleDoesNotExistError } from '../../Role/domain/RoleDoesNotExistError'
 import { User } from './User'
 import { RoleRepository } from '../../Role/domain/RoleRepository'

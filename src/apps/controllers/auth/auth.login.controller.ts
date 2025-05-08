@@ -1,9 +1,9 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { type UserPrimitives } from '../../../Contexts/User/user/domain/User'
-import { type RolePrimitives } from '../../../Contexts/User/Role/domain/Role'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { Controller } from '../controller'
 import { AuthUseCase } from '../../../Contexts/Auth/application/AuthUseCase'
+import { type RolePrimitives } from '../../../Contexts/User/Role/domain/Role.dto'
 
 type ReqUser = UserPrimitives & {
 	role: RolePrimitives
