@@ -1,7 +1,7 @@
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { ResponseService } from '../../../Shared/domain/ResponseType'
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
-import { StatusDto } from '../domain/Status.dto'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type ResponseService } from '../../../Shared/domain/ResponseType'
+import { type StatusDto } from '../domain/Status.dto'
 import { type StatusRepository } from '../domain/StatusRepository'
 
 export class StatusFinderAll extends GetAllBaseService<StatusDto> {

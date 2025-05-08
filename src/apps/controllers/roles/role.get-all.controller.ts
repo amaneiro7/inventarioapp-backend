@@ -5,12 +5,15 @@ import { type RoleFinderAll } from '../../../Contexts/User/Role/application/Role
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { RoleDependencies } from '../../di/roles/roles.di'
+import { CriteriaFromUrlConverter } from '../../../Contexts/Shared/infrastructure/criteria/CriteriaFromUrlConverter'
 
 export class RoleGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const getAll: RoleFinderAll = container.resolve(RoleDependencies.FinderAll)
-			const data = await getAll.run()
+			const convert = new CriteriaFromUrlConverter()
+			const query = convert.toCriteria(req)
+			const data = await getAll.run(query)
 			res.status(httpStatus.OK).json(data)
 		} catch (error) {
 			next(error)
