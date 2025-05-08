@@ -157,7 +157,7 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 					cambios.processorId.oldValue = processorOld?.name
 				}
 
-				if (cambios?.memoryRamCapacity.oldValue && cambios?.memoryRamCapacity.newValue) {
+				if (cambios?.memoryRamCapacity?.oldValue && cambios?.memoryRamCapacity?.newValue) {
 					const memoryRamCapacityNew = Number(cambios?.memoryRamCapacity.newValue)
 					const memoryRamCapacityOld = Number(cambios?.memoryRamCapacity.oldValue)
 					if (memoryRamCapacityNew === memoryRamCapacityOld) {
