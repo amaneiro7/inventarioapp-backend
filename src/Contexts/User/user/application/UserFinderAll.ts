@@ -24,8 +24,13 @@ export class UserFinderAll {
 			.filter(user => user.roleId !== RoleId.Options.ADMIN)
 			// Se elimina la propiedad password, por alguna razon con sequelize
 			.map(user => {
-				const { password, ...rest } = user
-				return rest
+				return {
+					id: user.id,
+					email: user.email,
+					lastName: user.lastName,
+					name: user.name,
+					roleId: `${user.roleId}`
+				}
 			})
 
 		return {

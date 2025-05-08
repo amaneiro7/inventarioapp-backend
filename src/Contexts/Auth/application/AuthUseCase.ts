@@ -1,7 +1,7 @@
-import { type RolePrimitives } from '../../User/Role/domain/Role'
-import { type UserPrimitives } from '../../User/user/domain/User'
 import { generateAceessToken, generateRefreshToken } from '../domain/GenerateToken'
 import { SendUserWithoutPassowrd } from '../domain/SendUserWithoutPassword'
+import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
+import { type UserPrimitives } from '../../User/user/domain/User'
 
 type ReqUser = UserPrimitives & {
 	role: RolePrimitives

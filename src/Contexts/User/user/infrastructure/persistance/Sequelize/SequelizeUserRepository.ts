@@ -33,7 +33,12 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 			(await UserModel.findOne({
 				where: { email: userEmail },
 				include: ['role']
-			}).then(user => JSON.parse(JSON.stringify(user)))) ?? null
+			})
+				.then(user => JSON.parse(JSON.stringify(user)))
+				.then(user => ({
+					...user,
+					roleId: `${user.roleId}`
+				}))) ?? null
 		)
 	}
 
@@ -41,7 +46,12 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 		return (
 			(await UserModel.findByPk(id, {
 				include: ['role']
-			}).then(user => JSON.parse(JSON.stringify(user)))) ?? null
+			})
+				.then(user => JSON.parse(JSON.stringify(user)))
+				.then(user => ({
+					...user,
+					roleId: `${user.roleId}`
+				}))) ?? null
 		)
 	}
 
