@@ -6,7 +6,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 export class SiteName extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 100
 	private readonly NAME_MIN_LENGTH = 3
-	private readonly regex = /^[a-zA-Z0-9()\-.,\s]*$/
+	private readonly regex = /^[a-zA-ZÀ-ÿ0-9()\-.,\s]*$/
 
 	constructor(readonly value: string) {
 		super(value)
@@ -25,7 +25,9 @@ export class SiteName extends StringValueObject {
 			)
 		}
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid site name`)
+			throw new InvalidArgumentError(
+				`<${value}> No es un nombre válido, el nombree solo puede contener letras mayúsculas, minúsculas, números y los caracteres especiales ()-,.`
+			)
 		}
 	}
 
