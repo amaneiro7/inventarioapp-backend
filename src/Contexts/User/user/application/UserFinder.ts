@@ -29,12 +29,10 @@ export class UserFinder {
 		if (findUser.roleId === RoleId.Options.ADMIN) {
 			throw new UserDoesNotExistError('')
 		}
+		const { password, ...res } = findUser
 		return {
-			id: findUser.id,
-			email: findUser.email,
-			lastName: findUser.lastName,
-			name: findUser.name,
-			roleId: `${findUser.roleId}`
+			...res,
+			roleId: `${res.roleId}`
 		}
 	}
 }
