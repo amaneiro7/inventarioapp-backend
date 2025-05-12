@@ -18,6 +18,7 @@ import { ComputerDashboard } from '../../../Contexts/Device/Inventroy/applicatio
 import { SequelizeTotalCountByCategoryRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeTotalCountByCategoryRepository'
 import { SequelizeCountByCategoryRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByCategoryRepository'
 import { SequelizeCountByRegionRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByRegionRepository'
+import { SequelizeCountTotalOperatingSystemRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountTotalOperatingSystemRepository'
 
 export enum ComputerDashboardDependencies {
 	Repository = 'computerDashboardRepository',
@@ -45,6 +46,7 @@ export const register = (container: AwilixContainer) => {
 		totalCountByCategoryRepository: asClass(SequelizeTotalCountByCategoryRepository).singleton(),
 		countByCategoryRepository: asClass(SequelizeCountByCategoryRepository).singleton(),
 		countByRegionRepository: asClass(SequelizeCountByRegionRepository).singleton(),
+		countTotalOperatingSystemRepository: asClass(SequelizeCountTotalOperatingSystemRepository).singleton(),
 
 		computerDashboard: asClass(ComputerDashboard),
 		generalDashboard: asClass(GeneralDashboard),
