@@ -1,6 +1,8 @@
 import { type ComputerDashboardRepository } from '../domain/ComputerDashboardRepository'
-import { ComputerMemoryRamModulesRepository } from '../domain/ComputerMemoryRamModulesRepository'
+import { type ComputerMemoryRamModulesRepository } from '../domain/ComputerMemoryRamModulesRepository'
 import { type ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepositoyr'
+import { type CountByCategoryRepository } from '../domain/CountByCategoryRepository'
+import { type CountByRegionRepository } from '../domain/CountByRegionRepository'
 import { type CountOSByRegionRepository } from '../domain/CountOSByRegionRepository'
 import { type TotalActiveUsersRepository } from '../domain/TotalActiveUsersRepository'
 import { type TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
@@ -14,7 +16,9 @@ export class ComputerDashboard {
 		private readonly computerMemoryRamModulesRepository: ComputerMemoryRamModulesRepository,
 		private readonly totalComputerRepository: TotalComputerRepository,
 		private readonly totalActiveUsersRepository: TotalActiveUsersRepository,
-		private readonly totalAgenciesRepository: TotalAgenciesRepository
+		private readonly totalAgenciesRepository: TotalAgenciesRepository,
+		private readonly countByCategoryRepository: CountByCategoryRepository,
+		private readonly countByRegionRepository: CountByRegionRepository
 	) {}
 
 	async run(): Promise<{}> {
@@ -34,9 +38,9 @@ export class ComputerDashboard {
 		] = await Promise.all([
 			this.totalComputerRepository.run(),
 			this.computerDashboardRepository.countByStatus(),
-			this.computerDashboardRepository.countByCategory(),
+			this.countByCategoryRepository.run(),
 			this.computerDashboardRepository.countByBrand(),
-			this.computerDashboardRepository.countByRegion(),
+			this.countByRegionRepository.run(),
 			this.totalActiveUsersRepository.run(),
 			this.totalAgenciesRepository.run(),
 			this.computerDashboardRepository.countTotalHDD(),

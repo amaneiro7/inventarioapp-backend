@@ -16,6 +16,8 @@ import { GeneralDashboard } from '../../../Contexts/Device/Inventroy/application
 import { GeneralDashboardGetController } from '../../controllers/dashboard/general-dashboard.controller'
 import { ComputerDashboard } from '../../../Contexts/Device/Inventroy/application/ComputerDashboard'
 import { SequelizeTotalCountByCategoryRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeTotalCountByCategoryRepository'
+import { SequelizeCountByCategoryRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByCategoryRepository'
+import { SequelizeCountByRegionRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByRegionRepository'
 
 export enum ComputerDashboardDependencies {
 	Repository = 'computerDashboardRepository',
@@ -41,6 +43,8 @@ export const register = (container: AwilixContainer) => {
 		totalAgenciesRepository: asClass(SequelizeTotalAgenciesRepository).singleton(),
 		totalAdministrativeSitesRepository: asClass(SequelizeTotalAdministrativeSitesRepository).singleton(),
 		totalCountByCategoryRepository: asClass(SequelizeTotalCountByCategoryRepository).singleton(),
+		countByCategoryRepository: asClass(SequelizeCountByCategoryRepository).singleton(),
+		countByRegionRepository: asClass(SequelizeCountByRegionRepository).singleton(),
 
 		computerDashboard: asClass(ComputerDashboard),
 		generalDashboard: asClass(GeneralDashboard),

@@ -31,7 +31,8 @@ export const register = async (router: Router) => {
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
 	router.get('/devices/download', authenticate, download.run.bind(download))
-	router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
+	//router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
+	router.get('/devices/dashboard/computer', computerDashboard.run.bind(computerDashboard))
 
 	router.get('/devices/:id', authenticate, getController.run.bind(getController))
 
