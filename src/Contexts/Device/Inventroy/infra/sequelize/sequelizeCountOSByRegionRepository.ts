@@ -41,10 +41,17 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 						},
 						{
 							association: 'computer',
+							required: true,
 							attributes: [],
+							where: {
+								operatingSystemId: {
+									[Op.ne]: null
+								}
+							},
 							include: [
 								{
 									association: 'operatingSystem',
+									required: true,
 									attributes: []
 								}
 							]
@@ -143,7 +150,7 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 							name: administrativeRegionName,
 							count: 0,
 							typeOfSiteCount: {},
-							region: new Map()
+							regions: new Map()
 						})
 					}
 
@@ -152,8 +159,8 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 					administrativeRegion.typeOfSiteCount![typeOfSiteName] =
 						(administrativeRegion.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
 
-					if (!administrativeRegion.region.has(regionName)) {
-						administrativeRegion.region.set(regionName, {
+					if (!administrativeRegion.regions.has(regionName)) {
+						administrativeRegion.regions.set(regionName, {
 							name: regionName,
 							count: 0,
 							typeOfSiteCount: {},
@@ -161,7 +168,7 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 						})
 					}
 
-					const region = administrativeRegion.region.get(regionName)
+					const region = administrativeRegion.regions.get(regionName)
 					region.count += countNumber
 					region.typeOfSiteCount![typeOfSiteName] =
 						(region.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
@@ -221,7 +228,7 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 					administrativeRegion: Array.from(operatingSystem.administrativeRegion.values()).map(
 						(administrativeRegion: any) => ({
 							...administrativeRegion,
-							region: Array.from(administrativeRegion.region.values()).map((region: any) => ({
+							regions: Array.from(administrativeRegion.regions.values()).map((region: any) => ({
 								...region,
 								states: Array.from(region.states.values()).map((state: any) => ({
 									...state,
