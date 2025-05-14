@@ -1,15 +1,14 @@
-import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { Nullable } from '../../../../Shared/domain/Nullable'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
 
 export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
 	private readonly cacheKey: string = 'employees'
@@ -50,7 +49,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 		})
 	}
 
-	async searchByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>> {
+	async searchByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
 		return (
 			(await EmployeeModel.findOne({
 				where: {

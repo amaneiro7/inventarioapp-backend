@@ -1,12 +1,14 @@
+import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
+import { UserModel } from './UserSchema'
+import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { UsersAssociation } from './UsersAssociation'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
-import { UserModel } from './UserSchema'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
 	private readonly cacheKey: string = 'users'
@@ -15,13 +17,15 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<UserPrimitivesOptional>> {
 		const options = this.convert(criteria)
-		//options.include = ['role']
-		//console.log(options)
+		const opt = UsersAssociation.converFilter(criteria, options)
+
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
+			criteria,
+			ex: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await UserModel.findAndCountAll(options)
-				console.log(rows)
+				const { count, rows } = await UserModel.findAndCountAll(opt)
+
 				return {
 					data: rows,
 					total: count
@@ -42,8 +46,6 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 
 		const userData = user.get({ plain: true })
 
-		console.log(userData)
-
 		return {
 			...userData,
 			roleId: `${userData.roleId}`
@@ -60,8 +62,6 @@ export class SequelizeUserRepository extends CriteriaToSequelizeConverter implem
 		}
 
 		const userData = user.get({ plain: true })
-
-		console.log(userData)
 
 		return {
 			...userData,
