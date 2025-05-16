@@ -12,7 +12,7 @@ import { type DeviceSearchByCriteriaController } from '../../controllers/device/
 import { type DeviceDeleteController } from '../../controllers/device/device.delete.controller'
 import { type DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 import { type ComputerDashboardGetController } from '../../controllers/device/device-computer-dashboard.controller'
-import { DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
+import { type DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -28,7 +28,9 @@ export const register = async (router: Router) => {
 		ComputerDashboardDependencies.ComputerDashboardGetController
 	)
 
-	const devicePingStatusController = new DevicePingStatusController()
+	const devicePingStatusController: DevicePingStatusController = container.resolve(
+		DeviceDependencies.DevicePingStatusController
+	)
 
 	// get
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
