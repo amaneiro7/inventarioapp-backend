@@ -1,3 +1,4 @@
+import { schedule } from 'node-cron'
 import { MainCategoryList } from '../../../Category/MainCategory/domain/MainCategory'
 import { ComputerName } from '../../../Features/Computer/domain/ComputerName'
 import { IPAddress } from '../../../Features/Computer/domain/IPAddress'
@@ -9,17 +10,19 @@ import { StatusOptions } from '../../Status/domain/StatusOptions'
 import { DeviceId } from '../domain/DeviceId'
 import { DeviceRepository } from '../domain/DeviceRepository'
 import { PingService } from './PingService'
+import { Queue, Job } from 'bull'
 
 interface DeviceStatus {
 	id: Primitives<DeviceId>
 	status: 'online' | 'offline'
-	computerName: Primitives<ComputerName>
-	ipAddress: Primitives<IPAddress>
+	computerName: Primitives<ComputerName> | undefined
+	ipAddress: Primitives<IPAddress> | undefined
 	locationId: Primitives<LocationId>
 	lastResponse: Date | null
 }
 
 export class DeviceMonitoring {
+	private pingQueue: Queue
 	constructor(
 		private readonly deviceRepository: DeviceRepository,
 		private readonly pingService: PingService = new PingService()
