@@ -22,7 +22,7 @@ module.exports = {
 	},
 	production: {
 		username: 'postgres',
-		password: '$0p0rT3*.*',
+		password: 'SoporteCalidad',
 		database: 'inventoryApp_prod',
 		host: 'localhost',
 		dialect: 'postgres',

@@ -6,7 +6,7 @@ import { IDepartment } from './IDeparment'
 export class DepartmentName extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 100
 	private readonly NAME_MIN_LENGTH = 3
-	private readonly regex = /^[a-zA-Z0-9()\-.,\s]*$/
+	private readonly regex = /^[a-zA-ZÀ-ÿ0-9()\-.,\s]*$/
 
 	constructor(readonly value: string) {
 		super(value)
