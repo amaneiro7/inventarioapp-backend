@@ -14,6 +14,9 @@ import { DevicePatchController } from '../../controllers/device/device.patch.con
 import { DeviceDeleteController } from '../../controllers/device/device.delete.controller'
 import { DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 import { DeviceSearchByCriteriaController } from '../../controllers/device/device.search-by-criteria.controller'
+import { DeviceMonitoring } from '../../../Contexts/Device/Device/application/DeviceMonitoring'
+import { PingService } from '../../../Contexts/Device/Device/application/PingService'
+import { DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
 
 export enum DeviceDependencies {
 	Repository = 'deviceRepository',
@@ -29,8 +32,11 @@ export enum DeviceDependencies {
 	PostController = 'devicePostController',
 	PatchController = 'devicePatchController',
 	DeleteController = 'deviceDeleteController',
+	DevicePingStatusController = 'devicePingStatusController',
 	GetByCriteriaController = 'deviceGetByCriteria',
-	ExcelDownloadController = 'deviceExcelDownload'
+	ExcelDownloadController = 'deviceExcelDownload',
+	DeviceMonitoring = 'deviceMonitoring',
+	PingService = 'pingService'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -48,7 +54,10 @@ export const register = (container: AwilixContainer) => {
 		devicePostController: asClass(DevicePostController),
 		devicePatchController: asClass(DevicePatchController),
 		deviceDeleteController: asClass(DeviceDeleteController),
+		devicePingStatusController: asClass(DevicePingStatusController),
 		deviceGetByCriteria: asClass(DeviceSearchByCriteriaController),
-		deviceExcelDownload: asClass(DeviceDownloadExcelServiceController)
+		deviceExcelDownload: asClass(DeviceDownloadExcelServiceController),
+		deviceMonitoring: asClass(DeviceMonitoring),
+		pingService: asClass(PingService)
 	})
 }
