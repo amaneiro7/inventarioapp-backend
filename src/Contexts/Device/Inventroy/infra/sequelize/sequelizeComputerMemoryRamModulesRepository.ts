@@ -20,6 +20,7 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 						[sequelize.col('computer.memory_ram'), 'memoryRam'],
 						[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
 						[sequelize.col('model.modelComputer.memoryRamType.name'), 'memoryRamTypeName'],
+						[sequelize.col('model.modelLaptop.memoryRamType.name'), 'memoryRamLaptopTypeName'],
 						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 					],
 					include: [
@@ -47,6 +48,16 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 											attributes: []
 										}
 									]
+								},
+								{
+									association: 'modelLaptop',
+									attributes: [],
+									include: [
+										{
+											association: 'memoryRamType',
+											attributes: []
+										}
+									]
 								}
 							]
 						},
@@ -65,7 +76,8 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 					group: [
 						'computer.memory_ram',
 						'location.typeOfSite.name',
-						'model.modelComputer.memoryRamType.name'
+						'model.modelComputer.memoryRamType.name',
+						'model.modelLaptop.memoryRamType.name'
 					],
 					order: [
 						[sequelize.col('location.typeOfSite.name'), 'ASC'],
@@ -77,7 +89,8 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 				const typeOfSiteMap = new Map()
 				// Process each result item
 				result.forEach((item: any) => {
-					const { typeOfSiteName, memoryRam, memoryRamTypeName, count } = item
+					const { typeOfSiteName, memoryRam, memoryRamTypeName, memoryRamLaptopTypeName, count } = item
+					console.log(memoryRamLaptopTypeName)
 					const countAsNumber = Number(count)
 					// Initialize map entry if it doesn't exist
 					if (!typeOfSiteMap.has(typeOfSiteName)) {
@@ -87,10 +100,12 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 						})
 					}
 					const typeOfSite = typeOfSiteMap.get(typeOfSiteName)
-					let memoryType = typeOfSite.memoryRamType.find((mt: any) => mt.name === memoryRamTypeName)
+					let memoryType = typeOfSite.memoryRamType.find(
+						(mt: any) => mt.name === memoryRamTypeName || mt.name === memoryRamLaptopTypeName
+					)
 					// Initialize memory type entry if it doesn't exist
 					if (!memoryType) {
-						memoryType = { name: memoryRamTypeName, memoryRamValues: [] }
+						memoryType = { name: memoryRamTypeName ?? memoryRamLaptopTypeName, memoryRamValues: [] }
 						typeOfSite.memoryRamType.push(memoryType)
 					}
 					// Count occurrences of each memory RAM value
@@ -128,11 +143,14 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 							...mt,
 							memoryRamValues: mt.memoryRamValues.sort(
 								(a: any, b: any) =>
-									Number(b.name.replace(/ Gb| Mb/, '')) - Number(a.name.replace(/ Gb| Mb/, '')) ||
-									(b.name.includes('Mb') ? -1 : a.name.includes('Mb') ? 1 : 0) // Priorizar Gb si los números son iguales
+									Number(b?.name.replace(/ Gb| Mb/, '')) - Number(a?.name.replace(/ Gb| Mb/, '')) ||
+									(b?.name.includes('Mb') ? -1 : a?.name.includes('Mb') ? 1 : 0) // Priorizar Gb si los números son iguales
 							)
 						}))
-						.sort((a: any, b: any) => a.name.localeCompare(b.name))
+						.sort((a: any, b: any) => {
+							console.log(a, b)
+							return a?.name.localeCompare(b?.name)
+						})
 				}))
 			}
 		})
