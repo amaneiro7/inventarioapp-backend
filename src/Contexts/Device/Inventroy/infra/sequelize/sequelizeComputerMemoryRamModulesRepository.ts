@@ -5,11 +5,26 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type ComputerMemoryRamModulesRepository } from '../../domain/ComputerMemoryRamModulesRepository'
 
+interface MemoryRamValue {
+	name: string
+	count: number
+}
+
+interface MemoryRamType {
+	name: string
+	memoryRamValues: MemoryRamValue[]
+}
+
+interface TypeOfSiteData {
+	name: string
+	memoryRamType: MemoryRamType[]
+}
+
 export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemoryRamModulesRepository {
 	private readonly cacheKey: string = 'dashboard'
 	constructor(private readonly cache: CacheService) {}
 
-	async run(): Promise<{}> {
+	async run(): Promise<TypeOfSiteData[]> {
 		return await this.cache.getCachedData({
 			cacheKey: `computer-memoryRamModules-${this.cacheKey}`,
 			ex: TimeTolive.SHORT,
@@ -90,7 +105,6 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 				// Process each result item
 				result.forEach((item: any) => {
 					const { typeOfSiteName, memoryRam, memoryRamTypeName, memoryRamLaptopTypeName, count } = item
-					console.log(memoryRamLaptopTypeName)
 					const countAsNumber = Number(count)
 					// Initialize map entry if it doesn't exist
 					if (!typeOfSiteMap.has(typeOfSiteName)) {
@@ -148,7 +162,6 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 							)
 						}))
 						.sort((a: any, b: any) => {
-							console.log(a, b)
 							return a?.name.localeCompare(b?.name)
 						})
 				}))
