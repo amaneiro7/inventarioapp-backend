@@ -250,3 +250,9 @@ migraciones.txt
 Configurar las variables de entorno.txt
 guia paso a paso.txt
 .qodo
+
+#certificate
+certificate
+.crt
+nginx.key
+nginx.keyclear
