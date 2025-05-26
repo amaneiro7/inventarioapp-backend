@@ -7,7 +7,11 @@ import { DeviceMonitoringIpAddress } from '../valueObject/DeviceMonitoringIpAddr
 import { DeviceMonitoringLastFailed } from '../valueObject/DeviceMonitoringLastFailed'
 import { DeviceMonitoringLastSuccess } from '../valueObject/DeviceMonitoringLastSuccess'
 import { DeviceMonitoringStatus } from '../valueObject/DeviceMonitoringStatus'
-import { DeviceMonitoringDto, DeviceMonitoringParams, DeviceMonitoringPrimitives } from './DeviceMonitoring.dto'
+import {
+	type DeviceMonitoringDto,
+	type DeviceMonitoringParams,
+	type DeviceMonitoringPrimitives
+} from './DeviceMonitoring.dto'
 
 export class DeviceMonitoring {
 	constructor(
