@@ -253,6 +253,6 @@ guia paso a paso.txt
 
 #certificate
 certificate
-.crt
+*.crt
 nginx.key
 nginx.keyclear
