@@ -1,10 +1,8 @@
 import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { DeviceId } from '../../../Device/domain/DeviceId'
-import { DeviceLocation } from '../../../Device/domain/DeviceLocation'
-import { DeviceMonitoringComputerName } from '../valueObject/DeviceMonitoringComputerName'
 import { DeviceMonitoringId } from '../valueObject/DeviceMonitoringId'
-import { DeviceMonitoringIpAddress } from '../valueObject/DeviceMonitoringIpAddress'
 import { DeviceMonitoringLastFailed } from '../valueObject/DeviceMonitoringLastFailed'
+import { DeviceMonitoringLastScan } from '../valueObject/DeviceMonitoringLastScan'
 import { DeviceMonitoringLastSuccess } from '../valueObject/DeviceMonitoringLastSuccess'
 import { DeviceMonitoringStatus } from '../valueObject/DeviceMonitoringStatus'
 import {
@@ -18,9 +16,7 @@ export class DeviceMonitoring {
 		private readonly id: DeviceMonitoringId,
 		private readonly deviceId: DeviceId,
 		private status: DeviceMonitoringStatus,
-		private computerName: DeviceMonitoringComputerName,
-		private ipAddress: DeviceMonitoringIpAddress,
-		private locationId: DeviceLocation,
+		private lastScan: DeviceMonitoringLastScan,
 		private lastSuccess: DeviceMonitoringLastSuccess,
 		private lastFailed: DeviceMonitoringLastFailed
 	) {}
@@ -31,9 +27,7 @@ export class DeviceMonitoring {
 			new DeviceMonitoringId(id),
 			new DeviceId(params.deviceId),
 			new DeviceMonitoringStatus(params.status),
-			new DeviceMonitoringComputerName(params.computerName),
-			new DeviceMonitoringIpAddress(params.ipAddress),
-			new DeviceLocation(params.locationId),
+			new DeviceMonitoringLastScan(params.lastScan),
 			new DeviceMonitoringLastSuccess(params.lastSuccess),
 			new DeviceMonitoringLastFailed(params.lastFailed)
 		)
@@ -43,9 +37,7 @@ export class DeviceMonitoring {
 			new DeviceMonitoringId(primitives.id),
 			new DeviceId(primitives.deviceId),
 			new DeviceMonitoringStatus(primitives.status),
-			new DeviceMonitoringComputerName(primitives.computerName),
-			new DeviceMonitoringIpAddress(primitives.ipAddress),
-			new DeviceLocation(primitives.locationId),
+			new DeviceMonitoringLastScan(primitives.lastScan),
 			new DeviceMonitoringLastSuccess(primitives.lastSuccess),
 			new DeviceMonitoringLastFailed(primitives.lastFailed)
 		)
@@ -56,9 +48,7 @@ export class DeviceMonitoring {
 			id: this.idValue,
 			deviceId: this.deviceValue,
 			status: this.statusValue,
-			computerName: this.computerNameValue,
-			ipAddress: this.ipAddressValue,
-			locationId: this.locationValue,
+			lastScan: this.lastScanValue,
 			lastSuccess: this.lastSuccessValue,
 			lastFailed: this.lastFailedValue
 		}
@@ -73,14 +63,8 @@ export class DeviceMonitoring {
 	get statusValue(): Primitives<DeviceMonitoringStatus> {
 		return this.status.value
 	}
-	get computerNameValue(): Primitives<DeviceMonitoringComputerName> {
-		return this.computerName.value
-	}
-	get ipAddressValue(): Primitives<DeviceMonitoringIpAddress> {
-		return this.ipAddress.value
-	}
-	get locationValue(): Primitives<DeviceLocation> {
-		return this.locationId.value
+	get lastScanValue(): Primitives<DeviceMonitoringLastScan> {
+		return this.lastScan.value
 	}
 	get lastSuccessValue(): Primitives<DeviceMonitoringLastSuccess> {
 		return this.lastSuccess.value
@@ -92,17 +76,11 @@ export class DeviceMonitoring {
 	updateStatus(newStatus: Primitives<DeviceMonitoringStatus>): void {
 		this.status = new DeviceMonitoringStatus(newStatus)
 	}
-	updateComputerName(newComputerName: Primitives<DeviceMonitoringComputerName>): void {
-		this.computerName = new DeviceMonitoringComputerName(newComputerName)
-	}
-	updateIpAddress(newIpAddress: Primitives<DeviceMonitoringIpAddress>): void {
-		this.ipAddress = new DeviceMonitoringIpAddress(newIpAddress)
-	}
-	updateLocationId(newLocation: Primitives<DeviceLocation>): void {
-		this.locationId = new DeviceLocation(newLocation)
-	}
 	updateLastSuccess(newLastSuccess: Primitives<DeviceMonitoringLastSuccess>): void {
 		this.lastSuccess = new DeviceMonitoringLastSuccess(newLastSuccess)
+	}
+	updateLastScan(newLastScan: Primitives<DeviceMonitoringLastScan>): void {
+		this.lastScan = new DeviceMonitoringLastScan(newLastScan)
 	}
 	updateLastFailed(newLastFailed: Primitives<DeviceMonitoringLastFailed>): void {
 		this.lastFailed = new DeviceMonitoringLastFailed(newLastFailed)
