@@ -5,7 +5,7 @@ import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../en
 export abstract class DeviceMonitoringRepository {
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<DeviceMonitoringDto>>
 
-	abstract searchById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto>
+	abstract searchById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto | null>
 
 	abstract save(payload: DeviceMonitoringPrimitives): Promise<void>
 }

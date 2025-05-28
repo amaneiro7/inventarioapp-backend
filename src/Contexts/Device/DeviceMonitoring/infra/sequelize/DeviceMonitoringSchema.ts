@@ -5,7 +5,7 @@ import { type DeviceDto } from '../../../Device/domain/Device.dto'
 import { type DeviceMonitoringLastScan } from '../../domain/valueObject/DeviceMonitoringLastScan'
 import { type DeviceMonitoringLastSuccess } from '../../domain/valueObject/DeviceMonitoringLastSuccess'
 import { type DeviceMonitoringLastFailed } from '../../domain/valueObject/DeviceMonitoringLastFailed'
-export class DeviceModel extends Model<Omit<DeviceMonitoringDto, 'device'>> implements DeviceMonitoringDto {
+export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'device'>> implements DeviceMonitoringDto {
 	declare id: string
 	declare deviceId: string
 	declare status: DeviceMonitoringStatuses
@@ -21,7 +21,7 @@ export class DeviceModel extends Model<Omit<DeviceMonitoringDto, 'device'>> impl
 		}) // A deviceMonitoring has one device
 	}
 	static async initialize(sequelize: Sequelize): Promise<void> {
-		DeviceModel.init(
+		DeviceMonitoringModel.init(
 			{
 				id: {
 					type: DataTypes.UUID,
