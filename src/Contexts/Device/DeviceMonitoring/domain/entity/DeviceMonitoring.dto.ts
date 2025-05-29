@@ -22,7 +22,7 @@ export type DeviceMonitoringDto = DeviceMonitoringType & {
 }
 
 export type DeviceMonitoringMapped = DeviceMonitoringType & {
-	ipAddress: Primitives<IPAddress>
-	computerName: Primitives<ComputerName>
-	locationId: DeviceDto['locationId']
+	ipAddress?: Primitives<IPAddress>
+	computerName?: Primitives<ComputerName>
+	location: DeviceDto['location']
 }

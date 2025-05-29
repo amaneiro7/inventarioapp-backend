@@ -7,7 +7,7 @@ import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMoni
 import { type PingService } from '../../Device/application/PingService'
 
 export class DeviceMonitoringService {
-	private readonly minutesSchedule = 1
+	private readonly minutesSchedule = 5
 	private readonly CRON_SCHEDULE = `*/${this.minutesSchedule} * * * *` // Runs every 10 minutes
 	constructor(
 		private readonly deviceMonitoringRepository: DeviceMonitoringRepository,
@@ -53,31 +53,6 @@ export class DeviceMonitoringService {
 		} catch (error) {
 			console.error('[ERROR] Failed to enqueue device pings:', error)
 		}
-		// await Promise.all(
-		// 	devicesToMonitor .map(async device => {
-		// 		const ipAddress = device?.device?.computer?.ipAddress
-		// 		const deviceMonitoringId = device.id
-		// 		const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId)
-		// 		if (deviceMonitoring) {
-		// 			const entity = DeviceMonitoring.fromPrimitives(deviceMonitoring)
-		// 			if (ipAddress) {
-		// 				try {
-		// 					await this.pingService.pingIp({ ipAddress })
-		// 					entity.updateStatus(DeviceMonitoringStatuses.ONLINE)
-		// 					entity.updateLastSuccess(new Date())
-		// 				} catch (error) {
-		// 					entity.updateStatus(DeviceMonitoringStatuses.OFFLINE)
-		// 					entity.updateLastFailed(new Date())
-		// 				} finally {
-		// 					entity.updateLastScan(new Date())
-		// 					await this.deviceMonitoringRepository.save(entity.toPrimitive())
-		// 				}
-		// 			} else {
-		// 				console.warn(`Device ${device.id} has no IP address to ping.`)
-		// 			}
-		// 		}
-		// 	})
-		// )
 	}
 
 	/**
