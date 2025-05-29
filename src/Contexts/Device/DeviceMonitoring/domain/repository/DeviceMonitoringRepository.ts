@@ -7,5 +7,7 @@ export abstract class DeviceMonitoringRepository {
 
 	abstract searchById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto | null>
 
+	abstract searchNotnullIpAddress(): Promise<DeviceMonitoringDto[]>
+
 	abstract save(payload: DeviceMonitoringPrimitives): Promise<void>
 }

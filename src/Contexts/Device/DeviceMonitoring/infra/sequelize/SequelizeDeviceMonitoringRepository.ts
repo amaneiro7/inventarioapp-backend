@@ -1,21 +1,21 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { type Transaction } from 'sequelize'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { Op } from 'sequelize'
+
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { DeviceModel, DeviceMonitoringModel } from './DeviceMonitoringSchema'
+import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DeviceMonitoringDto, DeviceMonitoringPrimitives } from '../../domain/entity/DeviceMonitoring.dto'
 import { DeviceMonitoringRepository } from '../../domain/repository/DeviceMonitoringRepository'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 
 export class SequelizeDeviceMonitoringRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringRepository
 {
-	private readonly models = sequelize.models
 	private readonly cacheKey: string = 'devices'
 	constructor(private readonly cache: CacheService) {
 		super()
@@ -33,6 +33,32 @@ export class SequelizeDeviceMonitoringRepository
 					total: count,
 					data: rows
 				}
+			}
+		})
+	}
+
+	async searchNotnullIpAddress(): Promise<DeviceMonitoringDto[]> {
+		return await this.cache.getCachedData({
+			cacheKey: `${this.cacheKey}-not-null-ip-address`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				return await DeviceMonitoringModel.findAll({
+					include: [
+						{
+							association: 'device',
+							where: {
+								statusId: StatusOptions.INUSE
+							},
+							include: [
+								{
+									association: 'computer',
+									where: { ipAddress: { [Op.ne]: null } },
+									required: true
+								}
+							]
+						}
+					]
+				})
 			}
 		})
 	}
@@ -56,54 +82,14 @@ export class SequelizeDeviceMonitoringRepository
 	async save(payload: DeviceMonitoringPrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
-			const deviceMonitoring = (await DeviceMonitoringModel.findByPk(id)) ?? null // Find the device by its id, if it does not exist, device will be null
+			const deviceMonitoring = (await DeviceMonitoringModel.findByPk(payload.id)) ?? null // Find the device by its id, if it does not exist, device will be null
 			if (!deviceMonitoring) {
 				// If the device does not exist
-				await DeviceMonitoringModel.create(
-					{
-						id,
-						serial,
-						activo,
-						statusId,
-						categoryId,
-						brandId,
-						modelId,
-						locationId,
-						observation,
-						employeeId
-					},
-					{ transaction: t }
-				) // Create a new device with the given payload
+				await DeviceMonitoringModel.create(payload, { transaction: t }) // Create a new device with the given payload
 			} else {
 				// If the device already exists
-				await DeviceModel.update(
-					{
-						serial,
-						activo,
-						statusId,
-						categoryId,
-						brandId,
-						modelId,
-						employeeId,
-						locationId,
-						observation
-					},
-					{ where: { id }, transaction: t }
-				) // Update the device with the given payload
+				await DeviceMonitoringModel.update(payload, { where: { id: payload.id }, transaction: t }) // Update the device with the given payload
 				// await device.save({ transaction: t }) // Save the updated device
-			}
-
-			if (DeviceComputer.isComputerCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceComputerIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
-			}
-			if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceHardDriveIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
-			}
-			if (MFP.isMFPCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceMFPIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
 			}
 
 			await t.commit() // Commit the transaction
