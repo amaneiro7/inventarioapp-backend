@@ -21,8 +21,8 @@ export class DeviceMonitoringFinderAll extends GetAllBaseService<DeviceMonitorin
 				ipAddress: device.device?.computer?.ipAddress ?? '',
 				location: device.device?.location ?? '',
 				lastScan: device.lastScan,
-				lastFailed: device.lastSuccess,
-				lastSuccess: device.lastFailed
+				lastSuccess: device.lastSuccess,
+				lastFailed: device.lastFailed
 			})),
 			total,
 			pageSize: criteria.pageSize,

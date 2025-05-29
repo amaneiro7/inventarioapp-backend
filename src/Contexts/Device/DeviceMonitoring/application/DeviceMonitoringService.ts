@@ -7,8 +7,8 @@ import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMoni
 import { type PingService } from '../../Device/application/PingService'
 
 export class DeviceMonitoringService {
-	private readonly minutesSchedule = 5
-	private readonly CRON_SCHEDULE = `*/${this.minutesSchedule} * * * *` // Runs every 10 minutes
+	private readonly minutesSchedule = 20 // Runs every 20 minutes
+	private readonly CRON_SCHEDULE = `*/${this.minutesSchedule} * * * *`
 	constructor(
 		private readonly deviceMonitoringRepository: DeviceMonitoringRepository,
 		private readonly pingService: PingService
@@ -69,7 +69,6 @@ export class DeviceMonitoringService {
 		ipAddress: string
 	}): Promise<void> {
 		try {
-			console.log(deviceMonitoringId)
 			const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId)
 
 			if (!deviceMonitoring) {

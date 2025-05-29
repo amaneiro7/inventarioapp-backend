@@ -11,6 +11,7 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DeviceMonitoringDto, DeviceMonitoringPrimitives } from '../../domain/entity/DeviceMonitoring.dto'
 import { DeviceMonitoringRepository } from '../../domain/repository/DeviceMonitoringRepository'
 import { StatusOptions } from '../../../Status/domain/StatusOptions'
+import { DeviceMonitoringAssociation } from './DeviceMonitoringAssociation'
 
 export class SequelizeDeviceMonitoringRepository
 	extends SequelizeCriteriaConverter
@@ -23,12 +24,13 @@ export class SequelizeDeviceMonitoringRepository
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DeviceMonitoringDto>> {
 		const options = this.convert(criteria)
+		const opt = DeviceMonitoringAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
 			ex: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
-				const { count, rows } = await DeviceMonitoringModel.findAndCountAll(options)
+				const { count, rows } = await DeviceMonitoringModel.findAndCountAll(opt)
 				return {
 					total: count,
 					data: rows
