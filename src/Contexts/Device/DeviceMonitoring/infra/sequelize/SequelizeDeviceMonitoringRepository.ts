@@ -16,7 +16,7 @@ export class SequelizeDeviceMonitoringRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringRepository
 {
-	private readonly cacheKey: string = 'devices'
+	private readonly cacheKey: string = 'deviceMonitoring'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
@@ -26,7 +26,7 @@ export class SequelizeDeviceMonitoringRepository
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria: criteria,
-			ex: TimeTolive.SHORT,
+			ex: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceMonitoringModel.findAndCountAll(options)
 				return {

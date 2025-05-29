@@ -7,6 +7,8 @@ import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 import { type Database } from '../Contexts/Shared/domain/Database'
+import { DeviceDependencies } from './di/device/device.di'
+import { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
 
 export class InventarioBackendApp {
 	server?: Server
@@ -21,6 +23,8 @@ export class InventarioBackendApp {
 
 		await this.server.listen()
 		await this.initializeDBStorage()
+		const pingService: DeviceMonitoringService = container.resolve(DeviceDependencies.DeviceMonitoringService)
+		pingService.startMonitoringSchedule()
 	}
 
 	get httpServer(): Server['httpServer'] | undefined {

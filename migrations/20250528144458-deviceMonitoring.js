@@ -12,6 +12,7 @@ module.exports = {
       device_id: {
         type: Sequelize.UUID,
         allowNull: false,
+        unique: true,
         references: {
           model: 'devices',
           key: 'id'
@@ -24,21 +25,16 @@ module.exports = {
         allowNull: false,
         defaultValue: 'not available'
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
       last_scan: {
-        tyep: Sequelize.DATE,
+        type: Sequelize.DATE,
         allowNull: true
       },
       last_success: {
-        tyep: Sequelize.DATE,
+        type: Sequelize.DATE,
         allowNull: true
       },
       last_failed: {
-        tyep: Sequelize.DATE,
+        type: Sequelize.DATE,
         allowNull: true
       },
       updated_at: {

@@ -1,5 +1,6 @@
 import { type AwilixContainer, asClass } from 'awilix'
 import { SequelizeDeviceRepository } from '../../../Contexts/Device/Device/infrastructure/sequelize/SequelizeDeviceRepository'
+import { SequelizeDeviceMonitoringRepository } from '../../../Contexts/Device/DeviceMonitoring/infra/sequelize/SequelizeDeviceMonitoringRepository'
 import { DeviceCreator } from '../../../Contexts/Device/Device/application/DeviceCreator'
 import { DeviceFinder } from '../../../Contexts/Device/Device/application/DeviceFinder'
 import { DevicesFinderAll } from '../../../Contexts/Device/Device/application/DeviceFinderAll'
@@ -14,15 +15,21 @@ import { DevicePatchController } from '../../controllers/device/device.patch.con
 import { DeviceDeleteController } from '../../controllers/device/device.delete.controller'
 import { DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 import { DeviceSearchByCriteriaController } from '../../controllers/device/device.search-by-criteria.controller'
-import { DeviceMonitoring } from '../../../Contexts/Device/Device/application/DeviceMonitoring'
-import { PingService } from '../../../Contexts/Device/Device/application/PingService'
 import { DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
+import { DeviceMonitoringService } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
+import { DeviceMonitoringFinder } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringFinder'
+import { DeviceMonitoringCreator } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringCreator'
+import { DeviceMonitoringFinderAll } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringFinderAll'
 
 export enum DeviceDependencies {
 	Repository = 'deviceRepository',
 	Finder = 'deviceFinder',
 	FinderAll = 'deviceFinderAll',
 	Creator = 'deviceCreator',
+	MonitoringFinder = 'deviceMonitoringFinder',
+	MonitoringFinderAll = 'deviceMonitoringFinderAll',
+	MonitoringCreator = 'deviceMonitoringCreator',
+	DeviceMonitoringService = 'deviceMonitoringService',
 	Updater = 'deviceUpdater',
 	Remover = 'deviceRemover',
 	ExcelService = 'deviceExcelService',
@@ -34,17 +41,19 @@ export enum DeviceDependencies {
 	DeleteController = 'deviceDeleteController',
 	DevicePingStatusController = 'devicePingStatusController',
 	GetByCriteriaController = 'deviceGetByCriteria',
-	ExcelDownloadController = 'deviceExcelDownload',
-	DeviceMonitoring = 'deviceMonitoring',
-	PingService = 'pingService'
+	ExcelDownloadController = 'deviceExcelDownload'
 }
 
 export const register = (container: AwilixContainer) => {
 	container.register({
 		deviceRepository: asClass(SequelizeDeviceRepository).singleton(),
+		deviceMonitoringRepository: asClass(SequelizeDeviceMonitoringRepository).singleton(),
 		deviceFinder: asClass(DeviceFinder),
 		deviceFinderAll: asClass(DevicesFinderAll),
 		deviceCreator: asClass(DeviceCreator),
+		deviceMonitoringFinder: asClass(DeviceMonitoringFinder),
+		deviceMonitoringFinderAll: asClass(DeviceMonitoringFinderAll),
+		deviceMonitoringCreator: asClass(DeviceMonitoringCreator),
 		deviceUpdater: asClass(DeviceUpdater),
 		deviceRemover: asClass(DeviceRemover),
 		deviceExcelService: asClass(DeviceExcelService),
@@ -57,7 +66,6 @@ export const register = (container: AwilixContainer) => {
 		devicePingStatusController: asClass(DevicePingStatusController),
 		deviceGetByCriteria: asClass(DeviceSearchByCriteriaController),
 		deviceExcelDownload: asClass(DeviceDownloadExcelServiceController),
-		deviceMonitoring: asClass(DeviceMonitoring),
-		pingService: asClass(PingService)
+		deviceMonitoringService: asClass(DeviceMonitoringService)
 	})
 }

@@ -2,9 +2,9 @@ import { EnumValueObject } from '../../../../Shared/domain/value-object/EnumValu
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 
 export enum DeviceMonitoringStatuses {
-	ONLINE = 'Online',
-	OFFLINE = 'Offline',
-	NOTAVAILABLE = 'Not available'
+	ONLINE = 'online',
+	OFFLINE = 'offline',
+	NOTAVAILABLE = 'not available'
 }
 
 export class DeviceMonitoringStatus extends EnumValueObject<DeviceMonitoringStatuses> {

@@ -15,10 +15,7 @@ export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'devi
 	declare device: DeviceDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
-		this.hasOne(models.Device, {
-			as: 'device',
-			foreignKey: 'deviceId'
-		}) // A deviceMonitoring has one device
+		this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A Device Monitoring belongs to a device
 	}
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		DeviceMonitoringModel.init(

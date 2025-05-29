@@ -85,6 +85,10 @@ export class DeviceModel
 			as: 'computer',
 			foreignKey: 'deviceId'
 		}) // A device has one computer
+		this.hasOne(models.DeviceMonitoring, {
+			as: 'deviceMonitoring',
+			foreignKey: 'deviceId'
+		}) // A device has one device Monitoring
 		this.hasOne(models.DeviceMFP, { as: 'mfp', foreignKey: 'deviceId' }) // A device has one multifuncional printer
 		this.belongsTo(models.Employee, {
 			as: 'employee',
