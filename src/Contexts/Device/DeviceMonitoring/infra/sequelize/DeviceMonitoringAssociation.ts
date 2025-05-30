@@ -1,12 +1,16 @@
 import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { StatusList } from '../../../Status/domain/StatusList'
 
 export class DeviceMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		options.include = [
 			{
 				association: 'device', // 0
+				where: {
+					statusId: StatusList.INUSE
+				},
 				include: [
 					{
 						association: 'computer', // 0 - 0
@@ -18,6 +22,7 @@ export class DeviceMonitoringAssociation {
 					},
 					{
 						association: 'location', // 0 - 1
+						required: true,
 						include: [
 							'typeOfSite', // 0 - 1 - 0
 							{
