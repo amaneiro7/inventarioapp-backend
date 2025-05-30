@@ -5,6 +5,7 @@ import { HardDriveValidation } from '../../../Features/HardDrive/HardDrive/appli
 import { DeviceHardDrive } from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../Features/MFP/domain/MFP'
 import { HistoryCreator } from '../../../History/application/HistoryCreator'
+import { DeviceMonitoringCreator } from '../../DeviceMonitoring/application/DeviceMonitoringCreator'
 import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
 import { Device } from '../domain/Device'
 import { DeviceActivo } from '../domain/DeviceActivo'
@@ -24,6 +25,7 @@ import { type DeviceParams } from '../domain/Device.dto'
 import { type DeviceComputerParams } from '../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDriveParams } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type DeviceMFPParams } from '../../../Features/MFP/domain/MFP.dto'
+import { type DeviceMonitoringRepository } from '../../DeviceMonitoring/domain/repository/DeviceMonitoringRepository'
 
 export class DeviceCreator {
 	constructor(
@@ -33,6 +35,7 @@ export class DeviceCreator {
 		private readonly employeeRepository: EmployeeRepository,
 		private readonly locationRepository: LocationRepository,
 		private readonly historyRepository: HistoryRepository,
+		private readonly deviceMonitoringRepository: DeviceMonitoringRepository,
 		private readonly computerValidation: ComputerValidation,
 		private readonly hardDriveValidation: HardDriveValidation
 	) {}
@@ -107,6 +110,12 @@ export class DeviceCreator {
 				oldData: {},
 				createdAt: new Date()
 			})
+
+			if (DeviceComputer.isComputerCategory({ categoryId })) {
+				await new DeviceMonitoringCreator(this.deviceMonitoringRepository).run({
+					deviceId: devicePrimitives.id
+				})
+			}
 		} catch (error) {
 			throw new Error('Error al guardar el dispositivo o crear el historial')
 		}

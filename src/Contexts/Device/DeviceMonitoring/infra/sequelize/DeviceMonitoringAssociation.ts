@@ -88,6 +88,13 @@ export class DeviceMonitoringAssociation {
 		}
 
 		// Poder filtrar por ubicacion - por sitio
+		if (options.where && 'locationId' in options.where) {
+			;(options.include[0] as any).required = true
+			;(options.include[0] as any).where = {
+				locationId: (options.where as any)?.locationId
+			}
+			delete options.where?.locationId
+		}
 		if (options.where && 'siteId' in options.where) {
 			;(options.include[0] as any).required = true
 			;(options.include[0] as any).include[1].include[1].where = {
