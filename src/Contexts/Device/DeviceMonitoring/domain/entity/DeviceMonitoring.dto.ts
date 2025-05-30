@@ -26,3 +26,9 @@ export type DeviceMonitoringMapped = DeviceMonitoringType & {
 	computerName?: Primitives<ComputerName>
 	location: DeviceDto['location']
 }
+export interface DashboardData {
+	onlineCount: number
+	offlineCount: number
+	notAvailableCount: number
+	totalDevices: number
+}

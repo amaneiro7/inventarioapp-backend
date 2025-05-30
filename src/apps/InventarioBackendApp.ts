@@ -13,6 +13,9 @@ import { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/app
 export class InventarioBackendApp {
 	server?: Server
 	private readonly logger: Logger = container.resolve(SharedDependencies.Logger)
+	private readonly pingService: DeviceMonitoringService = container.resolve(
+		DeviceDependencies.DeviceMonitoringService
+	)
 
 	async start(): Promise<void> {
 		const port = config.port
@@ -23,8 +26,7 @@ export class InventarioBackendApp {
 
 		await this.server.listen()
 		await this.initializeDBStorage()
-		const pingService: DeviceMonitoringService = container.resolve(DeviceDependencies.DeviceMonitoringService)
-		pingService.startMonitoringSchedule()
+		this.pingService.startMonitoringLoop()
 	}
 
 	get httpServer(): Server['httpServer'] | undefined {
@@ -36,6 +38,7 @@ export class InventarioBackendApp {
 		const database: Database = container.resolve(SharedDependencies.Database)
 		await database.close()
 		await cache.close()
+		this.pingService.stopMonitoringLoop()
 
 		return await this.server?.stop()
 	}

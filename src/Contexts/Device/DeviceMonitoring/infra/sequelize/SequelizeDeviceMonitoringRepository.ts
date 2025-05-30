@@ -1,17 +1,15 @@
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { Op } from 'sequelize'
-
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
-
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { DeviceMonitoringDto, DeviceMonitoringPrimitives } from '../../domain/entity/DeviceMonitoring.dto'
-import { DeviceMonitoringRepository } from '../../domain/repository/DeviceMonitoringRepository'
 import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { DeviceMonitoringAssociation } from './DeviceMonitoringAssociation'
+import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../../domain/entity/DeviceMonitoring.dto'
+import { type DeviceMonitoringRepository } from '../../domain/repository/DeviceMonitoringRepository'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeDeviceMonitoringRepository
 	extends SequelizeCriteriaConverter

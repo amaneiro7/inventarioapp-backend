@@ -1,5 +1,5 @@
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../entity/DeviceMonitoring.dto'
 
 export abstract class DeviceMonitoringRepository {

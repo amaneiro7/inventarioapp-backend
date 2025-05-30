@@ -13,6 +13,7 @@ import { type DeviceDeleteController } from '../../controllers/device/device.del
 import { type DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 import { type ComputerDashboardGetController } from '../../controllers/device/device-computer-dashboard.controller'
 import { type DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
+import { DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -32,14 +33,22 @@ export const register = async (router: Router) => {
 		DeviceDependencies.DevicePingStatusController
 	)
 
+	const deviceMonitoringDashboardGetController: DeviceMonitoringDashboardGetController = container.resolve(
+		ComputerDashboardDependencies.DeviceMonitoringDashboardGetController
+	)
+
 	// get
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 
-	router.get('/devices/ping-status', devicePingStatusController.run.bind(devicePingStatusController))
+	router.get('/devices/ping-status', authenticate, devicePingStatusController.run.bind(devicePingStatusController))
 
 	router.get('/devices/download', authenticate, download.run.bind(download))
 	//router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
-	router.get('/devices/dashboard/computer', computerDashboard.run.bind(computerDashboard))
+	router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
+	router.get(
+		'/devices/dashboard/monitoring',
+		deviceMonitoringDashboardGetController.run.bind(deviceMonitoringDashboardGetController)
+	)
 
 	router.get('/devices/:id', authenticate, getController.run.bind(getController))
 

@@ -19,13 +19,18 @@ import { SequelizeTotalCountByCategoryRepository } from '../../../Contexts/Devic
 import { SequelizeCountByCategoryRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByCategoryRepository'
 import { SequelizeCountByRegionRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountByRegionRepository'
 import { SequelizeCountTotalOperatingSystemRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeCountTotalOperatingSystemRepository'
+import { DeviceMonitoringDashboard } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringDashboard'
+import { DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
+import { SequelizeDeviceMonitoringDashboardRepository } from '../../../Contexts/Device/DeviceMonitoring/infra/sequelize/sequelizeDeviceMonitoringDashboardRepository'
 
 export enum ComputerDashboardDependencies {
 	Repository = 'computerDashboardRepository',
 	ComputerDashboard = 'computerDashboard',
+	DeviceMonitoringDashboard = 'deviceMonitoringDashboard',
 	GeneralDashboard = 'generalDashboard',
 	ComputerDashboardGetController = 'computerDashboardGetController',
-	GeneralDashboardGetController = 'generalDashboardGetController'
+	GeneralDashboardGetController = 'generalDashboardGetController',
+	DeviceMonitoringDashboardGetController = 'deviceMonitoringDashboardGetController'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -47,11 +52,14 @@ export const register = (container: AwilixContainer) => {
 		countByCategoryRepository: asClass(SequelizeCountByCategoryRepository).singleton(),
 		countByRegionRepository: asClass(SequelizeCountByRegionRepository).singleton(),
 		countTotalOperatingSystemRepository: asClass(SequelizeCountTotalOperatingSystemRepository).singleton(),
+		deviceMonitoringDashboardRepository: asClass(SequelizeDeviceMonitoringDashboardRepository).singleton(),
 
 		computerDashboard: asClass(ComputerDashboard),
 		generalDashboard: asClass(GeneralDashboard),
+		deviceMonitoringDashboard: asClass(DeviceMonitoringDashboard),
 
 		computerDashboardGetController: asClass(ComputerDashboardGetController),
-		generalDashboardGetController: asClass(GeneralDashboardGetController)
+		generalDashboardGetController: asClass(GeneralDashboardGetController),
+		deviceMonitoringDashboardGetController: asClass(DeviceMonitoringDashboardGetController)
 	})
 }
