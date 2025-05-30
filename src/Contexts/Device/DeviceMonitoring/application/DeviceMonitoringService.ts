@@ -81,6 +81,15 @@ export class DeviceMonitoringService {
 					} else {
 						// Consider updating status to 'no_ip_configured' if appropriate for your domain.
 						// For simplicity, we'll just log and skip for now.
+						const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId)
+						if (deviceMonitoring) {
+							const deviceMonitoringEntity = DeviceMonitoring.fromPrimitives(deviceMonitoring)
+							deviceMonitoringEntity.updateStatus(DeviceMonitoringStatuses.NOTAVAILABLE)
+							deviceMonitoringEntity.updateLastSuccess(null)
+							deviceMonitoringEntity.updateLastFailed(null)
+							deviceMonitoringEntity.updateLastScan(null)
+							await this.deviceMonitoringRepository.save(deviceMonitoringEntity.toPrimitive())
+						}
 					}
 				})
 			)
