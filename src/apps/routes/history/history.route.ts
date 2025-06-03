@@ -14,5 +14,5 @@ export const register = async (router: Router) => {
 
 	router.get('/histories/', authenticate, getAllController.run.bind(getAllController))
 
-	router.get('/histories/dashboard/', historyDashboard.run.bind(historyDashboard))
+	router.get('/histories/dashboard/', authenticate, historyDashboard.run.bind(historyDashboard))
 }

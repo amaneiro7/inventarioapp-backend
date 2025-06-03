@@ -19,7 +19,12 @@ export class LocationAssociation {
 									{
 										association: 'region', // 0 - 0 - 0 - 0
 										required: true,
-										include: ['administrativeRegion']
+										include: [
+											{
+												association: 'administrativeRegion',
+												required: true
+											}
+										]
 									}
 								]
 							}
@@ -52,6 +57,14 @@ export class LocationAssociation {
 			}
 
 			delete options.where?.regionId
+		}
+		// Poder filtrar por region Administrativa
+		if (options.where && 'administrativeRegionId' in options.where) {
+			;(options.include[0] as any).include[0].include[0].include[0].include[0].where = {
+				id: options.where.administrativeRegionId
+			}
+
+			delete options.where?.administrativeRegionId
 		}
 
 		return options

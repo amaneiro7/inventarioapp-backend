@@ -13,7 +13,8 @@ import { type DeviceDeleteController } from '../../controllers/device/device.del
 import { type DeviceDownloadExcelServiceController } from '../../controllers/device/device.download-excel-service.controller'
 import { type ComputerDashboardGetController } from '../../controllers/device/device-computer-dashboard.controller'
 import { type DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
-import { DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
+import { type DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
+import { type DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -36,6 +37,8 @@ export const register = async (router: Router) => {
 	const deviceMonitoringDashboardGetController: DeviceMonitoringDashboardGetController = container.resolve(
 		ComputerDashboardDependencies.DeviceMonitoringDashboardGetController
 	)
+	const deviceMonitoringDashboardByStateGetController: DeviceMonitoringDashboardByStateGetController =
+		container.resolve(ComputerDashboardDependencies.DeviceMonitoringDashboardByStateGetController)
 
 	// get
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
@@ -47,7 +50,13 @@ export const register = async (router: Router) => {
 	router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
 	router.get(
 		'/devices/dashboard/monitoring',
+		authenticate,
 		deviceMonitoringDashboardGetController.run.bind(deviceMonitoringDashboardGetController)
+	)
+	router.get(
+		'/devices/dashboard/monitoringbystate',
+		authenticate,
+		deviceMonitoringDashboardByStateGetController.run.bind(deviceMonitoringDashboardByStateGetController)
 	)
 
 	router.get('/devices/:id', authenticate, getController.run.bind(getController))

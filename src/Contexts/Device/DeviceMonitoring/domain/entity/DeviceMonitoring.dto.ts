@@ -32,3 +32,6 @@ export interface DashboardData {
 	notAvailableCount: number
 	totalDevices: number
 }
+export interface DashboardByStateData extends DashboardData {
+	byState: Record<string, DashboardData>
+}

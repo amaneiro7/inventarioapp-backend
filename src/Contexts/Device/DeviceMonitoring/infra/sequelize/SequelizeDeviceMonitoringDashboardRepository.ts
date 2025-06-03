@@ -6,6 +6,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardRepository } from '../../domain/repository/DeviceMonitoringDashboardRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
 
 export class SequelizeDeviceMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
@@ -19,14 +20,16 @@ export class SequelizeDeviceMonitoringDashboardRepository
 		const options = this.convert(criteria)
 		const opt = DeviceMonitoringDashboardAssociation.buildDashboardFindOptions(criteria, options)
 		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+			cacheKey: this.cacheKey,
+			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const devices = await DeviceMonitoringModel.findAll(opt)
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
-					overall: {}
+					[DeviceMonitoringStatuses.ONLINE]: 0,
+					[DeviceMonitoringStatuses.OFFLINE]: 0
 				}
 
 				devices.forEach((device: any) => {
@@ -37,8 +40,7 @@ export class SequelizeDeviceMonitoringDashboardRepository
 					// Sumar al total
 					total += countNumber
 
-					// Agregar a la sección "overall"
-					dashboardData.overall[statusName] = (dashboardData.overall[statusName] || 0) + countNumber
+					dashboardData[statusName] = (dashboardData[statusName] || 0) + countNumber
 				})
 
 				return {
