@@ -1,4 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type LocationStatusDto } from '../../LocationStatus/domain/LocationStatus.dto'
+import { type LocationStatusId } from '../../LocationStatus/domain/LocationStatusId'
 import { type SiteDto } from '../../Site/domain/Site.dto'
 import { type TypeOfSiteDto } from '../../TypeOfSite/domain/TypeOfSite.dto'
 import { type LocationId } from './LocationId'
@@ -13,6 +15,7 @@ export interface Location {
 	typeOfSiteId: Primitives<LocationTypeOfSite>
 	siteId: Primitives<LocationSite>
 	subnet: Primitives<LocationSubnet>
+	locationStatusId: Primitives<LocationStatusId>
 }
 export type LocationPrimitives = Location
 export type LocationParams = Omit<Location, 'id'>
@@ -20,4 +23,5 @@ export type LocationParams = Omit<Location, 'id'>
 export type LocationDto = Location & {
 	typeOfSite: TypeOfSiteDto
 	site: SiteDto
+	operationalStatus: LocationStatusDto
 }

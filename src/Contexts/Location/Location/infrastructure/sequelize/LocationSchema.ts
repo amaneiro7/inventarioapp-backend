@@ -7,22 +7,35 @@ import { type LocationSubnet } from '../../domain/LocationSubnet'
 import { type SiteId } from '../../../Site/domain/SiteId'
 import { type LocationDto } from '../../domain/Location.dto'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
-import { type TypeOfSite } from '../../../TypeOfSite/domain/TypeOfSite.dto'
+import { type TypeOfSiteDto } from '../../../TypeOfSite/domain/TypeOfSite.dto'
+import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
+import { type LocationOperationalStatus } from '../../domain/LocationOperationalStatus'
+import { type LocationStatusDto } from '../../../LocationStatus/domain/LocationStatus.dto'
 
-export class LocationModel extends Model<Omit<LocationDto, 'site' | 'typeOfSite'>> implements LocationDto {
-	declare typeOfSite: TypeOfSite
-	declare site: SiteDto
+export class LocationModel
+	extends Model<Omit<LocationDto, 'site' | 'typeOfSite' | 'operationalStatus'>>
+	implements LocationDto
+{
 	declare id: Primitives<LocationId>
 	declare typeOfSiteId: Primitives<TypeOfSiteId>
 	declare siteId: Primitives<SiteId>
+	declare locationStatusId: Primitives<LocationOperationalStatus>
 	declare name: Primitives<LocationName>
 	declare subnet: Primitives<LocationSubnet>
+
+	declare typeOfSite: TypeOfSiteDto
+	declare site: SiteDto
+	declare operationalStatus: LocationStatusDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.TypeOfSite, {
 			as: 'typeOfSite',
 			foreignKey: 'typeOfSiteId'
 		}) // A Location belongs to Many Type Of Site
+		this.belongsTo(models.LocationStatus, {
+			as: 'locationStatus',
+			foreignKey: 'locationStatusId'
+		}) // A Location belongs to Many Location STatus
 		this.belongsTo(models.Site, { as: 'site', foreignKey: 'siteId' }) //  A Location belongs to Many sites
 		this.hasMany(models.Employee, {
 			as: 'employee',
@@ -53,6 +66,11 @@ export class LocationModel extends Model<Omit<LocationDto, 'site' | 'typeOfSite'
 				subnet: {
 					type: DataTypes.INET,
 					allowNull: true
+				},
+				locationStatusId: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					defaultValue: LocationStatusOptions.OPERATIONAL
 				}
 			},
 			{

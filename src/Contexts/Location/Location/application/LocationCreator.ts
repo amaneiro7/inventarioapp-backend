@@ -2,16 +2,19 @@ import { Location } from '../domain/Location'
 import { LocationName } from '../domain/LocationName'
 import { LocationSite } from '../domain/LocationSite'
 import { LocationTypeOfSite } from '../domain/LocationTypeOfSite'
+import { LocationOperationalStatus } from '../domain/LocationOperationalStatus'
 import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
+import { type LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
 
 export class LocationCreator {
 	constructor(
 		private readonly locationRepository: LocationRepository,
 		private readonly typeOfSiteRepository: TypeOfSiteRepository,
-		private readonly siteRepository: SiteRepository
+		private readonly siteRepository: SiteRepository,
+		private readonly locationStatusRepository: LocationStatusRepository
 	) {}
 
 	async run(params: LocationParams): Promise<void> {
@@ -28,6 +31,10 @@ export class LocationCreator {
 		await LocationSite.ensureSiteExit({
 			repository: this.siteRepository,
 			site: params.siteId
+		})
+		await LocationOperationalStatus.ensureOperationalStatusExit({
+			repository: this.locationStatusRepository,
+			operationalStatus: params.locationStatusId
 		})
 
 		await this.locationRepository.save(location.toPrimitive())

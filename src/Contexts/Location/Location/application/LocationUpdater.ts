@@ -10,12 +10,15 @@ import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
+import { LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
+import { LocationOperationalStatus } from '../domain/LocationOperationalStatus'
 
 export class LocationUpdater {
 	constructor(
 		private readonly locationRepository: LocationRepository,
 		private readonly typeOfSiteRepository: TypeOfSiteRepository,
-		private readonly siteRepository: SiteRepository
+		private readonly siteRepository: SiteRepository,
+		private readonly locationStatusRepository: LocationStatusRepository
 	) {}
 
 	async run({ id, params }: { id: Primitives<LocationId>; params: Partial<LocationParams> }): Promise<void> {
@@ -27,25 +30,32 @@ export class LocationUpdater {
 
 		const locationEntity = Location.fromPrimitives(location)
 
-		await LocationName.updateNameField({
-			repository: this.locationRepository,
-			name: params.name,
-			entity: locationEntity
-		})
-		await LocationSite.updateSiteField({
-			repository: this.siteRepository,
-			entity: locationEntity,
-			site: params.siteId
-		})
-		await LocationTypeOfSite.updateTypeOfSiteField({
-			repository: this.typeOfSiteRepository,
-			entity: locationEntity,
-			typeOfSite: params.typeOfSiteId
-		})
-		await LocationSubnet.updateSubnetField({
-			subnet: params.subnet,
-			entity: locationEntity
-		})
+		await Promise.all([
+			LocationName.updateNameField({
+				repository: this.locationRepository,
+				name: params.name,
+				entity: locationEntity
+			}),
+			LocationSite.updateSiteField({
+				repository: this.siteRepository,
+				entity: locationEntity,
+				site: params.siteId
+			}),
+			LocationTypeOfSite.updateTypeOfSiteField({
+				repository: this.typeOfSiteRepository,
+				entity: locationEntity,
+				typeOfSite: params.typeOfSiteId
+			}),
+			LocationSubnet.updateSubnetField({
+				subnet: params.subnet,
+				entity: locationEntity
+			}),
+			LocationOperationalStatus.updateOperationalStatusField({
+				repository: this.locationStatusRepository,
+				entity: locationEntity,
+				operationalStatus: params.locationStatusId
+			})
+		])
 
 		await this.locationRepository.save(locationEntity.toPrimitive())
 	}

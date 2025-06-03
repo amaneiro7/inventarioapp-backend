@@ -1,5 +1,5 @@
-import { FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type FindOptions } from 'sequelize'
 
 export class LocationAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
@@ -32,7 +32,8 @@ export class LocationAssociation {
 					}
 				]
 			},
-			'typeOfSite' // 1
+			'typeOfSite', // 1
+			'locationStatus' // 2
 		]
 		// Poder filtrar por ciudad
 		if (options.where && 'cityId' in options.where) {
