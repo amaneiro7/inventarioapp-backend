@@ -6,7 +6,7 @@ module.exports = {
     return await queryInterface.bulkInsert('location_status', [
       { id: '1', name: 'Operativa' },
       { id: '2', name: 'Cerrado temporalmente' },
-      { id: '3', name: 'cerrado permanentemente' },
+      { id: '3', name: 'Cerrado permanentemente' },
       { id: '4', name: 'Cierre programado' },
       { id: '5', name: 'En construcción' },
     ])
