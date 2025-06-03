@@ -3,6 +3,7 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TypeOfSiteList } from '../../../../Location/TypeOfSite/domain/TypeOfSiteList'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalAgenciesRepository } from '../../domain/TotalAgenciesRepository'
+import { LocationStatusOptions } from '../../../../Location/LocationStatus/domain/LocationStatusOptions'
 
 export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository {
 	private readonly cacheKey: string = 'totalAgencies'
@@ -14,7 +15,8 @@ export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository
 			fetchFunction: async () => {
 				return await LocationModel.count({
 					where: {
-						typeOfSiteId: TypeOfSiteList.AGENCIA
+						typeOfSiteId: TypeOfSiteList.AGENCIA,
+						locationStatusId: LocationStatusOptions.OPERATIONAL
 					}
 				})
 			}

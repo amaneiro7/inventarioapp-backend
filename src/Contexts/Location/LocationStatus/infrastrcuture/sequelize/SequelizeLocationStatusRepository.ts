@@ -19,7 +19,6 @@ export class SequelizeLocationStatusRepository
 	}
 	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationStatusDto>> {
 		const options = this.convert(criteria)
-		options.include = ['region']
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,

@@ -2,6 +2,7 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { TypeOfSiteList } from '../../../../Location/TypeOfSite/domain/TypeOfSiteList'
 import { SiteModels } from '../../../../Location/Site/infrastructure/sequelize/SiteSchema'
+import { LocationStatusOptions } from '../../../../Location/LocationStatus/domain/LocationStatusOptions'
 import { type TotalAdministrativeSitesRepository } from '../../domain/TotalAdministrativeSitesRepository'
 
 export class SequelizeTotalAdministrativeSitesRepository implements TotalAdministrativeSitesRepository {
@@ -18,7 +19,8 @@ export class SequelizeTotalAdministrativeSitesRepository implements TotalAdminis
 							association: 'location',
 							attributes: [],
 							where: {
-								typeOfSiteId: TypeOfSiteList.TORRE
+								typeOfSiteId: TypeOfSiteList.TORRE,
+								locationStatusId: LocationStatusOptions.OPERATIONAL
 							}
 						}
 					],
