@@ -35,7 +35,17 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 	async searchById(id: Primitives<CityId>): Promise<CityDto | null> {
 		return (
 			(await CityModel.findByPk(id, {
-				include: ['state']
+				include: [
+					{
+						association: 'state',
+						include: [
+							{
+								association: 'region',
+								include: ['administrativeRegion']
+							}
+						]
+					}
+				]
 			})) ?? null
 		)
 	}
