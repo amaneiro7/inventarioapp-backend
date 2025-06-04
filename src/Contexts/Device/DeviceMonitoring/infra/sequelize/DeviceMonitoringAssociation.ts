@@ -1,4 +1,4 @@
-import { Op, type WhereOptions, type FindOptions } from 'sequelize'
+import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { StatusList } from '../../../Status/domain/StatusList'
@@ -6,16 +6,6 @@ import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitor
 
 export class DeviceMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		let baseWhere: WhereOptions = {
-			status: {
-				[Op.ne]: DeviceMonitoringStatuses.NOTAVAILABLE
-			}
-		}
-		// If a 'status' filter is explicitly provided in criteria, override the default
-		if (options.where && 'status' in options.where) {
-			baseWhere.status = options.where.status
-		}
-		options.where = baseWhere
 		options.include = [
 			{
 				association: 'device', // 0
@@ -69,6 +59,15 @@ export class DeviceMonitoringAssociation {
 				]
 			}
 		]
+
+		if (!criteria.searchValueInArray('status')) {
+			options.where = {
+				...options.where,
+				status: {
+					[Op.ne]: DeviceMonitoringStatuses.NOTAVAILABLE
+				}
+			}
+		}
 
 		if (options.where && 'computerName' in options.where) {
 			;(options.include[0] as any).include[0].where = {

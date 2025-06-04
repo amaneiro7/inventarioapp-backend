@@ -1,4 +1,4 @@
-import { Op, type WhereOptions, type FindOptions } from 'sequelize'
+import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
@@ -6,19 +6,10 @@ import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMon
 
 export class LocationMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		let baseWhere: WhereOptions = {
-			status: {
-				[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
-			}
-		}
-		// If a 'status' filter is explicitly provided in criteria, override the default
-		if (options.where && 'status' in options.where) {
-			baseWhere.status = options.where.status
-		}
-		options.where = baseWhere
 		options.include = [
 			{
 				association: 'location', // 0
+				required: true,
 				where: {
 					locationStatusId: LocationStatusOptions.OPERATIONAL,
 					subnet: { [Op.ne]: null }
@@ -31,22 +22,18 @@ export class LocationMonitoringAssociation {
 					{
 						association: 'site', // 0 - 1
 						required: true,
-						attributes: [],
 						include: [
 							{
 								association: 'city', // 0 - 1 - 0
 								required: true,
-								attributes: [],
 								include: [
 									{
 										association: 'state', // 0 - 1 - 0
 										required: true,
-										attributes: [],
 										include: [
 											{
 												association: 'region', // 0 - 1 - 0 - 0
 												required: true,
-												attributes: [],
 
 												include: [
 													{
@@ -66,11 +53,13 @@ export class LocationMonitoringAssociation {
 			}
 		]
 
-		if (options.where && 'name' in options.where) {
-			;(options.include[0] as any).where = {
-				name: (options.where as any)?.name
+		if (!criteria.searchValueInArray('status')) {
+			options.where = {
+				...options.where,
+				status: {
+					[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
+				}
 			}
-			delete options.where.name
 		}
 
 		// Poder filtrar por direccion
@@ -155,7 +144,7 @@ export class LocationMonitoringAssociation {
 			stateId: ['location', 'site', 'city', 'state', 'name'],
 			regionId: ['location', 'site', 'city', 'state', 'region', 'name'],
 			administrativeRegionId: ['location', 'site', 'city', 'state', 'region', 'administrativeRegion', 'name'],
-			ipAddress: ['location', 'subnet'],
+			subnet: ['location', 'subnet'],
 			name: ['location', 'name']
 		}
 		// @ts-ignore
