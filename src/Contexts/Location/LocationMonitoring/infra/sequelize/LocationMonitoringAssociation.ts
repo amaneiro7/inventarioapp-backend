@@ -2,9 +2,15 @@ import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
+import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
 
 export class LocationMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		options.where = {
+			status: {
+				[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
+			}
+		}
 		options.include = [
 			{
 				association: 'location', // 0

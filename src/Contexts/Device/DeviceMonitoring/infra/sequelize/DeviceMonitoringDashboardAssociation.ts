@@ -2,9 +2,15 @@ import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { StatusList } from '../../../Status/domain/StatusList'
+import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
 
 export class DeviceMonitoringDashboardAssociation {
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
+		options.where = {
+			status: {
+				[Op.ne]: DeviceMonitoringStatuses.NOTAVAILABLE
+			}
+		}
 		options.attributes = [
 			[sequelize.col('status'), 'statusName'],
 			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
