@@ -4,7 +4,7 @@
  * @param ipAddress The original IP address string (e.g., "10.100.10.0" or "192.168.79.169").
  * @returns The converted IP address string, or the original if no conversion is needed/possible.
  */
-function convertSubnetToHostIp(ipAddress: string | null | undefined): string | null | undefined {
+export async function convertSubnetToHostIp(ipAddress: string | null | undefined): Promise<string | null | undefined> {
 	if (!ipAddress) {
 		return ipAddress // Return as is if null or undefined
 	}

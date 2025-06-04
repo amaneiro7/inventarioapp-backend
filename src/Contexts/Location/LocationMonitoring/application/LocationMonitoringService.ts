@@ -4,6 +4,7 @@ import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { LocationMonitoringStatuses } from '../domain/valueObject/LocationMonitoringStatus'
 import { LocationId } from '../../Location/domain/LocationId'
 import { PingService } from '../../../Device/Device/application/PingService'
+import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 import { type Logger } from '../../../Shared/domain/Logger'
@@ -14,7 +15,7 @@ interface PingJobData {
 }
 
 export class LocationMonitoringService {
-	private readonly CONCURRENCY_LIMIT = 5
+	private readonly CONCURRENCY_LIMIT = 2
 	//private readonly SCAN_INTERVAL_MINUTES = 25 // Frecuencia de escaneo en minutos
 	private readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
 
@@ -64,9 +65,15 @@ export class LocationMonitoringService {
 			return
 		}
 		const now = new Date()
-		const formattedDate = now.toLocaleDateString()
-		const formattedHour = now.toLocaleTimeString()
-		const formattedISOString = `${formattedDate} ${formattedHour}`
+		const formattedISOString = new Intl.DateTimeFormat('es-VE', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		}).format(now)
 		const currentHour = now.getHours()
 		const currentDay = now.getDay() // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
 
@@ -100,11 +107,11 @@ export class LocationMonitoringService {
 			const limit = pLimit(this.CONCURRENCY_LIMIT)
 
 			// Create an array of promises, each wrapped by the p-limit function
-			const pingPromises = locationsToMonitor.map(location =>
-				limit(async () => {
+			const pingPromises = locationsToMonitor.map(location => {
+				return limit(async () => {
 					const subnet = location?.location?.subnet
 					const locationMonitoringId = location.id
-					const ipAddress = convertSubnetToHostIp(subnet)
+					const ipAddress = await convertSubnetToHostIp(subnet)
 
 					if (ipAddress) {
 						await this.processPingJob({ locationMonitoringId, ipAddress })
@@ -124,12 +131,12 @@ export class LocationMonitoringService {
 						}
 					}
 				})
-			)
+			})
 
 			await Promise.allSettled(pingPromises)
 			this.logger.info(`[INFO] All ping jobs for this scan have completed.`)
 		} catch (error) {
-			// console.error('[ERROR] Failed to enqueue location pings:', error)
+			this.logger.error(`'[ERROR] Failed to enqueue location pings:', ${error}`)
 		}
 	}
 
