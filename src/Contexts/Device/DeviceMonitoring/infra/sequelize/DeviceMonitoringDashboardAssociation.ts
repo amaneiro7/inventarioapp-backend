@@ -1,4 +1,4 @@
-import { Op, type FindOptions } from 'sequelize'
+import { Op, type WhereOptions, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { StatusList } from '../../../Status/domain/StatusList'
@@ -6,11 +6,16 @@ import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitor
 
 export class DeviceMonitoringDashboardAssociation {
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
-		options.where = {
+		let baseWhere: WhereOptions = {
 			status: {
 				[Op.ne]: DeviceMonitoringStatuses.NOTAVAILABLE
 			}
 		}
+		// If a 'status' filter is explicitly provided in criteria, override the default
+		if (options.where && 'status' in options.where) {
+			baseWhere.status = options.where.status
+		}
+		options.where = baseWhere
 		options.attributes = [
 			[sequelize.col('status'), 'statusName'],
 			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
