@@ -42,6 +42,10 @@ export class LocationModel
 			foreignKey: 'locationId'
 		}) // A Location has Many employees
 		this.hasMany(models.Device, { as: 'devices', foreignKey: 'locationId' }) // A Location has Many devices
+		this.hasOne(models.LocationMonitoring, {
+			as: 'locationMonitoring',
+			foreignKey: 'locationId'
+		}) // A location has one location Monitoring
 	}
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		LocationModel.init(

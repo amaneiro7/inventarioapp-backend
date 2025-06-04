@@ -8,13 +8,16 @@ import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRep
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
 import { type LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
+import { LocationMonitoringCreator } from '../../LocationMonitoring/application/LocationMonitoringCreator'
+import { LocationMonitoringRepository } from '../../LocationMonitoring/domain/repository/LocationMonitoringRepository'
 
 export class LocationCreator {
 	constructor(
 		private readonly locationRepository: LocationRepository,
 		private readonly typeOfSiteRepository: TypeOfSiteRepository,
 		private readonly siteRepository: SiteRepository,
-		private readonly locationStatusRepository: LocationStatusRepository
+		private readonly locationStatusRepository: LocationStatusRepository,
+		private readonly locationMonitoringRepository: LocationMonitoringRepository
 	) {}
 
 	async run(params: LocationParams): Promise<void> {
@@ -36,7 +39,10 @@ export class LocationCreator {
 			repository: this.locationStatusRepository,
 			operationalStatus: params.locationStatusId
 		})
-
-		await this.locationRepository.save(location.toPrimitive())
+		const LocationPrimitives = location.toPrimitive()
+		await this.locationRepository.save(LocationPrimitives)
+		await new LocationMonitoringCreator(this.locationMonitoringRepository).run({
+			locationId: LocationPrimitives.id
+		})
 	}
 }

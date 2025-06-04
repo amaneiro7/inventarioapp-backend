@@ -2,8 +2,8 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
-import { type StateDto } from '../../../State/domain/State.dto'
 import { type LocationName } from '../../../Location/domain/LocationName'
+import { type SiteDto } from '../../../Site/domain/Site.dto'
 
 export type LocationMonitoringType = {
 	id: Primitives<LocationMonitoring['id']>
@@ -23,9 +23,9 @@ export type LocationMonitoringDto = LocationMonitoringType & {
 }
 
 export type LocationMonitoringMapped = LocationMonitoringType & {
-	ipAddress?: Primitives<IPAddress>
+	subnet?: Primitives<IPAddress>
 	name?: Primitives<LocationName>
-	state: StateDto
+	site: SiteDto
 }
 export interface DashboardData {
 	onlineCount: number

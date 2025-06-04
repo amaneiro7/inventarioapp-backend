@@ -69,7 +69,7 @@ export class LocationMonitoringAssociation {
 			const value: string = subnet[symbol] as string
 
 			;(options.include[0] as any).where = {
-				subnet: sequelize.literal(`ip_address::text ILIKE '%${value}%'`)
+				subnet: sequelize.literal(`subnet::text ILIKE '%${value}%'`)
 			}
 
 			delete options.where.subnet

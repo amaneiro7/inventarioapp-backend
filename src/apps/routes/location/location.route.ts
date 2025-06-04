@@ -35,8 +35,6 @@ export const register = async (router: Router) => {
 	router.get('/locations/', authenticate, searchByCriteria.run.bind(searchByCriteria))
 	router.get('/locations/all', authenticate, getAllController.run.bind(getAllController))
 
-	router.get('/locations/:id', authenticate, getController.run.bind(getController))
-
 	// monitoring
 	router.get(
 		'/locations/ping-status',
@@ -54,6 +52,7 @@ export const register = async (router: Router) => {
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
 	)
 
+	router.get('/locations/:id', authenticate, getController.run.bind(getController))
 	//post
 	router.post('/locations/', authenticate, postController.run.bind(postController))
 

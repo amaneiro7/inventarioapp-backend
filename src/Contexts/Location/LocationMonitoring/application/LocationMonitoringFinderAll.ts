@@ -18,8 +18,8 @@ export class LocationMonitoringFinderAll extends GetAllBaseService<LocationMonit
 				status: location.status,
 				locationId: location.locationId,
 				name: location.location.name ?? '',
-				ipAddress: location.location?.subnet ?? '',
-				state: location.location?.site?.city?.state,
+				subnet: location.location?.subnet ?? '',
+				site: location.location?.site,
 				lastScan: location.lastScan,
 				lastSuccess: location.lastSuccess,
 				lastFailed: location.lastFailed

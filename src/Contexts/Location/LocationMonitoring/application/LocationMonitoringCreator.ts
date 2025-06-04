@@ -5,7 +5,7 @@ import { type LocationId } from '../../Location/domain/LocationId'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 
 export class LocationMonitoringCreator {
-	constructor(private readonly deviceMonitoringRepository: LocationMonitoringRepository) {}
+	constructor(private readonly locationMonitoringRepository: LocationMonitoringRepository) {}
 
 	async run({ locationId }: { locationId: Primitives<LocationId> }): Promise<void> {
 		const deviceMonitoring = LocationMonitoring.create({
@@ -16,6 +16,6 @@ export class LocationMonitoringCreator {
 			status: LocationMonitoringStatuses.NOTAVAILABLE
 		}).toPrimitive()
 
-		await this.deviceMonitoringRepository.save(deviceMonitoring)
+		await this.locationMonitoringRepository.save(deviceMonitoring)
 	}
 }
