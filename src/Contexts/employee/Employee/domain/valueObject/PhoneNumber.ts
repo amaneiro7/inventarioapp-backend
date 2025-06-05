@@ -1,10 +1,11 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { phoneNumberAreaCode } from './phoneNumberAreaCode'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
 
 export class PhoneNumber extends StringValueObject {
-	private readonly areaCodes = ['0414', '0424', '0412', '0416', '0426']
+	private readonly areaCodes = phoneNumberAreaCode.map(areaCode => areaCode.codigo)
 	private readonly numberLength = 7
 	private readonly totalLength = 11 // 4 dígitos de área + 7 dígitos del número
 	private readonly phoneRegex = new RegExp(`^(${this.areaCodes.join('|')})\\d{${this.numberLength}}$`)
