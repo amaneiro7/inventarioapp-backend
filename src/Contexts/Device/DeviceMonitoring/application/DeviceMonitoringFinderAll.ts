@@ -19,7 +19,8 @@ export class DeviceMonitoringFinderAll extends GetAllBaseService<DeviceMonitorin
 				deviceId: device.deviceId,
 				computerName: device.device?.computer?.computerName ?? '',
 				ipAddress: device.device?.computer?.ipAddress ?? '',
-				location: device.device?.location ?? '',
+				location: device.device?.location,
+				employee: device.device?.employee,
 				lastScan: device.lastScan,
 				lastSuccess: device.lastSuccess,
 				lastFailed: device.lastFailed

@@ -25,6 +25,7 @@ export type DeviceMonitoringMapped = DeviceMonitoringType & {
 	ipAddress?: Primitives<IPAddress>
 	computerName?: Primitives<ComputerName>
 	location: DeviceDto['location']
+	employee: DeviceDto['employee']
 }
 export interface DashboardData {
 	onlineCount: number

@@ -55,6 +55,17 @@ export class DeviceMonitoringAssociation {
 								]
 							}
 						]
+					},
+					{
+						association: 'employee',
+						attributes: ['userName', 'name', 'lastName', 'email'],
+						include: [
+							{ association: 'directiva', attributes: ['name'] },
+							{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
+							{ association: 'vicepresidencia', attributes: ['name'] },
+							{ association: 'departamento', attributes: ['name'] },
+							{ association: 'cargo', attributes: ['name'] }
+						]
 					}
 				]
 			}
