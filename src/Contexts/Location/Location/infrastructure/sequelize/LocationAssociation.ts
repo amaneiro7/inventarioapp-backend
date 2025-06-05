@@ -1,5 +1,6 @@
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type FindOptions } from 'sequelize'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class LocationAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
@@ -35,6 +36,15 @@ export class LocationAssociation {
 			'typeOfSite', // 1
 			'locationStatus' // 2
 		]
+		// Poder filtrar por direccion
+		if (options.where && 'subnet' in options.where) {
+			const subnet = options.where.subnet
+			const symbol = Object.getOwnPropertySymbols(subnet)[0]
+			const value: string = subnet[symbol] as string
+
+			options.where.subnet = sequelize.literal(`subnet::text ILIKE '%${value}%'`)
+		}
+
 		// Poder filtrar por ciudad
 		if (options.where && 'cityId' in options.where) {
 			;(options.include[0] as any).include[0].where = {
