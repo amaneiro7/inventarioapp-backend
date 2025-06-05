@@ -1,29 +1,26 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type AdministrativeRegionDto, type AdministrativeRegionPrimitives } from './LocationStatus.dto'
-import { AdministrativeRegionId } from './LocationStatusId'
-import { AdministrativeRegionName } from './LocationStatusName'
-export class AdministrativeRegion {
-	constructor(private readonly id: AdministrativeRegionId, private readonly name: AdministrativeRegionName) {}
+import { LocationStatusId } from '../../LocationStatus/domain/LocationStatusId'
+import { LocationStatusName } from '../../LocationStatus/domain/LocationStatusName'
+import { type LocationStatusDto, type LocationStatusPrimitives } from '../../LocationStatus/domain/LocationStatus.dto'
+export class LocationStatus {
+	constructor(private readonly id: LocationStatusId, private readonly name: LocationStatusName) {}
 
-	static fromPrimitives(primitives: AdministrativeRegionDto): AdministrativeRegion {
-		return new AdministrativeRegion(
-			new AdministrativeRegionId(primitives.id),
-			new AdministrativeRegionName(primitives.name)
-		)
+	static fromPrimitives(primitives: LocationStatusDto): LocationStatus {
+		return new LocationStatus(new LocationStatusId(primitives.id), new LocationStatusName(primitives.name))
 	}
 
-	toPrimitive(): AdministrativeRegionPrimitives {
+	toPrimitive(): LocationStatusPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue
 		}
 	}
 
-	get idValue(): Primitives<AdministrativeRegionId> {
+	get idValue(): Primitives<LocationStatusId> {
 		return this.id.value
 	}
 
-	get nameValue(): Primitives<AdministrativeRegionName> {
+	get nameValue(): Primitives<LocationStatusName> {
 		return this.name.value
 	}
 }
