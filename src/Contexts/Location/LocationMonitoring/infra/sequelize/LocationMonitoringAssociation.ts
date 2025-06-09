@@ -110,6 +110,15 @@ export class LocationMonitoringAssociation {
 
 			delete options.where?.stateId
 		}
+		// Poder filtrar por nombre estado
+		if (options.where && 'stateName' in options.where) {
+			;(options.include[0] as any).required = true
+			;(options.include[0] as any).include[1].include[0].include[0].where = {
+				name: options.where.stateName
+			}
+
+			delete options.where?.stateName
+		}
 
 		// Poder filtrar por region
 		if (options.where && 'regionId' in options.where) {
