@@ -32,7 +32,8 @@ const {
 	REFRESH_TOKEN_EXPIRES_IN: refreshTokenExpiresIn = '30d',
 	REFRESH_TOKEN_SECRET: refreshTokenSecret = 'refresh_token_scret',
 	SMTP_EMAIL: smtpEmail = 'jaasnavas0811@gmail.com',
-	SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx'
+	SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx',
+	MONITORING_ENABLED: rawMonitoringEnabled = 'false'
 } = process.env
 
 type Config = {
@@ -60,6 +61,7 @@ type Config = {
 	refreshTokenExpiresIn: string
 	smtpEmail: string
 	smtpPassword: string
+	isMonitoringActive: boolean
 }
 
 export const config: Config = {
@@ -86,5 +88,6 @@ export const config: Config = {
 	accessTokenExpiresIn,
 	refreshTokenExpiresIn,
 	smtpEmail,
-	smtpPassword
+	smtpPassword,
+	isMonitoringActive: rawMonitoringEnabled === 'true' || rawMonitoringEnabled === 'enabled'
 }

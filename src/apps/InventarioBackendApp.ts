@@ -31,8 +31,12 @@ export class InventarioBackendApp {
 
 		await this.server.listen()
 		await this.initializeDBStorage()
-		this.locationPingService.startMonitoringLoop()
-		this.devicePingService.startMonitoringLoop()
+		if (config.isMonitoringActive) {
+			this.locationPingService.startMonitoringLoop()
+			this.devicePingService.startMonitoringLoop()
+		} else {
+			this.logger.info('Monitoring is not active')
+		}
 	}
 
 	get httpServer(): Server['httpServer'] | undefined {
