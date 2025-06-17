@@ -6,9 +6,8 @@ import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitor
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardByStateData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardByStateRepository } from '../../domain/repository/DeviceMonitoringDashboardByStateRepository'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { StatusList } from '../../../Status/domain/StatusList'
-import { Op } from 'sequelize'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { DeviceMonitoringDashboardByStateAssociation } from './DeviceMonitoringDashboardByStateAssociation'
 
 export class SequelizeDeviceMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
@@ -18,83 +17,14 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async run(): Promise<DashboardByStateData> {
+	async run(criteria: Criteria): Promise<DashboardByStateData> {
+		const options = this.convert(criteria)
+		const opt = DeviceMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const devices = await DeviceMonitoringModel.findAll({
-					attributes: [
-						[sequelize.col('status'), 'statusName'],
-						[sequelize.col('device.location.site.city.state.name'), 'stateName'],
-						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
-					],
-					include: [
-						{
-							association: 'device', // 0
-							where: {
-								statusId: StatusList.INUSE
-							},
-							required: true,
-							include: [
-								{
-									association: 'computer', // 0 - 0
-									where: {
-										ipAddress: { [Op.ne]: null }
-									},
-									required: true,
-									attributes: []
-								},
-								{
-									association: 'location', // 0 - 1
-									required: true,
-									attributes: [],
-									include: [
-										{
-											association: 'typeOfSite', // 0 - 1 - 0
-											attributes: []
-										},
-										{
-											association: 'site', // 0 - 1 - 1
-											required: true,
-											attributes: [],
-											include: [
-												{
-													association: 'city', // 0 - 1 - 1 - 0
-													required: true,
-													attributes: [],
-													include: [
-														{
-															association: 'state', // 0 - 1 - 1 - 1
-															required: true,
-															attributes: [],
-															include: [
-																{
-																	association: 'region', // 0 - 1 - 1 - 1 - 0
-																	required: true,
-																	attributes: [],
-																	include: [
-																		{
-																			association: 'administrativeRegion', // 0 - 1 - 1 - 1 - 0 - 0
-																			required: true,
-																			attributes: []
-																		}
-																	]
-																}
-															]
-														}
-													]
-												}
-											]
-										}
-									]
-								}
-							]
-						}
-					],
-					group: ['status', 'device.id', 'device.location.site.city.state.name'],
-					raw: true
-				})
+				const devices = await DeviceMonitoringModel.findAll(opt)
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
