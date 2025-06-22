@@ -6,9 +6,8 @@ import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMon
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardByStateData } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardByStateRepository } from '../../domain/repository/LocationMonitoringDashboardByStateRepository'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { Op } from 'sequelize'
-import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { LocationMonitoringDashboardByStateAssociation } from './LocationMonitoringDashboardByStateAssociation'
 
 export class SequelizeLocationMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
@@ -18,69 +17,15 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
-	async run(): Promise<DashboardByStateData> {
+	async run(criteria: Criteria): Promise<DashboardByStateData> {
+		const options = this.convert(criteria)
+		const opt = LocationMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
+			criteria,
 			fetchFunction: async () => {
-				const devices = await LocationMonitoringModel.findAll({
-					attributes: [
-						[sequelize.col('status'), 'statusName'],
-						[sequelize.col('location.site.city.state.name'), 'stateName'],
-						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
-					],
-					include: [
-						{
-							association: 'location', // 0
-							where: {
-								locationStatusId: LocationStatusOptions.OPERATIONAL,
-								subnet: { [Op.ne]: null }
-							},
-							required: true,
-							include: [
-								{
-									association: 'typeOfSite', // 0 - 1 - 0
-									attributes: []
-								},
-								{
-									association: 'site', // 0 - 1 - 1
-									required: true,
-									attributes: [],
-									include: [
-										{
-											association: 'city', // 0 - 1 - 1 - 0
-											required: true,
-											attributes: [],
-											include: [
-												{
-													association: 'state', // 0 - 1 - 1 - 1
-													required: true,
-													attributes: [],
-													include: [
-														{
-															association: 'region', // 0 - 1 - 1 - 1 - 0
-															required: true,
-															attributes: [],
-															include: [
-																{
-																	association: 'administrativeRegion', // 0 - 1 - 1 - 1 - 0 - 0
-																	required: true,
-																	attributes: []
-																}
-															]
-														}
-													]
-												}
-											]
-										}
-									]
-								}
-							]
-						}
-					],
-					group: ['status', 'location.id', 'location.site.city.state.name'],
-					raw: true
-				})
+				const devices = await LocationMonitoringModel.findAll(opt)
 
 				let total = 0
 				const dashboardData: Record<string, any> = {

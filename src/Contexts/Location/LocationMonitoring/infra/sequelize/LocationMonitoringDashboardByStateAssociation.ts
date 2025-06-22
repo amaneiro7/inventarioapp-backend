@@ -1,67 +1,53 @@
 import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { StatusList } from '../../../Status/domain/StatusList'
-import { LocationMonitoringStatuses } from '../../../../Location/LocationMonitoring/domain/valueObject/LocationMonitoringStatus'
+import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
+import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
 
-export class DeviceMonitoringDashboardByStateAssociation {
+export class LocationMonitoringDashboardByStateAssociation {
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
 		options.attributes = [
 			[sequelize.col('status'), 'statusName'],
-			[sequelize.col('device.location.site.city.state.name'), 'stateName'],
+			[sequelize.col('location.site.city.state.name'), 'stateName'],
 			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 		]
 		options.include = [
 			{
-				association: 'device', // 0
+				association: 'location', // 0
 				where: {
-					statusId: StatusList.INUSE
+					locationStatusId: LocationStatusOptions.OPERATIONAL,
+					subnet: { [Op.ne]: null }
 				},
 				required: true,
 				include: [
 					{
-						association: 'computer', // 0 - 0
-						where: {
-							ipAddress: { [Op.ne]: null }
-						},
-						required: true,
+						association: 'typeOfSite', // 0 - 1 - 0
 						attributes: []
 					},
 					{
-						association: 'location', // 0 - 1
+						association: 'site', // 0 - 1 - 1
 						required: true,
 						attributes: [],
 						include: [
 							{
-								association: 'typeOfSite', // 0 - 1 - 0
-								attributes: []
-							},
-							{
-								association: 'site', // 0 - 1 - 1
+								association: 'city', // 0 - 1 - 1 - 0
 								required: true,
 								attributes: [],
 								include: [
 									{
-										association: 'city', // 0 - 1 - 1 - 0
+										association: 'state', // 0 - 1 - 1 - 1
 										required: true,
 										attributes: [],
 										include: [
 											{
-												association: 'state', // 0 - 1 - 1 - 1
+												association: 'region', // 0 - 1 - 1 - 1 - 0
 												required: true,
 												attributes: [],
 												include: [
 													{
-														association: 'region', // 0 - 1 - 1 - 1 - 0
+														association: 'administrativeRegion', // 0 - 1 - 1 - 1 - 0 - 0
 														required: true,
-														attributes: [],
-														include: [
-															{
-																association: 'administrativeRegion', // 0 - 1 - 1 - 1 - 0 - 0
-																required: true,
-																attributes: []
-															}
-														]
+														attributes: []
 													}
 												]
 											}
@@ -74,57 +60,47 @@ export class DeviceMonitoringDashboardByStateAssociation {
 				]
 			}
 		]
-		options.group = ['status', 'device.id', 'device.location.site.city.state.name']
+		options.group = ['status', 'location.id', 'location.site.city.state.name']
 		options.raw = true
 
-		if (!criteria.searchValueInArray('status')) {
-			options.where = {
-				...options.where,
-				status: {
-					[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
-				}
+		options.where = {
+			...options.where,
+			status: {
+				[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
 			}
 		}
 
-		if (options.where && 'computerName' in options.where) {
-			;(options.include[0] as any).include[0].where = {
-				computerName: (options.where as any)?.computerName
+		if (options.where && 'name' in options.where) {
+			;(options.include[0] as any).where = {
+				name: (options.where as any)?.name
 			}
-			delete options.where.computerName
+			delete options.where.name
 		}
 
 		// Poder filtrar por direccion
-		if (options.where && 'ipAddress' in options.where) {
-			const ipAddress = options.where.ipAddress
-			const symbol = Object.getOwnPropertySymbols(ipAddress)[0]
-			const value: string = ipAddress[symbol] as string
+		if (options.where && 'subnet' in options.where) {
+			const subnet = options.where.subnet
+			const symbol = Object.getOwnPropertySymbols(subnet)[0]
+			const value: string = subnet[symbol] as string
 
-			;(options.include[0] as any).include[0].where = {
-				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${value}%'`)
+			;(options.include[0] as any).where = {
+				subnet: sequelize.literal(`subnet::text ILIKE '%${value}%'`)
 			}
 
-			delete options.where.ipAddress
+			delete options.where.subnet
 		}
 
 		// Poder filtrar por ubicacion - Tipo de sitio
 		if (options.where && 'typeOfSiteId' in options.where) {
-			;(options.include[0] as any).include[1].where = {
+			;(options.include[0] as any).where = {
 				typeOfSiteId: (options.where as any)?.typeOfSiteId
 			}
 			delete options.where?.typeOfSiteId
 		}
 
-		// Poder filtrar por ubicacion - por sitio
-		if (options.where && 'locationId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).where = {
-				locationId: (options.where as any)?.locationId
-			}
-			delete options.where?.locationId
-		}
 		if (options.where && 'siteId' in options.where) {
 			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].where = {
+			;(options.include[0] as any).include[1].where = {
 				id: (options.where as any)?.siteId
 			}
 			delete options.where?.siteId
@@ -133,7 +109,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 		// Poder filtrar por ciudad
 		if (options.where && 'cityId' in options.where) {
 			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].where = {
+			;(options.include[0] as any).include[1].include[0].where = {
 				id: options.where.cityId
 			}
 
@@ -143,7 +119,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 		// Poder filtrar por estado
 		if (options.where && 'stateId' in options.where) {
 			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].where = {
+			;(options.include[0] as any).include[1].include[0].include[0].where = {
 				id: options.where.stateId
 			}
 
@@ -153,7 +129,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 		// Poder filtrar por region
 		if (options.where && 'regionId' in options.where) {
 			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].include[0].where = {
+			;(options.include[0] as any).include[1].include[0].include[0].include[0].where = {
 				id: (options.where as any)?.regionId
 			}
 
@@ -162,7 +138,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 		// Poder filtrar por region administrativa
 		if (options.where && 'administrativeRegionId' in options.where) {
 			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].include[0].include[0].where = {
+			;(options.include[0] as any).include[1].include[0].include[0].include[0].include[0].where = {
 				id: (options.where as any)?.administrativeRegionId
 			}
 
