@@ -11,6 +11,7 @@ import { type LocationPatchController } from '../../controllers/location/locatio
 import { type LocationPingStatusController } from '../../controllers/location/location-pingstatus.controller'
 import { type LocationMonitoringDashboardGetController } from '../../controllers/location/location-monitoring-dashboard.controller'
 import { type LocationMonitoringDashboardByStateGetController } from '../../controllers/location/location-monitoring-dashboard-by-state.controller'
+import { type LocationMonitoringDashboardByLocationGetController } from '../../controllers/location/location-monitoring-dashboard-by-location.controller'
 
 export const register = async (router: Router) => {
 	const getController: LocationGetController = container.resolve(LocationDependencies.GetController)
@@ -30,6 +31,8 @@ export const register = async (router: Router) => {
 	)
 	const locationMonitoringDashboardByStateGetController: LocationMonitoringDashboardByStateGetController =
 		container.resolve(LocationMonitoringDependencies.LocationMonitoringDashboardByStateGetController)
+	const locationMonitoringDashboardByLocationGetController: LocationMonitoringDashboardByLocationGetController =
+		container.resolve(LocationMonitoringDependencies.LocationMonitoringDashboardByLocationGetController)
 
 	// get
 	router.get('/locations/', authenticate, searchByCriteria.run.bind(searchByCriteria))
@@ -50,6 +53,11 @@ export const register = async (router: Router) => {
 		'/locations/dashboard/monitoringbystate',
 		authenticate,
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
+	)
+	router.get(
+		'/locations/dashboard/monitoringbylocation',
+		// authenticate,
+		locationMonitoringDashboardByLocationGetController.run.bind(locationMonitoringDashboardByLocationGetController)
 	)
 
 	router.get('/locations/:id', authenticate, getController.run.bind(getController))

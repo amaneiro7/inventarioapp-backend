@@ -36,3 +36,6 @@ export interface DashboardData {
 export interface DashboardByStateData extends DashboardData {
 	byState: Record<string, DashboardData>
 }
+export interface DashboardByLocationData extends DashboardData {
+	byLocation: Record<string, DashboardData>
+}
