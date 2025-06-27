@@ -27,6 +27,9 @@ import { ComputerDashboardGetController } from '../../controllers/device/device-
 import { GeneralDashboardGetController } from '../../controllers/dashboard/general-dashboard.controller'
 import { DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
 import { DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
+import { DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
+import { SequelizeDeviceMonitoringDashboardByLocationRepository } from '../../../Contexts/Device/DeviceMonitoring/infra/sequelize/SequelizeDeviceMonitoringDashboardByLocationRepository'
+import { DeviceMonitoringDashboardByLocation } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringDashboardByLocation'
 
 export enum ComputerDashboardDependencies {
 	//Repo
@@ -36,12 +39,14 @@ export enum ComputerDashboardDependencies {
 	ComputerDashboard = 'computerDashboard',
 	DeviceMonitoringDashboard = 'deviceMonitoringDashboard',
 	DeviceMonitoringDashboardByState = 'deviceMonitoringDashboardByState',
+	DeviceMonitoringDashboardByLocation = 'deviceMonitoringDashboardByLocation',
 
 	//controller
 	ComputerDashboardGetController = 'computerDashboardGetController',
 	GeneralDashboardGetController = 'generalDashboardGetController',
 	DeviceMonitoringDashboardGetController = 'deviceMonitoringDashboardGetController',
-	DeviceMonitoringDashboardByStateGetController = 'deviceMonitoringDashboardByStateGetController'
+	DeviceMonitoringDashboardByStateGetController = 'deviceMonitoringDashboardByStateGetController',
+	DeviceMonitoringDashboardByLocationGetController = 'deviceMonitoringDashboardByLocationGetController'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -67,15 +72,20 @@ export const register = (container: AwilixContainer) => {
 		deviceMonitoringDashboardByStateRepository: asClass(
 			SequelizeDeviceMonitoringDashboardByStateRepository
 		).singleton(),
+		deviceMonitoringDashboardByLocationRepository: asClass(
+			SequelizeDeviceMonitoringDashboardByLocationRepository
+		).singleton(),
 
 		computerDashboard: asClass(ComputerDashboard),
 		generalDashboard: asClass(GeneralDashboard),
 		deviceMonitoringDashboard: asClass(DeviceMonitoringDashboard),
 		deviceMonitoringDashboardByState: asClass(DeviceMonitoringDashboardByState),
+		deviceMonitoringDashboardByLocation: asClass(DeviceMonitoringDashboardByLocation),
 
 		computerDashboardGetController: asClass(ComputerDashboardGetController),
 		generalDashboardGetController: asClass(GeneralDashboardGetController),
 		deviceMonitoringDashboardGetController: asClass(DeviceMonitoringDashboardGetController),
-		deviceMonitoringDashboardByStateGetController: asClass(DeviceMonitoringDashboardByStateGetController)
+		deviceMonitoringDashboardByStateGetController: asClass(DeviceMonitoringDashboardByStateGetController),
+		deviceMonitoringDashboardByLocationGetController: asClass(DeviceMonitoringDashboardByLocationGetController)
 	})
 }

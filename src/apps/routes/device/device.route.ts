@@ -15,6 +15,7 @@ import { type ComputerDashboardGetController } from '../../controllers/device/de
 import { type DevicePingStatusController } from '../../controllers/device/device-pingstatus.controller'
 import { type DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
 import { type DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
+import { type DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -39,6 +40,8 @@ export const register = async (router: Router) => {
 	)
 	const deviceMonitoringDashboardByStateGetController: DeviceMonitoringDashboardByStateGetController =
 		container.resolve(ComputerDashboardDependencies.DeviceMonitoringDashboardByStateGetController)
+	const deviceMonitoringDashboardByLocationGetController: DeviceMonitoringDashboardByLocationGetController =
+		container.resolve(ComputerDashboardDependencies.DeviceMonitoringDashboardByLocationGetController)
 
 	// get
 	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
@@ -57,6 +60,11 @@ export const register = async (router: Router) => {
 		'/devices/dashboard/monitoringbystate',
 		authenticate,
 		deviceMonitoringDashboardByStateGetController.run.bind(deviceMonitoringDashboardByStateGetController)
+	)
+	router.get(
+		'/devices/dashboard/monitoringbylocation',
+		// authenticate,
+		deviceMonitoringDashboardByLocationGetController.run.bind(deviceMonitoringDashboardByLocationGetController)
 	)
 
 	router.get('/devices/:id', authenticate, getController.run.bind(getController))

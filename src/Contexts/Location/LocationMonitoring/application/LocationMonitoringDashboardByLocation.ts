@@ -9,8 +9,6 @@ export class LocationMonitoringDashboardByLocation {
 
 	async run(criteria: Criteria): Promise<DashboardByLocationData> {
 		const [summary] = await Promise.all([this.locationMonitoringDashboardByLocationRepository.run(criteria)])
-		return {
-			...summary
-		}
+		return summary
 	}
 }

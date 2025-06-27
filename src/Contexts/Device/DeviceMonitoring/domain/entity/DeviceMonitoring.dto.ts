@@ -36,3 +36,25 @@ export interface DashboardData {
 export interface DashboardByStateData extends DashboardData {
 	byState: Record<string, DashboardData>
 }
+
+export type DashboardByLocationData = AdmRegionData[]
+
+export interface LocationData {
+	name: string
+	total: number
+	onlineCount: number
+	offlineCount: number
+}
+
+export interface SiteData {
+	name: string
+	locations: LocationData[]
+	total: number
+	onlineCount: number
+	offlineCount: number
+}
+
+export interface AdmRegionData {
+	name: string
+	sites: SiteData[]
+}

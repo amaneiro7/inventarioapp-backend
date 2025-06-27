@@ -1,7 +1,7 @@
-import { LocationMonitoringModel } from './LocationMonitoringSchema'
+import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
-import { LocationMonitoringDashboardByLocationAssociation } from './LocationMonitoringDashboardByLocationAssociation'
+import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
+import { DeviceMonitoringDashboardByLocationAssociation } from './DeviceMonitoringDashboardByLocationAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 import { type CacheService } from '../../../../Shared/domain/CacheService'
@@ -9,25 +9,25 @@ import {
 	type LocationData,
 	type SiteData,
 	type DashboardByLocationData
-} from '../../domain/entity/LocationMonitoring.dto'
-import { type LocationMonitoringDashboardByLocationRepository } from '../../domain/repository/LocationMonitoringDashboardByLocationRepository'
+} from '../../domain/entity/DeviceMonitoring.dto'
+import { type DeviceMonitoringDashboardByLocationRepository } from '../../domain/repository/DeviceMonitoringDashboardByLocationRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 // Define the structure of the raw data returned from LocationMonitoringModel.findAll
 // This helps with type safety when destructuring 'device'
-interface RawLocationMonitoringData {
-	statusName: LocationMonitoringStatuses
+interface RawDeviceMonitoringData {
+	statusName: DeviceMonitoringStatuses
 	locationName: string
 	admRegionName: string
 	siteName: string
 	count: string | number // Assuming count could be a string from DB
 }
 
-export class SequelizeLocationMonitoringDashboardByLocationRepository
+export class SequelizeDeviceMonitoringDashboardByLocationRepository
 	extends SequelizeCriteriaConverter
-	implements LocationMonitoringDashboardByLocationRepository
+	implements DeviceMonitoringDashboardByLocationRepository
 {
-	private readonly cacheKey: string = 'locationMonitoringDashboardByLocation'
+	private readonly cacheKey: string = 'deviceMonitoringDashboardByLocation'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
@@ -41,7 +41,7 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 	 */
 	async run(criteria: Criteria): Promise<DashboardByLocationData> {
 		const baseOptions = this.convert(criteria)
-		const findOptions = LocationMonitoringDashboardByLocationAssociation.buildDashboardFindOptions(
+		const findOptions = DeviceMonitoringDashboardByLocationAssociation.buildDashboardFindOptions(
 			criteria,
 			baseOptions
 		)
@@ -51,13 +51,13 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 			criteria,
 			fetchFunction: async () => {
 				try {
-					const rawDevices = await LocationMonitoringModel.findAll(findOptions)
-					const transformedData = this.processRawData(rawDevices as unknown as RawLocationMonitoringData[])
+					const rawDevices = await DeviceMonitoringModel.findAll(findOptions)
+					const transformedData = this.processRawData(rawDevices as unknown as RawDeviceMonitoringData[])
 					return transformedData
 				} catch (error) {
-					console.error('Error fetching or processing location monitoring data:', error)
+					console.error('Error fetching or processing device monitoring data:', error)
 					// Re-throw or throw a more specific error for upstream handling
-					throw new Error('Failed to retrieve location monitoring dashboard data.')
+					throw new Error('Failed to retrieve device monitoring dashboard data.')
 				}
 				// const locationBySiteMap = new Map()
 				// devices.forEach((device: any) => {
@@ -85,9 +85,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 				// 	const site = locationBySite.site.get(siteName)
 				// 	site.total += countNumber
-				// 	if (statusName === LocationMonitoringStatuses.ONLINE) {
+				// 	if (statusName === DeviceMonitoringStatuses.ONLINE) {
 				// 		site.onlineCount += countNumber
-				// 	} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+				// 	} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
 				// 		site.oflineCount += countNumber
 				// 	}
 
@@ -102,9 +102,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 				// 	} else {
 				// 		const location = site.location.get(locationName)
 				// 		location.total += countNumber
-				// 		if (statusName === LocationMonitoringStatuses.ONLINE) {
+				// 		if (statusName === DeviceMonitoringStatuses.ONLINE) {
 				// 			location.onlineCount += countNumber
-				// 		} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+				// 		} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
 				// 			location.oflineCount += countNumber
 				// 		}
 				// 	}
@@ -126,7 +126,7 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 	 * @param rawData - Array of raw data objects from the database.
 	 * @returns Transformed DashboardByLocationData.
 	 */
-	private processRawData(rawData: RawLocationMonitoringData[]): DashboardByLocationData {
+	private processRawData(rawData: RawDeviceMonitoringData[]): DashboardByLocationData {
 		const admRegionMap = new Map() // Use specific types for maps
 
 		rawData.forEach(item => {
@@ -156,9 +156,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 			// Update Site counts
 			currentSite.total += countNumber
-			if (statusName === LocationMonitoringStatuses.ONLINE) {
+			if (statusName === DeviceMonitoringStatuses.ONLINE) {
 				currentSite.onlineCount += countNumber
-			} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+			} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
 				currentSite.offlineCount += countNumber
 			}
 			// Consider handling other statuses or logging unknown ones
@@ -176,9 +176,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 			// Update Location counts
 			currentLocation.total += countNumber
-			if (statusName === LocationMonitoringStatuses.ONLINE) {
+			if (statusName === DeviceMonitoringStatuses.ONLINE) {
 				currentLocation.onlineCount += countNumber
-			} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+			} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
 				currentLocation.offlineCount += countNumber
 			}
 			// Ensure consistency in spelling: `offlineCount`
