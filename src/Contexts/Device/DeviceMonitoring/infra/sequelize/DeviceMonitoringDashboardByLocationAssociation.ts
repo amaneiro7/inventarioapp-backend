@@ -11,6 +11,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 			[sequelize.col('device.location.site.city.state.region.administrativeRegion.name'), 'admRegionName'],
 			[sequelize.col('device.location.site.name'), 'siteName'],
 			[sequelize.col('device.location.name'), 'locationName'],
+			[sequelize.col('device.employee.vicepresidenciaEjecutiva.name'), 'vpeName'],
 			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 		]
 		options.include = [
@@ -72,6 +73,11 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 								]
 							}
 						]
+					},
+					{
+						association: 'employee',
+						attributes: [],
+						include: [{ association: 'vicepresidenciaEjecutiva', attributes: [] }]
 					}
 				]
 			}
@@ -80,6 +86,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 			'status',
 			'device.id',
 			'device.location.site.city.state.region.administrativeRegion.name',
+			'device.employee.vicepresidenciaEjecutiva.name',
 			'device.location.site.name',
 			'device.location.name'
 		]

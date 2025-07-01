@@ -116,6 +116,15 @@ export class DeviceMonitoringAssociation {
 			}
 			delete options.where?.locationId
 		}
+		// Poder filtrar por nombre estado
+		if (options.where && 'locationName' in options.where) {
+			;(options.include[0] as any).required = true
+			;(options.include[0] as any).include[1].where = {
+				name: options.where.locationName
+			}
+
+			delete options.where?.locationName
+		}
 		if (options.where && 'siteId' in options.where) {
 			;(options.include[0] as any).required = true
 			;(options.include[0] as any).include[1].include[1].where = {

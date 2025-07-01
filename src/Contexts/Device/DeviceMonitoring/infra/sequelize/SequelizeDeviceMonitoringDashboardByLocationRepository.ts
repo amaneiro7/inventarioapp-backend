@@ -20,6 +20,7 @@ interface RawDeviceMonitoringData {
 	locationName: string
 	admRegionName: string
 	siteName: string
+	vpeName: string
 	count: string | number // Assuming count could be a string from DB
 }
 
@@ -59,64 +60,6 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 					// Re-throw or throw a more specific error for upstream handling
 					throw new Error('Failed to retrieve device monitoring dashboard data.')
 				}
-				// const locationBySiteMap = new Map()
-				// devices.forEach((device: any) => {
-				// 	const { statusName, locationName, admRegionName, siteName, count } = device
-				// 	const countNumber = Number(count)
-
-				// 	if (!locationBySiteMap.has(admRegionName)) {
-				// 		locationBySiteMap.set(admRegionName, {
-				// 			name: admRegionName,
-				// 			site: new Map()
-				// 		})
-				// 	}
-
-				// 	const locationBySite = locationBySiteMap.get(admRegionName)
-
-				// 	if (!locationBySite.site.has(siteName)) {
-				// 		locationBySite.site.set(siteName, {
-				// 			name: siteName,
-				// 			location: new Map(),
-				// 			total: 0,
-				// 			onlineCount: 0,
-				// 			offlineCount: 0
-				// 		})
-				// 	}
-
-				// 	const site = locationBySite.site.get(siteName)
-				// 	site.total += countNumber
-				// 	if (statusName === DeviceMonitoringStatuses.ONLINE) {
-				// 		site.onlineCount += countNumber
-				// 	} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
-				// 		site.oflineCount += countNumber
-				// 	}
-
-				// 	if (!site.location.has(locationName)) {
-				// 		site.location.set(locationName, {
-				// 			name: locationName,
-				// 			location: new Map(),
-				// 			total: 0,
-				// 			onlineCount: 0,
-				// 			offlineCount: 0
-				// 		})
-				// 	} else {
-				// 		const location = site.location.get(locationName)
-				// 		location.total += countNumber
-				// 		if (statusName === DeviceMonitoringStatuses.ONLINE) {
-				// 			location.onlineCount += countNumber
-				// 		} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
-				// 			location.oflineCount += countNumber
-				// 		}
-				// 	}
-				// })
-				// const transformedData = Array.from(locationBySiteMap.values()).map((admRegion: any) => ({
-				// 	...admRegion,
-				// 	site: Array.from(admRegion.site.values()).map((site: any) => ({
-				// 		...site,
-				// 		location: Array.from(site.location.values())
-				// 	}))
-				// }))
-				// return transformedData
 			}
 		})
 	}
@@ -130,7 +73,7 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 		const admRegionMap = new Map() // Use specific types for maps
 
 		rawData.forEach(item => {
-			const { statusName, locationName, admRegionName, siteName, count } = item
+			const { statusName, locationName, admRegionName, siteName, vpeName, count } = item
 			const countNumber = Number(count) // Ensure count is a number
 
 			// Initialize Administrative Region
@@ -169,7 +112,8 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 					name: locationName,
 					total: 0,
 					onlineCount: 0,
-					offlineCount: 0
+					offlineCount: 0,
+					vpeName: new Set(vpeName)
 				})
 			}
 			const currentLocation = currentSite.locations.get(locationName)! // Assert non-null
