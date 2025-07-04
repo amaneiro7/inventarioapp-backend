@@ -2,7 +2,7 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { LocationMonitoringDashboardAssociation } from './LocationMonitoringDashboardAssociation'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardData } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardRepository } from '../../domain/repository/LocationMonitoringDashboardRepository'
@@ -28,8 +28,8 @@ export class SequelizeLocationMonitoringDashboardRepository
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
-					[LocationMonitoringStatuses.ONLINE]: 0,
-					[LocationMonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.ONLINE]: 0,
+					[MonitoringStatuses.OFFLINE]: 0
 				}
 
 				locations.forEach((device: any) => {

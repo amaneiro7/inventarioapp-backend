@@ -6,7 +6,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardRepository } from '../../domain/repository/DeviceMonitoringDashboardRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 export class SequelizeDeviceMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
@@ -28,8 +28,8 @@ export class SequelizeDeviceMonitoringDashboardRepository
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
-					[DeviceMonitoringStatuses.ONLINE]: 0,
-					[DeviceMonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.ONLINE]: 0,
+					[MonitoringStatuses.OFFLINE]: 0
 				}
 
 				devices.forEach((device: any) => {

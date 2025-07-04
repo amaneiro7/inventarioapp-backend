@@ -1,7 +1,7 @@
 // import { schedule } from 'node-cron'
 import pLimit from 'p-limit'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
-import { LocationMonitoringStatuses } from '../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/MonitoringStatus'
 import { LocationId } from '../../Location/domain/LocationId'
 import { PingService } from '../../../Device/Device/application/PingService'
 import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'
@@ -123,7 +123,7 @@ export class LocationMonitoringService {
 						)
 						if (locationMonitoring) {
 							const locationMonitoringEntity = LocationMonitoring.fromPrimitives(locationMonitoring)
-							locationMonitoringEntity.updateStatus(LocationMonitoringStatuses.NOTAVAILABLE)
+							locationMonitoringEntity.updateStatus(MonitoringStatuses.NOTAVAILABLE)
 							locationMonitoringEntity.updateLastSuccess(null)
 							locationMonitoringEntity.updateLastFailed(null)
 							locationMonitoringEntity.updateLastScan(null)
@@ -162,11 +162,11 @@ export class LocationMonitoringService {
 			locationMonitoringEntity = LocationMonitoring.fromPrimitives(locationMonitoring)
 			await this.pingService.pingIp({ ipAddress, enableLogging: false }) // Pass IPAddress value object
 			// PingService should throw an error if ping fails
-			locationMonitoringEntity.updateStatus(LocationMonitoringStatuses.ONLINE)
+			locationMonitoringEntity.updateStatus(MonitoringStatuses.ONLINE)
 			locationMonitoringEntity.updateLastSuccess(new Date())
 		} catch (error) {
 			if (locationMonitoringEntity) {
-				locationMonitoringEntity.updateStatus(LocationMonitoringStatuses.OFFLINE)
+				locationMonitoringEntity.updateStatus(MonitoringStatuses.OFFLINE)
 				locationMonitoringEntity.updateLastFailed(new Date())
 			}
 		} finally {

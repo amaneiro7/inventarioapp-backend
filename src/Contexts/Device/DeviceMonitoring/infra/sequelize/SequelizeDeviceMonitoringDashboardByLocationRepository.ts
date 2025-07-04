@@ -1,6 +1,6 @@
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 import { DeviceMonitoringDashboardByLocationAssociation } from './DeviceMonitoringDashboardByLocationAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
@@ -16,7 +16,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 // Define the structure of the raw data returned from LocationMonitoringModel.findAll
 // This helps with type safety when destructuring 'device'
 interface RawDeviceMonitoringData {
-	statusName: DeviceMonitoringStatuses
+	statusName: MonitoringStatuses
 	locationName: string
 	admRegionName: string
 	siteName: string
@@ -99,9 +99,9 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 
 			// Update Site counts
 			currentSite.total += countNumber
-			if (statusName === DeviceMonitoringStatuses.ONLINE) {
+			if (statusName === MonitoringStatuses.ONLINE) {
 				currentSite.onlineCount += countNumber
-			} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
+			} else if (statusName === MonitoringStatuses.OFFLINE) {
 				currentSite.offlineCount += countNumber
 			}
 			// Consider handling other statuses or logging unknown ones
@@ -120,9 +120,9 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 
 			// Update Location counts
 			currentLocation.total += countNumber
-			if (statusName === DeviceMonitoringStatuses.ONLINE) {
+			if (statusName === MonitoringStatuses.ONLINE) {
 				currentLocation.onlineCount += countNumber
-			} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
+			} else if (statusName === MonitoringStatuses.OFFLINE) {
 				currentLocation.offlineCount += countNumber
 			}
 			// Ensure consistency in spelling: `offlineCount`

@@ -1,20 +1,20 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 import { type LocationMonitoringDto } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
-import { type LocationMonitoringLastScan } from '../../domain/valueObject/LocationMonitoringLastScan'
-import { type LocationMonitoringLastSuccess } from '../../domain/valueObject/LocationMonitoringLastSuccess'
-import { type LocationMonitoringLastFailed } from '../../domain/valueObject/LocationMonitoringLastFailed'
+import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
+import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
+import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
 export class LocationMonitoringModel
 	extends Model<Omit<LocationMonitoringDto, 'location'>>
 	implements LocationMonitoringDto
 {
 	declare id: string
 	declare locationId: string
-	declare status: LocationMonitoringStatuses
-	declare lastScan: LocationMonitoringLastScan['value']
-	declare lastSuccess: LocationMonitoringLastSuccess['value']
-	declare lastFailed: LocationMonitoringLastFailed['value']
+	declare status: MonitoringStatuses
+	declare lastScan: MonitoringLastScan['value']
+	declare lastSuccess: MonitoringLastSuccess['value']
+	declare lastFailed: MonitoringLastFailed['value']
 	declare location: LocationDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
@@ -30,12 +30,12 @@ export class LocationMonitoringModel
 				},
 				status: {
 					type: DataTypes.ENUM(
-						LocationMonitoringStatuses.NOTAVAILABLE,
-						LocationMonitoringStatuses.ONLINE,
-						LocationMonitoringStatuses.OFFLINE
+						MonitoringStatuses.NOTAVAILABLE,
+						MonitoringStatuses.ONLINE,
+						MonitoringStatuses.OFFLINE
 					),
 					allowNull: false,
-					defaultValue: LocationMonitoringStatuses.NOTAVAILABLE
+					defaultValue: MonitoringStatuses.NOTAVAILABLE
 				},
 				locationId: {
 					type: DataTypes.UUID,

@@ -1,7 +1,7 @@
 // import { schedule } from 'node-cron'
 import pLimit from 'p-limit'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
-import { DeviceMonitoringStatuses } from '../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/MonitoringStatus'
 import { DeviceId } from '../../Device/domain/DeviceId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
@@ -86,39 +86,6 @@ export class DeviceMonitoringService {
 		this.timeoutId = setTimeout(() => this.runLoop(), this.IDLE_TIME_MS)
 	}
 
-	// This method will be scheduled by node-cron
-	// public startMonitoringSchedule(): void {
-	// 	schedule(
-	// 		this.CRON_SCHEDULE,
-	// 		async ctx => {
-	// 			this.logger.info(`[${ctx.triggeredAt.toISOString()}] Starting scheduled device ping scan...`)
-	// 			const currentHour = ctx.triggeredAt.getHours()
-	// 			const currentDay = ctx.triggeredAt.getDay() // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-	// 			if (
-	// 				currentDay >= this.START_DAY_OF_WEEK &&
-	// 				currentDay <= this.END_DAY_OF_WEEK &&
-	// 				currentHour >= this.START_HOUR &&
-	// 				currentHour < this.END_HOUR
-	// 			) {
-	// 				await this.executePingScan()
-	// 			} else {
-	// 				this.logger.info(`[${ctx.triggeredAt.toISOString()}] Skipping scan: Outside defined working hours.`)
-	// 			}
-	// 		},
-	// 		{
-	// 			noOverlap: true,
-	// 			name: 'device-monitoring-scan',
-	// 			timezone: this.TIMEZONE
-	// 		}
-	// 	)
-	// 	this.logger.info(
-	// 		`Device monitoring scheduled to run every ${this.SCAN_INTERVAL_MINUTES} minutes, ` +
-	// 			`Mon-Fri from ${this.START_HOUR} AM to ${
-	// 				this.END_HOUR > 12 ? this.END_HOUR - 12 + ' PM' : this.END_HOUR + ' AM'
-	// 			} (${this.TIMEZONE}).`
-	// 	)
-	// }
-
 	async executePingScan() {
 		try {
 			const devicesToMonitor = await this.deviceMonitoringRepository.searchNotnullIpAddress()
@@ -146,7 +113,7 @@ export class DeviceMonitoringService {
 						const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId)
 						if (deviceMonitoring) {
 							const deviceMonitoringEntity = DeviceMonitoring.fromPrimitives(deviceMonitoring)
-							deviceMonitoringEntity.updateStatus(DeviceMonitoringStatuses.NOTAVAILABLE)
+							deviceMonitoringEntity.updateStatus(MonitoringStatuses.NOTAVAILABLE)
 							deviceMonitoringEntity.updateLastSuccess(null)
 							deviceMonitoringEntity.updateLastFailed(null)
 							deviceMonitoringEntity.updateLastScan(null)
@@ -183,11 +150,11 @@ export class DeviceMonitoringService {
 			deviceMonitoringEntity = DeviceMonitoring.fromPrimitives(deviceMonitoring)
 			await this.pingService.pingIp({ ipAddress, enableLogging: false }) // Pass IPAddress value object
 			// PingService should throw an error if ping fails
-			deviceMonitoringEntity.updateStatus(DeviceMonitoringStatuses.ONLINE)
+			deviceMonitoringEntity.updateStatus(MonitoringStatuses.ONLINE)
 			deviceMonitoringEntity.updateLastSuccess(new Date())
 		} catch (error) {
 			if (deviceMonitoringEntity) {
-				deviceMonitoringEntity.updateStatus(DeviceMonitoringStatuses.OFFLINE)
+				deviceMonitoringEntity.updateStatus(MonitoringStatuses.OFFLINE)
 				deviceMonitoringEntity.updateLastFailed(new Date())
 			}
 		} finally {

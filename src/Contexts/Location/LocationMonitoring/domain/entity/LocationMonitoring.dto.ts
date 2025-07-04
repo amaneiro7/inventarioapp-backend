@@ -1,3 +1,4 @@
+import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/Monitoring.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
@@ -5,13 +6,8 @@ import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type LocationName } from '../../../Location/domain/LocationName'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
 
-export type LocationMonitoringType = {
-	id: Primitives<LocationMonitoring['id']>
+export type LocationMonitoringType = MonitoringPrimitives & {
 	locationId: Primitives<LocationMonitoring['locationId']>
-	status: Primitives<LocationMonitoring['status']>
-	lastScan: Primitives<LocationMonitoring['lastScan']>
-	lastSuccess: Primitives<LocationMonitoring['lastSuccess']>
-	lastFailed: Primitives<LocationMonitoring['lastFailed']>
 }
 
 export type LocationMonitoringPrimitives = LocationMonitoringType

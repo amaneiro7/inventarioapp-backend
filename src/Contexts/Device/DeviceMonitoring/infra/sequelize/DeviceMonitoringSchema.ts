@@ -1,17 +1,18 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 import { type DeviceMonitoringDto } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceDto } from '../../../Device/domain/Device.dto'
-import { type DeviceMonitoringLastScan } from '../../domain/valueObject/DeviceMonitoringLastScan'
-import { type DeviceMonitoringLastSuccess } from '../../domain/valueObject/DeviceMonitoringLastSuccess'
-import { type DeviceMonitoringLastFailed } from '../../domain/valueObject/DeviceMonitoringLastFailed'
+import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
+import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
+import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
+
 export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'device'>> implements DeviceMonitoringDto {
 	declare id: string
 	declare deviceId: string
-	declare status: DeviceMonitoringStatuses
-	declare lastScan: DeviceMonitoringLastScan['value']
-	declare lastSuccess: DeviceMonitoringLastSuccess['value']
-	declare lastFailed: DeviceMonitoringLastFailed['value']
+	declare status: MonitoringStatuses
+	declare lastScan: MonitoringLastScan['value']
+	declare lastSuccess: MonitoringLastSuccess['value']
+	declare lastFailed: MonitoringLastFailed['value']
 	declare device: DeviceDto
 
 	static async associate(models: Sequelize['models']): Promise<void> {
@@ -27,12 +28,12 @@ export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'devi
 				},
 				status: {
 					type: DataTypes.ENUM(
-						DeviceMonitoringStatuses.NOTAVAILABLE,
-						DeviceMonitoringStatuses.ONLINE,
-						DeviceMonitoringStatuses.OFFLINE
+						MonitoringStatuses.NOTAVAILABLE,
+						MonitoringStatuses.ONLINE,
+						MonitoringStatuses.OFFLINE
 					),
 					allowNull: false,
-					defaultValue: DeviceMonitoringStatuses.NOTAVAILABLE
+					defaultValue: MonitoringStatuses.NOTAVAILABLE
 				},
 				deviceId: {
 					type: DataTypes.UUID,

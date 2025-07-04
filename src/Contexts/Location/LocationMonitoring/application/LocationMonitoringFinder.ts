@@ -1,5 +1,5 @@
 import { LocationMonitoringDoesNotExistError } from '../domain/error/LocationMonitoringDoesNotExistError'
-import { LocationMonitoringId } from '../domain/valueObject/LocationMonitoringId'
+import { MonitoringId } from '../../../Shared/domain/Monitoring/MonitoringId'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 import { type LocationMonitoringDto } from '../domain/entity/LocationMonitoring.dto'
 
@@ -8,7 +8,7 @@ export class LocationMonitoringFinder {
 
 	async run(params: { id: string }): Promise<LocationMonitoringDto> {
 		const { id } = params
-		const locationMonitoringId = new LocationMonitoringId(id)
+		const locationMonitoringId = new MonitoringId(id)
 		const locationMonitoring = await this.locationMonitoringRepository.searchById(locationMonitoringId.value)
 
 		if (!locationMonitoring) {

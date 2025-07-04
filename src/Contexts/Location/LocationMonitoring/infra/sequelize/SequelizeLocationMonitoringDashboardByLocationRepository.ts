@@ -1,6 +1,6 @@
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 import { LocationMonitoringDashboardByLocationAssociation } from './LocationMonitoringDashboardByLocationAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
@@ -16,7 +16,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 // Define the structure of the raw data returned from LocationMonitoringModel.findAll
 // This helps with type safety when destructuring 'device'
 interface RawLocationMonitoringData {
-	statusName: LocationMonitoringStatuses
+	statusName: MonitoringStatuses
 	locationName: string
 	admRegionName: string
 	siteName: string
@@ -59,64 +59,6 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 					// Re-throw or throw a more specific error for upstream handling
 					throw new Error('Failed to retrieve location monitoring dashboard data.')
 				}
-				// const locationBySiteMap = new Map()
-				// devices.forEach((device: any) => {
-				// 	const { statusName, locationName, admRegionName, siteName, count } = device
-				// 	const countNumber = Number(count)
-
-				// 	if (!locationBySiteMap.has(admRegionName)) {
-				// 		locationBySiteMap.set(admRegionName, {
-				// 			name: admRegionName,
-				// 			site: new Map()
-				// 		})
-				// 	}
-
-				// 	const locationBySite = locationBySiteMap.get(admRegionName)
-
-				// 	if (!locationBySite.site.has(siteName)) {
-				// 		locationBySite.site.set(siteName, {
-				// 			name: siteName,
-				// 			location: new Map(),
-				// 			total: 0,
-				// 			onlineCount: 0,
-				// 			offlineCount: 0
-				// 		})
-				// 	}
-
-				// 	const site = locationBySite.site.get(siteName)
-				// 	site.total += countNumber
-				// 	if (statusName === LocationMonitoringStatuses.ONLINE) {
-				// 		site.onlineCount += countNumber
-				// 	} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
-				// 		site.oflineCount += countNumber
-				// 	}
-
-				// 	if (!site.location.has(locationName)) {
-				// 		site.location.set(locationName, {
-				// 			name: locationName,
-				// 			location: new Map(),
-				// 			total: 0,
-				// 			onlineCount: 0,
-				// 			offlineCount: 0
-				// 		})
-				// 	} else {
-				// 		const location = site.location.get(locationName)
-				// 		location.total += countNumber
-				// 		if (statusName === LocationMonitoringStatuses.ONLINE) {
-				// 			location.onlineCount += countNumber
-				// 		} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
-				// 			location.oflineCount += countNumber
-				// 		}
-				// 	}
-				// })
-				// const transformedData = Array.from(locationBySiteMap.values()).map((admRegion: any) => ({
-				// 	...admRegion,
-				// 	site: Array.from(admRegion.site.values()).map((site: any) => ({
-				// 		...site,
-				// 		location: Array.from(site.location.values())
-				// 	}))
-				// }))
-				// return transformedData
 			}
 		})
 	}
@@ -156,9 +98,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 			// Update Site counts
 			currentSite.total += countNumber
-			if (statusName === LocationMonitoringStatuses.ONLINE) {
+			if (statusName === MonitoringStatuses.ONLINE) {
 				currentSite.onlineCount += countNumber
-			} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+			} else if (statusName === MonitoringStatuses.OFFLINE) {
 				currentSite.offlineCount += countNumber
 			}
 			// Consider handling other statuses or logging unknown ones
@@ -176,9 +118,9 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 			// Update Location counts
 			currentLocation.total += countNumber
-			if (statusName === LocationMonitoringStatuses.ONLINE) {
+			if (statusName === MonitoringStatuses.ONLINE) {
 				currentLocation.onlineCount += countNumber
-			} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+			} else if (statusName === MonitoringStatuses.OFFLINE) {
 				currentLocation.offlineCount += countNumber
 			}
 			// Ensure consistency in spelling: `offlineCount`

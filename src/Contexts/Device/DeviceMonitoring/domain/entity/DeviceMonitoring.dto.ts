@@ -3,14 +3,10 @@ import { type DeviceMonitoring } from './DeviceMonitoring'
 import { type DeviceDto } from '../../../Device/domain/Device.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
+import { MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/Monitoring.dto'
 
-export type DeviceMonitoringType = {
-	id: Primitives<DeviceMonitoring['id']>
+export type DeviceMonitoringType = MonitoringPrimitives & {
 	deviceId: Primitives<DeviceMonitoring['deviceId']>
-	status: Primitives<DeviceMonitoring['status']>
-	lastScan: Primitives<DeviceMonitoring['lastScan']>
-	lastSuccess: Primitives<DeviceMonitoring['lastSuccess']>
-	lastFailed: Primitives<DeviceMonitoring['lastFailed']>
 }
 
 export type DeviceMonitoringPrimitives = DeviceMonitoringType

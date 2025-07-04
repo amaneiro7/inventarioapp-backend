@@ -1,4 +1,4 @@
-import { DeviceMonitoringStatuses } from '../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/MonitoringStatus'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../Device/domain/DeviceId'
@@ -13,7 +13,7 @@ export class DeviceMonitoringCreator {
 			lastFailed: null,
 			lastScan: null,
 			lastSuccess: null,
-			status: DeviceMonitoringStatuses.NOTAVAILABLE
+			status: MonitoringStatuses.NOTAVAILABLE
 		}).toPrimitive()
 
 		await this.deviceMonitoringRepository.save(deviceMonitoring)

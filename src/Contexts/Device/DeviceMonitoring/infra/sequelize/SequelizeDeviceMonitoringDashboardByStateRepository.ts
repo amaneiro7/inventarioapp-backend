@@ -1,7 +1,7 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { DeviceMonitoringStatuses } from '../../domain/valueObject/DeviceMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardByStateData } from '../../domain/entity/DeviceMonitoring.dto'
@@ -28,8 +28,8 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
-					[DeviceMonitoringStatuses.ONLINE]: 0,
-					[DeviceMonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.ONLINE]: 0,
+					[MonitoringStatuses.OFFLINE]: 0
 				}
 
 				const dashboardByStateData: Array<{
@@ -68,9 +68,9 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 
 					// Sum by state
 					tempStateMap[stateName].total += countNumber
-					if (statusName === DeviceMonitoringStatuses.ONLINE) {
+					if (statusName === MonitoringStatuses.ONLINE) {
 						tempStateMap[stateName].onlineCount += countNumber
-					} else if (statusName === DeviceMonitoringStatuses.OFFLINE) {
+					} else if (statusName === MonitoringStatuses.OFFLINE) {
 						tempStateMap[stateName].offlineCount += countNumber
 					}
 				})

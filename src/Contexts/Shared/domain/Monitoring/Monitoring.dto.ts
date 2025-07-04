@@ -1,11 +1,12 @@
-import { type MonitoringLastFailed } from '../value-object/MonitoringLastFailed'
-import { type MonitoringLastScan } from '../value-object/MonitoringLastScan'
-import { type MonitoringLastSuccess } from '../value-object/MonitoringLastSuccess'
-import { type MonitoringStatus } from '../value-object/MonitoringStatus'
+import { type MonitoringId } from './MonitoringId'
+import { type MonitoringLastFailed } from './MonitoringLastFailed'
+import { type MonitoringLastScan } from './MonitoringLastScan'
+import { type MonitoringLastSuccess } from './MonitoringLastSuccess'
+import { type MonitoringStatus } from './MonitoringStatus'
 import { type Primitives } from '../value-object/Primitives'
 
 export interface MonitoringPrimitives {
-	id: Primitives<any>
+	id: Primitives<MonitoringId>
 	status: Primitives<MonitoringStatus>
 	lastScan: Primitives<MonitoringLastScan>
 	lastSuccess: Primitives<MonitoringLastSuccess>

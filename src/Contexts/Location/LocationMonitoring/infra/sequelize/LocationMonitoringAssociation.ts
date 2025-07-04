@@ -2,7 +2,7 @@ import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 export class LocationMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
@@ -57,7 +57,7 @@ export class LocationMonitoringAssociation {
 			options.where = {
 				...options.where,
 				status: {
-					[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
+					[Op.ne]: MonitoringStatuses.NOTAVAILABLE
 				}
 			}
 		}

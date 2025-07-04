@@ -2,7 +2,7 @@ import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { StatusList } from '../../../Status/domain/StatusList'
-import { LocationMonitoringStatuses } from '../../../../Location/LocationMonitoring/domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 export class DeviceMonitoringDashboardByStateAssociation {
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
@@ -81,7 +81,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 			options.where = {
 				...options.where,
 				status: {
-					[Op.ne]: LocationMonitoringStatuses.NOTAVAILABLE
+					[Op.ne]: MonitoringStatuses.NOTAVAILABLE
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-import { LocationMonitoringStatuses } from '../domain/valueObject/LocationMonitoringStatus'
+import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/MonitoringStatus'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from '../../Location/domain/LocationId'
@@ -13,7 +13,7 @@ export class LocationMonitoringCreator {
 			lastFailed: null,
 			lastScan: null,
 			lastSuccess: null,
-			status: LocationMonitoringStatuses.NOTAVAILABLE
+			status: MonitoringStatuses.NOTAVAILABLE
 		}).toPrimitive()
 
 		await this.locationMonitoringRepository.save(deviceMonitoring)

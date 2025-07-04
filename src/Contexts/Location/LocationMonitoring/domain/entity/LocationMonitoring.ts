@@ -1,45 +1,48 @@
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { Monitoring } from '../../../../Shared/domain/Monitoring/Monitoring'
+import { MonitoringId } from '../../../../Shared/domain/Monitoring/MonitoringId'
 import { LocationId } from '../../../Location/domain/LocationId'
-import { LocationMonitoringId } from '../valueObject/LocationMonitoringId'
-import { LocationMonitoringLastFailed } from '../valueObject/LocationMonitoringLastFailed'
-import { LocationMonitoringLastScan } from '../valueObject/LocationMonitoringLastScan'
-import { LocationMonitoringLastSuccess } from '../valueObject/LocationMonitoringLastSuccess'
-import { LocationMonitoringStatus } from '../valueObject/LocationMonitoringStatus'
+import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
+import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
+import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
 import {
 	type LocationMonitoringDto,
 	type LocationMonitoringParams,
 	type LocationMonitoringPrimitives
 } from './LocationMonitoring.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
-export class LocationMonitoring {
+export class LocationMonitoring extends Monitoring {
 	constructor(
-		private readonly id: LocationMonitoringId,
+		id: MonitoringId,
 		private readonly locationId: LocationId,
-		private status: LocationMonitoringStatus,
-		private lastScan: LocationMonitoringLastScan,
-		private lastSuccess: LocationMonitoringLastSuccess,
-		private lastFailed: LocationMonitoringLastFailed
-	) {}
+		status: MonitoringStatus,
+		lastScan: MonitoringLastScan,
+		lastSuccess: MonitoringLastSuccess,
+		lastFailed: MonitoringLastFailed
+	) {
+		super(id, status, lastScan, lastSuccess, lastFailed)
+	}
 
 	static create(params: LocationMonitoringParams): LocationMonitoring {
-		const id = LocationMonitoringId.random().value
+		const id = MonitoringId.random().value
 		return new LocationMonitoring(
-			new LocationMonitoringId(id),
+			new MonitoringId(id),
 			new LocationId(params.locationId),
-			new LocationMonitoringStatus(params.status),
-			new LocationMonitoringLastScan(params.lastScan),
-			new LocationMonitoringLastSuccess(params.lastSuccess),
-			new LocationMonitoringLastFailed(params.lastFailed)
+			new MonitoringStatus(params.status),
+			new MonitoringLastScan(params.lastScan),
+			new MonitoringLastSuccess(params.lastSuccess),
+			new MonitoringLastFailed(params.lastFailed)
 		)
 	}
 	static fromPrimitives(primitives: LocationMonitoringDto): LocationMonitoring {
 		return new LocationMonitoring(
-			new LocationMonitoringId(primitives.id),
+			new MonitoringId(primitives.id),
 			new LocationId(primitives.locationId),
-			new LocationMonitoringStatus(primitives.status),
-			new LocationMonitoringLastScan(primitives.lastScan),
-			new LocationMonitoringLastSuccess(primitives.lastSuccess),
-			new LocationMonitoringLastFailed(primitives.lastFailed)
+			new MonitoringStatus(primitives.status),
+			new MonitoringLastScan(primitives.lastScan),
+			new MonitoringLastSuccess(primitives.lastSuccess),
+			new MonitoringLastFailed(primitives.lastFailed)
 		)
 	}
 
@@ -54,35 +57,7 @@ export class LocationMonitoring {
 		}
 	}
 
-	get idValue(): Primitives<LocationMonitoringId> {
-		return this.id.value
-	}
 	get locationValue(): Primitives<LocationId> {
 		return this.locationId.value
-	}
-	get statusValue(): Primitives<LocationMonitoringStatus> {
-		return this.status.value
-	}
-	get lastScanValue(): Primitives<LocationMonitoringLastScan> {
-		return this.lastScan.value
-	}
-	get lastSuccessValue(): Primitives<LocationMonitoringLastSuccess> {
-		return this.lastSuccess.value
-	}
-	get lastFailedValue(): Primitives<LocationMonitoringLastFailed> {
-		return this.lastFailed.value
-	}
-
-	updateStatus(newStatus: Primitives<LocationMonitoringStatus>): void {
-		this.status = new LocationMonitoringStatus(newStatus)
-	}
-	updateLastSuccess(newLastSuccess: Primitives<LocationMonitoringLastSuccess>): void {
-		this.lastSuccess = new LocationMonitoringLastSuccess(newLastSuccess)
-	}
-	updateLastScan(newLastScan: Primitives<LocationMonitoringLastScan>): void {
-		this.lastScan = new LocationMonitoringLastScan(newLastScan)
-	}
-	updateLastFailed(newLastFailed: Primitives<LocationMonitoringLastFailed>): void {
-		this.lastFailed = new LocationMonitoringLastFailed(newLastFailed)
 	}
 }

@@ -1,5 +1,5 @@
+import { MonitoringId } from '../../../Shared/domain/Monitoring/MonitoringId'
 import { DeviceMonitoringDoesNotExistError } from '../domain/error/DeviceMonitoringDoesNotExistError'
-import { DeviceMonitoringId } from '../domain/valueObject/DeviceMonitoringId'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 import { type DeviceMonitoringDto } from '../domain/entity/DeviceMonitoring.dto'
 
@@ -8,7 +8,7 @@ export class DeviceMonitoringFinder {
 
 	async run(params: { id: string }): Promise<DeviceMonitoringDto> {
 		const { id } = params
-		const deviceMonitoringId = new DeviceMonitoringId(id)
+		const deviceMonitoringId = new MonitoringId(id)
 		const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId.value)
 
 		if (!deviceMonitoring) {

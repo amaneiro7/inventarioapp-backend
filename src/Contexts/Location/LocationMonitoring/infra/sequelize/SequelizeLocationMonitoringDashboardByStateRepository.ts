@@ -1,13 +1,12 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { LocationMonitoringStatuses } from '../../domain/valueObject/LocationMonitoringStatus'
-
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { LocationMonitoringDashboardByStateAssociation } from './LocationMonitoringDashboardByStateAssociation'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardByStateData } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardByStateRepository } from '../../domain/repository/LocationMonitoringDashboardByStateRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { LocationMonitoringDashboardByStateAssociation } from './LocationMonitoringDashboardByStateAssociation'
 
 export class SequelizeLocationMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
@@ -29,8 +28,8 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 
 				let total = 0
 				const dashboardData: Record<string, any> = {
-					[LocationMonitoringStatuses.ONLINE]: 0,
-					[LocationMonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.ONLINE]: 0,
+					[MonitoringStatuses.OFFLINE]: 0
 				}
 
 				const dashboardByStateData: Array<{
@@ -69,9 +68,9 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 
 					// Sum by state
 					tempStateMap[stateName].total += countNumber
-					if (statusName === LocationMonitoringStatuses.ONLINE) {
+					if (statusName === MonitoringStatuses.ONLINE) {
 						tempStateMap[stateName].onlineCount += countNumber
-					} else if (statusName === LocationMonitoringStatuses.OFFLINE) {
+					} else if (statusName === MonitoringStatuses.OFFLINE) {
 						tempStateMap[stateName].offlineCount += countNumber
 					}
 				})
