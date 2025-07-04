@@ -10,31 +10,24 @@ interface IModelinstance {
 const path = 'src/**/*Schema.*'
 const routes = globSync(path)
 export async function initilizarModels(sequelize: Sequelize): Promise<void> {
-	// Primero se inicializan los modelos
+	const modules: IModelinstance[] = []
 	for (const route of routes) {
-		await initModels(route, sequelize)
+		const routePath = require(resolve(route))
+		const [_, instance] = Object.entries(routePath)[0]
+		modules.push(instance as IModelinstance)
 	}
-	// Luego se definen sus relaciones
-	for (const route of routes) {
-		await defineAssociations(route, sequelize.models)
-	}
-}
 
-async function initModels(path: string, sequelize: Sequelize): Promise<void> {
-	const routePath: IModelinstance = require(resolve(path))
-	const [_, instance] = Object.entries(routePath)[0]
-	// Verifica si la instancia tiene el metodo initialize y si es una funcion
-	if (typeof instance.initialize === 'function') {
-		await instance.initialize(sequelize)
+	// 1. Inicializar todos los modelos
+	for (const module of modules) {
+		if (typeof module.initialize === 'function') {
+			await module.initialize(sequelize)
+		}
 	}
-}
 
-// Define associations between different Sequelize models
-export async function defineAssociations(path: string, models: Sequelize['models']): Promise<void> {
-	const routePath: IModelinstance = require(resolve(path))
-	const [_, instance] = Object.entries(routePath)[0]
-	// Verifica si la instancia tiene el metodo initialize y si es una funcion
-	if (typeof instance.associate === 'function') {
-		await instance.associate(models)
+	// 2. Definir todas las asociaciones
+	for (const module of modules) {
+		if (typeof module.associate === 'function') {
+			await module.associate(sequelize.models)
+		}
 	}
 }
