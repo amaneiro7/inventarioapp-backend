@@ -12,7 +12,7 @@ import { morganLog } from './Middleware/morgan'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
 import swaggerUi from 'swagger-ui-express'
-import { swaggerDocs } from './Middleware/swagger'
+import { swaggerSpec } from '../Contexts/Shared/infrastructure/documentation/swagger'
 import fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
 import path from 'node:path' // Importa el módulo path para construir rutas
 
@@ -72,7 +72,7 @@ export class Server {
 			res.send('Servidor de Inventario funcionando correctamente')
 		})
 
-		this.express.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 		// Configuración de rutas
 		registerRoutes(this.express, this.logger)

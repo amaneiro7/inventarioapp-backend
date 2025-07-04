@@ -9,6 +9,19 @@ export const register = async (router: Router) => {
 		ComputerDashboardDependencies.GeneralDashboardGetController
 	)
 
-	// get
+	/**
+	 * @swagger
+	 * /dashboard:
+	 *   get:
+	 *     tags:
+	 *       - Dashboard
+	 *     summary: Obtener datos generales del dashboard
+	 *     description: Devuelve un resumen de datos para el dashboard principal, como contadores de dispositivos, etc.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard obtenidos con éxito.
+	 */
 	router.get('/dashboard/', authenticate, generalDashboard.run.bind(generalDashboard))
 }

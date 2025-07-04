@@ -8,5 +8,19 @@ import { InputTypeDependencies } from '../../di/input-type/input-type.di'
 export const register = async (router: Router) => {
 	const getAllController: InputTypeGetAllController = container.resolve(InputTypeDependencies.GetAllController)
 
+	/**
+	 * @swagger
+	 * /inputtypes:
+	 *   get:
+	 *     tags:
+	 *       - Tipos de Entrada
+	 *     summary: Obtener todos los tipos de entrada
+	 *     description: Devuelve una lista de todos los tipos de entrada disponibles (ej. USB, PS/2).
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de tipos de entrada obtenida con éxito.
+	 */
 	router.get('/inputtypes/', authenticate, getAllController.run.bind(getAllController))
 }

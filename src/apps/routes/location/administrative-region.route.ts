@@ -9,5 +9,19 @@ export const register = async (router: Router) => {
 		AdministrativeRegionDependencies.GetAllController
 	)
 
+	/**
+	 * @swagger
+	 * /administrativeregions:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones - Regiones Administrativas
+	 *     summary: Obtener todas las regiones administrativas
+	 *     description: Devuelve una lista de todas las regiones administrativas.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de regiones administrativas obtenida con éxito.
+	 */
 	router.get('/administrativeregions/', authenticate, getAllController.run.bind(getAllController))
 }

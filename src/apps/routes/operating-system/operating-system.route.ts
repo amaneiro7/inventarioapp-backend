@@ -10,5 +10,19 @@ export const register = async (router: Router) => {
 		OperatingSystemDependencies.GetAllController
 	)
 
+	/**
+	 * @swagger
+	 * /operatingsystems:
+	 *   get:
+	 *     tags:
+	 *       - Sistemas Operativos
+	 *     summary: Obtener todos los sistemas operativos
+	 *     description: Devuelve una lista de todos los sistemas operativos disponibles.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de sistemas operativos obtenida con éxito.
+	 */
 	router.get('/operatingsystems/', authenticate, getAllController.run.bind(getAllController))
 }

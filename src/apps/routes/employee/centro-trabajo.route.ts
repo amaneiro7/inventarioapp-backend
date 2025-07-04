@@ -15,13 +15,109 @@ export const register = async (router: Router) => {
 	const postController: CentroTrabajoPostController = container.resolve(CentroTrabajoDependencies.PostController)
 	const patchController: CentroTrabajoPatchController = container.resolve(CentroTrabajoDependencies.PatchController)
 
+	/**
+	 * @swagger
+	 * /centrotrabajos:
+	 *   get:
+	 *     tags:
+	 *       - Empleados - Centros de Trabajo
+	 *     summary: Obtener todos los centros de trabajo
+	 *     description: Devuelve una lista de todos los centros de trabajo.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de centros de trabajo obtenida con éxito.
+	 */
 	router.get('/centrotrabajos/', authenticate, getAllController.run.bind(getAllController))
 
+	/**
+	 * @swagger
+	 * /centrotrabajos/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Empleados - Centros de Trabajo
+	 *     summary: Obtener un centro de trabajo por ID
+	 *     description: Devuelve los detalles de un centro de trabajo específico.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID del centro de trabajo.
+	 *     responses:
+	 *       '200':
+	 *         description: Detalles del centro de trabajo.
+	 *       '404':
+	 *         description: Centro de trabajo no encontrado.
+	 */
 	router.get('/centrotrabajos/:id', authenticate, getController.run.bind(getController))
 
-	//post
+	/**
+	 * @swagger
+	 * /centrotrabajos:
+	 *   post:
+	 *     tags:
+	 *       - Empleados - Centros de Trabajo
+	 *     summary: Crear un nuevo centro de trabajo
+	 *     description: Añade un nuevo centro de trabajo al sistema.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               name:
+	 *                 type: string
+	 *                 description: Nombre del centro de trabajo.
+	 *                 example: "Oficina Principal"
+	 *     responses:
+	 *       '201':
+	 *         description: Centro de trabajo creado con éxito.
+	 *       '400':
+	 *         description: Datos de entrada no válidos.
+	 */
 	router.post('/centrotrabajos/', authenticate, postController.run.bind(postController))
 
-	// patch
+	/**
+	 * @swagger
+	 * /centrotrabajos/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Empleados - Centros de Trabajo
+	 *     summary: Actualizar un centro de trabajo existente
+	 *     description: Actualiza el nombre de un centro de trabajo específico.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID del centro de trabajo a actualizar.
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               name:
+	 *                 type: string
+	 *                 description: Nuevo nombre del centro de trabajo.
+	 *                 example: "Sede Central"
+	 *     responses:
+	 *       '200':
+	 *         description: Centro de trabajo actualizado con éxito.
+	 *       '404':
+	 *         description: Centro de trabajo no encontrado.
+	 */
 	router.patch('/centrotrabajos/:id', authenticate, patchController.run.bind(patchController))
 }

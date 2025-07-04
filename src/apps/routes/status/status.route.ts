@@ -11,6 +11,33 @@ export const register = async (router: Router) => {
 		StatusDependencies.StatusDashboardGetController
 	)
 
+	/**
+	 * @swagger
+	 * /status:
+	 *   get:
+	 *     tags:
+	 *       - Estados
+	 *     summary: Obtener todos los estados
+	 *     description: Devuelve una lista de todos los estados posibles de un dispositivo o elemento.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de estados obtenida con éxito.
+	 */
 	router.get('/status/', authenticate, getAllController.run.bind(getAllController))
+
+	/**
+	 * @swagger
+	 * /status/dashboard:
+	 *   get:
+	 *     tags:
+	 *       - Estados
+	 *     summary: Obtener datos del dashboard de estados
+	 *     description: Devuelve un resumen de datos para el dashboard de estados.
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard obtenidos con éxito.
+	 */
 	router.get('/status/dashboard/', statusDashboard.run.bind(statusDashboard))
 }

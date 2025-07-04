@@ -14,6 +14,43 @@ export const register = async (router: Router) => {
 		AuthDependencies.RefreshTokenController
 	)
 
+	/**
+	 * @swagger
+	 * /auth/login/local:
+	 *   post:
+	 *     tags:
+	 *       - Autenticación
+	 *     summary: Iniciar sesión de usuario
+	 *     description: Autentica a un usuario con su email y contraseña, devolviendo tokens de acceso y refresco.
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               email:
+	 *                 type: string
+	 *                 description: Correo electrónico del usuario.
+	 *                 example: "test@example.com"
+	 *               password:
+	 *                 type: string
+	 *                 description: Contraseña del usuario.
+	 *                 example: "password123"
+	 *     responses:
+	 *       '200':
+	 *         description: Autenticación exitosa.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 accessToken:
+	 *                   type: string
+	 *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+	 *       '401':
+	 *         description: No autorizado, credenciales incorrectas.
+	 */
 	router.post(
 		'/auth/login/local',
 		passport.authenticate(StrategyOptions.LOCAL, { session: false }),

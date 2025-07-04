@@ -13,13 +13,109 @@ export const register = async (router: Router) => {
 	const postController: CargoPostController = container.resolve(CargoDependencies.PostController)
 	const patchController: CargoPatchController = container.resolve(CargoDependencies.PatchController)
 
+	/**
+	 * @swagger
+	 * /cargos:
+	 *   get:
+	 *     tags:
+	 *       - Empleados - Cargos
+	 *     summary: Obtener todos los cargos
+	 *     description: Devuelve una lista de todos los cargos de empleados.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de cargos obtenida con éxito.
+	 */
 	router.get('/cargos/', authenticate, getAllController.run.bind(getAllController))
 
+	/**
+	 * @swagger
+	 * /cargos/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Empleados - Cargos
+	 *     summary: Obtener un cargo por ID
+	 *     description: Devuelve los detalles de un cargo específico.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID del cargo.
+	 *     responses:
+	 *       '200':
+	 *         description: Detalles del cargo.
+	 *       '404':
+	 *         description: Cargo no encontrado.
+	 */
 	router.get('/cargos/:id', authenticate, getController.run.bind(getController))
 
-	//post
+	/**
+	 * @swagger
+	 * /cargos:
+	 *   post:
+	 *     tags:
+	 *       - Empleados - Cargos
+	 *     summary: Crear un nuevo cargo
+	 *     description: Añade un nuevo cargo al sistema.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               name:
+	 *                 type: string
+	 *                 description: Nombre del cargo.
+	 *                 example: "Analista de Sistemas"
+	 *     responses:
+	 *       '201':
+	 *         description: Cargo creado con éxito.
+	 *       '400':
+	 *         description: Datos de entrada no válidos.
+	 */
 	router.post('/cargos/', authenticate, postController.run.bind(postController))
 
-	// patch
+	/**
+	 * @swagger
+	 * /cargos/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Empleados - Cargos
+	 *     summary: Actualizar un cargo existente
+	 *     description: Actualiza el nombre de un cargo específico.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID del cargo a actualizar.
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               name:
+	 *                 type: string
+	 *                 description: Nuevo nombre del cargo.
+	 *                 example: "Analista Senior de Sistemas"
+	 *     responses:
+	 *       '200':
+	 *         description: Cargo actualizado con éxito.
+	 *       '404':
+	 *         description: Cargo no encontrado.
+	 */
 	router.patch('/cargos/:id', authenticate, patchController.run.bind(patchController))
 }

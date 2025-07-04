@@ -34,36 +34,220 @@ export const register = async (router: Router) => {
 	const locationMonitoringDashboardByLocationGetController: LocationMonitoringDashboardByLocationGetController =
 		container.resolve(LocationMonitoringDependencies.LocationMonitoringDashboardByLocationGetController)
 
-	// get
+	/**
+	 * @swagger
+	 * /locations:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Buscar ubicaciones por criterios
+	 *     description: Devuelve una lista paginada de ubicaciones que coinciden con los filtros de búsqueda.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: query
+	 *         name: filters
+	 *         schema:
+	 *           type: string
+	 *         description: Filtros de búsqueda (ej. `field,operator,value`).
+	 *       - in: query
+	 *         name: orderBy
+	 *         schema:
+	 *           type: string
+	 *         description: Campo por el cual ordenar.
+	 *       - in: query
+	 *         name: orderType
+	 *         schema:
+	 *           type: string
+	 *         description: Tipo de orden (asc, desc).
+	 *       - in: query
+	 *         name: limit
+	 *         schema:
+	 *           type: integer
+	 *         description: Número de resultados por página.
+	 *       - in: query
+	 *         name: offset
+	 *         schema:
+	 *           type: integer
+	 *         description: Número de resultados a saltar.
+	 *     responses:
+	 *       '200':
+	 *         description: Búsqueda exitosa.
+	 */
 	router.get('/locations/', authenticate, searchByCriteria.run.bind(searchByCriteria))
+
+	/**
+	 * @swagger
+	 * /locations/all:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener todas las ubicaciones
+	 *     description: Devuelve una lista completa de todas las ubicaciones sin paginación.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de ubicaciones obtenida con éxito.
+	 */
 	router.get('/locations/all', authenticate, getAllController.run.bind(getAllController))
 
-	// monitoring
+	/**
+	 * @swagger
+	 * /locations/ping-status:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener estado de ping de ubicaciones
+	 *     description: Devuelve el estado de conexión (ping) de las ubicaciones monitorizadas.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Estado de ping obtenido.
+	 */
 	router.get(
 		'/locations/ping-status',
 		authenticate,
 		locationPingStatusController.run.bind(locationPingStatusController)
 	)
+
+	/**
+	 * @swagger
+	 * /locations/dashboard/monitoring:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener datos del dashboard de monitoreo de ubicaciones
+	 *     description: Devuelve un resumen de datos para el dashboard de monitoreo de ubicaciones.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard obtenidos con éxito.
+	 */
 	router.get(
 		'/locations/dashboard/monitoring',
 		authenticate,
 		locationMonitoringDashboardGetController.run.bind(locationMonitoringDashboardGetController)
 	)
+
+	/**
+	 * @swagger
+	 * /locations/dashboard/monitoringbystate:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener datos del dashboard de monitoreo de ubicaciones por estado
+	 *     description: Devuelve un resumen de datos de monitoreo de ubicaciones agrupados por estado.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard obtenidos con éxito.
+	 */
 	router.get(
 		'/locations/dashboard/monitoringbystate',
 		authenticate,
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
 	)
+
+	/**
+	 * @swagger
+	 * /locations/dashboard/monitoringbylocation:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener datos del dashboard de monitoreo de ubicaciones por ubicación
+	 *     description: Devuelve un resumen de datos de monitoreo de ubicaciones agrupados por ubicación.
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard obtenidos con éxito.
+	 */
 	router.get(
 		'/locations/dashboard/monitoringbylocation',
-		// authenticate,
 		locationMonitoringDashboardByLocationGetController.run.bind(locationMonitoringDashboardByLocationGetController)
 	)
 
+	/**
+	 * @swagger
+	 * /locations/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Obtener una ubicación por ID
+	 *     description: Devuelve los detalles completos de una ubicación específica.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID de la ubicación.
+	 *     responses:
+	 *       '200':
+	 *         description: Detalles de la ubicación.
+	 *       '404':
+	 *         description: Ubicación no encontrada.
+	 */
 	router.get('/locations/:id', authenticate, getController.run.bind(getController))
-	//post
+
+	/**
+	 * @swagger
+	 * /locations:
+	 *   post:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Crear una nueva ubicación
+	 *     description: Añade una nueva ubicación al sistema.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             description: Datos de la ubicación a crear (el esquema completo es extenso).
+	 *     responses:
+	 *       '201':
+	 *         description: Ubicación creada con éxito.
+	 *       '400':
+	 *         description: Datos de entrada no válidos.
+	 */
 	router.post('/locations/', authenticate, postController.run.bind(postController))
 
-	// patch
+	/**
+	 * @swagger
+	 * /locations/{id}:
+	 *   patch:
+	 *     tags:
+	 *       - Ubicaciones
+	 *     summary: Actualizar una ubicación existente
+	 *     description: Actualiza la información de una ubicación específica.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID de la ubicación a actualizar.
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             description: Campos de la ubicación a actualizar.
+	 *     responses:
+	 *       '200':
+	 *         description: Ubicación actualizada con éxito.
+	 *       '404':
+	 *         description: Ubicación no encontrada.
+	 */
 	router.patch('/locations/:id', authenticate, patchController.run.bind(patchController))
 }

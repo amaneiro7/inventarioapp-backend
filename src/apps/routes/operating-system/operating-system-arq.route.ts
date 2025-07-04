@@ -10,5 +10,19 @@ export const register = async (router: Router) => {
 		OperatingSystemArqDependencies.GetAllController
 	)
 
+	/**
+	 * @swagger
+	 * /operatingsystemarqs:
+	 *   get:
+	 *     tags:
+	 *       - Sistemas Operativos - Arquitecturas
+	 *     summary: Obtener todas las arquitecturas de sistemas operativos
+	 *     description: Devuelve una lista de todas las arquitecturas de sistemas operativos disponibles (ej. x64, x86).
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de arquitecturas obtenida con éxito.
+	 */
 	router.get('/operatingsystemarqs/', authenticate, getAllController.run.bind(getAllController))
 }
