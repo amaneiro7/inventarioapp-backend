@@ -3,7 +3,10 @@ import { LocationStatusId } from '../../LocationStatus/domain/LocationStatusId'
 import { LocationStatusName } from '../../LocationStatus/domain/LocationStatusName'
 import { type LocationStatusDto, type LocationStatusPrimitives } from '../../LocationStatus/domain/LocationStatus.dto'
 export class LocationStatus {
-	constructor(private readonly id: LocationStatusId, private readonly name: LocationStatusName) {}
+	constructor(
+		private readonly id: LocationStatusId,
+		private readonly name: LocationStatusName
+	) {}
 
 	static fromPrimitives(primitives: LocationStatusDto): LocationStatus {
 		return new LocationStatus(new LocationStatusId(primitives.id), new LocationStatusName(primitives.name))

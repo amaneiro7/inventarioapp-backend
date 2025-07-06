@@ -14,7 +14,10 @@ interface EmployeCentroTrabajoProps {
 }
 
 export class EmployeCentroTrabajo extends AcceptedNullValueObject<Primitives<CentroTrabajoId>> {
-	constructor(value: Primitives<CentroTrabajoId> | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: Primitives<CentroTrabajoId> | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 		this.ensureIsValidCentroTrabajoId({ value, type: this.type })
 	}

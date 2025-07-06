@@ -9,7 +9,10 @@ import { type EmployeeRepository } from '../../../employee/Employee/domain/Repos
 import { StatusOptions } from '../../Status/domain/StatusOptions'
 
 export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
-	constructor(readonly value: Primitives<EmployeeId> | null, private readonly status: Primitives<DeviceStatus>) {
+	constructor(
+		readonly value: Primitives<EmployeeId> | null,
+		private readonly status: Primitives<DeviceStatus>
+	) {
 		super(value)
 		this.ensureEmployeeConditionDependsOfStatus({
 			employee: this.value,

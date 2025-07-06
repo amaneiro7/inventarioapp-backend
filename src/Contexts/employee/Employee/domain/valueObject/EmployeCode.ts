@@ -14,7 +14,10 @@ interface EmployeeCodeProps {
 }
 
 export class EmployeeCode extends AcceptedNullValueObject<number> {
-	constructor(value: number | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: number | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 		this.ensureIsValidEmployeeCode({ value, type: this.type })
 	}

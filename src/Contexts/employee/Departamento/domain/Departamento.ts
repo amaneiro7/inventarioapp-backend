@@ -6,7 +6,12 @@ import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
 
 export class Departamento extends IDepartment {
-	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[], private vicepresidenciaId: DepartmentId) {
+	constructor(
+		id: DepartmentId,
+		name: DepartmentName,
+		cargos: CargoId[],
+		private vicepresidenciaId: DepartmentId
+	) {
 		super(id, name, cargos)
 	}
 

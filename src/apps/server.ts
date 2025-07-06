@@ -22,7 +22,10 @@ export class Server {
 	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt') // Ruta por defecto al certificado
 	httpServer?: http.Server | https.Server
 
-	constructor(readonly port: string, private readonly logger: Logger) {
+	constructor(
+		readonly port: string,
+		private readonly logger: Logger
+	) {
 		this.port = port
 		this.express = express()
 

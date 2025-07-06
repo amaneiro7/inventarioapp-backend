@@ -3,7 +3,10 @@ import { type AdministrativeRegionDto, type AdministrativeRegionPrimitives } fro
 import { AdministrativeRegionId } from './AdministrativeRegionId'
 import { AdministrativeRegionName } from './AdministrativeRegionName'
 export class AdministrativeRegion {
-	constructor(private readonly id: AdministrativeRegionId, private readonly name: AdministrativeRegionName) {}
+	constructor(
+		private readonly id: AdministrativeRegionId,
+		private readonly name: AdministrativeRegionName
+	) {}
 
 	static fromPrimitives(primitives: AdministrativeRegionDto): AdministrativeRegion {
 		return new AdministrativeRegion(

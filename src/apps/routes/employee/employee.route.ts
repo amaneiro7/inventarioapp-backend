@@ -73,10 +73,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de empleados obtenida con éxito.
 	 */
-	router.get(
-		'/employees/all',
-		getAllController.run.bind(getAllController)
-	)
+	router.get('/employees/all', getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

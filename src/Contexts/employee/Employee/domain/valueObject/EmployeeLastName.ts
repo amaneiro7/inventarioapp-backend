@@ -9,7 +9,10 @@ export class EmployeeLastName extends AcceptedNullValueObject<string> {
 	private readonly NAME_MIN_LENGTH = 3
 	private readonly Regex = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
 
-	constructor(value: string | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: string | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 
 		this.ensureIsValidName({ value, type: this.type })

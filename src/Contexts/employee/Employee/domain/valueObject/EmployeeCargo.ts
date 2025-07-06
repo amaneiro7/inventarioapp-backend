@@ -12,7 +12,10 @@ interface EmployeeCargoProps {
 	type: Primitives<EmployeeType>
 }
 export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> {
-	constructor(value: Primitives<CargoId> | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: Primitives<CargoId> | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 		this.ensureIsValidCargo({ value, type: this.type })
 	}

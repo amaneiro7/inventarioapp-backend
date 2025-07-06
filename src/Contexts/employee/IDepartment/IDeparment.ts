@@ -17,7 +17,11 @@ export interface DepartmentPrimitives {
 }
 
 export class IDepartment {
-	constructor(private readonly id: DepartmentId, private name: DepartmentName, private cargos: CargoId[]) {}
+	constructor(
+		private readonly id: DepartmentId,
+		private name: DepartmentName,
+		private cargos: CargoId[]
+	) {}
 
 	static create(params: Omit<DepartmentPrimitives, 'id'>): IDepartment {
 		const id = DepartmentId.random().value

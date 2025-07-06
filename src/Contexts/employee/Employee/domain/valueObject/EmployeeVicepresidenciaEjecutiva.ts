@@ -12,7 +12,10 @@ interface EmployeeVicepresidenciaEjecutivaProps {
 	directivaId: Primitives<DepartmentId> | null
 }
 export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Primitives<DepartmentId>> {
-	constructor(value: Primitives<DepartmentId> | null, private readonly directivaId: Primitives<DepartmentId> | null) {
+	constructor(
+		value: Primitives<DepartmentId> | null,
+		private readonly directivaId: Primitives<DepartmentId> | null
+	) {
 		super(value)
 		this.ensureIsValidVicepresidenciaEjecutiva({ value, directivaId: this.directivaId })
 	}

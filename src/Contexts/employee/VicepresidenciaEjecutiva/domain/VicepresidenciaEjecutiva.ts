@@ -14,7 +14,12 @@ import {
  */
 
 export class VicepresidenciaEjecutiva extends IDepartment {
-	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[], private directivaId: DepartmentId) {
+	constructor(
+		id: DepartmentId,
+		name: DepartmentName,
+		cargos: CargoId[],
+		private directivaId: DepartmentId
+	) {
 		super(id, name, cargos)
 	}
 

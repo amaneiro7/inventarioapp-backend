@@ -14,7 +14,10 @@ interface EmployeeNationalityProps {
 	type: Primitives<EmployeeType>
 }
 export class EmployeeNationality extends AcceptedNullValueObject<Nationalities> {
-	constructor(value: Nationalities | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: Nationalities | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 		this.ensureIsValidNationality({ value, type: this.type })
 	}

@@ -13,7 +13,10 @@ interface EmployeeDirectivaProps {
 	type: Primitives<EmployeeType>
 }
 export class EmployeeDirectiva extends AcceptedNullValueObject<Primitives<DepartmentId>> {
-	constructor(value: Primitives<DepartmentId> | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: Primitives<DepartmentId> | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 		this.ensureIsValidDirectiva({ value, type: this.type })
 	}

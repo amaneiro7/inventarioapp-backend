@@ -4,7 +4,10 @@ import { type RoleId } from './RoleId'
 import { type RoleName } from './RoleName'
 
 export class Role {
-	constructor(private readonly id: RoleId, private readonly name: RoleName) {}
+	constructor(
+		private readonly id: RoleId,
+		private readonly name: RoleName
+	) {}
 
 	get idValue(): Primitives<RoleId> {
 		return this.id.value

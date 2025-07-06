@@ -8,7 +8,10 @@ import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapac
 import { type DeviceComputer } from './Computer'
 
 export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitives<HardDriveCapacityId>> {
-	constructor(readonly value: Primitives<HardDriveCapacityId> | null, readonly status: Primitives<DeviceStatus>) {
+	constructor(
+		readonly value: Primitives<HardDriveCapacityId> | null,
+		readonly status: Primitives<DeviceStatus>
+	) {
 		super(value)
 		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIsValidHardDriveCapacityId(value)

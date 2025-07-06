@@ -12,6 +12,8 @@
 		"dev:node": "cross-env NODE_ENV=development nodemon ./src/apps/start.ts",
 		"dev:bun": "cross-env NODE_ENV=development bun --watch ./src/apps/start.ts",
 		"format": "prettier --write \"**/*.{ts,js,json,md}\"",
+		"lint": "eslint . --ext .ts",
+		"lint:fix": "eslint . --ext .ts --fix",
 		"swagger": "node ./src/apps/Middleware/swagger.ts",
 		"migration:generate": "sequelize-cli migration:generate --name",
 		"migration:all": "sequelize-cli db:migrate",

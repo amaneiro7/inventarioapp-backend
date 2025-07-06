@@ -13,7 +13,10 @@ export class ComputerName extends AcceptedNullValueObject<string> {
 	private readonly notSpecialCharacterOnlyGuiones = /^[^\W_]*-?[^\W_]*$/
 	private errors: string[] = []
 
-	constructor(readonly value: string | null, private readonly statusId: Primitives<DeviceStatus>) {
+	constructor(
+		readonly value: string | null,
+		private readonly statusId: Primitives<DeviceStatus>
+	) {
 		super(value)
 
 		// Convertir el valor a mayúsculas si no es nulo

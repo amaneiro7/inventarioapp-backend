@@ -17,7 +17,10 @@ export class EmployeeCedula extends AcceptedNullValueObject<number> {
 	private static readonly MAX_CEDULA = 200000000
 	private static readonly MIN_CEDULA = 1
 
-	constructor(value: number | null, private readonly type: Primitives<EmployeeType>) {
+	constructor(
+		value: number | null,
+		private readonly type: Primitives<EmployeeType>
+	) {
 		super(value)
 
 		this.ensureIsValidCedula({ value, type: this.type })

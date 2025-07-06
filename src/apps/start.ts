@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { InventarioBackendApp } from './InventarioBackendApp'
 ;(async () => {
 	try {
