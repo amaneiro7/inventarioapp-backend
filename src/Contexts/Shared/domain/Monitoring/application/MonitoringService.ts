@@ -1,24 +1,26 @@
 import pLimit from 'p-limit'
-import { MonitoringStatuses } from '../../domain/Monitoring/MonitoringStatus'
-import { type PingService } from '../../../Device/Device/application/PingService'
-import { type Logger } from '../../domain/Logger'
-import { type Primitives } from '../../domain/value-object/Primitives'
+import { MonitoringStatuses } from '../domain/value-object/MonitoringStatus'
+import { type Primitives } from '../../value-object/Primitives'
+import { type PingService } from '../../../../Device/Device/application/PingService'
+import { type Logger } from '../../Logger'
+import { type MonitoringId } from '../domain/value-object/MonitoringId'
+import { type PingLogger } from '../infra/PingLogger'
 
-export interface GenericMonitoringRepository<T> {
-	searchNotnullIpAddress: () => Promise<T[]>
-	searchById: (id: Primitives<any>) => Promise<T | null>
-	save: (entity: T) => Promise<void>
+export interface GenericMonitoringRepository<DTO, Payload> {
+	searchNotnullIpAddress: () => Promise<DTO[]>
+	searchById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
+	save: (entity: Payload) => Promise<void>
 }
 
-export abstract class MonitoringService<T, R extends GenericMonitoringRepository<T>> {
+export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
 	protected readonly CONCURRENCY_LIMIT = 2
 	protected readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
 
-	protected readonly START_HOUR = 7 // 7 AM
-	protected readonly END_HOUR = 19 // 7 PM (19:00)
+	protected readonly START_HOUR = 0 // 7 AM
+	protected readonly END_HOUR = 24 // 7 PM (19:00)
 
 	protected readonly START_DAY_OF_WEEK = 1 // Lunes
-	protected readonly END_DAY_OF_WEEK = 5 // Viernes
+	protected readonly END_DAY_OF_WEEK = 7 // Viernes
 
 	protected isRunning: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
@@ -26,7 +28,8 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 	constructor(
 		protected readonly repository: R,
 		protected readonly pingService: PingService,
-		protected readonly logger: Logger
+		protected readonly logger: Logger,
+		protected readonly pingLogger: PingLogger
 	) {}
 
 	public startMonitoringLoop(): void {
@@ -83,19 +86,24 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 	}
 
 	protected abstract getMonitoringName(): string
-	protected abstract getIpAddress(item: T): Promise<string | null | undefined>
-	protected abstract getMonitoringId(item: T): Primitives<any>
-	protected abstract createMonitoringEntity(item: T): T
+	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
+	protected abstract getMonitoringId(item: DTO): Primitives<MonitoringId>
+	protected abstract createMonitoringEntity(item: DTO): Entity
 	protected abstract updateMonitoringEntityStatus(
-		entity: T,
+		entity: Entity,
 		status: MonitoringStatuses,
 		lastSuccess: Date | null,
 		lastFailed: Date | null,
 		lastScan: Date | null
 	): void
+	protected abstract createMonitoringPayload(item: Entity): Payload
 
 	protected async executePingScan(): Promise<void> {
 		try {
+			this.pingLogger.logPingResult({
+				fileName: this.getMonitoringName(),
+				message: `Starting ${this.getMonitoringName()} ping scan.`
+			}) // Log start of scan
 			const itemsToMonitor = await this.repository.searchNotnullIpAddress()
 			this.logger.info(`[INFO] Found ${itemsToMonitor.length} ${this.getMonitoringName()}s to monitor.`)
 
@@ -116,14 +124,16 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 					} else {
 						const monitoringRecord = await this.repository.searchById(monitoringId)
 						if (monitoringRecord) {
+							const monitoringEntity = this.createMonitoringEntity(monitoringRecord)
 							this.updateMonitoringEntityStatus(
-								monitoringRecord,
+								monitoringEntity,
 								MonitoringStatuses.NOTAVAILABLE,
 								null,
 								null,
 								null
 							)
-							await this.repository.save(monitoringRecord)
+							const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
+							await this.repository.save(monitoringPayload)
 						}
 					}
 				})
@@ -131,13 +141,21 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 
 			await Promise.allSettled(pingPromises)
 			this.logger.info(`[INFO] All ping jobs for this scan have completed.`)
+			this.pingLogger.logPingResult({
+				fileName: this.getMonitoringName(),
+				message: `Completed ${this.getMonitoringName()} ping scan.`
+			}) // Log end of scan
 		} catch (error) {
 			this.logger.error(`[ERROR] Failed to enqueue ${this.getMonitoringName()} pings: ${error}`)
+			this.pingLogger.logPingResult({
+				fileName: this.getMonitoringName(),
+				message: `Error during ${this.getMonitoringName()} ping scan: ${error}`
+			}) // Log error
 		}
 	}
 
-	protected async processPingJob(monitoringId: Primitives<any>, ipAddress: string): Promise<void> {
-		let monitoringEntity: T | null = null
+	protected async processPingJob(monitoringId: Primitives<MonitoringId>, ipAddress: string): Promise<void> {
+		let monitoringEntity: Entity | null = null
 		try {
 			const monitoringRecord = await this.repository.searchById(monitoringId)
 
@@ -152,6 +170,10 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 			await this.pingService.pingIp({ ipAddress, enableLogging: false })
 
 			this.updateMonitoringEntityStatus(monitoringEntity, MonitoringStatuses.ONLINE, new Date(), null, new Date())
+			await this.pingLogger.logPingResult({
+				fileName: this.getMonitoringName(),
+				message: `[${this.getMonitoringName()}] ${ipAddress} - ONLINE`
+			})
 		} catch (error) {
 			if (monitoringEntity) {
 				this.updateMonitoringEntityStatus(
@@ -161,10 +183,15 @@ export abstract class MonitoringService<T, R extends GenericMonitoringRepository
 					new Date(),
 					new Date()
 				)
+				await this.pingLogger.logPingResult({
+					fileName: this.getMonitoringName(),
+					message: `[${this.getMonitoringName()}] ${ipAddress} - OFFLINE: ${error}`
+				})
 			}
 		} finally {
 			if (monitoringEntity) {
-				await this.repository.save(monitoringEntity)
+				const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
+				await this.repository.save(monitoringPayload)
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 import { LocationMonitoringDoesNotExistError } from '../domain/error/LocationMonitoringDoesNotExistError'
-import { MonitoringId } from '../../../Shared/domain/Monitoring/MonitoringId'
+import { MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 import { type LocationMonitoringDto } from '../domain/entity/LocationMonitoring.dto'
 

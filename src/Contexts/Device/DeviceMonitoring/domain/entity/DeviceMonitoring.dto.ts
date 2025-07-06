@@ -3,7 +3,7 @@ import { type DeviceMonitoring } from './DeviceMonitoring'
 import { type DeviceDto } from '../../../Device/domain/Device.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
-import { MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/Monitoring.dto'
+import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring.dto'
 
 export type DeviceMonitoringType = MonitoringPrimitives & {
 	deviceId: Primitives<DeviceMonitoring['deviceId']>

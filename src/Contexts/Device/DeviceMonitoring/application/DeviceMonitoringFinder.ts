@@ -1,4 +1,4 @@
-import { MonitoringId } from '../../../Shared/domain/Monitoring/MonitoringId'
+import { MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { DeviceMonitoringDoesNotExistError } from '../domain/error/DeviceMonitoringDoesNotExistError'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 import { type DeviceMonitoringDto } from '../domain/entity/DeviceMonitoring.dto'

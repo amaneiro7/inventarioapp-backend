@@ -2,7 +2,7 @@ import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 export class LocationMonitoringDashboardByLocationAssociation {
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {

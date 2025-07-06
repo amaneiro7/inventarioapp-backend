@@ -2,11 +2,11 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceMonitoringDashboardAssociation } from './DeviceMonitoringDashboardAssociation'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardRepository } from '../../domain/repository/DeviceMonitoringDashboardRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 export class SequelizeDeviceMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter

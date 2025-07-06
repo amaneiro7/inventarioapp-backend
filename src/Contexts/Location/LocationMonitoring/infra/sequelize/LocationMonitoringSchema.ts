@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { type LocationMonitoringDto } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
-import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
-import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
-import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
+import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
+import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
+import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
 export class LocationMonitoringModel
 	extends Model<Omit<LocationMonitoringDto, 'location'>>
 	implements LocationMonitoringDto

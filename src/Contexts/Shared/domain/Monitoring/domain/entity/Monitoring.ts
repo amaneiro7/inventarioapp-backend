@@ -1,10 +1,10 @@
+import { type MonitoringId } from '../value-object/MonitoringId'
+import { type MonitoringStatus } from '../value-object//MonitoringStatus'
+import { type MonitoringLastScan } from '../value-object/MonitoringLastScan'
+import { type MonitoringLastSuccess } from '../value-object/MonitoringLastSuccess'
+import { type MonitoringLastFailed } from '../value-object/MonitoringLastFailed'
+import { type Primitives } from '../../../value-object/Primitives'
 import { type MonitoringPrimitives } from './Monitoring.dto'
-import { type MonitoringStatus } from './MonitoringStatus'
-import { type MonitoringLastScan } from './MonitoringLastScan'
-import { type MonitoringLastSuccess } from './MonitoringLastSuccess'
-import { type MonitoringLastFailed } from './MonitoringLastFailed'
-import { type Primitives } from '../value-object/Primitives'
-import { type MonitoringId } from './MonitoringId'
 
 export abstract class Monitoring {
 	constructor(

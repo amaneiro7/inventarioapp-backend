@@ -1,4 +1,4 @@
-import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from '../../Location/domain/LocationId'

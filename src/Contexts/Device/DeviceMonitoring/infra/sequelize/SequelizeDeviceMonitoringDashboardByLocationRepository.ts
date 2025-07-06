@@ -1,6 +1,6 @@
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { DeviceMonitoringDashboardByLocationAssociation } from './DeviceMonitoringDashboardByLocationAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 

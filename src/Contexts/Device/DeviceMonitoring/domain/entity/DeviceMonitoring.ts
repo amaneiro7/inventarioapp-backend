@@ -1,10 +1,11 @@
-import { Monitoring } from '../../../../Shared/domain/Monitoring/Monitoring'
-import { MonitoringId } from '../../../../Shared/domain/Monitoring/MonitoringId'
+import { Monitoring } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring'
+import { MonitoringId } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { DeviceId } from '../../../Device/domain/DeviceId'
-import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
-import { MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
-import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
-import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
+import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
+import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
+import { MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
+
 import {
 	type DeviceMonitoringDto,
 	type DeviceMonitoringParams,

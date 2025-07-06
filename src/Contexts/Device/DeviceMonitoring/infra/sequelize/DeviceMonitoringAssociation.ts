@@ -1,8 +1,8 @@
 import { Op, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { StatusList } from '../../../Status/domain/StatusList'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
 
 export class DeviceMonitoringAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {

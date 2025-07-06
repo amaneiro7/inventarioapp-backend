@@ -1,7 +1,7 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { LocationMonitoringDashboardByStateAssociation } from './LocationMonitoringDashboardByStateAssociation'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DashboardByStateData } from '../../domain/entity/LocationMonitoring.dto'

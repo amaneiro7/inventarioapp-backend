@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/MonitoringStatus'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { type DeviceMonitoringDto } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceDto } from '../../../Device/domain/Device.dto'
-import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/MonitoringLastScan'
-import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/MonitoringLastSuccess'
-import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/MonitoringLastFailed'
+import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
+import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
+import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
 
 export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'device'>> implements DeviceMonitoringDto {
 	declare id: string

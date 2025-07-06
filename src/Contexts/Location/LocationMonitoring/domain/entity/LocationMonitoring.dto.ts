@@ -1,4 +1,4 @@
-import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/Monitoring.dto'
+import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
