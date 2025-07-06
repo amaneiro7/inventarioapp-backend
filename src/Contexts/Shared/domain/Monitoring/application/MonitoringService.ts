@@ -5,6 +5,7 @@ import { type PingResult, type PingService } from './PingService'
 import { type Logger } from '../../Logger'
 import { type MonitoringId } from '../domain/value-object/MonitoringId'
 import { type PingLogger } from '../infra/PingLogger'
+import { type MonitoringServiceConfig } from '../domain/entity/MonitoringConfig'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotnullIpAddress: () => Promise<DTO[]>
@@ -13,14 +14,14 @@ export interface GenericMonitoringRepository<DTO, Payload> {
 }
 
 export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
-	protected readonly CONCURRENCY_LIMIT = 2
-	protected readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
+	// protected readonly CONCURRENCY_LIMIT = 2
+	// protected readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
 
-	protected readonly START_HOUR = 7 // 7 AM
-	protected readonly END_HOUR = 19 // 7 PM (19:00)
+	// protected readonly START_HOUR = 7 // 7 AM
+	// protected readonly END_HOUR = 19 // 7 PM (19:00)
 
-	protected readonly START_DAY_OF_WEEK = 1 // Lunes
-	protected readonly END_DAY_OF_WEEK = 5 // Viernes
+	// protected readonly START_DAY_OF_WEEK = 1 // Lunes
+	// protected readonly END_DAY_OF_WEEK = 5 // Viernes
 
 	protected isRunning: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
@@ -31,8 +32,17 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		protected readonly logger: Logger,
 		protected readonly pingLogger: PingLogger
 	) {}
+	protected abstract monitoringConfig: MonitoringServiceConfig
 
 	public startMonitoringLoop(): void {
+		if (this.monitoringConfig.concurrencyLimit <= 0) {
+			this.logger.info('Concurrency limit must be greater than 0. Defaulting to 1.')
+			this.monitoringConfig.concurrencyLimit = 1
+		}
+		if (this.monitoringConfig.idleTimeMs < 0) {
+			this.logger.info('Idle time cannot be negative. Defaulting to 0.')
+			this.monitoringConfig.idleTimeMs = 0
+		}
 		if (this.isRunning) {
 			this.logger.info(`${this.getMonitoringName()} monitoring loop is already running.`)
 			return
@@ -70,21 +80,40 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		const currentHour = now.getHours()
 		const currentDay = now.getDay()
 
-		const shouldRun =
-			currentDay >= this.START_DAY_OF_WEEK &&
-			currentDay <= this.END_DAY_OF_WEEK &&
-			currentHour >= this.START_HOUR &&
-			currentHour < this.END_HOUR
+		let shouldRun: boolean
+		if (this.monitoringConfig.disableTimeChecks) {
+			shouldRun = true
+			this.logger.info(
+				`[${formattedISOString}] Time checks are disabled. Running ${this.getMonitoringName()} ping scan.`
+			)
+		} else {
+			shouldRun =
+				currentDay >= this.monitoringConfig.startDayOfWeek &&
+				currentDay <= this.monitoringConfig.endDayOfWeek &&
+				currentHour >= this.monitoringConfig.startHour &&
+				currentHour < this.monitoringConfig.endHour
+
+			if (shouldRun) {
+				this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
+			} else {
+				this.logger.info(
+					`[${formattedISOString}] ${this.getMonitoringName} Skipping scan: Outside defined working hours (${this.monitoringConfig.startDayOfWeek}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${this.monitoringConfig.endHour}:00).`
+				)
+			}
+		}
 
 		if (shouldRun) {
-			this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
 			await this.executePingScan()
-		} else {
-			this.logger.info(`[${formattedISOString}] Skipping scan: Outside defined working hours.`)
 		}
-		this.timeoutId = setTimeout(() => this.runLoop(), this.IDLE_TIME_MS)
-	}
 
+		// if (shouldRun) {
+		// 	this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
+		// 	await this.executePingScan()
+		// } else {
+		// 	this.logger.info(`[${formattedISOString}] Skipping scan: Outside defined working hours.`)
+		// }
+		this.timeoutId = setTimeout(() => this.runLoop(), this.monitoringConfig.idleTimeMs)
+	}
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
 	protected abstract getExpectedHostname(item: DTO): Promise<string | null | undefined>
@@ -114,7 +143,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				return
 			}
 
-			const limit = pLimit(this.CONCURRENCY_LIMIT)
+			const limit = pLimit(this.monitoringConfig.concurrencyLimit)
 
 			const pingPromises = itemsToMonitor.map(item =>
 				limit(async () => {

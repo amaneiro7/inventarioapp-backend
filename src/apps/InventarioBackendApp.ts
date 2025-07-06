@@ -31,11 +31,15 @@ export class InventarioBackendApp {
 
 		await this.server.listen()
 		await this.initializeDBStorage()
-		if (config.isMonitoringActive) {
+		if (config.monitoring.location.isLocationMonitoringEnabled) {
 			this.locationPingService.startMonitoringLoop()
+		} else {
+			this.logger.info('Monitoring location is not active')
+		}
+		if (config.monitoring.device.isDeviceMonitoringEnabled) {
 			this.devicePingService.startMonitoringLoop()
 		} else {
-			this.logger.info('Monitoring is not active')
+			this.logger.info('Monitoring device is not active')
 		}
 	}
 

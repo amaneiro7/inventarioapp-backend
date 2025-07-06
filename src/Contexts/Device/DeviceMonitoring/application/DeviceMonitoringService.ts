@@ -1,13 +1,15 @@
+import { config } from '../../../Shared/infrastructure/config'
 import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
-import { PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
+import { type PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
+import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
 export class DeviceMonitoringService extends MonitoringService<
 	DeviceMonitoringDto,
@@ -22,6 +24,15 @@ export class DeviceMonitoringService extends MonitoringService<
 		protected readonly pingLogger: PingLogger
 	) {
 		super(deviceMonitoringRepository, pingService, logger, pingLogger)
+	}
+	protected readonly monitoringConfig: MonitoringServiceConfig = {
+		concurrencyLimit: config.monitoring.device.deviceMonitoringConcurrencyLimit,
+		startDayOfWeek: config.monitoring.device.deviceMonitoringStartDayOfWeek,
+		endDayOfWeek: config.monitoring.device.deviceMonitoringEndDayOfWeek,
+		startHour: config.monitoring.device.deviceMonitoringStartHour,
+		endHour: config.monitoring.device.deviceMonitoringEndHour,
+		idleTimeMs: config.monitoring.device.deviceMonitoringIdleTimeMs,
+		disableTimeChecks: config.monitoring.device.isDeviceMonitoringDisableTimeChecks
 	}
 
 	protected getMonitoringName(): string {

@@ -33,7 +33,23 @@ const {
 	REFRESH_TOKEN_SECRET: refreshTokenSecret = 'refresh_token_scret',
 	SMTP_EMAIL: smtpEmail = 'jaasnavas0811@gmail.com',
 	SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx',
-	MONITORING_ENABLED: rawMonitoringEnabled = 'false'
+	MONITORING_ENABLED: rawMonitoringEnabled = 'false',
+	DEVICE_MONITORING_ENABLED: rawDeviceMonitoringEnabled,
+	DEVICE_MONITORING_CONCURRENCY_LIMIT: deviceMonitoringConcurrencyLimit,
+	DEVICE_MONITORING_IDLE_TIME_MS: deviceMonitoringIdleTimeMs,
+	DEVICE_MONITORING_START_HOUR: deviceMonitoringStartHour,
+	DEVICE_MONITORING_END_HOUR: deviceMonitoringEndHour,
+	DEVICE_MONITORING_START_DAY_OF_WEEK: deviceMonitoringStartDayOfWeek,
+	DEVICE_MONITORING_END_DAY_OF_WEEK: deviceMonitoringEndDayOfWeek,
+	DEVICE_MONITORING_DISABLE_TIME_CHECKS: rawDeviceMonitoringDisableTimeChecks,
+	LOCATION_MONITORING_ENABLED: rawLocationMonitoringEnabled,
+	LOCATION_MONITORING_CONCURRENCY_LIMIT: locationMonitoringConcurrencyLimit,
+	LOCATION_MONITORING_IDLE_TIME_MS: locationMonitoringIdleTimeMs,
+	LOCATION_MONITORING_START_HOUR: locationMonitoringStartHour,
+	LOCATION_MONITORING_END_HOUR: locationMonitoringEndHour,
+	LOCATION_MONITORING_START_DAY_OF_WEEK: locationMonitoringStartDayOfWeek,
+	LOCATION_MONITORING_END_DAY_OF_WEEK: locationMonitoringEndDayOfWeek,
+	LOCATION_MONITORING_DISABLE_TIME_CHECKS: rawLocationMonitoringDisableTimeChecks
 } = process.env
 
 type Config = {
@@ -53,6 +69,28 @@ type Config = {
 		host: string
 		port: number
 		password: string
+	}
+	monitoring: {
+		device: {
+			isDeviceMonitoringEnabled: boolean
+			deviceMonitoringConcurrencyLimit: number
+			deviceMonitoringIdleTimeMs: number
+			deviceMonitoringStartHour: number
+			deviceMonitoringEndHour: number
+			deviceMonitoringStartDayOfWeek: number
+			deviceMonitoringEndDayOfWeek: number
+			isDeviceMonitoringDisableTimeChecks: boolean
+		}
+		location: {
+			isLocationMonitoringEnabled: boolean
+			locationMonitoringConcurrencyLimit: number
+			locationMonitoringIdleTimeMs: number
+			locationMonitoringStartHour: number
+			locationMonitoringEndHour: number
+			locationMonitoringStartDayOfWeek: number
+			locationMonitoringEndDayOfWeek: number
+			isLocationMonitoringDisableTimeChecks: boolean
+		}
 	}
 	signedCookie: string
 	accessTokenSecret: string
@@ -81,6 +119,28 @@ export const config: Config = {
 		host: redisHost,
 		port: Number(redisPort),
 		password: redisPassword
+	},
+	monitoring: {
+		device: {
+			isDeviceMonitoringEnabled: rawDeviceMonitoringEnabled === 'true',
+			deviceMonitoringConcurrencyLimit: Number(deviceMonitoringConcurrencyLimit),
+			deviceMonitoringIdleTimeMs: Number(deviceMonitoringIdleTimeMs),
+			deviceMonitoringStartHour: Number(deviceMonitoringStartHour),
+			deviceMonitoringEndHour: Number(deviceMonitoringEndHour),
+			deviceMonitoringStartDayOfWeek: Number(deviceMonitoringStartDayOfWeek),
+			deviceMonitoringEndDayOfWeek: Number(deviceMonitoringEndDayOfWeek),
+			isDeviceMonitoringDisableTimeChecks: rawDeviceMonitoringDisableTimeChecks === 'true'
+		},
+		location: {
+			isLocationMonitoringEnabled: rawLocationMonitoringEnabled == 'true',
+			locationMonitoringConcurrencyLimit: Number(locationMonitoringConcurrencyLimit),
+			locationMonitoringIdleTimeMs: Number(locationMonitoringIdleTimeMs),
+			locationMonitoringStartHour: Number(locationMonitoringStartHour),
+			locationMonitoringEndHour: Number(locationMonitoringEndHour),
+			locationMonitoringStartDayOfWeek: Number(locationMonitoringStartDayOfWeek),
+			locationMonitoringEndDayOfWeek: Number(locationMonitoringEndDayOfWeek),
+			isLocationMonitoringDisableTimeChecks: rawLocationMonitoringDisableTimeChecks === 'true'
+		}
 	},
 	signedCookie,
 	accessTokenSecret,

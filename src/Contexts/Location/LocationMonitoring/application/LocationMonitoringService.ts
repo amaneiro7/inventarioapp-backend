@@ -1,3 +1,4 @@
+import { config } from '../../../Shared/infrastructure/config'
 import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
@@ -9,6 +10,7 @@ import { type Logger } from '../../../Shared/domain/Logger'
 import { type LocationMonitoringDto, type LocationMonitoringPrimitives } from '../domain/entity/LocationMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
+import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
 export class LocationMonitoringService extends MonitoringService<
 	LocationMonitoringDto,
@@ -23,6 +25,16 @@ export class LocationMonitoringService extends MonitoringService<
 		protected readonly pingLogger: PingLogger
 	) {
 		super(locationMonitoringRepository, pingService, logger, pingLogger)
+	}
+
+	protected monitoringConfig: MonitoringServiceConfig = {
+		concurrencyLimit: config.monitoring.location.locationMonitoringConcurrencyLimit,
+		startDayOfWeek: config.monitoring.location.locationMonitoringStartDayOfWeek,
+		endDayOfWeek: config.monitoring.location.locationMonitoringEndDayOfWeek,
+		startHour: config.monitoring.location.locationMonitoringStartHour,
+		endHour: config.monitoring.location.locationMonitoringEndHour,
+		idleTimeMs: config.monitoring.location.locationMonitoringIdleTimeMs,
+		disableTimeChecks: config.monitoring.location.isLocationMonitoringDisableTimeChecks
 	}
 
 	protected getMonitoringName(): string {
