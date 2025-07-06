@@ -3,7 +3,7 @@ import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
-import { type PingService } from '../../Device/application/PingService'
+import { PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
@@ -28,10 +28,6 @@ export class DeviceMonitoringService extends MonitoringService<
 		return 'Device'
 	}
 
-	protected async getIpAddress(item: DeviceMonitoringDto): Promise<string | null | undefined> {
-		return item?.device?.computer?.ipAddress
-	}
-
 	protected getMonitoringId(item: DeviceMonitoringDto): Primitives<MonitoringId> {
 		return item.id
 	}
@@ -41,6 +37,17 @@ export class DeviceMonitoringService extends MonitoringService<
 	}
 	protected createMonitoringPayload(item: DeviceMonitoring): DeviceMonitoringPrimitives {
 		return item.toPrimitive()
+	}
+	protected async getIpAddress(item: DeviceMonitoringDto): Promise<string | null | undefined> {
+		return item?.device?.computer?.ipAddress
+	}
+	protected async getExpectedHostname(item: DeviceMonitoringDto): Promise<string | null | undefined> {
+		return item?.device?.computer?.computerName
+	}
+	protected validatePingResult(hostanme: string | null | undefined, pingResult: PingResult): boolean {
+		const expectedHostname = hostanme?.toLowerCase()
+		const receivedHostname = pingResult.hostname?.toLowerCase()
+		return expectedHostname === receivedHostname
 	}
 
 	protected updateMonitoringEntityStatus(

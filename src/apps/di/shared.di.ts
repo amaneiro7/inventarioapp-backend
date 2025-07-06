@@ -3,7 +3,7 @@ import { WinstonLogger } from '../../Contexts/Shared/infrastructure/WinstonLogge
 import { RedisRepository } from '../../Contexts/Shared/infrastructure/persistance/Redis/RedisRepository'
 import { CacheService } from '../../Contexts/Shared/domain/CacheService'
 import { SequelizeConfig } from '../../Contexts/Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { PingService } from '../../Contexts/Device/Device/application/PingService'
+import { PingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService'
 import { PingLogger } from '../../Contexts/Shared/domain/Monitoring/infra/PingLogger'
 
 export enum SharedDependencies {

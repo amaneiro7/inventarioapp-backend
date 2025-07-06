@@ -1,7 +1,7 @@
 import pLimit from 'p-limit'
 import { MonitoringStatuses } from '../domain/value-object/MonitoringStatus'
 import { type Primitives } from '../../value-object/Primitives'
-import { type PingService } from '../../../../Device/Device/application/PingService'
+import { type PingResult, type PingService } from './PingService'
 import { type Logger } from '../../Logger'
 import { type MonitoringId } from '../domain/value-object/MonitoringId'
 import { type PingLogger } from '../infra/PingLogger'
@@ -16,11 +16,11 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	protected readonly CONCURRENCY_LIMIT = 2
 	protected readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
 
-	protected readonly START_HOUR = 0 // 7 AM
-	protected readonly END_HOUR = 24 // 7 PM (19:00)
+	protected readonly START_HOUR = 7 // 7 AM
+	protected readonly END_HOUR = 19 // 7 PM (19:00)
 
 	protected readonly START_DAY_OF_WEEK = 1 // Lunes
-	protected readonly END_DAY_OF_WEEK = 7 // Viernes
+	protected readonly END_DAY_OF_WEEK = 5 // Viernes
 
 	protected isRunning: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
@@ -87,6 +87,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
+	protected abstract getExpectedHostname(item: DTO): Promise<string | null | undefined>
 	protected abstract getMonitoringId(item: DTO): Primitives<MonitoringId>
 	protected abstract createMonitoringEntity(item: DTO): Entity
 	protected abstract updateMonitoringEntityStatus(
@@ -97,6 +98,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		lastScan: Date | null
 	): void
 	protected abstract createMonitoringPayload(item: Entity): Payload
+	protected abstract validatePingResult(expectedHostname: string | null | undefined, pingResult: PingResult): boolean
 
 	protected async executePingScan(): Promise<void> {
 		try {
@@ -117,10 +119,11 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			const pingPromises = itemsToMonitor.map(item =>
 				limit(async () => {
 					const ipAddress = await this.getIpAddress(item)
+					const expectedHostname = await this.getExpectedHostname(item)
 					const monitoringId = this.getMonitoringId(item)
 
 					if (ipAddress) {
-						await this.processPingJob(monitoringId, ipAddress)
+						await this.processPingJob({ monitoringId, ipAddress, expectedHostname })
 					} else {
 						const monitoringRecord = await this.repository.searchById(monitoringId)
 						if (monitoringRecord) {
@@ -154,8 +157,17 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		}
 	}
 
-	protected async processPingJob(monitoringId: Primitives<MonitoringId>, ipAddress: string): Promise<void> {
+	protected async processPingJob({
+		ipAddress,
+		monitoringId,
+		expectedHostname
+	}: {
+		monitoringId: Primitives<MonitoringId>
+		ipAddress: string
+		expectedHostname?: string | null | undefined
+	}): Promise<void> {
 		let monitoringEntity: Entity | null = null
+		let pingResult: PingResult | undefined
 		try {
 			const monitoringRecord = await this.repository.searchById(monitoringId)
 
@@ -167,13 +179,39 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			}
 
 			monitoringEntity = this.createMonitoringEntity(monitoringRecord)
-			await this.pingService.pingIp({ ipAddress, enableLogging: false })
+			pingResult = await this.pingService.pingIp({ ipAddress })
 
-			this.updateMonitoringEntityStatus(monitoringEntity, MonitoringStatuses.ONLINE, new Date(), null, new Date())
-			await this.pingLogger.logPingResult({
-				fileName: this.getMonitoringName(),
-				message: `[${this.getMonitoringName()}] ${ipAddress} - ONLINE`
-			})
+			const isValidHostname = this.validatePingResult(expectedHostname, pingResult)
+
+			if (isValidHostname) {
+				this.updateMonitoringEntityStatus(
+					monitoringEntity,
+					MonitoringStatuses.ONLINE,
+					new Date(),
+					null,
+					new Date()
+				)
+				await this.pingLogger.logPingResult({
+					fileName: this.getMonitoringName(),
+					message: `[${this.getMonitoringName()}] ${ipAddress} - ONLINE (Hostname: ${
+						pingResult.hostname ?? 'N/A'
+					})`
+				})
+			} else {
+				this.updateMonitoringEntityStatus(
+					monitoringEntity,
+					MonitoringStatuses.HOSTNAME_MISMATCH,
+					null,
+					new Date(),
+					new Date()
+				)
+				await this.pingLogger.logPingResult({
+					fileName: this.getMonitoringName(),
+					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Expected: ${
+						expectedHostname ?? 'N/A'
+					}, Received: ${pingResult.hostname ?? 'N/A'})`
+				})
+			}
 		} catch (error) {
 			if (monitoringEntity) {
 				this.updateMonitoringEntityStatus(

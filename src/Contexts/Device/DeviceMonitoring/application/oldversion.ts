@@ -4,7 +4,7 @@ import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/val
 import { DeviceId } from '../../Device/domain/DeviceId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
-import { type PingService } from '../../Device/application/PingService'
+import { type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
 
 interface PingJobData {
@@ -147,7 +147,7 @@ export class DeviceMonitoringService {
 			}
 
 			deviceMonitoringEntity = DeviceMonitoring.fromPrimitives(deviceMonitoring)
-			await this.pingService.pingIp({ ipAddress, enableLogging: false }) // Pass IPAddress value object
+			await this.pingService.pingIp({ ipAddress }) // Pass IPAddress value object
 			// PingService should throw an error if ping fails
 			deviceMonitoringEntity.updateStatus(MonitoringStatuses.ONLINE)
 			deviceMonitoringEntity.updateLastSuccess(new Date())

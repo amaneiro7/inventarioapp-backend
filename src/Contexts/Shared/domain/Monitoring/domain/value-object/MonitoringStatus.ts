@@ -4,7 +4,8 @@ import { InvalidArgumentError } from '../../../value-object/InvalidArgumentError
 export enum MonitoringStatuses {
 	ONLINE = 'online',
 	OFFLINE = 'offline',
-	NOTAVAILABLE = 'not available'
+	NOTAVAILABLE = 'not available',
+	HOSTNAME_MISMATCH = 'hostname mismatch'
 }
 
 export class MonitoringStatus extends EnumValueObject<MonitoringStatuses> {
