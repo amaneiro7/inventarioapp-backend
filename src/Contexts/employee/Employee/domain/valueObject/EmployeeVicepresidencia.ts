@@ -1,6 +1,6 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { DepartmentId } from '../../../IDepartment/DepartmentId'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { DepartmentDoesNotExistError } from '../../../IDepartment/DepartmentDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'

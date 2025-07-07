@@ -1,5 +1,8 @@
-export class LocationMonitoringDoesNotExistError extends Error {
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
+
+export class LocationMonitoringDoesNotExistError extends ApiError {
 	constructor(public readonly value: string) {
-		super(`La ubicación con el ID ${value} no existe`)
+		super(httpStatus.NOT_FOUND, `La ubicación con el ID ${value} no existe`)
 	}
 }

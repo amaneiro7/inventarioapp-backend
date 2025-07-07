@@ -1,5 +1,5 @@
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { MemoryRamCapacity } from '../../MemoryRam/MemoryRamCapacity/MemoryRamCapacity'
 import { type DeviceComputer } from './Computer'

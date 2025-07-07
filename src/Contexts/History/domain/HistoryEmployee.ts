@@ -1,6 +1,6 @@
 import { EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId'
 import { AcceptedNullValueObject } from '../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { InvalidArgumentError } from '../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../Shared/domain/errors/ApiError'
 import { Primitives } from '../../Shared/domain/value-object/Primitives'
 
 export class HistoryEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {

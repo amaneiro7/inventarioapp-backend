@@ -1,5 +1,5 @@
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { InvalidArgumentError } from '../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../Shared/domain/value-object/StringValueObject'
 import { IDepartment } from './IDeparment'
 

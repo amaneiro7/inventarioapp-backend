@@ -1,6 +1,8 @@
-export class DeviceDoesNotExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class DeviceDoesNotExistError extends ApiError {
 	constructor(public readonly value: string) {
-		super()
-		this.message = `The Device ${value} does not exist`
+		super(httpStatus.NOT_FOUND, `The Device ${value} does not exist`)
 	}
 }

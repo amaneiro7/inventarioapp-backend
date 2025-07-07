@@ -1,6 +1,8 @@
-export class StatusAlreadyExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class StatusAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super()
-		this.message = `The status ${this.name} already exist`
+		super(httpStatus.BAD_REQUEST, `The status ${name} already exist`)
 	}
 }

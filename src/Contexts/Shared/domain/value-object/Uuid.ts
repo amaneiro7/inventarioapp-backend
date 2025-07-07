@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { InvalidArgumentError } from './InvalidArgumentError'
+import { InvalidArgumentError } from '../errors/ApiError'
 import { ValueObject } from './ValueObject'
 
 export class Uuid extends ValueObject<string> {

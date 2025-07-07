@@ -1,5 +1,8 @@
-export class InvalidCriteria extends Error {
+import { ApiError } from '../errors/ApiError'
+import httpStatus from '../../infrastructure/utils/http-status'
+
+export class InvalidCriteria extends ApiError {
 	constructor() {
-		super('Page size is required when page number is defined')
+		super(httpStatus.BAD_REQUEST, 'Page size is required when page number is defined')
 	}
 }

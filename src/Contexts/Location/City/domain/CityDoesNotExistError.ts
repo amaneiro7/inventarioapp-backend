@@ -1,5 +1,8 @@
-export class CityDoesNotExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class CityDoesNotExistError extends ApiError {
 	constructor(public readonly value: string) {
-		super(`La ciudad ${value} no existe`)
+		super(httpStatus.NOT_FOUND, `La ciudad ${value} no existe`)
 	}
 }

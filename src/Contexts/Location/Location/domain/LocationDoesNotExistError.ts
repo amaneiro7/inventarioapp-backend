@@ -1,9 +1,10 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from './LocationId'
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
-export class LocationDoesNotExistError extends Error {
+export class LocationDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<LocationId>) {
-		super()
-		this.message = `The location ${value} does not exist`
+		super(httpStatus.NOT_FOUND, `The location ${value} does not exist`)
 	}
 }

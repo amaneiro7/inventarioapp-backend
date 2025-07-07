@@ -1,6 +1,6 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 // import { CentroCostoDoesNotExistError } from '../../../CentroCosto/domain/CentroCostoDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'

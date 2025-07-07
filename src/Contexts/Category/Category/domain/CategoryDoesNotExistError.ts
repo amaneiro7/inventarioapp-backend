@@ -1,5 +1,8 @@
-export class CategoryDoesNotExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class CategoryDoesNotExistError extends ApiError {
 	constructor(public readonly value: string) {
-		super(`The Category ${value} does not exist`)
+		super(httpStatus.NOT_FOUND, `The Category ${value} does not exist`)
 	}
 }

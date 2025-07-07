@@ -1,6 +1,8 @@
-export class ComputerAlreadyExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class ComputerAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super()
-		this.message = `The Computer Features ${this.name} already exist`
+		super(httpStatus.BAD_REQUEST, `The Computer Features ${name} already exist`)
 	}
 }

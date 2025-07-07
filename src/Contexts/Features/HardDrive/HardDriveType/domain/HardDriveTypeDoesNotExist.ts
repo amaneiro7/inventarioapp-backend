@@ -1,5 +1,8 @@
-export class HardDriveTypeDoesNotExistError extends Error {
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
+
+export class HardDriveTypeDoesNotExistError extends ApiError {
 	constructor(public readonly value: number | string) {
-		super(`This Hard Drive Type ${value} does not exist`)
+		super(httpStatus.NOT_FOUND, `This Hard Drive Type ${value} does not exist`)
 	}
 }

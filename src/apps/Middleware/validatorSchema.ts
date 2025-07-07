@@ -1,6 +1,7 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type ValidationError, validationResult } from 'express-validator'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../Contexts/Shared/domain/errors/ApiError'
 
 export function validateReqSchema(req: Request, res: Response, next: NextFunction): any {
 	const validationErrors = validationResult(req)
@@ -12,7 +13,5 @@ export function validateReqSchema(req: Request, res: Response, next: NextFunctio
 		[err.type]: err.msg
 	}))
 
-	return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-		errors
-	})
+	throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, JSON.stringify(errors))
 }

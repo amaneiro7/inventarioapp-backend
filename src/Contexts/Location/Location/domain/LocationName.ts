@@ -1,6 +1,6 @@
 import { Location } from './Location'
 import { LocationNameAlreadyExistError } from './LocationNameAlreadyExistError'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 import { type LocationRepository } from './LocationRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'

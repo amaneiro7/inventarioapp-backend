@@ -1,6 +1,8 @@
-export class LocationNameAlreadyExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class LocationNameAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super()
-		this.message = `El nombre de ubicación ${this.name} ya existe`
+		super(httpStatus.BAD_REQUEST, `El nombre de ubicación ${name} ya existe`)
 	}
 }

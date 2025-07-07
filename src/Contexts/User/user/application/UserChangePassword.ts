@@ -1,7 +1,7 @@
 import { User } from '../domain/User'
 import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
 
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { UserId } from '../domain/UserId'
 import { PasswordService } from '../domain/PasswordService'
 import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'

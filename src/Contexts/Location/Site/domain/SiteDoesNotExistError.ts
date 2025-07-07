@@ -1,8 +1,10 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { SiteId } from './SiteId'
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
-export class SiteDoesNotExistError extends Error {
+export class SiteDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<SiteId>) {
-		super(`El sitio no existe`)
+		super(httpStatus.NOT_FOUND, `El sitio no existe`)
 	}
 }

@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { type Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'

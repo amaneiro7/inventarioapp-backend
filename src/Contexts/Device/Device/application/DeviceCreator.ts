@@ -6,7 +6,7 @@ import { DeviceHardDrive } from '../../../Features/HardDrive/HardDrive/domain/Ha
 import { MFP } from '../../../Features/MFP/domain/MFP'
 import { HistoryCreator } from '../../../History/application/HistoryCreator'
 import { DeviceMonitoringCreator } from '../../DeviceMonitoring/application/DeviceMonitoringCreator'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { Device } from '../domain/Device'
 import { DeviceActivo } from '../domain/DeviceActivo'
 import { DeviceEmployee } from '../domain/DeviceEmployee'

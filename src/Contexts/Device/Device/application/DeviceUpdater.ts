@@ -14,7 +14,7 @@ import { HardDriveHealth } from '../../../Features/HardDrive/HardDrive/domain/Ha
 import { HDDCapacity } from '../../../Features/HardDrive/HardDrive/domain/HDDCapacity'
 import { HDDType } from '../../../Features/HardDrive/HardDrive/domain/HDDType'
 import { HistoryCreator } from '../../../History/application/HistoryCreator'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { Device } from '../domain/Device'
 import { DeviceActivo } from '../domain/DeviceActivo'
 import { DeviceDoesNotExistError } from '../domain/DeviceDoesNotExistError'

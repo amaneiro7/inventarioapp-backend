@@ -1,6 +1,6 @@
 import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'

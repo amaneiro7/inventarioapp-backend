@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from '../value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../errors/ApiError'
 import { EnumValueObject } from '../value-object/EnumValueObject'
 
 export enum Operator {

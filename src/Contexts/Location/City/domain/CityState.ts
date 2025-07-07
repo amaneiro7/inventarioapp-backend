@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StateId } from '../../State/domain/StateId'
 import { type City } from './City'
 import { type StateRepository } from '../../State/domain/StateRepository'

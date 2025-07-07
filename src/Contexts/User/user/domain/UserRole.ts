@@ -4,7 +4,7 @@ import { RoleDoesNotExistError } from '../../Role/domain/RoleDoesNotExistError'
 import { User } from './User'
 import { RoleRepository } from '../../Role/domain/RoleRepository'
 import { RoleId } from '../../Role/domain/RoleId'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 
 export class UserRole extends RoleId {
 	constructor(value: Primitives<RoleId>) {

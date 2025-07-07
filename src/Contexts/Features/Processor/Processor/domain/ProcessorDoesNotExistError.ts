@@ -1,6 +1,8 @@
-export class ProcessorDoesNotExistError extends Error {
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
+
+export class ProcessorDoesNotExistError extends ApiError {
 	constructor(public readonly value: string) {
-		super()
-		this.message = `The processor name ${value} does not exist`
+		super(httpStatus.NOT_FOUND, `The processor name ${value} does not exist`)
 	}
 }

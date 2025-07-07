@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from './InvalidArgumentError'
+import { InvalidArgumentError } from '../errors/ApiError'
 
 type Primitives = string | number | boolean | Date
 

@@ -1,6 +1,6 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { CargoId } from '../../../Cargo/domain/CargoId'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { CargoDoesNotExistError } from '../../../Cargo/domain/CargoDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'

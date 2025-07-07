@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 
 export class PasswordService {
 	// Define the function that takes in a password and returns a hashed string

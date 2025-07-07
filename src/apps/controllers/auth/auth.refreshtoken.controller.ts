@@ -6,12 +6,13 @@ import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { AuthDependencies } from '../../di/auth/auth.di'
+import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'
 
 export class AuthRefreshTokenController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const jwtToken = req?.user as JwtPayloadUser
-			if (!jwtToken) throw new Error('Token not provided')
+			if (!jwtToken) throw new ApiError(httpStatus.UNAUTHORIZED, 'Token not provided')
 
 			const refreshToken: AuthRefreshTokenUseCase = container.resolve(AuthDependencies.RefreshTokenUseCase)
 			const { infoUser } = await refreshToken.run(jwtToken)

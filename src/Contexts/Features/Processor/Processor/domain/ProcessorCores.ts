@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { NumberValueObject } from '../../../../Shared/domain/value-object/NumberValueObject'
 
 export class ProcessorCores extends NumberValueObject {

@@ -1,5 +1,5 @@
 import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { User } from '../../user/domain/User'
 
 export function isSuperAdmin({ user }: { user?: JwtPayloadUser }): void {

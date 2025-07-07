@@ -1,5 +1,5 @@
 import { BooleanValueObject } from '../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { ModelSeries } from './ModelSeries'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 

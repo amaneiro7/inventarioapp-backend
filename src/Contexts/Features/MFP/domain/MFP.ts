@@ -16,7 +16,7 @@ import { DeviceSerial } from '../../../Device/Device/domain/DeviceSerial'
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { MFPIPAddress } from './MFPIPAddress'
 import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
 import { type DeviceMFPParams, type DeviceMFPPrimitives } from './MFP.dto'
 

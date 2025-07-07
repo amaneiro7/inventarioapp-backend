@@ -1,7 +1,7 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { DeviceStatus } from './DeviceStatus'
 import { EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'

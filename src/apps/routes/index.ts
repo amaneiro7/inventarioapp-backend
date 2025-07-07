@@ -1,18 +1,14 @@
 import { Router, type Express, type NextFunction, type Request, type Response } from 'express'
-import { type Logger } from '../../Contexts/Shared/domain/Logger'
-import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
-import errorHandler from 'errorhandler'
-import { validationResult, type ValidationError } from 'express-validator'
 import { resolve } from 'node:path'
 import { sync } from 'fast-glob'
-import { config } from '../../Contexts/Shared/infrastructure/config'
+import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
+import { validationResult, type ValidationError } from 'express-validator'
+import { errorHandler, errorConverter } from '../Middleware/errorHandler'
+import { type Logger } from '../../Contexts/Shared/domain/Logger'
 
 export function registerRoutes(express: Express, logger: Logger) {
 	const router = Router()
 	express.use('/api/v1', router)
-	if (!config.isProd) {
-		router.use(errorHandler())
-	}
 
 	const routePath = 'src/**/*.route.*'
 	const routes = sync(routePath)
@@ -20,12 +16,11 @@ export function registerRoutes(express: Express, logger: Logger) {
 		register(route, router)
 	}
 
-	// Manejo de errores global
-	router.use((err: Error, req: Request, res: Response, _next: () => void) => {
-		const errorMessage = `name: ${err.name} - message: ${err.message}`
-		logger.error(errorMessage)
-		res.status(httpStatus.BAD_REQUEST).send(err.message)
-	})
+	// convert error to ApiError, if needed
+	router.use(errorConverter)
+
+	// handle error
+	router.use(errorHandler(logger))
 }
 
 function register(routePath: string, router: Router) {

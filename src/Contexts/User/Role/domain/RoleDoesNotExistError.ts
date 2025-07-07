@@ -1,5 +1,8 @@
-export class RoleDoesNotExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class RoleDoesNotExistError extends ApiError {
 	constructor() {
-		super(`The role does not exist`)
+		super(httpStatus.NOT_FOUND, `The role does not exist`)
 	}
 }

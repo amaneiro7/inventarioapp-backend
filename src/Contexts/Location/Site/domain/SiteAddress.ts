@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 import { Site } from './Site'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'

@@ -1,6 +1,8 @@
-export class CargoDoesNotExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class CargoDoesNotExistError extends ApiError {
 	constructor() {
-		super()
-		this.message = `El cargo no existe`
+		super(httpStatus.NOT_FOUND, `El cargo no existe`)
 	}
 }

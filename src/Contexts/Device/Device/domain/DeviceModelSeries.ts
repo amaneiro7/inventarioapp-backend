@@ -6,7 +6,7 @@ import { type Device } from './Device'
 import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesDoesNotExistError } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
-import { InvalidArgumentError } from '../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 
 export class DeviceModelSeries extends ModelSeriesId {
 	static async updateModelField({

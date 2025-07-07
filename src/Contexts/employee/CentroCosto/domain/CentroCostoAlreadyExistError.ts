@@ -1,6 +1,8 @@
-export class CentroCostoAlreadyExistError extends Error {
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+
+export class CentroCostoAlreadyExistError extends ApiError {
 	constructor() {
-		super()
-		this.message = `El centro de costo ya se encuentra registrado`
+		super(httpStatus.BAD_REQUEST, `El centro de costo ya se encuentra registrado`)
 	}
 }

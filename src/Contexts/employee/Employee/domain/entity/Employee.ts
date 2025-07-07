@@ -16,7 +16,7 @@ import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
 import { EmployeeCargo } from '../valueObject/EmployeeCargo'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
-import { InvalidArgumentError } from '../../../../Shared/domain/value-object/InvalidArgumentError'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
 
