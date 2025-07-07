@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+ 
 import { type Primitives } from '../value-object/Primitives'
 import { FilterField } from './FilterField'
 import { FilterOperator } from './FilterOperator'

@@ -26,7 +26,7 @@ export class CriteriaToSequelizeConverter {
 		return query
 	}
 
-	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+	 
 	private generateWhereQueryFromFilters(filters: Filter[], mappings: Mappings = {}): WhereOptions {
 		return filters.reduce((acc: WhereOptions, filter) => {
 			const field = mappings[filter.field.value] ?? filter.field.value

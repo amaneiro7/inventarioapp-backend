@@ -140,7 +140,7 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 						const individualMemoryCount = memoryCounts[memoryValue]
 						const totalCountForThisMemory = countAsNumber * individualMemoryCount
 
-						let existingRamValue = memoryType.memoryRamValues.find((rv: any) => rv.name === ramValueName)
+						const existingRamValue = memoryType.memoryRamValues.find((rv: any) => rv.name === ramValueName)
 
 						if (existingRamValue) {
 							existingRamValue.count += totalCountForThisMemory

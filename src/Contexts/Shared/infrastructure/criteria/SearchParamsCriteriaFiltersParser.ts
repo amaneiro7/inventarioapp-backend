@@ -3,7 +3,7 @@ import { FilterField } from '../../domain/criteria/FilterField'
 import { FilterOperator } from '../../domain/criteria/FilterOperator'
 import { FilterValue } from '../../domain/criteria/FilterValue'
 
-/* eslint-disable @typescript-eslint/no-extraneous-class */
+ 
 export interface FilterType {
 	value: string
 	operator: string

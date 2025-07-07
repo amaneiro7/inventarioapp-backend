@@ -1,4 +1,4 @@
-/* eslint-disable no-prototype-builtins */
+ 
 // import 'dotenv/config'
 import dotenv from 'dotenv'
 
