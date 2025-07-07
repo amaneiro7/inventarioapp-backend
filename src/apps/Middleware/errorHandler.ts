@@ -8,9 +8,8 @@ interface ApiError extends Error {
 	isOperational: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorConverter = (err: ApiError | Error, req: Request, res: Response, next: NextFunction) => {
-	let error = err
+	const error = err
 	// if (!(error instanceof ApiError)) {
 	//   const statusCode = error.statusCode ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR
 	//   const message = error.message || httpStatus[statusCode]
@@ -39,4 +38,5 @@ export const errorHandler = (logger: Logger) => (err: ApiError, req: Request, re
 	}
 
 	res.status(statusCode).send(message)
+	next(err)
 }

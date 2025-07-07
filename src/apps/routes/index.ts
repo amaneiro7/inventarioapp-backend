@@ -23,8 +23,8 @@ export function registerRoutes(express: Express, logger: Logger) {
 	router.use(errorHandler(logger))
 }
 
-function register(routePath: string, router: Router) {
-	const route = require(resolve(routePath))
+async function register(routePath: string, router: Router) {
+	const route = await import(resolve(routePath))
 	route.register(router)
 }
 

@@ -116,7 +116,7 @@ export class DeviceCreator {
 					deviceId: devicePrimitives.id
 				})
 			}
-		} catch (error) {
+		} catch {
 			throw new Error('Error al guardar el dispositivo o crear el historial')
 		}
 	}
