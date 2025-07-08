@@ -5,7 +5,7 @@ import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/val
 import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
-import { type PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
+import { type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type LocationMonitoringDto, type LocationMonitoringPrimitives } from '../domain/entity/LocationMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
@@ -60,10 +60,7 @@ export class LocationMonitoringService extends MonitoringService<
 	protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
 		return item.toPrimitive()
 	}
-	protected validatePingResult(payload: {
-		expectedHostname: string | null | undefined
-		pingResult: PingResult
-	}): boolean {
+	protected validatePingResult(): boolean {
 		// No hostname validation for locations, always return true
 		return true
 	}

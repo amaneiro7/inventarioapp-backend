@@ -23,7 +23,7 @@ export class PingService {
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
 			command = 'ping'
-			pingArgs = ['-n', '1', '-w', '1000 -a', ipAddress]
+			pingArgs = ['-n', '1', '-w', '1000', '-a', ipAddress]
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'

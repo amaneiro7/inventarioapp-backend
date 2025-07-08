@@ -116,7 +116,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		lastScan: Date | null
 	): void
 	protected abstract createMonitoringPayload(item: Entity): Payload
-	protected abstract validatePingResult(payload: {
+	protected abstract validatePingResult(payload?: {
 		expectedHostname: string | null | undefined
 		pingResult: PingResult
 	}): boolean
