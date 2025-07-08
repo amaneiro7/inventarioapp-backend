@@ -105,7 +105,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	}
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
-	protected abstract getExpectedHostname(item: DTO): Promise<string | null | undefined>
+	protected abstract getExpectedHostname(item?: DTO): Promise<string | null | undefined>
 	protected abstract getMonitoringId(item: DTO): Primitives<MonitoringId>
 	protected abstract createMonitoringEntity(item: DTO): Entity
 	protected abstract updateMonitoringEntityStatus(

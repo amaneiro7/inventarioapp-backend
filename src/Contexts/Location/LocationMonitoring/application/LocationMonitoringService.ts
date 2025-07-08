@@ -45,7 +45,7 @@ export class LocationMonitoringService extends MonitoringService<
 		const subnet = item?.location?.subnet
 		return await convertSubnetToHostIp(subnet)
 	}
-	protected async getExpectedHostname(item: LocationMonitoringDto): Promise<string | null | undefined> {
+	protected async getExpectedHostname(): Promise<string | null | undefined> {
 		// Hostname is not applicable for locations
 		return undefined
 	}
@@ -60,7 +60,10 @@ export class LocationMonitoringService extends MonitoringService<
 	protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
 		return item.toPrimitive()
 	}
-	protected validatePingResult(hostanme: string | null | undefined, pingResult: PingResult): boolean {
+	protected validatePingResult(payload: {
+		expectedHostname: string | null | undefined
+		pingResult: PingResult
+	}): boolean {
 		// No hostname validation for locations, always return true
 		return true
 	}
