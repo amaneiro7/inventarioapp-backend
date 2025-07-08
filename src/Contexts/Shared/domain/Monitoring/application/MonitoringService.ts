@@ -200,7 +200,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			}
 
 			monitoringEntity = this.createMonitoringEntity(monitoringRecord)
-			pingResult = await this.pingService.pingIp({ ipAddress })
+			pingResult = await this.pingService.pingIp({ ipAddress, getHostName: expectedHostname ? true : false })
 
 			const isValidHostname = this.validatePingResult({ expectedHostname, pingResult })
 

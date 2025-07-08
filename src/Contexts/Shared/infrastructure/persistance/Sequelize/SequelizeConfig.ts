@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize'
 import { config } from '../../config'
-import { Database } from '../../../domain/Database'
-import { Logger } from '../../../domain/Logger'
 import { initilizarModels } from './initSchemas'
+import { type Database } from '../../../domain/Database'
+import { type Logger } from '../../../domain/Logger'
 
 const {
 	postgres: { user, password, dbName, host, port, ssl }
@@ -19,9 +19,9 @@ export const sequelize = new Sequelize(url, {
 		}
 	}),
 	pool: {
-		max: 5,
+		max: 50,
 		min: 0,
-		acquire: 60000,
+		acquire: 10000,
 		idle: 10000
 	}
 })

@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		// Primero, consulta los datos necesarios de la tabla 'locations'
 		const locations = await queryInterface.sequelize.query(
 			`SELECT
@@ -14,10 +14,12 @@ module.exports = {
 		// Mapea los resultados para que coincidan con la estructura de location_monitorings
 		const locationMonitoringsData = locations.map(location => {
 			console.log(location)
+			const statuses = ['online', 'offline', 'not available', 'hostname mismatch']
+			const randomStatus = statuses[Math.floor(Math.random() * statuses.length)]
 			return {
 				id: location.id,
 				location_id: location.id, // Asume que 'location_id' en location_monitorings se refiere al ID del sitio
-				status: 'not available', // Estado inicial desconocido
+				status: randomStatus, // Estado aleatorio
 				last_scan: null,
 				last_success: null,
 				last_failed: null,
@@ -35,7 +37,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		// Opción 2 (Más drástica, si el seed siempre limpia la tabla):
 		await queryInterface.bulkDelete('location_monitorings', null, {})
 		// console.log('Se eliminaron todos los registros de "location_monitorings".');

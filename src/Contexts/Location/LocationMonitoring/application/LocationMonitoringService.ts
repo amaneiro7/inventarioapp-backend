@@ -62,6 +62,7 @@ export class LocationMonitoringService extends MonitoringService<
 	}
 	protected validatePingResult(): boolean {
 		// No hostname validation for locations, always return true
+
 		return true
 	}
 

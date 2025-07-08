@@ -30,7 +30,8 @@ export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'devi
 					type: DataTypes.ENUM(
 						MonitoringStatuses.NOTAVAILABLE,
 						MonitoringStatuses.ONLINE,
-						MonitoringStatuses.OFFLINE
+						MonitoringStatuses.OFFLINE,
+						MonitoringStatuses.HOSTNAME_MISMATCH
 					),
 					allowNull: false,
 					defaultValue: MonitoringStatuses.NOTAVAILABLE

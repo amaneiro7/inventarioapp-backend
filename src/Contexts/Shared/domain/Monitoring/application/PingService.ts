@@ -15,24 +15,25 @@ export interface PingResult {
 }
 export class PingService {
 	constructor(private readonly logger: Logger) {}
-	async pingIp({ ipAddress }: { ipAddress: string }): Promise<PingResult> {
+	async pingIp({ ipAddress, getHostName }: { ipAddress: string; getHostName?: boolean }): Promise<PingResult> {
 		let command = ''
+		const getHostNameArg = getHostName ? '-a' : ''
 		let pingArgs: string[] = []
 		const osPlatform = platform()
 
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
 			command = 'ping'
-			pingArgs = ['-n', '1', '-w', '1000', '-a', ipAddress]
+			pingArgs = ['-n', '1', '-w', '1000', getHostNameArg, ipAddress]
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'
-			pingArgs = ['-c', '1', '-W', '1', ipAddress]
+			pingArgs = ['-c', '1', '-W', '1', getHostNameArg, ipAddress]
 		}
 
 		try {
 			// Use execPromise with a timeout for the command itself
-			const { stdout, stderr } = await execPromise(`${command} ${pingArgs.join(' ')}`, { timeout: 2000 })
+			const { stdout, stderr } = await execPromise(`${command} ${pingArgs.join(' ')}`, { timeout: 8000 })
 
 			if (stderr) {
 				this.logger.info(`Ping command stderr for ${ipAddress}: ${stderr.trim()}`)
