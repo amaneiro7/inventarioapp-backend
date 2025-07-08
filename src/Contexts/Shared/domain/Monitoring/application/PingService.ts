@@ -49,22 +49,37 @@ export class PingService {
 					}%. Raw output: ${result.rawOutput.trim()}`
 				)
 			}
-		} catch (error: any) {
-			// Re-throw a more user-friendly error for the caller (MonitoringService)
-			if (error.killed && error.signal === 'SIGTERM') {
-				throw new Error(`Ping to ${ipAddress} timed out after 2 seconds.`)
-			} else if (error.code === 'ENOENT') {
-				throw new Error(`Ping command not found. Is 'ping' installed and in your system's PATH?`)
-			} else if (
-				error.stdout &&
-				(error.stdout.includes('Request timed out') || error.stdout.includes('Destination host unreachable'))
-			) {
-				throw new Error(`Host ${ipAddress} is unreachable. (Ping command output indicates failure)`)
-			} else if (error.message.includes('100% packet loss')) {
-				throw new Error(`Host ${ipAddress} is unreachable. (100% packet loss)`)
-			} else {
-				throw new Error(`Failed to execute ping command for ${ipAddress}: ${error.message}`)
+		} catch (rawError: unknown) {
+			// Handle errors from execPromise. The caught object is 'unknown' by default in modern TS.
+			// We inspect it to provide a more specific error message.
+			if (rawError instanceof Error) {
+				// The error from execPromise has additional properties. We can cast it to access them safely.
+				const error = rawError as Error & {
+					killed?: boolean
+					signal?: string
+					code?: string
+					stdout?: string
+					stderr?: string
+				}
+
+				if (error.killed && error.signal === 'SIGTERM') {
+					throw new Error(`Ping to ${ipAddress} timed out after 2 seconds.`)
+				} else if (error.code === 'ENOENT') {
+					throw new Error(`Ping command not found. Is 'ping' installed and in your system's PATH?`)
+				} else if (
+					error.stdout &&
+					(error.stdout.includes('Request timed out') ||
+						error.stdout.includes('Destination host unreachable'))
+				) {
+					throw new Error(`Host ${ipAddress} is unreachable. (Ping command output indicates failure)`)
+				} else if (error.message.includes('100% packet loss')) {
+					throw new Error(`Host ${ipAddress} is unreachable. (100% packet loss)`)
+				} else {
+					throw new Error(`Failed to execute ping command for ${ipAddress}: ${error.message}`)
+				}
 			}
+			// Fallback for cases where a non-Error was thrown
+			throw new Error(`Failed to execute ping command for ${ipAddress}: ${String(rawError)}`)
 		}
 	}
 
@@ -87,7 +102,7 @@ export class PingService {
 			}
 			// Extract hostname for Windows
 			const hostnameMatch =
-				output.match(/Reply from ([a-zA-Z0-9\-.]+)/i) || output.match(/Respuesta desde ([a-zA-Z0-9\-.]+)/i)
+				output.match(/Reply from ([a-zA-Z0-9\-.]+)/i) || output.match(/Haciendo ping a ([a-zA-Z0-9\-.]+)/i)
 			if (hostnameMatch && hostnameMatch[1]) {
 				result.hostname = hostnameMatch[1]
 			}
