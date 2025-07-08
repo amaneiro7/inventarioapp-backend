@@ -62,7 +62,6 @@ export class DeviceMonitoringService extends MonitoringService<
 		expectedHostname: string | null | undefined
 		pingResult: PingResult
 	}): boolean {
-		console.log('expectedHostname', expectedHostname, 'pingResult', pingResult)
 		const hostname = expectedHostname?.toLowerCase()
 		const receivedHostname = pingResult.hostname?.toLowerCase()
 		return hostname === receivedHostname

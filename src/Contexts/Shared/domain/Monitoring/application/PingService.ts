@@ -23,7 +23,7 @@ export class PingService {
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
 			command = 'ping'
-			pingArgs = ['-n', '1', '-w', '1000', ipAddress]
+			pingArgs = ['-n', '1', '-w', '1000 -a', ipAddress]
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'
@@ -104,7 +104,14 @@ export class PingService {
 			const hostnameMatch =
 				output.match(/Reply from ([a-zA-Z0-9\-.]+)/i) || output.match(/Haciendo ping a ([a-zA-Z0-9\-.]+)/i)
 			if (hostnameMatch && hostnameMatch[1]) {
-				result.hostname = hostnameMatch[1]
+				let fullHostname = hostnameMatch[1]
+				const domainToRemove = '.corp.bnc.com'
+				if (fullHostname.toLowerCase().endsWith(domainToRemove)) {
+					// Use slice to get the part before the domain
+					// fullHostname.length - domainToRemove.length will give you the starting index of the domain
+					fullHostname = fullHostname.slice(0, fullHostname.length - domainToRemove.length)
+				}
+				result.hostname = fullHostname
 			}
 		} else {
 			// Linux/macOS output patterns
