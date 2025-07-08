@@ -14,15 +14,6 @@ export interface GenericMonitoringRepository<DTO, Payload> {
 }
 
 export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
-	// protected readonly CONCURRENCY_LIMIT = 2
-	// protected readonly IDLE_TIME_MS = 5 * 6 * 1000 // 5 minutes idle time between scans (adjust as needed)
-
-	// protected readonly START_HOUR = 7 // 7 AM
-	// protected readonly END_HOUR = 19 // 7 PM (19:00)
-
-	// protected readonly START_DAY_OF_WEEK = 1 // Lunes
-	// protected readonly END_DAY_OF_WEEK = 5 // Viernes
-
 	protected isRunning: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
 
@@ -97,7 +88,11 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
 			} else {
 				this.logger.info(
-					`[${formattedISOString}] ${this.getMonitoringName} Skipping scan: Outside defined working hours (${this.monitoringConfig.startDayOfWeek}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${this.monitoringConfig.endHour}:00).`
+					`[${formattedISOString}] ${this.getMonitoringName()} Skipping scan: Outside defined working hours (${
+						this.monitoringConfig.startDayOfWeek
+					}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${
+						this.monitoringConfig.endHour
+					}:00).`
 				)
 			}
 		}
@@ -105,14 +100,8 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		if (shouldRun) {
 			await this.executePingScan()
 		}
-
-		// if (shouldRun) {
-		// 	this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
-		// 	await this.executePingScan()
-		// } else {
-		// 	this.logger.info(`[${formattedISOString}] Skipping scan: Outside defined working hours.`)
-		// }
-		this.timeoutId = setTimeout(() => this.runLoop(), this.monitoringConfig.idleTimeMs)
+		const idleTimeMs = this.monitoringConfig.idleTimeMs * 60 * 1000
+		this.timeoutId = setTimeout(() => this.runLoop(), idleTimeMs)
 	}
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
@@ -127,7 +116,10 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		lastScan: Date | null
 	): void
 	protected abstract createMonitoringPayload(item: Entity): Payload
-	protected abstract validatePingResult(expectedHostname: string | null | undefined, pingResult: PingResult): boolean
+	protected abstract validatePingResult(payload: {
+		expectedHostname: string | null | undefined
+		pingResult: PingResult
+	}): boolean
 
 	protected async executePingScan(): Promise<void> {
 		try {
@@ -210,7 +202,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			monitoringEntity = this.createMonitoringEntity(monitoringRecord)
 			pingResult = await this.pingService.pingIp({ ipAddress })
 
-			const isValidHostname = this.validatePingResult(expectedHostname, pingResult)
+			const isValidHostname = this.validatePingResult({ expectedHostname, pingResult })
 
 			if (isValidHostname) {
 				this.updateMonitoringEntityStatus(

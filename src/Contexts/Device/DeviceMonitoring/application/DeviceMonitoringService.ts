@@ -55,10 +55,17 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected async getExpectedHostname(item: DeviceMonitoringDto): Promise<string | null | undefined> {
 		return item?.device?.computer?.computerName
 	}
-	protected validatePingResult(hostanme: string | null | undefined, pingResult: PingResult): boolean {
-		const expectedHostname = hostanme?.toLowerCase()
+	protected validatePingResult({
+		expectedHostname,
+		pingResult
+	}: {
+		expectedHostname: string | null | undefined
+		pingResult: PingResult
+	}): boolean {
+		console.log('expectedHostname', expectedHostname, 'pingResult', pingResult)
+		const hostname = expectedHostname?.toLowerCase()
 		const receivedHostname = pingResult.hostname?.toLowerCase()
-		return expectedHostname === receivedHostname
+		return hostname === receivedHostname
 	}
 
 	protected updateMonitoringEntityStatus(

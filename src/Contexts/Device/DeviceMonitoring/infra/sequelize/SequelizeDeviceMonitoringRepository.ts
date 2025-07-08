@@ -53,7 +53,7 @@ export class SequelizeDeviceMonitoringRepository
 								{
 									association: 'computer',
 									where: { ipAddress: { [Op.ne]: null } },
-									attributes: ['ipAddress'],
+									attributes: ['ipAddress', 'computerName'],
 									required: true
 								}
 							]
