@@ -219,11 +219,13 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					})`
 				})
 			} else {
+				// Se revirtio el cambio porque genero muchos falsos positivos
+				// el dominio tarda mucho en actualizarse y el hacer ping -a podria no devolver el nombre correcto
 				this.updateMonitoringEntityStatus(
 					monitoringEntity,
-					MonitoringStatuses.HOSTNAME_MISMATCH,
-					null,
+					MonitoringStatuses.ONLINE,
 					new Date(),
+					null,
 					new Date()
 				)
 				await this.pingLogger.logPingResult({
