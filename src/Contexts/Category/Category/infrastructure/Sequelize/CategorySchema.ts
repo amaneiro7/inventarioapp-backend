@@ -5,6 +5,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type MainCategoryId } from '../../../MainCategory/domain/MainCategoryId'
 import { type CategoryDto } from '../../domain/Category.dto'
 import { type MainCategoryDto } from '../../../MainCategory/domain/MainCategory.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> implements CategoryDto {
 	declare id: Primitives<CategoryId>
@@ -12,7 +13,7 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 	declare mainCategoryId: Primitives<MainCategoryId>
 	declare mainCategory: MainCategoryDto
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.belongsTo(models.MainCategory, {
 			as: 'mainCategory',
 			foreignKey: 'mainCategoryId'

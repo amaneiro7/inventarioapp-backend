@@ -1,9 +1,9 @@
 import { InvalidArgumentError } from '../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../Shared/domain/value-object/StringValueObject'
-import { Brand } from './Brand'
 import { BrandAlreadyExistError } from './BrandAlreadyExistError'
-import { BrandRepository } from './BrandRepository'
+import { type Brand } from './Brand'
+import { type BrandRepository } from './BrandRepository'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 
 export class BrandName extends StringValueObject {
 	private readonly NAME_MAX_LENGTH = 100

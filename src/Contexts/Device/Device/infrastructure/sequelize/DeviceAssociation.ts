@@ -1,7 +1,16 @@
-import { type FindOptions } from 'sequelize'
+import { type FindOptions, type Includeable, type WhereOptions, type Literal } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+
+// Define a type for the objects within the `include` array that are being manipulated
+interface SequelizeIncludeOptions {
+  association: string;
+  required?: boolean;
+  where?: WhereOptions | Literal; // Literal for sequelize.literal
+  include?: Includeable[];
+  attributes?: string[];
+}
 
 export class DeviceAssociation {
 	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
