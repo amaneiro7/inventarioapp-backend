@@ -100,7 +100,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		}
 
 		if (shouldRun) {
-			await this.executePingScan()
+			await this.executePingScan({ showLogs })
 		}
 		const idleTimeMs = this.monitoringConfig.idleTimeMs * 60 * 1000
 		this.timeoutId = setTimeout(() => this.runLoop({ showLogs }), idleTimeMs)
@@ -123,17 +123,23 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		pingResult: PingResult
 	}): boolean
 
-	protected async executePingScan(): Promise<void> {
+	protected async executePingScan({ showLogs = false }: { showLogs: boolean }): Promise<void> {
 		try {
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
 				message: `Starting ${this.getMonitoringName()} ping scan.`
 			}) // Log start of scan
 			const itemsToMonitor = await this.repository.searchNotnullIpAddress()
-			this.logger.info(`[INFO] Found ${itemsToMonitor.length} ${this.getMonitoringName()}s to monitor.`)
+			if (showLogs) {
+				this.logger.info(`[INFO] Found ${itemsToMonitor.length} ${this.getMonitoringName()}s to monitor.`)
+			}
 
 			if (itemsToMonitor.length === 0) {
-				this.logger.info(`[INFO] No ${this.getMonitoringName()}s with IP addresses to monitor. Skipping scan.`)
+				if (showLogs) {
+					this.logger.info(
+						`[INFO] No ${this.getMonitoringName()}s with IP addresses to monitor. Skipping scan.`
+					)
+				}
 				return
 			}
 
@@ -166,7 +172,9 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			)
 
 			await Promise.allSettled(pingPromises)
-			this.logger.info(`[INFO] All ping jobs for this scan have completed.`)
+			if (showLogs) {
+				this.logger.info(`[INFO] All ping jobs for this scan have completed.`)
+			}
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
 				message: `Completed ${this.getMonitoringName()} ping scan.`
