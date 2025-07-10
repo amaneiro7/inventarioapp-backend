@@ -25,7 +25,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	) {}
 	protected abstract monitoringConfig: MonitoringServiceConfig
 
-	public startMonitoringLoop(): void {
+	public startMonitoringLoop({ showLogs = false }: { showLogs: boolean }): void {
 		if (this.monitoringConfig.concurrencyLimit <= 0) {
 			this.logger.info('Concurrency limit must be greater than 0. Defaulting to 1.')
 			this.monitoringConfig.concurrencyLimit = 1
@@ -41,7 +41,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 		this.isRunning = true
 		this.logger.info(`Starting continuous ${this.getMonitoringName()} monitoring loop...`)
-		this.runLoop()
+		this.runLoop({ showLogs })
 	}
 
 	public stopMonitoringLoop(): void {
@@ -53,7 +53,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		this.logger.info(`${this.getMonitoringName()} monitoring loop stopped.`)
 	}
 
-	protected async runLoop(): Promise<void> {
+	protected async runLoop({ showLogs }: { showLogs: boolean }): Promise<void> {
 		if (!this.isRunning) {
 			this.logger.info('Monitoring loop has been stopped.')
 			return
@@ -84,16 +84,18 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				currentHour >= this.monitoringConfig.startHour &&
 				currentHour < this.monitoringConfig.endHour
 
-			if (shouldRun) {
-				this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
-			} else {
-				this.logger.info(
-					`[${formattedISOString}] ${this.getMonitoringName()} Skipping scan: Outside defined working hours (${
-						this.monitoringConfig.startDayOfWeek
-					}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${
-						this.monitoringConfig.endHour
-					}:00).`
-				)
+			if (showLogs) {
+				if (shouldRun) {
+					this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
+				} else {
+					this.logger.info(
+						`[${formattedISOString}] ${this.getMonitoringName()} Skipping scan: Outside defined working hours (${
+							this.monitoringConfig.startDayOfWeek
+						}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${
+							this.monitoringConfig.endHour
+						}:00).`
+					)
+				}
 			}
 		}
 
@@ -101,7 +103,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			await this.executePingScan()
 		}
 		const idleTimeMs = this.monitoringConfig.idleTimeMs * 60 * 1000
-		this.timeoutId = setTimeout(() => this.runLoop(), idleTimeMs)
+		this.timeoutId = setTimeout(() => this.runLoop({ showLogs }), idleTimeMs)
 	}
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>

@@ -22,10 +22,7 @@ export class Server {
 	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt') // Ruta por defecto al certificado
 	httpServer?: http.Server | https.Server
 
-	constructor(
-		readonly port: string,
-		private readonly logger: Logger
-	) {
+	constructor(readonly port: string, private readonly logger: Logger) {
 		this.port = port
 		this.express = express()
 
@@ -91,7 +88,7 @@ export class Server {
 				const env = this.express.get('env') as string
 				this.httpServer = https.createServer(credentials, this.express).listen(this.port, () => {
 					this.logger.info(
-						`  Inventario Backend app is running at https://localhost:${this.port} in ${env} mode (HTTPS)`
+						` Inventario Backend app is running at https://localhost:${this.port} in ${env} mode (HTTPS)`
 					)
 					this.logger.info('  Press CTRL-C to stop\n')
 					resolve()
@@ -108,7 +105,7 @@ export class Server {
 			const env = this.express.get('env') as string
 			this.httpServer = this.express.listen(this.port, () => {
 				this.logger.info(
-					`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode (HTTP)`
+					` Inventario Backend app is running at http://localhost:${this.port} in ${env} mode (HTTP)`
 				)
 				this.logger.info('  Press CTRL-C to stop\n')
 				resolve()
