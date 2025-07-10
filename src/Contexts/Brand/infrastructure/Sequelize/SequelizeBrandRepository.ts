@@ -1,10 +1,10 @@
+import { BrandModel } from './BrandSchema'
+import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { type BrandRepository } from '../../domain/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type BrandDto } from '../../domain/Brand.dto'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { BrandModel } from './BrandSchema'
-import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 
 export class SequelizeBrandRepository extends SequelizeCriteriaConverter implements BrandRepository {

@@ -3,12 +3,13 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type BrandId } from '../../domain/BrandId'
 import { type BrandName } from '../../domain/BrandName'
 import { type BrandDto } from '../../domain/Brand.dto'
+import { type SequelizeModels } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 export class BrandModel extends Model<BrandDto> implements BrandDto {
 	declare id: Primitives<BrandId>
 	declare name: Primitives<BrandName>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.hasMany(models.Model, { as: 'model', foreignKey: 'brandId' }) // A brand can have many model series
 		this.hasMany(models.Device, { as: 'device', foreignKey: 'brandId' }) // A brand can have many device
 	}

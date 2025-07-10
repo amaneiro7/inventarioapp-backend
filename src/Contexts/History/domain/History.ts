@@ -7,9 +7,18 @@ import { HistoryEmployee } from './HistoryEmployee'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
 
+import { HistoryId } from './HistoryId'
+import { DeviceId } from '../../Device/Device/domain/DeviceId'
+import { UserId } from '../../User/user/domain/UserId'
+import { Action, type ActionType } from './HistoryAction'
+import { CreatedAt } from './CreatedAt'
+import { HistoryEmployee } from './HistoryEmployee'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
+
 interface Cambio {
-	oldValue: any
-	newValue: any
+	oldValue: unknown
+	newValue: unknown
 }
 export class History {
 	constructor(
@@ -95,13 +104,13 @@ export class History {
 		return this.newData
 	}
 
-	public static compararDatos(newData: Record<string, any>, oldData: Record<string, any>): Record<string, Cambio> {
+	public static compararDatos(newData: Record<string, unknown>, oldData: Record<string, unknown>): Record<string, Cambio> {
 		const cambios: Record<string, Cambio> = {}
 
 		for (const key in newData) {
 			if (Object.prototype.hasOwnProperty.call(newData, key)) {
 				if (Array.isArray(newData[key]) && Array.isArray(oldData[key])) {
-					if (!History.arraysIguales(newData[key], oldData[key])) {
+					if (!History.arraysIguales(newData[key] as unknown[], oldData[key] as unknown[])) {
 						cambios[key] = {
 							oldValue: oldData[key],
 							newValue: newData[key]
@@ -119,14 +128,14 @@ export class History {
 		return cambios
 	}
 
-	private static normalizarValor(valor: any) {
+	private static normalizarValor(valor: unknown) {
 		if (valor === undefined || valor === null || valor === '') {
 			return null // Normaliza a null para la comparación
 		}
 		return valor
 	}
 
-	private static arraysIguales(arr1: any[], arr2: any[]) {
+	private static arraysIguales(arr1: unknown[], arr2: unknown[]) {
 		if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
 			return false
 		}

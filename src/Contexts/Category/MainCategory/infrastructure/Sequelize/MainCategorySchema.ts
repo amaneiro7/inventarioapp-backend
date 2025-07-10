@@ -3,17 +3,13 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type MainCategoryDto } from '../../domain/MainCategory.dto'
 import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryName } from '../../domain/MainCategoryName'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 export class MainCategoryModel extends Model<MainCategoryDto> implements MainCategoryDto {
 	declare id: Primitives<MainCategoryId>
 	declare name: Primitives<MainCategoryName>
 
-	public static async createModel(sequelize: Sequelize) {
-		await this.initialize(sequelize)
-		await this.associate(sequelize.models)
-	}
-
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.hasMany(models.Category, {
 			as: 'category',
 			foreignKey: 'mainCategoryId'

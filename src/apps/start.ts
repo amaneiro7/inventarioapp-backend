@@ -13,7 +13,7 @@ process.on('uncaughtException', err => {
 	process.exit(1)
 })
 
-function handleError(e: any) {
+function handleError(e: unknown) {
 	console.log(e)
 	process.exit(1)
 }
