@@ -8,7 +8,7 @@ import { type PingLogger } from '../infra/PingLogger'
 import { type MonitoringServiceConfig } from '../domain/entity/MonitoringConfig'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
-	searchNotnullIpAddress: () => Promise<DTO[]>
+	searchNotNullIpAddress: (page: number, pageSize: number) => Promise<DTO[]>
 	searchById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
 	save: (entity: Payload) => Promise<void>
 }
@@ -129,51 +129,68 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				fileName: this.getMonitoringName(),
 				message: `Starting ${this.getMonitoringName()} ping scan.`
 			}) // Log start of scan
-			const itemsToMonitor = await this.repository.searchNotnullIpAddress()
-			if (showLogs) {
-				this.logger.info(`[INFO] Found ${itemsToMonitor.length} ${this.getMonitoringName()}s to monitor.`)
-			}
-
-			if (itemsToMonitor.length === 0) {
-				if (showLogs) {
-					this.logger.info(
-						`[INFO] No ${this.getMonitoringName()}s with IP addresses to monitor. Skipping scan.`
-					)
-				}
-				return
-			}
 
 			const limit = pLimit(this.monitoringConfig.concurrencyLimit)
+			// const batchSize = this.monitoringConfig?. ?? 1000 // Default to 1000 if not set
+			const batchSize = 1000 // Default to 1000 if not set
+			let page = 1
+			let hasMore = true
+			let totalMonitored = 0
 
-			const pingPromises = itemsToMonitor.map(item =>
-				limit(async () => {
-					const ipAddress = await this.getIpAddress(item)
-					const expectedHostname = await this.getExpectedHostname(item)
-					const monitoringId = this.getMonitoringId(item)
+			while (hasMore) {
+				const itemsToMonitor = await this.repository.searchNotNullIpAddress(page, batchSize)
+				totalMonitored += itemsToMonitor.length
 
-					if (ipAddress) {
-						await this.processPingJob({ monitoringId, ipAddress, expectedHostname })
-					} else {
-						const monitoringRecord = await this.repository.searchById(monitoringId)
-						if (monitoringRecord) {
-							const monitoringEntity = this.createMonitoringEntity(monitoringRecord)
-							this.updateMonitoringEntityStatus(
-								monitoringEntity,
-								MonitoringStatuses.NOTAVAILABLE,
-								null,
-								null,
-								null
-							)
-							const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
-							await this.repository.save(monitoringPayload)
+				if (showLogs) {
+					this.logger.info(
+						`[INFO] Processing batch ${page} with ${itemsToMonitor.length} ${this.getMonitoringName()}s.`
+					)
+				}
+
+				if (itemsToMonitor.length === 0) {
+					hasMore = false
+					continue
+				}
+
+				const pingPromises = itemsToMonitor.map(item =>
+					limit(async () => {
+						const ipAddress = await this.getIpAddress(item)
+						const expectedHostname = await this.getExpectedHostname(item)
+						const monitoringId = this.getMonitoringId(item)
+
+						if (ipAddress) {
+							await this.processPingJob({ monitoringId, ipAddress, expectedHostname })
+						} else {
+							const monitoringRecord = await this.repository.searchById(monitoringId)
+							if (monitoringRecord) {
+								const monitoringEntity = this.createMonitoringEntity(monitoringRecord)
+								this.updateMonitoringEntityStatus(
+									monitoringEntity,
+									MonitoringStatuses.NOTAVAILABLE,
+									null,
+									null,
+									null
+								)
+								const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
+								await this.repository.save(monitoringPayload)
+							}
 						}
-					}
-				})
-			)
+					})
+				)
 
-			await Promise.allSettled(pingPromises)
+				await Promise.allSettled(pingPromises)
+
+				if (itemsToMonitor.length < batchSize) {
+					hasMore = false
+				} else {
+					page++
+				}
+			}
+
 			if (showLogs) {
-				this.logger.info(`[INFO] All ping jobs for this scan have completed.`)
+				this.logger.info(
+					`[INFO] All ping jobs for this scan have completed. Total monitored: ${totalMonitored}`
+				)
 			}
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),

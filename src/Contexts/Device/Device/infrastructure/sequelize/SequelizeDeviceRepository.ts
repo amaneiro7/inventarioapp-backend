@@ -1,13 +1,7 @@
-import { set_fs, utils, write } from 'xlsx'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'node:fs'
-
-import { type Transaction } from 'sequelize'
-import { type DeviceRepository } from '../../domain/DeviceRepository'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DeviceId } from '../../domain/DeviceId'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-
+import { set_fs, utils, write } from 'xlsx'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceModel } from './DeviceSchema'
 import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
@@ -15,9 +9,15 @@ import { DeviceAssociation } from './DeviceAssociation'
 import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { clearComputerDataset } from './clearComputerDataset'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { type Transaction, Model, Op } from 'sequelize'
+import { type DeviceRepository } from '../../domain/DeviceRepository'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DeviceId } from '../../domain/DeviceId'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DevicePrimitives, type DeviceDto } from '../../domain/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
@@ -41,6 +41,19 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 				}
 			}
 		})
+	}
+
+	async searchNotNullIpAddressPaginated(page: number, pageSize: number): Promise<DeviceDto[]> {
+		const offset = (page - 1) * pageSize
+		const result = await DeviceModel.findAll({
+			where: {
+				ipAddress: { [Op.ne]: null }
+			},
+			offset,
+			limit: pageSize
+		})
+
+		return result
 	}
 
 	async matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
@@ -122,12 +135,11 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		return (await DeviceModel.findOne({ where: { serial } })) ?? null
 	}
 
-	async searchByComputerName(computerName: string): Promise<any> {
-		return (
-			(await this.models.DeviceComputer.findOne({
-				where: { computerName }
-			})) ?? null
-		)
+	async searchByComputerName(computerName: string): Promise<Model<any, any> | null> {
+		const data = await this.models.DeviceComputer.findOne({
+			where: { computerName }
+		})
+		return data ?? null
 	}
 
 	/**
