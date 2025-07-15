@@ -1,3 +1,4 @@
+import { createHash } from 'crypto'
 import { Primitives } from '../value-object/Primitives'
 import { FiltersPrimitives } from './Filter'
 import { FilterField } from './FilterField'
@@ -68,5 +69,22 @@ export class Criteria {
 		return this.filters.value.map(filter => {
 			if (filter.field.value === field) return filter.value.value
 		})
+	}
+
+	/**
+	 * Generates a unique and consistent hash string representing the current state of the criteria.
+	 * This is primarily used for creating unique cache keys.
+	 *
+	 * @returns {string} A SHA-256 hash string.
+	 */
+	public hash(): string {
+		const data = {
+			filters: this.filters.toPrimitives(),
+			order: this.order.toPrimitives(),
+			pageSize: this.pageSize,
+			pageNumber: this.pageNumber
+		}
+		const json = JSON.stringify(data)
+		return createHash('sha256').update(json).digest('hex')
 	}
 }

@@ -1,151 +1,119 @@
-import { Op, type FindOptions } from 'sequelize'
+import { Op, Sequelize, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
+/**
+ * A utility class to build the complex Sequelize FindOptions for general location monitoring searches.
+ */
 export class LocationMonitoringAssociation {
+	/**
+	 * Constructs a dynamic and complex FindOptions object for Sequelize based on the provided criteria.
+	 *
+	 * @param criteria The criteria object containing filters and ordering.
+	 * @param options The base FindOptions to be modified.
+	 * @returns A fully configured FindOptions object.
+	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = [
-			{
-				association: 'location', // 0
-				required: true,
-				where: {
-					locationStatusId: LocationStatusOptions.OPERATIONAL,
-					subnet: { [Op.ne]: null }
-				},
-				include: [
-					{
-						association: 'typeOfSite', // 0 - 0
-						attributes: []
-					},
-					{
-						association: 'site', // 0 - 1
-						required: true,
-						include: [
-							{
-								association: 'city', // 0 - 1 - 0
-								required: true,
-								include: [
-									{
-										association: 'state', // 0 - 1 - 0
-										required: true,
-										include: [
-											{
-												association: 'region', // 0 - 1 - 0 - 0
-												required: true,
+		// Define the nested include structure using named variables for clarity and type safety.
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = { association: 'state', required: true, include: [regionInclude] }
+		const cityInclude: IncludeOptions = { association: 'city', required: true, include: [stateInclude] }
+		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
+		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
-												include: [
-													{
-														association: 'administrativeRegion', // 0 - 1 - 0 - 0 - 0
-														required: true,
-														attributes: []
-													}
-												]
-											}
-										]
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
+		const locationInclude: IncludeOptions = {
+			association: 'location',
+			required: true,
+			where: {
+				locationStatusId: LocationStatusOptions.OPERATIONAL,
+				subnet: { [Op.ne]: null }
+			},
+			include: [typeOfSiteInclude, siteInclude]
+		}
 
+		options.include = [locationInclude]
+
+		// --- Dynamic Filter Application ---
 		if (!criteria.searchValueInArray('status')) {
-			options.where = {
-				...options.where,
-				status: {
-					[Op.ne]: MonitoringStatuses.NOTAVAILABLE
-				}
-			}
+			options.where = { ...options.where, status: { [Op.ne]: MonitoringStatuses.NOTAVAILABLE } }
 		}
 
-		// Poder filtrar por direccion
-		if (options.where && 'subnet' in options.where) {
-			const subnet = options.where.subnet
-			const symbol = Object.getOwnPropertySymbols(subnet)[0]
-			const value: string = subnet[symbol] as string
+		const whereFilters = options.where ?? {}
+		const locationWhereFilters = locationInclude.where ?? {}
 
-			;(options.include[0] as any).where = {
-				subnet: sequelize.literal(`subnet::text ILIKE '%${value}%'`)
+		try {
+			if ('subnet' in whereFilters) {
+				const subnet = whereFilters.subnet as string
+				const symbol = Object.getOwnPropertySymbols(subnet)[0]
+				const value: string = subnet[symbol] as string
+
+				locationWhereFilters.subnet = Sequelize.literal(`subnet::text ILIKE '%${value}%'`)
+				delete whereFilters.subnet
 			}
-
-			delete options.where.subnet
+		} catch (error) {
+			console.log('hola')
 		}
 
-		// Poder filtrar por ubicacion - Tipo de sitio
-		if (options.where && 'typeOfSiteId' in options.where) {
-			;(options.include[0] as any).where = {
-				typeOfSiteId: (options.where as any)?.typeOfSiteId
-			}
-			delete options.where?.typeOfSiteId
+		if ('typeOfSiteId' in whereFilters) {
+			locationWhereFilters.typeOfSiteId = whereFilters.typeOfSiteId
+			delete whereFilters.typeOfSiteId
 		}
 
-		if (options.where && 'siteId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].where = {
-				id: (options.where as any)?.siteId
-			}
-			delete options.where?.siteId
+		if ('siteId' in whereFilters) {
+			siteInclude.where = { id: whereFilters.siteId }
+			delete whereFilters.siteId
 		}
 
-		// Poder filtrar por ciudad
-		if (options.where && 'cityId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[0].where = {
-				id: options.where.cityId
-			}
-
-			delete options.where?.cityId
+		if ('cityId' in whereFilters) {
+			cityInclude.where = { id: whereFilters.cityId }
+			delete whereFilters.cityId
 		}
 
-		// Poder filtrar por estado
-		if (options.where && 'stateId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[0].include[0].where = {
-				id: options.where.stateId
-			}
-
-			delete options.where?.stateId
-		}
-		// Poder filtrar por nombre estado
-		if (options.where && 'stateName' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[0].include[0].where = {
-				name: options.where.stateName
-			}
-
-			delete options.where?.stateName
+		if ('stateId' in whereFilters) {
+			stateInclude.where = { id: whereFilters.stateId }
+			delete whereFilters.stateId
 		}
 
-		// Poder filtrar por region
-		if (options.where && 'regionId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.regionId
-			}
-
-			delete options.where?.regionId
-		}
-		// Poder filtrar por region administrativa
-		if (options.where && 'administrativeRegionId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[0].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.administrativeRegionId
-			}
-
-			delete options.where?.administrativeRegionId
+		if ('stateName' in whereFilters) {
+			stateInclude.where = { ...stateInclude.where, name: whereFilters.stateName }
+			delete whereFilters.stateName
 		}
 
+		if ('regionId' in whereFilters) {
+			regionInclude.where = { id: whereFilters.regionId }
+			delete whereFilters.regionId
+		}
+
+		if ('administrativeRegionId' in whereFilters) {
+			administrativeRegionInclude.where = { id: whereFilters.administrativeRegionId }
+			delete whereFilters.administrativeRegionId
+		}
+
+		// Re-assign the modified where clauses
+		options.where = whereFilters
+		locationInclude.where = locationWhereFilters
+
+		// --- Order Transformation ---
 		options.order = this.transformOrder(options.order)
 
 		return options
 	}
 
-	private static transformOrder(order: FindOptions['order']): FindOptions['order'] {
-		if (!order || !Array.isArray(order)) return undefined
+	/**
+	 * Transforms a simple order format into a nested format for Sequelize.
+	 */
+	private static transformOrder(order: Order | undefined): Order | undefined {
+		if (!order || !Array.isArray(order) || order.length === 0) return undefined
 
 		const orderMap: Record<string, string[]> = {
 			locationId: ['location', 'name'],
@@ -156,10 +124,24 @@ export class LocationMonitoringAssociation {
 			subnet: ['location', 'subnet'],
 			name: ['location', 'name']
 		}
-		// @ts-ignore
-		return order.map(([orderBy, orderType]) => {
-			const mappedOrder = orderMap[orderBy]
-			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
+
+		// The Sequelize `Order` type from the library allows for these nested arrays automatically,
+		// so we can leverage that without creating a new complex type if the direct `Order` type is sufficient.
+		// However, if we want to be very specific about the *structure* we are building:
+		const transformedOrder: (string | string[])[] = (order as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			if (mappedPath) {
+				// For nested paths, append the direction to the path array
+				return [...mappedPath, direction]
+			} else {
+				// For top-level fields, keep it as [field, direction]
+				return [field, direction]
+			}
 		})
+
+		// The `Order` type from Sequelize's `index.d.ts` is a union that includes `Array<string | OrderItem>`,
+		// where OrderItem can be `[string, string]`, `[string, Order]` or `[Model, string]` etc.
+		// So `Array<string[]>` or `Array<[string, string]>` fits into `Order`.
+		return transformedOrder as Order // Cast back to Order to satisfy the return type
 	}
 }

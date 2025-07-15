@@ -8,6 +8,12 @@ import { type DashboardData } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardRepository } from '../../domain/repository/LocationMonitoringDashboardRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+// Represents the structure of each record returned by the database query.
+interface LocationCountByStatus {
+	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
+	count: string | number
+}
+
 export class SequelizeLocationMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardRepository
@@ -16,37 +22,42 @@ export class SequelizeLocationMonitoringDashboardRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
 	async run(criteria: Criteria): Promise<DashboardData> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringDashboardAssociation.buildDashboardFindOptions(criteria, options)
+
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const locations = await LocationMonitoringModel.findAll(opt)
+				const locations = (await LocationMonitoringModel.findAll(opt)) as unknown as LocationCountByStatus[]
 
-				let total = 0
-				const dashboardData: Record<string, any> = {
+				// Initialize the dashboard data with all possible statuses from MonitoringStatuses set to 0.
+				const initialState: DashboardData = {
+					total: 0,
 					[MonitoringStatuses.ONLINE]: 0,
-					[MonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.OFFLINE]: 0,
+					[MonitoringStatuses.NOTAVAILABLE]: 0,
+					[MonitoringStatuses.HOSTNAME_MISMATCH]: 0 // Assuming this status is also possible
 				}
 
-				locations.forEach((device: any) => {
-					const { statusName, count } = device
-
+				// Use reduce for a more concise and efficient aggregation.
+				return locations.reduce((acc, location) => {
+					const { statusName, count } = location
 					const countNumber = Number(count)
 
-					// Sumar al total
-					total += countNumber
+					// Sum to total
+					acc.total += countNumber
 
-					dashboardData[statusName] = (dashboardData[statusName] || 0) + countNumber
-				})
+					// Increment the count for the specific status, if it's a recognized status.
+					if (Object.prototype.hasOwnProperty.call(acc, statusName)) {
+						acc[statusName] = (acc[statusName] ?? 0) + countNumber
+					}
 
-				return {
-					total,
-					...dashboardData
-				}
+					return acc
+				}, initialState)
 			}
 		})
 	}

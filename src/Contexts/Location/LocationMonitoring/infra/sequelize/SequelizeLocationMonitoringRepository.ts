@@ -23,23 +23,35 @@ export class SequelizeLocationMonitoringRepository
 		super()
 	}
 
+	/**
+	 * Searches for all location monitoring entries matching the given criteria.
+	 * It uses caching to improve performance.
+	 * @param criteria The criteria to filter, sort, and paginate the results.
+	 * @returns A promise that resolves to a paginated response of location monitoring DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationMonitoringDto>> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
-			criteria: criteria,
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			ex: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationMonitoringModel.findAndCountAll(opt)
 				return {
 					total: count,
-					data: rows
+					data: rows.map(row => row.get({ plain: true }))
 				}
 			}
 		})
 	}
 
+	/**
+	 * Searches for location monitoring entries that have a non-null subnet.
+	 * This is useful for finding locations that are configured for network monitoring.
+	 * @param page - Optional page number for pagination.
+	 * @param pageSize - Optional page size for pagination.
+	 * @returns A promise that resolves to an array of location monitoring DTOs.
+	 */
 	async searchNotNullIpAddress({
 		page,
 		pageSize
@@ -49,10 +61,10 @@ export class SequelizeLocationMonitoringRepository
 	}): Promise<LocationMonitoringDto[]> {
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}-not-null-ip-address`,
+			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				return await LocationMonitoringModel.findAll({
+				const rows = await LocationMonitoringModel.findAll({
 					offset,
 					limit: pageSize,
 					include: [
@@ -65,6 +77,7 @@ export class SequelizeLocationMonitoringRepository
 						}
 					]
 				})
+				return rows.map(row => row.get({ plain: true }))
 			}
 		})
 	}
@@ -74,16 +87,12 @@ export class SequelizeLocationMonitoringRepository
 	}
 
 	/**
-	 * This function saves a device to the database, it updates the device if it already exists
-	 * or creates a new one if it does not exist.
+	 * Saves a location monitoring entry to the database.
+	 * It updates the entry if it already exists or creates a new one if it does not.
+	 * This operation is wrapped in a transaction to ensure atomicity.
 	 *
-	 * It also checks if the device category is a computer category, if it is, it will
-	 * create a new LocationComputer entity, otherwise, it will not do anything.
-	 *
-	 * This function is wrapped in a transaction, if there is an error while updating/creating
-	 * the device or creating the LocationComputer entity, the transaction will be rolled back.
-	 *
-	 * @param payload - Location data to be saved
+	 * @param payload - The location monitoring data to be saved.
+	 * @throws {Error} If the save operation fails, it throws a detailed error.
 	 */
 	async save(payload: LocationMonitoringPrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
@@ -95,15 +104,15 @@ export class SequelizeLocationMonitoringRepository
 				await LocationMonitoringModel.update(payload, { where: { id: payload.id }, transaction: t }) // Update the device with the given payload
 			}
 
-			await t.commit()
+			await t.commit() // Commit the transaction
 			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
 		} catch (error: unknown) {
-			await t.rollback()
-			let errorMessage = 'Ha ocurrido un error desconocido al  guardar el monitoreo de ubicación.'
+			await t.rollback() // Rollback the transaction on error
+
+			// Improved error handling to provide more context
+			let errorMessage = 'An unknown error occurred while saving the location monitoring data.'
 			if (error instanceof Error) {
-				errorMessage = `Error al guardar el monitoreo de ubicación: ${error.message}`
-			} else if (typeof error === 'string') {
-				errorMessage = `Error al guardar el monitoreo de ubicación: ${error}`
+				errorMessage = `Error saving location monitoring data: ${error.message}`
 			}
 			throw new Error(errorMessage)
 		}

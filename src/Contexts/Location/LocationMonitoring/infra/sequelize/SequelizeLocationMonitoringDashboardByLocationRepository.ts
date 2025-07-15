@@ -8,19 +8,34 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import {
 	type LocationData,
 	type SiteData,
-	type DashboardByLocationData
+	type DashboardByLocationData,
+	type AdmRegionData
 } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardByLocationRepository } from '../../domain/repository/LocationMonitoringDashboardByLocationRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
-// Define the structure of the raw data returned from LocationMonitoringModel.findAll
-// This helps with type safety when destructuring 'device'
+// --- Type definitions for clarity and type safety ---
+
+// Represents the structure of each record returned by the database query.
 interface RawLocationMonitoringData {
-	statusName: MonitoringStatuses
+	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
 	locationName: string
 	admRegionName: string
 	siteName: string
-	count: string | number // Assuming count could be a string from DB
+	count: string | number
+}
+
+// Internal representation for a location while processing.
+type ProcessingLocationData = LocationData
+
+// Internal representation for a site while processing.
+interface ProcessingSiteData extends Omit<SiteData, 'locations'> {
+	locations: Map<string, ProcessingLocationData>
+}
+
+// Internal representation for an administrative region while processing.
+interface ProcessingAdmRegionData extends Omit<AdmRegionData, 'sites'> {
+	sites: Map<string, ProcessingSiteData>
 }
 
 export class SequelizeLocationMonitoringDashboardByLocationRepository
@@ -32,31 +47,24 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 		super()
 	}
 
-	/**
-	 * Retrieves and processes location monitoring dashboard data,
-	 * leveraging caching for improved performance.
-	 * @param criteria - Criteria for filtering the data.
-	 * @returns A promise that resolves to DashboardByLocationData.
-	 * @throws {Error} If data fetching or processing fails.
-	 */
 	async run(criteria: Criteria): Promise<DashboardByLocationData> {
 		const baseOptions = this.convert(criteria)
 		const findOptions = LocationMonitoringDashboardByLocationAssociation.buildDashboardFindOptions(
 			criteria,
 			baseOptions
 		)
+
 		return await this.cache.getCachedData<DashboardByLocationData>({
-			cacheKey: this.cacheKey,
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			ex: TimeTolive.SHORT,
-			criteria,
 			fetchFunction: async () => {
 				try {
-					const rawDevices = await LocationMonitoringModel.findAll(findOptions)
-					const transformedData = this.processRawData(rawDevices as unknown as RawLocationMonitoringData[])
-					return transformedData
+					const rawData = (await LocationMonitoringModel.findAll(
+						findOptions
+					)) as unknown as RawLocationMonitoringData[]
+					return this.processRawDataWithReduce(rawData)
 				} catch (error) {
 					console.error('Error fetching or processing location monitoring data:', error)
-					// Re-throw or throw a more specific error for upstream handling
 					throw new Error('Failed to retrieve location monitoring dashboard data.')
 				}
 			}
@@ -64,79 +72,64 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 	}
 
 	/**
-	 * Processes raw monitoring data into a hierarchical structure (AdmRegion -> Site -> Location).
+	 * Processes raw monitoring data into a hierarchical and sorted structure using a single reduce function.
 	 * @param rawData - Array of raw data objects from the database.
-	 * @returns Transformed DashboardByLocationData.
+	 * @returns Transformed and sorted DashboardByLocationData.
 	 */
-	private processRawData(rawData: RawLocationMonitoringData[]): DashboardByLocationData {
-		const admRegionMap = new Map() // Use specific types for maps
-
-		rawData.forEach(item => {
+	private processRawDataWithReduce(rawData: RawLocationMonitoringData[]): DashboardByLocationData {
+		const admRegionMap = rawData.reduce((acc, item) => {
 			const { statusName, locationName, admRegionName, siteName, count } = item
-			const countNumber = Number(count) // Ensure count is a number
+			const countNumber = Number(count)
 
-			// Initialize Administrative Region
-			if (!admRegionMap.has(admRegionName)) {
-				admRegionMap.set(admRegionName, {
-					name: admRegionName,
-					sites: new Map<string, SiteData>() // Use `sites` for plural, Map for internal use
-				})
+			// --- Administrative Region Level ---
+			let admRegion = acc.get(admRegionName)
+			if (!admRegion) {
+				admRegion = { name: admRegionName, sites: new Map<string, ProcessingSiteData>() }
+				acc.set(admRegionName, admRegion)
 			}
-			const currentAdmRegion = admRegionMap.get(admRegionName)! // Assert non-null after check
 
-			// Initialize Site within Administrative Region
-			if (!currentAdmRegion.sites.has(siteName)) {
-				currentAdmRegion.sites.set(siteName, {
+			// --- Site Level ---
+			let site = admRegion.sites.get(siteName)
+			if (!site) {
+				site = {
 					name: siteName,
-					locations: new Map<string, LocationData>(), // Use `locations` for plural, Map for internal use
+					locations: new Map<string, ProcessingLocationData>(),
 					total: 0,
 					onlineCount: 0,
 					offlineCount: 0
-				})
+				}
+				admRegion.sites.set(siteName, site)
 			}
-			const currentSite = currentAdmRegion.sites.get(siteName)! // Assert non-null
 
-			// Update Site counts
-			currentSite.total += countNumber
+			// --- Location Level ---
+			let location = site.locations.get(locationName)
+			if (!location) {
+				location = { name: locationName, total: 0, onlineCount: 0, offlineCount: 0 }
+				site.locations.set(locationName, location)
+			}
+
+			// --- Update Counts ---
+			site.total += countNumber
+			location.total += countNumber
+
 			if (statusName === MonitoringStatuses.ONLINE) {
-				currentSite.onlineCount += countNumber
+				site.onlineCount += countNumber
+				location.onlineCount += countNumber
 			} else if (statusName === MonitoringStatuses.OFFLINE) {
-				currentSite.offlineCount += countNumber
+				site.offlineCount += countNumber
+				location.offlineCount += countNumber
 			}
-			// Consider handling other statuses or logging unknown ones
 
-			// Initialize and Update Location within Site
-			if (!currentSite.locations.has(locationName)) {
-				currentSite.locations.set(locationName, {
-					name: locationName,
-					total: 0,
-					onlineCount: 0,
-					offlineCount: 0
-				})
-			}
-			const currentLocation = currentSite.locations.get(locationName)! // Assert non-null
+			return acc
+		}, new Map<string, ProcessingAdmRegionData>())
 
-			// Update Location counts
-			currentLocation.total += countNumber
-			if (statusName === MonitoringStatuses.ONLINE) {
-				currentLocation.onlineCount += countNumber
-			} else if (statusName === MonitoringStatuses.OFFLINE) {
-				currentLocation.offlineCount += countNumber
-			}
-			// Ensure consistency in spelling: `offlineCount`
-			// Original code had `site.oflineCount` which had a typo, corrected to `site.offlineCount`.
-			// The `location.oflineCount` also had this typo, corrected.
-		})
-
-		// Convert Maps to Arrays for final output DTO structure
-		const result: DashboardByLocationData = Array.from(admRegionMap.values()).map((admRegion: any) => ({
-			...admRegion,
-			sites: Array.from(admRegion.sites.values()).map((site: any) => ({
+		// --- Convert Maps to Arrays for Final DTO Structure ---
+		return Array.from(admRegionMap.values()).map(admRegion => ({
+			name: admRegion.name,
+			sites: Array.from(admRegion.sites.values()).map(site => ({
 				...site,
 				locations: Array.from(site.locations.values())
 			}))
 		}))
-
-		return result
 	}
 }

@@ -1,11 +1,13 @@
 import { OrderBy } from './OrderBy'
 import { OrderType, OrderTypes } from './OrderType'
 
+export interface OrderPrimitves {
+	orderBy?: string | null
+	orderType?: string | null
+}
+
 export class Order {
-	constructor(
-		public readonly orderBy: OrderBy,
-		public readonly orderType: OrderType
-	) {}
+	constructor(public readonly orderBy: OrderBy, public readonly orderType: OrderType) {}
 
 	static none(): Order {
 		return new Order(new OrderBy(''), new OrderType(OrderTypes.NONE))
@@ -15,6 +17,13 @@ export class Order {
 		return !orderBy
 			? Order.none()
 			: new Order(new OrderBy(orderBy), OrderType.fromValue(orderType ?? OrderTypes.ASC))
+	}
+
+	toPrimitives(): OrderPrimitves {
+		return {
+			orderBy: this.orderBy.value,
+			orderType: this.orderType.value
+		}
 	}
 
 	public isNone(): boolean {

@@ -5,6 +5,7 @@ import { type LocationDto } from '../../../Location/domain/Location.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type LocationName } from '../../../Location/domain/LocationName'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 export type LocationMonitoringType = MonitoringPrimitives & {
 	locationId: Primitives<LocationMonitoring['locationId']>
@@ -24,10 +25,11 @@ export type LocationMonitoringMapped = LocationMonitoringType & {
 	site: SiteDto
 }
 export interface DashboardData {
-	onlineCount: number
-	offlineCount: number
-	notAvailableCount: number
-	totalLocations: number
+	total: number
+	[MonitoringStatuses.ONLINE]: number
+	[MonitoringStatuses.OFFLINE]: number
+	[MonitoringStatuses.NOTAVAILABLE]: number
+	[MonitoringStatuses.HOSTNAME_MISMATCH]: number
 }
 export interface DashboardByStateData extends DashboardData {
 	byState: Record<string, DashboardData>
