@@ -1,4 +1,3 @@
-import { Op } from 'sequelize'
 import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
@@ -33,19 +32,6 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 				}
 			}
 		})
-	}
-
-	async searchNotNullIpAddressPaginated(page: number, pageSize: number): Promise<LocationDto[]> {
-		const offset = (page - 1) * pageSize
-		const result = await LocationModel.findAll({
-			where: {
-				ipAddress: { [Op.ne]: null }
-			},
-			offset,
-			limit: pageSize
-		})
-
-		return result
 	}
 
 	async matching(criteria: Criteria): Promise<ResponseDB<LocationDto>> {

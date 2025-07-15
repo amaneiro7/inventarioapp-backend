@@ -8,6 +8,33 @@ import { type DashboardByStateData } from '../../domain/entity/DeviceMonitoring.
 import { type DeviceMonitoringDashboardByStateRepository } from '../../domain/repository/DeviceMonitoringDashboardByStateRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+// --- Type definitions for clarity and type safety ---
+
+// Represents the structure of each record returned by the database query.
+interface DeviceCountByState {
+	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
+	stateName: string
+	count: string | number // The count can be a string from some DB drivers.
+}
+
+// Represents the structure of the aggregated data for a single state.
+interface StateData {
+	stateName: string
+	total: number
+	onlineCount: number
+	offlineCount: number
+}
+
+// Represents the accumulator's structure during the reduce operation.
+interface AggregatedData {
+	total: number
+	[MonitoringStatuses.ONLINE]: number
+	[MonitoringStatuses.OFFLINE]: number
+	[MonitoringStatuses.NOTAVAILABLE]: number
+	[MonitoringStatuses.HOSTNAME_MISMATCH]: number
+	byStateMap: Map<string, StateData>
+}
+
 export class SequelizeDeviceMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringDashboardByStateRepository
@@ -23,70 +50,67 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const devices = await DeviceMonitoringModel.findAll(opt)
+				// Cast the result of findAll to our specific type for type safety.
+				const devices = (await DeviceMonitoringModel.findAll(opt)) as unknown as DeviceCountByState[]
 
-				let total = 0
-				const dashboardData: Record<string, any> = {
+				// Define the initial state for the aggregation, now strongly typed.
+				const initialState: AggregatedData = {
+					total: 0,
 					[MonitoringStatuses.ONLINE]: 0,
-					[MonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.OFFLINE]: 0,
+					[MonitoringStatuses.NOTAVAILABLE]: 0,
+					[MonitoringStatuses.HOSTNAME_MISMATCH]: 0,
+					// Se utiliza un Map para almacenar y acceder a los datos por estado de forma eficiente (O(1) en promedio).
+					byStateMap: new Map<string, StateData>()
 				}
 
-				const dashboardByStateData: Array<{
-					stateName: string
-					total: number
-					onlineCount: number
-					offlineCount: number
-				}> = []
+				// Utiliza el método `reduce` para transformar la lista de dispositivos en un objeto agregado.
+				// Este enfoque es más funcional y evita la necesidad de múltiples bucles y variables temporales.
+				const aggregatedData = devices.reduce(
+					(acc: AggregatedData, device: DeviceCountByState): AggregatedData => {
+						const { statusName, stateName, count } = device
+						const countNumber = Number(count)
 
-				// Temporary map to build up state data efficiently
-				const tempStateMap: Record<
-					string,
-					{
-						total: number
-						onlineCount: number
-						offlineCount: number
-					}
-				> = {}
+						// Acumula el total general y los contadores de estado (ONLINE/OFFLINE).
+						acc.total += countNumber
+						acc[statusName] += countNumber
 
-				devices.forEach((device: any) => {
-					const { statusName, stateName, count } = device
-					const countNumber = Number(count)
-
-					// Aggregate total and status counts for the overall dashboard
-					total += countNumber
-					dashboardData[statusName] = (dashboardData[statusName] || 0) + countNumber
-
-					// Initialize state data if it doesn't exist
-					if (!tempStateMap[stateName]) {
-						tempStateMap[stateName] = {
-							total: 0,
-							onlineCount: 0,
-							offlineCount: 0
+						// Busca el estado actual en el Map. Si no existe, lo inicializa.
+						let stateData = acc.byStateMap.get(stateName)
+						if (!stateData) {
+							stateData = {
+								stateName,
+								total: 0,
+								onlineCount: 0,
+								offlineCount: 0
+							}
+							acc.byStateMap.set(stateName, stateData)
 						}
-					}
 
-					// Sum by state
-					tempStateMap[stateName].total += countNumber
-					if (statusName === MonitoringStatuses.ONLINE) {
-						tempStateMap[stateName].onlineCount += countNumber
-					} else if (statusName === MonitoringStatuses.OFFLINE) {
-						tempStateMap[stateName].offlineCount += countNumber
-					}
-				})
+						// Actualiza los contadores para el estado específico.
+						stateData.total += countNumber
+						if (statusName === MonitoringStatuses.ONLINE) {
+							stateData.onlineCount += countNumber
+						} else if (statusName === MonitoringStatuses.OFFLINE) {
+							stateData.offlineCount += countNumber
+						}
 
-				for (const stateName in tempStateMap) {
-					if (Object.prototype.hasOwnProperty.call(tempStateMap, stateName)) {
-						dashboardByStateData.push({
-							stateName,
-							...tempStateMap[stateName]
-						})
-					}
-				}
+						return acc
+					},
+					initialState
+				)
 
+				// Convierte el Map de `byStateMap` a un array y lo ordena alfabéticamente por nombre de estado.
+				const byStateArray = Array.from(aggregatedData.byStateMap.values()).sort((a, b) =>
+					a.stateName.localeCompare(b.stateName)
+				)
+
+				// Devuelve el objeto final con la estructura esperada por el DTO `DashboardByStateData`.
 				return {
-					total,
-					...dashboardData,
-					byState: dashboardByStateData.sort((a, b) => a.stateName.localeCompare(b.stateName))
+					total: aggregatedData.total,
+					[MonitoringStatuses.ONLINE]: aggregatedData[MonitoringStatuses.ONLINE],
+					[MonitoringStatuses.OFFLINE]: aggregatedData[MonitoringStatuses.OFFLINE],
+					byState: byStateArray
 				}
 			}
 		})

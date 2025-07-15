@@ -37,12 +37,21 @@ export class SequelizeDeviceMonitoringRepository
 		})
 	}
 
-	async searchNotnullIpAddress(): Promise<DeviceMonitoringDto[]> {
+	async searchNotNullIpAddress({
+		page,
+		pageSize
+	}: {
+		page?: number
+		pageSize?: number
+	}): Promise<DeviceMonitoringDto[]> {
+		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData({
 			cacheKey: `${this.cacheKey}-not-null-ip-address`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await DeviceMonitoringModel.findAll({
+					offset,
+					limit: pageSize,
 					include: [
 						{
 							association: 'device',

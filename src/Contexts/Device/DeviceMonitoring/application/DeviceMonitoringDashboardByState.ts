@@ -7,10 +7,7 @@ export class DeviceMonitoringDashboardByState {
 		private readonly deviceMonitoringDashboardByStateRepository: DeviceMonitoringDashboardByStateRepository
 	) {}
 
-	async run(criteria: Criteria): Promise<DashboardByStateData> {
-		const [summary] = await Promise.all([this.deviceMonitoringDashboardByStateRepository.run(criteria)])
-		return {
-			...summary
-		}
+	run(criteria: Criteria): Promise<DashboardByStateData> {
+		return this.deviceMonitoringDashboardByStateRepository.run(criteria)
 	}
 }

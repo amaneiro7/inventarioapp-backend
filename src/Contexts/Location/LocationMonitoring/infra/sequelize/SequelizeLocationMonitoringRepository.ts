@@ -40,12 +40,21 @@ export class SequelizeLocationMonitoringRepository
 		})
 	}
 
-	async searchNotnullIpAddress(): Promise<LocationMonitoringDto[]> {
+	async searchNotNullIpAddress({
+		page,
+		pageSize
+	}: {
+		page?: number
+		pageSize?: number
+	}): Promise<LocationMonitoringDto[]> {
+		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData({
 			cacheKey: `${this.cacheKey}-not-null-ip-address`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await LocationMonitoringModel.findAll({
+					offset,
+					limit: pageSize,
 					include: [
 						{
 							association: 'location',
@@ -88,9 +97,15 @@ export class SequelizeLocationMonitoringRepository
 
 			await t.commit()
 			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		} catch (error: any) {
+		} catch (error: unknown) {
 			await t.rollback()
-			throw new Error(error)
+			let errorMessage = 'Ha ocurrido un error desconocido al  guardar el monitoreo de ubicación.'
+			if (error instanceof Error) {
+				errorMessage = `Error al guardar el monitoreo de ubicación: ${error.message}`
+			} else if (typeof error === 'string') {
+				errorMessage = `Error al guardar el monitoreo de ubicación: ${error}`
+			}
+			throw new Error(errorMessage)
 		}
 	}
 }

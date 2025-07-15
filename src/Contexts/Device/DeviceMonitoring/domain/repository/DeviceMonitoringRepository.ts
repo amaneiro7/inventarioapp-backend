@@ -7,7 +7,13 @@ export abstract class DeviceMonitoringRepository {
 
 	abstract searchById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto | null>
 
-	abstract searchNotNullIpAddress(page: number, pageSize: number): Promise<DeviceMonitoringDto[]>
+	abstract searchNotNullIpAddress({
+		page,
+		pageSize
+	}: {
+		page?: number
+		pageSize?: number
+	}): Promise<DeviceMonitoringDto[]>
 
 	abstract save(payload: DeviceMonitoringPrimitives): Promise<void>
 }

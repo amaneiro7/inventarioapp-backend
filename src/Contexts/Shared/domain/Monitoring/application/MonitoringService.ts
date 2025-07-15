@@ -8,7 +8,7 @@ import { type PingLogger } from '../infra/PingLogger'
 import { type MonitoringServiceConfig } from '../domain/entity/MonitoringConfig'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
-	searchNotNullIpAddress: (page: number, pageSize: number) => Promise<DTO[]>
+	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>
 	searchById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
 	save: (entity: Payload) => Promise<void>
 }
@@ -131,14 +131,14 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			}) // Log start of scan
 
 			const limit = pLimit(this.monitoringConfig.concurrencyLimit)
-			// const batchSize = this.monitoringConfig?. ?? 1000 // Default to 1000 if not set
-			const batchSize = 1000 // Default to 1000 if not set
+			// const pageSize = this.monitoringConfig?. ?? 1000 // Default to 1000 if not set
+			const pageSize = 1000 // Default to 1000 if not set
 			let page = 1
 			let hasMore = true
 			let totalMonitored = 0
 
 			while (hasMore) {
-				const itemsToMonitor = await this.repository.searchNotNullIpAddress(page, batchSize)
+				const itemsToMonitor = await this.repository.searchNotNullIpAddress({ page, pageSize })
 				totalMonitored += itemsToMonitor.length
 
 				if (showLogs) {
@@ -180,7 +180,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 				await Promise.allSettled(pingPromises)
 
-				if (itemsToMonitor.length < batchSize) {
+				if (itemsToMonitor.length < pageSize) {
 					hasMore = false
 				} else {
 					page++

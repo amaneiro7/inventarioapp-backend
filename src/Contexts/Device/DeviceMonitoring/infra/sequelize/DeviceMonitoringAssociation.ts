@@ -1,185 +1,137 @@
-import { Op, type FindOptions } from 'sequelize'
+import { Op, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { StatusList } from '../../../Status/domain/StatusList'
 
+/**
+ * A utility class to build the complex Sequelize FindOptions for general device monitoring searches.
+ */
 export class DeviceMonitoringAssociation {
+	/**
+	 * Constructs a dynamic and complex FindOptions object for Sequelize based on the provided criteria.
+	 * This method is used for fetching detailed device monitoring lists with multiple joins.
+	 *
+	 * @param criteria The criteria object containing filters and ordering.
+	 * @param options The base FindOptions to be modified.
+	 * @returns A fully configured FindOptions object.
+	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = [
-			{
-				association: 'device', // 0
-				where: {
-					statusId: StatusList.INUSE
-				},
-				include: [
-					{
-						association: 'computer', // 0 - 0
-						where: {
-							ipAddress: { [Op.ne]: null }
-						},
-						required: true,
-						attributes: ['computerName', 'ipAddress']
-					},
-					{
-						association: 'location', // 0 - 1
-						required: true,
-						include: [
-							'typeOfSite', // 0 - 1 - 0
-							{
-								association: 'site', // 0 - 1 - 1
-								required: true,
-								include: [
-									{
-										association: 'city', // 0 - 1 - 1 - 0
-										required: true,
-										include: [
-											{
-												association: 'state', // 0 - 1 - 1 - 1
-												required: true,
-												include: [
-													{
-														association: 'region', // 0 - 1 - 1 - 1 - 0
-														required: true,
-														include: [
-															{
-																association: 'administrativeRegion', // 0 - 1 - 1 - 1 - 0 - 0
-																required: true
-															}
-														]
-													}
-												]
-											}
-										]
-									}
-								]
-							}
-						]
-					},
-					{
-						association: 'employee',
-						attributes: ['userName', 'name', 'lastName', 'email'],
-						include: [
-							{ association: 'directiva', attributes: ['name'] },
-							{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
-							{ association: 'vicepresidencia', attributes: ['name'] },
-							{ association: 'departamento', attributes: ['name'] },
-							{ association: 'cargo', attributes: ['name'] }
-						]
-					}
-				]
-			}
-		]
+		// Define the nested include structure using named variables for clarity and type safety.
+		const administrativeRegionInclude: IncludeOptions = { association: 'administrativeRegion', required: true }
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = { association: 'state', required: true, include: [regionInclude] }
+		const cityInclude: IncludeOptions = { association: 'city', required: true, include: [stateInclude] }
+		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
+		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite' }
 
+		const computerInclude: IncludeOptions = {
+			association: 'computer',
+			where: { ipAddress: { [Op.ne]: null } },
+			required: true,
+			attributes: ['computerName', 'ipAddress']
+		}
+		const locationInclude: IncludeOptions = {
+			association: 'location',
+			required: true,
+			include: [typeOfSiteInclude, siteInclude]
+		}
+		const employeeInclude: IncludeOptions = {
+			association: 'employee',
+			attributes: ['userName', 'name', 'lastName', 'email'],
+			include: [
+				{ association: 'directiva', attributes: ['name'] },
+				{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
+				{ association: 'vicepresidencia', attributes: ['name'] },
+				{ association: 'departamento', attributes: ['name'] },
+				{ association: 'cargo', attributes: ['name'] }
+			]
+		}
+
+		const deviceInclude: IncludeOptions = {
+			association: 'device',
+			where: { statusId: StatusList.INUSE },
+			include: [computerInclude, locationInclude, employeeInclude]
+		}
+
+		options.include = [deviceInclude]
+
+		// --- Dynamic Filter Application ---
 		if (!criteria.searchValueInArray('status')) {
-			options.where = {
-				...options.where,
-				status: {
-					[Op.ne]: MonitoringStatuses.NOTAVAILABLE
-				}
-			}
+			options.where = { ...options.where, status: { [Op.ne]: MonitoringStatuses.NOTAVAILABLE } }
 		}
 
-		if (options.where && 'computerName' in options.where) {
-			;(options.include[0] as any).include[0].where = {
-				computerName: (options.where as any)?.computerName
-			}
-			delete options.where.computerName
+		const whereFilters = options.where ?? {}
+
+		if ('computerName' in whereFilters) {
+			computerInclude.where = { ...computerInclude.where, computerName: whereFilters.computerName }
+			delete whereFilters.computerName
 		}
 
-		// Poder filtrar por direccion
-		if (options.where && 'ipAddress' in options.where) {
-			const ipAddress = options.where.ipAddress
-			const symbol = Object.getOwnPropertySymbols(ipAddress)[0]
-			const value: string = ipAddress[symbol] as string
-
-			;(options.include[0] as any).include[0].where = {
-				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${value}%'`)
-			}
-
-			delete options.where.ipAddress
+		if ('ipAddress' in whereFilters) {
+			const ipAddress = whereFilters.ipAddress as string
+			computerInclude.where = { ...computerInclude.where, ipAddress: { [Op.iLike]: `%${ipAddress}%` } }
+			delete whereFilters.ipAddress
 		}
 
-		// Poder filtrar por ubicacion - Tipo de sitio
-		if (options.where && 'typeOfSiteId' in options.where) {
-			;(options.include[0] as any).include[1].where = {
-				typeOfSiteId: (options.where as any)?.typeOfSiteId
-			}
-			delete options.where?.typeOfSiteId
+		if ('locationName' in whereFilters) {
+			locationInclude.where = { ...locationInclude.where, name: whereFilters.locationName }
+			delete whereFilters.locationName
 		}
 
-		// Poder filtrar por ubicacion - por sitio
-		if (options.where && 'locationId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).where = {
-				locationId: (options.where as any)?.locationId
-			}
-			delete options.where?.locationId
+		// Location-based filters
+		if ('typeOfSiteId' in whereFilters) {
+			locationInclude.where = { ...locationInclude.where, typeOfSiteId: whereFilters.typeOfSiteId }
+			delete whereFilters.typeOfSiteId
 		}
-		// Poder filtrar por nombre estado
-		if (options.where && 'locationName' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].where = {
-				name: options.where.locationName
-			}
-
-			delete options.where?.locationName
+		if ('locationId' in whereFilters) {
+			deviceInclude.where = { ...deviceInclude.where, locationId: whereFilters.locationId }
+			delete whereFilters.locationId
 		}
-		if (options.where && 'siteId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].where = {
-				id: (options.where as any)?.siteId
-			}
-			delete options.where?.siteId
+		if ('siteId' in whereFilters) {
+			siteInclude.where = { id: whereFilters.siteId }
+			delete whereFilters.siteId
 		}
-
-		// Poder filtrar por ciudad
-		if (options.where && 'cityId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].where = {
-				id: options.where.cityId
-			}
-
-			delete options.where?.cityId
+		if ('cityId' in whereFilters) {
+			cityInclude.where = { id: whereFilters.cityId }
+			delete whereFilters.cityId
+		}
+		if ('stateId' in whereFilters) {
+			stateInclude.where = { id: whereFilters.stateId }
+			delete whereFilters.stateId
+		}
+		if ('regionId' in whereFilters) {
+			regionInclude.where = { id: whereFilters.regionId }
+			delete whereFilters.regionId
+		}
+		if ('administrativeRegionId' in whereFilters) {
+			administrativeRegionInclude.where = { id: whereFilters.administrativeRegionId }
+			delete whereFilters.administrativeRegionId
 		}
 
-		// Poder filtrar por estado
-		if (options.where && 'stateId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].where = {
-				id: options.where.stateId
-			}
+		options.where = whereFilters
 
-			delete options.where?.stateId
-		}
-
-		// Poder filtrar por region
-		if (options.where && 'regionId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.regionId
-			}
-
-			delete options.where?.regionId
-		}
-		// Poder filtrar por region administrativa
-		if (options.where && 'administrativeRegionId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[1].include[1].include[0].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.administrativeRegionId
-			}
-
-			delete options.where?.administrativeRegionId
-		}
-
+		// --- Order Transformation ---
+		// The `transformOrder` method correctly maps frontend field names to the nested Sequelize structure.
 		options.order = this.transformOrder(options.order)
 
 		return options
 	}
 
-	private static transformOrder(order: FindOptions['order']): FindOptions['order'] {
-		if (!order || !Array.isArray(order)) return undefined
+	/**
+	 * Transforms a simple order format (e.g., ['locationId', 'ASC']) into a nested format
+	 * that Sequelize can use for ordering on associated tables.
+	 *
+	 * @param order The order configuration from the criteria.
+	 * @returns A Sequelize-compatible nested order configuration.
+	 */
+	private static transformOrder(order: Order | undefined): Order | undefined {
+		if (!order || !Array.isArray(order) || order.length === 0) return undefined
 
+		// This map defines the path to the sortable field within the nested include structure.
 		const orderMap: Record<string, string[]> = {
 			locationId: ['device', 'location', 'name'],
 			cityId: ['device', 'location', 'site', 'city', 'name'],
@@ -196,12 +148,28 @@ export class DeviceMonitoringAssociation {
 				'name'
 			],
 			ipAddress: ['device', 'computer', 'ipAddress'],
-			computerName: ['device', 'computer', 'computerName']
+			computerName: ['device', 'computer', 'computerName'],
+			status: ['status'],
+			id: ['id']
 		}
-		// @ts-ignore
-		return order.map(([orderBy, orderType]) => {
-			const mappedOrder = orderMap[orderBy]
-			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
+
+		// The Sequelize `Order` type from the library allows for these nested arrays automatically,
+		// so we can leverage that without creating a new complex type if the direct `Order` type is sufficient.
+		// However, if we want to be very specific about the *structure* we are building:
+		const transformedOrder: (string | string[])[] = (order as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			if (mappedPath) {
+				// For nested paths, append the direction to the path array
+				return [...mappedPath, direction]
+			} else {
+				// For top-level fields, keep it as [field, direction]
+				return [field, direction]
+			}
 		})
+
+		// The `Order` type from Sequelize's `index.d.ts` is a union that includes `Array<string | OrderItem>`,
+		// where OrderItem can be `[string, string]`, `[string, Order]` or `[Model, string]` etc.
+		// So `Array<string[]>` or `Array<[string, string]>` fits into `Order`.
+		return transformedOrder as Order // Cast back to Order to satisfy the return type
 	}
 }

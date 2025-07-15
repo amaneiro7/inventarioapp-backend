@@ -8,6 +8,12 @@ import { type DashboardData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardRepository } from '../../domain/repository/DeviceMonitoringDashboardRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+// Represents the structure of each record returned by the database query.
+interface DeviceCountByStatus {
+	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
+	count: string | number
+}
+
 export class SequelizeDeviceMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringDashboardRepository
@@ -16,37 +22,43 @@ export class SequelizeDeviceMonitoringDashboardRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
 	async run(criteria: Criteria): Promise<DashboardData> {
 		const options = this.convert(criteria)
 		const opt = DeviceMonitoringDashboardAssociation.buildDashboardFindOptions(criteria, options)
+
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const devices = await DeviceMonitoringModel.findAll(opt)
+				const devices = (await DeviceMonitoringModel.findAll(opt)) as DeviceCountByStatus[]
 
-				let total = 0
-				const dashboardData: Record<string, any> = {
+				// Initialize the dashboard data with all possible statuses from MonitoringStatuses set to 0.
+				// This ensures a consistent object shape regardless of the query results.
+				const initialState: DashboardData = {
+					total: 0,
 					[MonitoringStatuses.ONLINE]: 0,
-					[MonitoringStatuses.OFFLINE]: 0
+					[MonitoringStatuses.OFFLINE]: 0,
+					[MonitoringStatuses.NOTAVAILABLE]: 0,
+					[MonitoringStatuses.HOSTNAME_MISMATCH]: 0
 				}
 
-				devices.forEach((device: any) => {
+				// Use reduce for a more concise and efficient aggregation.
+				return devices.reduce((acc, device) => {
 					const { statusName, count } = device
-
 					const countNumber = Number(count)
 
-					// Sumar al total
-					total += countNumber
+					// Sum to total
+					acc.total += countNumber
 
-					dashboardData[statusName] = (dashboardData[statusName] || 0) + countNumber
-				})
+					// Increment the count for the specific status, if it's a recognized status.
+					if (Object.prototype.hasOwnProperty.call(acc, statusName)) {
+						acc[statusName] = (acc[statusName] ?? 0) + countNumber
+					}
 
-				return {
-					total,
-					...dashboardData
-				}
+					return acc
+				}, initialState)
 			}
 		})
 	}
