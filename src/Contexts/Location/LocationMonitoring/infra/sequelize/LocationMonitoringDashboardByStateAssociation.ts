@@ -18,11 +18,35 @@ export class LocationMonitoringDashboardByStateAssociation {
 	 */
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
 		// Define the nested include structure using named variables for clarity and type safety.
-		const administrativeRegionInclude: IncludeOptions = { association: 'administrativeRegion', required: true, attributes: [] }
-		const regionInclude: IncludeOptions = { association: 'region', required: true, attributes: [], include: [administrativeRegionInclude] }
-		const stateInclude: IncludeOptions = { association: 'state', required: true, attributes: [], include: [regionInclude] }
-		const cityInclude: IncludeOptions = { association: 'city', required: true, attributes: [], include: [stateInclude] }
-		const siteInclude: IncludeOptions = { association: 'site', required: true, attributes: [], include: [cityInclude] }
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			attributes: [],
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = {
+			association: 'state',
+			required: true,
+			attributes: [],
+			include: [regionInclude]
+		}
+		const cityInclude: IncludeOptions = {
+			association: 'city',
+			required: true,
+			attributes: [],
+			include: [stateInclude]
+		}
+		const siteInclude: IncludeOptions = {
+			association: 'site',
+			required: true,
+			attributes: [],
+			include: [cityInclude]
+		}
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
 		const locationInclude: IncludeOptions = {
@@ -63,7 +87,10 @@ export class LocationMonitoringDashboardByStateAssociation {
 
 		if ('subnet' in whereFilters) {
 			const subnet = whereFilters.subnet as string
-			locationWhereFilters.subnet = { [Op.iLike]: `%${subnet}%` }
+			const symbol = Object.getOwnPropertySymbols(subnet)[0]
+			const value: string = subnet[symbol] as string
+
+			locationWhereFilters.subnet = sequelize.literal(`subnet::text ILIKE '%${value}%'`)
 			delete whereFilters.subnet
 		}
 

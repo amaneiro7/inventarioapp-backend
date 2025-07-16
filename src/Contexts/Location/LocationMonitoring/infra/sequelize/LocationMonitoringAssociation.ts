@@ -1,21 +1,28 @@
-import { Op, Sequelize, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
+import { Op, WhereOptions, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 /**
- * A utility class to build the complex Sequelize FindOptions for general location monitoring searches.
+ * @class LocationMonitoringAssociation
+ * @description A utility class to build the complex Sequelize FindOptions for general location monitoring searches.
+ * It encapsulates the logic for creating nested joins and applying dynamic filters and ordering.
  */
 export class LocationMonitoringAssociation {
 	/**
-	 * Constructs a dynamic and complex FindOptions object for Sequelize based on the provided criteria.
+	 * @static
+	 * @method convertFilter
+	 * @description Constructs a dynamic and complex FindOptions object for Sequelize based on the provided criteria.
+	 * This method builds a deeply nested query to join from LocationMonitoring to the full geographical hierarchy.
 	 *
-	 * @param criteria The criteria object containing filters and ordering.
-	 * @param options The base FindOptions to be modified.
-	 * @returns A fully configured FindOptions object.
+	 * @param {Criteria} criteria The criteria object containing filters and ordering.
+	 * @param {FindOptions} options The base FindOptions to be modified.
+	 * @returns {FindOptions} A fully configured FindOptions object ready for a Sequelize query.
 	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		// Define the nested include structure using named variables for clarity and type safety.
+		// --- 1. Define the nested include structure ---
+		// Using named variables for each include makes the structure clear and avoids magic indexes.
+		// This improves readability and makes the code less prone to errors when modified.
 		const administrativeRegionInclude: IncludeOptions = {
 			association: 'administrativeRegion',
 			required: true,
@@ -31,41 +38,42 @@ export class LocationMonitoringAssociation {
 		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
+		// Explicitly type the `where` clause for `location` to allow dynamic properties to be added later.
+		const locationWhere: WhereOptions = {
+			locationStatusId: LocationStatusOptions.OPERATIONAL,
+			subnet: { [Op.ne]: null }
+		}
+
 		const locationInclude: IncludeOptions = {
 			association: 'location',
 			required: true,
-			where: {
-				locationStatusId: LocationStatusOptions.OPERATIONAL,
-				subnet: { [Op.ne]: null }
-			},
+			where: locationWhere, // Assign the typed where object
 			include: [typeOfSiteInclude, siteInclude]
 		}
 
 		options.include = [locationInclude]
 
-		// --- Dynamic Filter Application ---
+		// --- 2. Dynamic Filter Application ---
+		// This section applies filters from the criteria to the correct level of the nested include structure.
+
+		// Apply a top-level status filter if not already present in the criteria.
 		if (!criteria.searchValueInArray('status')) {
 			options.where = { ...options.where, status: { [Op.ne]: MonitoringStatuses.NOTAVAILABLE } }
 		}
 
 		const whereFilters = options.where ?? {}
-		const locationWhereFilters = locationInclude.where ?? {}
 
-		try {
-			if ('subnet' in whereFilters) {
-				const subnet = whereFilters.subnet as string
-				const symbol = Object.getOwnPropertySymbols(subnet)[0]
-				const value: string = subnet[symbol] as string
-
-				locationWhereFilters.subnet = Sequelize.literal(`subnet::text ILIKE '%${value}%'`)
-				delete whereFilters.subnet
-			}
-		} catch (error) {
-			console.log('hola')
+		// Handle subnet filter safely using Op.iLike to prevent SQL injection.
+		if ('subnet' in whereFilters) {
+			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
+			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+			locationWhere.subnet = { [Op.iLike]: subnetValue }
+			delete whereFilters.subnet
 		}
 
+		// Apply filters to their corresponding association.
 		if ('typeOfSiteId' in whereFilters) {
-			locationWhereFilters.typeOfSiteId = whereFilters.typeOfSiteId
+			locationWhere.typeOfSiteId = whereFilters.typeOfSiteId
 			delete whereFilters.typeOfSiteId
 		}
 
@@ -99,18 +107,26 @@ export class LocationMonitoringAssociation {
 			delete whereFilters.administrativeRegionId
 		}
 
-		// Re-assign the modified where clauses
+		// Re-assign the modified where clauses back to the options.
 		options.where = whereFilters
-		locationInclude.where = locationWhereFilters
 
-		// --- Order Transformation ---
+		// --- 3. Order Transformation ---
+		// The `transformOrder` method correctly maps frontend field names (e.g., 'cityId')
+		// to the nested Sequelize structure required for sorting on associated tables.
 		options.order = this.transformOrder(options.order)
 
 		return options
 	}
 
 	/**
-	 * Transforms a simple order format into a nested format for Sequelize.
+	 * @private
+	 * @static
+	 * @method transformOrder
+	 * @description Transforms a simple order format (e.g., ['cityId', 'ASC']) into a nested format
+	 * that Sequelize can use for ordering on associated tables (e.g., ['location', 'site', 'city', 'name', 'ASC']).
+	 *
+	 * @param {Order | undefined} order The order configuration from the criteria.
+	 * @returns {Order | undefined} A Sequelize-compatible nested order configuration.
 	 */
 	private static transformOrder(order: Order | undefined): Order | undefined {
 		if (!order || !Array.isArray(order) || order.length === 0) return undefined
@@ -125,23 +141,12 @@ export class LocationMonitoringAssociation {
 			name: ['location', 'name']
 		}
 
-		// The Sequelize `Order` type from the library allows for these nested arrays automatically,
-		// so we can leverage that without creating a new complex type if the direct `Order` type is sufficient.
-		// However, if we want to be very specific about the *structure* we are building:
-		const transformedOrder: (string | string[])[] = (order as Array<[string, string]>).map(([field, direction]) => {
+		const transformedOrder = (order as Array<[string, string]>).map(([field, direction]) => {
 			const mappedPath = orderMap[field]
-			if (mappedPath) {
-				// For nested paths, append the direction to the path array
-				return [...mappedPath, direction]
-			} else {
-				// For top-level fields, keep it as [field, direction]
-				return [field, direction]
-			}
+			// If a mapping exists, use the nested path. Otherwise, use the original field name.
+			return mappedPath ? [...mappedPath, direction] : [field, direction]
 		})
 
-		// The `Order` type from Sequelize's `index.d.ts` is a union that includes `Array<string | OrderItem>`,
-		// where OrderItem can be `[string, string]`, `[string, Order]` or `[Model, string]` etc.
-		// So `Array<string[]>` or `Array<[string, string]>` fits into `Order`.
-		return transformedOrder as Order // Cast back to Order to satisfy the return type
+		return transformedOrder as Order
 	}
 }
