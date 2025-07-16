@@ -1,5 +1,5 @@
-import { Op, type FindOptions, type IncludeOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { Op, type WhereOptions, type FindOptions, type IncludeOptions } from 'sequelize'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
@@ -49,13 +49,16 @@ export class LocationMonitoringDashboardByStateAssociation {
 		}
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
+		// Explicitly type the `where` clause for `location` to allow dynamic properties to be added later.
+		const locationWhere: WhereOptions = {
+			locationStatusId: LocationStatusOptions.OPERATIONAL,
+			subnet: { [Op.ne]: null }
+		}
+
 		const locationInclude: IncludeOptions = {
 			association: 'location',
 			required: true,
-			where: {
-				locationStatusId: LocationStatusOptions.OPERATIONAL,
-				subnet: { [Op.ne]: null }
-			},
+			where: locationWhere,
 			attributes: [],
 			include: [typeOfSiteInclude, siteInclude]
 		}
@@ -78,24 +81,23 @@ export class LocationMonitoringDashboardByStateAssociation {
 		}
 
 		const whereFilters = options.where ?? {}
-		const locationWhereFilters = locationInclude.where ?? {}
 
 		if ('name' in whereFilters) {
-			locationWhereFilters.name = whereFilters.name
+			locationWhere.name = whereFilters.name
 			delete whereFilters.name
 		}
 
+		// Handle subnet filter safely using Op.iLike to prevent SQL injection.
 		if ('subnet' in whereFilters) {
-			const subnet = whereFilters.subnet as string
-			const symbol = Object.getOwnPropertySymbols(subnet)[0]
-			const value: string = subnet[symbol] as string
-
-			locationWhereFilters.subnet = sequelize.literal(`subnet::text ILIKE '%${value}%'`)
+			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
+			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+			locationWhere.subnet = sequelize.literal(`subnet::text ILIKE '%${subnetValue}%'`)
 			delete whereFilters.subnet
 		}
 
+		// Apply filters to their corresponding association.
 		if ('typeOfSiteId' in whereFilters) {
-			locationWhereFilters.typeOfSiteId = whereFilters.typeOfSiteId
+			locationWhere.typeOfSiteId = whereFilters.typeOfSiteId
 			delete whereFilters.typeOfSiteId
 		}
 
@@ -125,7 +127,6 @@ export class LocationMonitoringDashboardByStateAssociation {
 		}
 
 		options.where = whereFilters
-		locationInclude.where = locationWhereFilters
 
 		// Add ordering for consistent results
 		options.order = [[sequelize.col('location.site.city.state.name'), 'ASC']]
