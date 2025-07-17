@@ -12,6 +12,13 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DirectivaDto, type DirectivaPrimitives } from '../../domain/Directiva.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+/**
+ * @class SequelizeDirectivaRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {DepartmentRepository<DirectivaDto>}
+ * @description Concrete implementation of the DirectivaRepository using Sequelize.
+ * Handles data persistence for Directiva entities, including caching mechanisms.
+ */
 export class SequelizeDirectivaRepository
 	extends CriteriaToSequelizeConverter
 	implements DepartmentRepository<DirectivaDto>
@@ -20,63 +27,136 @@ export class SequelizeDirectivaRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of Directiva entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<DirectivaDto>>} A promise that resolves to a paginated response containing Directiva DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DirectivaDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<DirectivaDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DirectivaModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single Directiva entity by its unique identifier.
+	 * Includes associated cargos data.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<DepartmentId>} id - The ID of the Directiva to search for.
+	 * @returns {Promise<Nullable<DirectivaDto>>} A promise that resolves to the Directiva DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DirectivaDto>> {
-		return (
-			(await DirectivaModel.findByPk(id, {
-				include: [
-					{
-						association: 'cargos',
-						attributes: ['id', 'name'],
-						through: { attributes: [] }
-					}
-					// 'employee'
-				]
-			})) ?? null
-		)
+		return await this.cache.getCachedData<Nullable<DirectivaDto>>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const directiva = await DirectivaModel.findByPk(id, {
+					include: [
+						{
+							association: 'cargos',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
+						}
+					]
+				})
+				return directiva ? directiva.get({ plain: true }) : null
+			}
+		})
 	}
 
+	/**
+	 * @method searchByName
+	 * @description Retrieves a single Directiva entity by its name.
+	 * Utilizes caching for direct name lookups.
+	 * @param {Primitives<DepartmentName>} name - The name of the Directiva to search for.
+	 * @returns {Promise<Nullable<DirectivaDto>>} A promise that resolves to the Directiva DTO if found, or null otherwise.
+	 */
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<DirectivaDto>> {
-		return (await DirectivaModel.findOne({ where: { name } })) ?? null
+		return await this.cache.getCachedData<Nullable<DirectivaDto>>({
+			cacheKey: `${this.cacheKey}:name:${name}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const directiva = await DirectivaModel.findOne({ where: { name } })
+				return directiva ? directiva.get({ plain: true }) : null
+			}
+		})
 	}
 
+	/**
+	 * @method save
+	 * @description Saves a Directiva entity to the data store. Uses `upsert` for atomic creation or update.
+	 * Handles associated `cargos` relationships.
+	 * Invalidates relevant cache entries after a successful operation.
+	 * @param {DirectivaPrimitives} payload - The Directiva data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 * @throws {Error} If the save operation fails, it throws a detailed error.
+	 */
 	async save(payload: DirectivaPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
 			const { id, cargos, ...restPayload } = payload
-			const directiva = (await DirectivaModel.findByPk(id, { transaction })) ?? null
-			if (directiva) {
-				await directiva.update(restPayload, { transaction })
-				await directiva.setCargos(cargos, { transaction })
-			} else {
-				const newDirectiva = await DirectivaModel.create({ ...restPayload, id }, { transaction })
-				await newDirectiva.setCargos(cargos, { transaction })
+
+			// Use upsert for the main Directiva entry
+			const [directivaInstance, created] = await DirectivaModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+
+			// Handle cargos association
+			if (cargos && cargos.length > 0) {
+				// Assuming setCargos expects an array of cargo IDs
+				await directivaInstance.setCargos(cargos, { transaction })
+			} else if (cargos && cargos.length === 0) {
+				// If an empty array is passed, clear existing associations
+				await directivaInstance.setCargos([], { transaction })
 			}
+
 			await transaction.commit()
-			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		} catch (error) {
+			// Invalidate relevant cache entries
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
+		} catch (error: unknown) {
 			await transaction.rollback()
-			throw error
+			let errorMessage = 'An unknown error occurred while saving the Directiva.'
+			if (error instanceof Error) {
+				errorMessage = `Error saving Directiva: ${error.message}`
+			} else if (typeof error === 'string') {
+				errorMessage = `Error saving Directiva: ${error}`
+			}
+			throw new Error(errorMessage)
 		}
 	}
 
+	/**
+	 * @method remove
+	 * @description Deletes a Directiva entity from the data store by its unique identifier.
+	 * Invalidates relevant cache entries after a successful deletion.
+	 * @param {Primitives<DepartmentId>} id - The ID of the Directiva to remove.
+	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
+	 */
 	async remove(id: Primitives<DepartmentId>): Promise<void> {
+		// Retrieve the entity to get its name for cache invalidation
+		const directivaToRemove = await DirectivaModel.findByPk(id)
+
 		await DirectivaModel.destroy({ where: { id } })
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+
+		// Invalidate relevant cache entries
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		if (directivaToRemove) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${directivaToRemove.name}` })
+		}
 	}
 }

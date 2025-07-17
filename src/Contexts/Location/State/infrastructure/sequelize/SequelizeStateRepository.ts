@@ -10,29 +10,58 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { StateModel } from './StateSchema'
 import { StateAssociation } from './StateAssociation'
 
+/**
+ * @class SequelizeStateRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {StateRepository}
+ * @description Concrete implementation of the StateRepository using Sequelize.
+ * Handles data persistence for State entities, including caching mechanisms.
+ */
 export class SequelizeStateRepository extends CriteriaToSequelizeConverter implements StateRepository {
 	private readonly cacheKey: string = 'states'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of State entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<StateDto>>} A promise that resolves to a paginated response containing State DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<StateDto>> {
 		const options = StateAssociation.converFilter(criteria, this.convert(criteria))
 
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<StateDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await StateModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single State entity by its unique identifier.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<StateId>} id - The ID of the State to search for.
+	 * @returns {Promise<StateDto | null>} A promise that resolves to the State DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<StateId>): Promise<StateDto | null> {
-		return (await StateModel.findByPk(id)) ?? null
+		return await this.cache.getCachedData<StateDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const state = await StateModel.findByPk(id)
+				return state ? state.get({ plain: true }) : null
+			}
+		})
 	}
 }

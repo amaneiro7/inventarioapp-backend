@@ -6,12 +6,25 @@ import { StatusList } from '../../../Status/domain/StatusList'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalComputerRepository } from '../../domain/TotalComputerRepository'
 
+/**
+ * @class SequelizeTotalComputerRepository
+ * @implements {TotalComputerRepository}
+ * @description Concrete implementation of the TotalComputerRepository using Sequelize.
+ * Provides the total count of computers (devices with MainCategoryList.COMPUTER) that are not in a 'DESINCORPORADO' status.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeTotalComputerRepository implements TotalComputerRepository {
 	private readonly cacheKey: string = 'totalComputer'
 	constructor(private readonly cache: CacheService) {}
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+
+	/**
+	 * @method run
+	 * @description Retrieves the total count of computers.
+	 * @returns {Promise<number>} A promise that resolves to the total count of computers.
+	 */
+	async run(): Promise<number> {
+		return await this.cache.getCachedData<number>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await DeviceModel.count({

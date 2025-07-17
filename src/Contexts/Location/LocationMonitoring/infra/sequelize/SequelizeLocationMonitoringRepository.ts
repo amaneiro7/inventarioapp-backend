@@ -14,6 +14,13 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 
+/**
+ * @class SequelizeLocationMonitoringRepository
+ * @extends SequelizeCriteriaConverter
+ * @implements {LocationMonitoringRepository}
+ * @description Concrete implementation of the LocationMonitoringRepository using Sequelize.
+ * Handles data persistence for LocationMonitoring entities, including caching mechanisms.
+ */
 export class SequelizeLocationMonitoringRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringRepository
@@ -24,16 +31,18 @@ export class SequelizeLocationMonitoringRepository
 	}
 
 	/**
-	 * Searches for all location monitoring entries matching the given criteria.
+	 * @method searchAll
+	 * @description Searches for all location monitoring entries matching the given criteria.
 	 * It uses caching to improve performance.
-	 * @param criteria The criteria to filter, sort, and paginate the results.
-	 * @returns A promise that resolves to a paginated response of location monitoring DTOs.
+	 * @param {Criteria} criteria - The criteria to filter, sort, and paginate the results.
+	 * @returns {Promise<ResponseDB<LocationMonitoringDto>>} A promise that resolves to a paginated response of location monitoring DTOs.
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationMonitoringDto>> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringAssociation.convertFilter(criteria, options)
-		return await this.cache.getCachedData({
+		return await this.cache.getCachedData<ResponseDB<LocationMonitoringDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			criteria,
 			ex: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationMonitoringModel.findAndCountAll(opt)
@@ -46,11 +55,13 @@ export class SequelizeLocationMonitoringRepository
 	}
 
 	/**
-	 * Searches for location monitoring entries that have a non-null subnet.
+	 * @method searchNotNullIpAddress
+	 * @description Searches for location monitoring entries that have a non-null subnet.
 	 * This is useful for finding locations that are configured for network monitoring.
-	 * @param page - Optional page number for pagination.
-	 * @param pageSize - Optional page size for pagination.
-	 * @returns A promise that resolves to an array of location monitoring DTOs.
+	 * @param {object} params - Parameters for pagination.
+	 * @param {number} [params.page] - Optional page number for pagination.
+	 * @param {number} [params.pageSize] - Optional page size for pagination.
+	 * @returns {Promise<LocationMonitoringDto[]>} A promise that resolves to an array of location monitoring DTOs.
 	 */
 	async searchNotNullIpAddress({
 		page,
@@ -60,7 +71,7 @@ export class SequelizeLocationMonitoringRepository
 		pageSize?: number
 	}): Promise<LocationMonitoringDto[]> {
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
-		return await this.cache.getCachedData({
+		return await this.cache.getCachedData<LocationMonitoringDto[]>({
 			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
@@ -82,30 +93,45 @@ export class SequelizeLocationMonitoringRepository
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single location monitoring entry by its unique identifier.
+	 * @param {string} id - The ID of the location monitoring entry to search for.
+	 * @returns {Promise<LocationMonitoringDto | null>} A promise that resolves to the LocationMonitoring DTO if found, or null otherwise.
+	 */
 	async searchById(id: string): Promise<LocationMonitoringDto | null> {
-		return (await LocationMonitoringModel.findByPk(id)) ?? null
+		return await this.cache.getCachedData<LocationMonitoringDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const locationMonitoring = (await LocationMonitoringModel.findByPk(id))
+				return locationMonitoring ? locationMonitoring.get({ plain: true }) : null
+			}
+		})
 	}
 
 	/**
-	 * Saves a location monitoring entry to the database.
+	 * @method save
+	 * @description Saves a location monitoring entry to the database.
 	 * It updates the entry if it already exists or creates a new one if it does not.
 	 * This operation is wrapped in a transaction to ensure atomicity.
+	 * Invalidates relevant cache entries after a successful operation.
 	 *
-	 * @param payload - The location monitoring data to be saved.
+	 * @param {LocationMonitoringPrimitives} payload - The location monitoring data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 * @throws {Error} If the save operation fails, it throws a detailed error.
 	 */
 	async save(payload: LocationMonitoringPrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
-			const deviceMonitoring = (await LocationMonitoringModel.findByPk(payload.id)) ?? null // Find the device by its id, if it does not exist, device will be null
-			if (!deviceMonitoring) {
-				await LocationMonitoringModel.create(payload, { transaction: t }) // Create a new device with the given payload
-			} else {
-				await LocationMonitoringModel.update(payload, { where: { id: payload.id }, transaction: t }) // Update the device with the given payload
-			}
+			// Use upsert for atomic create or update operation
+			await LocationMonitoringModel.upsert(payload, { transaction: t })
 
 			await t.commit() // Commit the transaction
-			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+			// Invalidate all cache entries related to location monitoring.
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			// Also invalidate the specific ID entry.
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
 		} catch (error: unknown) {
 			await t.rollback() // Rollback the transaction on error
 

@@ -13,71 +13,157 @@ import { CargoAssociation } from './CargoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
+/**
+ * @class SequelizeCargoRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {CargoRepository}
+ * @description Concrete implementation of the CargoRepository using Sequelize.
+ * Handles data persistence for Cargo entities, including caching mechanisms.
+ */
 export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of Cargo entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<CargoDto>>} A promise that resolves to a paginated response containing Cargo DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CargoDto>> {
 		const options = this.convert(criteria)
 		const opt = CargoAssociation.convertFilter(criteria, options)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<CargoDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CargoModel.findAndCountAll(opt)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single Cargo entity by its unique identifier.
+	 * Includes associated departamentos, directivas, vicepresidencias ejecutivas, and vicepresidencias data.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<CargoId>} id - The ID of the Cargo to search for.
+	 * @returns {Promise<Nullable<CargoDto>>} A promise that resolves to the Cargo DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
-		return (
-			(await CargoModel.findByPk(id, {
-				include: [
-					{
-						association: 'departamentos',
-						attributes: ['id', 'name'],
-						through: { attributes: [] }
-					},
-					'employee'
-				]
-			})) ?? null
-		)
+		return await this.cache.getCachedData<Nullable<CargoDto>>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const cargo = await CargoModel.findByPk(id, {
+					include: [
+						{
+							association: 'departamentos',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
+						},
+						'employee'
+					]
+				})
+				return cargo ? cargo.get({ plain: true }) : null
+			}
+		})
 	}
 
+	/**
+	 * @method searchByName
+	 * @description Retrieves a single Cargo entity by its name.
+	 * Utilizes caching for direct name lookups.
+	 * @param {Primitives<CargoName>} name - The name of the Cargo to search for.
+	 * @returns {Promise<Nullable<CargoDto>>} A promise that resolves to the Cargo DTO if found, or null otherwise.
+	 */
 	async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
-		return (await CargoModel.findOne({ where: { name } })) ?? null
+		return await this.cache.getCachedData<Nullable<CargoDto>>({
+			cacheKey: `${this.cacheKey}:name:${name}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const cargo = await CargoModel.findOne({ where: { name } })
+				return cargo ? cargo.get({ plain: true }) : null
+			}
+		})
 	}
 
+	/**
+	 * @method save
+	 * @description Saves a Cargo entity to the data store. Uses `upsert` for atomic creation or update.
+	 * Handles associated `departamentos`, `directivas`, `vicepresidenciasEjecutivas`, and `vicepresidencias` relationships.
+	 * Invalidates relevant cache entries after a successful operation.
+	 * @param {CargoPrimitives} payload - The Cargo data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 * @throws {Error} If the save operation fails, it throws a detailed error.
+	 */
 	async save(payload: CargoPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
 			const { id, departamentos, directivas, vicepresidenciasEjecutivas, vicepresidencias, ...restPayload } =
 				payload
-			const cargo = (await CargoModel.findByPk(id)) ?? null
-			if (cargo) {
-				await cargo.update(restPayload, { transaction })
-				await cargo.setDirectivas(directivas, { transaction })
-				await cargo.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
-				await cargo.setVicepresidencias(vicepresidencias, { transaction })
-				await cargo.setDepartamentos(directivas, { transaction })
-			} else {
-				const newCargo = await CargoModel.create({ ...restPayload, id }, { transaction })
-				await newCargo.setDirectivas(directivas, { transaction })
-				await newCargo.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
-				await newCargo.setVicepresidencias(vicepresidencias, { transaction })
-				await newCargo.setDepartamentos(directivas, { transaction })
+
+			// Use upsert for the main Cargo entry
+			const [cargoInstance, created] = await CargoModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+
+			// Handle associations
+			if (departamentos) {
+				await cargoInstance.setDepartamentos(departamentos, { transaction })
 			}
+			if (directivas) {
+				await cargoInstance.setDirectivas(directivas, { transaction })
+			}
+			if (vicepresidenciasEjecutivas) {
+				await cargoInstance.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
+			}
+			if (vicepresidencias) {
+				await cargoInstance.setVicepresidencias(vicepresidencias, { transaction })
+			}
+
 			await transaction.commit()
-			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		} catch (error) {
+			// Invalidate relevant cache entries
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
+		} catch (error: unknown) {
 			await transaction.rollback()
-			throw error
+			let errorMessage = 'An unknown error occurred while saving the Cargo.'
+			if (error instanceof Error) {
+				errorMessage = `Error saving Cargo: ${error.message}`
+			} else if (typeof error === 'string') {
+				errorMessage = `Error saving Cargo: ${error}`
+			}
+			throw new Error(errorMessage)
+		}
+	}
+
+	/**
+	 * @method remove
+	 * @description Deletes a Cargo entity from the data store by its unique identifier.
+	 * Invalidates relevant cache entries after a successful deletion.
+	 * @param {Primitives<CargoId>} id - The ID of the Cargo to remove.
+	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
+	 */
+	async remove(id: Primitives<CargoId>): Promise<void> {
+		// Retrieve the entity to get its name for cache invalidation
+		const cargoToRemove = await CargoModel.findByPk(id)
+
+		await CargoModel.destroy({ where: { id } })
+
+		// Invalidate relevant cache entries
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		if (cargoToRemove) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${cargoToRemove.name}` })
 		}
 	}
 }
+

@@ -11,66 +11,127 @@ import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/
 import { CityModel } from './CitySchema'
 import { CityAssociation } from './CityAssociation'
 
+/**
+ * @class SequelizeCityRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {CityRepository}
+ * @description Concrete implementation of the CityRepository using Sequelize.
+ * Handles data persistence for City entities, including caching mechanisms.
+ */
 export class SequelizeCityRepository extends CriteriaToSequelizeConverter implements CityRepository {
 	private readonly cacheKey: string = 'cities'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of City entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<CityDto>>} A promise that resolves to a paginated response containing City DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CityDto>> {
 		const options = CityAssociation.converFilter(criteria, this.convert(criteria))
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<CityDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CityModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single City entity by its unique identifier.
+	 * Includes associated state, region, and administrative region data.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<CityId>} id - The ID of the City to search for.
+	 * @returns {Promise<CityDto | null>} A promise that resolves to the City DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<CityId>): Promise<CityDto | null> {
-		return (
-			(await CityModel.findByPk(id, {
-				include: [
-					{
-						association: 'state',
-						include: [
-							{
-								association: 'region',
-								include: ['administrativeRegion']
-							}
-						]
-					}
-				]
-			})) ?? null
-		)
+		return await this.cache.getCachedData<CityDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const city = await CityModel.findByPk(id, {
+					include: [
+						{
+							association: 'state',
+							include: [
+								{
+									association: 'region',
+									include: ['administrativeRegion']
+								}
+							]
+						}
+					]
+				})
+				return city ? city.get({ plain: true }) : null
+			}
+		})
 	}
+
+	/**
+	 * @method searchByName
+	 * @description Retrieves a single City entity by its name.
+	 * Utilizes caching for direct name lookups.
+	 * @param {Primitives<CityName>} name - The name of the City to search for.
+	 * @returns {Promise<CityDto | null>} A promise that resolves to the City DTO if found, or null otherwise.
+	 */
 	async searchByName(name: Primitives<CityName>): Promise<CityDto | null> {
-		return (
-			(await CityModel.findOne({
-				where: { name }
-			})) ?? null
-		)
+		return await this.cache.getCachedData<CityDto | null>({
+			cacheKey: `${this.cacheKey}:name:${name}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const city = await CityModel.findOne({
+					where: { name }
+				})
+				return city ? city.get({ plain: true }) : null
+			}
+		})
 	}
 
+	/**
+	 * @method remove
+	 * @description Deletes a City entity from the data store by its unique identifier.
+	 * Invalidates relevant cache entries after a successful deletion.
+	 * @param {string} id - The ID of the City to remove.
+	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
+	 */
 	async remove(id: string): Promise<void> {
+		// Retrieve the city to get its name for cache invalidation
+		const cityToRemove = await CityModel.findByPk(id)
+
 		await CityModel.destroy({ where: { id } })
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+
+		// Invalidate relevant cache entries
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		if (cityToRemove) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${cityToRemove.name}` })
+		}
 	}
 
+	/**
+	 * @method save
+	 * @description Saves a City entity to the data store. Uses `upsert` for atomic creation or update.
+	 * Invalidates relevant cache entries after a successful operation.
+	 * @param {CityPrimitives} payload - The City data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 */
 	async save(payload: CityPrimitives): Promise<void> {
-		const { id } = payload
-		const city = (await CityModel.findByPk(id)) ?? null
-		if (!city) {
-			await CityModel.create({ ...payload })
-		} else {
-			city.set({ ...payload })
-			await city.save()
-		}
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		// Use upsert for atomic create or update operation
+		await CityModel.upsert(payload)
+
+		// Invalidate relevant cache entries
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
 	}
 }

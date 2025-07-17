@@ -9,6 +9,13 @@ import { type LocationStatusDto } from '../../domain/LocationStatus.dto'
 import { type LocationStatusId } from '../../domain/LocationStatusId'
 import { type LocationStatusRepository } from '../../domain/LocationStatusRepository'
 
+/**
+ * @class SequelizeLocationStatusRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {LocationStatusRepository}
+ * @description Concrete implementation of the LocationStatusRepository using Sequelize.
+ * Handles data persistence for LocationStatus entities, including caching mechanisms.
+ */
 export class SequelizeLocationStatusRepository
 	extends CriteriaToSequelizeConverter
 	implements LocationStatusRepository
@@ -17,23 +24,45 @@ export class SequelizeLocationStatusRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of LocationStatus entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<LocationStatusDto>>} A promise that resolves to a paginated response containing LocationStatus DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<LocationStatusDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<LocationStatusDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationStatusModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single LocationStatus entity by its unique identifier.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<LocationStatusId>} id - The ID of the LocationStatus to search for.
+	 * @returns {Promise<LocationStatusDto | null>} A promise that resolves to the LocationStatus DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null> {
-		return (await LocationStatusModel.findByPk(id)) ?? null
+		return await this.cache.getCachedData<LocationStatusDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const locationStatus = await LocationStatusModel.findByPk(id)
+				return locationStatus ? locationStatus.get({ plain: true }) : null
+			}
+		})
 	}
 }

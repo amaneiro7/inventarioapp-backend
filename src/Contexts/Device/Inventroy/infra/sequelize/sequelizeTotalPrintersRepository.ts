@@ -6,12 +6,25 @@ import { StatusList } from '../../../Status/domain/StatusList'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalPrintersRepository } from '../../domain/TotalPrintersRepository'
 
+/**
+ * @class SequelizeTotalPrintersRepository
+ * @implements {TotalPrintersRepository}
+ * @description Concrete implementation of the TotalPrintersRepository using Sequelize.
+ * Provides the total count of printers (devices with MainCategoryList.PRINTERS) that are not in a 'DESINCORPORADO' status.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeTotalPrintersRepository implements TotalPrintersRepository {
 	private readonly cacheKey: string = 'totalPrinters'
 	constructor(private readonly cache: CacheService) {}
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+
+	/**
+	 * @method run
+	 * @description Retrieves the total count of printers.
+	 * @returns {Promise<number>} A promise that resolves to the total count of printers.
+	 */
+	async run(): Promise<number> {
+		return await this.cache.getCachedData<number>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await DeviceModel.count({

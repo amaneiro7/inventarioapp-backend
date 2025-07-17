@@ -6,12 +6,25 @@ import { StatusList } from '../../../Status/domain/StatusList'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalScreensRepository } from '../../domain/TotalScreensRepository'
 
+/**
+ * @class SequelizeTotalScreensRepository
+ * @implements {TotalScreensRepository}
+ * @description Concrete implementation of the TotalScreensRepository using Sequelize.
+ * Provides the total count of screens (devices with MainCategoryList.SCREENS) that are not in a 'DESINCORPORADO' status.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeTotalScreensRepository implements TotalScreensRepository {
 	private readonly cacheKey: string = 'totalScreens'
 	constructor(private readonly cache: CacheService) {}
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+
+	/**
+	 * @method run
+	 * @description Retrieves the total count of screens.
+	 * @returns {Promise<number>} A promise that resolves to the total count of screens.
+	 */
+	async run(): Promise<number> {
+		return await this.cache.getCachedData<number>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await DeviceModel.count({

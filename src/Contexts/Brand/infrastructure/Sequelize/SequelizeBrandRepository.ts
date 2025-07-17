@@ -32,7 +32,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 
 		return await this.cache.getCachedData<ResponseDB<BrandDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			criteria: criteria,
+			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await BrandModel.findAndCountAll(options)
@@ -93,7 +93,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 
 		// Invalidate relevant cache entries
 		// Assuming removeCachedData with a base key clears all entries starting with that key.
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
 		// Also invalidate specific entries if they were cached
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${payload.name}` })
@@ -114,7 +114,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 
 		// Invalidate relevant cache entries
 		// Assuming removeCachedData with a base key clears all entries starting with that key.
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
 		// Also invalidate the specific ID entry
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
 		// If the brand was found, invalidate its name-based cache entry as well

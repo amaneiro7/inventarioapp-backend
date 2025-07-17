@@ -5,12 +5,25 @@ import { SiteModels } from '../../../../Location/Site/infrastructure/sequelize/S
 import { LocationStatusOptions } from '../../../../Location/LocationStatus/domain/LocationStatusOptions'
 import { type TotalAdministrativeSitesRepository } from '../../domain/TotalAdministrativeSitesRepository'
 
+/**
+ * @class SequelizeTotalAdministrativeSitesRepository
+ * @implements {TotalAdministrativeSitesRepository}
+ * @description Concrete implementation of the TotalAdministrativeSitesRepository using Sequelize.
+ * Provides the total count of administrative sites (sites with TypeOfSiteList.TORRE) that are operational.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeTotalAdministrativeSitesRepository implements TotalAdministrativeSitesRepository {
 	private readonly cacheKey: string = 'totalAdministrativeSites'
 	constructor(private readonly cache: CacheService) {}
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+
+	/**
+	 * @method run
+	 * @description Retrieves the total count of administrative sites.
+	 * @returns {Promise<number>} A promise that resolves to the total count of administrative sites.
+	 */
+	async run(): Promise<number> {
+		return await this.cache.getCachedData<number>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
 				return await SiteModels.count({

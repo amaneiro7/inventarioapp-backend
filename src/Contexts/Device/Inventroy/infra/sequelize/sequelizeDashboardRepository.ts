@@ -5,16 +5,85 @@ import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type ComputerDashboardRepository } from '../../domain/ComputerDashboardRepository'
 
+// --- Type Definitions for Dashboard Data ---
+
+// Raw data from countTotalHDD query
+interface RawHDDData {
+	hddCapacityName: string
+	hddTypeName: string
+	count: string | number
+}
+
+// Aggregated HDD Type Data
+interface HDDTypeData {
+	name: string
+	count: number
+}
+
+// Aggregated HDD Capacity Data
+interface AggregatedHDDData {
+	name: string
+	count: number
+	hddType: HDDTypeData[]
+}
+
+// Raw data from countByStatus query
+interface RawStatusCountData {
+	name: string
+	count: string | number
+}
+
+// Raw data from countByBrand query
+interface RawBrandCountData {
+	categoryName: string
+	brandName: string
+	modelName: string
+	typeOfSiteName: string
+	count: string | number
+}
+
+// Aggregated TypeOfSite Data
+interface TypeOfSiteAggregatedData {
+	name: string
+	count: number
+}
+
+// Aggregated Model Data
+interface ModelAggregatedData {
+	name: string
+	category: string
+	count: number
+	typeOfSite: TypeOfSiteAggregatedData[]
+}
+
+// Aggregated Brand Data
+interface AggregatedBrandData {
+	name: string
+	count: number
+	model: ModelAggregatedData[]
+}
+
+/**
+ * @class SequelizeComputerDashboardRepository
+ * @implements {ComputerDashboardRepository}
+ * @description Concrete implementation of the ComputerDashboardRepository using Sequelize.
+ * Provides various aggregated dashboard data for computer devices, utilizing caching for performance.
+ */
 export class SequelizeComputerDashboardRepository implements ComputerDashboardRepository {
 	private readonly cacheKey: string = 'dashboard'
 	constructor(private readonly cache: CacheService) {}
 
-	async countTotalHDD(): Promise<{}> {
-		return await this.cache.getCachedData({
+	/**
+	 * @method countTotalHDD
+	 * @description Counts the total number of computers grouped by HDD capacity and type.
+	 * @returns {Promise<AggregatedHDDData[]>} A promise that resolves to an array of aggregated HDD data.
+	 */
+	async countTotalHDD(): Promise<AggregatedHDDData[]> {
+		return await this.cache.getCachedData<AggregatedHDDData[]>({
 			cacheKey: `computer-hdd-${this.cacheKey}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('computer.hardDriveCapacity.name'), 'hddCapacityName'],
 						[sequelize.col('computer.hardDriveType.name'), 'hddTypeName'],
@@ -49,49 +118,57 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 					group: ['computer.hardDriveCapacity.name', 'computer.hardDriveType.name'],
 					order: [[sequelize.col('computer.hardDriveCapacity.name'), 'ASC']],
 					raw: true
-				})
-				const hddCapacityMap = new Map()
-				result.forEach((item: any) => {
+				})) as RawHDDData[]
+
+				const hddCapacityMap = result.reduce((acc, item) => {
 					const { hddCapacityName, hddTypeName, count } = item
 					const countAsNumber = Number(count)
 					const hddCapacityNameWithGB = `${hddCapacityName} GB`
 
-					if (!hddCapacityMap.has(hddCapacityNameWithGB)) {
-						hddCapacityMap.set(hddCapacityNameWithGB, {
+					let capacityEntry = acc.get(hddCapacityNameWithGB)
+					if (!capacityEntry) {
+						capacityEntry = {
 							name: hddCapacityNameWithGB,
 							count: 0,
-							hddType: new Map()
-						})
+							hddType: []
+						}
+						acc.set(hddCapacityNameWithGB, capacityEntry)
 					}
-					const hddCapacity = hddCapacityMap.get(hddCapacityNameWithGB)
-					hddCapacity.count += countAsNumber
 
-					if (!hddCapacity.hddType.has(hddTypeName)) {
-						hddCapacity.hddType.set(hddTypeName, {
-							name: hddTypeName,
-							count: countAsNumber
-						})
+					capacityEntry.count += countAsNumber
+
+					const existingType = capacityEntry.hddType.find(type => type.name === hddTypeName)
+					if (existingType) {
+						existingType.count += countAsNumber
 					} else {
-						hddCapacity.hddType.get(hddTypeName).count += countAsNumber
+						capacityEntry.hddType.push({ name: hddTypeName, count: countAsNumber })
 					}
-				})
 
-				// convertir los mapas a arrays
-				const transformedData = Array.from(hddCapacityMap.values()).map((hddCapacity: any) => ({
+					return acc
+				}, new Map<string, AggregatedHDDData>())
+
+				// Convert the Map to an array and sort hddType entries
+				const transformedData = Array.from(hddCapacityMap.values()).map(hddCapacity => ({
 					...hddCapacity,
-					hddType: Array.from(hddCapacity.hddType.values())
+					hddType: hddCapacity.hddType.sort((a, b) => a.name.localeCompare(b.name))
 				}))
 
-				return transformedData
+				return transformedData.sort((a, b) => a.name.localeCompare(b.name))
 			}
 		})
 	}
-	async countByStatus(): Promise<{}> {
-		return await this.cache.getCachedData({
+
+	/**
+	 * @method countByStatus
+	 * @description Counts the number of computers grouped by their status.
+	 * @returns {Promise<Array<{ name: string; count: number }>>} A promise that resolves to an array of status counts.
+	 */
+	async countByStatus(): Promise<Array<{ name: string; count: number }>> {
+		return await this.cache.getCachedData<Array<{ name: string; count: number }>>({
 			cacheKey: `computer-status-${this.cacheKey}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('status.name'), 'name'],
 						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
@@ -112,20 +189,25 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 					group: ['status.name'],
 					order: [[sequelize.col('status.name'), 'ASC']],
 					raw: true
-				})
+				})) as RawStatusCountData[]
 				return result
-					.map((status: any) => ({ name: status.name, count: Number(status.count) }))
+					.map(status => ({ name: status.name, count: Number(status.count) }))
 					.sort((a, b) => b.count - a.count)
 			}
 		})
 	}
 
-	async countByBrand(): Promise<{}> {
-		return await this.cache.getCachedData({
+	/**
+	 * @method countByBrand
+	 * @description Counts the number of computers grouped by brand, model, and type of site.
+	 * @returns {Promise<AggregatedBrandData[]>} A promise that resolves to an array of aggregated brand data.
+	 */
+	async countByBrand(): Promise<AggregatedBrandData[]> {
+		return await this.cache.getCachedData<AggregatedBrandData[]>({
 			cacheKey: `computer-brand-${this.cacheKey}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('category.name'), 'categoryName'],
 						[sequelize.col('brand.name'), 'brandName'],
@@ -161,56 +243,59 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 						[sequelize.col('model.name'), 'ASC']
 					],
 					raw: true
-				})
+				})) as RawBrandCountData[]
 
-				const brandMap = new Map()
-				result.forEach((item: any) => {
+				const brandMap = result.reduce((acc, item) => {
 					const { brandName, modelName, typeOfSiteName, categoryName, count } = item
 					const countAsNumber = Number(count)
 
-					if (!brandMap.has(brandName)) {
-						brandMap.set(brandName, {
+					let brandEntry = acc.get(brandName)
+					if (!brandEntry) {
+						brandEntry = {
 							name: brandName,
 							count: 0,
-							model: new Map()
-						})
+							model: []
+						}
+						acc.set(brandName, brandEntry)
 					}
-					const brand = brandMap.get(brandName)
-					brand.count += countAsNumber
 
-					if (!brand.model.has(modelName)) {
-						brand.model.set(modelName, {
+					brandEntry.count += countAsNumber
+
+					let modelEntry = brandEntry.model.find(m => m.name === modelName)
+					if (!modelEntry) {
+						modelEntry = {
 							name: modelName,
 							category: categoryName,
 							count: 0,
-							typeOfSite: new Map()
-						})
+							typeOfSite: []
+						}
+						brandEntry.model.push(modelEntry)
 					}
 
-					const model = brand.model.get(modelName)
-					model.count += countAsNumber
+					modelEntry.count += countAsNumber
 
-					if (!model.typeOfSite.has(typeOfSiteName)) {
-						model.typeOfSite.set(typeOfSiteName, {
-							name: typeOfSiteName,
-							count: countAsNumber
-						})
+					const existingTypeOfSite = modelEntry.typeOfSite.find(ts => ts.name === typeOfSiteName)
+					if (existingTypeOfSite) {
+						existingTypeOfSite.count += countAsNumber
 					} else {
-						model.typeOfSite.get(typeOfSiteName).count += countAsNumber
+						modelEntry.typeOfSite.push({ name: typeOfSiteName, count: countAsNumber })
 					}
-				})
 
-				// convertir los mapas a arrays
-				const transformedData = Array.from(brandMap.values()).map((brand: any) => ({
+					return acc
+				}, new Map<string, AggregatedBrandData>())
+
+				// Convert maps to arrays and sort
+				const transformedData = Array.from(brandMap.values()).map(brand => ({
 					...brand,
-					model: Array.from(brand.model.values()).map((model: any) => ({
+					model: brand.model.map(model => ({
 						...model,
-						typeOfSite: Array.from(model.typeOfSite.values())
-					}))
+						typeOfSite: model.typeOfSite.sort((a, b) => a.name.localeCompare(b.name))
+					})).sort((a, b) => a.name.localeCompare(b.name))
 				}))
 
-				return transformedData
+				return transformedData.sort((a, b) => a.name.localeCompare(b.name))
 			}
 		})
 	}
 }
+

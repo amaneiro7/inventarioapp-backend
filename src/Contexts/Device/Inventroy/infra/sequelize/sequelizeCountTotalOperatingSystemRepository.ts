@@ -5,16 +5,50 @@ import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainC
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 
+// --- Type Definitions for OS Data ---
+
+// Raw data from the Sequelize query
+interface RawOSData {
+	osName: string
+	arqName: string
+	count: string | number
+}
+
+// Aggregated Architecture Data
+interface ArqData {
+	name: string
+	count: number
+}
+
+// Aggregated Operating System Data
+interface AggregatedOSData {
+	name: string
+	count: number
+	arq: ArqData[]
+}
+
+/**
+ * @class SequelizeCountTotalOperatingSystemRepository
+ * @implements {CountTotalOperatingSystemRepository}
+ * @description Concrete implementation of the CountTotalOperatingSystemRepository using Sequelize.
+ * Provides aggregated data of operating systems and their architectures for computer devices.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeCountTotalOperatingSystemRepository implements CountTotalOperatingSystemRepository {
-	private readonly cacheKey: string = 'dashboard'
+	private readonly cacheKey: string = 'computer-os-dashboard'
 	constructor(private readonly cache: CacheService) {}
 
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-os-${this.cacheKey}`,
+	/**
+	 * @method run
+	 * @description Retrieves the total count of operating systems grouped by OS name and architecture.
+	 * @returns {Promise<AggregatedOSData[]>} A promise that resolves to an array of aggregated OS data.
+	 */
+	async run(): Promise<AggregatedOSData[]> {
+		return await this.cache.getCachedData<AggregatedOSData[]>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('computer.operatingSystem.name'), 'osName'],
 						[sequelize.col('computer.operatingSystemArq.name'), 'arqName'],
@@ -49,40 +83,39 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 					group: ['computer.operatingSystem.name', 'computer.operatingSystemArq.name'],
 					order: [[sequelize.col('computer.operatingSystem.name'), 'ASC']],
 					raw: true
-				})
-				const operatingSystemMap = new Map()
-				result.forEach((item: any) => {
+				})) as RawOSData[]
+
+				const operatingSystemMap = result.reduce((acc, item) => {
 					const { osName, arqName, count } = item
 					const countAsNumber = Number(count)
 
-					if (!operatingSystemMap.has(osName)) {
-						operatingSystemMap.set(osName, {
-							name: osName,
-							count: 0,
-							arq: new Map()
-						})
+					let osEntry = acc.get(osName)
+					if (!osEntry) {
+						osEntry = { name: osName, count: 0, arq: [] }
+						acc.set(osName, osEntry)
 					}
-					const operatingSystem = operatingSystemMap.get(osName)
-					operatingSystem.count += countAsNumber
 
-					if (!operatingSystem.arq.has(arqName)) {
-						operatingSystem.arq.set(arqName, {
-							name: arqName,
-							count: countAsNumber
-						})
+					osEntry.count += countAsNumber
+
+					const existingArq = osEntry.arq.find(a => a.name === arqName)
+					if (existingArq) {
+						existingArq.count += countAsNumber
 					} else {
-						operatingSystem.arq.get(arqName).count += countAsNumber
+						osEntry.arq.push({ name: arqName, count: countAsNumber })
 					}
-				})
 
-				// convertir los mapas a arrays
-				const transformedData = Array.from(operatingSystemMap.values()).map((operatingSystem: any) => ({
-					...operatingSystem,
-					arq: Array.from(operatingSystem.arq.values())
+					return acc
+				}, new Map<string, AggregatedOSData>())
+
+				// Convert the Map to an array and sort arq entries
+				const transformedData = Array.from(operatingSystemMap.values()).map(os => ({
+					...os,
+					arq: os.arq.sort((a, b) => a.name.localeCompare(b.name))
 				}))
 
-				return transformedData
+				return transformedData.sort((a, b) => a.name.localeCompare(b.name))
 			}
 		})
 	}
 }
+

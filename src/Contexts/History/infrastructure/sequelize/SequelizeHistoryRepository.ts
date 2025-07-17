@@ -1,37 +1,60 @@
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
+import { HistoryModel } from './HistorySchema'
+import { CriteriaToSequelizeConverter } from '../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { HistoryAssociation } from './HistoryAssociation'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { CriteriaToSequelizeConverter } from '../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type HistoryDto, type HistoryPrimitives } from '../../domain/History.dto'
 import { type HistoryRepository } from '../../domain/HistoryRepository'
-import { HistoryAssociation } from './HistoryAssociation'
-import { HistoryModel } from './HistorySchema'
 
+/**
+ * @class SequelizeHistoryRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {HistoryRepository}
+ * @description Concrete implementation of the HistoryRepository using Sequelize.
+ * Handles data persistence for History entities, including caching mechanisms.
+ */
 export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter implements HistoryRepository {
 	private readonly cacheKey: string = 'histories'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of History entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<HistoryDto>>} A promise that resolves to a paginated response containing History DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<HistoryDto>> {
 		const options = this.convert(criteria)
 		const opt = HistoryAssociation.converFilter(criteria, options)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<HistoryDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await HistoryModel.findAndCountAll(opt)
 				return {
-					data: JSON.parse(JSON.stringify(rows)),
-					total: count
+					total: count,
+					data: rows.map(row => row.get({ plain: true }))
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method save
+	 * @description Saves a History entity to the data store. This method handles creation.
+	 * Invalidates relevant cache entries after a successful operation.
+	 * @param {HistoryPrimitives} payload - The History data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 */
 	async save(payload: HistoryPrimitives): Promise<void> {
 		await HistoryModel.create(payload)
-		await this.cache.removeCachedData({ cacheKey: this.cacheKey })
+		// Invalidate all cache entries related to histories.
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
 	}
 }

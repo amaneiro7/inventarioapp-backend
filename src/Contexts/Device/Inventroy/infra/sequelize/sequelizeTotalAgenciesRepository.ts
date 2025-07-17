@@ -5,12 +5,25 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalAgenciesRepository } from '../../domain/TotalAgenciesRepository'
 import { LocationStatusOptions } from '../../../../Location/LocationStatus/domain/LocationStatusOptions'
 
+/**
+ * @class SequelizeTotalAgenciesRepository
+ * @implements {TotalAgenciesRepository}
+ * @description Concrete implementation of the TotalAgenciesRepository using Sequelize.
+ * Provides the total count of agencies (locations with TypeOfSiteList.AGENCIA) that are operational.
+ * Utilizes caching for improved performance.
+ */
 export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository {
 	private readonly cacheKey: string = 'totalAgencies'
 	constructor(private readonly cache: CacheService) {}
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}`,
+
+	/**
+	 * @method run
+	 * @description Retrieves the total count of agencies.
+	 * @returns {Promise<number>} A promise that resolves to the total count of agencies.
+	 */
+	async run(): Promise<number> {
+		return await this.cache.getCachedData<number>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.TOO_LONG,
 			fetchFunction: async () => {
 				return await LocationModel.count({
