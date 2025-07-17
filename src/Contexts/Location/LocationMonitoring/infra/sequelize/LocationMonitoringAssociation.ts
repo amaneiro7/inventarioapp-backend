@@ -1,7 +1,8 @@
-import { Op, WhereOptions, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { Op, type WhereOptions, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
  * @class LocationMonitoringAssociation
@@ -67,7 +68,7 @@ export class LocationMonitoringAssociation {
 		if ('subnet' in whereFilters) {
 			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
 			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
-			locationWhere.subnet = { [Op.iLike]: subnetValue }
+			locationWhere.subnet = sequelize.literal(`subnet::text ILIKE '%${subnetValue}%'`)
 			delete whereFilters.subnet
 		}
 

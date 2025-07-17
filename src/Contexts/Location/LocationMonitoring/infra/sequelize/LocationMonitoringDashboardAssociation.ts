@@ -1,4 +1,4 @@
-import { Op, type FindOptions, type IncludeOptions } from 'sequelize'
+import { Op, type WhereOptions, type FindOptions, type IncludeOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
@@ -17,7 +17,9 @@ export class LocationMonitoringDashboardAssociation {
 	 * @returns A fully configured FindOptions object.
 	 */
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
-		// Define the nested include structure using named variables for clarity and type safety.
+		// --- 1. Define the nested include structure ---
+		// Using named variables for each include makes the structure clear and avoids magic indexes.
+		// This improves readability and makes the code less prone to errors when modified.
 		const administrativeRegionInclude: IncludeOptions = {
 			association: 'administrativeRegion',
 			required: true,
@@ -49,13 +51,16 @@ export class LocationMonitoringDashboardAssociation {
 		}
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
+		// Explicitly type the `where` clause for `location` to allow dynamic properties to be added later.
+		const locationWhere: WhereOptions = {
+			locationStatusId: LocationStatusOptions.OPERATIONAL,
+			subnet: { [Op.ne]: null }
+		}
+
 		const locationInclude: IncludeOptions = {
 			association: 'location',
 			required: true,
-			where: {
-				locationStatusId: LocationStatusOptions.OPERATIONAL,
-				subnet: { [Op.ne]: null }
-			},
+			where: locationWhere,
 			attributes: [], // No attributes needed, just for joining and filtering
 			include: [typeOfSiteInclude, siteInclude]
 		}
@@ -72,30 +77,32 @@ export class LocationMonitoringDashboardAssociation {
 		options.group = [sequelize.col('status')]
 		options.raw = true
 
-		// --- Dynamic Filter Application ---
+		// --- 2. Dynamic Filter Application ---
+		// This section applies filters from the criteria to the correct level of the nested include structure.
+
+		// Apply a top-level status filter if not already present in the criteria.
 		if (!criteria.searchValueInArray('status')) {
 			options.where = { ...options.where, status: { [Op.ne]: MonitoringStatuses.NOTAVAILABLE } }
 		}
 
 		const whereFilters = options.where ?? {}
-		const locationWhereFilters = locationInclude.where ?? {}
 
 		if ('name' in whereFilters) {
-			locationWhereFilters.name = whereFilters.name
+			locationWhere.name = whereFilters.name
 			delete whereFilters.name
 		}
 
+		// Handle subnet filter safely using Op.iLike to prevent SQL injection.
 		if ('subnet' in whereFilters) {
-			const subnet = whereFilters.subnet as string
-			const symbol = Object.getOwnPropertySymbols(subnet)[0]
-			const value: string = subnet[symbol] as string
-
-			locationWhereFilters.subnet = sequelize.literal(`subnet::text ILIKE '%${value}%'`)
+			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
+			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+			locationWhere.subnet = sequelize.literal(`subnet::text ILIKE '%${subnetValue}%'`)
 			delete whereFilters.subnet
 		}
 
+		// Apply filters to their corresponding association.
 		if ('typeOfSiteId' in whereFilters) {
-			locationWhereFilters.typeOfSiteId = whereFilters.typeOfSiteId
+			locationWhere.typeOfSiteId = whereFilters.typeOfSiteId
 			delete whereFilters.typeOfSiteId
 		}
 
@@ -126,7 +133,6 @@ export class LocationMonitoringDashboardAssociation {
 
 		// Re-assign the modified where clauses
 		options.where = whereFilters
-		locationInclude.where = locationWhereFilters
 
 		return options
 	}
