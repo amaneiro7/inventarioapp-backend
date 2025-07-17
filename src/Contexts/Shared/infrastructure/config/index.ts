@@ -1,4 +1,3 @@
- 
 // import 'dotenv/config'
 import dotenv from 'dotenv'
 
@@ -95,8 +94,8 @@ type Config = {
 	signedCookie: string
 	accessTokenSecret: string
 	refreshTokenSecret: string
-	accessTokenExpiresIn: string
-	refreshTokenExpiresIn: string
+	accessTokenExpiresIn: number
+	refreshTokenExpiresIn: number
 	smtpEmail: string
 	smtpPassword: string
 	isMonitoringActive: boolean
@@ -145,8 +144,8 @@ export const config: Config = {
 	signedCookie,
 	accessTokenSecret,
 	refreshTokenSecret,
-	accessTokenExpiresIn,
-	refreshTokenExpiresIn,
+	accessTokenExpiresIn: Number(accessTokenExpiresIn),
+	refreshTokenExpiresIn: Number(refreshTokenExpiresIn),
 	smtpEmail,
 	smtpPassword,
 	isMonitoringActive: rawMonitoringEnabled === 'true' || rawMonitoringEnabled === 'enabled'

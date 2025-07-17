@@ -43,19 +43,6 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		})
 	}
 
-	async searchNotNullIpAddressPaginated(page: number, pageSize: number): Promise<DeviceDto[]> {
-		const offset = (page - 1) * pageSize
-		const result = await DeviceModel.findAll({
-			where: {
-				ipAddress: { [Op.ne]: null }
-			},
-			offset,
-			limit: pageSize
-		})
-
-		return result
-	}
-
 	async matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
 

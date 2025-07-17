@@ -1,5 +1,5 @@
 import { PasswordService } from '../../User/user/domain/PasswordService'
-import { UserDoesNotExistError } from '../../User/user/domain/UserDoesNotExistError'
+import { InvalidCredentialsError } from '../domain/InvalidCredentialsError'
 import { UserEmail } from '../../User/user/domain/UserEmail'
 import { type UserPrimitives } from '../../User/user/domain/User'
 import { type UserRepository } from '../../User/user/domain/UserRepository'
@@ -13,10 +13,10 @@ export class UserLoginLocal {
 		const user = await this.userRepository.searchByEmail(userEmail.value)
 
 		if (!user) {
-			throw new UserDoesNotExistError(email)
+			throw new InvalidCredentialsError()
 		}
 
-		PasswordService.compare(password, user.password)
+		await PasswordService.compare(password, user.password)
 
 		return user
 	}

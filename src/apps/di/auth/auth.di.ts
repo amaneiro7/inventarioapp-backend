@@ -1,3 +1,4 @@
+import { TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
 import { asClass, type AwilixContainer } from 'awilix'
 import { UserLoginLocal } from '../../../Contexts/Auth/application/UserLoginLocal'
 import { LocalAuthStrategy } from '../../../Contexts/Auth/infrastructure/passport/strategies/local.strategy'
@@ -15,7 +16,8 @@ export enum AuthDependencies {
 	PassportManager = 'passportManager',
 	LoginController = 'authLoginController',
 	LogoutController = 'authLogoutController',
-	RefreshTokenController = 'authRefreshTokenController'
+	RefreshTokenController = 'authRefreshTokenController',
+	TokenDenylistService = 'tokenDenylistService'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -28,6 +30,7 @@ export const register = (container: AwilixContainer) => {
 		passportManager: asClass(PassportManager),
 		authLoginController: asClass(AuthLoginController),
 		authLogoutController: asClass(AuthLogoutController),
+		tokenDenylistService: asClass(TokenDenylistService),
 		authRefreshTokenController: asClass(AuthRefreshTokenController)
 	})
 }

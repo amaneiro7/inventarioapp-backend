@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { InvalidCredentialsError } from '../../../Auth/domain/InvalidCredentialsError'
 
 export class PasswordService {
 	// Define the function that takes in a password and returns a hashed string
@@ -15,12 +15,12 @@ export class PasswordService {
 	}
 
 	// Define a function named 'compare' that takes in two parameters: 'password' and 'hash'
-	static compare(password: string, hash: string): void {
+	static async compare(password: string, hash: string): Promise<void> {
 		// Use the 'bcrypt.compareSync' method to compare the 'password' with the 'hash'
 		// Return the result of the comparison
 		const isMatch = bcrypt.compareSync(password, hash)
 		if (!isMatch) {
-			throw new InvalidArgumentError('Contraseña incorrecta')
+			throw new InvalidCredentialsError()
 		}
 	}
 }

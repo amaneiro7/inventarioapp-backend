@@ -1,3 +1,4 @@
+import { loginLimiter } from '../../Middleware/loginRateLimit'
 import passport from 'passport'
 import { type Router } from 'express'
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
@@ -53,6 +54,7 @@ export const register = async (router: Router) => {
 	 */
 	router.post(
 		'/auth/login/local',
+		loginLimiter, // <--- Rate limit aplicado
 		passport.authenticate(StrategyOptions.LOCAL, { session: false }),
 		authLoginController.run.bind(authLoginController)
 	)
