@@ -3,10 +3,8 @@ import { resolve } from 'node:path'
 import { sync } from 'fast-glob'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { validationResult, type ValidationError } from 'express-validator'
-import { errorHandler, errorConverter } from '../Middleware/errorHandler'
-import { type Logger } from '../../Contexts/Shared/domain/Logger'
 
-export function registerRoutes(express: Express, logger: Logger) {
+export function registerRoutes({ express }: { express: Express }) {
 	const router = Router()
 	express.use('/api/v1', router)
 
@@ -15,12 +13,6 @@ export function registerRoutes(express: Express, logger: Logger) {
 	for (const route of routes) {
 		register(route, router)
 	}
-
-	// convert error to ApiError, if needed
-	router.use(errorConverter)
-
-	// handle error
-	router.use(errorHandler(logger))
 }
 
 async function register(routePath: string, router: Router) {

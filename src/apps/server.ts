@@ -1,20 +1,22 @@
+import express, { json, urlencoded, type Request, type Response } from 'express' //
+// import 'express-async-errors' // <-- ¡Añadir esta línea al principio!
 import * as http from 'node:http' // Import the http module
 import * as https from 'node:https' // Import the http module
-import express, { json, urlencoded, type Request, type Response } from 'express' //
+import * as fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
+import * as path from 'node:path' // Importa el módulo path para construir rutas
+import swaggerUi from 'swagger-ui-express'
 import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import { options } from './Middleware/cors'
 import helmet from 'helmet' // Protege contra ataques de seguridad
-import { limiter } from './Middleware/rateLimit' // Importa el middleware de limitacion de peticiones
 import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
+import { options } from './Middleware/cors'
+import { limiter } from './Middleware/rateLimit' // Importa el middleware de limitacion de peticiones
 import { morganLog } from './Middleware/morgan'
-import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { registerRoutes } from './routes'
-import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from '../Contexts/Shared/infrastructure/documentation/swagger'
-import fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
-import path from 'node:path' // Importa el módulo path para construir rutas
+import { errorHandler } from './Middleware/errorHandler'
+import { type Logger } from '../Contexts/Shared/domain/Logger'
 
 export class Server {
 	private express: express.Express
@@ -75,7 +77,11 @@ export class Server {
 		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 		// Configuración de rutas
-		registerRoutes(this.express, this.logger)
+		registerRoutes({ express: this.express })
+
+		// Middleware de manejo de errores (debe ir al final)
+
+		this.express.use(errorHandler(this.logger))
 	}
 
 	private async startHTTPS(): Promise<void> {
