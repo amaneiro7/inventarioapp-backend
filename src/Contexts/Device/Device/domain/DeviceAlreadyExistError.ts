@@ -6,3 +6,10 @@ export class DeviceAlreadyExistError extends ApiError {
 		super(httpStatus.BAD_REQUEST, `El dispositivo con el serial: ${name} ya existe.`)
 	}
 }
+
+// export class DeviceAlreadyExistError extends Error {
+//   constructor(readonly name: string) {
+//     super()
+//     this.message = `The Device ${this.name} already exist`
+//   }
+// }

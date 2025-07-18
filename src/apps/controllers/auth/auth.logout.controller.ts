@@ -1,8 +1,8 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { type Controller } from '../controller'
-import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
-import { type TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
 import { config } from '../../../Contexts/Shared/infrastructure/config'
+import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
+import { type Controller } from '../controller'
+import { type TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
 
 export class AuthLogoutController implements Controller {
 	constructor(private readonly tokenDenylistService: TokenDenylistService) {}
@@ -14,11 +14,11 @@ export class AuthLogoutController implements Controller {
 
 			if (accessToken) {
 				// Añadir a la denylist con el tiempo de expiración del token de acceso
-				await this.tokenDenylistService.addToDenylist(accessToken, config.accessTokenExpiresIn)
+				await this.tokenDenylistService.addToDenylist(accessToken, config.accessTokenRedisExpiresIn)
 			}
 			if (refreshToken) {
 				// Añadir a la denylist con el tiempo de expiración del token de refresco
-				await this.tokenDenylistService.addToDenylist(refreshToken, config.refreshTokenExpiresIn)
+				await this.tokenDenylistService.addToDenylist(refreshToken, config.refreshTokenRedisExpiresIn)
 			}
 
 			res.status(httpStatus.OK)

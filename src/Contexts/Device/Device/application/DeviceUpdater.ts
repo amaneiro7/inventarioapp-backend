@@ -40,9 +40,9 @@ import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/dom
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
-import { DeviceParams } from '../domain/Device.dto'
-import { DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer.dto'
-import { DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
+import { type DeviceParams } from '../domain/Device.dto'
+import { type DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer.dto'
+import { type DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 
 export class DeviceUpdater {
 	constructor(
@@ -269,45 +269,47 @@ export class DeviceUpdater {
 			observation,
 			stockNumber
 		} = params
-		await DeviceStatus.updateStatusField({
-			repository: this.statusRepository,
-			status: statusId,
-			entity: deviceEntity
-		})
-		await DeviceActivo.updateActivoField({
-			repository: this.deviceRepository,
-			activo,
-			entity: deviceEntity
-		})
-		await DeviceSerial.updateSerialField({
-			repository: this.deviceRepository,
-			serial,
-			entity: deviceEntity
-		})
-		await DeviceLocation.updateLocationField({
-			repository: this.locationRepository,
-			location: locationId,
-			entity: deviceEntity
-		})
-		await DeviceObservation.updateObservationField({
-			observation,
-			entity: deviceEntity
-		})
-		await DeviceStocknumber.updateStockNumberField({
-			stockNumber,
-			entity: deviceEntity
-		})
-		await DeviceEmployee.updateEmployeeField({
-			repository: this.employeeRepository,
-			employee: employeeId,
-			entity: deviceEntity
-		})
-		await DeviceModelSeries.updateModelField({
-			repository: this.modelSeriesRepository,
-			modelSeries: modelId,
-			category: categoryId,
-			brand: brandId,
-			entity: deviceEntity
-		})
+		await Promise.all([
+			DeviceStatus.updateStatusField({
+				repository: this.statusRepository,
+				status: statusId,
+				entity: deviceEntity
+			}),
+			DeviceActivo.updateActivoField({
+				repository: this.deviceRepository,
+				activo,
+				entity: deviceEntity
+			}),
+			DeviceSerial.updateSerialField({
+				repository: this.deviceRepository,
+				serial,
+				entity: deviceEntity
+			}),
+			DeviceLocation.updateLocationField({
+				repository: this.locationRepository,
+				location: locationId,
+				entity: deviceEntity
+			}),
+			DeviceObservation.updateObservationField({
+				observation,
+				entity: deviceEntity
+			}),
+			DeviceStocknumber.updateStockNumberField({
+				stockNumber,
+				entity: deviceEntity
+			}),
+			DeviceEmployee.updateEmployeeField({
+				repository: this.employeeRepository,
+				employee: employeeId,
+				entity: deviceEntity
+			}),
+			DeviceModelSeries.updateModelField({
+				repository: this.modelSeriesRepository,
+				modelSeries: modelId,
+				category: categoryId,
+				brand: brandId,
+				entity: deviceEntity
+			})
+		])
 	}
 }

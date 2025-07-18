@@ -11,14 +11,14 @@ export enum TimeTolive {
  * @description Defines the contract for any cache storage implementation.
  * This interface abstracts the underlying cache mechanism (e.g., Redis, in-memory).
  */
-export interface CacheRepository {
+export abstract class CacheRepository {
 	/**
 	 * @method get
 	 * @description Retrieves a value from the cache by its key.
 	 * @param {string} key - The unique key of the cached item.
 	 * @returns {Promise<string | null>} A promise that resolves to the cached string value, or null if not found.
 	 */
-	get(key: string): Promise<string | null>
+	abstract get(key: string): Promise<string | null>
 
 	/**
 	 * @method set
@@ -28,7 +28,7 @@ export interface CacheRepository {
 	 * @param {number} ex - The time-to-live for the item in seconds.
 	 * @returns {Promise<void>} A promise that resolves when the item is successfully stored.
 	 */
-	set(key: string, value: string, ex?: TimeTolive): Promise<void>
+	abstract set(key: string, value: string, ex?: TimeTolive): Promise<void>
 
 	/**
 	 * @method del
@@ -36,7 +36,7 @@ export interface CacheRepository {
 	 * @param {string} key - The key of the item to delete.
 	 * @returns {Promise<void>} A promise that resolves when the item is successfully deleted.
 	 */
-	del(key: string): Promise<void>
+	abstract del(key: string): Promise<void>
 
 	/**
 	 * @method delByPattern
@@ -45,5 +45,9 @@ export interface CacheRepository {
 	 * @param {string} pattern - The pattern to match keys for deletion.
 	 * @returns {Promise<void>} A promise that resolves when matching items are successfully deleted.
 	 */
-	delByPattern(pattern: string): Promise<void>
+	abstract delByPattern(pattern: string): Promise<void>
+
+	abstract close(): Promise<void>
+
+	abstract connect(): Promise<void>
 }

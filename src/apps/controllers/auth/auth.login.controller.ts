@@ -16,7 +16,7 @@ export class AuthLoginController implements Controller {
 			const user = req.user as ReqUser
 			if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
 
-			const { infoUser, refreshToken } = await AuthUseCase.authenticaUser(user)
+			const { user: infoUser, refreshToken, accessToken } = await AuthUseCase.authenticaUser(user)
 
 			res.status(httpStatus.OK)
 				.cookie('refreshToken', refreshToken, {
@@ -25,7 +25,8 @@ export class AuthLoginController implements Controller {
 					sameSite: 'strict'
 				})
 				.json({
-					...infoUser,
+					user: infoUser,
+					accessToken,
 					message: 'Sesion iniciada exitosamente'
 				})
 		} catch (error) {

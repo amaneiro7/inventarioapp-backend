@@ -16,7 +16,7 @@ export class UserLoginLocal {
 			throw new InvalidCredentialsError()
 		}
 
-		await PasswordService.compare(password, user.password)
+		PasswordService.compare(password, user.password)
 
 		return user
 	}

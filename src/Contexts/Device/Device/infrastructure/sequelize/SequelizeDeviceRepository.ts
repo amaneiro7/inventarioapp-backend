@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { type Transaction, Model } from 'sequelize'
 import fs from 'node:fs'
 import { set_fs, utils, write } from 'xlsx'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
@@ -9,7 +10,6 @@ import { DeviceAssociation } from './DeviceAssociation'
 import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { clearComputerDataset } from './clearComputerDataset'
-import { type Transaction, Model, Op } from 'sequelize'
 import { type DeviceRepository } from '../../domain/DeviceRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/DeviceId'

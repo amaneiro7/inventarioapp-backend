@@ -27,8 +27,8 @@ const {
 	REDIS_PASSWORD: redisPassword = 'Man12345*',
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
-	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15m',
-	REFRESH_TOKEN_EXPIRES_IN: refreshTokenExpiresIn = '30d',
+	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15',
+	REFRESH_TOKEN_EXPIRES_IN: refreshTokenExpiresIn = '30',
 	REFRESH_TOKEN_SECRET: refreshTokenSecret = 'refresh_token_scret',
 	SMTP_EMAIL: smtpEmail = 'jaasnavas0811@gmail.com',
 	SMTP_PASSWORD: smtpPassword = 'vldpmrrvdvcnrjdx',
@@ -94,8 +94,10 @@ type Config = {
 	signedCookie: string
 	accessTokenSecret: string
 	refreshTokenSecret: string
-	accessTokenExpiresIn: number
-	refreshTokenExpiresIn: number
+	accessTokenExpiresIn: string
+	refreshTokenExpiresIn: string
+	accessTokenRedisExpiresIn: number
+	refreshTokenRedisExpiresIn: number
 	smtpEmail: string
 	smtpPassword: string
 	isMonitoringActive: boolean
@@ -144,8 +146,10 @@ export const config: Config = {
 	signedCookie,
 	accessTokenSecret,
 	refreshTokenSecret,
-	accessTokenExpiresIn: Number(accessTokenExpiresIn),
-	refreshTokenExpiresIn: Number(refreshTokenExpiresIn),
+	accessTokenExpiresIn: `${accessTokenExpiresIn}m`,
+	refreshTokenExpiresIn: `${refreshTokenExpiresIn}d`,
+	accessTokenRedisExpiresIn: Number(accessTokenExpiresIn) * 60,
+	refreshTokenRedisExpiresIn: 60 * 60 * 24 * Number(refreshTokenExpiresIn),
 	smtpEmail,
 	smtpPassword,
 	isMonitoringActive: rawMonitoringEnabled === 'true' || rawMonitoringEnabled === 'enabled'

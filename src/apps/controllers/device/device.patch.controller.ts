@@ -18,6 +18,7 @@ export class DevicePatchController implements Controller {
 				message: 'Dispositivo actualizado exitosamente'
 			})
 		} catch (error) {
+			console.log('hola')
 			next(error)
 		}
 	}

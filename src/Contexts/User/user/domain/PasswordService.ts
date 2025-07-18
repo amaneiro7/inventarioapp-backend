@@ -15,7 +15,7 @@ export class PasswordService {
 	}
 
 	// Define a function named 'compare' that takes in two parameters: 'password' and 'hash'
-	static async compare(password: string, hash: string): Promise<void> {
+	static compare(password: string, hash: string): void {
 		// Use the 'bcrypt.compareSync' method to compare the 'password' with the 'hash'
 		// Return the result of the comparison
 		const isMatch = bcrypt.compareSync(password, hash)
