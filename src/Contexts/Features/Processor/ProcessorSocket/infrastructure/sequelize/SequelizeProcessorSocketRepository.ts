@@ -9,6 +9,13 @@ import { type ProcessorSocketId } from '../../domain/ProcessorSocketId'
 import { type ProcessorSocketRepository } from '../../domain/ProcessorSocketRepository'
 import { ProcessorSocketModel } from './ProcessorSocketSchema'
 
+/**
+ * @class SequelizeProcessorSocketRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {ProcessorSocketRepository}
+ * @description Concrete implementation of the ProcessorSocketRepository using Sequelize.
+ * Handles data persistence for ProcessorSocket entities, including caching mechanisms.
+ */
 export class SequelizeProcessorSocketRepository
 	extends CriteriaToSequelizeConverter
 	implements ProcessorSocketRepository
@@ -17,23 +24,45 @@ export class SequelizeProcessorSocketRepository
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of ProcessorSocket entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<ProcessorSocketDto>>} A promise that resolves to a paginated response containing ProcessorSocket DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorSocketDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<ProcessorSocketDto>>({
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await ProcessorSocketModel.findAndCountAll(options)
+				const { count, rows } = await ProcessorSocketModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single ProcessorSocket entity by its unique identifier.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<ProcessorSocketId>} id - The ID of the ProcessorSocket to search for.
+	 * @returns {Promise<ProcessorSocketDto | null>} A promise that resolves to the ProcessorSocket DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null> {
-		return (await ProcessorSocketModel.findByPk(id)) ?? null
+		return await this.cache.getCachedData<ProcessorSocketDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const processorSocket = await ProcessorSocketModel.findByPk(id)
+				return processorSocket ? processorSocket.get({ plain: true }) : null
+			}
+		})
 	}
 }

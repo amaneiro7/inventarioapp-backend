@@ -20,6 +20,13 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
+/**
+ * @class SequelizeDeviceRepository
+ * @extends SequelizeCriteriaConverter
+ * @implements {DeviceRepository}
+ * @description Concrete implementation of the DeviceRepository using Sequelize.
+ * Handles data persistence for Device entities, including caching mechanisms, associated feature models, and data export.
+ */
 export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
 	private readonly models = sequelize.models
 	private readonly cacheKey: string = 'devices'
@@ -27,28 +34,43 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		super()
 	}
 
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of Device entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<DeviceDto>>} A promise that resolves to a paginated response containing Device DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<DeviceDto>>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(options)
 				return {
 					total: count,
-					data: rows
+					data: rows.map(row => row.get({ plain: true }))
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method matching
+	 * @description Retrieves a paginated list of Device entities that match specific criteria,
+	 * often used for more complex filtering logic defined in DeviceAssociation.
+	 * Utilizes caching for improved performance.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<DeviceDto>>} A promise that resolves to a paginated response containing Device DTOs.
+	 */
 	async matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
 
 		const deviceOptions = new DeviceAssociation().convertFilterLocation(criteria, options)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<DeviceDto>>({
+			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria: criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
@@ -56,212 +78,248 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 
 				return {
 					total,
-					data
+					data: data.map(row => row.get({ plain: true }))
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single Device entity by its unique identifier.
+	 * Includes all relevant associated models (model, category, brand, status, employee, computer, hardDrive, location, history).
+	 * Utilizes caching for direct ID lookups.
+	 * @param {string} id - The ID of the Device to search for.
+	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the Device DTO if found, or null otherwise.
+	 */
 	async searchById(id: string): Promise<DeviceDto | null> {
-		return (
-			(await DeviceModel.findByPk(id, {
-				include: [
-					{
-						association: 'model',
-						include: [
-							{
-								association: 'modelComputer',
-								include: ['memoryRamType']
-							},
-							{
-								association: 'modelLaptop',
-								include: ['memoryRamType']
-							}
-						]
-					},
-					'category',
-					'brand',
-					'status',
-					'employee',
-					{
-						association: 'computer',
-						include: [
-							'processor',
-							'hardDriveCapacity',
-							'hardDriveType',
-							'operatingSystem',
-							'operatingSystemArq'
-						]
-					},
-					{
-						association: 'hardDrive',
-						include: ['hardDriveCapacity', 'hardDriveType']
-					},
-					'location',
-					{
-						association: 'history',
-						include: [
-							{
-								association: 'user',
-								attributes: ['email', 'name', 'lastName']
-							},
-							'employee'
-						],
-						order: [['createdAt', 'DESC']]
-					}
-				]
-			})) ?? null
-		)
-	}
-
-	async searchByActivo(activo: string): Promise<DeviceDto | null> {
-		return (await DeviceModel.findOne({ where: { activo } })) ?? null
-	}
-
-	async searchBySerial(serial: string): Promise<DeviceDto | null> {
-		return (await DeviceModel.findOne({ where: { serial } })) ?? null
-	}
-
-	async searchByComputerName(computerName: string): Promise<Model<any, any> | null> {
-		const data = await this.models.DeviceComputer.findOne({
-			where: { computerName }
+		return await this.cache.getCachedData<DeviceDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const device = await DeviceModel.findByPk(id, {
+					include: [
+						{
+							association: 'model',
+							include: [
+								{
+									association: 'modelComputer',
+									include: ['memoryRamType']
+								},
+								{
+									association: 'modelLaptop',
+									include: ['memoryRamType']
+								}
+							]
+						},
+						'category',
+						'brand',
+						'status',
+						'employee',
+						{
+							association: 'computer',
+							include: [
+								'processor',
+								'hardDriveCapacity',
+								'hardDriveType',
+								'operatingSystem',
+								'operatingSystemArq'
+							]
+						},
+						{
+							association: 'hardDrive',
+							include: ['hardDriveCapacity', 'hardDriveType']
+						},
+						'location',
+						{
+							association: 'history',
+							include: [
+								{
+									association: 'user',
+									attributes: ['email', 'name', 'lastName']
+								},
+								'employee'
+							],
+							order: [['createdAt', 'DESC']]
+						}
+					]
+				})
+				return device ? device.get({ plain: true }) : null
+			}
 		})
-		return data ?? null
 	}
 
 	/**
-	 * This function saves a device to the database, it updates the device if it already exists
-	 * or creates a new one if it does not exist.
-	 *
-	 * It also checks if the device category is a computer category, if it is, it will
-	 * create a new DeviceComputer entity, otherwise, it will not do anything.
-	 *
-	 * This function is wrapped in a transaction, if there is an error while updating/creating
-	 * the device or creating the DeviceComputer entity, the transaction will be rolled back.
-	 *
-	 * @param payload - Device data to be saved
+	 * @method searchByActivo
+	 * @description Retrieves a single Device entity by its 'activo' field.
+	 * Utilizes caching for direct lookups.
+	 * @param {string} activo - The 'activo' value of the Device to search for.
+	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the Device DTO if found, or null otherwise.
+	 */
+	async searchByActivo(activo: string): Promise<DeviceDto | null> {
+		return await this.cache.getCachedData<DeviceDto | null>({
+			cacheKey: `${this.cacheKey}:activo:${activo}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const device = await DeviceModel.findOne({ where: { activo } })
+				return device ? device.get({ plain: true }) : null
+			}
+		})
+	}
+
+	/**
+	 * @method searchBySerial
+	 * @description Retrieves a single Device entity by its serial number.
+	 * Utilizes caching for direct lookups.
+	 * @param {string} serial - The serial number of the Device to search for.
+	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the Device DTO if found, or null otherwise.
+	 */
+	async searchBySerial(serial: string): Promise<DeviceDto | null> {
+		return await this.cache.getCachedData<DeviceDto | null>({
+			cacheKey: `${this.cacheKey}:serial:${serial}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const device = await DeviceModel.findOne({ where: { serial } })
+				return device ? device.get({ plain: true }) : null
+			}
+		})
+	}
+
+	/**
+	 * @method searchByComputerName
+	 * @description Retrieves a single DeviceComputer model by its computer name.
+	 * Utilizes caching for direct lookups.
+	 * @param {string} computerName - The computer name to search for.
+	 * @returns {Promise<Model<any, any> | null>} A promise that resolves to the DeviceComputer model if found, or null otherwise.
+	 */
+	async searchByComputerName(computerName: string): Promise<Model<any, any> | null> {
+		return await this.cache.getCachedData<Model<any, any> | null>({
+			cacheKey: `${this.cacheKey}:computerName:${computerName}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const data = await this.models.DeviceComputer.findOne({
+					where: { computerName }
+				})
+				return data ? data.get({ plain: true }) : null
+			}
+		})
+	}
+
+	/**
+	 * @method save
+	 * @description Saves a Device entity to the data store. Uses `upsert` for atomic creation or update.
+	 * It also handles the creation/update of associated specific device types (e.g., Computer, HardDrive, MFP) based on category.
+	 * Invalidates relevant cache entries after a successful operation.
+	 * @param {DevicePrimitives} payload - The Device data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 * @throws {Error} If the save operation fails, it throws a detailed error.
 	 */
 	async save(payload: DevicePrimitives): Promise<void> {
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
-			const { id, serial, activo, statusId, categoryId, brandId, modelId, locationId, observation, employeeId } =
-				payload // Destructure the payload
-			const device = (await DeviceModel.findByPk(id)) ?? null // Find the device by its id, if it does not exist, device will be null
-			if (!device) {
-				// If the device does not exist
-				await DeviceModel.create(
-					{
-						id,
-						serial,
-						activo,
-						statusId,
-						categoryId,
-						brandId,
-						modelId,
-						locationId,
-						observation,
-						employeeId
-					},
-					{ transaction: t }
-				) // Create a new device with the given payload
-			} else {
-				// If the device already exists
-				await DeviceModel.update(
-					{
-						serial,
-						activo,
-						statusId,
-						categoryId,
-						brandId,
-						modelId,
-						employeeId,
-						locationId,
-						observation
-					},
-					{ where: { id }, transaction: t }
-				) // Update the device with the given payload
-				// await device.save({ transaction: t }) // Save the updated device
-			}
+			// Use upsert for the main Device entry
+			const [deviceInstance, created] = await DeviceModel.upsert(payload, { transaction: t, returning: true })
 
-			if (DeviceComputer.isComputerCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceComputerIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
+			// Handle associated device types based on category
+			if (DeviceComputer.isComputerCategory({ categoryId: payload.categoryId })) {
+				await this.upsertAssociatedDeviceModel(this.models.DeviceComputer, payload, t)
 			}
-			if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceHardDriveIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
+			if (DeviceHardDrive.isHardDriveCategory({ categoryId: payload.categoryId })) {
+				await this.upsertAssociatedDeviceModel(this.models.DeviceHardDrive, payload, t)
 			}
-			if (MFP.isMFPCategory({ categoryId })) {
-				// If the device category is a computer category
-				await this.creareDeviceMFPIfCategoryMatches(id, payload, t) // Create a new DeviceComputer entity with the given payload
+			if (MFP.isMFPCategory({ categoryId: payload.categoryId })) {
+				await this.upsertAssociatedDeviceModel(this.models.DeviceMFP, payload, t)
 			}
 
 			await t.commit() // Commit the transaction
-			await this.cache.removeCachedData({ cacheKey: this.cacheKey })
-		} catch (error: any) {
-			// If there is an error
+			// Invalidate all cache entries related to devices.
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			// Also invalidate specific entries if they were cached by ID, activo, or serial.
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:activo:${payload.activo}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:serial:${payload.serial}` })
+			// Invalidate computerName cache if applicable
+			if (payload.computerName) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:computerName:${payload.computerName}` })
+			}
+		} catch (error: unknown) {
 			await t.rollback() // Rollback the transaction
-			throw new Error(error)
+			let errorMessage = 'An unknown error occurred while saving the device.'
+			if (error instanceof Error) {
+				errorMessage = `Error saving device: ${error.message}`
+			} else if (typeof error === 'string') {
+				errorMessage = `Error saving device: ${error}`
+			}
+			throw new Error(errorMessage)
 		}
 	}
 
-	private async creareDeviceComputerIfCategoryMatches(
-		id: Primitives<DeviceId>,
+	/**
+	 * @private
+	 * @method upsertAssociatedDeviceModel
+	 * @description Helper method to perform an upsert operation on an associated device model.
+	 * @param {Model<any, any>} model - The Sequelize model for the associated entity (e.g., DeviceComputer).
+	 * @param {DevicePrimitives} payload - The data for the associated model.
+	 * @param {Transaction} transaction - The Sequelize transaction to use.
+	 * @returns {Promise<void>}
+	 */
+	private async upsertAssociatedDeviceModel(
+		model: Model<any, any>,
 		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
-		const computer = (await this.models.DeviceComputer.findByPk(id)) ?? null
-		if (computer === null) {
-			await this.models.DeviceComputer.create({ deviceId: id, ...payload }, { transaction })
-		} else {
-			await this.models.DeviceComputer.update({ ...payload }, { where: { id }, transaction })
-		}
-	}
-	private async creareDeviceHardDriveIfCategoryMatches(
-		id: Primitives<DeviceId>,
-		payload: DevicePrimitives,
-		transaction: Transaction
-	): Promise<void> {
-		const hardDrive = (await this.models.DeviceHardDrive.findByPk(id)) ?? null
-		if (hardDrive === null) {
-			await this.models.DeviceHardDrive.create({ deviceId: id, ...payload }, { transaction })
-		} else {
-			await this.models.DeviceHardDrive.update({ ...payload }, { where: { id }, transaction })
-		}
-	}
-	private async creareDeviceMFPIfCategoryMatches(
-		id: Primitives<DeviceId>,
-		payload: DevicePrimitives,
-		transaction: Transaction
-	): Promise<void> {
-		const mfp = (await this.models.DeviceMFP.findByPk(id)) ?? null
-		if (mfp === null) {
-			await this.models.DeviceMFP.create({ deviceId: id, ...payload }, { transaction })
-		} else {
-			await this.models.DeviceMFP.update({ ...payload }, { where: { id }, transaction })
-		}
+		// Assuming the associated models also have a 'deviceId' field that matches the main device's id
+		await model.upsert({ deviceId: payload.id, ...payload }, { transaction })
 	}
 
+	/**
+	 * @method remove
+	 * @description Deletes a Device entity from the data store by its unique identifier.
+	 * Invalidates relevant cache entries after a successful deletion.
+	 * @param {string} deviceId - The ID of the Device to remove.
+	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
+	 */
 	async remove(deviceId: string): Promise<void> {
+		// Retrieve the device to get its activo, serial, and computerName for cache invalidation
+		const deviceToRemove = await DeviceModel.findByPk(deviceId)
+
 		await DeviceModel.destroy({ where: { id: deviceId } })
+
+		// Invalidate relevant cache entries
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${deviceId}` })
+		if (deviceToRemove) {
+			if (deviceToRemove.activo) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:activo:${deviceToRemove.activo}` })
+			}
+			if (deviceToRemove.serial) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:serial:${deviceToRemove.serial}` })
+			}
+			if (deviceToRemove.computerName) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:computerName:${deviceToRemove.computerName}` })
+			}
+		}
 	}
 
-	async donwload(criteria: Criteria): Promise<{}> {
+	/**
+	 * @method donwload
+	 * @description Generates an Excel file (buffer) containing device data based on provided criteria.
+	 * @param {Criteria} criteria - The criteria for filtering the data to be downloaded.
+	 * @returns {Promise<Buffer>} A promise that resolves to an Excel file buffer.
+	 */
+	async donwload(criteria: Criteria): Promise<Buffer> {
 		set_fs(fs)
 
 		const { data } = await this.matching(criteria)
 
 		const wbData = clearComputerDataset({ devices: data })
-		// Crear una nueva hoja de cálculo
+		// Create a new worksheet
 		const worksheet = utils.json_to_sheet(wbData)
 		worksheet['!cols'] = [{ wch: 20 }]
 		const workbook = utils.book_new()
 		utils.book_append_sheet(workbook, worksheet, 'Inventario')
 
-		// Generar un archivo buffer
-		// const now = new Date()
-		// const filename = `Reporte-Inventario${now.toLocaleString().replace(/[/:]/g, '-')}.xlsx`
-		// return writeFile(workbook, filename, { compression: true })
+		// Generate a buffer
 		const buf = write(workbook, {
 			type: 'buffer',
 			bookType: 'xlsx',
@@ -270,3 +328,4 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		return buf
 	}
 }
+

@@ -9,28 +9,57 @@ import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
+/**
+ * @class SequelizeMemoryRamTypeRepository
+ * @extends CriteriaToSequelizeConverter
+ * @implements {MemoryRamTypeRepository}
+ * @description Concrete implementation of the MemoryRamTypeRepository using Sequelize.
+ * Handles data persistence for MemoryRamType entities, including caching mechanisms.
+ */
 export class SequelizeMemoryRamTypeRepository extends CriteriaToSequelizeConverter implements MemoryRamTypeRepository {
 	private readonly cacheKey: string = 'memoryRamType'
 	constructor(private readonly cache: CacheService) {
 		super()
 	}
+
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of MemoryRamType entities based on the provided criteria.
+	 * Utilizes caching to improve performance for repeated queries.
+	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<MemoryRamTypeDto>>} A promise that resolves to a paginated response containing MemoryRamType DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<MemoryRamTypeDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+		return await this.cache.getCachedData<ResponseDB<MemoryRamTypeDto>>({
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await MemoryRamTypeModel.findAndCountAll(options)
 				return {
-					data: rows,
+					data: rows.map(row => row.get({ plain: true })),
 					total: count
 				}
 			}
 		})
 	}
 
+	/**
+	 * @method searchById
+	 * @description Retrieves a single MemoryRamType entity by its unique identifier.
+	 * Utilizes caching for direct ID lookups.
+	 * @param {Primitives<MemoryRamTypeId>} id - The ID of the MemoryRamType to search for.
+	 * @returns {Promise<MemoryRamTypeDto | null>} A promise that resolves to the MemoryRamType DTO if found, or null otherwise.
+	 */
 	async searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null> {
-		return (await MemoryRamTypeModel.findByPk(id)) ?? null
+		return await this.cache.getCachedData<MemoryRamTypeDto | null>({
+			cacheKey: `${this.cacheKey}:id:${id}`,
+			ex: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const memoryRamType = await MemoryRamTypeModel.findByPk(id)
+				return memoryRamType ? memoryRamType.get({ plain: true }) : null
+			}
+		})
 	}
 }
