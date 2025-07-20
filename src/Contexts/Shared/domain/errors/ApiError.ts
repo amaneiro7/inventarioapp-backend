@@ -17,6 +17,6 @@ export class ApiError extends Error {
 
 export class InvalidArgumentError extends ApiError {
 	constructor(message: string, stack = '') {
-		super(httpStatus.BAD_REQUEST, message, true, stack)
+		super(httpStatus[400].statusCode, message, true, stack)
 	}
 }

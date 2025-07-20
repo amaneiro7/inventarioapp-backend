@@ -5,6 +5,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class LocationDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<LocationId>) {
-		super(httpStatus.NOT_FOUND, `The location ${value} does not exist`)
+		super(httpStatus[404].statusCode, `The location ${value} does not exist`)
 	}
 }

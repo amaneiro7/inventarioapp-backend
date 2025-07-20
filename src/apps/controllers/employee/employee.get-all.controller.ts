@@ -15,7 +15,7 @@ export class EmployeeGetAllController implements Controller {
 			const query = convert.toCriteria(req)
 
 			const data = await getAll.run(query)
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

@@ -15,7 +15,7 @@ export class DeviceMonitoringDashboardByStateGetController implements Controller
 			const convert = new CriteriaFromUrlConverter()
 			const query = convert.toCriteria(req)
 			const data = await get.run(query)
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

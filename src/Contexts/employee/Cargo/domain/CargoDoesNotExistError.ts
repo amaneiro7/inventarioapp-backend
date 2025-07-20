@@ -3,6 +3,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class CargoDoesNotExistError extends ApiError {
 	constructor() {
-		super(httpStatus.NOT_FOUND, `El cargo no existe`)
+		super(httpStatus[404].statusCode, `El cargo no existe`)
 	}
 }

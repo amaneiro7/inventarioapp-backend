@@ -13,6 +13,6 @@ export class BrandDoesNotExistError extends ApiError {
 	 * @param {string} value - The ID of the brand that was not found.
 	 */
 	constructor(public readonly value: string) {
-		super(httpStatus.NOT_FOUND, `La marca con el ID ${value} no existe`)
+		super(httpStatus[404].statusCode, `La marca con el ID ${value} no existe`)
 	}
 }

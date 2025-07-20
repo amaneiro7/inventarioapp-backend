@@ -3,6 +3,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class RoleDoesNotExistError extends ApiError {
 	constructor() {
-		super(httpStatus.NOT_FOUND, `The role does not exist`)
+		super(httpStatus[404].statusCode, `The role does not exist`)
 	}
 }

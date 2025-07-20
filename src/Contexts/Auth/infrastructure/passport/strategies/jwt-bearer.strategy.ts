@@ -1,7 +1,14 @@
-import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt'
+import { ExtractJwt, Strategy, type StrategyOptions } from 'passport-jwt'
 import { config } from '../../../../Shared/infrastructure/config'
 import { type TokenDenylistService } from '../../../domain/TokenDenylistService'
 
+/**
+ * @class JwtBearerStrategy
+ * @extends Strategy
+ * @description Implements the JWT Bearer authentication strategy for Passport.
+ * This strategy extracts the JWT from the Authorization header as a bearer token and verifies it.
+ * It also checks if the token has been revoked by consulting the `TokenDenylistService`.
+ */
 export class JwtBearerStrategy extends Strategy {
 	constructor(private readonly tokenDenylistService: TokenDenylistService) {
 		const jwtOptions: StrategyOptions = {

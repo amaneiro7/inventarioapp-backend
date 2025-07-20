@@ -5,6 +5,6 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 export class EmployeeDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<DeviceEmployee>) {
-		super(httpStatus.NOT_FOUND, `The employee ${value} does not exist`)
+		super(httpStatus[404].statusCode, `The employee ${value} does not exist`)
 	}
 }

@@ -5,6 +5,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class SiteDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<SiteId>) {
-		super(httpStatus.NOT_FOUND, `El sitio no existe`)
+		super(httpStatus[404].statusCode, `El sitio no existe`)
 	}
 }

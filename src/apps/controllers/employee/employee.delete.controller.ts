@@ -11,7 +11,7 @@ export class EmployeeDeleteController implements Controller {
 			const { id } = req.params
 			const remover: EmployeeRemover = container.resolve(EmployeeDependencies.Remover)
 			await remover.run({ id })
-			res.status(httpStatus.OK).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Empleado eliminado exitosamente'
 			})
 		} catch (error) {

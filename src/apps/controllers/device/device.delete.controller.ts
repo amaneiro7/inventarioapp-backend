@@ -12,7 +12,7 @@ export class DeviceDeleteController implements Controller {
 			const { id } = req.params
 			const remover: DeviceRemover = container.resolve(DeviceDependencies.Remover)
 			await remover.run({ id })
-			res.status(httpStatus.OK).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Dispositivo eliminado exitosamente'
 			})
 		} catch (error) {

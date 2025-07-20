@@ -8,6 +8,13 @@ import { type UserLastName } from '../../../domain/UserLastName'
 import { type UserPassword } from '../../../domain/UserPassword'
 import { type UserPrimitives } from '../../../domain/User'
 
+/**
+ * @class UserModel
+ * @extends Model<UserPrimitives>
+ * @implements {UserPrimitives}
+ * @description Sequelize model for the User entity. Defines the table structure and associations
+ * for users in the database, including the `userSecret` for refresh token rotation.
+ */
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare id: Primitives<UserId>
 	declare email: Primitives<UserEmail>
@@ -16,11 +23,26 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare lastName: Primitives<UserLastName>
 	declare password: Primitives<UserPassword>
 
+	/**
+	 * @static
+	 * @method associate
+	 * @description Defines associations with other Sequelize models.
+	 * A user belongs to a role and can have many history entries.
+	 * @param {Sequelize['models']} models - An object containing all initialized Sequelize models.
+	 * @returns {Promise<void>}
+	 */
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' }) // A user belongs to a role
 		this.hasMany(models.History, { as: 'history', foreignKey: 'userId' }) // A user can have many history
 	}
 
+	/**
+	 * @static
+	 * @method initialize
+	 * @description Initializes the UserModel with its schema definition.
+	 * @param {Sequelize} sequelize - The Sequelize instance.
+	 * @returns {Promise<void>}
+	 */
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		UserModel.init(
 			{
@@ -52,10 +74,6 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				password: {
 					allowNull: false,
 					type: DataTypes.STRING(64)
-					// validate: {
-					//   min: 8,
-					//   is: /^(?=.*[a-z])(?=.*[-Z])(?=.*d)(?=.*[@#$%^&*]).{8,}$/
-					// }
 				}
 			},
 			{

@@ -12,13 +12,14 @@ export class AuthRefreshTokenController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const jwtToken = req?.user as JwtPayloadUser
-			if (!jwtToken) throw new ApiError(httpStatus.UNAUTHORIZED, 'Token not provided')
+			if (!jwtToken) throw new ApiError(httpStatus[401].statusCode, 'Token not provided')
 
 			const refreshToken: AuthRefreshTokenUseCase = container.resolve(AuthDependencies.RefreshTokenUseCase)
-			const { infoUser } = await refreshToken.run(jwtToken)
+			const { user, accessToken } = await refreshToken.run(jwtToken)
 
-			res.status(httpStatus.OK).send({
-				...infoUser
+			res.status(httpStatus[200].statusCode).send({
+				user,
+				accessToken
 			})
 		} catch (error) {
 			next(error)

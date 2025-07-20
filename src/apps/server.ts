@@ -1,5 +1,4 @@
 import express, { json, urlencoded, type Request, type Response } from 'express' //
-// import 'express-async-errors' // <-- ¡Añadir esta línea al principio!
 import * as http from 'node:http' // Import the http module
 import * as https from 'node:https' // Import the http module
 import * as fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
@@ -120,16 +119,7 @@ export class Server {
 	}
 
 	async listen(): Promise<void> {
-		// Intenta iniciar con HTTPS primero
 		await this.startHTTPS()
-		// await new Promise<void>(resolve => {
-		// 	const env = this.express.get('env') as string
-		// 	this.httpServer = this.express.listen(this.port, () => {
-		// 		this.logger.info(`  Inventario Backend app is running at http://localhost:${this.port} in ${env} mode`)
-		// 		this.logger.info('  Press CTRL-C to stop\n')
-		// 		resolve()
-		// 	})
-		// })
 	}
 
 	getHTTPServer(): Server['httpServer'] {

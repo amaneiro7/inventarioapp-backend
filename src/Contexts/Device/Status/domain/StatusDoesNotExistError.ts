@@ -5,6 +5,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class StatusDoesNotExistError extends ApiError {
 	constructor(public readonly value: Primitives<StatusId>) {
-		super(httpStatus.NOT_FOUND, `The status ${value} does not exist`)
+		super(httpStatus[404].statusCode, `The status ${value} does not exist`)
 	}
 }

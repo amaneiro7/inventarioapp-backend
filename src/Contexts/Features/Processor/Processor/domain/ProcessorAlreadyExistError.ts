@@ -3,6 +3,6 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 export class ProcessorAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super(httpStatus.BAD_REQUEST, `The Processor ${name} already exist`)
+		super(httpStatus[400].statusCode, `The Processor ${name} already exist`)
 	}
 }

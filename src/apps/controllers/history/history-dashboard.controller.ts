@@ -11,7 +11,7 @@ export class HistoryDashboardGetController implements Controller {
 			const getAll: HistoryDashboard = container.resolve(HistoryDependencies.HistoryDashboard)
 
 			const data = await getAll.run()
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

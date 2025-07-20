@@ -3,6 +3,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class CityAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super(httpStatus.BAD_REQUEST, `La ciudad ${name} ya existe`)
+		super(httpStatus[400].statusCode, `La ciudad ${name} ya existe`)
 	}
 }

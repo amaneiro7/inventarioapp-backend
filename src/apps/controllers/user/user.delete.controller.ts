@@ -14,7 +14,7 @@ export class UserDeleteController implements Controller {
 			const user = req.user as JwtPayloadUser
 			const remover: UserRemover = container.resolve(UserDependencies.Remover)
 			await remover.run({ id, user })
-			res.status(httpStatus.OK).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Usuario eliminado exitosamente'
 			})
 		} catch (error) {

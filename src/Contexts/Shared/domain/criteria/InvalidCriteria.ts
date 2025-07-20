@@ -3,6 +3,6 @@ import httpStatus from '../../infrastructure/utils/http-status'
 
 export class InvalidCriteria extends ApiError {
 	constructor() {
-		super(httpStatus.BAD_REQUEST, 'Page size is required when page number is defined')
+		super(httpStatus[400].statusCode, 'Page size is required when page number is defined')
 	}
 }

@@ -13,7 +13,7 @@ export class UserGetByEmailController implements Controller {
 			const { email } = req.body
 			const get: UserFinderByEmail = container.resolve(UserDependencies.FinderByEmail)
 			const data = await get.run({ email, user })
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

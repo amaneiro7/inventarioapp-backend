@@ -11,7 +11,7 @@ export class DeviceGetController implements Controller {
 			const { id } = req.params
 			const get: DeviceFinder = container.resolve(DeviceDependencies.Finder)
 			const data = await get.run({ id })
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

@@ -21,7 +21,7 @@ export class AuthLogoutController implements Controller {
 				await this.tokenDenylistService.addToDenylist(refreshToken, config.refreshTokenRedisExpiresIn)
 			}
 
-			res.status(httpStatus.OK)
+			res.status(httpStatus[200].statusCode)
 				.clearCookie('refreshToken')
 				.clearCookie('accessToken')
 				.send({ message: 'Sesión cerrada exitosamente' })

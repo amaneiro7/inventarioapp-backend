@@ -1,6 +1,12 @@
 import { Strategy as LocalStrategy, type IStrategyOptions } from 'passport-local'
 import { type UserLoginLocal } from '../../../application/UserLoginLocal'
 
+/**
+ * @class LocalAuthStrategy
+ * @extends LocalStrategy
+ * @description Implements the local authentication strategy for Passport.
+ * It uses the `UserLoginLocal` use case to validate a user's email and password.
+ */
 export class LocalAuthStrategy extends LocalStrategy {
 	constructor(private readonly userLoginLocal: UserLoginLocal) {
 		const options: IStrategyOptions = {

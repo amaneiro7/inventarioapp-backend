@@ -11,7 +11,7 @@ export class VicepresidenciaEjecutivaGetController implements Controller {
 			const { id } = req.params
 			const get: VicepresidenciaEjecutivaFinder = container.resolve(VicepresidenciaEjecutivaDependencies.Finder)
 			const data = await get.run({ id })
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

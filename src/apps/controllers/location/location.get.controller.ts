@@ -11,7 +11,7 @@ export class LocationGetController implements Controller {
 			const { id } = req.params
 			const get: LocationFinder = container.resolve(LocationDependencies.Finder)
 			const data = await get.run({ id })
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

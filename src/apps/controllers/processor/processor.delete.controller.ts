@@ -11,7 +11,7 @@ export class ProcessorDeleteController implements Controller {
 			const { id } = req.params
 			const remover: ProcessorRemover = container.resolve(ProcessorDependencies.Remover)
 			await remover.run({ id })
-			res.status(httpStatus.OK).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Empleado eliminado exitosamente'
 			})
 		} catch (error) {

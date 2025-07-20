@@ -3,6 +3,13 @@ import { ExtractJwt, Strategy, type StrategyOptions } from 'passport-jwt'
 import { config } from '../../../../Shared/infrastructure/config'
 import { type TokenDenylistService } from '../../../domain/TokenDenylistService'
 
+/**
+ * @class JwtCookiesStrategy
+ * @extends Strategy
+ * @description Implements a JWT strategy for Passport that extracts the refresh token from an HTTP-only cookie.
+ * This is typically used for the refresh token rotation flow. It also checks if the token has been
+ * denylisted to prevent reuse of revoked tokens.
+ */
 export class JwtCookiesStrategy extends Strategy {
 	constructor(private readonly tokenDenylistService: TokenDenylistService) {
 		const jwtOptions: StrategyOptions = {

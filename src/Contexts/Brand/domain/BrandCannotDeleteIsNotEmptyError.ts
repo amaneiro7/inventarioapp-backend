@@ -13,6 +13,6 @@ export class BrandCannotDeleteIsNotEmptyError extends ApiError {
 	 * @description Creates an instance of BrandCannotDeleteIsNotEmptyError.
 	 */
 	constructor() {
-		super(httpStatus.BAD_REQUEST, 'Cannot delete this brand because is not empty')
+		super(httpStatus[400].statusCode, 'Cannot delete this brand because is not empty')
 	}
 }

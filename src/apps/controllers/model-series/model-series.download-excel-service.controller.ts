@@ -23,7 +23,7 @@ export class ModelSeriesDownloadExcelServiceController implements Controller {
 			const buf = await downloadExcel.run(query)
 			const now = new Date()
 			const filename = `Reporte-Inventario${now.toLocaleDateString().replace(/[/:]/g, '-')}.xlsx`
-			res.status(httpStatus.OK)
+			res.status(httpStatus[200].statusCode)
 				.setHeader('Content-Disposition', `attachment filename=${filename}`)
 				.setHeader('Content-Type', 'application/vnd.ms-excel')
 				.end(buf)

@@ -11,7 +11,7 @@ export class ComputerDashboardGetController implements Controller {
 			const getAll: ComputerDashboard = container.resolve(ComputerDashboardDependencies.ComputerDashboard)
 
 			const data = await getAll.run()
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

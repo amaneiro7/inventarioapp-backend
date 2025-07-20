@@ -13,6 +13,7 @@ import { AuthRefreshTokenUseCase } from '../../../Contexts/Auth/application/Auth
 export enum AuthDependencies {
 	UserLoginLocal = 'userLoginLocal',
 	RefreshTokenUseCase = 'refreshTokenUseCase',
+	AuthUseCase = 'authUseCase',
 	PassportManager = 'passportManager',
 	LoginController = 'authLoginController',
 	LogoutController = 'authLogoutController',

@@ -13,7 +13,7 @@ export class UserGetController implements Controller {
 			const { id } = req.params
 			const get: UserFinder = container.resolve(UserDependencies.Finder)
 			const data = await get.run({ id, user })
-			res.status(httpStatus.OK).json(data)
+			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)
 		}

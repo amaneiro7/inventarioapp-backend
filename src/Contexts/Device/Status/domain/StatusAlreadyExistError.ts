@@ -3,6 +3,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 export class StatusAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super(httpStatus.BAD_REQUEST, `The status ${name} already exist`)
+		super(httpStatus[400].statusCode, `The status ${name} already exist`)
 	}
 }
