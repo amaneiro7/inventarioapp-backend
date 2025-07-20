@@ -1,84 +1,50 @@
-import express, { json, urlencoded, type Request, type Response } from 'express' //
-import * as http from 'node:http' // Import the http module
-import * as https from 'node:https' // Import the http module
-import * as fs from 'node:fs/promises' // Importa el módulo fs para leer archivos de forma asíncrona
-import * as path from 'node:path' // Importa el módulo path para construir rutas
+import express, { json, urlencoded, type Request, type Response } from 'express'
+import * as http from 'node:http'
+import * as https from 'node:https'
+import * as fs from 'node:fs/promises'
+import * as path from 'node:path'
 import swaggerUi from 'swagger-ui-express'
-import compress from 'compression' // Comprime la respuesta de cada peticion
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import helmet from 'helmet' // Protege contra ataques de seguridad
-import responseTime from 'response-time' // Mide el tiempo de respuesta de cada peticion
+import responseTime from 'response-time'
 import { options } from './Middleware/cors'
-import { limiter } from './Middleware/rateLimit' // Importa el middleware de limitacion de peticiones
+import { limiter } from './Middleware/rateLimit'
 import { morganLog } from './Middleware/morgan'
+import { security } from './Middleware/security'
+import { errorHandler } from './Middleware/errorHandler'
 import { registerRoutes } from './routes'
 import { swaggerSpec } from '../Contexts/Shared/infrastructure/documentation/swagger'
-import { errorHandler } from './Middleware/errorHandler'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 
 export class Server {
 	private express: express.Express
-	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key') // Ruta por defecto a la clave privada
-	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt') // Ruta por defecto al certificado
+	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key')
+	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt')
 	httpServer?: http.Server | https.Server
 
 	constructor(readonly port: string, private readonly logger: Logger) {
 		this.port = port
 		this.express = express()
 
-		// Middleware para parsear JSON
 		this.express.use(json())
-
-		// Middleware para parsear URL-encoded
 		this.express.use(urlencoded({ extended: true }))
 
-		// Middleware de seguridad con Helmet
-		this.express.use(helmet.xssFilter())
-		this.express.use(helmet.noSniff())
-		this.express.use(helmet.hidePoweredBy())
-		this.express.use(helmet.frameguard({ action: 'deny' }))
+		// Security and performance middlewares
+		this.express.use(security)
 
-		// Middleware para comprimir las respuestas
-		this.express.use(
-			compress({
-				filter: (req, res) => {
-					if (req.headers['x-no-compression']) {
-						// don't compress responses with this request header
-						return false
-					}
-					// fallback to standard filter function
-					return compress.filter(req, res)
-				}
-			})
-		)
-
-		// Middleware para el rate limit
 		this.express.use(limiter)
-
-		// Middlware para medir el tiempo de respuesta
 		this.express.use(responseTime())
-
-		// Middleware para logging con Morgan
 		this.express.use(morganLog)
-
-		// Middleware para CORS
 		this.express.use(cors(options))
-
-		// Middleware para cookies firmadas
 		this.express.use(cookieParser())
 
-		// Ruta para validar el funcionamiento del servidor
 		this.express.get('/', (req: Request, res: Response) => {
 			res.send('Servidor de Inventario funcionando correctamente')
 		})
 
 		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-		// Configuración de rutas
 		registerRoutes({ express: this.express })
-
-		// Middleware de manejo de errores (debe ir al final)
 
 		this.express.use(errorHandler(this.logger))
 	}
@@ -95,7 +61,7 @@ export class Server {
 					this.logger.info(
 						` Inventario Backend app is running at https://localhost:${this.port} in ${env} mode (HTTPS)`
 					)
-					this.logger.info('  Press CTRL-C to stop\n')
+					this.logger.info(' 	Press CTRL-C to stop\n')
 					resolve()
 				})
 			})
@@ -112,7 +78,7 @@ export class Server {
 				this.logger.info(
 					` Inventario Backend app is running at http://localhost:${this.port} in ${env} mode (HTTP)`
 				)
-				this.logger.info('  Press CTRL-C to stop\n')
+				this.logger.info(' 	Press CTRL-C to stop\n')
 				resolve()
 			})
 		})
