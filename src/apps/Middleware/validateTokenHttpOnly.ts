@@ -1,8 +1,15 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
+import passport from 'passport'
+import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/strategy-options'
 
+/**
+ * @description Middleware to validate the refresh token from an HTTP-only cookie.
+ * It uses the `jwt-cookie` Passport strategy to verify the token.
+ * This is a crucial part of the token refresh flow.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @param {NextFunction} next - The next middleware function.
+ */
 export const validateToken = (req: Request, res: Response, next: NextFunction): void => {
-	res.set('Cache-Control', 'no-store').status(httpStatus[200].statusCode).json({ message: 'Token provided' })
-
-	next()
+	passport.authenticate(StrategyOptions.JWTCOOKIE, { session: false })(req, res, next)
 }

@@ -1,6 +1,10 @@
 import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerAutogen from 'swagger-autogen'
 
+/**
+ * @description The main Swagger document configuration.
+ * This object defines the basic information for the API, such as the title, description, and host.
+ */
 const doc = {
 	info: {
 		title: 'Inventario APP',
@@ -16,6 +20,9 @@ const doc = {
 const outputFile = './swagger-output.json'
 const routes = ['./src/apps/routes/index.ts']
 
+/**
+ * @description Options for `swagger-jsdoc` to generate Swagger documentation from JSDoc comments.
+ */
 const options = {
 	swaggerDefinition: {
 		openapi: '3.0.0',
@@ -28,5 +35,10 @@ const options = {
 	apis: ['src/**/*.route.*']
 }
 
+// Automatically generate the Swagger output file
 swaggerAutogen()(outputFile, routes, doc)
+
+/**
+ * @description The generated Swagger documentation object.
+ */
 export const swaggerDocs = swaggerJsdoc(options)

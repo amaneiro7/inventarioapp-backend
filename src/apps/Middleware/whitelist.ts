@@ -1,3 +1,7 @@
+/**
+ * @description A list of allowed origins for CORS (Cross-Origin Resource Sharing).
+ * Only requests from these domains will be permitted.
+ */
 export const whitelist = [
 	'localhost',
 	'10.0.12.106',
