@@ -30,29 +30,31 @@ export class ComputerValidation {
 	}
 
 	private async ensureValidation(params: DeviceComputerParams): Promise<void> {
-		await ComputerName.ensuerComputerNameDoesNotExit({
-			repository: this.deviceRepository,
-			computerName: params.computerName
-		})
-		await ComputerProcessor.ensureProcessorExit({
-			repository: this.processorRepository,
-			processor: params.processorId
-		})
-		await HardDriveCapacityId.ensureHardDriveCapacityExit({
-			repository: this.hardDriveCapacityRepository,
-			hardDriveCapacity: params.hardDriveCapacityId
-		})
-		await HardDriveTypeId.ensureHardDriveTypeExit({
-			repository: this.hardDriveTypeRepository,
-			hardDriveType: params.hardDriveTypeId
-		})
-		await ComputerOperatingSystem.ensureOperatingSystemExit({
-			repository: this.operatingSystemRepository,
-			operatingSystem: params.operatingSystemId
-		})
-		await ComputerOperatingSystemArq.ensureOperatingSystemArqExit({
-			repository: this.operatingSystemArqRepository,
-			operatingSystemArq: params.operatingSystemArqId
-		})
+		await Promise.all([
+			ComputerName.ensuerComputerNameDoesNotExit({
+				repository: this.deviceRepository,
+				computerName: params.computerName
+			}),
+			ComputerProcessor.ensureProcessorExit({
+				repository: this.processorRepository,
+				processor: params.processorId
+			}),
+			HardDriveCapacityId.ensureHardDriveCapacityExit({
+				repository: this.hardDriveCapacityRepository,
+				hardDriveCapacity: params.hardDriveCapacityId
+			}),
+			HardDriveTypeId.ensureHardDriveTypeExit({
+				repository: this.hardDriveTypeRepository,
+				hardDriveType: params.hardDriveTypeId
+			}),
+			ComputerOperatingSystem.ensureOperatingSystemExit({
+				repository: this.operatingSystemRepository,
+				operatingSystem: params.operatingSystemId
+			}),
+			ComputerOperatingSystemArq.ensureOperatingSystemArqExit({
+				repository: this.operatingSystemArqRepository,
+				operatingSystemArq: params.operatingSystemArqId
+			})
+		])
 	}
 }

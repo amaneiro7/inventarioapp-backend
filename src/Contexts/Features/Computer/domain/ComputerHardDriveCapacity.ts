@@ -1,23 +1,31 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type DeviceComputer } from './Computer'
 
+/**
+ * Represents the hard drive capacity of a computer, which can be null.
+ */
 export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitives<HardDriveCapacityId>> {
-	constructor(
-		readonly value: Primitives<HardDriveCapacityId> | null,
-		readonly status: Primitives<DeviceStatus>
-	) {
+	/**
+	 * Creates an instance of ComputerHardDriveCapacity.
+	 * @param value - The ID of the hard drive capacity, or null.
+	 * @param status - The status of the device.
+	 */
+	constructor(readonly value: Primitives<HardDriveCapacityId> | null, readonly status: Primitives<DeviceStatus>) {
 		super(value)
-		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIsValidHardDriveCapacityId(value)
 		this.ensureIfStatusIsInUseHardDriveMustHaveAValue(this.value, this.status)
 	}
 
+	/**
+	 * Converts the hard drive capacity to its primitive value.
+	 * @returns The hard drive capacity ID or null.
+	 */
 	toPrimitives(): Primitives<HardDriveCapacityId> | null {
 		return this.value
 	}
@@ -47,11 +55,7 @@ export class ComputerHardDriveCapacity extends AcceptedNullValueObject<Primitive
 	private isValid(id: Primitives<HardDriveCapacityId> | null): boolean {
 		if (id === null) return true
 		const hardDriveCapacityId = new HardDriveCapacityId(id)
-		if (hardDriveCapacityId instanceof HardDriveCapacityId) {
-			return true
-		}
-
-		return false
+		return hardDriveCapacityId instanceof HardDriveCapacityId
 	}
 
 	static async updateHardDriveCapacityField({

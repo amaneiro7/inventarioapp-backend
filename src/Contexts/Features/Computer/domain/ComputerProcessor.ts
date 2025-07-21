@@ -1,37 +1,43 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ProcessorPrimitives } from '../../Processor/Processor/domain/Processor.dto'
-import { ProcessorDoesNotExistError } from '../../Processor/Processor/domain/ProcessorDoesNotExistError'
 import { ProcessorId } from '../../Processor/Processor/domain/ProcessorId'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { ProcessorDoesNotExistError } from '../../Processor/Processor/domain/ProcessorDoesNotExistError'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorPrimitives } from '../../Processor/Processor/domain/Processor.dto'
 import { type DeviceComputer } from './Computer'
 
+/**
+ * Represents the processor of a computer, which can be null.
+ */
 export class ComputerProcessor extends AcceptedNullValueObject<Primitives<ProcessorId>> {
+	/**
+	 * Creates an instance of ComputerProcessor.
+	 * @param value - The ID of the processor, or null.
+	 */
 	constructor(readonly value: Primitives<ProcessorId> | null) {
 		super(value)
-		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIsValidProcessorId(value)
 	}
 
+	/**
+	 * Converts the processor ID to its primitive value.
+	 * @returns The processor ID or null.
+	 */
 	toPrimitives(): Primitives<ProcessorId> | null {
 		return this.value
 	}
 
 	private ensureIsValidProcessorId(id: Primitives<ProcessorId> | null): void {
 		if (!this.isValid(id)) {
-			throw new InvalidArgumentError('EmployeeId is required')
+			throw new InvalidArgumentError('ProcessorId is required')
 		}
 	}
 
 	private isValid(id: Primitives<ProcessorId> | null): boolean {
 		if (id === null) return true
 		const processorId = new ProcessorId(id)
-		if (processorId instanceof ProcessorId) {
-			return true
-		}
-
-		return false
+		return processorId instanceof ProcessorId
 	}
 
 	static async updateProcessorField({

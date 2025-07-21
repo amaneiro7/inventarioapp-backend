@@ -1,48 +1,54 @@
-import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepository'
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepository'
 import { type DeviceComputer } from './Computer'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
+/**
+ * Represents the name of a computer, which can be null.
+ */
 export class ComputerName extends AcceptedNullValueObject<string> {
 	private readonly NAME_MAX_LENGTH = 1000
 	private readonly NAME_MIN_LENGTH = 3
 	private readonly notLowerCase = /^[^a-z]*$/
-	private readonly notSpecialCharacterOnlyGuiones = /^[^\W_]*-?[^\W_]*$/
-	private errors: string[] = []
+	private readonly notSpecialCharacterOnlyGuiones = /^[A-Z0-9-]+$/
 
-	constructor(
-		readonly value: string | null,
-		private readonly statusId: Primitives<DeviceStatus>
-	) {
+	/**
+	 * Creates an instance of ComputerName.
+	 * @param value - The name of the computer, or null.
+	 * @param statusId - The status of the device.
+	 */
+	constructor(readonly value: string | null, private readonly statusId: Primitives<DeviceStatus>) {
 		super(value)
 
-		// Convertir el valor a mayúsculas si no es nulo
-		if (value !== null) {
-			this.value = value.toUpperCase().trim()
+		if (this.value !== null) {
+			this.value = this.value.toUpperCase().trim()
 		}
 
 		this.ensureIfStatusIsInUse(this.value, this.statusId)
-		this.ensureIsValid(value)
+		this.ensureIsValid(this.value)
 	}
 
+	/**
+	 * Converts the computer name to its primitive value.
+	 * @returns The computer name or null.
+	 */
 	toPrimitives(): string | null {
 		return this.value
 	}
 
 	private ensureIfStatusIsInUse(value: Primitives<ComputerName>, statusId: Primitives<DeviceStatus>): void {
-		// Si el estatus pertenece a que esta en almace, desincorporado por desincorporar, no puede tener nombre de equipo
 		if (
 			(statusId === StatusOptions.INALMACEN ||
 				statusId === StatusOptions.DESINCORPORADO ||
 				statusId === StatusOptions.PORDESINCORPORAR) &&
 			value !== null
 		) {
-			throw new InvalidArgumentError('Computer name can only be stablished when the device is in use')
+			throw new InvalidArgumentError('Computer name can only be established when the device is in use')
 		}
-		// Si el estatus pertenece a que esta en uso, a prestamo, contigencia o en guardia, debe tener nombre de equipo
+
 		if (
 			(statusId === StatusOptions.INUSE ||
 				statusId === StatusOptions.PRESTAMO ||
@@ -56,28 +62,25 @@ export class ComputerName extends AcceptedNullValueObject<string> {
 	}
 
 	private ensureIsValid(value: string | null): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> exceeded the maximum length`)
-		}
-	}
+		if (value === null) return
 
-	private isValid(name: string | null): boolean {
-		if (name === null) return true
-		const isHasNotSpecialCharacterOnlyGuiones = this.notSpecialCharacterOnlyGuiones.test(name)
-		if (!isHasNotSpecialCharacterOnlyGuiones) {
-			this.errors.push(`${name}: El Nombre de equipo no puede contener caracteres especiales`)
+		const errors: string[] = []
+
+		if (!this.notSpecialCharacterOnlyGuiones.test(value)) {
+			errors.push('Computer name cannot contain special characters other than hyphens')
 		}
-		const isNotHasLowerCharacter = this.notLowerCase.test(name)
-		if (!isNotHasLowerCharacter) {
-			this.errors.push('El Nombre de equipo debe estar en mayúsculas')
+
+		if (!this.notLowerCase.test(value)) {
+			errors.push('Computer name must be in uppercase')
 		}
-		const isNameValidLength = name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-		if (!isNameValidLength) {
-			this.errors.push(
-				`El Nombre de equipo debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`
-			)
+
+		if (value.length < this.NAME_MIN_LENGTH || value.length > this.NAME_MAX_LENGTH) {
+			errors.push(`Computer name must be between ${this.NAME_MIN_LENGTH} and ${this.NAME_MAX_LENGTH} characters`)
 		}
-		return isHasNotSpecialCharacterOnlyGuiones && isNotHasLowerCharacter && isNameValidLength
+
+		if (errors.length > 0) {
+			throw new InvalidArgumentError(errors.join(', '))
+		}
 	}
 
 	static async updateComputerNameField({

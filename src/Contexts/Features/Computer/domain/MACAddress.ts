@@ -1,34 +1,37 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type DeviceComputer } from './Computer'
+import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { DeviceComputer } from './Computer'
 
-// Define a class for MACAddress that extends the StringValueObject class
+/**
+ * Represents a MAC address, which can be null.
+ */
 export class MACAddress extends AcceptedNullValueObject<string> {
-	// Define a regular expression for MAC address validation
 	private readonly macAddressRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/
 
-	// Constructor for MACAddress class
+	/**
+	 * Creates an instance of MACAddress.
+	 * @param value - The MAC address string, or null.
+	 */
 	constructor(readonly value: string | null) {
-		super(value) // Call the constructor of the parent class
-
-		// Ensure that the provided MAC address is valid
+		super(value)
 		this.ensureIsValid(value)
 	}
 
-	// Convert MAC address to its primitive value
+	/**
+	 * Converts the MAC address to its primitive value.
+	 * @returns The MAC address string or null.
+	 */
 	toPrimitives(): string | null {
 		return this.value
 	}
 
-	// Ensure that the provided MAC address is a valid name
 	private ensureIsValid(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid MAC Adress`)
+			throw new InvalidArgumentError(`<${value}> is not a valid MAC Address`)
 		}
 	}
 
-	// Check if the provided MAC address is a valid name
 	private isValid(name: string | null): boolean {
 		if (name === null) return true
 		return this.macAddressRegex.test(name)

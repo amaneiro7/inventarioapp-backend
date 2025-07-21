@@ -1,32 +1,39 @@
 import { Device } from '../../../Device/Device/domain/Device'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { CategoryId } from '../../../Category/Category/domain/CategoryId'
-import { CategoryDefaultData, type CategoryValues } from '../../../Category/Category/domain/CategoryDefaultData'
-import { BrandId } from '../../../Brand/domain/BrandId'
-import { DeviceActivo } from '../../../Device/Device/domain/DeviceActivo'
-import { DeviceEmployee } from '../../../Device/Device/domain/DeviceEmployee'
 import { DeviceId } from '../../../Device/Device/domain/DeviceId'
-import { DeviceModelSeries } from '../../../Device/Device/domain/DeviceModelSeries'
-import { DeviceObservation } from '../../../Device/Device/domain/DeviceObservation'
 import { DeviceSerial } from '../../../Device/Device/domain/DeviceSerial'
+import { DeviceActivo } from '../../../Device/Device/domain/DeviceActivo'
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { ComputerMemoryRamCapacity } from './ComputerMemoryRamCapacity'
+import { CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { BrandId } from '../../../Brand/domain/BrandId'
+import { DeviceModelSeries } from '../../../Device/Device/domain/DeviceModelSeries'
+import { DeviceEmployee } from '../../../Device/Device/domain/DeviceEmployee'
+import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
+import { DeviceObservation } from '../../../Device/Device/domain/DeviceObservation'
+import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
 import { ComputerName } from './ComputerName'
 import { ComputerProcessor } from './ComputerProcessor'
-import { IPAddress } from './IPAddress'
-import { MACAddress } from './MACAddress'
+import { ComputerMemoryRam } from './ComputerMemoryRam'
+import { MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
+import { ComputerMemoryRamCapacity } from './ComputerMemoryRamCapacity'
 import { ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
 import { ComputerHardDriveType } from './ComputerHardDriveType'
 import { ComputerOperatingSystem } from './ComputerOperatingSystem'
 import { ComputerOperatingSystemArq } from './ComputerOperatingSystemArq'
-import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
-import { ComputerMemoryRam } from './ComputerMemoryRam'
+import { MACAddress } from './MACAddress'
+import { IPAddress } from './IPAddress'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
-import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
+import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 import { type DeviceComputerParams, type DeviceComputerPrimitives } from './Computer.dto'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
+/**
+ * Represents a computer device, extending the base Device class with specific properties.
+ */
 export class DeviceComputer extends Device {
+	/**
+	 * Creates an instance of DeviceComputer.
+	 * @param params - The parameters for creating a computer device.
+	 */
 	constructor(
 		id: DeviceId,
 		serial: DeviceSerial,
@@ -65,10 +72,15 @@ export class DeviceComputer extends Device {
 		)
 
 		if (!DeviceComputer.isComputerCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('No pertenece a esta categoria')
+			throw new InvalidArgumentError('Este dispositivo no pertenece a la categoría de computadora')
 		}
 	}
 
+	/**
+	 * Creates a new DeviceComputer instance from primitive values.
+	 * @param params - The primitive values for creating the computer device.
+	 * @returns A new DeviceComputer instance.
+	 */
 	static create(params: DeviceComputerParams): DeviceComputer {
 		const id = DeviceId.random().value
 		return new DeviceComputer(
@@ -96,11 +108,25 @@ export class DeviceComputer extends Device {
 		)
 	}
 
+	/**
+	 * Checks if a given category ID corresponds to a computer category.
+	 * @param categoryId - The category ID to check.
+	 * @returns True if it is a computer category, false otherwise.
+	 */
 	static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const acceptedComputerCategories: CategoryValues[] = ['Computadoras', 'All in One', 'Laptops', 'Servidores']
-		return acceptedComputerCategories.includes(CategoryDefaultData[categoryId])
+		const acceptedComputerCategories: CategoryValues[] = [
+			CategoryValues.COMPUTADORAS,
+			CategoryValues.ALLINONE,
+			CategoryValues.LAPTOPS,
+			CategoryValues.SERVIDORES
+		]
+		return acceptedComputerCategories.some(key => key === categoryId)
 	}
 
+	/**
+	 * Converts the DeviceComputer instance to its primitive representation.
+	 * @returns The primitive representation of the DeviceComputer.
+	 */
 	toPrimitives(): DeviceComputerPrimitives {
 		return {
 			id: this.idValue,
@@ -127,6 +153,11 @@ export class DeviceComputer extends Device {
 		}
 	}
 
+	/**
+	 * Creates a DeviceComputer instance from its primitive representation.
+	 * @param primitives - The primitive representation of the DeviceComputer.
+	 * @returns A new DeviceComputer instance.
+	 */
 	static fromPrimitives(primitives: DeviceComputerPrimitives): DeviceComputer {
 		return new DeviceComputer(
 			new DeviceId(primitives.id),
@@ -219,6 +250,7 @@ export class DeviceComputer extends Device {
 	get memoryRamCapacityValue(): Primitives<ComputerMemoryRamCapacity> {
 		return this.memoryRamCapacity.value
 	}
+
 	get memoryRamValue(): Primitives<MemoryRamValues>[] {
 		return this.memoryRam.toPrimitives()
 	}

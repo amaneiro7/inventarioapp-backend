@@ -1,10 +1,22 @@
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { MemoryRamCapacity } from '../../MemoryRam/MemoryRamCapacity/MemoryRamCapacity'
+import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceComputer } from './Computer'
+import { HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
+import { ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
+import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
 
+/**
+ * Represents the memory RAM capacity of a computer.
+ */
 export class ComputerMemoryRamCapacity extends MemoryRamCapacity {
+	/**
+	 * Creates an instance of ComputerMemoryRamCapacity.
+	 * @param value - The memory RAM capacity value.
+	 * @param status - The status of the device.
+	 */
 	constructor(value: Primitives<ComputerMemoryRamCapacity>, status: Primitives<DeviceStatus>) {
 		super(value)
 
@@ -12,7 +24,7 @@ export class ComputerMemoryRamCapacity extends MemoryRamCapacity {
 	}
 
 	private deviceIsInUse(memoryRam: Primitives<ComputerMemoryRamCapacity>, status: Primitives<DeviceStatus>): void {
-		if (status === DeviceStatus.StatusOptions.INUSE && memoryRam === 0) {
+		if (status === StatusOptions.INUSE && memoryRam === 0) {
 			throw new InvalidArgumentError('Memory Ram cannot be 0 when computer is in use')
 		}
 	}
@@ -35,5 +47,32 @@ export class ComputerMemoryRamCapacity extends MemoryRamCapacity {
 		const status = entity.statusValue
 		// Actualiza el campo la memoria Ram de la entidad {@link Device} con el nuevo la memoria Ram
 		entity.updateMemoryRamCapacity(memoryRam, status)
+	}
+
+	static async updateHardDriveCapacityField({
+		repository,
+		hardDriveCapacity,
+		entity
+	}: {
+		repository: HardDriveCapacityRepository
+		hardDriveCapacity?: Primitives<ComputerHardDriveCapacity>
+		entity: DeviceComputer
+	}): Promise<void> {
+		// Si no se ha pasado un nuevo valor de la capacidad del Disco Duro no realiza ninguna acción
+		if (hardDriveCapacity === undefined) {
+			return
+		}
+		// Verifica que si el valor actual y el nuevo valor son iguales no realice ningún cambio
+		if (entity.hardDriveCapacityValue === hardDriveCapacity) {
+			return
+		}
+		// Verifica que el valor de la capacidad del Disco Duro exista en la base de datos, si no existe lanza un error {@link EmployeeDoesNotExistError} con el valor de la capacidad del Disco Duro pasado
+		await HardDriveCapacityId.ensureHardDriveCapacityExit({
+			repository,
+			hardDriveCapacity
+		})
+		const status = entity.statusValue
+		// Actualiza el campo valor de la capacidad del Disco Duro de la entidad {@link Device} con el nuevo valor de la capacidad del Disco Duro
+		entity.updateHardDriveCapacity(hardDriveCapacity, status)
 	}
 }

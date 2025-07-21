@@ -1,25 +1,34 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemArqPrimitives } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArq.dto'
-import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqDoesNotExist'
 import { OperatingSystemArqId } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqID'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqDoesNotExist'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type ComputerOperatingSystem } from './ComputerOperatingSystem'
 import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
 import { type DeviceComputer } from './Computer'
 
-import { type ComputerOperatingSystem } from './ComputerOperatingSystem'
-
+/**
+ * Represents the operating system architecture of a computer, which can be null.
+ */
 export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitives<OperatingSystemArqId>> {
+	/**
+	 * Creates an instance of ComputerOperatingSystemArq.
+	 * @param value - The ID of the operating system architecture, or null.
+	 * @param operatingSystem - The operating system of the computer.
+	 */
 	constructor(
 		readonly value: Primitives<OperatingSystemArqId> | null,
 		readonly operatingSystem: Primitives<ComputerOperatingSystem>
 	) {
 		super(value)
-		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIfOperatingSystemIsNullOperatingSystemArqIsNullAsWell(this.value, this.operatingSystem)
 		this.ensureIsValidOperatingSystemArqId(value)
 	}
 
+	/**
+	 * Converts the operating system architecture to its primitive value.
+	 * @returns The operating system architecture ID or null.
+	 */
 	toPrimitives(): Primitives<ComputerOperatingSystemArq> {
 		return this.value
 	}
@@ -45,11 +54,7 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitiv
 	private isValid(id: Primitives<ComputerOperatingSystemArq>): boolean {
 		if (id === null) return true
 		const operatingSystemArqId = new OperatingSystemArqId(id)
-		if (operatingSystemArqId instanceof OperatingSystemArqId) {
-			return true
-		}
-
-		return false
+		return operatingSystemArqId instanceof OperatingSystemArqId
 	}
 
 	static async updateOperatingSystemArqField({
@@ -92,8 +97,7 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitiv
 			return
 		}
 		// Searches for a device with the given valor del Sistema Operativo in the database
-		const deviceWithOperatingSystemArq: OperatingSystemArqPrimitives | null =
-			await repository.searchById(operatingSystemArq)
+		const deviceWithOperatingSystemArq = await repository.searchById(operatingSystemArq)
 		// If a device with the given valor del Sistema Operativo exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor del Sistema Operativo
 		if (deviceWithOperatingSystemArq === null) {

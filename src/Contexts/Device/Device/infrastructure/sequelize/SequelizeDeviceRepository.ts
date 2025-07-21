@@ -221,7 +221,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			const [deviceInstance, created] = await DeviceModel.upsert(payload, { transaction: t, returning: true })
 
 			// Handle associated device types based on category
-			if (DeviceComputer.isComputerCategory({ categoryId: payload.categoryId })) {
+			if (DeviceComputer.isComputerCategory({ categoryId: { categoryId: payload.categoryId } })) {
 				await this.upsertAssociatedDeviceModel(this.models.DeviceComputer, payload, t)
 			}
 			if (DeviceHardDrive.isHardDriveCategory({ categoryId: payload.categoryId })) {
@@ -296,7 +296,9 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:serial:${deviceToRemove.serial}` })
 			}
 			if (deviceToRemove.computerName) {
-				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:computerName:${deviceToRemove.computerName}` })
+				await this.cache.removeCachedData({
+					cacheKey: `${this.cacheKey}:computerName:${deviceToRemove.computerName}`
+				})
 			}
 		}
 	}
@@ -328,4 +330,3 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		return buf
 	}
 }
-

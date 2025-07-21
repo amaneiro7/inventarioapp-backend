@@ -1,4 +1,4 @@
-import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { DeviceComputer } from '../../../Features/Computer/domain/Computer'
 import { ComputerHardDriveCapacity } from '../../../Features/Computer/domain/ComputerHardDriveCapacity'
 import { ComputerHardDriveType } from '../../../Features/Computer/domain/ComputerHardDriveType'
@@ -128,48 +128,50 @@ export class DeviceUpdater {
 			} = params as Partial<DeviceComputerPrimitives>
 
 			// Actualizamos los campos de la clase Computer
-			await ComputerName.updateComputerNameField({
-				repository: this.deviceRepository,
-				computerName,
-				entity: deviceEntity
-			})
-			await ComputerMemoryRam.updateMemoryRam({
-				entity: deviceEntity,
-				memoryRam
-			})
-			await ComputerProcessor.updateProcessorField({
-				repository: this.processorRepository,
-				processor: processorId,
-				entity: deviceEntity
-			})
-			await ComputerHardDriveCapacity.updateHardDriveCapacityField({
-				repository: this.hardDriveCapacityRepository,
-				entity: deviceEntity,
-				hardDriveCapacity: hardDriveCapacityId
-			})
-			await ComputerHardDriveType.updateHardDriveTypeField({
-				repository: this.hardDriveTypeRepository,
-				hardDriveType: hardDriveTypeId,
-				entity: deviceEntity
-			})
-			await ComputerOperatingSystem.updateOperatingSystemField({
-				repository: this.operatingSystemRepository,
-				operatingSystem: operatingSystemId,
-				entity: deviceEntity
-			})
-			await ComputerOperatingSystemArq.updateOperatingSystemArqField({
-				repository: this.operatingSystemArqRepository,
-				operatingSystemArq: operatingSystemArqId,
-				entity: deviceEntity
-			})
-			await IPAddress.updateIPAddressField({
-				ipAddress,
-				entity: deviceEntity
-			})
-			await MACAddress.updateMACAddressField({
-				macAddress,
-				entity: deviceEntity
-			})
+			await Promise.all([
+				ComputerName.updateComputerNameField({
+					repository: this.deviceRepository,
+					computerName,
+					entity: deviceEntity
+				}),
+				ComputerMemoryRam.updateMemoryRam({
+					entity: deviceEntity,
+					memoryRam
+				}),
+				ComputerProcessor.updateProcessorField({
+					repository: this.processorRepository,
+					processor: processorId,
+					entity: deviceEntity
+				}),
+				ComputerHardDriveCapacity.updateHardDriveCapacityField({
+					repository: this.hardDriveCapacityRepository,
+					entity: deviceEntity,
+					hardDriveCapacity: hardDriveCapacityId
+				}),
+				ComputerHardDriveType.updateHardDriveTypeField({
+					repository: this.hardDriveTypeRepository,
+					hardDriveType: hardDriveTypeId,
+					entity: deviceEntity
+				}),
+				ComputerOperatingSystem.updateOperatingSystemField({
+					repository: this.operatingSystemRepository,
+					operatingSystem: operatingSystemId,
+					entity: deviceEntity
+				}),
+				ComputerOperatingSystemArq.updateOperatingSystemArqField({
+					repository: this.operatingSystemArqRepository,
+					operatingSystemArq: operatingSystemArqId,
+					entity: deviceEntity
+				}),
+				IPAddress.updateIPAddressField({
+					ipAddress,
+					entity: deviceEntity
+				}),
+				MACAddress.updateMACAddressField({
+					macAddress,
+					entity: deviceEntity
+				})
+			])
 		} else if (
 			DeviceHardDrive.isHardDriveCategory({
 				categoryId: device.categoryId
@@ -206,20 +208,22 @@ export class DeviceUpdater {
 			await this.updateMainDevice({ params, deviceEntity })
 
 			// Actualizamos los campos de la clase HardDrive
-			await HDDCapacity.updateHardDriveCapacityField({
-				repository: this.hardDriveCapacityRepository,
-				entity: deviceEntity,
-				hardDriveCapacity: hardDriveCapacityId
-			})
-			await HDDType.updateHardDriveTypeField({
-				repository: this.hardDriveTypeRepository,
-				hardDriveType: hardDriveTypeId,
-				entity: deviceEntity
-			})
-			await HardDriveHealth.updateHealthField({
-				health,
-				entity: deviceEntity
-			})
+			await Promise.all([
+				HDDCapacity.updateHardDriveCapacityField({
+					repository: this.hardDriveCapacityRepository,
+					entity: deviceEntity,
+					hardDriveCapacity: hardDriveCapacityId
+				}),
+				HDDType.updateHardDriveTypeField({
+					repository: this.hardDriveTypeRepository,
+					hardDriveType: hardDriveTypeId,
+					entity: deviceEntity
+				}),
+				HardDriveHealth.updateHealthField({
+					health,
+					entity: deviceEntity
+				})
+			])
 		} else {
 			// Si el device no es de tipo computadora o hard drive, lo creamos como una instancia de la clase Device
 			deviceEntity = Device.fromPrimitives(device)

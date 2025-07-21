@@ -1,35 +1,39 @@
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { type DeviceComputer } from './Computer'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
-// Define a class IPAddress that extends the StringValueObject class
+/**
+ * Represents an IP address, which can be null.
+ */
 export class IPAddress extends AcceptedNullValueObject<string> {
-	// Define a private regular expression for IP address validation
 	private readonly IPADRRESS_VALIDATION =
 		/^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3}$/
 
-	// Constructor that takes a value and ensures it is a valid IP address
-	constructor(
-		readonly value: string | null,
-		private readonly status: Primitives<DeviceStatus>
-	) {
-		super(value) // Call the constructor of the parent class
+	/**
+	 * Creates an instance of IPAddress.
+	 * @param value - The IP address string, or null.
+	 * @param status - The status of the device.
+	 */
+	constructor(readonly value: string | null, private readonly status: Primitives<DeviceStatus>) {
+		super(value)
 		this.ensureIsStatusIsInUseIPAddressIsRequired(this.status, this.value)
-		this.ensureIsValid(value) // Ensure the provided value is a valid IP address
+		this.ensureIsValid(value)
 	}
 
-	// Return the value as a primitive string
+	/**
+	 * Converts the IP address to its primitive value.
+	 * @returns The IP address string or null.
+	 */
 	toPrimitives(): string | null {
 		return this.value
 	}
 
-	// Private method to ensure the provided value is a valid IP address
 	private ensureIsValid(value: string | null): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid IP Address`) // Throw an error if the value is not a valid IP address
+			throw new InvalidArgumentError(`<${value}> is not a valid IP Address`)
 		}
 	}
 
@@ -38,7 +42,6 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 		ipAddress: Primitives<IPAddress>
 	): void {
 		if (status === StatusOptions.INUSE && !ipAddress) {
-			// Throw an error if IP Address is null when computer status is in use
 			throw new InvalidArgumentError('IP Address is required when status is in use')
 		}
 		if (
@@ -47,12 +50,10 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 				status === StatusOptions.PORDESINCORPORAR) &&
 			!!ipAddress
 		) {
-			// Throw an error if IP Address is not null when computer status is in werehouse
-			throw new InvalidArgumentError('IP Address is not required when status is in use')
+			throw new InvalidArgumentError('IP Address is not required when status is not in use')
 		}
 	}
 
-	// Private method to check if the provided value is a valid IP address using the defined regular expression
 	private isValid(name: string | null): boolean {
 		if (name === null) return true
 		return this.IPADRRESS_VALIDATION.test(name)

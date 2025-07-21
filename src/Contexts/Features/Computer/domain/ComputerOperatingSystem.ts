@@ -1,28 +1,39 @@
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { OperatingSystemId } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemId'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { OperatingSystemDoesNotExistError } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemDoesNotExist'
-import { OperatingSystemId } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemId'
+import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemPrimitives } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'
 import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type DeviceComputer } from './Computer'
 import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 
+/**
+ * Represents the operating system of a computer, which can be null.
+ */
 export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<OperatingSystemId>> {
+	/**
+	 * Creates an instance of ComputerOperatingSystem.
+	 * @param value - The ID of the operating system, or null.
+	 * @param hardDriveCapacity - The capacity of the hard drive.
+	 * @param status - The status of the device.
+	 */
 	constructor(
 		readonly value: Primitives<OperatingSystemId> | null,
 		readonly hardDriveCapacity: Primitives<ComputerHardDriveCapacity>,
 		readonly status: Primitives<DeviceStatus>
 	) {
 		super(value)
-		// this.nullIsCargoisHigherThanCoordinador(cargoId)
 		this.ensureIfHardDriveisNullOperatingSystemIsNullAsWell(this.value, this.hardDriveCapacity)
 		this.ensureIfStatusIsInUseOperatingSystemMustHaveAValue(this.value, this.status)
 		this.ensureIsValidOperatingSystemId(value)
 	}
 
+	/**
+	 * Converts the operating system to its primitive value.
+	 * @returns The operating system ID or null.
+	 */
 	toPrimitives(): Primitives<ComputerOperatingSystem> {
 		return this.value
 	}
@@ -70,11 +81,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<
 	private isValid(id: Primitives<ComputerOperatingSystem>): boolean {
 		if (id === null) return true
 		const operatingSystemId = new OperatingSystemId(id)
-		if (operatingSystemId instanceof OperatingSystemId) {
-			return true
-		}
-
-		return false
+		return operatingSystemId instanceof OperatingSystemId
 	}
 
 	static async updateOperatingSystemField({
@@ -117,7 +124,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<
 			return
 		}
 		// Searches for a device with the given valor del Sistema Operativo in the database
-		const deviceWithOperatingSystem: OperatingSystemPrimitives | null = await repository.searchById(operatingSystem)
+		const deviceWithOperatingSystem = await repository.searchById(operatingSystem)
 		// If a device with the given valor del Sistema Operativo exists, it means that it already exists in the database,
 		// so we need to throw a {@link DeviceAlreadyExistError} with the given valor del Sistema Operativo
 		if (deviceWithOperatingSystem === null) {
