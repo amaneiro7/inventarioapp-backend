@@ -44,7 +44,7 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<LocationDto>
 			}
 		})
 	}
@@ -69,7 +69,7 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<LocationDto>
 			}
 		})
 	}
@@ -106,7 +106,7 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 						}
 					]
 				})
-				return location ? location.get({ plain: true }) : null
+				return location ? (location.get({ plain: true }) as LocationDto) : null
 			}
 		})
 	}
@@ -124,7 +124,7 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const location = await LocationModel.findOne({ where: { name } })
-				return location ? location.get({ plain: true }) : null
+				return location ? (location.get({ plain: true }) as LocationDto) : null
 			}
 		})
 	}
@@ -145,4 +145,3 @@ export class SequelizeLocationRepository extends CriteriaToSequelizeConverter im
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
 	}
 }
-

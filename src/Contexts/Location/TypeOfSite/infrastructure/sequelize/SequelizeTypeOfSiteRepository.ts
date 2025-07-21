@@ -1,13 +1,13 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { TypeOfSiteModel } from './TypeOfSiteSchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type TypeOfSiteDto } from '../../domain/TypeOfSite.dto'
 import { type TypeOfSiteId } from '../../domain/TypeOfSiteId'
 import { type TypeOfSiteRepository } from '../../domain/TypeOfSiteRepository'
-import { TypeOfSiteModel } from './TypeOfSiteSchema'
 
 /**
  * @class SequelizeTypeOfSiteRepository

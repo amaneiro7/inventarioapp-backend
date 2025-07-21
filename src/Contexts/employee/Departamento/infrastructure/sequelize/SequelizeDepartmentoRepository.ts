@@ -48,7 +48,7 @@ export class SequelizeDepartamentoRepository
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<DepartamentoDto>
 			}
 		})
 	}
@@ -92,7 +92,7 @@ export class SequelizeDepartamentoRepository
 						// 'employee'
 					]
 				})
-				return departamento ? departamento.get({ plain: true }) : null
+				return departamento ? (departamento.get({ plain: true }) as DepartamentoDto) : null
 			}
 		})
 	}
@@ -110,7 +110,7 @@ export class SequelizeDepartamentoRepository
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const departamento = await DepartamentoModel.findOne({ where: { name } })
-				return departamento ? departamento.get({ plain: true }) : null
+				return departamento ? (departamento.get({ plain: true }) as DepartamentoDto) : null
 			}
 		})
 	}
@@ -127,10 +127,10 @@ export class SequelizeDepartamentoRepository
 	async save(payload: DepartamentoPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, cargos, ...restPayload } = payload
+			const { cargos, ...restPayload } = payload
 
 			// Use upsert for the main Departamento entry
-			const [departamentoInstance, created] = await DepartamentoModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+			const [departamentoInstance] = await DepartamentoModel.upsert(restPayload, { transaction, returning: true })
 
 			// Handle cargos association
 			if (cargos && cargos.length > 0) {
@@ -144,7 +144,7 @@ export class SequelizeDepartamentoRepository
 			await transaction.commit()
 			// Invalidate relevant cache entries
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${restPayload.id}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
 		} catch (error: unknown) {
 			await transaction.rollback()

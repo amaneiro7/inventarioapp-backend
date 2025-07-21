@@ -42,7 +42,7 @@ export class SequelizeStateRepository extends CriteriaToSequelizeConverter imple
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<StateDto>
 			}
 		})
 	}
@@ -60,7 +60,7 @@ export class SequelizeStateRepository extends CriteriaToSequelizeConverter imple
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const state = await StateModel.findByPk(id)
-				return state ? state.get({ plain: true }) : null
+				return state ? (state.get({ plain: true }) as StateDto) : null
 			}
 		})
 	}

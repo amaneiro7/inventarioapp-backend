@@ -40,13 +40,13 @@ export class SequelizeDirectivaRepository
 		return await this.cache.getCachedData<ResponseDB<DirectivaDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DirectivaModel.findAndCountAll(options)
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<DirectivaDto>
 			}
 		})
 	}
@@ -73,7 +73,7 @@ export class SequelizeDirectivaRepository
 						}
 					]
 				})
-				return directiva ? directiva.get({ plain: true }) : null
+				return directiva ? (directiva.get({ plain: true }) as DirectivaDto) : null
 			}
 		})
 	}
@@ -91,7 +91,7 @@ export class SequelizeDirectivaRepository
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const directiva = await DirectivaModel.findOne({ where: { name } })
-				return directiva ? directiva.get({ plain: true }) : null
+				return directiva ? (directiva.get({ plain: true }) as DirectivaDto) : null
 			}
 		})
 	}
@@ -108,10 +108,10 @@ export class SequelizeDirectivaRepository
 	async save(payload: DirectivaPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, cargos, ...restPayload } = payload
+			const { cargos, ...restPayload } = payload
 
 			// Use upsert for the main Directiva entry
-			const [directivaInstance, created] = await DirectivaModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+			const [directivaInstance] = await DirectivaModel.upsert(restPayload, { transaction, returning: true })
 
 			// Handle cargos association
 			if (cargos && cargos.length > 0) {
@@ -125,7 +125,7 @@ export class SequelizeDirectivaRepository
 			await transaction.commit()
 			// Invalidate relevant cache entries
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${restPayload.id}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
 		} catch (error: unknown) {
 			await transaction.rollback()

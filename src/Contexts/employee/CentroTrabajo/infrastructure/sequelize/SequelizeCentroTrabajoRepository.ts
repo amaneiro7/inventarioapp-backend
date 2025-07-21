@@ -42,7 +42,7 @@ export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConvert
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<CentroTrabajoDto>
 			}
 		})
 	}
@@ -60,7 +60,7 @@ export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConvert
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const centroTrabajo = await CentroTrabajoModel.findByPk(id)
-				return centroTrabajo ? centroTrabajo.get({ plain: true }) : null
+				return centroTrabajo ? (centroTrabajo.get({ plain: true }) as CentroTrabajoDto) : null
 			}
 		})
 	}
@@ -78,7 +78,7 @@ export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConvert
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const centroTrabajo = await CentroTrabajoModel.findOne({ where: { name } })
-				return centroTrabajo ? centroTrabajo.get({ plain: true }) : null
+				return centroTrabajo ? (centroTrabajo.get({ plain: true }) as CentroTrabajoDto) : null
 			}
 		})
 	}

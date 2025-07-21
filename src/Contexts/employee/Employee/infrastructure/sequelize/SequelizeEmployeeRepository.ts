@@ -42,7 +42,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<EmployeeDto>
 			}
 		})
 	}
@@ -67,7 +67,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<EmployeeDto>
 			}
 		})
 	}
@@ -89,7 +89,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 						email
 					}
 				})
-				return employee ? employee.get({ plain: true }) : null
+				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
 			}
 		})
 	}
@@ -118,7 +118,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 						'departamento'
 					]
 				})
-				return employee ? employee.get({ plain: true }) : null
+				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
 			}
 		})
 	}
@@ -137,7 +137,7 @@ export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter im
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne(this.convert(criteria))
-				return employee ? employee.get({ plain: true }) : null
+				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
 			}
 		})
 	}

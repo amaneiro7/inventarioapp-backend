@@ -42,7 +42,7 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<CityDto>
 			}
 		})
 	}
@@ -73,7 +73,7 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 						}
 					]
 				})
-				return city ? city.get({ plain: true }) : null
+				return city ? (city.get({ plain: true }) as CityDto) : null
 			}
 		})
 	}
@@ -93,7 +93,7 @@ export class SequelizeCityRepository extends CriteriaToSequelizeConverter implem
 				const city = await CityModel.findOne({
 					where: { name }
 				})
-				return city ? city.get({ plain: true }) : null
+				return city ? (city.get({ plain: true }) as CityDto) : null
 			}
 		})
 	}

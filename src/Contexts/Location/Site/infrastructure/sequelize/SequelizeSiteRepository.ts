@@ -41,7 +41,7 @@ export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implem
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<SiteDto>
 			}
 		})
 	}
@@ -72,7 +72,7 @@ export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implem
 						}
 					]
 				})
-				return site ? site.get({ plain: true }) : null
+				return site ? (site.get({ plain: true }) as SiteDto) : null
 			}
 		})
 	}

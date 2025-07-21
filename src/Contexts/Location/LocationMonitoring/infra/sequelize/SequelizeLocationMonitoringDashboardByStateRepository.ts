@@ -4,7 +4,7 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { LocationMonitoringDashboardByStateAssociation } from './LocationMonitoringDashboardByStateAssociation'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type DashboardByStateData } from '../../domain/entity/LocationMonitoring.dto'
+import { type StateData, type DashboardByStateData } from '../../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardByStateRepository } from '../../domain/repository/LocationMonitoringDashboardByStateRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
@@ -17,19 +17,13 @@ interface LocationCountByState {
 	count: string | number
 }
 
-// Represents the structure of the aggregated data for a single state.
-interface StateData {
-	stateName: string
-	total: number
-	onlineCount: number
-	offlineCount: number
-}
-
 // Represents the accumulator's structure during the reduce operation.
 interface AggregatedData {
 	total: number
 	[MonitoringStatuses.ONLINE]: number
 	[MonitoringStatuses.OFFLINE]: number
+	[MonitoringStatuses.HOSTNAME_MISMATCH]: number
+	[MonitoringStatuses.NOTAVAILABLE]: number
 	byStateMap: Map<string, StateData>
 }
 
@@ -57,6 +51,8 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 					total: 0,
 					[MonitoringStatuses.ONLINE]: 0,
 					[MonitoringStatuses.OFFLINE]: 0,
+					[MonitoringStatuses.HOSTNAME_MISMATCH]: 0,
+					[MonitoringStatuses.NOTAVAILABLE]: 0,
 					byStateMap: new Map<string, StateData>()
 				}
 
@@ -98,6 +94,8 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 					total: aggregatedData.total,
 					[MonitoringStatuses.ONLINE]: aggregatedData[MonitoringStatuses.ONLINE],
 					[MonitoringStatuses.OFFLINE]: aggregatedData[MonitoringStatuses.OFFLINE],
+					[MonitoringStatuses.HOSTNAME_MISMATCH]: aggregatedData[MonitoringStatuses.HOSTNAME_MISMATCH],
+					[MonitoringStatuses.NOTAVAILABLE]: aggregatedData[MonitoringStatuses.NOTAVAILABLE],
 					byState: byStateArray
 				}
 			}

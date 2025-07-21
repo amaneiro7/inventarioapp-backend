@@ -36,13 +36,13 @@ export class SequelizeRegionRepository extends CriteriaToSequelizeConverter impl
 		return await this.cache.getCachedData<ResponseDB<RegionDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await RegionModel.findAndCountAll(options)
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<RegionDto>
 			}
 		})
 	}
@@ -60,7 +60,7 @@ export class SequelizeRegionRepository extends CriteriaToSequelizeConverter impl
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const region = await RegionModel.findByPk(id)
-				return region ? region.get({ plain: true }) : null
+				return region ? (region.get({ plain: true }) as RegionDto) : null
 			}
 		})
 	}

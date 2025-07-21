@@ -73,7 +73,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<ModelSeriesDto>
 			}
 		})
 	}
@@ -100,7 +100,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<ModelSeriesDto>
 			}
 		})
 	}
@@ -130,7 +130,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 						'modelMouse'
 					]
 				})
-				return modelSeries ? modelSeries.get({ plain: true }) : null
+				return modelSeries ? (modelSeries.get({ plain: true }) as ModelSeriesDto) : null
 			}
 		})
 	}
@@ -151,7 +151,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 					where: { categoryId },
 					include: ['category', 'brand']
 				})
-				return rows.map(row => row.get({ plain: true }))
+				return rows.map(row => row.get({ plain: true })) as ModelSeriesDto[]
 			}
 		})
 	}
@@ -172,7 +172,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 					where: { name },
 					include: ['category', 'brand']
 				})
-				return modelSeries ? modelSeries.get({ plain: true }) : null
+				return modelSeries ? (modelSeries.get({ plain: true }) as ModelSeriesDto) : null
 			}
 		})
 	}

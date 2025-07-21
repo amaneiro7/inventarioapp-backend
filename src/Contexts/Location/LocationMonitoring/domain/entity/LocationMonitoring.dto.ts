@@ -31,8 +31,16 @@ export interface DashboardData {
 	[MonitoringStatuses.NOTAVAILABLE]: number
 	[MonitoringStatuses.HOSTNAME_MISMATCH]: number
 }
+
+// Represents the structure of the aggregated data for a single state.
+export interface StateData {
+	stateName: string
+	total: number
+	onlineCount: number
+	offlineCount: number
+}
 export interface DashboardByStateData extends DashboardData {
-	byState: Record<string, DashboardData>
+	byState: StateData[]
 }
 export type DashboardByLocationData = AdmRegionData[]
 

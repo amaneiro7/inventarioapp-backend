@@ -39,7 +39,7 @@ export class SequelizeAdministrativeRegionRepository
 		return await this.cache.getCachedData<ResponseDB<AdministrativeRegionDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await AdministrativeRegionModel.findAndCountAll(options)
 				return {

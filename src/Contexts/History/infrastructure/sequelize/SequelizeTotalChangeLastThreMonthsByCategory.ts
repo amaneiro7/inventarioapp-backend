@@ -87,7 +87,7 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 						[sequelize.col('device.category.name'), 'ASC']
 					],
 					raw: true
-				})) as RawHistoryData[]
+				})) as unknown as RawHistoryData[]
 
 				// Use reduce to group and aggregate data more efficiently.
 				const groupedResult = lastActiviries.reduce((acc: GroupedResult, history) => {
@@ -108,7 +108,7 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 
 				// Transform the grouped object into the final array format.
 				const finalResult = Object.keys(groupedResult).map(month => {
-					const monthData: Record<string, any> = { name: month }
+					const monthData = { name: month }
 					Object.assign(monthData, groupedResult[month])
 					return monthData
 				})
@@ -118,4 +118,3 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 		})
 	}
 }
-

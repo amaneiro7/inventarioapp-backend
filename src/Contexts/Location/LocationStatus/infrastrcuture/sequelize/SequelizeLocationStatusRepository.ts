@@ -37,7 +37,7 @@ export class SequelizeLocationStatusRepository
 		return await this.cache.getCachedData<ResponseDB<LocationStatusDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationStatusModel.findAndCountAll(options)
 				return {

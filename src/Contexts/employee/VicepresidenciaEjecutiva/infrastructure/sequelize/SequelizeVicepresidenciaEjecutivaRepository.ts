@@ -54,7 +54,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<VicepresidenciaEjecutivaDto>
 			}
 		})
 	}
@@ -82,7 +82,9 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 						'employee'
 					]
 				})
-				return vicepresidenciaEjecutiva ? vicepresidenciaEjecutiva.get({ plain: true }) : null
+				return vicepresidenciaEjecutiva
+					? (vicepresidenciaEjecutiva.get({ plain: true }) as VicepresidenciaEjecutivaDto)
+					: null
 			}
 		})
 	}
@@ -100,7 +102,9 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const vicepresidenciaEjecutiva = await VicepresidenciaEjecutivaModel.findOne({ where: { name } })
-				return vicepresidenciaEjecutiva ? vicepresidenciaEjecutiva.get({ plain: true }) : null
+				return vicepresidenciaEjecutiva
+					? (vicepresidenciaEjecutiva.get({ plain: true }) as VicepresidenciaEjecutivaDto)
+					: null
 			}
 		})
 	}
@@ -117,10 +121,12 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	async save(payload: VicepresidenciaEjecutivaPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, cargos, ...restPayload } = payload
-
+			const { cargos, ...restPayload } = payload
 			// Use upsert for the main VicepresidenciaEjecutiva entry
-			const [vicepresidenciaEjecutivaInstance, created] = await VicepresidenciaEjecutivaModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+			const [vicepresidenciaEjecutivaInstance] = await VicepresidenciaEjecutivaModel.upsert(restPayload, {
+				transaction,
+				returning: true
+			})
 
 			// Handle cargos association
 			if (cargos && cargos.length > 0) {
@@ -134,7 +140,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 			await transaction.commit()
 			// Invalidate relevant cache entries
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${restPayload.id}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
 		} catch (error: unknown) {
 			await transaction.rollback()
@@ -165,7 +171,9 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
 		if (vicepresidenciaEjecutivaToRemove) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${vicepresidenciaEjecutivaToRemove.name}` })
+			await this.cache.removeCachedData({
+				cacheKey: `${this.cacheKey}:name:${vicepresidenciaEjecutivaToRemove.name}`
+			})
 		}
 	}
 }

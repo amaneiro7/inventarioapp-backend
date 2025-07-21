@@ -51,7 +51,7 @@ export class SequelizeVicepresidenciaRepository
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<VicepresidenciaDto>
 			}
 		})
 	}
@@ -88,7 +88,7 @@ export class SequelizeVicepresidenciaRepository
 						}
 					]
 				})
-				return vicepresidencia ? vicepresidencia.get({ plain: true }) : null
+				return vicepresidencia ? (vicepresidencia.get({ plain: true }) as VicepresidenciaDto) : null
 			}
 		})
 	}
@@ -106,7 +106,7 @@ export class SequelizeVicepresidenciaRepository
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const vicepresidencia = await VicepresidenciaModel.findOne({ where: { name } })
-				return vicepresidencia ? vicepresidencia.get({ plain: true }) : null
+				return vicepresidencia ? (vicepresidencia.get({ plain: true }) as VicepresidenciaDto) : null
 			}
 		})
 	}
@@ -123,10 +123,13 @@ export class SequelizeVicepresidenciaRepository
 	async save(payload: VicepresidenciaPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, cargos, ...restPayload } = payload
+			const { cargos, ...restPayload } = payload
 
 			// Use upsert for the main Vicepresidencia entry
-			const [vicepresidenciaInstance, created] = await VicepresidenciaModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+			const [vicepresidenciaInstance] = await VicepresidenciaModel.upsert(restPayload, {
+				transaction,
+				returning: true
+			})
 
 			// Handle cargos association
 			if (cargos && cargos.length > 0) {
@@ -140,7 +143,7 @@ export class SequelizeVicepresidenciaRepository
 			await transaction.commit()
 			// Invalidate relevant cache entries
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${restPayload.id}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
 		} catch (error: unknown) {
 			await transaction.rollback()
@@ -175,4 +178,3 @@ export class SequelizeVicepresidenciaRepository
 		}
 	}
 }
-

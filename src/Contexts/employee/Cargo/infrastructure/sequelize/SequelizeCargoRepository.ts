@@ -45,7 +45,7 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
-				}
+				} as ResponseDB<CargoDto>
 			}
 		})
 	}
@@ -73,7 +73,7 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 						'employee'
 					]
 				})
-				return cargo ? cargo.get({ plain: true }) : null
+				return cargo ? (cargo.get({ plain: true }) as CargoDto) : null
 			}
 		})
 	}
@@ -91,7 +91,7 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const cargo = await CargoModel.findOne({ where: { name } })
-				return cargo ? cargo.get({ plain: true }) : null
+				return cargo ? (cargo.get({ plain: true }) as CargoDto) : null
 			}
 		})
 	}
@@ -108,11 +108,10 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 	async save(payload: CargoPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { id, departamentos, directivas, vicepresidenciasEjecutivas, vicepresidencias, ...restPayload } =
-				payload
+			const { departamentos, directivas, vicepresidenciasEjecutivas, vicepresidencias, ...restPayload } = payload
 
 			// Use upsert for the main Cargo entry
-			const [cargoInstance, created] = await CargoModel.upsert(restPayload, { transaction, returning: true, where: { id } })
+			const [cargoInstance] = await CargoModel.upsert(restPayload, { transaction, returning: true })
 
 			// Handle associations
 			if (departamentos) {
@@ -131,7 +130,7 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 			await transaction.commit()
 			// Invalidate relevant cache entries
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${restPayload.id}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${restPayload.name}` })
 		} catch (error: unknown) {
 			await transaction.rollback()
@@ -166,4 +165,3 @@ export class SequelizeCargoRepository extends CriteriaToSequelizeConverter imple
 		}
 	}
 }
-

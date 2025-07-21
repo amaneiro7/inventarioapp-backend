@@ -49,7 +49,7 @@ export class SequelizeLocationMonitoringRepository
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<LocationMonitoringDto>
 			}
 		})
 	}
@@ -88,7 +88,7 @@ export class SequelizeLocationMonitoringRepository
 						}
 					]
 				})
-				return rows.map(row => row.get({ plain: true }))
+				return rows.map(row => row.get({ plain: true })) as LocationMonitoringDto[]
 			}
 		})
 	}
@@ -104,8 +104,8 @@ export class SequelizeLocationMonitoringRepository
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const locationMonitoring = (await LocationMonitoringModel.findByPk(id))
-				return locationMonitoring ? locationMonitoring.get({ plain: true }) : null
+				const locationMonitoring = await LocationMonitoringModel.findByPk(id)
+				return locationMonitoring ? (locationMonitoring.get({ plain: true }) as LocationMonitoringDto) : null
 			}
 		})
 	}
