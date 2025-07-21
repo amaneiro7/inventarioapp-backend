@@ -14,11 +14,10 @@ export class DevicePatchController implements Controller {
 			const { id } = req.params
 			const update: DeviceUpdater = container.resolve(DeviceDependencies.Updater)
 			await update.run({ id, params, user })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Dispositivo actualizado exitosamente'
 			})
 		} catch (error) {
-			console.log('hola')
 			next(error)
 		}
 	}

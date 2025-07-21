@@ -22,7 +22,7 @@ export class CityPatchController implements Controller {
 			const { id } = req.params
 			const update: CityUpdater = container.resolve(CityDependencies.Updater)
 			await update.run({ id, params: { name, stateId } })
-			res.status(httpStatus[204].statusCode).json({
+			res.status(httpStatus[200].statusCode).json({
 				message: 'Ciudad actualizada exitosamente'
 			})
 		} catch (error) {

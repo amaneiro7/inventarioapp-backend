@@ -13,7 +13,7 @@ export class RegionPatchController implements Controller {
 			const { id } = req.params
 			const update: RegionUpdater = container.resolve(RegionDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Región actualizado exitosamente'
 			})
 		} catch (error) {

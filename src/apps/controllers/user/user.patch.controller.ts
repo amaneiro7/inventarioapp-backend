@@ -14,7 +14,7 @@ export class UserPatchController implements Controller {
 
 			const update: UserUpdater = container.resolve(UserDependencies.Updater)
 			await update.run({ id, payload, user })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Usuario actualizado exitosamente'
 			})
 		} catch (error) {

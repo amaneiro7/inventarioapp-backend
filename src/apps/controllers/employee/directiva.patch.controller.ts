@@ -12,7 +12,7 @@ export class DirectivaPatchController implements Controller {
 			const { id } = req.params
 			const update: DirectivaUpdater = container.resolve(DirectivaDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Directiva actualizado exitosamente'
 			})
 		} catch (error) {

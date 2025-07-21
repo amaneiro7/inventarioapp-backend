@@ -20,7 +20,7 @@ export class BrandPatchController implements Controller {
 			const { id } = req.params
 			const update: BrandUpdater = container.resolve(BrandDependencies.Updater)
 			await update.run({ id, newName: name })
-			res.status(httpStatus[204].statusCode).json({
+			res.status(httpStatus[200].statusCode).json({
 				message: 'Marca actualizada exitosamente'
 			})
 		} catch (error) {

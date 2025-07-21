@@ -14,7 +14,7 @@ export class VicepresidenciaEjecutivaPatchController implements Controller {
 				VicepresidenciaEjecutivaDependencies.Updater
 			)
 			await update.run({ id, params })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Vicepresidencia ejecutiva actualizado exitosamente'
 			})
 		} catch (error) {

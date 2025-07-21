@@ -12,7 +12,7 @@ export class DepartamentoPatchController implements Controller {
 			const { id } = req.params
 			const update: DepartamentoUpdater = container.resolve(DepartamentoDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus[204].statusCode).send({
+			res.status(httpStatus[200].statusCode).send({
 				message: 'Departamento actualizado exitosamente'
 			})
 		} catch (error) {
