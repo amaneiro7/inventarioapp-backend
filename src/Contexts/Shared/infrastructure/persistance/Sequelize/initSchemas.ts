@@ -12,7 +12,8 @@ const routes = globSync(path)
 export async function initilizarModels(sequelize: Sequelize): Promise<void> {
 	const modules: IModelinstance[] = []
 	for (const route of routes) {
-		const routePath = require(resolve(route))
+		const routePath = await import(resolve(route))
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [_, instance] = Object.entries(routePath)[0]
 		modules.push(instance as IModelinstance)
 	}
