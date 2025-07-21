@@ -4,6 +4,7 @@ import { type DeviceDto } from '../../../Device/domain/Device.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
 import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring.dto'
+import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 export type DeviceMonitoringType = MonitoringPrimitives & {
 	deviceId: Primitives<DeviceMonitoring['deviceId']>
@@ -27,10 +28,21 @@ export interface DashboardData {
 	onlineCount: number
 	offlineCount: number
 	notAvailableCount: number
-	totalDevices: number
+	total: number
 }
-export interface DashboardByStateData extends DashboardData {
-	byState: Record<string, DashboardData>
+export interface DashboardByStateData {
+	total: number
+	[MonitoringStatuses.ONLINE]: number
+	[MonitoringStatuses.OFFLINE]: number
+	byState: StateData[]
+}
+
+// Represents the structure of the aggregated data for a single state.
+export interface StateData {
+	stateName: string
+	total: number
+	onlineCount: number
+	offlineCount: number
 }
 
 export type DashboardByLocationData = AdmRegionData[]

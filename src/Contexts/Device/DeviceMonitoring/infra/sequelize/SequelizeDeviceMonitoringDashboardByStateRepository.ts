@@ -4,7 +4,7 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { DeviceMonitoringDashboardByStateAssociation } from './DeviceMonitoringDashboardByStateAssociation'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type DashboardByStateData } from '../../domain/entity/DeviceMonitoring.dto'
+import { type StateData, type DashboardByStateData } from '../../domain/entity/DeviceMonitoring.dto'
 import { type DeviceMonitoringDashboardByStateRepository } from '../../domain/repository/DeviceMonitoringDashboardByStateRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
@@ -15,14 +15,6 @@ interface DeviceCountByState {
 	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
 	stateName: string
 	count: string | number // The count can be a string from some DB drivers.
-}
-
-// Represents the structure of the aggregated data for a single state.
-interface StateData {
-	stateName: string
-	total: number
-	onlineCount: number
-	offlineCount: number
 }
 
 // Represents the accumulator's structure during the reduce operation.

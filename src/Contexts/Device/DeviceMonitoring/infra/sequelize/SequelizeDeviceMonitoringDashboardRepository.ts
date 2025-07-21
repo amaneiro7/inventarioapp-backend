@@ -32,7 +32,7 @@ export class SequelizeDeviceMonitoringDashboardRepository
 			criteria,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const devices = (await DeviceMonitoringModel.findAll(opt)) as DeviceCountByStatus[]
+				const devices = (await DeviceMonitoringModel.findAll(opt)) as unknown as DeviceCountByStatus[]
 
 				// Initialize the dashboard data with all possible statuses from MonitoringStatuses set to 0.
 				// This ensures a consistent object shape regardless of the query results.
