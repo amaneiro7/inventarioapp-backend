@@ -49,7 +49,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as unknown as ResponseDB<CategoryDto>
 			}
 		})
 	}
@@ -67,7 +67,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findByPk(id)
-				return category ? category.get({ plain: true }) : null
+				return category ? (category.get({ plain: true }) as CategoryDto) : null
 			}
 		})
 	}
@@ -85,7 +85,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findOne({ where: { name } })
-				return category ? category.get({ plain: true }) : null
+				return category ? (category.get({ plain: true }) as CategoryDto) : null
 			}
 		})
 	}

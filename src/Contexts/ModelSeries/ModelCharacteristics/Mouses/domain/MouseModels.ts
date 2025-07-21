@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -35,8 +36,8 @@ export class MouseModels extends ModelSeries {
 	}
 
 	public static isMouseCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedMouseCategories: CategoryValues[] = ['Mouses']
-		return AcceptedMouseCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedMouseCategories: CategoryValues[] = [CategoryValues.MOUSE]
+		return AcceptedMouseCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): MouseModels {

@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
-import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/Category/domain/CategoryDefaultData'
+
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
@@ -69,8 +70,8 @@ export class LaptopsModels extends ComputerModels {
 	}
 
 	public static isLaptopCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = ['Laptops']
-		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedComputerCategories: CategoryValues[] = [CategoryValues.LAPTOPS]
+		return AcceptedComputerCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): LaptopsModels {

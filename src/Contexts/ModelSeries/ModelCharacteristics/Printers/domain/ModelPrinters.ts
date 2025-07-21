@@ -7,9 +7,10 @@ import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { CartridgeModel } from './CartridgeModel'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+
 import { type PrinteModelsParams, type PrinteModelsPrimitives } from './ModelPrinters.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 
 export class ModelPrinters extends ModelSeries {
 	constructor(
@@ -39,8 +40,8 @@ export class ModelPrinters extends ModelSeries {
 	}
 
 	public static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = ['Impresoras Laser', 'Impresoras Tinta']
-		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedComputerCategories: CategoryValues[] = [CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]
+		return AcceptedComputerCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ModelPrinters {

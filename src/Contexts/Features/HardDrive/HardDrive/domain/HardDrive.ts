@@ -15,8 +15,9 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { DeviceStocknumber } from '../../../../Device/Device/domain/DeviceStock'
 import { DeviceLocation } from '../../../../Device/Device/domain/DeviceLocation'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+
 import { type DeviceHardDriveParams, type DeviceHardDrivePrimitives } from './HardDrive.dto'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 export class DeviceHardDrive extends Device {
 	constructor(
 		id: DeviceId,
@@ -78,8 +79,8 @@ export class DeviceHardDrive extends Device {
 	}
 
 	static isHardDriveCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedHardDriveCategories: CategoryValues[] = ['Discos Duros']
-		return AcceptedHardDriveCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedHardDriveCategories: CategoryValues[] = [CategoryValues.HARDDRIVE]
+		return AcceptedHardDriveCategories.some(category => category === categoryId)
 	}
 
 	updateHealth(newHealth: Primitives<HardDriveHealth>): void {

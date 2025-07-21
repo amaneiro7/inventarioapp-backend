@@ -6,7 +6,7 @@ import { type HardDriveHealth } from '../../domain/HardDriveHealth'
 import { type HDDCapacity } from '../../domain/HDDCapacity'
 import { type HDDType } from '../../domain/HDDType'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { CategoryValues } from '../../../../../Category/Category/domain/Category'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface DeviceHardDriveCreationAttributes
 	extends Pick<

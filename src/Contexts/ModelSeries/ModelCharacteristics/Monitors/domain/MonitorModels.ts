@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -48,8 +49,8 @@ export class MonitorModels extends ModelSeries {
 	}
 
 	public static isMonitorCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedMonitorCategories: CategoryValues[] = ['Monitores']
-		return AcceptedMonitorCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedMonitorCategories: CategoryValues[] = [CategoryValues.MONITORES]
+		return AcceptedMonitorCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): MonitorModels {

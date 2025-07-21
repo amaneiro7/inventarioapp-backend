@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-import { CategoryDefaultData, type CategoryValues } from '../../../../Category/Category/domain/CategoryDefaultData'
+
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -38,8 +39,8 @@ export class KeyboardModels extends ModelSeries {
 	}
 
 	public static isKeyboardCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedKeyboardCategories: CategoryValues[] = ['Teclados']
-		return AcceptedKeyboardCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedKeyboardCategories: CategoryValues[] = [CategoryValues.KEYBOARD]
+		return AcceptedKeyboardCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): KeyboardModels {

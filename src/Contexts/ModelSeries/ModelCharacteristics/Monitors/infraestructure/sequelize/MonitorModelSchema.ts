@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../../Category/Category/domain/Category'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
 import { type MonitorScreenSize } from '../../domain/MonitorScreenSize'
@@ -8,6 +7,7 @@ import { type MonitorHasHDMI } from '../../domain/MonitorHasHDMI'
 import { type MonitorHasVGA } from '../../domain/MonitorHasVGA'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { type MonitorModelsDto } from '../../domain/MonitoModels.dto'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface MonitorModelsCreationAttributes extends MonitorModelsDto {
 	id: Primitives<ModelSeriesId>

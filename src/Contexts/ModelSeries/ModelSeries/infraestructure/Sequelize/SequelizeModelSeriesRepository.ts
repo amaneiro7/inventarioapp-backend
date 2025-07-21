@@ -1,3 +1,4 @@
+import { type Model, type ModelStatic, type Transaction } from 'sequelize'
 import { set_fs, utils, write } from 'xlsx'
 import fs from 'node:fs'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
@@ -15,7 +16,6 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { clearModelDataset } from './clearModelDataset'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Transaction } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesRepository } from '../../domain/ModelSeriesRepository'
 import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/ModelSeries.dto'
@@ -189,7 +189,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		const t = await sequelize.transaction()
 		try {
 			// Use upsert for the main ModelSeries entry
-			const [modelSeriesInstance, created] = await ModelSeriesModel.upsert(payload, {
+			await ModelSeriesModel.upsert(payload, {
 				transaction: t,
 				returning: true
 			})
@@ -242,7 +242,8 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 * @returns {Promise<void>}
 	 */
 	private async upsertAssociatedModel(
-		model: any,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		model: ModelStatic<Model<any, any>>,
 		payload: ModelSeriesPrimitives,
 		transaction: Transaction
 	): Promise<void> {

@@ -1,10 +1,5 @@
 import { Device } from '../../../Device/Device/domain/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import {
-	CategoryDefaultData,
-	CategoryNames,
-	type CategoryValues
-} from '../../../Category/Category/domain/CategoryDefaultData'
 import { BrandId } from '../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
 import { DeviceActivo } from '../../../Device/Device/domain/DeviceActivo'
@@ -19,6 +14,7 @@ import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
 import { type DeviceMFPParams, type DeviceMFPPrimitives } from './MFP.dto'
+import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
 export class MFP extends Device {
 	constructor(
@@ -72,8 +68,8 @@ export class MFP extends Device {
 	}
 
 	static isMFPCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const acceptedComputerCategories: CategoryValues[] = [CategoryNames.MFP]
-		return acceptedComputerCategories.includes(CategoryDefaultData[categoryId])
+		const acceptedComputerCategories: CategoryValues[] = [CategoryValues.MFP]
+		return acceptedComputerCategories.some(category => category === categoryId)
 	}
 
 	toPrimitives(): DeviceMFPPrimitives {

@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../Category/Category/domain/Category'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { type InputTypeId } from '../../../InputType/domain/InputTypeId'

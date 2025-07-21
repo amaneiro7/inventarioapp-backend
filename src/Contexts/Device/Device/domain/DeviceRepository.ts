@@ -21,7 +21,7 @@ export abstract class DeviceRepository {
 
 	abstract matching(criteria: Criteria): Promise<ResponseDB<DeviceDto>>
 
-	abstract donwload(criteria: Criteria): Promise<{}>
+	abstract donwload(criteria: Criteria): Promise<Buffer>
 
 	abstract remove(deviceId: Primitives<DeviceId>): Promise<void>
 }

@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../../../Category/Category/domain/Category'
+
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type MemoryRamSlotQuantity } from '../../domain/MemoryRamSlotQuantity'
@@ -12,6 +12,7 @@ import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSerie
 import { type CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
 import { type ComputerModelsDto } from '../../domain/ComputerModels.dto'
 import { type MemoryRamType } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { CategoryValues } from '../../../../../../Category/Category/domain/CategoryOptions'
 
 interface ComputerModelsCreationAttributes extends Omit<ComputerModelsDto, 'memoryRamType'> {
 	id: Primitives<ModelSeriesId>

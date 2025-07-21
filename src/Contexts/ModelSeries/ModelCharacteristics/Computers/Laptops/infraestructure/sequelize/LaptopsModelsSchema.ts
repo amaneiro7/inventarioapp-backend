@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { CategoryValues } from '../../../../../../Category/Category/domain/Category'
+
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
@@ -13,6 +13,7 @@ import { type BatteryModelName } from '../../domain/BatteryModelName'
 import { type CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
 import { type LaptopModelsDto } from '../../domain/LaptopsModels.dto'
 import { type MemoryRamTypeDto } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { CategoryValues } from '../../../../../../Category/Category/domain/CategoryOptions'
 
 interface LaptopModelsCreationAttributes extends Omit<LaptopModelsDto, 'memoryRamType'> {
 	id: Primitives<ModelSeriesId>

@@ -1,11 +1,10 @@
 import { BrandId } from '../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-
 import { Generic } from './Generic'
-import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
 import { ModelSeriesId } from './ModelSeriesId'
 import { ModelSeriesName } from './ModelSeriesName'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
 export class ModelSeries {
 	constructor(
 		private readonly id: ModelSeriesId,

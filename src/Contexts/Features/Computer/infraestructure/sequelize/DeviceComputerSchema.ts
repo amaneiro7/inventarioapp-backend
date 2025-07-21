@@ -15,7 +15,7 @@ import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingS
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { type DeviceComputerPrimitives } from '../../domain/Computer.dto'
 
-interface DeviceComputerCreationAttributes
+export interface DeviceComputerCreationAttributes
 	extends Pick<
 		DeviceComputerPrimitives,
 		| 'id'

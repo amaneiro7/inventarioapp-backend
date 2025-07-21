@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { type Transaction, Model } from 'sequelize'
+import { type Transaction, Model, ModelStatic } from 'sequelize'
 import fs from 'node:fs'
 import { set_fs, utils, write } from 'xlsx'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
@@ -9,16 +8,13 @@ import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
 import { DeviceAssociation } from './DeviceAssociation'
 import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
 import { MFP } from '../../../../Features/MFP/domain/MFP'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
 import { type DeviceRepository } from '../../domain/DeviceRepository'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DeviceId } from '../../domain/DeviceId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DevicePrimitives, type DeviceDto } from '../../domain/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeDeviceRepository
@@ -52,7 +48,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<DeviceDto>
 			}
 		})
 	}
@@ -79,7 +75,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 				return {
 					total,
 					data: data.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<DeviceDto>
 			}
 		})
 	}
@@ -144,7 +140,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 						}
 					]
 				})
-				return device ? device.get({ plain: true }) : null
+				return device ? (device.get({ plain: true }) as DeviceDto) : null
 			}
 		})
 	}
@@ -162,7 +158,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { activo } })
-				return device ? device.get({ plain: true }) : null
+				return device ? (device.get({ plain: true }) as DeviceDto) : null
 			}
 		})
 	}
@@ -180,7 +176,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { serial } })
-				return device ? device.get({ plain: true }) : null
+				return device ? (device.get({ plain: true }) as DeviceDto) : null
 			}
 		})
 	}
@@ -192,15 +188,23 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	 * @param {string} computerName - The computer name to search for.
 	 * @returns {Promise<Model<any, any> | null>} A promise that resolves to the DeviceComputer model if found, or null otherwise.
 	 */
-	async searchByComputerName(computerName: string): Promise<Model<any, any> | null> {
-		return await this.cache.getCachedData<Model<any, any> | null>({
+	async searchByComputerName(computerName: string): Promise<DeviceDto | null> {
+		return await this.cache.getCachedData({
 			cacheKey: `${this.cacheKey}:computerName:${computerName}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const data = await this.models.DeviceComputer.findOne({
-					where: { computerName }
+				const data = await DeviceModel.findOne({
+					include: [
+						{
+							association: 'computer',
+							attributes: [],
+							where: {
+								computerName
+							}
+						}
+					]
 				})
-				return data ? data.get({ plain: true }) : null
+				return data ? (data.get({ plain: true }) as DeviceDto) : null
 			}
 		})
 	}
@@ -218,10 +222,10 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const t = await sequelize.transaction() // Start a new transaction
 		try {
 			// Use upsert for the main Device entry
-			const [deviceInstance, created] = await DeviceModel.upsert(payload, { transaction: t, returning: true })
+			await DeviceModel.upsert(payload, { transaction: t, returning: true })
 
 			// Handle associated device types based on category
-			if (DeviceComputer.isComputerCategory({ categoryId: { categoryId: payload.categoryId } })) {
+			if (DeviceComputer.isComputerCategory({ categoryId: payload.categoryId })) {
 				await this.upsertAssociatedDeviceModel(this.models.DeviceComputer, payload, t)
 			}
 			if (DeviceHardDrive.isHardDriveCategory({ categoryId: payload.categoryId })) {
@@ -239,8 +243,10 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:activo:${payload.activo}` })
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:serial:${payload.serial}` })
 			// Invalidate computerName cache if applicable
-			if (payload.computerName) {
-				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:computerName:${payload.computerName}` })
+			if (payload && 'computerName' in payload) {
+				await this.cache.removeCachedData({
+					cacheKey: `${this.cacheKey}:computerName:${payload?.computerName}`
+				})
 			}
 		} catch (error: unknown) {
 			await t.rollback() // Rollback the transaction
@@ -258,13 +264,14 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	 * @private
 	 * @method upsertAssociatedDeviceModel
 	 * @description Helper method to perform an upsert operation on an associated device model.
-	 * @param {Model<any, any>} model - The Sequelize model for the associated entity (e.g., DeviceComputer).
+	 * @param {ModelStatic<Model<any, any>>} model - The Sequelize model for the associated entity (e.g., DeviceComputer).
 	 * @param {DevicePrimitives} payload - The data for the associated model.
 	 * @param {Transaction} transaction - The Sequelize transaction to use.
 	 * @returns {Promise<void>}
 	 */
 	private async upsertAssociatedDeviceModel(
-		model: Model<any, any>,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		model: ModelStatic<Model<any, any>>,
 		payload: DevicePrimitives,
 		transaction: Transaction
 	): Promise<void> {
@@ -295,7 +302,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			if (deviceToRemove.serial) {
 				await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:serial:${deviceToRemove.serial}` })
 			}
-			if (deviceToRemove.computerName) {
+			if (deviceToRemove && 'computerName' in deviceToRemove) {
 				await this.cache.removeCachedData({
 					cacheKey: `${this.cacheKey}:computerName:${deviceToRemove.computerName}`
 				})

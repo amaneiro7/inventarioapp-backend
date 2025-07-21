@@ -1,6 +1,5 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type CategoryValues, CategoryDefaultData } from '../../../../../Category/Category/domain/CategoryDefaultData'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../../ModelSeries/domain/ModelSeries'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
@@ -15,6 +14,7 @@ import { MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { type ComputerModelsParams, type ComputerModelsPrimitives } from './ComputerModels.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 export class ComputerModels extends ModelSeries {
 	constructor(
@@ -53,8 +53,12 @@ export class ComputerModels extends ModelSeries {
 	}
 
 	public static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = ['Computadoras', 'All in One', 'Servidores']
-		return AcceptedComputerCategories.includes(CategoryDefaultData[categoryId])
+		const AcceptedComputerCategories: CategoryValues[] = [
+			CategoryValues.COMPUTADORAS,
+			CategoryValues.ALLINONE,
+			CategoryValues.SERVIDORES
+		]
+		return AcceptedComputerCategories.some(category => category === categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ComputerModels {
