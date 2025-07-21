@@ -3,9 +3,25 @@ import { CategoryDoesNotExistError } from '../domain/CategoryDoesNotExistError'
 import { type CategoryDto } from '../domain/Category.dto'
 import { type CategoryRepository } from '../domain/CategoryRepository'
 
+/**
+ * Service to find a category by its ID.
+ *
+ * @class CategoriesFinder
+ */
 export class CategoriesFinder {
+	/**
+	 * Creates an instance of CategoriesFinder.
+	 * @param {CategoryRepository} categoryRepository - The repository for categories.
+	 */
 	constructor(private readonly categoryRepository: CategoryRepository) {}
 
+	/**
+	 * Executes the service to find a category.
+	 *
+	 * @param {{ id: string }} params - The parameters for finding a category, containing the ID.
+	 * @returns {Promise<CategoryDto>} A promise that resolves to the found category.
+	 * @throws {CategoryDoesNotExistError} If the category with the given ID does not exist.
+	 */
 	async run(params: { id: string }): Promise<CategoryDto> {
 		const { id } = params
 		const categoryId = new CategoryId(id).value
