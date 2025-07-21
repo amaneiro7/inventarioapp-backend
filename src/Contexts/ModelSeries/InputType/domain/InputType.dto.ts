@@ -1,6 +1,6 @@
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { InputTypeId } from './InputTypeId'
-import { InputTypeName } from './InputTypeName'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type InputTypeId } from './InputTypeId'
+import { type InputTypeName } from './InputTypeName'
 
 export interface InputType {
 	id: Primitives<InputTypeId>

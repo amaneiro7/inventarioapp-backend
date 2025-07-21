@@ -1,13 +1,13 @@
 import { InputTypeModel } from './InputTypeSchema'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type InputTypeRepository } from '../../domain/InputTypeRepository'
 import { type InputTypeDto } from '../../domain/InputType.dto'
 import { type InputTypeId } from '../../domain/InputTypeId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeInputTypeRepository
