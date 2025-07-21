@@ -27,7 +27,7 @@ export function validateReqSchema(req: Request, res: Response, next: NextFunctio
 	}
 	const errors = validationErrors.array().map((err: ValidationError) => ({ [err.type]: err.msg }))
 
-	return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+	return res.status(httpStatus[422].statusCode).json({
 		errors
 	})
 }
