@@ -34,7 +34,7 @@ export class SequelizeStatusRepository extends CriteriaToSequelizeConverter impl
 		return await this.cache.getCachedData<ResponseDB<StatusDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await StatusModel.findAndCountAll(options)
 				return {
