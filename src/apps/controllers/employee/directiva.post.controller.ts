@@ -11,7 +11,7 @@ export class DirectivaPostController implements Controller {
 			const params = req.body
 			const create: DirectivaCreator = container.resolve(DirectivaDependencies.Creator)
 			await create.run({ params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Directiva creado exitosamente'
 			})
 		} catch (error) {

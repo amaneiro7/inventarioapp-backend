@@ -12,7 +12,7 @@ export class VicepresidenciaPatchController implements Controller {
 			const { id } = req.params
 			const update: VicepresidenciaUpdater = container.resolve(VicepresidenciaDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[204].statusCode).send({
 				message: 'Vicepresidencia actualizado exitosamente'
 			})
 		} catch (error) {

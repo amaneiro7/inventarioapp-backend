@@ -12,7 +12,7 @@ export class CentroTrabajoPatchController implements Controller {
 			const { id } = req.params
 			const update: CentroTrabajoUpdater = container.resolve(CentroTrabajoDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[204].statusCode).send({
 				message: 'Centro de trabajo actualizado exitosamente'
 			})
 		} catch (error) {

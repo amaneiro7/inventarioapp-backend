@@ -12,7 +12,7 @@ export class SitePatchController implements Controller {
 			const { id } = req.params
 			const update: SiteUpdater = container.resolve(SiteDependencies.Updater)
 			await update.run({ id, params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[204].statusCode).send({
 				message: 'Sitio actualizado exitosamente'
 			})
 		} catch (error) {

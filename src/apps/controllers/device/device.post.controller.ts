@@ -13,7 +13,7 @@ export class DevicePostController implements Controller {
 			const params = req.body
 			const create: DeviceCreator = container.resolve(DeviceDependencies.Creator)
 			await create.run({ params, user })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Dispositivo creado exitosamente'
 			})
 		} catch (error) {

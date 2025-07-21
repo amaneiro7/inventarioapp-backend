@@ -19,7 +19,7 @@ export class CityPostController implements Controller {
 			const { name, stateId } = req.body
 			const create: CityCreator = container.resolve(CityDependencies.Creator)
 			await create.run({ name, stateId })
-			res.status(httpStatus.CREATED).json({
+			res.status(httpStatus[201].statusCode).json({
 				message: 'Ciudad creada exitosamente'
 			})
 		} catch (error) {

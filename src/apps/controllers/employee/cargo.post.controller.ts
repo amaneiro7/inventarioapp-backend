@@ -11,7 +11,7 @@ export class CargoPostController implements Controller {
 			const params = req.body
 			const create: CargoCreator = container.resolve(CargoDependencies.Creator)
 			await create.run({ params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Cargo creado exitosamente'
 			})
 		} catch (error) {

@@ -11,7 +11,7 @@ export class LocationPostController implements Controller {
 			const params = req.body
 			const create: LocationCreator = container.resolve(LocationDependencies.Creator)
 			await create.run(params)
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Ubicación agregado exitosamente'
 			})
 		} catch (error) {

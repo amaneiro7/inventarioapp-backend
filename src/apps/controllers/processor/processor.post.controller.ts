@@ -12,7 +12,7 @@ export class ProcessorPostController implements Controller {
 			const params = req.body
 			const create: ProcessorCreator = container.resolve(ProcessorDependencies.Creator)
 			await create.run(params)
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Procesador creado exitosamente'
 			})
 		} catch (error) {

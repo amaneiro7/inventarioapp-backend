@@ -10,7 +10,7 @@ export class EmployeePostController implements Controller {
 			const params = req.body
 			const create: EmployeeCreator = container.resolve(EmployeeDependencies.Creator)
 			await create.run({ params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Empleado creado exitosamente'
 			})
 		} catch (error) {

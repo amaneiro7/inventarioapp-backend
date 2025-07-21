@@ -19,7 +19,7 @@ export class UserChangePasswordController implements Controller {
 				newPassword,
 				reTypePassword
 			})
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Contraseña actualizada exitosamente'
 			})
 		} catch (error) {

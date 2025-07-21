@@ -11,7 +11,7 @@ export class CentroTrabajoPostController implements Controller {
 			const params = req.body
 			const create: CentroTrabajoCreator = container.resolve(CentroTrabajoDependencies.Creator)
 			await create.run({ params })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Centro de trabajo creado exitosamente'
 			})
 		} catch (error) {

@@ -13,7 +13,7 @@ export class UserPostController implements Controller {
 			const payload = req.body
 			const create: UserRegister = container.resolve(UserDependencies.Register)
 			await create.run({ payload, user })
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Usuario registrado exitosamente'
 			})
 		} catch (error) {

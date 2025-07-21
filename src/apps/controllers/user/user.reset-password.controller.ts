@@ -17,7 +17,7 @@ export class UserResetPasswordController implements Controller {
 				user,
 				id
 			})
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Se ha restablecido la contraseña con éxito'
 			})
 		} catch (error) {

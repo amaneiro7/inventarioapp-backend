@@ -11,7 +11,7 @@ export class SitePostController implements Controller {
 			const params = req.body
 			const create: SiteCreator = container.resolve(SiteDependencies.Creator)
 			await create.run(params)
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Sitio creado exitosamente'
 			})
 		} catch (error) {

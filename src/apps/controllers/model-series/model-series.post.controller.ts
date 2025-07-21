@@ -11,7 +11,7 @@ export class ModelSeriesPostController implements Controller {
 			const params = req.body
 			const create: ModelSeriesCreator = container.resolve(ModelSeriesDependencies.Creator)
 			await create.run(params)
-			res.status(httpStatus.CREATED).send({
+			res.status(httpStatus[201].statusCode).send({
 				message: 'Modelo creado exitosamente'
 			})
 		} catch (error) {

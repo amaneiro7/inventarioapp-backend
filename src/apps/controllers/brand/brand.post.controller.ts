@@ -16,7 +16,7 @@ export class BrandPostController implements Controller {
 			const { name } = req.body
 			const create: BrandCreator = container.resolve(BrandDependencies.Creator)
 			await create.run({ name })
-			res.status(httpStatus.CREATED).json({
+			res.status(httpStatus[201].statusCode).json({
 				message: 'Marca creada exitosamente'
 			})
 		} catch (error) {
