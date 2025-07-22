@@ -36,9 +36,9 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 	 * The data is cached to improve subsequent requests.
 	 * @param {object} params - Parameters for the query.
 	 * @param {number} [params.months=2] - The number of months to look back for data.
-	 * @returns {Promise<object>} A promise that resolves to an aggregated object of changes by month and category.
+	 * @returns {Promise<{name: string}[]>} A promise that resolves to an aggregated object of changes by month and category.
 	 */
-	async run({ months = 2 }: { months?: number }): Promise<object> {
+	async run({ months = 2 }: { months?: number }): Promise<{ name: string }[]> {
 		// Ensure the cache key is unique for different 'months' values.
 		const specificCacheKey = `${this.cacheKey}:${months}`
 

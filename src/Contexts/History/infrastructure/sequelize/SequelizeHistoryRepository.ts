@@ -40,7 +40,7 @@ export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter imp
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<HistoryDto>
 			}
 		})
 	}

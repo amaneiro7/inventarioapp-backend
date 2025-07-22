@@ -70,6 +70,10 @@ export class History {
 		)
 	}
 
+	/**
+	 * @description Converts the History entity to its primitive representation.
+	 * @returns {HistoryPrimitives} The plain object representation of the history.
+	 */
 	toPrimitives(): HistoryPrimitives {
 		return {
 			id: this.id.value,
