@@ -5,13 +5,13 @@ const { randomUUID } = require('crypto')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		return queryInterface.bulkInsert('users', [
 			{
 				id: randomUUID(),
-				email: 'admin@bnc.com.ve',
-				name: 'admin',
-				last_name: 'admin',
+				email: 'itinventario@bnc.com.ve',
+				name: 'inventario',
+				last_name: 'IT',
 				role_id: 1,
 				password: hashSync('Admin12345*', 10),
 				created_at: new Date(),
@@ -90,7 +90,7 @@ module.exports = {
 		])
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		return queryInterface.bulkDelete('users', null, {})
 	}
 }
