@@ -4,7 +4,7 @@ import { HistoryFinderAll } from '../../../Contexts/History/application/HistoryF
 import { HistoryCreator } from '../../../Contexts/History/application/HistoryCreator'
 import { HistoryGetAllController } from '../../controllers/history/history.get-all.controller'
 import { SequelizeTotalChangeLastThreMonthsByCategoryRepository } from '../../../Contexts/History/infrastructure/sequelize/SequelizeTotalChangeLastThreMonthsByCategory'
-import { HistoryDashboard } from '../../../Contexts/History/application/HistroyDashboard'
+import { HistoryDashboard } from '../../../Contexts/History/application/HistoryDashboard'
 import { HistoryDashboardGetController } from '../../controllers/history/history-dashboard.controller'
 
 export enum HistoryDependencies {

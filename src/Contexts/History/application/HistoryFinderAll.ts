@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { History } from '../domain/History'
 import { GetAllBaseService } from '../../Shared/methods/getAll.abstract'
 import { type ResponseService } from '../../Shared/domain/ResponseType'
@@ -16,6 +17,10 @@ import { type OperatingSystemArqRepository } from '../../Features/OperatingSyste
 import { type LocationRepository } from '../../Location/Location/domain/LocationRepository'
 import { type ProcessorRepository } from '../../Features/Processor/Processor/domain/ProcessorRepository'
 
+/**
+ * @description Service to find all history records, enriching them with related entity names.
+ * This service is optimized to prevent N+1 query problems by fetching related data in bulk.
+ */
 export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 	constructor(
 		private readonly historyRepository: HistoryRepository,
@@ -34,153 +39,144 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 		super()
 	}
 
+	/**
+	 * @description Executes the history search and enrichment.
+	 * @param {Criteria} criteria - The criteria for filtering and pagination.
+	 * @returns {Promise<ResponseService<HistoryDto>>} A paginated response of enriched history DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<HistoryDto>> {
 		const { data, total } = await this.historyRepository.searchAll(criteria)
 
-		const mappedData: HistoryDto[] = await Promise.all(
-			data.map(async data => {
-				const cambios = History.compararDatos(data.newData, data.oldData)
-				// Buscar el nombre del status
-				if (cambios?.statusId?.newValue) {
-					const statusNew = await this.statusRepository.searchById(cambios.statusId.newValue)
-					cambios.statusId.newValue = statusNew?.name
-				}
-				if (cambios?.statusId?.oldValue) {
-					const statusOld = await this.statusRepository.searchById(cambios.statusId.oldValue)
-					cambios.statusId.oldValue = statusOld?.name
-				}
+		if (data.length === 0) {
+			return this.response({ data: [], total: 0, pageNumber: criteria.pageNumber, pageSize: criteria.pageSize })
+		}
 
-				// Buscar el nombre de la categoría
-				if (cambios?.categoryId?.newValue) {
-					const categoryNew = await this.categoryRepository.searchById(cambios.categoryId.newValue)
-					cambios.categoryId.newValue = categoryNew?.name
-				}
-				if (cambios?.categoryId?.oldValue) {
-					const categoryOld = await this.categoryRepository.searchById(cambios.categoryId.oldValue)
-					cambios.categoryId.oldValue = categoryOld?.name
-				}
-				// Buscar el nombre de la marca
-				if (cambios?.brandId?.newValue) {
-					const brandNew = await this.brandRepository.searchById(cambios.brandId.newValue)
-					cambios.brandId.newValue = brandNew?.name
-				}
-				if (cambios?.brandId?.oldValue) {
-					const brandOld = await this.brandRepository.searchById(cambios.brandId.oldValue)
-					cambios.brandId.oldValue = brandOld?.name
-				}
-				// Buscar el nombre de el modelo
-				if (cambios?.modelId?.newValue) {
-					const modelNew = await this.modelSeriesRepository.searchById(cambios.modelId.newValue)
-					cambios.modelId.newValue = modelNew?.name
-				}
-				if (cambios?.modelId?.oldValue) {
-					const modelOld = await this.modelSeriesRepository.searchById(cambios.modelId.oldValue)
-					cambios.modelId.oldValue = modelOld?.name
-				}
-				// Buscar el userName del empleado
-				if (cambios?.employeeId?.newValue) {
-					const employeeNew = await this.employeeRepository.searchById(cambios.employeeId.newValue)
-					cambios.employeeId.newValue = employeeNew?.userName
-				}
-				if (cambios?.employeeId?.oldValue) {
-					const employeeOld = await this.employeeRepository.searchById(cambios.employeeId.oldValue)
-					cambios.employeeId.oldValue = employeeOld?.userName
-				}
-				// Buscar el name del tipo de disco duro
-				if (cambios?.hardDriveTypeId?.newValue) {
-					const hardDriveTypeNew = await this.hardDriveTypeRepository.searchById(
-						cambios.hardDriveTypeId.newValue
-					)
-					cambios.hardDriveTypeId.newValue = hardDriveTypeNew?.name
-				}
-				if (cambios?.hardDriveTypeId?.oldValue) {
-					const hardDriveTypeOld = await this.hardDriveTypeRepository.searchById(
-						cambios.hardDriveTypeId.oldValue
-					)
-					cambios.hardDriveTypeId.oldValue = hardDriveTypeOld?.name
-				}
-				// Buscar el name de la capacidad del disco duro
-				if (cambios?.hardDriveCapacityId?.newValue) {
-					const hardDriveCapacityNew = await this.hardDriveCapacityRepository.searchById(
-						cambios.hardDriveCapacityId.newValue
-					)
-					cambios.hardDriveCapacityId.newValue = `${hardDriveCapacityNew?.name} Gb`
-				}
-				if (cambios?.hardDriveCapacityId?.oldValue) {
-					const hardDriveCapacityOld = await this.hardDriveCapacityRepository.searchById(
-						cambios.hardDriveCapacityId.oldValue
-					)
-					cambios.hardDriveCapacityId.oldValue = `${hardDriveCapacityOld?.name} Gb`
-				}
-				// Buscar el name del sistema operativo
-				if (cambios?.operatingSystemId?.newValue) {
-					const operatingSystemNew = await this.operatingSystemRepository.searchById(
-						cambios.operatingSystemId.newValue
-					)
-					cambios.operatingSystemId.newValue = operatingSystemNew?.name
-				}
-				if (cambios?.operatingSystemId?.oldValue) {
-					const operatingSystemOld = await this.operatingSystemRepository.searchById(
-						cambios.operatingSystemId.oldValue
-					)
-					cambios.operatingSystemId.oldValue = operatingSystemOld?.name
-				}
-				// Buscar el name de la arquitectura del sistema operativo
-				if (cambios?.operatingSystemArqId?.newValue) {
-					const operatingSystemArqNew = await this.operatingSystemArqRepository.searchById(
-						cambios.operatingSystemArqId.newValue
-					)
-					cambios.operatingSystemArqId.newValue = operatingSystemArqNew?.name
-				}
-				if (cambios?.operatingSystemArqId?.oldValue) {
-					const operatingSystemArqOld = await this.operatingSystemArqRepository.searchById(
-						cambios.operatingSystemArqId.oldValue
-					)
-					cambios.operatingSystemArqId.oldValue = operatingSystemArqOld?.name
-				}
-				// Buscar el name de la ubicación
-				if (cambios?.locationId?.newValue) {
-					const locationNew = await this.locationRepository.searchById(cambios.locationId.newValue)
-					cambios.locationId.newValue = locationNew?.name
-				}
-				if (cambios?.locationId?.oldValue) {
-					const locationOld = await this.locationRepository.searchById(cambios.locationId.oldValue)
-					cambios.locationId.oldValue = locationOld?.name
-				}
-				// Buscar el name del procesador
-				if (cambios?.processorId?.newValue) {
-					const processorNew = await this.processorRepository.searchById(cambios.processorId.newValue)
-					cambios.processorId.newValue = processorNew?.name
-				}
-				if (cambios?.processorId?.oldValue) {
-					const processorOld = await this.processorRepository.searchById(cambios.processorId.oldValue)
-					cambios.processorId.oldValue = processorOld?.name
-				}
+		const entityIds = this.collectEntityIds(data)
+		const namesMap = await this.fetchEntityNames(entityIds)
 
-				if (cambios?.memoryRamCapacity?.oldValue && cambios?.memoryRamCapacity?.newValue) {
-					const memoryRamCapacityNew = Number(cambios?.memoryRamCapacity.newValue)
-					const memoryRamCapacityOld = Number(cambios?.memoryRamCapacity.oldValue)
-					if (memoryRamCapacityNew === memoryRamCapacityOld) {
-						delete cambios?.memoryRamCapacity
-					}
-				}
-
-				if (cambios?.id) {
-					delete cambios.id
-				}
-
-				return {
-					...data,
-					cambios
-				}
-			})
-		)
+		const mappedData = this.mapHistoryData(data, namesMap)
 
 		return this.response({
 			data: mappedData,
 			total,
 			pageNumber: criteria.pageNumber,
 			pageSize: criteria.pageSize
+		})
+	}
+
+	private collectEntityIds(data: HistoryDto[]): Record<string, Set<string>> {
+		const ids: Record<string, Set<string>> = {
+			status: new Set<string>(),
+			category: new Set<string>(),
+			brand: new Set<string>(),
+			model: new Set<string>(),
+			employee: new Set<string>(),
+			hardDriveType: new Set<string>(),
+			hardDriveCapacity: new Set<string>(),
+			operatingSystem: new Set<string>(),
+			operatingSystemArq: new Set<string>(),
+			location: new Set<string>(),
+			processor: new Set<string>()
+		}
+
+		for (const item of data) {
+			const cambios = History.compararDatos(item.newData, item.oldData)
+			for (const key in cambios) {
+				const { oldValue, newValue } = cambios[key]
+				this.addIdToSet(ids, key, oldValue as string | null)
+				this.addIdToSet(ids, key, newValue as string | null)
+			}
+		}
+		return ids
+	}
+
+	private addIdToSet(ids: Record<string, Set<string>>, key: string, value: string | null) {
+		if (value && key.endsWith('Id')) {
+			const type = key.slice(0, -2)
+			if (ids[type]) {
+				ids[type].add(value)
+			}
+		}
+	}
+
+	private async fetchEntityNames(ids: Record<string, Set<string>>): Promise<Record<string, Map<string, string>>> {
+		const [statuses, categories, brands, models, employees, hddTypes, hddCaps, os, osArqs, locations, processors] =
+			await Promise.all([
+				this.fetchNames(this.statusRepository, Array.from(ids.status)),
+				this.fetchNames(this.categoryRepository, Array.from(ids.category)),
+				this.fetchNames(this.brandRepository, Array.from(ids.brand)),
+				this.fetchNames(this.modelSeriesRepository, Array.from(ids.model)),
+				this.fetchNames(this.employeeRepository, Array.from(ids.employee), 'userName'),
+				this.fetchNames(this.hardDriveTypeRepository, Array.from(ids.hardDriveType)),
+				this.fetchNames(this.hardDriveCapacityRepository, Array.from(ids.hardDriveCapacity), 'name', ' Gb'),
+				this.fetchNames(this.operatingSystemRepository, Array.from(ids.operatingSystem)),
+				this.fetchNames(this.operatingSystemArqRepository, Array.from(ids.operatingSystemArq)),
+				this.fetchNames(this.locationRepository, Array.from(ids.location)),
+				this.fetchNames(this.processorRepository, Array.from(ids.processor))
+			])
+
+		return {
+			status: statuses,
+			category: categories,
+			brand: brands,
+			model: models,
+			employee: employees,
+			hardDriveType: hddTypes,
+			hardDriveCapacity: hddCaps,
+			operatingSystem: os,
+			operatingSystemArq: osArqs,
+			location: locations,
+			processor: processors
+		}
+	}
+
+	private async fetchNames(
+		repository: any,
+		ids: string[],
+		nameField = 'name',
+		suffix = ''
+	): Promise<Map<string, string>> {
+		if (ids.length === 0) return new Map()
+		const results = await Promise.all(ids.map(id => repository.searchById(id)))
+		const map = new Map<string, string>()
+		for (const item of results) {
+			if (item) {
+				map.set(item.id, `${item[nameField]}${suffix}`)
+			}
+		}
+		return map
+	}
+
+	private mapHistoryData(data: HistoryDto[], namesMap: Record<string, Map<string, string>>): HistoryDto[] {
+		return data.map(item => {
+			const cambios = History.compararDatos(item.newData, item.oldData)
+			const enrichedCambios: Record<string, { oldValue: unknown; newValue: unknown }> = {}
+
+			for (const key in cambios) {
+				const { oldValue, newValue } = cambios[key]
+				const type = key.endsWith('Id') ? key.slice(0, -2) : key
+
+				const nameMap = namesMap[type]
+				enrichedCambios[key] = {
+					oldValue: nameMap?.get(oldValue as string) ?? oldValue,
+					newValue: nameMap?.get(newValue as string) ?? newValue
+				}
+			}
+
+			if (enrichedCambios.memoryRamCapacity) {
+				const oldVal = Number(enrichedCambios.memoryRamCapacity.oldValue)
+				const newVal = Number(enrichedCambios.memoryRamCapacity.newValue)
+				if (oldVal === newVal) {
+					delete enrichedCambios.memoryRamCapacity
+				}
+			}
+
+			delete enrichedCambios.id
+
+			return {
+				...item,
+				cambios: enrichedCambios
+			}
 		})
 	}
 }

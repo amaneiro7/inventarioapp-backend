@@ -7,31 +7,55 @@ import { HistoryEmployee } from './HistoryEmployee'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
 
-import { HistoryId } from './HistoryId'
-import { DeviceId } from '../../Device/Device/domain/DeviceId'
-import { UserId } from '../../User/user/domain/UserId'
-import { Action, type ActionType } from './HistoryAction'
-import { CreatedAt } from './CreatedAt'
-import { HistoryEmployee } from './HistoryEmployee'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type HistoryDto, type HistoryParams, type HistoryPrimitives } from './History.dto'
-
 interface Cambio {
 	oldValue: unknown
 	newValue: unknown
 }
+/**
+ * @class History
+ * @description Represents a historical record of a change to an entity.
+ */
 export class History {
 	constructor(
+		/**
+		 * @description The unique identifier for the history record.
+		 */
 		private readonly id: HistoryId,
+		/**
+		 * @description The ID of the device that was changed.
+		 */
 		private readonly deviceId: DeviceId,
+		/**
+		 * @description The ID of the user who performed the action.
+		 */
 		private readonly userId: UserId,
+		/**
+		 * @description The ID of the employee associated with the device at the time of the change.
+		 */
 		private readonly employeeId: HistoryEmployee,
+		/**
+		 * @description The type of action performed (e.g., CREATE, UPDATE, DELETE).
+		 */
 		private readonly action: Action,
-		private readonly oldData: object,
-		private readonly newData: object,
+		/**
+		 * @description A JSON object representing the state of the data *before* the change.
+		 */
+		private readonly oldData: Record<string, unknown>,
+		/**
+		 * @description A JSON object representing the state of the data *after* the change.
+		 */
+		private readonly newData: Record<string, unknown>,
+		/**
+		 * @description The timestamp of when the history record was created.
+		 */
 		private readonly createdAt: CreatedAt
 	) {}
 
+	/**
+	 * @description Factory method to create a new History instance.
+	 * @param {HistoryParams} params - The data for the new history record.
+	 * @returns {History} A new History object.
+	 */
 	static create(params: HistoryParams): History {
 		const id = HistoryId.random().value
 		return new History(
@@ -96,15 +120,18 @@ export class History {
 		return this.userId.value
 	}
 
-	get oldDataValue(): object {
+	get oldDataValue(): Record<string, unknown> {
 		return this.oldData
 	}
 
-	get newDataValue(): object {
+	get newDataValue(): Record<string, unknown> {
 		return this.newData
 	}
 
-	public static compararDatos(newData: Record<string, unknown>, oldData: Record<string, unknown>): Record<string, Cambio> {
+	public static compararDatos(
+		newData: Record<string, unknown>,
+		oldData: Record<string, unknown>
+	): Record<string, Cambio> {
 		const cambios: Record<string, Cambio> = {}
 
 		for (const key in newData) {

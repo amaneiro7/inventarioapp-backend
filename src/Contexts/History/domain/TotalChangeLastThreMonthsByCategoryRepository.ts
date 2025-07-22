@@ -1,3 +1,3 @@
 export abstract class TotalChangeLastThreMonthsByCategoryRepository {
-	abstract run({ months }: { months?: number }): Promise<{}>
+	abstract run({ months }: { months?: number }): Promise<any[]>
 }
