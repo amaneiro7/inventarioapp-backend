@@ -132,6 +132,13 @@ export class History {
 		return this.newData
 	}
 
+	/**
+	 * @description Compares two data objects and returns a record of the fields that have changed.
+	 * It normalizes values like null, undefined, and empty strings for accurate comparison.
+	 * @param {Record<string, unknown>} newData - The new data object.
+	 * @param {Record<string, unknown>} oldData - The old data object.
+	 * @returns {Record<string, Cambio>} An object where keys are the changed field names and values contain the old and new values.
+	 */
 	public static compararDatos(
 		newData: Record<string, unknown>,
 		oldData: Record<string, unknown>
@@ -159,6 +166,13 @@ export class History {
 		return cambios
 	}
 
+	/**
+	 * @description Normalizes a value to null if it is undefined, null, or an empty string.
+	 * This ensures consistent comparison between different representations of "empty".
+	 * @param {unknown} valor - The value to normalize.
+	 * @returns {unknown | null} The normalized value.
+	 * @private
+	 */
 	private static normalizarValor(valor: unknown) {
 		if (valor === undefined || valor === null || valor === '') {
 			return null // Normaliza a null para la comparación
@@ -166,7 +180,14 @@ export class History {
 		return valor
 	}
 
-	private static arraysIguales(arr1: unknown[], arr2: unknown[]) {
+	/**
+	 * @description Compares two arrays for equality, using the normalization logic.
+	 * @param {unknown[]} arr1 - The first array.
+	 * @param {unknown[]} arr2 - The second array.
+	 * @returns {boolean} True if the arrays are equal, false otherwise.
+	 * @private
+	 */
+	private static arraysIguales(arr1: unknown[], arr2: unknown[]): boolean {
 		if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
 			return false
 		}

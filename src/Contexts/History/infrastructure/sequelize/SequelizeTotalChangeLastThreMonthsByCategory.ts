@@ -34,9 +34,9 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 	 * @method run
 	 * @description Fetches and aggregates historical data of changes by category for a specified number of months.
 	 * The data is cached to improve subsequent requests.
-	 * @param {object} params - Parameters for the query.
-	 * @param {number} [params.months=2] - The number of months to look back for data.
-	 * @returns {Promise<{name: string}[]>} A promise that resolves to an aggregated object of changes by month and category.
+	 * @param {{ months?: number }} params - An object containing the number of months to look back.
+	 * @param {number} [params.months=2] - The number of past months to include in the report (e.g., 2 for the last 3 months).
+	 * @returns {Promise<object>} A promise that resolves to an aggregated object of changes by month and category.
 	 */
 	async run({ months = 2 }: { months?: number }): Promise<{ name: string }[]> {
 		// Ensure the cache key is unique for different 'months' values.

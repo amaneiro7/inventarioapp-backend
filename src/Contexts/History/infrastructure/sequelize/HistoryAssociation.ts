@@ -1,56 +1,100 @@
-import { FindOptions, Op } from 'sequelize'
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type FindOptions, type IncludeOptions, Op, type Order } from 'sequelize'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 
+/**
+ * @class HistoryAssociation
+ * @description A utility class to build complex Sequelize query options for the History model.
+ * It handles the dynamic construction of nested includes, filters, and order clauses based on a given Criteria object.
+ */
 export class HistoryAssociation {
+	/**
+	 * @static
+	 * @method converFilter
+	 * @description Converts a Criteria object into a Sequelize FindOptions object, correctly mapping
+	 * filters and orderings to their respective nested associations (e.g., user, device).
+	 *
+	 * @param {Criteria} criteria The criteria object containing filters, order, and pagination.
+	 * @param {FindOptions} options The base Sequelize options to be modified.
+	 * @returns {FindOptions} The fully constructed Sequelize FindOptions object.
+	 */
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		const deviceInclude: IncludeOptions = {
+			association: 'device',
+			attributes: ['serial', 'updatedAt'],
+			include: [{ association: 'category', attributes: ['name'] }]
+		}
+
 		options.include = [
 			{
-				association: 'user', // 0
+				association: 'user',
 				attributes: ['id', 'name', 'email', 'lastName', 'roleId']
 			},
-			'employee', // 1
-			{
-				association: 'device', // 2
-				include: ['category', 'brand', 'model']
-			}
+			{ association: 'employee', attributes: [] },
+			deviceInclude
 		]
 
-		if (options.where && 'serial' in options.where) {
-			;(options.include[2] as any).where = {
-				serial: options.where.serial
-			}
-			delete options.where.serial
+		const whereFilters = options.where ?? {}
+		const deviceWhere: Record<string, unknown> = {}
+
+		// --- Dynamic Filter Application (Bug Fixed) ---
+		// Accumulate filters for the nested 'device' association.
+		if ('serial' in whereFilters) {
+			deviceWhere.serial = whereFilters.serial
+			delete whereFilters.serial
 		}
-		if (options.where && 'categoryId' in options.where) {
-			;(options.include[2] as any).where = {
-				categoryId: options.where.categoryId
-			}
-			delete options.where.categoryId
+		if ('categoryId' in whereFilters) {
+			deviceWhere.categoryId = whereFilters.categoryId
+			delete whereFilters.categoryId
 		}
-		if (options.where && 'startDate' in options.where && 'endDate' in options.where) {
-			options.where = {
-				updatedAt: {
-					[Op.between]: [options.where.startDate, options.where.endDate]
-				}
-			}
-			delete options.where.startDate
-			delete options.where.endDate
+
+		// Assign the accumulated 'where' clause to the device include if it's not empty.
+		if (Object.keys(deviceWhere).length > 0) {
+			deviceInclude.where = deviceWhere
 		}
+
+		// Handle date range filter on the main History model.
+		if ('startDate' in whereFilters && 'endDate' in whereFilters) {
+			whereFilters.updatedAt = {
+				[Op.between]: [whereFilters.startDate, whereFilters.endDate]
+			}
+			delete whereFilters.startDate
+			delete whereFilters.endDate
+		}
+
+		options.where = whereFilters
 		options.order = this.transformOrder(options.order)
+
 		return options
 	}
 
-	private static transformOrder(order: FindOptions['order']): FindOptions['order'] {
-		if (!order || !Array.isArray(order)) return undefined
+	/**
+	 * @private
+	 * @static
+	 * @method transformOrder
+	 * @description Transforms a simple order format (e.g., ['serial', 'ASC']) into a nested format
+	 * that Sequelize can use for ordering on associated tables (e.g., ['device', 'serial', 'ASC']).
+	 *
+	 * @param {Order | undefined} order The order configuration from the criteria.
+	 * @returns {Order | undefined} A Sequelize-compatible nested order configuration.
+	 */
+	private static transformOrder(order: Order | undefined): Order | undefined {
+		if (!Array.isArray(order) || order.length === 0) {
+			return undefined
+		}
 
 		const orderMap: Record<string, string[]> = {
 			serial: ['device', 'serial'],
 			categoryId: ['device', 'category', 'name']
 		}
-		// @ts-ignore
-		return order.map(([orderBy, orderType]) => {
-			const mappedOrder = orderMap[orderBy]
-			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
+
+		// Ensure we are working with an array of [field, direction] tuples.
+		const orderTuples = order.flat().length === 2 && typeof order[0] === 'string' ? [order] : order
+
+		const transformedOrder = (orderTuples as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			return mappedPath ? [...mappedPath, direction.toUpperCase()] : [field, direction.toUpperCase()]
 		})
+
+		return transformedOrder as Order
 	}
 }

@@ -1,8 +1,8 @@
 import { Op, type WhereOptions, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @class LocationMonitoringAssociation
