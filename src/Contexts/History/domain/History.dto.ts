@@ -7,6 +7,7 @@ import { type HistoryId } from './HistoryId'
 import { type DeviceId } from '../../Device/Device/domain/DeviceId'
 import { type UserId } from '../../User/user/domain/UserId'
 import { type CreatedAt } from './CreatedAt'
+import { type EmployeeDto } from '../../employee/Employee/domain/entity/Employee.dto'
 
 /**
  * @interface History
@@ -38,7 +39,7 @@ export type HistoryParams = Omit<History, 'id'>
  * @description Data Transfer Object for a History record, including related entities.
  */
 export type HistoryDto = History & {
-	employee: UserDto | null // Assuming employee is a UserDto
+	employee: EmployeeDto | null // Assuming employee is a UserDto
 	device: DeviceDto
 	user: UserDto
 	/** @description An object detailing the specific fields that were changed. */

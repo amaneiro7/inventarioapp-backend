@@ -3,7 +3,7 @@ import { type Controller } from '../controller'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { HistoryDependencies } from '../../di/history/history.di'
-import { type HistoryDashboard } from '../../../Contexts/History/application/HistroyDashboard'
+import { type HistoryDashboard } from '../../../Contexts/History/application/HistoryDashboard'
 
 export class HistoryDashboardGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -9,6 +9,7 @@ import { type HistoryEmployee } from '../../domain/HistoryEmployee'
 import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 import { type UserDto } from '../../../User/user/domain/User.dto'
+import { type CreatedAt } from '../../domain/CreatedAt'
 
 export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' | 'user'>> implements HistoryDto {
 	declare id: Primitives<HistoryId>
@@ -16,9 +17,9 @@ export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' |
 	declare userId: Primitives<UserId>
 	declare employeeId: Primitives<HistoryEmployee>
 	declare action: ActionType
-	declare oldData: object
-	declare newData: object
-	declare createdAt: Date
+	declare oldData: Record<string, unknown>
+	declare newData: Record<string, unknown>
+	declare createdAt: Primitives<CreatedAt>
 	// joins
 	declare employee: EmployeeDto
 	declare device: DeviceDto
