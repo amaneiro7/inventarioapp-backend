@@ -28,7 +28,10 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 	implements TotalChangeLastThreMonthsByCategoryRepository
 {
 	private readonly cacheKey: string = 'totalChangeLastThreMonthsByCategory'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

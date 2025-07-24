@@ -26,7 +26,10 @@ export class CacheService {
 	 * @constructor
 	 * @param {CacheRepository} cacheRepository - The concrete implementation of the cache storage (e.g., Redis).
 	 */
-	constructor(private readonly cacheRepository: CacheRepository) {}
+	private readonly cacheRepository: CacheRepository
+	constructor({ cacheRepository }: { cacheRepository: CacheRepository }) {
+		this.cacheRepository = cacheRepository
+	}
 
 	/**
 	 * @method getCachedData

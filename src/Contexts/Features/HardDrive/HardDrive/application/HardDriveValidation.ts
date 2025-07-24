@@ -7,10 +7,18 @@ import { type HardDriveTypeRepository } from '../../HardDriveType/domain/HardDri
 import { type DeviceHardDriveParams } from '../domain/HardDrive.dto'
 
 export class HardDriveValidation {
-	constructor(
-		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
-		private readonly hardDriveTypeRepository: HardDriveTypeRepository
-	) {}
+	private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
+	private readonly hardDriveTypeRepository: HardDriveTypeRepository
+	constructor({
+		hardDriveCapacityRepository,
+		hardDriveTypeRepository
+	}: {
+		hardDriveCapacityRepository: HardDriveCapacityRepository
+		hardDriveTypeRepository: HardDriveTypeRepository
+	}) {
+		this.hardDriveCapacityRepository = hardDriveCapacityRepository
+		this.hardDriveTypeRepository = hardDriveTypeRepository
+	}
 
 	async run(params: DeviceHardDriveParams): Promise<DeviceHardDrive> {
 		await HDDCapacity.ensureHardDriveCapacityExit({

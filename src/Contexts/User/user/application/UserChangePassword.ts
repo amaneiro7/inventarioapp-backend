@@ -4,11 +4,14 @@ import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { UserId } from '../domain/UserId'
 import { PasswordService } from '../domain/PasswordService'
-import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserChangePassword {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	async run({
 		payload,

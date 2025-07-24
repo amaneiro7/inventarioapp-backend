@@ -4,7 +4,14 @@ import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { VicepresidenciaDto } from '../domain/Vicepresidencia.dto'
 
 export class VicepresidenciaFinder {
-	constructor(private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>) {}
+	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	constructor({
+		vicepresidenciaRepository
+	}: {
+		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	}) {
+		this.vicepresidenciaRepository = vicepresidenciaRepository
+	}
 
 	async run(params: { id: string }): Promise<VicepresidenciaDto> {
 		const { id } = params

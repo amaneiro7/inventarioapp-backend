@@ -25,8 +25,10 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 	 * Creates an instance of SequelizeCategoryRepository.
 	 * @param {CacheService} cache - The cache service for storing and retrieving cached data.
 	 */
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

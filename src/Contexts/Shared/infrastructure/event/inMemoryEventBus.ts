@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { type DomainEvent } from '../../domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../domain/event/DomainEventSubscriber'
 import { type EventBus } from '../../domain/event/EventBus'
 
 export class InMemoryEventBus implements EventBus {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 	private readonly subscriptions = new Map<string, Function[]>()
 
 	constructor(subscribers: Array<DomainEventSubscriber<DomainEvent>>) {

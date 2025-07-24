@@ -10,18 +10,50 @@ import { type TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
 import { type TotalComputerRepository } from '../domain/TotalComputerRepository'
 
 export class ComputerDashboard {
-	constructor(
-		private readonly computerDashboardRepository: ComputerDashboardRepository,
-		private readonly countOSByRegionRepository: CountOSByRegionRepository,
-		private readonly computerMemoryRamRepository: ComputerMemoryRamRepository,
-		private readonly computerMemoryRamModulesRepository: ComputerMemoryRamModulesRepository,
-		private readonly totalComputerRepository: TotalComputerRepository,
-		private readonly totalActiveUsersRepository: TotalActiveUsersRepository,
-		private readonly totalAgenciesRepository: TotalAgenciesRepository,
-		private readonly countByCategoryRepository: CountByCategoryRepository,
-		private readonly countTotalOperatingSystemRepository: CountTotalOperatingSystemRepository,
-		private readonly countByRegionRepository: CountByRegionRepository
-	) {}
+	private readonly computerDashboardRepository: ComputerDashboardRepository
+	private readonly countOSByRegionRepository: CountOSByRegionRepository
+	private readonly computerMemoryRamRepository: ComputerMemoryRamRepository
+	private readonly computerMemoryRamModulesRepository: ComputerMemoryRamModulesRepository
+	private readonly totalComputerRepository: TotalComputerRepository
+	private readonly totalActiveUsersRepository: TotalActiveUsersRepository
+	private readonly totalAgenciesRepository: TotalAgenciesRepository
+	private readonly countByCategoryRepository: CountByCategoryRepository
+	private readonly countTotalOperatingSystemRepository: CountTotalOperatingSystemRepository
+	private readonly countByRegionRepository: CountByRegionRepository
+	constructor({
+		computerDashboardRepository,
+		countOSByRegionRepository,
+		computerMemoryRamRepository,
+		computerMemoryRamModulesRepository,
+		totalComputerRepository,
+		totalActiveUsersRepository,
+		totalAgenciesRepository,
+		countByCategoryRepository,
+		countTotalOperatingSystemRepository,
+		countByRegionRepository
+	}: {
+		computerDashboardRepository: ComputerDashboardRepository
+		countOSByRegionRepository: CountOSByRegionRepository
+		computerMemoryRamRepository: ComputerMemoryRamRepository
+		computerMemoryRamModulesRepository: ComputerMemoryRamModulesRepository
+		totalComputerRepository: TotalComputerRepository
+		totalActiveUsersRepository: TotalActiveUsersRepository
+		totalAgenciesRepository: TotalAgenciesRepository
+		countByCategoryRepository: CountByCategoryRepository
+		countTotalOperatingSystemRepository: CountTotalOperatingSystemRepository
+		countByRegionRepository: CountByRegionRepository
+	}) {
+		this.computerDashboardRepository = computerDashboardRepository
+		this.countOSByRegionRepository = countOSByRegionRepository
+		this.computerMemoryRamRepository = computerMemoryRamRepository
+		this.computerMemoryRamModulesRepository = computerMemoryRamModulesRepository
+		this.totalComputerRepository = totalComputerRepository
+		this.totalActiveUsersRepository = totalActiveUsersRepository
+		this.totalAgenciesRepository = totalAgenciesRepository
+		this.countByCategoryRepository = countByCategoryRepository
+		this.countTotalOperatingSystemRepository = countTotalOperatingSystemRepository
+		this.countByRegionRepository = countByRegionRepository
+	}
 
 	async run(): Promise<{}> {
 		const [

@@ -19,8 +19,10 @@ import { SiteAssociation } from './SiteAssociation'
  */
 export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implements SiteRepository {
 	private readonly cacheKey: string = 'sites'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

@@ -25,8 +25,10 @@ export class SequelizeDepartamentoRepository
 	implements DepartmentRepository<DepartamentoDto>
 {
 	private readonly cacheKey: string = 'departamento'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

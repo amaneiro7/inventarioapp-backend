@@ -1,12 +1,14 @@
+import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type LocationDto } from '../domain/Location.dto'
-import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type LocationRepository } from '../domain/LocationRepository'
 
 export class LocationSearchByCriteria extends GetAllBaseService<LocationDto> {
-	constructor(private readonly locationRepository: LocationRepository) {
+	private readonly locationRepository: LocationRepository
+	constructor({ locationRepository }: { locationRepository: LocationRepository }) {
 		super()
+		this.locationRepository = locationRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<LocationDto>> {

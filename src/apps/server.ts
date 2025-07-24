@@ -17,12 +17,15 @@ import { swaggerSpec } from '../Contexts/Shared/infrastructure/documentation/swa
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 
 export class Server {
+	readonly port: string
+	private readonly logger: Logger
 	private express: express.Express
 	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key')
 	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt')
 	httpServer?: http.Server | https.Server
 
-	constructor(readonly port: string, private readonly logger: Logger) {
+	constructor({ logger, port }: { port: string; logger: Logger }) {
+		this.logger = logger
 		this.port = port
 		this.express = express()
 

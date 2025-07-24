@@ -13,7 +13,10 @@ export class MainCategoriesFinder {
 	 * Creates an instance of MainCategoriesFinder.
 	 * @param {MainCategoryRepository} mainCategoryRepository - The repository for main categories.
 	 */
-	constructor(private readonly mainCategoryRepository: MainCategoryRepository) {}
+	private readonly mainCategoryRepository: MainCategoryRepository
+	constructor({ mainCategoryRepository }: { mainCategoryRepository: MainCategoryRepository }) {
+		this.mainCategoryRepository = mainCategoryRepository
+	}
 
 	/**
 	 * Executes the service to find a main category.

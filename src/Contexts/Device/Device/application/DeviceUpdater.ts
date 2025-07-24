@@ -45,19 +45,54 @@ import { type DeviceComputerPrimitives } from '../../../Features/Computer/domain
 import { type DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 
 export class DeviceUpdater {
-	constructor(
-		private readonly deviceRepository: DeviceRepository,
-		private readonly processorRepository: ProcessorRepository,
-		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
-		private readonly hardDriveTypeRepository: HardDriveTypeRepository,
-		private readonly operatingSystemRepository: OperatingSystemRepository,
-		private readonly operatingSystemArqRepository: OperatingSystemArqRepository,
-		private readonly historyRepository: HistoryRepository,
-		private readonly statusRepository: StatusRepository,
-		private readonly locationRepository: LocationRepository,
-		private readonly employeeRepository: EmployeeRepository,
-		private readonly modelSeriesRepository: ModelSeriesRepository
-	) {}
+	private readonly deviceRepository: DeviceRepository
+	private readonly processorRepository: ProcessorRepository
+	private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
+	private readonly hardDriveTypeRepository: HardDriveTypeRepository
+	private readonly operatingSystemRepository: OperatingSystemRepository
+	private readonly operatingSystemArqRepository: OperatingSystemArqRepository
+	private readonly historyRepository: HistoryRepository
+	private readonly statusRepository: StatusRepository
+	private readonly locationRepository: LocationRepository
+	private readonly employeeRepository: EmployeeRepository
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	constructor({
+		deviceRepository,
+		processorRepository,
+		hardDriveCapacityRepository,
+		hardDriveTypeRepository,
+		operatingSystemRepository,
+		operatingSystemArqRepository,
+		historyRepository,
+		statusRepository,
+		locationRepository,
+		employeeRepository,
+		modelSeriesRepository
+	}: {
+		deviceRepository: DeviceRepository
+		processorRepository: ProcessorRepository
+		hardDriveCapacityRepository: HardDriveCapacityRepository
+		hardDriveTypeRepository: HardDriveTypeRepository
+		operatingSystemRepository: OperatingSystemRepository
+		operatingSystemArqRepository: OperatingSystemArqRepository
+		historyRepository: HistoryRepository
+		statusRepository: StatusRepository
+		locationRepository: LocationRepository
+		employeeRepository: EmployeeRepository
+		modelSeriesRepository: ModelSeriesRepository
+	}) {
+		this.deviceRepository = deviceRepository
+		this.processorRepository = processorRepository
+		this.hardDriveCapacityRepository = hardDriveCapacityRepository
+		this.hardDriveTypeRepository = hardDriveTypeRepository
+		this.operatingSystemRepository = operatingSystemRepository
+		this.operatingSystemArqRepository = operatingSystemArqRepository
+		this.historyRepository = historyRepository
+		this.statusRepository = statusRepository
+		this.locationRepository = locationRepository
+		this.employeeRepository = employeeRepository
+		this.modelSeriesRepository = modelSeriesRepository
+	}
 	async run({
 		id,
 		params,

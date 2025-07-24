@@ -6,10 +6,17 @@ import { type DirectivaDto, type DirectivaParams } from '../domain/Directiva.dto
 
 export class DirectivaCreator {
 	private readonly createDirectivaUseCase: CreateDirectivaUseCase
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		cargoRepository,
+		directivaRepository
+	}: {
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.cargoRepository = cargoRepository
+		this.directivaRepository = directivaRepository
 		this.createDirectivaUseCase = new CreateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
 	}
 

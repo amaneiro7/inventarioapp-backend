@@ -10,7 +10,10 @@ import { type UserRepository } from '../../User/user/domain/UserRepository'
  * by checking the email and password against the stored user data.
  */
 export class UserLoginLocal {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	/**
 	 * @method run

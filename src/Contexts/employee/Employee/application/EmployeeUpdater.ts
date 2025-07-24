@@ -15,15 +15,37 @@ import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresid
 
 export class EmployeeUpdater {
 	private readonly updateEmployeeUseCase: UpdateEmployeeUseCase
-	constructor(
-		private readonly employeeRepository: EmployeeRepository,
-		private readonly locationRepository: LocationRepository,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
-		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly employeeRepository: EmployeeRepository
+	private readonly locationRepository: LocationRepository
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		employeeRepository,
+		locationRepository,
+		directivaRepository,
+		vicepresidenciaEjecutivaRepository,
+		vicepresidenciaRepository,
+		departamentoRepository,
+		cargoRepository
+	}: {
+		employeeRepository: EmployeeRepository
+		locationRepository: LocationRepository
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+		departamentoRepository: DepartmentRepository<DepartamentoDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.employeeRepository = employeeRepository
+		this.locationRepository = locationRepository
+		this.directivaRepository = directivaRepository
+		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = vicepresidenciaRepository
+		this.departamentoRepository = departamentoRepository
+		this.cargoRepository = cargoRepository
 		this.updateEmployeeUseCase = new UpdateEmployeeUseCase({
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,

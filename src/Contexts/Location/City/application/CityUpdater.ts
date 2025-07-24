@@ -8,10 +8,18 @@ import { type StateRepository } from '../../State/domain/StateRepository'
 import { type CityRepository } from '../domain/CityRepository'
 
 export class CityUpdater {
-	constructor(
-		private readonly cityRepository: CityRepository,
-		private readonly stateRepository: StateRepository
-	) {}
+	private readonly cityRepository: CityRepository
+	private readonly stateRepository: StateRepository
+	constructor({
+		cityRepository,
+		stateRepository
+	}: {
+		cityRepository: CityRepository
+		stateRepository: StateRepository
+	}) {
+		this.cityRepository = cityRepository
+		this.stateRepository = stateRepository
+	}
 
 	async run({ id, params }: { id: string; params: Partial<CityParams> }): Promise<void> {
 		const city = new CityId(id)

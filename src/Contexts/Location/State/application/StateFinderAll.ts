@@ -5,8 +5,10 @@ import { type StateDto } from '../domain/State.dto'
 import { type StateRepository } from '../domain/StateRepository'
 
 export class StateFinderAll extends GetAllBaseService<StateDto> {
-	constructor(private readonly stateRepository: StateRepository) {
+	private readonly stateRepository: StateRepository
+	constructor({ stateRepository }: { stateRepository: StateRepository }) {
 		super()
+		this.stateRepository = stateRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<StateDto>> {

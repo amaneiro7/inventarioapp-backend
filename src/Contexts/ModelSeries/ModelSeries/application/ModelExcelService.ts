@@ -9,7 +9,10 @@ import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCrite
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesExcelService {
-	constructor(private readonly modelSeriesRepository: ModelSeriesRepository) {}
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	constructor({ modelSeriesRepository }: { modelSeriesRepository: ModelSeriesRepository }) {
+		this.modelSeriesRepository = modelSeriesRepository
+	}
 	async run(query: SearchByCriteriaQuery): Promise<Buffer> {
 		// Recuperar los datos de la base de datos usando Sequelize
 		const filters = query.filters.map(filter => {

@@ -6,7 +6,10 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserRemover {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	async run({ user, id }: { user?: JwtPayloadUser; id: Primitives<UserId> }): Promise<void> {
 		// Se valida que el usuario que realiza la accion esta autorizado

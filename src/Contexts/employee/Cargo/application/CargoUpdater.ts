@@ -12,13 +12,30 @@ import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresid
 
 export class CargoUpdater {
 	private readonly updateCargoUseCase: UpdateCargoUseCase
-	constructor(
-		private readonly cargoRepository: CargoRepository,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
-		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-	) {
+	private readonly cargoRepository: CargoRepository
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	constructor({
+		cargoRepository,
+		departamentoRepository,
+		directivaRepository,
+		vicepresidenciaEjecutivaRepository,
+		vicepresidenciaRepository
+	}: {
+		cargoRepository: CargoRepository
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+		departamentoRepository: DepartmentRepository<DepartamentoDto>
+	}) {
+		this.cargoRepository = cargoRepository
+		this.departamentoRepository = departamentoRepository
+		this.directivaRepository = directivaRepository
+		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = vicepresidenciaRepository
+
 		this.updateCargoUseCase = new UpdateCargoUseCase({
 			cargoRepository: this.cargoRepository,
 			departamentoRepository: this.departamentoRepository,

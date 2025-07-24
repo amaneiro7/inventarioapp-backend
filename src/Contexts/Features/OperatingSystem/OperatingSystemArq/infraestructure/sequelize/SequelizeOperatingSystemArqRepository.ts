@@ -21,8 +21,10 @@ export class SequelizeOperatingSystemArqRepository
 	implements OperatingSystemArqRepository
 {
 	private readonly cacheKey: string = 'operatingSystemArq'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

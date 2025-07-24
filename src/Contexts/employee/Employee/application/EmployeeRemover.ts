@@ -3,7 +3,10 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 
 export class EmployeeRemover {
-	constructor(private readonly employeeRepository: EmployeeRepository) {}
+	private readonly employeeRepository: EmployeeRepository
+	constructor({ employeeRepository }: { employeeRepository: EmployeeRepository }) {
+		this.employeeRepository = employeeRepository
+	}
 
 	async run(params: { id: Primitives<EmployeeId> }): Promise<void> {
 		const { id } = params

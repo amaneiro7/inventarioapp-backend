@@ -5,8 +5,10 @@ import { type LocationDto } from '../domain/Location.dto'
 import { type LocationRepository } from '../domain/LocationRepository'
 
 export class LocationFinderAll extends GetAllBaseService<LocationDto> {
-	constructor(private readonly locationRepository: LocationRepository) {
+	private readonly locationRepository: LocationRepository
+	constructor({ locationRepository }: { locationRepository: LocationRepository }) {
 		super()
+		this.locationRepository = locationRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<LocationDto>> {

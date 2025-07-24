@@ -21,8 +21,10 @@ export class SequelizeHardDriveCapacityRepository
 	implements HardDriveCapacityRepository
 {
 	private readonly cacheKey: string = 'hardDriveCapacities'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

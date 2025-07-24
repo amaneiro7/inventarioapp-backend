@@ -27,8 +27,10 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	implements DepartmentRepository<VicepresidenciaEjecutivaDto>
 {
 	private readonly cacheKey: string = 'vicepresidenciaEjecutiva'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

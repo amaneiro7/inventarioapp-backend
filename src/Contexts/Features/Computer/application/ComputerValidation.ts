@@ -15,14 +15,34 @@ import { type ProcessorRepository } from '../../Processor/Processor/domain/Proce
 import { type DeviceComputerParams } from '../domain/Computer.dto'
 
 export class ComputerValidation {
-	constructor(
-		private readonly deviceRepository: DeviceRepository,
-		private readonly processorRepository: ProcessorRepository,
-		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
-		private readonly hardDriveTypeRepository: HardDriveTypeRepository,
-		private readonly operatingSystemRepository: OperatingSystemRepository,
-		private readonly operatingSystemArqRepository: OperatingSystemArqRepository
-	) {}
+	private readonly deviceRepository: DeviceRepository
+	private readonly processorRepository: ProcessorRepository
+	private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
+	private readonly hardDriveTypeRepository: HardDriveTypeRepository
+	private readonly operatingSystemRepository: OperatingSystemRepository
+	private readonly operatingSystemArqRepository: OperatingSystemArqRepository
+	constructor({
+		deviceRepository,
+		processorRepository,
+		hardDriveCapacityRepository,
+		hardDriveTypeRepository,
+		operatingSystemRepository,
+		operatingSystemArqRepository
+	}: {
+		deviceRepository: DeviceRepository
+		processorRepository: ProcessorRepository
+		hardDriveCapacityRepository: HardDriveCapacityRepository
+		hardDriveTypeRepository: HardDriveTypeRepository
+		operatingSystemRepository: OperatingSystemRepository
+		operatingSystemArqRepository: OperatingSystemArqRepository
+	}) {
+		this.deviceRepository = deviceRepository
+		this.processorRepository = processorRepository
+		this.hardDriveCapacityRepository = hardDriveCapacityRepository
+		this.hardDriveTypeRepository = hardDriveTypeRepository
+		this.operatingSystemRepository = operatingSystemRepository
+		this.operatingSystemArqRepository = operatingSystemArqRepository
+	}
 
 	async run(params: DeviceComputerParams): Promise<DeviceComputer> {
 		await this.ensureValidation(params)

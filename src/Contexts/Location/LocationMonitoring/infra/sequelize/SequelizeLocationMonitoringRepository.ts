@@ -26,8 +26,10 @@ export class SequelizeLocationMonitoringRepository
 	implements LocationMonitoringRepository
 {
 	private readonly cacheKey: string = 'locationMonitoring'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

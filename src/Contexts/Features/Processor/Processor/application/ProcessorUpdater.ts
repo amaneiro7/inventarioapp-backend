@@ -6,7 +6,10 @@ import { type ProcessorParams } from '../domain/Processor.dto'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
 export class ProcessorUpdater {
-	constructor(private readonly processorRepository: ProcessorRepository) {}
+	private readonly processorRepository: ProcessorRepository
+	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+		this.processorRepository = processorRepository
+	}
 
 	async run({ id, params }: { id: string; params: Partial<ProcessorParams> }): Promise<void> {
 		const { productCollection, numberModel, cores, frequency, threads } = params

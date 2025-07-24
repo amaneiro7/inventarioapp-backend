@@ -18,8 +18,10 @@ import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
  */
 export class SequelizeMemoryRamTypeRepository extends CriteriaToSequelizeConverter implements MemoryRamTypeRepository {
 	private readonly cacheKey: string = 'memoryRamType'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

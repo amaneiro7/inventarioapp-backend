@@ -14,8 +14,10 @@ export class BrandFinderAll extends GetAllBaseService<BrandDto> {
 	 * @constructor
 	 * @param {BrandRepository} brandRepository - The repository responsible for Brand data persistence.
 	 */
-	constructor(private readonly brandRepository: BrandRepository) {
+	private readonly brandRepository: BrandRepository
+	constructor({ brandRepository }: { brandRepository: BrandRepository }) {
 		super()
+		this.brandRepository = brandRepository
 	}
 
 	/**

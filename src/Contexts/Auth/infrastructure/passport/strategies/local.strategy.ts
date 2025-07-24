@@ -8,7 +8,8 @@ import { type UserLoginLocal } from '../../../application/UserLoginLocal'
  * It uses the `UserLoginLocal` use case to validate a user's email and password.
  */
 export class LocalAuthStrategy extends LocalStrategy {
-	constructor(private readonly userLoginLocal: UserLoginLocal) {
+	private readonly userLoginLocal: UserLoginLocal
+	constructor({ userLoginLocal }: { userLoginLocal: UserLoginLocal }) {
 		const options: IStrategyOptions = {
 			usernameField: 'email',
 			passwordField: 'password'
@@ -22,5 +23,6 @@ export class LocalAuthStrategy extends LocalStrategy {
 				done(error, false)
 			}
 		})
+		this.userLoginLocal = userLoginLocal
 	}
 }

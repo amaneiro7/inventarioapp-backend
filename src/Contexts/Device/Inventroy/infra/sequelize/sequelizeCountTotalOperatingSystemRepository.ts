@@ -36,7 +36,10 @@ interface AggregatedOSData {
  */
 export class SequelizeCountTotalOperatingSystemRepository implements CountTotalOperatingSystemRepository {
 	private readonly cacheKey: string = 'computer-os-dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run
@@ -118,4 +121,3 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 		})
 	}
 }
-

@@ -18,8 +18,10 @@ import { type RegionRepository } from '../../domain/RegionRepository'
  */
 export class SequelizeRegionRepository extends CriteriaToSequelizeConverter implements RegionRepository {
 	private readonly cacheKey: string = 'regions'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

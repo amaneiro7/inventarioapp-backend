@@ -3,9 +3,14 @@ import { type LocationMonitoringDashboardByLocationRepository } from '../domain/
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 
 export class LocationMonitoringDashboardByLocation {
-	constructor(
-		private readonly locationMonitoringDashboardByLocationRepository: LocationMonitoringDashboardByLocationRepository
-	) {}
+	private readonly locationMonitoringDashboardByLocationRepository: LocationMonitoringDashboardByLocationRepository
+	constructor({
+		locationMonitoringDashboardByLocationRepository
+	}: {
+		locationMonitoringDashboardByLocationRepository: LocationMonitoringDashboardByLocationRepository
+	}) {
+		this.locationMonitoringDashboardByLocationRepository = locationMonitoringDashboardByLocationRepository
+	}
 
 	async run(criteria: Criteria): Promise<DashboardByLocationData> {
 		const [summary] = await Promise.all([this.locationMonitoringDashboardByLocationRepository.run(criteria)])

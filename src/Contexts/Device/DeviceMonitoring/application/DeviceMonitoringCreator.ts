@@ -5,7 +5,10 @@ import { type DeviceId } from '../../Device/domain/DeviceId'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 
 export class DeviceMonitoringCreator {
-	constructor(private readonly deviceMonitoringRepository: DeviceMonitoringRepository) {}
+	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	constructor({ deviceMonitoringRepository }: { deviceMonitoringRepository: DeviceMonitoringRepository }) {
+		this.deviceMonitoringRepository = deviceMonitoringRepository
+	}
 
 	async run({ deviceId }: { deviceId: Primitives<DeviceId> }): Promise<void> {
 		const deviceMonitoring = DeviceMonitoring.create({

@@ -16,8 +16,11 @@ import { type ResponseDB } from '../../../Shared/domain/ResponseType'
  */
 export class SequelizeBrandRepository extends SequelizeCriteriaConverter implements BrandRepository {
 	private readonly cacheKey: string = 'brands'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

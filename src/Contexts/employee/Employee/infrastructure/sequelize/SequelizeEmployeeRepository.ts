@@ -19,8 +19,10 @@ import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/E
  */
 export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
 	private readonly cacheKey: string = 'employees'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

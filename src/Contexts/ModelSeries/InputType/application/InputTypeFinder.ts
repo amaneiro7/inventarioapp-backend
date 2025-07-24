@@ -5,8 +5,10 @@ import { type InputTypeDto } from '../domain/InputType.dto'
 import { type InputTypeRepository } from '../domain/InputTypeRepository'
 
 export class InputTypeFinderAll extends GetAllBaseService<InputTypeDto> {
-	constructor(private readonly inputTypeRepository: InputTypeRepository) {
+	private readonly inputTypeRepository: InputTypeRepository
+	constructor({ inputTypeRepository }: { inputTypeRepository: InputTypeRepository }) {
 		super()
+		this.inputTypeRepository = inputTypeRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<InputTypeDto>> {

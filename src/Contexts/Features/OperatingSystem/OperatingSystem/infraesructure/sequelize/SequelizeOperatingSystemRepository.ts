@@ -21,8 +21,10 @@ export class SequelizeOperatingSystemRepository
 	implements OperatingSystemRepository
 {
 	private readonly cacheKey: string = 'operatingSystem'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

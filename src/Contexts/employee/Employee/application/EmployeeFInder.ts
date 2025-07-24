@@ -5,7 +5,10 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto } from '../domain/entity/Employee.dto'
 
 export class EmployeeFinder {
-	constructor(private readonly employeeRepository: EmployeeRepository) {}
+	private readonly employeeRepository: EmployeeRepository
+	constructor({ employeeRepository }: { employeeRepository: EmployeeRepository }) {
+		this.employeeRepository = employeeRepository
+	}
 
 	async run(params: { id: Primitives<EmployeeId> }): Promise<EmployeeDto> {
 		const { id } = params

@@ -5,8 +5,10 @@ import { ProcessorSocketDto } from '../domain/ProcessorSocket.dto'
 import { type ProcessorSocketRepository } from '../domain/ProcessorSocketRepository'
 
 export class ProcessorSocketFinderAll extends GetAllBaseService<ProcessorSocketDto> {
-	constructor(private readonly processorSockeRepository: ProcessorSocketRepository) {
+	private readonly processorSockeRepository: ProcessorSocketRepository
+	constructor({ processorSockeRepository }: { processorSockeRepository: ProcessorSocketRepository }) {
 		super()
+		this.processorSockeRepository = processorSockeRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<ProcessorSocketDto>> {

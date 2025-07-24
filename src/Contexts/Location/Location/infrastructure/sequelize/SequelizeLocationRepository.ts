@@ -4,7 +4,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from '../../domain/LocationId'
 import { type LocationRepository } from '../../domain/LocationRepository'
-import { LocationName } from '../../domain/LocationName'
+import { type LocationName } from '../../domain/LocationName'
 import { LocationAssociation } from './LocationAssociation'
 import { LocationModel } from './LocationSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -20,8 +20,10 @@ import { type LocationDto, type LocationPrimitives } from '../../domain/Location
  */
 export class SequelizeLocationRepository extends CriteriaToSequelizeConverter implements LocationRepository {
 	private readonly cacheKey: string = 'locations'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

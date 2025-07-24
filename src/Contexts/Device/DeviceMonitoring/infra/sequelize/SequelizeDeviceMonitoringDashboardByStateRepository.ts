@@ -32,8 +32,10 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 	implements DeviceMonitoringDashboardByStateRepository
 {
 	private readonly cacheKey: string = 'deviceMonitoringDashboardBySTate'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 	async run(criteria: Criteria): Promise<DashboardByStateData> {
 		const options = this.convert(criteria)

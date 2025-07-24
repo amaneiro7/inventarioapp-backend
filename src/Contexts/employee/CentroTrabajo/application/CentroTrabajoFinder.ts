@@ -1,11 +1,14 @@
+import { CentroTrabajoDoesNotExistError } from '../domain/CentroTrabajoDoesNotExistError'
+import { CentroTrabajoId } from '../domain/CentroTrabajoId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
-import { CentroTrabajoId } from '../domain/CentroTrabajoId'
-import { CentroTrabajoDoesNotExistError } from '../domain/CentroTrabajoDoesNotExistError'
 import { type CentroTrabajoDto } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoFinder {
-	constructor(private readonly centroTrabajoRepository: CentroTrabajoRepository) {}
+	private readonly centroTrabajoRepository: CentroTrabajoRepository
+	constructor({ centroTrabajoRepository }: { centroTrabajoRepository: CentroTrabajoRepository }) {
+		this.centroTrabajoRepository = centroTrabajoRepository
+	}
 
 	async run(params: { id: Primitives<CentroTrabajoId> }): Promise<CentroTrabajoDto> {
 		const { id } = params

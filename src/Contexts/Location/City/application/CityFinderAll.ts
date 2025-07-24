@@ -5,8 +5,10 @@ import { type CityDto } from '../domain/City.dto'
 import { type CityRepository } from '../domain/CityRepository'
 
 export class CityFinderAll extends GetAllBaseService<CityDto> {
-	constructor(private readonly cityRepository: CityRepository) {
+	private readonly cityRepository: CityRepository
+	constructor({ cityRepository }: { cityRepository: CityRepository }) {
 		super()
+		this.cityRepository = cityRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<CityDto>> {

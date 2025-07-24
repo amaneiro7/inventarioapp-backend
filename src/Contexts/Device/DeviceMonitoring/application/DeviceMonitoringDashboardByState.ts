@@ -3,9 +3,14 @@ import { type DashboardByStateData } from '../domain/entity/DeviceMonitoring.dto
 import { type DeviceMonitoringDashboardByStateRepository } from '../domain/repository/DeviceMonitoringDashboardByStateRepository'
 
 export class DeviceMonitoringDashboardByState {
-	constructor(
-		private readonly deviceMonitoringDashboardByStateRepository: DeviceMonitoringDashboardByStateRepository
-	) {}
+	private readonly deviceMonitoringDashboardByStateRepository: DeviceMonitoringDashboardByStateRepository
+	constructor({
+		deviceMonitoringDashboardByStateRepository
+	}: {
+		deviceMonitoringDashboardByStateRepository: DeviceMonitoringDashboardByStateRepository
+	}) {
+		this.deviceMonitoringDashboardByStateRepository = deviceMonitoringDashboardByStateRepository
+	}
 
 	run(criteria: Criteria): Promise<DashboardByStateData> {
 		return this.deviceMonitoringDashboardByStateRepository.run(criteria)

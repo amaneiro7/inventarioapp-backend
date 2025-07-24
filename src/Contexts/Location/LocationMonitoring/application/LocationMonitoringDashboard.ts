@@ -3,7 +3,14 @@ import { type DashboardData } from '../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringDashboardRepository } from '../domain/repository/LocationMonitoringDashboardRepository'
 
 export class LocationMonitoringDashboard {
-	constructor(private readonly locationMonitoringDashboardRepository: LocationMonitoringDashboardRepository) {}
+	private readonly locationMonitoringDashboardRepository: LocationMonitoringDashboardRepository
+	constructor({
+		locationMonitoringDashboardRepository
+	}: {
+		locationMonitoringDashboardRepository: LocationMonitoringDashboardRepository
+	}) {
+		this.locationMonitoringDashboardRepository = locationMonitoringDashboardRepository
+	}
 
 	async run(criteria: Criteria): Promise<DashboardData> {
 		const [summary] = await Promise.all([this.locationMonitoringDashboardRepository.run(criteria)])

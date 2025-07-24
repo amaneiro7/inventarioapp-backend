@@ -32,8 +32,10 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 	implements LocationMonitoringDashboardByStateRepository
 {
 	private readonly cacheKey: string = 'locationMonitoringDashboardByState' // Corrected cache key
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	async run(criteria: Criteria): Promise<DashboardByStateData> {

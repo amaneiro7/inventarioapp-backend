@@ -5,7 +5,10 @@ import { type Nullable } from '../../../Shared/domain/Nullable'
 import { type DeviceDto } from '../domain/Device.dto'
 
 export class DeviceFinder {
-	constructor(private readonly deviceRepository: DeviceRepository) {}
+	private readonly deviceRepository: DeviceRepository
+	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
+		this.deviceRepository = deviceRepository
+	}
 
 	async run(params: { id: string }): Promise<Nullable<DeviceDto>> {
 		const { id } = params

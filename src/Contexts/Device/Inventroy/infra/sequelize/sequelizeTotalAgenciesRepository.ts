@@ -14,7 +14,10 @@ import { LocationStatusOptions } from '../../../../Location/LocationStatus/domai
  */
 export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository {
 	private readonly cacheKey: string = 'totalAgencies'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run
@@ -24,7 +27,7 @@ export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.TOO_LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await LocationModel.count({
 					where: {

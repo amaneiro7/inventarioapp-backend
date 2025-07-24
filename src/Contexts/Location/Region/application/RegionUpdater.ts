@@ -7,10 +7,18 @@ import { type RegionParams } from '../domain/Region.dto'
 import { type RegionRepository } from '../domain/RegionRepository'
 
 export class RegionUpdater {
-	constructor(
-		private readonly regionRepository: RegionRepository,
-		private readonly administrativeRegionRepository: AdministrativeRegionRepository
-	) {}
+	private readonly regionRepository: RegionRepository
+	private readonly administrativeRegionRepository: AdministrativeRegionRepository
+	constructor({
+		regionRepository,
+		administrativeRegionRepository
+	}: {
+		regionRepository: RegionRepository
+		administrativeRegionRepository: AdministrativeRegionRepository
+	}) {
+		this.regionRepository = regionRepository
+		this.administrativeRegionRepository = administrativeRegionRepository
+	}
 
 	async run({ id, params }: { id: string; params: Partial<RegionParams> }): Promise<void> {
 		const regionId = new RegionId(id).value

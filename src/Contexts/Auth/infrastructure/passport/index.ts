@@ -11,11 +11,22 @@ import { type JwtBearerStrategy } from './strategies/jwt-bearer.strategy'
  * into the Passport instance, making them available for use in the application's authentication middleware.
  */
 export class PassportManager {
-	constructor(
-		private readonly localStrategy: LocalAuthStrategy,
-		private readonly jwtCookiesStrategy: JwtCookiesStrategy,
-		private readonly jwtBearerStrategy: JwtBearerStrategy
-	) {}
+	private readonly localStrategy: LocalAuthStrategy
+	private readonly jwtCookiesStrategy: JwtCookiesStrategy
+	private readonly jwtBearerStrategy: JwtBearerStrategy
+	constructor({
+		jwtBearerStrategy,
+		jwtCookiesStrategy,
+		localStrategy
+	}: {
+		localStrategy: LocalAuthStrategy
+		jwtCookiesStrategy: JwtCookiesStrategy
+		jwtBearerStrategy: JwtBearerStrategy
+	}) {
+		this.localStrategy = localStrategy
+		this.jwtCookiesStrategy = jwtCookiesStrategy
+		this.jwtBearerStrategy = jwtBearerStrategy
+	}
 
 	/**
 	 * @method initialize

@@ -8,7 +8,10 @@ import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 export class UserResetPassword {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	async run({ id, user }: { id: Primitives<UserId>; user?: JwtPayloadUser }): Promise<void> {
 		// se valida que el usuario que esta realizando esta operacion tiene privilegios

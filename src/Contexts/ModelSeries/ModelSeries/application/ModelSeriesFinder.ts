@@ -4,15 +4,18 @@ import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesFinder {
-	constructor(private readonly modelSeriesRepository: ModelSeriesRepository) {}
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	constructor({ modelSeriesRepository }: { modelSeriesRepository: ModelSeriesRepository }) {
+		this.modelSeriesRepository = modelSeriesRepository
+	}
 
 	async run(params: { id: string }): Promise<ModelSeriesDto> {
 		const { id } = params
-		const modelSeriesId = new ModelSeriesId(id)
-		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId.toString())
+		const modelSeriesId = new ModelSeriesId(id).value
+		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
 
 		if (!modelSeries) {
-			throw new ModelSeriesDoesNotExistError(modelSeriesId.toString())
+			throw new ModelSeriesDoesNotExistError(modelSeriesId)
 		}
 
 		return modelSeries

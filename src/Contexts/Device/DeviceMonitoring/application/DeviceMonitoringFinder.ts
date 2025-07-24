@@ -4,7 +4,10 @@ import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMoni
 import { type DeviceMonitoringDto } from '../domain/entity/DeviceMonitoring.dto'
 
 export class DeviceMonitoringFinder {
-	constructor(private readonly deviceMonitoringRepository: DeviceMonitoringRepository) {}
+	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	constructor({ deviceMonitoringRepository }: { deviceMonitoringRepository: DeviceMonitoringRepository }) {
+		this.deviceMonitoringRepository = deviceMonitoringRepository
+	}
 
 	async run(params: { id: string }): Promise<DeviceMonitoringDto> {
 		const { id } = params

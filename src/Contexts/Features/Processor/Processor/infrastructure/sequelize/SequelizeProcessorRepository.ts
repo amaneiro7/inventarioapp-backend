@@ -18,8 +18,10 @@ import { type ProcessorRepository } from '../../domain/ProcessorRepository'
  */
 export class SequelizeProcessorRepository extends CriteriaToSequelizeConverter implements ProcessorRepository {
 	private readonly cacheKey: string = 'processors'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

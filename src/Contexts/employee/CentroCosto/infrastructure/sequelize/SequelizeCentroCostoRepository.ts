@@ -20,8 +20,10 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
  */
 export class SequelizeCentroCostoRepository extends CriteriaToSequelizeConverter implements CentroCostoRepository {
 	private readonly cacheKey: string = 'CentroCostos'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

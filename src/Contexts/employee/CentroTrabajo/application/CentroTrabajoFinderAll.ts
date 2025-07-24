@@ -5,8 +5,10 @@ import { type CentroTrabajoDto } from '../domain/CentroTrabajo.dto'
 import { type CentroTrabajoRepository } from '../domain/CentroTrabajoRepository'
 
 export class CentroTrabajoFinderAll extends GetAllBaseService<CentroTrabajoDto> {
-	constructor(private readonly centroTrabajoRepository: CentroTrabajoRepository) {
+	private readonly centroTrabajoRepository: CentroTrabajoRepository
+	constructor({ centroTrabajoRepository }: { centroTrabajoRepository: CentroTrabajoRepository }) {
 		super()
+		this.centroTrabajoRepository = centroTrabajoRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<CentroTrabajoDto>> {

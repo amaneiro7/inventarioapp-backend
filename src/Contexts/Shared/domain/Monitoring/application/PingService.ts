@@ -14,7 +14,10 @@ export interface PingResult {
 	hostname?: string // Resolved hostname from ping output
 }
 export class PingService {
-	constructor(private readonly logger: Logger) {}
+	private readonly logger: Logger
+	constructor({ logger }: { logger: Logger }) {
+		this.logger = logger
+	}
 	async pingIp({ ipAddress, getHostName }: { ipAddress: string; getHostName?: boolean }): Promise<PingResult> {
 		let command = ''
 		const getHostNameArg = getHostName ? '-a' : ''

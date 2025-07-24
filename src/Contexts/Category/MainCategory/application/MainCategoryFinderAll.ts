@@ -15,8 +15,10 @@ export class MainCategoriesFinderAll extends GetAllBaseService<MainCategoryDto> 
 	 * Creates an instance of MainCategoriesFinderAll.
 	 * @param {MainCategoryRepository} mainCategoryRepository - The repository for main categories.
 	 */
-	constructor(private readonly mainCategoryRepository: MainCategoryRepository) {
+	private readonly mainCategoryRepository: MainCategoryRepository
+	constructor({ mainCategoryRepository }: { mainCategoryRepository: MainCategoryRepository }) {
 		super()
+		this.mainCategoryRepository = mainCategoryRepository
 	}
 
 	/**

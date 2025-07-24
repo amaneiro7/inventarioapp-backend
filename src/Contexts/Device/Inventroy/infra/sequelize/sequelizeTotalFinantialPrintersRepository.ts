@@ -15,7 +15,10 @@ import { type TotalFinantialPrintersRepository } from '../../domain/TotalFinanti
  */
 export class SequelizeTotalFinantialPrintersRepository implements TotalFinantialPrintersRepository {
 	private readonly cacheKey: string = 'totalFinantialPrinters'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

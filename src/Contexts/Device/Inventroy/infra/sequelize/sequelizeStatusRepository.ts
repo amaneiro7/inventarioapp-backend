@@ -26,7 +26,10 @@ interface AggregatedDashboardData {
  */
 export class SequelizeStatusDashboardRepository implements StatusDashboardRepository {
 	private readonly cacheKey: string = 'statusDashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run
@@ -81,7 +84,8 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 					}
 
 					// Aggregate status within category
-					(acc[categoryName] as Record<string, number>)[statusName] = ((acc[categoryName] as Record<string, number>)[statusName] || 0) + countNumber
+					;(acc[categoryName] as Record<string, number>)[statusName] =
+						((acc[categoryName] as Record<string, number>)[statusName] || 0) + countNumber
 
 					return acc
 				}, initialDashboardState)
@@ -94,4 +98,3 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 		})
 	}
 }
-

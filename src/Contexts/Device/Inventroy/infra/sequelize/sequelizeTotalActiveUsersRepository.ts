@@ -12,7 +12,10 @@ import { type TotalActiveUsersRepository } from '../../domain/TotalActiveUsersRe
  */
 export class SequelizeTotalActiveUsersRepository implements TotalActiveUsersRepository {
 	private readonly cacheKey: string = 'totalActiveUsers'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

@@ -13,7 +13,10 @@ export class BrandCreator {
 	 * @constructor
 	 * @param {BrandRepository} brandRepository - The repository responsible for Brand data persistence.
 	 */
-	constructor(private readonly brandRepository: BrandRepository) {}
+	private readonly brandRepository: BrandRepository
+	constructor({ brandRepository }: { brandRepository: BrandRepository }) {
+		this.brandRepository = brandRepository
+	}
 
 	/**
 	 * @method run

@@ -1,13 +1,13 @@
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
+import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { ProcessorSocketModel } from './ProcessorSocketSchema'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type ProcessorSocketDto } from '../../domain/ProcessorSocket.dto'
 import { type ProcessorSocketId } from '../../domain/ProcessorSocketId'
 import { type ProcessorSocketRepository } from '../../domain/ProcessorSocketRepository'
-import { ProcessorSocketModel } from './ProcessorSocketSchema'
 
 /**
  * @class SequelizeProcessorSocketRepository
@@ -21,8 +21,10 @@ export class SequelizeProcessorSocketRepository
 	implements ProcessorSocketRepository
 {
 	private readonly cacheKey: string = 'processorSocket'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

@@ -5,8 +5,10 @@ import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 
 export class ModelSeriesFinderAll extends GetAllBaseService<ModelSeriesDto> {
-	constructor(private readonly modelSeriesRepository: ModelSeriesRepository) {
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	constructor({ modelSeriesRepository }: { modelSeriesRepository: ModelSeriesRepository }) {
 		super()
+		this.modelSeriesRepository = modelSeriesRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<ModelSeriesDto>> {

@@ -9,7 +9,10 @@ import { Op } from 'sequelize'
 
 export class SequelizeCountByRegionRepository implements CountByRegionRepository {
 	private readonly cacheKey: string = 'dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	async run(): Promise<{}> {
 		return await this.cache.getCachedData({

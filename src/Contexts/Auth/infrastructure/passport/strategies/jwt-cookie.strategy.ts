@@ -11,7 +11,8 @@ import { type TokenDenylistService } from '../../../domain/TokenDenylistService'
  * denylisted to prevent reuse of revoked tokens.
  */
 export class JwtCookiesStrategy extends Strategy {
-	constructor(private readonly tokenDenylistService: TokenDenylistService) {
+	private readonly tokenDenylistService: TokenDenylistService
+	constructor({ tokenDenylistService }: { tokenDenylistService: TokenDenylistService }) {
 		const jwtOptions: StrategyOptions = {
 			jwtFromRequest: ExtractJwt.fromExtractors([
 				(request: Request) => {
@@ -28,5 +29,6 @@ export class JwtCookiesStrategy extends Strategy {
 			}
 			done(null, jwtPayload)
 		})
+		this.tokenDenylistService = tokenDenylistService
 	}
 }

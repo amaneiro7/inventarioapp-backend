@@ -25,9 +25,10 @@ export type DeviceMonitoringMapped = DeviceMonitoringType & {
 	employee: DeviceDto['employee']
 }
 export interface DashboardData {
-	onlineCount: number
-	offlineCount: number
-	notAvailableCount: number
+	[MonitoringStatuses.ONLINE]: number
+	[MonitoringStatuses.OFFLINE]: number
+	[MonitoringStatuses.NOTAVAILABLE]: number
+	[MonitoringStatuses.HOSTNAME_MISMATCH]: number
 	total: number
 }
 export interface DashboardByStateData {

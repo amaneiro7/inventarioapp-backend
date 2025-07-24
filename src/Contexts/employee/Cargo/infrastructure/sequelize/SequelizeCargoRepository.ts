@@ -22,8 +22,10 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
  */
 export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

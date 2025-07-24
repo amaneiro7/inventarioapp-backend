@@ -18,8 +18,10 @@ import { type TypeOfSiteRepository } from '../../domain/TypeOfSiteRepository'
  */
 export class SequelizeTypeOfSiteRepository extends CriteriaToSequelizeConverter implements TypeOfSiteRepository {
 	private readonly cacheKey: string = 'typeOfSite'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

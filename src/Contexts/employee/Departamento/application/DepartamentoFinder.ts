@@ -4,7 +4,10 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type DepartamentoDto } from '../domain/Departamento.dto'
 
 export class DepartamentoFinder {
-	constructor(private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>) {}
+	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	constructor({ departamentoRepository }: { departamentoRepository: DepartmentRepository<DepartamentoDto> }) {
+		this.departamentoRepository = departamentoRepository
+	}
 
 	async run(params: { id: string }): Promise<DepartamentoDto> {
 		const { id } = params

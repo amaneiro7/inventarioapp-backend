@@ -13,7 +13,11 @@ export class BrandUpdater {
 	/**
 	 * @constructor
 	 * @param {BrandRepository} brandRepository - The repository responsible for Brand data persistence.
-	 */	constructor(private readonly brandRepository: BrandRepository) {}
+	 */
+	private readonly brandRepository: BrandRepository
+	constructor({ brandRepository }: { brandRepository: BrandRepository }) {
+		this.brandRepository = brandRepository
+	}
 
 	/**
 	 * @method run
@@ -25,7 +29,7 @@ export class BrandUpdater {
 	 * @throws {BrandDoesNotExistError} If the brand with the provided ID does not exist.
 	 * @throws {BrandAlreadyExistError} If the new name already exists for another brand.
 	 * @throws {InvalidArgumentError} If the new name is not valid (e.g., invalid length).
-	 */	async run(params: { id: string; newName: string }): Promise<void> {
+	 */ async run(params: { id: string; newName: string }): Promise<void> {
 		const { id, newName } = params
 		const brandId = new BrandId(id)
 

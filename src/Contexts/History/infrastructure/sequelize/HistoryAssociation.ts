@@ -18,20 +18,18 @@ export class HistoryAssociation {
 	 * @returns {FindOptions} The fully constructed Sequelize FindOptions object.
 	 */
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		const userInclude: IncludeOptions = {
+			association: 'user',
+			attributes: ['id', 'name', 'email', 'lastName', 'roleId']
+		}
+		const empñpyeeInclude: IncludeOptions = { association: 'employee', attributes: [] }
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			attributes: ['serial', 'updatedAt'],
+			attributes: ['serial'],
 			include: [{ association: 'category', attributes: ['name'] }]
 		}
 
-		options.include = [
-			{
-				association: 'user',
-				attributes: ['id', 'name', 'email', 'lastName', 'roleId']
-			},
-			{ association: 'employee', attributes: [] },
-			deviceInclude
-		]
+		options.include = [userInclude, empñpyeeInclude, deviceInclude]
 
 		const whereFilters = options.where ?? {}
 		const deviceWhere: Record<string, unknown> = {}

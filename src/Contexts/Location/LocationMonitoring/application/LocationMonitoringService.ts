@@ -18,13 +18,26 @@ export class LocationMonitoringService extends MonitoringService<
 	LocationMonitoring,
 	LocationMonitoringRepository
 > {
-	constructor(
-		protected readonly locationMonitoringRepository: LocationMonitoringRepository,
-		protected readonly pingService: PingService,
-		protected readonly logger: Logger,
-		protected readonly pingLogger: PingLogger
-	) {
+	protected readonly locationMonitoringRepository: LocationMonitoringRepository
+	protected readonly pingService: PingService
+	protected readonly logger: Logger
+	protected readonly pingLogger: PingLogger
+	constructor({
+		locationMonitoringRepository,
+		logger,
+		pingLogger,
+		pingService
+	}: {
+		locationMonitoringRepository: LocationMonitoringRepository
+		pingService: PingService
+		logger: Logger
+		pingLogger: PingLogger
+	}) {
 		super(locationMonitoringRepository, pingService, logger, pingLogger)
+		this.locationMonitoringRepository = locationMonitoringRepository
+		this.pingService = pingService
+		this.logger = logger
+		this.pingLogger = pingLogger
 	}
 
 	protected monitoringConfig: MonitoringServiceConfig = {

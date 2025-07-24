@@ -28,17 +28,46 @@ import { type DeviceMFPParams } from '../../../Features/MFP/domain/MFP.dto'
 import { type DeviceMonitoringRepository } from '../../DeviceMonitoring/domain/repository/DeviceMonitoringRepository'
 
 export class DeviceCreator {
-	constructor(
-		private readonly deviceRepository: DeviceRepository,
-		private readonly modelSeriesRepository: ModelSeriesRepository,
-		private readonly statusRepository: StatusRepository,
-		private readonly employeeRepository: EmployeeRepository,
-		private readonly locationRepository: LocationRepository,
-		private readonly historyRepository: HistoryRepository,
-		private readonly deviceMonitoringRepository: DeviceMonitoringRepository,
-		private readonly computerValidation: ComputerValidation,
-		private readonly hardDriveValidation: HardDriveValidation
-	) {}
+	private readonly deviceRepository: DeviceRepository
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly statusRepository: StatusRepository
+	private readonly employeeRepository: EmployeeRepository
+	private readonly locationRepository: LocationRepository
+	private readonly historyRepository: HistoryRepository
+	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	private readonly computerValidation: ComputerValidation
+	private readonly hardDriveValidation: HardDriveValidation
+	constructor({
+		deviceRepository,
+		modelSeriesRepository,
+		statusRepository,
+		employeeRepository,
+		locationRepository,
+		historyRepository,
+		deviceMonitoringRepository,
+		computerValidation,
+		hardDriveValidation
+	}: {
+		deviceRepository: DeviceRepository
+		modelSeriesRepository: ModelSeriesRepository
+		statusRepository: StatusRepository
+		employeeRepository: EmployeeRepository
+		locationRepository: LocationRepository
+		historyRepository: HistoryRepository
+		deviceMonitoringRepository: DeviceMonitoringRepository
+		computerValidation: ComputerValidation
+		hardDriveValidation: HardDriveValidation
+	}) {
+		this.deviceRepository = deviceRepository
+		this.modelSeriesRepository = modelSeriesRepository
+		this.statusRepository = statusRepository
+		this.employeeRepository = employeeRepository
+		this.locationRepository = locationRepository
+		this.historyRepository = historyRepository
+		this.deviceMonitoringRepository = deviceMonitoringRepository
+		this.computerValidation = computerValidation
+		this.hardDriveValidation = hardDriveValidation
+	}
 
 	async run({ params, user }: { params: DeviceParams; user?: JwtPayloadUser }): Promise<void> {
 		const { categoryId } = params

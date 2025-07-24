@@ -1,13 +1,13 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { MainCategoryModel } from './MainCategorySchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { type MainCategoryDto } from '../../domain/MainCategory.dto'
 import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryRepository } from '../../domain/MainCategoryRepository'
-import { MainCategoryModel } from './MainCategorySchema'
 
 /**
  * Sequelize implementation of the MainCategoryRepository.
@@ -24,8 +24,10 @@ export class SequelizeMainCategoryRepository extends CriteriaToSequelizeConverte
 	 * Creates an instance of SequelizeMainCategoryRepository.
 	 * @param {CacheService} cache - The cache service for storing and retrieving cached data.
 	 */
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

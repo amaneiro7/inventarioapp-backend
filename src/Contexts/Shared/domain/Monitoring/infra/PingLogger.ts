@@ -1,12 +1,14 @@
-import { Logger } from '../../Logger'
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
+import { type Logger } from '../../Logger'
 
 export class PingLogger {
 	private readonly logDirectory: string = path.resolve(process.cwd(), 'logs', 'ping')
 	private readonly MAX_LOG_DAYS = 3 // Keep logs for 3 days
+	private readonly logger: Logger
 
-	constructor(private readonly logger: Logger) {
+	constructor({ logger }: { logger: Logger }) {
+		this.logger = logger
 		void this.ensureLogDirectoryExists()
 		void this.cleanOldLogs()
 	}

@@ -17,11 +17,11 @@ export enum SharedDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		logger: asClass(WinstonLogger),
+		logger: asClass(WinstonLogger).singleton(),
 		database: asClass(SequelizeConfig).singleton(),
 		cacheRepository: asClass(RedisRepository).singleton(),
 		cache: asClass(CacheService).singleton(),
-		pingService: asClass(PingService),
-		pingLogger: asClass(PingLogger)
+		pingService: asClass(PingService).scoped(),
+		pingLogger: asClass(PingLogger).scoped()
 	})
 }

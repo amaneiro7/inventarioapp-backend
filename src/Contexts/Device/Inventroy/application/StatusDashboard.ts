@@ -1,7 +1,10 @@
 import { StatusDashboardRepository } from '../domain/StatusDashboardRepository'
 
 export class StatusDashboard {
-	constructor(private readonly statusDashboardRepository: StatusDashboardRepository) {}
+	private readonly statusDashboardRepository: StatusDashboardRepository
+	constructor({ statusDashboardRepository }: { statusDashboardRepository: StatusDashboardRepository }) {
+		this.statusDashboardRepository = statusDashboardRepository
+	}
 
 	async run(): Promise<{}> {
 		const [statuses] = await Promise.all([this.statusDashboardRepository.run()])

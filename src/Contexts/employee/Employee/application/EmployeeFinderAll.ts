@@ -5,8 +5,10 @@ import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type EmployeeDto } from '../domain/entity/Employee.dto'
 
 export class EmployeeFinderAll extends GetAllBaseService<EmployeeDto> {
-	constructor(private readonly employeeRepository: EmployeeRepository) {
+	private readonly employeeRepository: EmployeeRepository
+	constructor({ employeeRepository }: { employeeRepository: EmployeeRepository }) {
 		super()
+		this.employeeRepository = employeeRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<EmployeeDto>> {

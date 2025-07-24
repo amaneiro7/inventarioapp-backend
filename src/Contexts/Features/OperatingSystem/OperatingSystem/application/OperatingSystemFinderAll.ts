@@ -5,8 +5,10 @@ import { type OperatingSystemDto } from '../domain/OperatingSystem.dto'
 import { type OperatingSystemRepository } from '../domain/OperatingSystemRepository'
 
 export class OperatingSystemFinderAll extends GetAllBaseService<OperatingSystemDto> {
-	constructor(private readonly operatingSystemRepository: OperatingSystemRepository) {
+	private readonly operatingSystemRepository: OperatingSystemRepository
+	constructor({ operatingSystemRepository }: { operatingSystemRepository: OperatingSystemRepository }) {
 		super()
+		this.operatingSystemRepository = operatingSystemRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<OperatingSystemDto>> {

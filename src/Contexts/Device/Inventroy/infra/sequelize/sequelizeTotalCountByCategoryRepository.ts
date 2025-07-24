@@ -22,7 +22,10 @@ interface RawCategoryCountData {
  */
 export class SequelizeTotalCountByCategoryRepository implements TotalCountByCategoryRepository {
 	private readonly cacheKey: string = 'totalCountByCategory'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

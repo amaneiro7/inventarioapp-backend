@@ -1,7 +1,7 @@
 import { loginLimiter } from '../../Middleware/loginRateLimit'
 import passport from 'passport'
 import { type Router, type Request, type Response, type NextFunction } from 'express'
-import { type UserPrimitives } from '../../../Contexts/User/user/domain/User';
+import { type UserPrimitives } from '../../../Contexts/User/user/domain/User'
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
 import { type AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { type AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'
@@ -60,18 +60,18 @@ export const register = async (router: Router) => {
 			passport.authenticate(
 				StrategyOptions.LOCAL,
 				{ session: false },
-				(err: Error, user: UserPrimitives | false, info: object) => {
+				(err: Error, user: UserPrimitives | false) => {
 					if (err) {
-						return next(err);
+						return next(err)
 					}
 					if (!user) {
 						// You can create a more specific error here if you want
-						return next(new Error('Authentication failed.')); 
+						return next(new Error('Authentication failed.'))
 					}
-					req.user = user;
-					next();
+					req.user = user
+					next()
 				}
-			)(req, res, next);
+			)(req, res, next)
 		},
 		authLoginController.run.bind(authLoginController)
 	)

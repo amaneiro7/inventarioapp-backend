@@ -19,8 +19,10 @@ import { StateAssociation } from './StateAssociation'
  */
 export class SequelizeStateRepository extends CriteriaToSequelizeConverter implements StateRepository {
 	private readonly cacheKey: string = 'states'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

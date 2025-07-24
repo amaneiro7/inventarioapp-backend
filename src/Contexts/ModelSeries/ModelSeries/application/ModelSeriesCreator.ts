@@ -26,13 +26,30 @@ import { type KeyboardModelsParams } from '../../ModelCharacteristics/Keyboards/
 
 // Create the ModelSeriesCreator class
 export class ModelSeriesCreator {
-	constructor(
-		private readonly modelSeriesRepository: ModelSeriesRepository,
-		private readonly categoryRepository: CategoryRepository,
-		private readonly brandRepository: BrandRepository,
-		private readonly memoryRamTypeRepository: MemoryRamTypeRepository,
-		private readonly inputTypeRepository: InputTypeRepository
-	) {}
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly inputTypeRepository: InputTypeRepository
+	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
+	private readonly categoryRepository: CategoryRepository
+	private readonly brandRepository: BrandRepository
+	constructor({
+		brandRepository,
+		categoryRepository,
+		inputTypeRepository,
+		memoryRamTypeRepository,
+		modelSeriesRepository
+	}: {
+		modelSeriesRepository: ModelSeriesRepository
+		inputTypeRepository: InputTypeRepository
+		memoryRamTypeRepository: MemoryRamTypeRepository
+		categoryRepository: CategoryRepository
+		brandRepository: BrandRepository
+	}) {
+		this.brandRepository = brandRepository
+		this.categoryRepository = categoryRepository
+		this.inputTypeRepository = inputTypeRepository
+		this.memoryRamTypeRepository = memoryRamTypeRepository
+		this.modelSeriesRepository = modelSeriesRepository
+	}
 
 	// Define the run method to create model series
 	async run({ name, categoryId, brandId, generic, ...otherParams }: ModelSeriesParams): Promise<void> {

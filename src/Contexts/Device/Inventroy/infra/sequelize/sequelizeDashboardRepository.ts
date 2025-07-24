@@ -15,7 +15,10 @@ import { type AggregatedBrandData, type AggregatedHDDData } from './dashboard/ty
 export class SequelizeComputerDashboardRepository implements ComputerDashboardRepository {
 	private readonly cacheKeyPrefix: string = 'dashboard:computer'
 
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method countTotalHDD

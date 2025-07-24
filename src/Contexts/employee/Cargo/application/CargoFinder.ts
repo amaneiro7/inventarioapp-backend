@@ -4,7 +4,10 @@ import { CargoId } from '../domain/CargoId'
 import { type CargoRepository } from '../domain/CargoRepository'
 
 export class CargoFinder {
-	constructor(private readonly cargoRepository: CargoRepository) {}
+	private readonly cargoRepository: CargoRepository
+	constructor({ cargoRepository }: { cargoRepository: CargoRepository }) {
+		this.cargoRepository = cargoRepository
+	}
 
 	async run(params: { id: string }): Promise<CargoDto> {
 		const { id } = params

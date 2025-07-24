@@ -12,11 +12,21 @@ import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
 export class VicepresidenciaEjecutivaUpdater {
 	private readonly updateVicepresidenciaEjecutivaUseCase: UpdateVicepresidenciaEjecutivaUseCase
-	constructor(
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		cargoRepository,
+		directivaRepository,
+		vicepresidenciaEjecutivaRepository
+	}: {
+		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
+		this.directivaRepository = directivaRepository
+		this.cargoRepository = cargoRepository
 		this.updateVicepresidenciaEjecutivaUseCase = new UpdateVicepresidenciaEjecutivaUseCase(
 			this.vicepresidenciaEjecutivaRepository,
 			this.directivaRepository,

@@ -7,10 +7,18 @@ import { type UserRepository } from '../domain/UserRepository'
 import { type RoleRepository } from '../../Role/domain/RoleRepository'
 
 export class UserRegister {
-	constructor(
-		private readonly userRepository: UserRepository,
-		private readonly roleRepository: RoleRepository
-	) {}
+	private readonly userRepository: UserRepository
+	private readonly roleRepository: RoleRepository
+	constructor({
+		userRepository,
+		roleRepository
+	}: {
+		userRepository: UserRepository
+		roleRepository: RoleRepository
+	}) {
+		this.userRepository = userRepository
+		this.roleRepository = roleRepository
+	}
 
 	async run({ payload, user }: { payload: UserPrimitives; user?: JwtPayloadUser }): Promise<void> {
 		// Primero se valida si el usuario que esta realizando esta accion tiene permisos

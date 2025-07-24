@@ -4,7 +4,10 @@ import { type CityDto } from '../domain/City.dto'
 import { type CityRepository } from '../domain/CityRepository'
 
 export class CityFinder {
-	constructor(private readonly cityRepository: CityRepository) {}
+	private readonly cityRepository: CityRepository
+	constructor({ cityRepository }: { cityRepository: CityRepository }) {
+		this.cityRepository = cityRepository
+	}
 
 	async run(params: { id: string }): Promise<CityDto> {
 		const { id } = params

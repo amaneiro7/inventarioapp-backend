@@ -10,8 +10,10 @@ export class RedisRepository implements CacheRepository {
 			port: config.redis.port
 		}
 	})
+	private readonly logger: Logger
 
-	constructor(private readonly logger: Logger) {
+	constructor({ logger }: { logger: Logger }) {
+		this.logger = logger
 		this.client.on('error', error => this.logger.error(`'Redis Client Error', ${error}`))
 	}
 

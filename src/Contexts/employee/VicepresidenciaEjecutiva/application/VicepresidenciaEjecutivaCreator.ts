@@ -10,11 +10,21 @@ import {
 
 export class VicepresidenciaEjecutivaCreator {
 	private readonly createVicepresidenciaEjecutivaUseCase: CreateVicepresidenciaEjecutivaUseCase
-	constructor(
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		cargoRepository,
+		directivaRepository,
+		vicepresidenciaEjecutivaRepository
+	}: {
+		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
+		this.directivaRepository = directivaRepository
+		this.cargoRepository = cargoRepository
 		this.createVicepresidenciaEjecutivaUseCase = new CreateVicepresidenciaEjecutivaUseCase(
 			this.vicepresidenciaEjecutivaRepository,
 			this.directivaRepository,

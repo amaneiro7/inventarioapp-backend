@@ -24,7 +24,7 @@ export class InventarioBackendApp {
 
 	async start(): Promise<void> {
 		const port = config.port
-		this.server = new Server(port, this.logger)
+		this.server = new Server({ port, logger: this.logger })
 
 		const passportManager: PassportManager = container.resolve(AuthDependencies.PassportManager)
 		await passportManager.initialize()

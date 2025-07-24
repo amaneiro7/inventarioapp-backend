@@ -8,10 +8,17 @@ import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
 export class DirectivaUpdater {
 	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
-	constructor(
-		private readonly directivaRepository: DepartmentRepository<DirectivaDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		cargoRepository,
+		directivaRepository
+	}: {
+		directivaRepository: DepartmentRepository<DirectivaDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.cargoRepository = cargoRepository
+		this.directivaRepository = directivaRepository
 		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
 	}
 

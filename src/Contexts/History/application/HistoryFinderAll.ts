@@ -22,21 +22,58 @@ import { type ProcessorRepository } from '../../Features/Processor/Processor/dom
  * This service is optimized to prevent N+1 query problems by fetching related data in bulk.
  */
 export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
-	constructor(
-		private readonly historyRepository: HistoryRepository,
-		private readonly statusRepository: StatusRepository,
-		private readonly employeeRepository: EmployeeRepository,
-		private readonly brandRepository: BrandRepository,
-		private readonly categoryRepository: CategoryRepository,
-		private readonly modelSeriesRepository: ModelSeriesRepository,
-		private readonly hardDriveTypeRepository: HardDriveTypeRepository,
-		private readonly hardDriveCapacityRepository: HardDriveCapacityRepository,
-		private readonly operatingSystemRepository: OperatingSystemRepository,
-		private readonly operatingSystemArqRepository: OperatingSystemArqRepository,
-		private readonly locationRepository: LocationRepository,
-		private readonly processorRepository: ProcessorRepository
-	) {
+	private readonly historyRepository: HistoryRepository
+	private readonly statusRepository: StatusRepository
+	private readonly employeeRepository: EmployeeRepository
+	private readonly brandRepository: BrandRepository
+	private readonly categoryRepository: CategoryRepository
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly hardDriveTypeRepository: HardDriveTypeRepository
+	private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
+	private readonly operatingSystemRepository: OperatingSystemRepository
+	private readonly operatingSystemArqRepository: OperatingSystemArqRepository
+	private readonly locationRepository: LocationRepository
+	private readonly processorRepository: ProcessorRepository
+	constructor({
+		historyRepository,
+		statusRepository,
+		employeeRepository,
+		brandRepository,
+		categoryRepository,
+		modelSeriesRepository,
+		hardDriveTypeRepository,
+		hardDriveCapacityRepository,
+		operatingSystemRepository,
+		operatingSystemArqRepository,
+		locationRepository,
+		processorRepository
+	}: {
+		historyRepository: HistoryRepository
+		statusRepository: StatusRepository
+		employeeRepository: EmployeeRepository
+		brandRepository: BrandRepository
+		categoryRepository: CategoryRepository
+		modelSeriesRepository: ModelSeriesRepository
+		hardDriveTypeRepository: HardDriveTypeRepository
+		hardDriveCapacityRepository: HardDriveCapacityRepository
+		operatingSystemRepository: OperatingSystemRepository
+		operatingSystemArqRepository: OperatingSystemArqRepository
+		locationRepository: LocationRepository
+		processorRepository: ProcessorRepository
+	}) {
 		super()
+		this.historyRepository = historyRepository
+		this.statusRepository = statusRepository
+		this.employeeRepository = employeeRepository
+		this.brandRepository = brandRepository
+		this.categoryRepository = categoryRepository
+		this.modelSeriesRepository = modelSeriesRepository
+		this.hardDriveTypeRepository = hardDriveTypeRepository
+		this.hardDriveCapacityRepository = hardDriveCapacityRepository
+		this.operatingSystemRepository = operatingSystemRepository
+		this.operatingSystemArqRepository = operatingSystemArqRepository
+		this.locationRepository = locationRepository
+		this.processorRepository = processorRepository
 	}
 
 	/**

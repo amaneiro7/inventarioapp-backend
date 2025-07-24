@@ -5,8 +5,10 @@ import { type TypeOfSiteDto } from '../domain/TypeOfSite.dto'
 import { type TypeOfSiteRepository } from '../domain/TypeOfSiteRepository'
 
 export class TypeOfSiteFinderAll extends GetAllBaseService<TypeOfSiteDto> {
-	constructor(private readonly typeOfSiteRepository: TypeOfSiteRepository) {
+	private readonly typeOfSiteRepository: TypeOfSiteRepository
+	constructor({ typeOfSiteRepository }: { typeOfSiteRepository: TypeOfSiteRepository }) {
 		super()
+		this.typeOfSiteRepository = typeOfSiteRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<TypeOfSiteDto>> {

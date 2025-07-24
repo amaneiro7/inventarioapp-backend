@@ -9,7 +9,10 @@ import { type CountOSByRegionRepository } from '../../domain/CountOSByRegionRepo
 
 export class SequelizeCountOSByRegionRepository implements CountOSByRegionRepository {
 	private readonly cacheKey: string = 'dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	async run(): Promise<{}> {
 		return await this.cache.getCachedData({

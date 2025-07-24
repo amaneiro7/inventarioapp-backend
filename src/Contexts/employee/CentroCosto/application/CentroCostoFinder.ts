@@ -5,7 +5,10 @@ import { CodCentroCosto } from '../domain/CodCentroCosto'
 import { CentroCostoDoesNotExistError } from '../domain/CentroCostoDoesNotExistError'
 
 export class CentroCostoFinder {
-	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
+	private readonly centroCostoRepository: CentroCostoRepository
+	constructor({ centroCostoRepository }: { centroCostoRepository: CentroCostoRepository }) {
+		this.centroCostoRepository = centroCostoRepository
+	}
 
 	async run(params: { id: Primitives<CodCentroCosto> }): Promise<CentroCostoDto> {
 		const { id } = params

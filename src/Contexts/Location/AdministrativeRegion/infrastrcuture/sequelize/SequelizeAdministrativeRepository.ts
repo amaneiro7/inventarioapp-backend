@@ -21,8 +21,10 @@ export class SequelizeAdministrativeRegionRepository
 	implements AdministrativeRegionRepository
 {
 	private readonly cacheKey: string = 'administrativeRegions'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

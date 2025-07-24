@@ -4,7 +4,10 @@ import { type RegionDto } from '../domain/Region.dto'
 import { type RegionRepository } from '../domain/RegionRepository'
 
 export class RegionFinder {
-	constructor(private readonly regionRepository: RegionRepository) {}
+	private readonly regionRepository: RegionRepository
+	constructor({ regionRepository }: { regionRepository: RegionRepository }) {
+		this.regionRepository = regionRepository
+	}
 
 	async run(params: { id: string }): Promise<RegionDto> {
 		const { id } = params

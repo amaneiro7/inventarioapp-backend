@@ -21,8 +21,10 @@ export class SequelizeLocationStatusRepository
 	implements LocationStatusRepository
 {
 	private readonly cacheKey: string = 'locationStatus'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

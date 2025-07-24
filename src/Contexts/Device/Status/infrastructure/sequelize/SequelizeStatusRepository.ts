@@ -18,8 +18,10 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
  */
 export class SequelizeStatusRepository extends CriteriaToSequelizeConverter implements StatusRepository {
 	private readonly cacheKey: string = 'status'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

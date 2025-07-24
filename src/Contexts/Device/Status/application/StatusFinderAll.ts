@@ -5,8 +5,10 @@ import { type StatusDto } from '../domain/Status.dto'
 import { type StatusRepository } from '../domain/StatusRepository'
 
 export class StatusFinderAll extends GetAllBaseService<StatusDto> {
-	constructor(private readonly statusRepository: StatusRepository) {
+	private readonly statusRepository: StatusRepository
+	constructor({ statusRepository }: { statusRepository: StatusRepository }) {
 		super()
+		this.statusRepository = statusRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<StatusDto>> {

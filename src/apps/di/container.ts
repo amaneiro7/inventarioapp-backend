@@ -2,18 +2,20 @@ import { sync } from 'fast-glob'
 import { resolve } from 'node:path'
 import { type AwilixContainer, createContainer } from 'awilix'
 
-export const container = createContainer({ injectionMode: 'CLASSIC' })
+export const container = createContainer({ injectionMode: 'PROXY', strict: true })
 
 export async function registerDI(container: AwilixContainer) {
 	const routePath = 'src/**/*.di.*'
 	const routes = sync(routePath)
 	routes.forEach(async route => {
-		await register(route, container)
+		await register({ routePath: route, container })
 	})
 }
 
-async function register(routePath: string, container: AwilixContainer) {
+async function register({ routePath, container }: { routePath: string; container: AwilixContainer }) {
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	const dependencies = require(resolve(routePath))
+
 	// si el archivo no contiene un funcion llamada register no se
 	if (!dependencies.register) return
 	await dependencies.register(container)

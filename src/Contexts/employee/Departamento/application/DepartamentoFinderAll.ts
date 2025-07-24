@@ -5,8 +5,10 @@ import { type DepartamentoDto } from '../domain/Departamento.dto'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 
 export class DepartamentoFinderAll extends GetAllBaseService<DepartamentoDto> {
-	constructor(private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>) {
+	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	constructor({ departamentoRepository }: { departamentoRepository: DepartmentRepository<DepartamentoDto> }) {
 		super()
+		this.departamentoRepository = departamentoRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<DepartamentoDto>> {

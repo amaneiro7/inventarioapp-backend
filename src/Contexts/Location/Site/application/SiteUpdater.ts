@@ -1,13 +1,16 @@
 import { Site } from '../domain/Site'
-import { type SitePrimitives } from '../domain/Site.dto'
-import { SiteAddress } from '../domain/SiteAddress'
-import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
 import { SiteId } from '../domain/SiteId'
 import { SiteName } from '../domain/SiteName'
+import { SiteAddress } from '../domain/SiteAddress'
+import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
+import { type SitePrimitives } from '../domain/Site.dto'
 import { type SiteRepository } from '../domain/SiteRepository'
 
 export class SiteUpdater {
-	constructor(private readonly siteRepository: SiteRepository) {}
+	private readonly siteRepository: SiteRepository
+	constructor({ siteRepository }: { siteRepository: SiteRepository }) {
+		this.siteRepository = siteRepository
+	}
 
 	async run({ id, params }: { id: string; params: Partial<Omit<SitePrimitives, 'id'>> }): Promise<void> {
 		const siteId = new SiteId(id).value

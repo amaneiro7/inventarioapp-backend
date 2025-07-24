@@ -6,8 +6,10 @@ import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 
 export class RoleFinderAll extends GetAllBaseService<RoleDto> {
-	constructor(private readonly roleRepository: RoleRepository) {
+	private readonly roleRepository: RoleRepository
+	constructor({ roleRepository }: { roleRepository: RoleRepository }) {
 		super()
+		this.roleRepository = roleRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<RoleDto>> {

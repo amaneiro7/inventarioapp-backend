@@ -9,7 +9,10 @@ import { type CacheRepository } from '../../Shared/domain/CacheRepository'
 export class TokenDenylistService {
 	private readonly prefix = 'denylist:'
 
-	constructor(private readonly cacheRepository: CacheRepository) {}
+	private readonly cacheRepository: CacheRepository
+	constructor({ cacheRepository }: { cacheRepository: CacheRepository }) {
+		this.cacheRepository = cacheRepository
+	}
 
 	/**
 	 * @method addToDenylist

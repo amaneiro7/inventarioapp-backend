@@ -41,13 +41,30 @@ import { type LaptopModelsParams } from '../../ModelCharacteristics/Computers/La
 import { type ComputerModelsParams } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
 
 export class ModelSeriesUpdater {
-	constructor(
-		private readonly modelSeriesRepository: ModelSeriesRepository,
-		private readonly inputTypeRepository: InputTypeRepository,
-		private readonly memoryRamTypeRepository: MemoryRamTypeRepository,
-		private readonly categoryRepository: CategoryRepository,
-		private readonly brandRepository: BrandRepository
-	) {}
+	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly inputTypeRepository: InputTypeRepository
+	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
+	private readonly categoryRepository: CategoryRepository
+	private readonly brandRepository: BrandRepository
+	constructor({
+		brandRepository,
+		categoryRepository,
+		inputTypeRepository,
+		memoryRamTypeRepository,
+		modelSeriesRepository
+	}: {
+		modelSeriesRepository: ModelSeriesRepository
+		inputTypeRepository: InputTypeRepository
+		memoryRamTypeRepository: MemoryRamTypeRepository
+		categoryRepository: CategoryRepository
+		brandRepository: BrandRepository
+	}) {
+		this.brandRepository = brandRepository
+		this.categoryRepository = categoryRepository
+		this.inputTypeRepository = inputTypeRepository
+		this.memoryRamTypeRepository = memoryRamTypeRepository
+		this.modelSeriesRepository = modelSeriesRepository
+	}
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
 		const modelSeriesId = new ModelSeriesId(id).value

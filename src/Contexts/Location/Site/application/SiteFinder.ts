@@ -4,7 +4,10 @@ import { type SitePrimitives } from '../domain/Site.dto'
 import { type SiteRepository } from '../domain/SiteRepository'
 
 export class SiteFinder {
-	constructor(private readonly siteRepository: SiteRepository) {}
+	private readonly siteRepository: SiteRepository
+	constructor({ siteRepository }: { siteRepository: SiteRepository }) {
+		this.siteRepository = siteRepository
+	}
 
 	async run(params: { id: string }): Promise<SitePrimitives> {
 		const { id } = params

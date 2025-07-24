@@ -1,17 +1,27 @@
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { CreateDepartamentoUseCase } from '../domain/CreateDepartmentoUseCase'
 import { Departamento } from '../domain/Departamento'
+import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type DepartamentoDto, type DepartamentoParams } from '../domain/Departamento.dto'
 
 export class DepartamentoCreator {
 	private readonly createDepartamentoUseCase: CreateDepartamentoUseCase
-	constructor(
-		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
-		private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>,
-		private readonly cargoRepository: CargoRepository
-	) {
+	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	private readonly cargoRepository: CargoRepository
+	constructor({
+		cargoRepository,
+		departamentoRepository,
+		vicepresidenciaRepository
+	}: {
+		departamentoRepository: DepartmentRepository<DepartamentoDto>
+		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+		cargoRepository: CargoRepository
+	}) {
+		this.cargoRepository = cargoRepository
+		this.departamentoRepository = departamentoRepository
+		this.vicepresidenciaRepository = vicepresidenciaRepository
 		this.createDepartamentoUseCase = new CreateDepartamentoUseCase(
 			this.departamentoRepository,
 			this.vicepresidenciaRepository,

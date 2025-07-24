@@ -7,7 +7,10 @@ import { type ComputerMemoryRamRepository } from '../../domain/ComputerMemoryRam
 
 export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRepository {
 	private readonly cacheKey: string = 'dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	async run(): Promise<{}> {
 		return await this.cache.getCachedData({

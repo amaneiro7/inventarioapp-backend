@@ -23,8 +23,10 @@ export class SequelizeDeviceMonitoringRepository
 	implements DeviceMonitoringRepository
 {
 	private readonly cacheKey: string = 'deviceMonitoring'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**
@@ -46,7 +48,7 @@ export class SequelizeDeviceMonitoringRepository
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				}
+				} as ResponseDB<DeviceMonitoringDto>
 			}
 		})
 	}
@@ -92,7 +94,7 @@ export class SequelizeDeviceMonitoringRepository
 						}
 					]
 				})
-				return rows.map(row => row.get({ plain: true }))
+				return rows.map(row => row.get({ plain: true })) as DeviceMonitoringDto[]
 			}
 		})
 	}
@@ -109,7 +111,7 @@ export class SequelizeDeviceMonitoringRepository
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const deviceMonitoring = await DeviceMonitoringModel.findByPk(id)
-				return deviceMonitoring ? deviceMonitoring.get({ plain: true }) : null
+				return deviceMonitoring ? (deviceMonitoring.get({ plain: true }) as DeviceMonitoringDto) : null
 			}
 		})
 	}
@@ -148,4 +150,3 @@ export class SequelizeDeviceMonitoringRepository
 		}
 	}
 }
-

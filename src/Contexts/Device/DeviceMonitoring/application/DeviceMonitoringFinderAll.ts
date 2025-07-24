@@ -5,8 +5,10 @@ import { type DeviceMonitoringMapped } from '../domain/entity/DeviceMonitoring.d
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 
 export class DeviceMonitoringFinderAll extends GetAllBaseService<DeviceMonitoringMapped> {
-	constructor(private readonly deviceMonitoringRepository: DeviceMonitoringRepository) {
+	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	constructor({ deviceMonitoringRepository }: { deviceMonitoringRepository: DeviceMonitoringRepository }) {
 		super()
+		this.deviceMonitoringRepository = deviceMonitoringRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<DeviceMonitoringMapped>> {

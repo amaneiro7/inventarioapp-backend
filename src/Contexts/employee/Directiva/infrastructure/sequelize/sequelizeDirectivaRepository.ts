@@ -24,8 +24,10 @@ export class SequelizeDirectivaRepository
 	implements DepartmentRepository<DirectivaDto>
 {
 	private readonly cacheKey: string = 'directiva'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

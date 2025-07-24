@@ -9,7 +9,10 @@ import { type UserPrimitives } from '../domain/User'
 import { type UserRepository } from '../domain/UserRepository'
 
 export class UserFinder {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	async run({
 		id,
@@ -29,6 +32,7 @@ export class UserFinder {
 		if (findUser.roleId === RoleId.Options.ADMIN) {
 			throw new UserDoesNotExistError('')
 		}
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { password, ...res } = findUser
 		return {
 			...res,

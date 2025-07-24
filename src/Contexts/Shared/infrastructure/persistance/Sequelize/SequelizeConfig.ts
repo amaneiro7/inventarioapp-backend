@@ -28,8 +28,10 @@ export const sequelize = new Sequelize(url, {
 
 export class SequelizeConfig implements Database {
 	private sequelizeConnection: Sequelize
-	constructor(private readonly logger: Logger) {
+	private readonly logger: Logger
+	constructor({ logger }: { logger: Logger }) {
 		this.sequelizeConnection = sequelize
+		this.logger = logger
 	}
 
 	public createConfig(): Sequelize {

@@ -5,8 +5,10 @@ import { type OperatingSystemArqDto } from '../domain/OperatingSystemArq.dto'
 import { type OperatingSystemArqRepository } from '../domain/OperatingSystemArqRepository'
 
 export class OperatingSystemArqFinderAll extends GetAllBaseService<OperatingSystemArqDto> {
-	constructor(private readonly operatingSystemArqRepository: OperatingSystemArqRepository) {
+	private readonly operatingSystemArqRepository: OperatingSystemArqRepository
+	constructor({ operatingSystemArqRepository }: { operatingSystemArqRepository: OperatingSystemArqRepository }) {
 		super()
+		this.operatingSystemArqRepository = operatingSystemArqRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<OperatingSystemArqDto>> {

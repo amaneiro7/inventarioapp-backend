@@ -5,8 +5,14 @@ import { type AdministrativeRegionDto } from '../domain/AdministrativeRegion.dto
 import { type AdministrativeRegionRepository } from '../domain/AdministrativeRegionRepository'
 
 export class AdministrativeRegionFinderAll extends GetAllBaseService<AdministrativeRegionDto> {
-	constructor(private readonly administrativeRegionRepository: AdministrativeRegionRepository) {
+	private readonly administrativeRegionRepository: AdministrativeRegionRepository
+	constructor({
+		administrativeRegionRepository
+	}: {
+		administrativeRegionRepository: AdministrativeRegionRepository
+	}) {
 		super()
+		this.administrativeRegionRepository = administrativeRegionRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<AdministrativeRegionDto>> {

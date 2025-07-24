@@ -31,8 +31,10 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
 	private readonly models = sequelize.models
 	private readonly cacheKey: string = 'modelSeries'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

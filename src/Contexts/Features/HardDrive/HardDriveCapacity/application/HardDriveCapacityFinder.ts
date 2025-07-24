@@ -5,8 +5,10 @@ import { type HardDriveCapacityDto } from '../domain/HardDriveCapacity.dto'
 import { type HardDriveCapacityRepository } from '../domain/HardDriveCapacityRepository'
 
 export class HardDriveCapacityFinderAll extends GetAllBaseService<HardDriveCapacityDto> {
-	constructor(private readonly hardDriveCapacityRepository: HardDriveCapacityRepository) {
+	private readonly hardDriveCapacityRepository: HardDriveCapacityRepository
+	constructor({ hardDriveCapacityRepository }: { hardDriveCapacityRepository: HardDriveCapacityRepository }) {
 		super()
+		this.hardDriveCapacityRepository = hardDriveCapacityRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<HardDriveCapacityDto>> {

@@ -4,7 +4,10 @@ import { type LocationRepository } from '../domain/LocationRepository'
 import { type LocationDto } from '../domain/Location.dto'
 
 export class LocationFinder {
-	constructor(private readonly locationRepository: LocationRepository) {}
+	private readonly locationRepository: LocationRepository
+	constructor({ locationRepository }: { locationRepository: LocationRepository }) {
+		this.locationRepository = locationRepository
+	}
 
 	async run(params: { id: string }): Promise<LocationDto> {
 		const { id } = params

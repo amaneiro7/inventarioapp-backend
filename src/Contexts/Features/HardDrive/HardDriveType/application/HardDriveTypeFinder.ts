@@ -5,8 +5,10 @@ import { type HardDriveTypeDto } from '../domain/HardDriveType.dto'
 import { type HardDriveTypeRepository } from '../domain/HardDriveTypeRepository'
 
 export class HardDriveTypeFinderAll extends GetAllBaseService<HardDriveTypeDto> {
-	constructor(private readonly hardDriveTypeRepository: HardDriveTypeRepository) {
+	private readonly hardDriveTypeRepository: HardDriveTypeRepository
+	constructor({ hardDriveTypeRepository }: { hardDriveTypeRepository: HardDriveTypeRepository }) {
 		super()
+		this.hardDriveTypeRepository = hardDriveTypeRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<HardDriveTypeDto>> {

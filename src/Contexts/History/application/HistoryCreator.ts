@@ -10,7 +10,10 @@ export class HistoryCreator {
 	/**
 	 * @param {HistoryRepository} historyRepository - The repository for persisting history data.
 	 */
-	constructor(private readonly historyRepository: HistoryRepository) {}
+	private readonly historyRepository: HistoryRepository
+	constructor({ historyRepository }: { historyRepository: HistoryRepository }) {
+		this.historyRepository = historyRepository
+	}
 
 	/**
 	 * @description Creates a History entity from the provided parameters and saves it to the repository.

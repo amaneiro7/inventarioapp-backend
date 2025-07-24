@@ -5,8 +5,10 @@ import { type LocationMonitoringMapped } from '../domain/entity/LocationMonitori
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 
 export class LocationMonitoringFinderAll extends GetAllBaseService<LocationMonitoringMapped> {
-	constructor(private readonly locationMonitoringRepository: LocationMonitoringRepository) {
+	private readonly locationMonitoringRepository: LocationMonitoringRepository
+	constructor({ locationMonitoringRepository }: { locationMonitoringRepository: LocationMonitoringRepository }) {
 		super()
+		this.locationMonitoringRepository = locationMonitoringRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<LocationMonitoringMapped>> {

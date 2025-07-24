@@ -5,10 +5,14 @@ import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 
 export class VicepresidenciaEjecutivaFinderAll extends GetAllBaseService<VicepresidenciaEjecutivaDto> {
-	constructor(
-		private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-	) {
+	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	constructor({
+		vicepresidenciaEjecutivaRepository
+	}: {
+		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	}) {
 		super()
+		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<VicepresidenciaEjecutivaDto>> {

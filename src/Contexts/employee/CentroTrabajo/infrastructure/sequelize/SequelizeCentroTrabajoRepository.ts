@@ -20,8 +20,10 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
  */
 export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConverter implements CentroTrabajoRepository {
 	private readonly cacheKey: string = 'CentroTrabajos'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

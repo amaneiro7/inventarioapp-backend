@@ -15,7 +15,10 @@ import { type TotalScreensRepository } from '../../domain/TotalScreensRepository
  */
 export class SequelizeTotalScreensRepository implements TotalScreensRepository {
 	private readonly cacheKey: string = 'totalScreens'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

@@ -9,10 +9,18 @@ import { CentroCostoAlreadyExistError } from '../../CentroCosto/domain/CentroCos
 import { CentroTrabajoParams } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoCreator {
-	constructor(
-		private readonly centroTrabajoRepository: CentroTrabajoRepository,
-		private readonly centroCostoRepository: CentroCostoRepository
-	) {}
+	private readonly centroTrabajoRepository: CentroTrabajoRepository
+	private readonly centroCostoRepository: CentroCostoRepository
+	constructor({
+		centroCostoRepository,
+		centroTrabajoRepository
+	}: {
+		centroTrabajoRepository: CentroTrabajoRepository
+		centroCostoRepository: CentroCostoRepository
+	}) {
+		this.centroCostoRepository = centroCostoRepository
+		this.centroTrabajoRepository = centroTrabajoRepository
+	}
 
 	async run({ params: { id, name, centroCostoId } }: { params: CentroTrabajoParams }): Promise<void> {
 		await this.ensureCentroTrabajoDoesNotExist({ id })

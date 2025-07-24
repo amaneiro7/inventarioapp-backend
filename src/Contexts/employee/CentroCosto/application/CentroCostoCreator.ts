@@ -6,7 +6,10 @@ import { type CodCentroCosto } from '../domain/CodCentroCosto'
 import { type CentroCostoParams } from '../domain/CentroCosto.dto'
 
 export class CentroCostoCreator {
-	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
+	private readonly centroCostoRepository: CentroCostoRepository
+	constructor({ centroCostoRepository }: { centroCostoRepository: CentroCostoRepository }) {
+		this.centroCostoRepository = centroCostoRepository
+	}
 
 	async run({ params: { id, name } }: { params: CentroCostoParams }): Promise<void> {
 		await this.ensureCentroCostoDoesNotExist({ id })

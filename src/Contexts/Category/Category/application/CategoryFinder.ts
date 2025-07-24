@@ -13,7 +13,10 @@ export class CategoriesFinder {
 	 * Creates an instance of CategoriesFinder.
 	 * @param {CategoryRepository} categoryRepository - The repository for categories.
 	 */
-	constructor(private readonly categoryRepository: CategoryRepository) {}
+	private readonly categoryRepository: CategoryRepository
+	constructor({ categoryRepository }: { categoryRepository: CategoryRepository }) {
+		this.categoryRepository = categoryRepository
+	}
 
 	/**
 	 * Executes the service to find a category.

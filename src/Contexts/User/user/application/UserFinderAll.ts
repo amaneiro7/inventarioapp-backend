@@ -7,7 +7,10 @@ import { type UserRepository } from '../domain/UserRepository'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 
 export class UserFinderAll {
-	constructor(private readonly userRepository: UserRepository) {}
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		this.userRepository = userRepository
+	}
 
 	async run({
 		user,

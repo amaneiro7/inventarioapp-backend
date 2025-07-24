@@ -5,8 +5,10 @@ import { type MemoryRamTypeDto } from '../domain/MemoryRam.dto'
 import { type MemoryRamTypeRepository } from '../domain/MemoryRamTypeRepository'
 
 export class MemoryRamTypeFinderAll extends GetAllBaseService<MemoryRamTypeDto> {
-	constructor(private readonly memoryRamTypeRepository: MemoryRamTypeRepository) {
+	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
+	constructor({ memoryRamTypeRepository }: { memoryRamTypeRepository: MemoryRamTypeRepository }) {
 		super()
+		this.memoryRamTypeRepository = memoryRamTypeRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<MemoryRamTypeDto>> {

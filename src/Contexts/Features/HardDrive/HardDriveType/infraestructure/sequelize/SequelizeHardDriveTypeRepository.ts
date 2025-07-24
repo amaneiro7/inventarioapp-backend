@@ -18,8 +18,10 @@ import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
  */
 export class SequelizeHardDriveTypeRepository extends CriteriaToSequelizeConverter implements HardDriveTypeRepository {
 	private readonly cacheKey: string = 'hardDriveType'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

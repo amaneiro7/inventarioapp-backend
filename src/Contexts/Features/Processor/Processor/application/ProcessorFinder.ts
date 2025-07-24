@@ -3,7 +3,10 @@ import { ProcessorDoesNotExistError } from '../domain/ProcessorDoesNotExistError
 import { ProcessorId } from '../domain/ProcessorId'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 export class ProcessorsFinder {
-	constructor(private readonly processorRepository: ProcessorRepository) {}
+	private readonly processorRepository: ProcessorRepository
+	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+		this.processorRepository = processorRepository
+	}
 
 	async run(params: { id: string }): Promise<ProcessorDto> {
 		const { id } = params

@@ -10,10 +10,18 @@ import { type CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { type CentroTrabajoParams } from '../domain/CentroTrabajo.dto'
 
 export class CentroTrabajoUpdater {
-	constructor(
-		private readonly centroTrabajoRepository: CentroTrabajoRepository,
-		private readonly centroCostoRepository: CentroCostoRepository
-	) {}
+	private readonly centroTrabajoRepository: CentroTrabajoRepository
+	private readonly centroCostoRepository: CentroCostoRepository
+	constructor({
+		centroCostoRepository,
+		centroTrabajoRepository
+	}: {
+		centroTrabajoRepository: CentroTrabajoRepository
+		centroCostoRepository: CentroCostoRepository
+	}) {
+		this.centroCostoRepository = centroCostoRepository
+		this.centroTrabajoRepository = centroTrabajoRepository
+	}
 
 	async run({
 		id,

@@ -5,7 +5,10 @@ import { type LocationId } from '../../Location/domain/LocationId'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 
 export class LocationMonitoringCreator {
-	constructor(private readonly locationMonitoringRepository: LocationMonitoringRepository) {}
+	private readonly locationMonitoringRepository: LocationMonitoringRepository
+	constructor({ locationMonitoringRepository }: { locationMonitoringRepository: LocationMonitoringRepository }) {
+		this.locationMonitoringRepository = locationMonitoringRepository
+	}
 
 	async run({ locationId }: { locationId: Primitives<LocationId> }): Promise<void> {
 		const deviceMonitoring = LocationMonitoring.create({

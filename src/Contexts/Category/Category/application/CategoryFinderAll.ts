@@ -15,8 +15,10 @@ export class CategoriesFinderAll extends GetAllBaseService<CategoryDto> {
 	 * Creates an instance of CategoriesFinderAll.
 	 * @param {CategoryRepository} categoryRepository - The repository for categories.
 	 */
-	constructor(private readonly categoryRepository: CategoryRepository) {
+	private readonly categoryRepository: CategoryRepository
+	constructor({ categoryRepository }: { categoryRepository: CategoryRepository }) {
 		super()
+		this.categoryRepository = categoryRepository
 	}
 
 	/**

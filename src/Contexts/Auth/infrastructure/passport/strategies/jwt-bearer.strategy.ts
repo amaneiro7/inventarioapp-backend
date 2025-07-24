@@ -10,7 +10,8 @@ import { type TokenDenylistService } from '../../../domain/TokenDenylistService'
  * It also checks if the token has been revoked by consulting the `TokenDenylistService`.
  */
 export class JwtBearerStrategy extends Strategy {
-	constructor(private readonly tokenDenylistService: TokenDenylistService) {
+	private readonly tokenDenylistService: TokenDenylistService
+	constructor({ tokenDenylistService }: { tokenDenylistService: TokenDenylistService }) {
 		const jwtOptions: StrategyOptions = {
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			secretOrKey: config.accessTokenSecret,
@@ -23,5 +24,6 @@ export class JwtBearerStrategy extends Strategy {
 			}
 			done(null, jwtPayload)
 		})
+		this.tokenDenylistService = tokenDenylistService
 	}
 }

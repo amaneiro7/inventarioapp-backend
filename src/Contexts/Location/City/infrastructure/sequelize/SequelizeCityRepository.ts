@@ -20,8 +20,10 @@ import { CityAssociation } from './CityAssociation'
  */
 export class SequelizeCityRepository extends CriteriaToSequelizeConverter implements CityRepository {
 	private readonly cacheKey: string = 'cities'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

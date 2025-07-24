@@ -5,8 +5,10 @@ import { type DeviceDto } from '../domain/Device.dto'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 
 export class DevicesFinderAll extends GetAllBaseService<DeviceDto> {
-	constructor(private readonly deviceRepository: DeviceRepository) {
+	private readonly deviceRepository: DeviceRepository
+	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
 		super()
+		this.deviceRepository = deviceRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<DeviceDto>> {

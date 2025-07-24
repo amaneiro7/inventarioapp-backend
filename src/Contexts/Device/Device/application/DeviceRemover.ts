@@ -3,7 +3,10 @@ import { DeviceId } from '../domain/DeviceId'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 
 export class DeviceRemover {
-	constructor(private readonly deviceRepository: DeviceRepository) {}
+	private readonly deviceRepository: DeviceRepository
+	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
+		this.deviceRepository = deviceRepository
+	}
 
 	async run(params: { id: string }): Promise<void> {
 		const { id } = params

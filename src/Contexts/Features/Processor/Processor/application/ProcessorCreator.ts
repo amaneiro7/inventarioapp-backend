@@ -1,11 +1,14 @@
 import { Processor } from '../domain/Processor'
-import { type ProcessorParams } from '../domain/Processor.dto'
 import { ProcessorAlreadyExistError } from '../domain/ProcessorAlreadyExistError'
 import { ProcessorNumberModel } from '../domain/ProcessorNumberModel'
+import { type ProcessorParams } from '../domain/Processor.dto'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
 export class ProcessorCreator {
-	constructor(private readonly processorRepository: ProcessorRepository) {}
+	private readonly processorRepository: ProcessorRepository
+	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+		this.processorRepository = processorRepository
+	}
 
 	async run({ productCollection, numberModel, cores, threads, frequency }: ProcessorParams): Promise<void> {
 		const processor = Processor.create({

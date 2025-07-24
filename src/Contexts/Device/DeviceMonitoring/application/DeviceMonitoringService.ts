@@ -17,13 +17,26 @@ export class DeviceMonitoringService extends MonitoringService<
 	DeviceMonitoring,
 	DeviceMonitoringRepository
 > {
-	constructor(
-		protected readonly deviceMonitoringRepository: DeviceMonitoringRepository,
-		protected readonly pingService: PingService,
-		protected readonly logger: Logger,
-		protected readonly pingLogger: PingLogger
-	) {
+	protected readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	protected readonly pingService: PingService
+	protected readonly logger: Logger
+	protected readonly pingLogger: PingLogger
+	constructor({
+		deviceMonitoringRepository,
+		logger,
+		pingLogger,
+		pingService
+	}: {
+		deviceMonitoringRepository: DeviceMonitoringRepository
+		pingService: PingService
+		logger: Logger
+		pingLogger: PingLogger
+	}) {
 		super(deviceMonitoringRepository, pingService, logger, pingLogger)
+		this.deviceMonitoringRepository = deviceMonitoringRepository
+		this.pingService = pingService
+		this.logger = logger
+		this.pingLogger = pingLogger
 	}
 	protected readonly monitoringConfig: MonitoringServiceConfig = {
 		concurrencyLimit: config.monitoring.device.deviceMonitoringConcurrencyLimit,

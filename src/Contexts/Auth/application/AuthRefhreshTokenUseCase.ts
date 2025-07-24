@@ -14,7 +14,12 @@ import { type AuthResponseDto } from '../domain/Auth.dto'
  * refresh tokens upon successful validation.
  */
 export class AuthRefreshTokenUseCase {
-	constructor(private readonly userRepository: UserRepository) {}
+	// Declare userRepository as a class property
+	private readonly userRepository: UserRepository
+	constructor({ userRepository }: { userRepository: UserRepository }) {
+		// Assign the passed userRepository to the class property
+		this.userRepository = userRepository
+	}
 
 	/**
 	 * @method run

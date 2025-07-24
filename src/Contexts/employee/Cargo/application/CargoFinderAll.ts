@@ -5,10 +5,11 @@ import { type CargoDto } from '../domain/Cargo.dto'
 import { type CargoRepository } from '../domain/CargoRepository'
 
 export class CargoFinderAll extends GetAllBaseService<CargoDto> {
-	constructor(private readonly cargoRepository: CargoRepository) {
+	private readonly cargoRepository: CargoRepository
+	constructor({ cargoRepository }: { cargoRepository: CargoRepository }) {
 		super()
+		this.cargoRepository = cargoRepository
 	}
-
 	async run(criteria: Criteria): Promise<ResponseService<CargoDto>> {
 		const { data, total } = await this.cargoRepository.searchAll(criteria)
 

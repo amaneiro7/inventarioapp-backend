@@ -7,7 +7,10 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CentroCostoParams } from '../domain/CentroCosto.dto'
 
 export class CentroCostoUpdater {
-	constructor(private readonly centroCostoRepository: CentroCostoRepository) {}
+	private readonly centroCostoRepository: CentroCostoRepository
+	constructor({ centroCostoRepository }: { centroCostoRepository: CentroCostoRepository }) {
+		this.centroCostoRepository = centroCostoRepository
+	}
 
 	async run({
 		id,

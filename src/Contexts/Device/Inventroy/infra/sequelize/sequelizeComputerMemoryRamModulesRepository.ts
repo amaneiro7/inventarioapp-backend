@@ -22,7 +22,10 @@ interface TypeOfSiteData {
 
 export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemoryRamModulesRepository {
 	private readonly cacheKey: string = 'dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	async run(): Promise<TypeOfSiteData[]> {
 		return await this.cache.getCachedData({

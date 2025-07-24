@@ -18,8 +18,10 @@ import { type RoleDto } from '../../domain/Role.dto'
  */
 export class SequelizeRolesRepository extends CriteriaToSequelizeConverter implements RoleRepository {
 	private readonly cacheKey: string = 'roles'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

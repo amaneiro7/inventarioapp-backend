@@ -15,7 +15,10 @@ import { type TotalComputerRepository } from '../../domain/TotalComputerReposito
  */
 export class SequelizeTotalComputerRepository implements TotalComputerRepository {
 	private readonly cacheKey: string = 'totalComputer'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	/**
 	 * @method run

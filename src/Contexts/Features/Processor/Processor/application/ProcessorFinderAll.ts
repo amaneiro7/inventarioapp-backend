@@ -5,8 +5,10 @@ import { type ProcessorDto } from '../domain/Processor.dto'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
 export class ProcessorsFinderAll extends GetAllBaseService<ProcessorDto> {
-	constructor(private readonly processorRepository: ProcessorRepository) {
+	private readonly processorRepository: ProcessorRepository
+	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
 		super()
+		this.processorRepository = processorRepository
 	}
 
 	async run(criteria: Criteria): Promise<ResponseService<ProcessorDto>> {

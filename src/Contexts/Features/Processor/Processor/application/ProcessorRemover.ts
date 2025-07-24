@@ -3,7 +3,10 @@ import { ProcessorId } from '../domain/ProcessorId'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
 export class ProcessorRemover {
-	constructor(private readonly processorRepository: ProcessorRepository) {}
+	private readonly processorRepository: ProcessorRepository
+	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+		this.processorRepository = processorRepository
+	}
 
 	async run(params: { id: string }): Promise<void> {
 		const { id } = params

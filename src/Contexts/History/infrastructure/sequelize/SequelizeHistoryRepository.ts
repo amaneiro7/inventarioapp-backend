@@ -17,8 +17,10 @@ import { type HistoryRepository } from '../../domain/HistoryRepository'
  */
 export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter implements HistoryRepository {
 	private readonly cacheKey: string = 'histories'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

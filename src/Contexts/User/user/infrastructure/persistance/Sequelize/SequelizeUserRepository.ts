@@ -19,8 +19,10 @@ import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
  */
 export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
 	private readonly cacheKey: string = 'users'
-	constructor(private readonly cache: CacheService) {
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
 		super()
+		this.cache = cache
 	}
 
 	/**

@@ -7,7 +7,10 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 
 export class SequelizeCountByCategoryRepository implements CountByCategoryRepository {
 	private readonly cacheKey: string = 'dashboard'
-	constructor(private readonly cache: CacheService) {}
+	private readonly cache: CacheService
+	constructor({ cache }: { cache: CacheService }) {
+		this.cache = cache
+	}
 
 	async run(): Promise<{}> {
 		return await this.cache.getCachedData({
