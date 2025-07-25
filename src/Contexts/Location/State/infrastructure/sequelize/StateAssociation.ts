@@ -1,29 +1,32 @@
-import { FindOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type FindOptions, type IncludeOptions } from 'sequelize'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class StateAssociation {
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = [
-			{
-				association: 'region', // 0
-				required: true,
-				include: [
-					{
-						association: 'administrativeRegion', // 0 - 0
-						required: true,
-						attributes: []
-					}
-				]
-			}
-		]
+		const whereFilters = { ...options.where }
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
+		}
+		options.include = [regionInclude]
 
-		if (options.where && 'administrativeRegionId' in options.where) {
-			;(options.include[0] as any).where = {
-				administrativeRegionId: options.where.administrativeRegionId
+		// Poder filtrar por region administrativa
+		if ('administrativeRegionId' in whereFilters) {
+			administrativeRegionInclude.where = {
+				id: whereFilters.administrativeRegionId
 			}
-			delete options.where.administrativeRegionId
+
+			delete whereFilters?.administrativeRegionId
 		}
 
+		// Re-assign the modified where clauses back to the options.
+		options.where = whereFilters
 		return options
 	}
 }

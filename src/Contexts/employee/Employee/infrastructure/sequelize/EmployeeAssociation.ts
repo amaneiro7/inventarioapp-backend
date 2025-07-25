@@ -1,90 +1,139 @@
-import { FindOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { Order, type FindOptions, type IncludeOptions } from 'sequelize'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class EmployeeAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		const whereFilters = { ...options.where } // Clone to avoid direct mutation
+
+		// ------------------- 1. INCLUDES DEFINITION -------------------
+		// Define all possible associations that can be included in the query.
+		// These are later referenced by the filter configuration.
+		const directivaInclude: IncludeOptions = {
+			association: 'directiva',
+			attributes: ['id', 'name']
+		}
+		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
+			association: 'vicepresidenciaEjecutiva',
+			attributes: ['id', 'name']
+		}
+		const vicepresidenciaInclude: IncludeOptions = {
+			association: 'vicepresidencia',
+			attributes: ['id', 'name']
+		}
+		const departamentoInclude: IncludeOptions = {
+			association: 'departamento',
+			attributes: ['id', 'name']
+		}
+		const cargoInclude: IncludeOptions = {
+			association: 'cargo',
+			attributes: ['id', 'name']
+		}
+
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = { association: 'state', required: true, include: [regionInclude] }
+		const cityInclude: IncludeOptions = { association: 'city', required: true, include: [stateInclude] }
+		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
+		const locationInclude: IncludeOptions = {
+			association: 'location',
+			include: [siteInclude]
+		}
 		options.include = [
-			{
-				association: 'directiva', // 0
-				attributes: ['id', 'name']
-			},
-			{
-				association: 'vicepresidenciaEjecutiva', // 1
-				attributes: ['id', 'name']
-			},
-			{
-				association: 'vicepresidencia', // 2
-				attributes: ['id', 'name']
-			},
-			{
-				association: 'departamento', // 3
-				attributes: ['id', 'name']
-			},
-			{
-				association: 'cargo', // 4
-				attributes: ['id', 'name']
-			},
-			{
-				association: 'location', // 5
-				include: [
-					'typeOfSite', // 5 - 0
-					{
-						association: 'site', // 5 - 1
-						required: true,
-						include: [
-							{
-								association: 'city', // 5 - 1 - 0
-								required: true,
-								include: [
-									{
-										association: 'state', // 5 - 1 - 0 - 0
-										required: true,
-										include: [
-											{
-												association: 'region', // 5 - 1 - 0 - 0 - 0
-												required: true
-											}
-										]
-									}
-								]
-							}
-						]
-					}
-				]
-			}
+			directivaInclude,
+			vicepresidenciaEjecutivaInclude,
+			vicepresidenciaInclude,
+			departamentoInclude,
+			cargoInclude,
+			locationInclude
 		]
-		// Filtrar por sitio
-		if (options.where && 'siteId' in options.where) {
-			;(options.include[5] as any).required = true
-			;(options.include[5] as any).include[1].where = {
-				id: options.where.siteId
+
+		// Poder filtrar por ubicacion - por sitio
+		if ('siteId' in whereFilters) {
+			locationInclude.required = true
+			siteInclude.where = {
+				id: whereFilters.siteId
 			}
-			delete options.where.siteId
+			delete whereFilters?.siteId
 		}
-		// Filtrar por ciudad
-		if (options.where && 'cityId' in options.where) {
-			;(options.include[5] as any).required = true
-			;(options.include[5] as any).include[1].include[0].where = {
-				id: options.where.cityId
+
+		// Poder filtrar por ciudad
+		if ('cityId' in whereFilters) {
+			locationInclude.required = true
+			cityInclude.where = {
+				id: whereFilters.cityId
 			}
-			delete options.where.cityId
+
+			delete whereFilters?.cityId
 		}
-		// Filtrar por estado
-		if (options.where && 'stateId' in options.where) {
-			;(options.include[5] as any).required = true
-			;(options.include[5] as any).include[1].include[0].include[0].where = {
-				id: options.where.stateId
+
+		// Poder filtrar por estado
+		if ('stateId' in whereFilters) {
+			locationInclude.required = true
+			stateInclude.where = {
+				id: whereFilters.stateId
 			}
-			delete options.where.stateId
+
+			delete whereFilters?.stateId
 		}
-		// Filtrar por región
-		if (options.where && 'regionId' in options.where) {
-			;(options.include[5] as any).required = true
-			;(options.include[5] as any).include[1].include[0].include[0].include[0].where = {
-				id: options.where.regionId
+
+		// Poder filtrar por region
+		if ('regionId' in whereFilters) {
+			locationInclude.required = true
+			regionInclude.where = {
+				id: whereFilters.regionId
 			}
-			delete options.where.regionId
+
+			delete whereFilters?.regionId
 		}
+		// Poder filtrar por region administrativa
+		if ('administrativeRegionId' in whereFilters) {
+			locationInclude.required = true
+			administrativeRegionInclude.where = {
+				id: whereFilters.administrativeRegionId
+			}
+
+			delete whereFilters?.administrativeRegionId
+		}
+
+		// Re-assign the modified where clauses back to the options.
+		options.where = whereFilters
+
+		// --- 3. Order Transformation ---
+		// The `transformOrder` method correctly maps frontend field names (e.g., 'cityId')
+		// to the nested Sequelize structure required for sorting on associated tables.
+		options.order = this.transformOrder(options.order)
 		return options
+	}
+
+	private static transformOrder(order: Order | undefined): Order | undefined {
+		if (!order || !Array.isArray(order) || order.length === 0) return undefined
+
+		const orderMap: Record<string, string[]> = {
+			cargoId: ['cargo', 'name'],
+			directivaId: ['directiva', 'name'],
+			vicepresidenciaEjecutivaId: ['vicepresidenciaEjecutiva', 'name'],
+			vicepresidenciaId: ['vicepresidencia', 'name'],
+			departamentoId: ['departamento', 'name'],
+			locationId: ['location', 'name'],
+			cityId: ['location', 'site', 'city', 'name'],
+			stateId: ['location', 'site', 'city', 'state', 'name'],
+			regionId: ['location', 'site', 'city', 'state', 'region', 'name'],
+			administrativeRegionId: ['location', 'site', 'city', 'state', 'region', 'administrativeRegion', 'name']
+		}
+		const transformedOrder = (order as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			// If a mapping exists, use the nested path. Otherwise, use the original field name.
+			return mappedPath ? [...mappedPath, direction] : [field, direction]
+		})
+
+		return transformedOrder as Order
 	}
 }

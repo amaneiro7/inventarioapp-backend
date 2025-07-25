@@ -1,40 +1,41 @@
-import { FindOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type FindOptions, type IncludeOptions } from 'sequelize'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class CityAssociation {
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = [
-			{
-				association: 'state', // 0
-				required: true,
-				include: [
-					{
-						association: 'region', // 0 - 0
-						required: true,
-						include: [
-							{
-								association: 'administrativeRegion', // 0 - 0 - 0
-								required: true,
-								attributes: []
-							}
-						]
-					}
-				]
-			}
-		]
+		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 
-		if (options.where && 'regionId' in options.where) {
-			;(options.include[0] as any).where = {
-				regionId: options.where.regionId
-			}
-			delete options.where.regionId
+		// ------------------- 1. INCLUDES DEFINITION -------------------
+		// Define all possible associations that can be included in the query.
+		// These are later referenced by the filter configuration.
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true
 		}
-		if (options.where && 'administrativeRegionId' in options.where) {
-			;(options.include[0] as any).include[0].where = {
-				administrativeRegionId: options.where.administrativeRegionId
-			}
-			delete options.where.administrativeRegionId
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
 		}
+		const stateInclude: IncludeOptions = { association: 'state', required: true, include: [regionInclude] }
+
+		options.include = [stateInclude]
+
+		if ('regionId' in whereFilters) {
+			regionInclude.where = {
+				id: whereFilters.regionId
+			}
+			delete whereFilters.regionId
+		}
+		if ('administrativeRegionId' in whereFilters) {
+			administrativeRegionInclude.where = {
+				id: whereFilters.administrativeRegionId
+			}
+			delete whereFilters.administrativeRegionId
+		}
+
+		// Re-assign the modified where clauses back to the options.
+		options.where = whereFilters
 
 		return options
 	}

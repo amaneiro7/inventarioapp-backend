@@ -365,15 +365,6 @@ export class DeviceAssociation {
 			delete whereFilters.processor
 		}
 
-		// Poder filtrar por ubicacion - Tipo de sitio
-		if ('typeOfSiteId' in whereFilters) {
-			locationInclude.required = true
-			typeOfSiteInclude.where = {
-				id: whereFilters.typeOfSiteId
-			}
-			delete whereFilters.typeOfSiteId
-		}
-
 		//Filtrar por Cargo
 		if ('cargoId' in whereFilters) {
 			employeInclude.required = true
@@ -415,6 +406,14 @@ export class DeviceAssociation {
 			delete whereFilters?.departamentoId
 		}
 
+		// Poder filtrar por ubicacion - Tipo de sitio
+		if ('typeOfSiteId' in whereFilters) {
+			locationInclude.required = true
+			typeOfSiteInclude.where = {
+				id: whereFilters.typeOfSiteId
+			}
+			delete whereFilters.typeOfSiteId
+		}
 		// Poder filtrar por ubicacion - por sitio
 		if ('siteId' in whereFilters) {
 			locationInclude.required = true
