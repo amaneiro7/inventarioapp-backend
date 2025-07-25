@@ -1,7 +1,8 @@
-import { VicepresidenciaModel } from './VicepresidenciaSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { VicepresidenciaModel } from './VicepresidenciaSchema'
+import { VicepresidenciaAssociation } from './VicepresidenciaAssociation'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -14,13 +15,13 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 /**
  * @class SequelizeVicepresidenciaRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {DepartmentRepository<VicepresidenciaDto>}
  * @description Concrete implementation of the VicepresidenciaRepository using Sequelize.
  * Handles data persistence for Vicepresidencia entities, including caching mechanisms.
  */
 export class SequelizeVicepresidenciaRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements DepartmentRepository<VicepresidenciaDto>
 {
 	private readonly cacheKey: string = 'vicepresidencia'
@@ -40,15 +41,14 @@ export class SequelizeVicepresidenciaRepository
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<VicepresidenciaDto>> {
 		const options = this.convert(criteria)
-
-		options.include = ['vicepresidenciaEjecutiva']
+		const opt = VicepresidenciaAssociation.convertFilter(criteria, options)
 
 		return await this.cache.getCachedData<ResponseDB<VicepresidenciaDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await VicepresidenciaModel.findAndCountAll(options)
+				const { rows, count } = await VicepresidenciaModel.findAndCountAll(opt)
 
 				return {
 					data: rows.map(row => row.get({ plain: true })),
@@ -105,7 +105,7 @@ export class SequelizeVicepresidenciaRepository
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaDto>> {
 		return await this.cache.getCachedData<Nullable<VicepresidenciaDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ex: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const vicepresidencia = await VicepresidenciaModel.findOne({ where: { name } })
 				return vicepresidencia ? (vicepresidencia.get({ plain: true }) as VicepresidenciaDto) : null

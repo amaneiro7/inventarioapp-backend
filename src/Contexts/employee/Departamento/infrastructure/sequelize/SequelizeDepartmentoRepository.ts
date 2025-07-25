@@ -1,5 +1,5 @@
 import { DepartamentoModel } from './DepartamentoSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DepartamentoAssociation } from './DepartamentoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
@@ -15,13 +15,13 @@ import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/
 
 /**
  * @class SequelizeDepartamentoRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {DepartmentRepository<DepartamentoDto>}
  * @description Concrete implementation of the DepartamentoRepository using Sequelize.
  * Handles data persistence for Departamento entities, including caching mechanisms.
  */
 export class SequelizeDepartamentoRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements DepartmentRepository<DepartamentoDto>
 {
 	private readonly cacheKey: string = 'departamento'

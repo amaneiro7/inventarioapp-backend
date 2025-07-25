@@ -2,15 +2,15 @@ import { type FindOptions, type IncludeOptions } from 'sequelize'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
- * @class DepartamentoAssociation
- * @description A utility class to build complex Sequelize query options for the Departamento model.
+ * @class VicepresidenciaAssociation
+ * @description A utility class to build complex Sequelize query options for the Vicepresidencia model.
  * It handles the dynamic construction of deeply nested includes and applies filters to them.
  */
-export class DepartamentoAssociation {
+export class VicepresidenciaAssociation {
 	/**
 	 * @static
 	 * @method convertFilter
-	 * @description Modifies a Sequelize FindOptions object to include Departamento associations.
+	 * @description Modifies a Sequelize FindOptions object to include Vicepresidencia associations.
 	 * It dynamically adds 'where' clauses to the nested includes based on filter keys
 	 * like `vicepresidenciaId`, `directivaId`, etc., found in the criteria.
 	 *
@@ -19,6 +19,8 @@ export class DepartamentoAssociation {
 	 * @returns {FindOptions} The enhanced Sequelize FindOptions object with includes and nested filters.
 	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
+		// Cast to our custom type to make TypeScript aware of the filter keys.
+		const whereFilters = { ...options.where }
 		// --- 1. Define Includes with Clear Naming for Readability and Safety ---
 		const directivaInclude: IncludeOptions = {
 			association: 'directiva',
@@ -29,31 +31,19 @@ export class DepartamentoAssociation {
 			attributes: ['id', 'name'],
 			include: [directivaInclude]
 		}
-		const vicepresidenciaInclude: IncludeOptions = {
-			association: 'vicepresidencia',
-			attributes: ['id', 'name'],
-			include: [vicepresidenciaEjecutivaInclude]
-		}
 		const cargoInclude: IncludeOptions = {
 			association: 'cargos',
 			attributes: ['id', 'name'],
 			through: { attributes: [] }
 		}
 
-		options.include = [vicepresidenciaInclude, cargoInclude, 'employee']
-
-		// Cast to our custom type to make TypeScript aware of the filter keys.
-		const whereFilters = options.where ?? {}
+		options.include = [vicepresidenciaEjecutivaInclude, cargoInclude, 'employee']
 
 		// --- 2. Apply Nested Filters Accumulatively ---
 		// These filters are applied to the correct level of the nested include structure.
 		if ('cargoId' in whereFilters) {
 			cargoInclude.where = { id: whereFilters.cargoId }
 			delete whereFilters.cargoId
-		}
-		if ('vicepresidenciaId' in whereFilters) {
-			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
-			delete whereFilters.vicepresidenciaId
 		}
 		if ('vicepresidenciaEjecutivaId' in whereFilters) {
 			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjecutivaId }
@@ -64,7 +54,9 @@ export class DepartamentoAssociation {
 			delete whereFilters.directivaId
 		}
 
+		console.log(whereFilters)
 		options.where = whereFilters
+		console.log(options.where)
 
 		return options
 	}
