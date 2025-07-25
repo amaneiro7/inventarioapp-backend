@@ -38,6 +38,7 @@ export const register = (container: AwilixContainer) => {
 		locationMonitoringDashboardByState: asClass(LocationMonitoringDashboardByState),
 		locationMonitoringDashboardByLocation: asClass(LocationMonitoringDashboardByLocation),
 		locationMonitoringCreator: asClass(LocationMonitoringCreator),
+		// This service is a stateless orchestrator, transient (default) is appropriate.
 		locationMonitoringService: asClass(LocationMonitoringService).scoped(),
 		//repo
 		locationMonitoringDashboardRepository: asClass(SequelizeLocationMonitoringDashboardRepository).singleton(),

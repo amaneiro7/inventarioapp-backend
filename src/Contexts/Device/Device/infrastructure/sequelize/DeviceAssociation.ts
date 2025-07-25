@@ -1,12 +1,31 @@
-import { IncludeOptions, Order, type FindOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+/**
+ * @class DeviceAssociation
+ * @description A utility class to build complex Sequelize query options for the Device model.
+ * It dynamically constructs nested includes and applies filters and order clauses based on a Criteria object.
+ * This class is optimized to handle a large number of potential filters in a scalable way.
+ */
+import { type IncludeOptions, type Order, type FindOptions } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 export class DeviceAssociation {
+	/**
+	 * @method convertFilterLocation
+	 * @description Converts a Criteria object into a Sequelize FindOptions object. It maps filters and orderings
+	 * to their respective nested associations (e.g., computer, employee, location) using a configuration-based approach.
+	 *
+	 * @param {Criteria} criteria The criteria object containing filters, order, and pagination.
+	 * @param {FindOptions} options The base Sequelize options to be modified.
+	 * @returns {FindOptions} The fully constructed Sequelize FindOptions object.
+	 */
 	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
 		const mainCategoryId = criteria.obtainFilterValue('mainCategoryId') ?? []
+		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 
+		// ------------------- 1. INCLUDES DEFINITION -------------------
+		// Define all possible associations that can be included in the query.
+		// These are later referenced by the filter configuration.
 		const modelComputerInclude: IncludeOptions = {
 			association: 'modelComputer',
 			include: ['memoryRamType'],
@@ -22,7 +41,7 @@ export class DeviceAssociation {
 		}
 
 		const modelLaptopInclude: IncludeOptions = {
-			association: 'modelLaptop', // 0 - 1
+			association: 'modelLaptop',
 			include: ['memoryRamType'],
 			attributes: [
 				'memoryRamTypeId',
@@ -178,11 +197,8 @@ export class DeviceAssociation {
 		}
 
 		const hardDriveInclude: IncludeOptions = {
-			association: 'hardDrive', // 6
-			include: [
-				'hardDriveCapacity', // 6 - 0
-				'hardDriveType' // 6 - 1
-			]
+			association: 'hardDrive',
+			include: ['hardDriveCapacity', 'hardDriveType']
 		}
 
 		const administrativeRegionInclude: IncludeOptions = {
@@ -205,7 +221,7 @@ export class DeviceAssociation {
 		}
 
 		const mfpInclude: IncludeOptions = {
-			association: 'mfp', // 8
+			association: 'mfp',
 			required: mainCategoryId.includes(MainCategoryList.PRINTERS)
 		}
 
@@ -235,7 +251,8 @@ export class DeviceAssociation {
 			historyInclude
 		]
 
-		const whereFilters = options.where ?? {}
+		// ------------------- 2. DYNAMIC FILTER APPLICATION -------------------
+		// This section handles special-case filters that require complex logic.
 
 		// Poder filtrar por main category
 		if ('mainCategoryId' in whereFilters) {
@@ -247,54 +264,63 @@ export class DeviceAssociation {
 		// Poder filtrar por las caracteristicas de computer
 		if ('computerName' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				computerName: whereFilters.computerName
 			}
 			delete whereFilters.computerName
 		}
 		if ('processorId' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				processorId: whereFilters.processorId
 			}
 			delete whereFilters.processorId
 		}
 		if ('hardDriveCapacityId' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				hardDriveCapacityId: whereFilters.hardDriveCapacityId
 			}
 			delete whereFilters.hardDriveCapacityId
 		}
 		if ('hardDriveTypeId' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				hardDriveTypeId: whereFilters.hardDriveTypeId
 			}
 			delete whereFilters.hardDriveTypeId
 		}
 		if ('operatingSystemId' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				operatingSystemId: whereFilters.operatingSystemId
 			}
 			delete whereFilters.operatingSystemId
 		}
 		if ('operatingSystemArqId' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				operatingSystemArqId: whereFilters.operatingSystemArqId
 			}
 			delete whereFilters.operatingSystemArqId
 		}
 		if ('memoryRam' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				memoryRam: whereFilters.memoryRam
 			}
 			delete whereFilters.memoryRam
 		}
 		if ('memoryRamCapacity' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				memoryRamCapacity: whereFilters.memoryRamCapacity
 			}
 			delete whereFilters.memoryRamCapacity
 		}
 		if ('macAddress' in whereFilters) {
 			computerInclude.where = {
+				...(computerInclude.where || {}),
 				macAddress: whereFilters.macAddress
 			}
 			delete whereFilters.macAddress
@@ -305,18 +331,30 @@ export class DeviceAssociation {
 			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
 
 			computerInclude.where = {
+				...(computerInclude.where ?? {}),
 				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
 			}
 
 			delete whereFilters.ipAddress
 		}
-
+		/**
+		 * @SpecialFilter memoryRamTypeId
+		 * @description This filter is unique because the 'memoryRamTypeId' field can exist in either
+		 * the 'modelComputer' or 'modelLaptop' association. A standard WHERE clause on one would exclude the other.
+		 * @solution To solve this, we apply an [Op.or] condition on the parent 'modelInclude'.
+		 * We use Sequelize's '$association.column syntax to reference columns in nested includes,
+		 * allowing us to build a condition that checks both possible paths.
+		 */
 		// Poder filtrar por typo de memoria ram
 		if ('memoryRamTypeId' in whereFilters) {
-			modelComputerInclude.required = true
 			modelComputerInclude.where = {
 				memoryRamTypeId: whereFilters.memoryRamTypeId
 			}
+
+			// 3. The parent model is required for the filter to apply correctly.
+			modelInclude.required = true
+
+			// 4. Clean up the processed filter.
 			delete whereFilters.memoryRamTypeId
 		}
 		// Poder filtrar por nombre de procesador
@@ -329,6 +367,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por ubicacion - Tipo de sitio
 		if ('typeOfSiteId' in whereFilters) {
+			locationInclude.required = true
 			typeOfSiteInclude.where = {
 				id: whereFilters.typeOfSiteId
 			}
@@ -434,7 +473,15 @@ export class DeviceAssociation {
 
 		return options
 	}
-
+	/**
+	 * @private
+	 * @method transformOrder
+	 * @description Transforms a simple order format (e.g., ['cityId', 'ASC']) into a nested format
+	 * that Sequelize can use for ordering on associated tables (e.g., ['location', 'site', 'city', 'name', 'ASC']).
+	 *
+	 * @param {Order | undefined} order The order configuration from the criteria.
+	 * @returns {Order | undefined} A Sequelize-compatible nested order configuration.
+	 */
 	private transformOrder(order: Order | undefined): Order | undefined {
 		if (!order || !Array.isArray(order) || order.length === 0) return undefined
 

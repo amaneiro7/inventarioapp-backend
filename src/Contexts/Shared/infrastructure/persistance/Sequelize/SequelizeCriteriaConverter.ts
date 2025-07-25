@@ -1,34 +1,43 @@
-import { type FindOptions, Op } from 'sequelize'
+import { type FindOptions, Op, type WhereOptions, type WhereAttributeHash } from 'sequelize'
 import { Operator } from '../../../domain/criteria/FilterOperator'
 import { type FiltersPrimitives } from '../../../domain/criteria/Filter'
 import { type Criteria } from '../../../domain/criteria/Criteria'
 import { type Filters } from '../../../domain/criteria/Filters'
-import { type Order } from '../../../domain/criteria/Order'
 
-//Una interface que provee una función anonima a la cuál tiene un parametro de tipo T y devuelve un valor de tipo K
-//Esto nos servirá más adelante
-interface TransformerFunction<T, K> {
-	(value: T): K
-}
+// Defines the structure of a Sequelize condition object, e.g., { [Op.eq]: 'value' }.
+// This is the core part of a where clause for a single attribute.
+type SequelizeCondition = WhereAttributeHash[keyof WhereAttributeHash]
 
+// Defines a function that transforms a domain filter primitive into a Sequelize condition object.
+type ConditionTransformer = (filter: FiltersPrimitives) => SequelizeCondition
+
+/**
+ * @class SequelizeCriteriaConverter
+ * @description Converts a domain-specific Criteria object into a Sequelize FindOptions object.
+ * It handles the transformation of filters, ordering, and pagination into a type-safe Sequelize query.
+ */
 export class SequelizeCriteriaConverter {
-	private filterTransformers: Map<Operator, TransformerFunction<FiltersPrimitives, FindOptions['where']>>
+	private readonly conditionTransformers: Map<Operator, ConditionTransformer>
+
 	constructor() {
-		//Se crea un map dónde la key es de tipo Operator, El enum generico que creamos para para nuestra clase FilterOperator
-		//el valor es la función que recibe la claseFilter y el tipo SequelizeFilter
-		this.filterTransformers = new Map<Operator, TransformerFunction<FiltersPrimitives, FindOptions['where']>>([
-			[Operator.EQUAL, this.equalFilter], // [Operador, función]
-			[Operator.NOT_EQUAL, this.notEqualFilter], // [Operador, función]
-			[Operator.GREATER_THAN, this.greaterThanFilter], // [Operador, función]
-			[Operator.GREATER_THAN_OR_EQUAL, this.greaterThanOrEqualFilter], // [Operador, función]
-			[Operator.LOWER_THAN, this.lowerThanFilter], // [Operador, función]
-			[Operator.LOWER_THAN_OR_EQUAL, this.lowerThanOrEqualFilter], // [Operador, función]
-			[Operator.CONTAINS, this.containsFilter], // [Operador, función]
-			[Operator.NOT_CONTAINS, this.notContainsFilter] // [Operador, función]
+		this.conditionTransformers = new Map<Operator, ConditionTransformer>([
+			[Operator.EQUAL, this.equalCondition],
+			[Operator.NOT_EQUAL, this.notEqualCondition],
+			[Operator.GREATER_THAN, this.greaterThanCondition],
+			[Operator.GREATER_THAN_OR_EQUAL, this.greaterThanOrEqualCondition],
+			[Operator.LOWER_THAN, this.lowerThanCondition],
+			[Operator.LOWER_THAN_OR_EQUAL, this.lowerThanOrEqualCondition],
+			[Operator.CONTAINS, this.containsCondition],
+			[Operator.NOT_CONTAINS, this.notContainsCondition]
 		])
 	}
 
-	//Esta metodo es el que ejecuta la conversión y arma la query de los filtros, ya que retorna el tipo SequelizeQuery
+	/**
+	 * @method convert
+	 * @description The main method that orchestrates the conversion of a Criteria object.
+	 * @param {Criteria} criteria The domain Criteria object.
+	 * @returns {FindOptions} The equivalent Sequelize FindOptions object.
+	 */
 	public convert(criteria: Criteria): FindOptions {
 		const query: FindOptions = {}
 
@@ -51,106 +60,85 @@ export class SequelizeCriteriaConverter {
 		return query
 	}
 
-	// Este metodo hace la conversión de nuestro operador de todos los filtros
-	protected generateFilter(filters: Filters): FindOptions['where'] {
-		// const filtersPrimitives = filters.toPrimitives()
-		// const group: {
-		//     field: string;
-		//     operator: string;
-		//     value: string[];
-		// }[] = filtersPrimitives.reduce((acc, { field, operator, value }) => {
-		//     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//     // @ts-expect-error
-		//     const existingField = acc.find(entry => entry.field === field)
-		//     if (existingField) {
-		//         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//         // @ts-expect-error
-		//         existingField.value.push(value)
-		//     } else {
-		//         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//         // @ts-expect-error
-		//         acc.push({ field, operator, value: [value] })
-		//     }
-		//     return acc
-		// }, [])
-
-		// Recorre todos los filtros a transformar
-		const filter = filters.value.map(filter => {
-			// A traves de lal Map obtengo la función por el tipo de operador generico pasado como parametro
-			const transformer = this.filterTransformers.get(filter.operator.value) //Operador generico de la calse FilterOperator
-
-			if (!transformer) {
-				throw Error(`Unexpected operator value ${filter.operator.value}`)
+	/**
+	 * @method generateFilter
+	 * @description Generates a fully-typed and optimized Sequelize `where` clause from a set of Filters.
+	 * - Groups filters by field.
+	 * - Correctly handles multiple filters on the same field:
+	 *   - Multiple 'EQUAL' filters become a single `[Op.in]` clause.
+	 *   - A mix of different filters becomes an `[Op.and]` clause.
+	 * @param {Filters} filters The domain Filters object.
+	 * @returns {WhereOptions} The generated Sequelize `where` clause.
+	 */
+	protected generateFilter(filters: Filters): WhereOptions {
+		const filtersByField = new Map<string, FiltersPrimitives[]>()
+		for (const filter of filters.value) {
+			const primitive = filter.toPrimitives()
+			if (!filtersByField.has(primitive.field)) {
+				filtersByField.set(primitive.field, [])
 			}
+			filtersByField.get(primitive.field)!.push(primitive)
+		}
 
-			// Ejecuto la función directament con el filtro
-			// Esta función es una de las declaradas más abajo según corresponda el operador
-			return transformer(filter.toPrimitives())
-		})
-		const outputData = filter.reduce((acc, item) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			const key = Object.keys(item)[0]
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			const value = item[key]
+		const where: WhereOptions = {}
+		for (const [field, fieldFilters] of filtersByField.entries()) {
+			const allAreEquals = fieldFilters.every(f => f.operator === Operator.EQUAL)
 
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			if (acc[key]) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				acc[key][Op.or] = [...acc[key][Op.or], ...value[Op.or]]
+			if (fieldFilters.length > 1 && allAreEquals) {
+				where[field] = {
+					[Op.in]: fieldFilters.map(f => f.value)
+				}
 			} else {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				acc[key] = value
+				const conditions: SequelizeCondition[] = fieldFilters.map(f => {
+					const transformer = this.conditionTransformers.get(f.operator as Operator)
+					if (!transformer) {
+						throw new Error(`Unexpected operator value ${f.operator}`)
+					}
+					return transformer(f)
+				})
+
+				if (conditions.length > 1) {
+					where[field] = { [Op.and]: conditions }
+				} else {
+					where[field] = conditions[0]
+				}
 			}
-
-			return acc
-		}, {})
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-		const finalOutputData = Object.entries(outputData).map(([key, value]) => ({
-			[key]: value
-		}))
-
-		return Object.assign({}, ...finalOutputData)
+		}
+		return where
 	}
 
-	protected generateSort(order: Order): FindOptions['order'] {
-		return [order.orderBy.value, order.orderType.isAsc() ? 'ASC' : 'DESC']
+	// ------------------- Condition Transformers -------------------
+	// Each function now returns a type-safe SequelizeCondition object.
+
+	private equalCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.eq]: filter.value }
 	}
 
-	// Todos las funciones declaradas hacia abajo cumplen con el tipo credo de SequelizeFilter
-	private equalFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		// Si intentamos pasarse un operador que no está indicado en SequelizeFilter nos dará error, en este caso el operador es $eq
-		return { [filter.field]: { [Op.or]: [filter.value] } }
+	private notEqualCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.ne]: filter.value }
 	}
 
-	private notEqualFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.ne]: filter.value } }
+	private greaterThanCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.gt]: filter.value }
 	}
 
-	private greaterThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.gt]: filter.value } }
-	}
-	private greaterThanOrEqualFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.gte]: filter.value } }
+	private greaterThanOrEqualCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.gte]: filter.value }
 	}
 
-	private lowerThanFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.lt]: filter.value } }
-	}
-	private lowerThanOrEqualFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.lte]: filter.value } }
+	private lowerThanCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.lt]: filter.value }
 	}
 
-	private containsFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.iLike]: `%${filter.value}%` } }
+	private lowerThanOrEqualCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.lte]: filter.value }
 	}
 
-	private notContainsFilter(filter: FiltersPrimitives): FindOptions['where'] {
-		return { [filter.field]: { [Op.notILike]: `%${filter.value}%` } }
+	private containsCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.iLike]: `%${filter.value}%` }
+	}
+
+	private notContainsCondition(filter: FiltersPrimitives): SequelizeCondition {
+		return { [Op.notILike]: `%${filter.value}%` }
 	}
 }

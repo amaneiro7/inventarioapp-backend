@@ -23,15 +23,20 @@ export enum AuthDependencies {
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		userLoginLocal: asClass(UserLoginLocal),
+		// Application Use Cases: Transient (default) is correct.
+		userLoginLocal: asClass(UserLoginLocal).singleton(),
 		refreshTokenUseCase: asClass(AuthRefreshTokenUseCase),
-		localStrategy: asClass(LocalAuthStrategy),
-		jwtCookiesStrategy: asClass(JwtCookiesStrategy),
-		jwtBearerStrategy: asClass(JwtBearerStrategy),
-		passportManager: asClass(PassportManager),
+
+		// Infrastructure & Strategies: These are stateless and can be singletons for efficiency.
+		localStrategy: asClass(LocalAuthStrategy).singleton(),
+		jwtCookiesStrategy: asClass(JwtCookiesStrategy).singleton(),
+		jwtBearerStrategy: asClass(JwtBearerStrategy).singleton(),
+		passportManager: asClass(PassportManager).singleton(),
+		tokenDenylistService: asClass(TokenDenylistService).singleton(),
+
+		// Controllers: Transient (default) is correct.
 		authLoginController: asClass(AuthLoginController),
 		authLogoutController: asClass(AuthLogoutController),
-		tokenDenylistService: asClass(TokenDenylistService),
 		authRefreshTokenController: asClass(AuthRefreshTokenController)
 	})
 }
