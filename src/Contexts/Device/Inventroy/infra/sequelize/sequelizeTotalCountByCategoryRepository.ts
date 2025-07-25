@@ -66,7 +66,7 @@ export class SequelizeTotalCountByCategoryRepository implements TotalCountByCate
 					group: ['category.name'],
 					order: [[sequelize.col('count'), 'DESC']],
 					raw: true
-				})) as RawCategoryCountData[]
+				})) as unknown as RawCategoryCountData[]
 				return categories.map(category => ({
 					name: category.name,
 					count: Number(category.count)

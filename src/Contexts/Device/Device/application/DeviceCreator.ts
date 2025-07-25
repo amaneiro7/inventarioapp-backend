@@ -130,18 +130,18 @@ export class DeviceCreator {
 				throw new InvalidArgumentError('user is required')
 			}
 
-			await new HistoryCreator(this.historyRepository).run({
+			await new HistoryCreator({ historyRepository: this.historyRepository }).run({
 				deviceId: device.idValue,
 				userId: user?.sub,
 				employeeId: device.employeeeValue,
 				action: 'CREATE',
-				newData: device.toPrimitives(),
+				newData: devicePrimitives as unknown as Record<string, unknown>,
 				oldData: {},
 				createdAt: new Date()
 			})
 
 			if (DeviceComputer.isComputerCategory({ categoryId })) {
-				await new DeviceMonitoringCreator(this.deviceMonitoringRepository).run({
+				await new DeviceMonitoringCreator({ deviceMonitoringRepository: this.deviceMonitoringRepository }).run({
 					deviceId: devicePrimitives.id
 				})
 			}

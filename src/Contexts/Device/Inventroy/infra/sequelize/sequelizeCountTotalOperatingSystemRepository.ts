@@ -86,7 +86,7 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 					group: ['computer.operatingSystem.name', 'computer.operatingSystemArq.name'],
 					order: [[sequelize.col('computer.operatingSystem.name'), 'ASC']],
 					raw: true
-				})) as RawOSData[]
+				})) as unknown as RawOSData[]
 
 				const operatingSystemMap = result.reduce((acc, item) => {
 					const { osName, arqName, count } = item

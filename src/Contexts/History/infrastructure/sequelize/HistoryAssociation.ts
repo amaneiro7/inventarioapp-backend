@@ -1,4 +1,4 @@
-import { type FindOptions, type IncludeOptions, Op, type Order } from 'sequelize'
+import { type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 
 /**
@@ -25,7 +25,7 @@ export class HistoryAssociation {
 		const empñpyeeInclude: IncludeOptions = { association: 'employee', attributes: [] }
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			attributes: ['serial'],
+			attributes: ['serial', 'updatedAt'],
 			include: [{ association: 'category', attributes: ['name'] }]
 		}
 
@@ -34,8 +34,8 @@ export class HistoryAssociation {
 		const whereFilters = options.where ?? {}
 		const deviceWhere: Record<string, unknown> = {}
 
-		// --- Dynamic Filter Application (Bug Fixed) ---
-		// Accumulate filters for the nested 'device' association.
+		// --- Dynamic Filter Application ---
+		// Accumulate all device-related filters into the 'deviceWhere' object.
 		if ('serial' in whereFilters) {
 			deviceWhere.serial = whereFilters.serial
 			delete whereFilters.serial
@@ -45,20 +45,23 @@ export class HistoryAssociation {
 			delete whereFilters.categoryId
 		}
 
-		// Assign the accumulated 'where' clause to the device include if it's not empty.
-		if (Object.keys(deviceWhere).length > 0) {
-			deviceInclude.where = deviceWhere
-		}
-
-		// Handle date range filter on the main History model.
+		// Handle date range filter on the device model, assuming it applies to device.updatedAt
 		if ('startDate' in whereFilters && 'endDate' in whereFilters) {
+			const { startDate, endDate } = whereFilters
 			whereFilters.updatedAt = {
-				[Op.between]: [whereFilters.startDate, whereFilters.endDate]
+				...endDate,
+				...startDate
 			}
 			delete whereFilters.startDate
 			delete whereFilters.endDate
 		}
 
+		// Assign the accumulated 'where' clause to the device include if it's not empty.
+		if (Object.keys(deviceWhere).length > 0) {
+			deviceInclude.where = deviceWhere
+		}
+
+		// Assign the remaining filters to the main 'where' clause.
 		options.where = whereFilters
 		options.order = this.transformOrder(options.order)
 

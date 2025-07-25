@@ -267,18 +267,19 @@ export class DeviceUpdater {
 			// Actualizamos los campos principales del device
 			await this.updateMainDevice({ params, deviceEntity })
 		}
+		const devicePrimitives = deviceEntity.toPrimitives()
 		// Guardamos los cambios en la base de datos
-		await this.deviceRepository.save(deviceEntity.toPrimitives()).then(() => {
+		await this.deviceRepository.save(devicePrimitives).then(() => {
 			if (!user?.sub) {
 				throw new InvalidArgumentError('user is required')
 			}
-			new HistoryCreator(this.historyRepository).run({
+			new HistoryCreator({ historyRepository: this.historyRepository }).run({
 				deviceId: deviceEntity.idValue,
 				userId: user?.sub,
 				employeeId: deviceEntity.employeeeValue,
 				action: 'UPDATE',
-				newData: deviceEntity.toPrimitives(),
-				oldData: oldDeviceEntity,
+				newData: devicePrimitives as unknown as Record<string, unknown>,
+				oldData: oldDeviceEntity as unknown as Record<string, unknown>,
 				createdAt: new Date()
 			})
 		})

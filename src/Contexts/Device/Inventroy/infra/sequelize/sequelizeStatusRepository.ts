@@ -63,7 +63,7 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 					],
 					group: ['category.name', 'status.name'],
 					raw: true
-				})) as RawStatusData[]
+				})) as unknown as RawStatusData[]
 
 				const initialDashboardState: AggregatedDashboardData = { overall: {} }
 				let totalDevices = 0

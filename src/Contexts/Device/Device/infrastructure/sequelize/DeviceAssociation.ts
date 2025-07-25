@@ -1,385 +1,442 @@
-import { type FindOptions, type Includeable, type WhereOptions, type Literal } from 'sequelize'
+import { IncludeOptions, Order, type FindOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
-
-// Define a type for the objects within the `include` array that are being manipulated
-interface SequelizeIncludeOptions {
-  association: string;
-  required?: boolean;
-  where?: WhereOptions | Literal; // Literal for sequelize.literal
-  include?: Includeable[];
-  attributes?: string[];
-}
 
 export class DeviceAssociation {
 	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
 		const mainCategoryId = criteria.obtainFilterValue('mainCategoryId') ?? []
 
+		const modelComputerInclude: IncludeOptions = {
+			association: 'modelComputer',
+			include: ['memoryRamType'],
+			attributes: [
+				'memoryRamTypeId',
+				'memoryRamSlotQuantity',
+				'hasBluetooth',
+				'hasWifiAdapter',
+				'hasDVI',
+				'hasHDMI',
+				'hasVGA'
+			]
+		}
+
+		const modelLaptopInclude: IncludeOptions = {
+			association: 'modelLaptop', // 0 - 1
+			include: ['memoryRamType'],
+			attributes: [
+				'memoryRamTypeId',
+				'memoryRamSlotQuantity',
+				'hasBluetooth',
+				'hasWifiAdapter',
+				'hasDVI',
+				'hasHDMI',
+				'hasVGA',
+				'batteryModel'
+			]
+		}
+
+		const modelMonitorInclude: IncludeOptions = {
+			association: 'modelMonitor', // 0 - 2
+			attributes: ['screenSize', 'hasDVI', 'hasHDMI', 'hasVGA']
+		}
+		const modelPrinterInclude: IncludeOptions = {
+			association: 'modelPrinter', // 0 - 3
+			attributes: ['cartridgeModel']
+		}
+		const modelKeyboardInclude: IncludeOptions = {
+			association: 'modelKeyboard', // 0 - 4
+			include: ['inputType'],
+			attributes: ['inputTypeId', 'hasFingerPrintReader']
+		}
+		const modelMouseInclude: IncludeOptions = {
+			association: 'modelMouse', // 0 - 5
+			include: ['inputType'],
+			attributes: ['inputTypeId']
+		}
+
+		const modelInclude: IncludeOptions = {
+			association: 'model',
+			include: [
+				modelComputerInclude,
+				modelLaptopInclude,
+				modelMonitorInclude,
+				modelPrinterInclude,
+				modelKeyboardInclude,
+				modelMouseInclude
+			],
+			attributes: ['name', 'categoryId', 'brandId', 'generic']
+		}
+
+		const mainCategoryInclude: IncludeOptions = {
+			association: 'mainCategory',
+			attributes: ['id', 'name']
+		}
+		const categoryInclude: IncludeOptions = {
+			association: 'category',
+			include: [mainCategoryInclude]
+		}
+
+		const brandInclude: IncludeOptions = {
+			association: 'brand',
+			attributes: ['id', 'name']
+		}
+		const statusInclude: IncludeOptions = {
+			association: 'status',
+			attributes: ['id', 'name']
+		}
+
+		const cargoInclude: IncludeOptions = {
+			association: 'cargo', // 4 - 0
+			attributes: ['id', 'name']
+		}
+		const directivaInclude: IncludeOptions = {
+			association: 'directiva', // 4 - 1
+			attributes: ['id', 'name']
+		}
+		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
+			association: 'vicepresidenciaEjecutiva', // 4 - 2
+			attributes: ['id', 'name']
+		}
+		const vicepresidenciaInclude: IncludeOptions = {
+			association: 'vicepresidencia', // 4 - 3
+			attributes: ['id', 'name']
+		}
+		const departamentoInclude: IncludeOptions = {
+			association: 'departamento', // 4 - 4
+			attributes: ['id', 'name']
+		}
+
+		const employeInclude: IncludeOptions = {
+			association: 'employee', // 4
+			attributes: [
+				'id',
+				'userName',
+				'type',
+				'name',
+				'lastName',
+				'email',
+				'isStillWorking',
+				'employeeCode',
+				'nationality',
+				'cedula',
+				'extension',
+				'phone'
+			],
+			include: [
+				cargoInclude,
+				directivaInclude,
+				vicepresidenciaEjecutivaInclude,
+				vicepresidenciaInclude,
+				departamentoInclude
+			]
+		}
+
+		const processorInclude: IncludeOptions = {
+			association: 'processor',
+			attributes: ['productCollection', 'numberModel', 'name', 'frequency', 'cores', 'threads']
+		}
+		const hardDriveCapacityInclude: IncludeOptions = {
+			association: 'hardDriveCapacity',
+			attributes: ['name']
+		}
+		const hardDriveTypeInclude: IncludeOptions = {
+			association: 'hardDriveType',
+			attributes: ['name']
+		}
+		const operatingSystemInclude: IncludeOptions = {
+			association: 'operatingSystem',
+			attributes: ['name']
+		}
+		const operatingSystemArqInclude: IncludeOptions = {
+			association: 'operatingSystemArq',
+			attributes: ['name']
+		}
+
+		const computerInclude: IncludeOptions = {
+			association: 'computer', // 5
+			required: mainCategoryId.includes(MainCategoryList.COMPUTER),
+			include: [
+				processorInclude,
+				hardDriveCapacityInclude,
+				hardDriveTypeInclude,
+				operatingSystemInclude,
+				operatingSystemArqInclude
+			],
+			attributes: [
+				'computerName',
+				'processorId',
+				'memoryRam',
+				'memoryRamCapacity',
+				'hardDriveCapacityId',
+				'hardDriveTypeId',
+				'operatingSystemId',
+				'operatingSystemArqId',
+				'macAddress',
+				'ipAddress'
+			]
+		}
+
+		const hardDriveInclude: IncludeOptions = {
+			association: 'hardDrive', // 6
+			include: [
+				'hardDriveCapacity', // 6 - 0
+				'hardDriveType' // 6 - 1
+			]
+		}
+
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = { association: 'state', required: true, include: [regionInclude] }
+		const cityInclude: IncludeOptions = { association: 'city', required: true, include: [stateInclude] }
+		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
+		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite' }
+		const locationInclude: IncludeOptions = {
+			association: 'location',
+			include: [typeOfSiteInclude, siteInclude]
+		}
+
+		const mfpInclude: IncludeOptions = {
+			association: 'mfp', // 8
+			required: mainCategoryId.includes(MainCategoryList.PRINTERS)
+		}
+
+		const historyInclude: IncludeOptions = {
+			association: 'history',
+			include: [
+				{
+					association: 'user',
+					attributes: ['email', 'name', 'lastName']
+				},
+				'employee'
+			],
+			separate: true,
+			order: [['createdAt', 'DESC']]
+		}
+
 		options.include = [
-			{
-				association: 'model', // 0
-				include: [
-					{
-						association: 'modelComputer', // 0 - 0
-						include: ['memoryRamType'],
-						attributes: [
-							'memoryRamTypeId',
-							'memoryRamSlotQuantity',
-							'hasBluetooth',
-							'hasWifiAdapter',
-							'hasDVI',
-							'hasHDMI',
-							'hasVGA'
-						]
-					},
-					{
-						association: 'modelLaptop', // 0 - 1
-						include: ['memoryRamType'],
-						attributes: [
-							'memoryRamTypeId',
-							'memoryRamSlotQuantity',
-							'hasBluetooth',
-							'hasWifiAdapter',
-							'hasDVI',
-							'hasHDMI',
-							'hasVGA',
-							'batteryModel'
-						]
-					},
-					{
-						association: 'modelMonitor', // 0 - 2
-						attributes: ['screenSize', 'hasDVI', 'hasHDMI', 'hasVGA']
-					},
-					{
-						association: 'modelPrinter', // 0 - 3
-						attributes: ['cartridgeModel']
-					},
-					{
-						association: 'modelKeyboard', // 0 - 4
-						include: ['inputType'],
-						attributes: ['inputTypeId', 'hasFingerPrintReader']
-					},
-					{
-						association: 'modelMouse', // 0 - 5
-						include: ['inputType'],
-						attributes: ['inputTypeId']
-					}
-				],
-				attributes: ['name', 'categoryId', 'brandId', 'generic']
-			},
-			{
-				association: 'category', // 1
-				include: ['mainCategory']
-			},
-			{
-				association: 'brand', // 2
-				attributes: ['id', 'name']
-			},
-			'status', // 3
-			{
-				association: 'employee', // 4
-				attributes: [
-					'id',
-					'userName',
-					'type',
-					'name',
-					'lastName',
-					'email',
-					'isStillWorking',
-					'employeeCode',
-					'nationality',
-					'cedula',
-					'extension',
-					'phone'
-				],
-				include: [
-					{
-						association: 'cargo', // 4 - 0
-						attributes: ['id', 'name']
-					},
-					{
-						association: 'directiva', // 4 - 1
-						attributes: ['id', 'name']
-					},
-					{
-						association: 'vicepresidenciaEjecutiva', // 4 - 2
-						attributes: ['id', 'name']
-					},
-					{
-						association: 'vicepresidencia', // 4 - 3
-						attributes: ['id', 'name']
-					},
-					{
-						association: 'departamento', // 4 - 4
-						attributes: ['id', 'name']
-					}
-				]
-			},
-			{
-				association: 'computer', // 5
-				required: mainCategoryId.includes(MainCategoryList.COMPUTER),
-				include: [
-					{
-						association: 'processor',
-						attributes: ['productCollection', 'numberModel', 'name', 'frequency', 'cores', 'threads']
-					}, // 5 - 0
-					{
-						association: 'hardDriveCapacity',
-						attributes: ['name']
-					}, // 5 - 1
-					{
-						association: 'hardDriveType',
-						attributes: ['name']
-					}, // 5 - 2
-					{
-						association: 'operatingSystem',
-						attributes: ['name']
-					}, // 5 - 3
-					{
-						association: 'operatingSystemArq',
-						attributes: ['name']
-					} // 5 - 4
-				],
-				attributes: [
-					'computerName',
-					'processorId',
-					'memoryRam',
-					'memoryRamCapacity',
-					'hardDriveCapacityId',
-					'hardDriveTypeId',
-					'operatingSystemId',
-					'operatingSystemArqId',
-					'macAddress',
-					'ipAddress'
-				]
-			},
-			{
-				association: 'hardDrive', // 6
-				include: [
-					'hardDriveCapacity', // 6 - 0
-					'hardDriveType' // 6 - 1
-				]
-			},
-			{
-				association: 'location', // 7
-				include: [
-					'typeOfSite', // 7 - 0
-					{
-						association: 'site', // 7 - 1
-						required: true,
-						include: [
-							{
-								association: 'city', // 7 - 1 - 0
-								required: true,
-								include: [
-									{
-										association: 'state', // 7 - 1 - 1
-										required: true,
-										include: [
-											{
-												association: 'region', // 7 - 1 - 1 - 0
-												required: true,
-												include: [
-													{
-														association: 'administrativeRegion', // 7 - 1 - 1 - 0 - 0
-														required: true
-													}
-												]
-											}
-										]
-									}
-								]
-							}
-						]
-					}
-				]
-			},
-			{
-				association: 'mfp', // 8
-				required: mainCategoryId.includes(MainCategoryList.PRINTERS)
-			},
-			{
-				association: 'history',
-				include: [
-					{
-						association: 'user',
-						attributes: ['email', 'name', 'lastName']
-					},
-					'employee'
-				],
-				separate: true,
-				order: [['createdAt', 'DESC']]
-			}
+			modelInclude,
+			categoryInclude,
+			brandInclude,
+			statusInclude,
+			employeInclude,
+			computerInclude,
+			hardDriveInclude,
+			locationInclude,
+			mfpInclude,
+			historyInclude
 		]
+
+		const whereFilters = options.where ?? {}
 
 		// Poder filtrar por main category
-		if (options.where && 'mainCategoryId' in options.where) {
-			;(options.include[1] as any).where = {
-				mainCategoryId: options.where?.mainCategoryId
+		if ('mainCategoryId' in whereFilters) {
+			mainCategoryInclude.where = {
+				id: whereFilters.mainCategoryId
 			}
-			delete options.where.mainCategoryId
+			delete whereFilters.mainCategoryId
 		}
 		// Poder filtrar por las caracteristicas de computer
-		const firstLevelJoin = [
-			'computerName',
-			'processorId',
-			'hardDriveCapacityId',
-			'hardDriveTypeId',
-			'operatingSystemId',
-			'operatingSystemArqId',
-			'memoryRam',
-			'memoryRamCapacity',
-			'macAddress'
-		]
-		firstLevelJoin.forEach(ele => {
-			if (options.where && criteria.searchValueInArray(ele)) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				options.include[5].where = {
-					// @ts-expect-error
-					...options?.include[5]?.where,
-					// @ts-expect-error
-					[ele]: options?.where[ele]
-				}
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				delete options.where[ele]
+		if ('computerName' in whereFilters) {
+			computerInclude.where = {
+				computerName: whereFilters.computerName
 			}
-		})
+			delete whereFilters.computerName
+		}
+		if ('processorId' in whereFilters) {
+			computerInclude.where = {
+				processorId: whereFilters.processorId
+			}
+			delete whereFilters.processorId
+		}
+		if ('hardDriveCapacityId' in whereFilters) {
+			computerInclude.where = {
+				hardDriveCapacityId: whereFilters.hardDriveCapacityId
+			}
+			delete whereFilters.hardDriveCapacityId
+		}
+		if ('hardDriveTypeId' in whereFilters) {
+			computerInclude.where = {
+				hardDriveTypeId: whereFilters.hardDriveTypeId
+			}
+			delete whereFilters.hardDriveTypeId
+		}
+		if ('operatingSystemId' in whereFilters) {
+			computerInclude.where = {
+				operatingSystemId: whereFilters.operatingSystemId
+			}
+			delete whereFilters.operatingSystemId
+		}
+		if ('operatingSystemArqId' in whereFilters) {
+			computerInclude.where = {
+				operatingSystemArqId: whereFilters.operatingSystemArqId
+			}
+			delete whereFilters.operatingSystemArqId
+		}
+		if ('memoryRam' in whereFilters) {
+			computerInclude.where = {
+				memoryRam: whereFilters.memoryRam
+			}
+			delete whereFilters.memoryRam
+		}
+		if ('memoryRamCapacity' in whereFilters) {
+			computerInclude.where = {
+				memoryRamCapacity: whereFilters.memoryRamCapacity
+			}
+			delete whereFilters.memoryRamCapacity
+		}
+		if ('macAddress' in whereFilters) {
+			computerInclude.where = {
+				macAddress: whereFilters.macAddress
+			}
+			delete whereFilters.macAddress
+		}
 		// Poder filtrar por direccion
-		if (options.where && 'ipAddress' in options.where) {
-			const ipAddress = options.where.ipAddress
-			const symbol = Object.getOwnPropertySymbols(ipAddress)[0]
-			const value: string = ipAddress[symbol] as string
+		if ('ipAddress' in whereFilters) {
+			const subnetFilter = whereFilters.ipAddress as { [key: symbol]: string }
+			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
 
-			;(options.include[5] as any).where = {
-				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${value}%'`)
+			computerInclude.where = {
+				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
 			}
 
-			delete options.where.ipAddress
+			delete whereFilters.ipAddress
 		}
 
 		// Poder filtrar por typo de memoria ram
-		if (options.where && 'memoryRamTypeId' in options.where) {
-			;(options.include[0] as any).required = true
-			;(options.include[0] as any).include[0].where = {
-				memoryRamTypeId: options.where.memoryRamTypeId
+		if ('memoryRamTypeId' in whereFilters) {
+			modelComputerInclude.required = true
+			modelComputerInclude.where = {
+				memoryRamTypeId: whereFilters.memoryRamTypeId
 			}
-			delete options.where.memoryRamTypeId
+			delete whereFilters.memoryRamTypeId
 		}
 		// Poder filtrar por nombre de procesador
-		if (options.where && 'processor' in options.where) {
-			;(options.include[5] as any).include[0].where = {
-				name: options.where.processor
+		if ('processor' in whereFilters) {
+			processorInclude.where = {
+				name: whereFilters.processor
 			}
-			delete options.where.processor
+			delete whereFilters.processor
 		}
 
 		// Poder filtrar por ubicacion - Tipo de sitio
-		if (options.where && 'typeOfSiteId' in options.where) {
-			;(options.include[7] as any).where = {
-				typeOfSiteId: (options.where as any)?.typeOfSiteId
+		if ('typeOfSiteId' in whereFilters) {
+			typeOfSiteInclude.where = {
+				id: whereFilters.typeOfSiteId
 			}
-			delete options.where?.typeOfSiteId
+			delete whereFilters.typeOfSiteId
 		}
 
 		//Filtrar por Cargo
-		if (options.where && 'cargoId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[0].where = {
-				id: (options.where as any)?.cargoId
+		if ('cargoId' in whereFilters) {
+			employeInclude.required = true
+			cargoInclude.where = {
+				id: whereFilters.cargoId
 			}
-			delete options.where?.cargoId
+			delete whereFilters?.cargoId
 		}
 		//Filtrar por directiva
-		if (options.where && 'directivaId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[1].where = {
-				id: (options.where as any)?.directivaId
+		if ('directivaId' in whereFilters) {
+			employeInclude.required = true
+			directivaInclude.where = {
+				id: whereFilters.directivaId
 			}
-			delete options.where?.directivaId
+			delete whereFilters?.directivaId
 		}
 		//Filtrar por VPE
-		if (options.where && 'vicepresidenciaEjecutivaId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[2].where = {
-				id: (options.where as any)?.vicepresidenciaEjecutivaId
+		if ('vicepresidenciaEjecutivaId' in whereFilters) {
+			employeInclude.required = true
+			vicepresidenciaEjecutivaInclude.where = {
+				id: whereFilters.vicepresidenciaEjecutivaId
 			}
-			delete options.where?.vicepresidenciaEjecutivaId
+			delete whereFilters?.vicepresidenciaEjecutivaId
 		}
 		//Filtrar por VP
-		if (options.where && 'vicepresidenciaId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[3].where = {
-				id: (options.where as any)?.vicepresidenciaId
+		if ('vicepresidenciaId' in whereFilters) {
+			employeInclude.required = true
+			vicepresidenciaInclude.where = {
+				id: whereFilters.vicepresidenciaId
 			}
-			delete options.where?.vicepresidenciaId
+			delete whereFilters?.vicepresidenciaId
 		}
 		//Filtrar por departamento
-		if (options.where && 'departamentoId' in options.where) {
-			;(options.include[4] as any).required = true
-			;(options.include[4] as any).include[4].where = {
-				id: (options.where as any)?.departamentoId
+		if ('departamentoId' in whereFilters) {
+			employeInclude.required = true
+			departamentoInclude.where = {
+				id: whereFilters.departamentoId
 			}
-			delete options.where?.departamentoId
+			delete whereFilters?.departamentoId
 		}
 
 		// Poder filtrar por ubicacion - por sitio
-		if (options.where && 'siteId' in options.where) {
-			;(options.include[7] as any).required = true
-			;(options.include[7] as any).include[1].where = {
-				id: (options.where as any)?.siteId
+		if ('siteId' in whereFilters) {
+			locationInclude.required = true
+			siteInclude.where = {
+				id: whereFilters.siteId
 			}
-			delete options.where?.siteId
+			delete whereFilters?.siteId
 		}
 
 		// Poder filtrar por ciudad
-		if (options.where && 'cityId' in options.where) {
-			;(options.include[7] as any).required = true
-			;(options.include[7] as any).include[1].include[0].where = {
-				id: options.where.cityId
+		if ('cityId' in whereFilters) {
+			locationInclude.required = true
+			cityInclude.where = {
+				id: whereFilters.cityId
 			}
 
-			delete options.where?.cityId
+			delete whereFilters?.cityId
 		}
 
 		// Poder filtrar por estado
-		if (options.where && 'stateId' in options.where) {
-			;(options.include[7] as any).required = true
-			;(options.include[7] as any).include[1].include[0].include[0].where = {
-				id: options.where.stateId
+		if ('stateId' in whereFilters) {
+			locationInclude.required = true
+			stateInclude.where = {
+				id: whereFilters.stateId
 			}
 
-			delete options.where?.stateId
+			delete whereFilters?.stateId
 		}
 
 		// Poder filtrar por region
-		if (options.where && 'regionId' in options.where) {
-			;(options.include[7] as any).required = true
-			;(options.include[7] as any).include[1].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.regionId
+		if ('regionId' in whereFilters) {
+			locationInclude.required = true
+			regionInclude.where = {
+				id: whereFilters.regionId
 			}
 
-			delete options.where?.regionId
+			delete whereFilters?.regionId
 		}
 		// Poder filtrar por region administrativa
-		if (options.where && 'administrativeRegionId' in options.where) {
-			;(options.include[7] as any).required = true
-			;(options.include[7] as any).include[1].include[0].include[0].include[0].include[0].where = {
-				id: (options.where as any)?.administrativeRegionId
+		if ('administrativeRegionId' in whereFilters) {
+			locationInclude.required = true
+			administrativeRegionInclude.where = {
+				id: whereFilters.administrativeRegionId
 			}
 
-			delete options.where?.administrativeRegionId
+			delete whereFilters?.administrativeRegionId
 		}
 
+		// Re-assign the modified where clauses back to the options.
+		options.where = whereFilters
+
+		// --- 3. Order Transformation ---
+		// The `transformOrder` method correctly maps frontend field names (e.g., 'cityId')
+		// to the nested Sequelize structure required for sorting on associated tables.
 		options.order = this.transformOrder(options.order)
 
 		return options
 	}
 
-	private transformOrder(order: FindOptions['order']): FindOptions['order'] {
-		if (!order || !Array.isArray(order)) return undefined
+	private transformOrder(order: Order | undefined): Order | undefined {
+		if (!order || !Array.isArray(order) || order.length === 0) return undefined
 
 		const orderMap: Record<string, string[]> = {
 			employeeId: ['employee', 'userName'],
@@ -405,10 +462,12 @@ export class DeviceAssociation {
 			brandId: ['brand', 'name'],
 			modelId: ['model', 'name']
 		}
-		// @ts-ignore
-		return order.map(([orderBy, orderType]) => {
-			const mappedOrder = orderMap[orderBy]
-			return mappedOrder ? [...mappedOrder, orderType] : [orderBy, orderType]
+		const transformedOrder = (order as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			// If a mapping exists, use the nested path. Otherwise, use the original field name.
+			return mappedPath ? [...mappedPath, direction] : [field, direction]
 		})
+
+		return transformedOrder as Order
 	}
 }
