@@ -1,5 +1,5 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { MainCategoryModel } from './MainCategorySchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -14,10 +14,10 @@ import { type MainCategoryRepository } from '../../domain/MainCategoryRepository
  * Handles data persistence for MainCategory entities using Sequelize, with caching capabilities.
  *
  * @class SequelizeMainCategoryRepository
- * @extends {CriteriaToSequelizeConverter}
+ * @extends {SequelizeCriteriaConverter}
  * @implements {MainCategoryRepository}
  */
-export class SequelizeMainCategoryRepository extends CriteriaToSequelizeConverter implements MainCategoryRepository {
+export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter implements MainCategoryRepository {
 	private readonly cacheKey: string = 'mainCategories'
 
 	/**

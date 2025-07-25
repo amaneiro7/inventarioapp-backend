@@ -1,5 +1,5 @@
 import { RolesModel } from './RolesSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -11,12 +11,12 @@ import { type RoleDto } from '../../domain/Role.dto'
 
 /**
  * @class SequelizeRolesRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {RoleRepository}
  * @description Concrete implementation of the RoleRepository using Sequelize.
  * Handles data persistence for Role entities, including caching mechanisms.
  */
-export class SequelizeRolesRepository extends CriteriaToSequelizeConverter implements RoleRepository {
+export class SequelizeRolesRepository extends SequelizeCriteriaConverter implements RoleRepository {
 	private readonly cacheKey: string = 'roles'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

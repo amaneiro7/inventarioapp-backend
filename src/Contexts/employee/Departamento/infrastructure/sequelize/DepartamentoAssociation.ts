@@ -26,12 +26,12 @@ export class DepartamentoAssociation {
 		}
 		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
 			association: 'vicepresidenciaEjecutiva',
-			attributes: ['id', 'name'],
+			attributes: ['id', 'name', 'directivaId'],
 			include: [directivaInclude]
 		}
 		const vicepresidenciaInclude: IncludeOptions = {
 			association: 'vicepresidencia',
-			attributes: ['id', 'name'],
+			attributes: ['id', 'name', 'vicepresidenciaEjecutivaId'],
 			include: [vicepresidenciaEjecutivaInclude]
 		}
 		const cargoInclude: IncludeOptions = {

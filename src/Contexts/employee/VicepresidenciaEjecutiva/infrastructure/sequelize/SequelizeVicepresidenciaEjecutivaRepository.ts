@@ -9,7 +9,7 @@ import {
 	type VicepresidenciaEjecutivaDto,
 	type VicepresidenciaEjecutivaPrimitives
 } from '../../domain/VicepresidenciaEjecutiva.dto'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -17,13 +17,13 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 
 /**
  * @class SequelizeVicepresidenciaEjecutivaRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {DepartmentRepository<VicepresidenciaEjecutivaDto>}
  * @description Concrete implementation of the VicepresidenciaEjecutivaRepository using Sequelize.
  * Handles data persistence for VicepresidenciaEjecutiva entities, including caching mechanisms.
  */
 export class SequelizeVicepresidenciaEjecutivaRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements DepartmentRepository<VicepresidenciaEjecutivaDto>
 {
 	private readonly cacheKey: string = 'vicepresidenciaEjecutiva'

@@ -6,18 +6,18 @@ import { type SitePrimitives, type SiteDto } from '../../domain/Site.dto'
 import { type SiteId } from '../../domain/SiteId'
 import { type SiteRepository } from '../../domain/SiteRepository'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { SiteModels } from './SiteSchema'
 import { SiteAssociation } from './SiteAssociation'
 
 /**
  * @class SequelizeSiteRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {SiteRepository}
  * @description Concrete implementation of the SiteRepository using Sequelize.
  * Handles data persistence for Site entities, including caching mechanisms.
  */
-export class SequelizeSiteRepository extends CriteriaToSequelizeConverter implements SiteRepository {
+export class SequelizeSiteRepository extends SequelizeCriteriaConverter implements SiteRepository {
 	private readonly cacheKey: string = 'sites'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

@@ -2,7 +2,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type OperatingSystemDto } from '../../domain/OperatingSystem.dto'
 import { type OperatingSystemId } from '../../domain/OperatingSystemId'
 import { type OperatingSystemRepository } from '../../domain/OperatingSystemRepository'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
 import { OperatingSystemModel } from './OperatingSystemSchema'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
@@ -11,13 +11,13 @@ import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeOperatingSystemRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {OperatingSystemRepository}
  * @description Concrete implementation of the OperatingSystemRepository using Sequelize.
  * Handles data persistence for OperatingSystem entities, including caching mechanisms.
  */
 export class SequelizeOperatingSystemRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements OperatingSystemRepository
 {
 	private readonly cacheKey: string = 'operatingSystem'

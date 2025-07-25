@@ -1,5 +1,5 @@
 import { InputTypeModel } from './InputTypeSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type InputTypeRepository } from '../../domain/InputTypeRepository'
 import { type InputTypeDto } from '../../domain/InputType.dto'
@@ -11,12 +11,12 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 /**
  * @class SequelizeInputTypeRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {InputTypeRepository}
  * @description Concrete implementation of the InputTypeRepository using Sequelize.
  * Handles data persistence for InputType entities, including caching mechanisms.
  */
-export class SequelizeInputTypeRepository extends CriteriaToSequelizeConverter implements InputTypeRepository {
+export class SequelizeInputTypeRepository extends SequelizeCriteriaConverter implements InputTypeRepository {
 	private readonly cacheKey: string = 'inputTypes'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

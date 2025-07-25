@@ -1,5 +1,5 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { LocationStatusModel } from './LocationStatusSchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -11,15 +11,12 @@ import { type LocationStatusRepository } from '../../domain/LocationStatusReposi
 
 /**
  * @class SequelizeLocationStatusRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {LocationStatusRepository}
  * @description Concrete implementation of the LocationStatusRepository using Sequelize.
  * Handles data persistence for LocationStatus entities, including caching mechanisms.
  */
-export class SequelizeLocationStatusRepository
-	extends CriteriaToSequelizeConverter
-	implements LocationStatusRepository
-{
+export class SequelizeLocationStatusRepository extends SequelizeCriteriaConverter implements LocationStatusRepository {
 	private readonly cacheKey: string = 'locationStatus'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

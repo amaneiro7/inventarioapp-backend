@@ -3,7 +3,7 @@ import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
 import { type MemoryRamTypeRepository } from '../../domain/MemoryRamTypeRepository'
 import { MemoryRamTypeModel } from './MemoryRamTypeSchema'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
@@ -11,12 +11,12 @@ import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeMemoryRamTypeRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {MemoryRamTypeRepository}
  * @description Concrete implementation of the MemoryRamTypeRepository using Sequelize.
  * Handles data persistence for MemoryRamType entities, including caching mechanisms.
  */
-export class SequelizeMemoryRamTypeRepository extends CriteriaToSequelizeConverter implements MemoryRamTypeRepository {
+export class SequelizeMemoryRamTypeRepository extends SequelizeCriteriaConverter implements MemoryRamTypeRepository {
 	private readonly cacheKey: string = 'memoryRamType'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

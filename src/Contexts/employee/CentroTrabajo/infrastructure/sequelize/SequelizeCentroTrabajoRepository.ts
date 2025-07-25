@@ -8,17 +8,17 @@ import { CentroTrabajoModel } from './CentroTrabajoSchema'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type CentroTrabajoDto, type CentroTrabajoPrimitives } from '../../domain/CentroTrabajo.dto'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @class SequelizeCentroTrabajoRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {CentroTrabajoRepository}
  * @description Concrete implementation of the CentroTrabajoRepository using Sequelize.
  * Handles data persistence for CentroTrabajo entities, including caching mechanisms.
  */
-export class SequelizeCentroTrabajoRepository extends CriteriaToSequelizeConverter implements CentroTrabajoRepository {
+export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter implements CentroTrabajoRepository {
 	private readonly cacheKey: string = 'CentroTrabajos'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

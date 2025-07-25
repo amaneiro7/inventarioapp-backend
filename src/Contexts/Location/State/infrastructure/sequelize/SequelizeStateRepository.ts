@@ -5,19 +5,19 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type StateDto } from '../../domain/State.dto'
 import { type StateId } from '../../domain/StateId'
 import { type StateRepository } from '../../domain/StateRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { StateModel } from './StateSchema'
 import { StateAssociation } from './StateAssociation'
 
 /**
  * @class SequelizeStateRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {StateRepository}
  * @description Concrete implementation of the StateRepository using Sequelize.
  * Handles data persistence for State entities, including caching mechanisms.
  */
-export class SequelizeStateRepository extends CriteriaToSequelizeConverter implements StateRepository {
+export class SequelizeStateRepository extends SequelizeCriteriaConverter implements StateRepository {
 	private readonly cacheKey: string = 'states'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

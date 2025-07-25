@@ -1,5 +1,5 @@
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { ProcessorModel } from './ProcessorSchema'
 import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
@@ -11,12 +11,12 @@ import { type ProcessorRepository } from '../../domain/ProcessorRepository'
 
 /**
  * @class SequelizeProcessorRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {ProcessorRepository}
  * @description Concrete implementation of the ProcessorRepository using Sequelize.
  * Handles data persistence for Processor entities, including caching mechanisms.
  */
-export class SequelizeProcessorRepository extends CriteriaToSequelizeConverter implements ProcessorRepository {
+export class SequelizeProcessorRepository extends SequelizeCriteriaConverter implements ProcessorRepository {
 	private readonly cacheKey: string = 'processors'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

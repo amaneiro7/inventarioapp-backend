@@ -1,7 +1,7 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DirectivaModel } from './DirectivaSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -14,13 +14,13 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @class SequelizeDirectivaRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {DepartmentRepository<DirectivaDto>}
  * @description Concrete implementation of the DirectivaRepository using Sequelize.
  * Handles data persistence for Directiva entities, including caching mechanisms.
  */
 export class SequelizeDirectivaRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements DepartmentRepository<DirectivaDto>
 {
 	private readonly cacheKey: string = 'directiva'

@@ -1,4 +1,4 @@
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -13,12 +13,12 @@ import { type LocationDto, type LocationPrimitives } from '../../domain/Location
 
 /**
  * @class SequelizeLocationRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {LocationRepository}
  * @description Concrete implementation of the LocationRepository using Sequelize.
  * Handles data persistence for Location entities, including caching mechanisms.
  */
-export class SequelizeLocationRepository extends CriteriaToSequelizeConverter implements LocationRepository {
+export class SequelizeLocationRepository extends SequelizeCriteriaConverter implements LocationRepository {
 	private readonly cacheKey: string = 'locations'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

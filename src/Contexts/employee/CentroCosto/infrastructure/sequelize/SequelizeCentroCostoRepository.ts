@@ -5,7 +5,7 @@ import { type CodCentroCosto } from '../../domain/CodCentroCosto'
 import { type CentroCostoName } from '../../domain/CentroCostoName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { CentroCostoModel } from './CentroCostoSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type CentroCostoPrimitives, type CentroCostoDto } from '../../domain/CentroCosto.dto'
@@ -13,12 +13,12 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeCentroCostoRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {CentroCostoRepository}
  * @description Concrete implementation of the CentroCostoRepository using Sequelize.
  * Handles data persistence for CentroCosto entities, including caching mechanisms.
  */
-export class SequelizeCentroCostoRepository extends CriteriaToSequelizeConverter implements CentroCostoRepository {
+export class SequelizeCentroCostoRepository extends SequelizeCriteriaConverter implements CentroCostoRepository {
 	private readonly cacheKey: string = 'CentroCostos'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

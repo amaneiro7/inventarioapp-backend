@@ -7,18 +7,18 @@ import { type CityId } from '../../domain/CityId'
 import { type CityRepository } from '../../domain/CityRepository'
 import { type CityName } from '../../domain/CityName'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CityModel } from './CitySchema'
 import { CityAssociation } from './CityAssociation'
 
 /**
  * @class SequelizeCityRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {CityRepository}
  * @description Concrete implementation of the CityRepository using Sequelize.
  * Handles data persistence for City entities, including caching mechanisms.
  */
-export class SequelizeCityRepository extends CriteriaToSequelizeConverter implements CityRepository {
+export class SequelizeCityRepository extends SequelizeCriteriaConverter implements CityRepository {
 	private readonly cacheKey: string = 'cities'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

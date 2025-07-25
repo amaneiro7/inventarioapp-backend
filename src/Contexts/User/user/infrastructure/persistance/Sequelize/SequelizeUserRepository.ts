@@ -1,6 +1,6 @@
 import { UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
 import { UserModel } from './UserSchema'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { UsersAssociation } from './UsersAssociation'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
@@ -12,12 +12,12 @@ import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 
 /**
  * @class SequelizeUserRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {UserRepository}
  * @description Concrete implementation of the UserRepository using Sequelize.
  * Handles data persistence for User entities, including caching mechanisms and refresh token JTI management.
  */
-export class SequelizeUserRepository extends CriteriaToSequelizeConverter implements UserRepository {
+export class SequelizeUserRepository extends SequelizeCriteriaConverter implements UserRepository {
 	private readonly cacheKey: string = 'users'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

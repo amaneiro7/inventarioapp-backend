@@ -1,6 +1,6 @@
 import { StatusModel } from './StatusSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type StatusId } from '../../domain/StatusId'
@@ -11,12 +11,12 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @class SequelizeStatusRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {StatusRepository}
  * @description Concrete implementation of the StatusRepository using Sequelize.
  * Handles data persistence for Status entities, including caching mechanisms.
  */
-export class SequelizeStatusRepository extends CriteriaToSequelizeConverter implements StatusRepository {
+export class SequelizeStatusRepository extends SequelizeCriteriaConverter implements StatusRepository {
 	private readonly cacheKey: string = 'status'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

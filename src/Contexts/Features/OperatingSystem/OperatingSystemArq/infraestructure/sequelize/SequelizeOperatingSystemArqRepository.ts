@@ -3,7 +3,7 @@ import { type OperatingSystemArqId } from '../../domain/OperatingSystemArqID'
 import { type OperatingSystemArqRepository } from '../../domain/OperatingSystemArqRepository'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
 import { OperatingSystemArqModel } from './OperatingSystemArqSchema'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type OperatingSystemArqDto } from '../../domain/OperatingSystemArq.dto'
 import { ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
@@ -11,13 +11,13 @@ import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeOperatingSystemArqRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {OperatingSystemArqRepository}
  * @description Concrete implementation of the OperatingSystemArqRepository using Sequelize.
  * Handles data persistence for OperatingSystemArq entities, including caching mechanisms.
  */
 export class SequelizeOperatingSystemArqRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements OperatingSystemArqRepository
 {
 	private readonly cacheKey: string = 'operatingSystemArq'

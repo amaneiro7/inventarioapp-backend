@@ -1,5 +1,5 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TypeOfSiteModel } from './TypeOfSiteSchema'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -11,12 +11,12 @@ import { type TypeOfSiteRepository } from '../../domain/TypeOfSiteRepository'
 
 /**
  * @class SequelizeTypeOfSiteRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {TypeOfSiteRepository}
  * @description Concrete implementation of the TypeOfSiteRepository using Sequelize.
  * Handles data persistence for TypeOfSite entities, including caching mechanisms.
  */
-export class SequelizeTypeOfSiteRepository extends CriteriaToSequelizeConverter implements TypeOfSiteRepository {
+export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter implements TypeOfSiteRepository {
 	private readonly cacheKey: string = 'typeOfSite'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

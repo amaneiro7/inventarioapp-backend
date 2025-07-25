@@ -8,19 +8,19 @@ import { type CargoDto, type CargoPrimitives } from '../../domain/Cargo.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { CargoModel } from './CargoSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CargoAssociation } from './CargoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeCargoRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {CargoRepository}
  * @description Concrete implementation of the CargoRepository using Sequelize.
  * Handles data persistence for Cargo entities, including caching mechanisms.
  */
-export class SequelizeCargoRepository extends CriteriaToSequelizeConverter implements CargoRepository {
+export class SequelizeCargoRepository extends SequelizeCriteriaConverter implements CargoRepository {
 	private readonly cacheKey: string = 'cargos'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

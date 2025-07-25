@@ -6,17 +6,17 @@ import { HardDriveTypeModel } from './HardDriveTypeSchema'
 import { type HardDriveTypeDto } from '../../domain/HardDriveType.dto'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
  * @class SequelizeHardDriveTypeRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {HardDriveTypeRepository}
  * @description Concrete implementation of the HardDriveTypeRepository using Sequelize.
  * Handles data persistence for HardDriveType entities, including caching mechanisms.
  */
-export class SequelizeHardDriveTypeRepository extends CriteriaToSequelizeConverter implements HardDriveTypeRepository {
+export class SequelizeHardDriveTypeRepository extends SequelizeCriteriaConverter implements HardDriveTypeRepository {
 	private readonly cacheKey: string = 'hardDriveType'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

@@ -1,6 +1,6 @@
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../../../Shared/domain/CacheService'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { ProcessorSocketModel } from './ProcessorSocketSchema'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
@@ -11,13 +11,13 @@ import { type ProcessorSocketRepository } from '../../domain/ProcessorSocketRepo
 
 /**
  * @class SequelizeProcessorSocketRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {ProcessorSocketRepository}
  * @description Concrete implementation of the ProcessorSocketRepository using Sequelize.
  * Handles data persistence for ProcessorSocket entities, including caching mechanisms.
  */
 export class SequelizeProcessorSocketRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements ProcessorSocketRepository
 {
 	private readonly cacheKey: string = 'processorSocket'

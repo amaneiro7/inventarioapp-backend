@@ -1,4 +1,4 @@
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -12,12 +12,12 @@ import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/E
 
 /**
  * @class SequelizeEmployeeRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {EmployeeRepository}
  * @description Concrete implementation of the EmployeeRepository using Sequelize.
  * Handles data persistence for Employee entities, including caching mechanisms.
  */
-export class SequelizeEmployeeRepository extends CriteriaToSequelizeConverter implements EmployeeRepository {
+export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter implements EmployeeRepository {
 	private readonly cacheKey: string = 'employees'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

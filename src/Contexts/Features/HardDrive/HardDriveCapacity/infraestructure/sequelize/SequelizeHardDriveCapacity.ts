@@ -3,7 +3,7 @@ import { CacheService } from '../../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { CriteriaToSequelizeConverter } from '../../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type HardDriveCapacityDto } from '../../domain/HardDriveCapacity.dto'
 import { type HardDriveCapacityId } from '../../domain/HardDriveCapacityId'
 import { type HardDriveCapacityRepository } from '../../domain/HardDriveCapacityRepository'
@@ -11,13 +11,13 @@ import { HardDriveCapacityModel } from './HardDriveCapacitySchema'
 
 /**
  * @class SequelizeHardDriveCapacityRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {HardDriveCapacityRepository}
  * @description Concrete implementation of the HardDriveCapacityRepository using Sequelize.
  * Handles data persistence for HardDriveCapacity entities, including caching mechanisms.
  */
 export class SequelizeHardDriveCapacityRepository
-	extends CriteriaToSequelizeConverter
+	extends SequelizeCriteriaConverter
 	implements HardDriveCapacityRepository
 {
 	private readonly cacheKey: string = 'hardDriveCapacities'

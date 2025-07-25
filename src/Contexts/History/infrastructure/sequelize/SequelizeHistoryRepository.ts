@@ -1,6 +1,6 @@
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { HistoryModel } from './HistorySchema'
-import { CriteriaToSequelizeConverter } from '../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { HistoryAssociation } from './HistoryAssociation'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
@@ -10,12 +10,12 @@ import { type HistoryRepository } from '../../domain/HistoryRepository'
 
 /**
  * @class SequelizeHistoryRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {HistoryRepository}
  * @description Concrete implementation of the HistoryRepository using Sequelize.
  * Handles data persistence for History entities, including caching mechanisms.
  */
-export class SequelizeHistoryRepository extends CriteriaToSequelizeConverter implements HistoryRepository {
+export class SequelizeHistoryRepository extends SequelizeCriteriaConverter implements HistoryRepository {
 	private readonly cacheKey: string = 'histories'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

@@ -19,8 +19,6 @@ export class VicepresidenciaAssociation {
 	 * @returns {FindOptions} The enhanced Sequelize FindOptions object with includes and nested filters.
 	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		// Cast to our custom type to make TypeScript aware of the filter keys.
-		const whereFilters = { ...options.where }
 		// --- 1. Define Includes with Clear Naming for Readability and Safety ---
 		const directivaInclude: IncludeOptions = {
 			association: 'directiva',
@@ -28,7 +26,7 @@ export class VicepresidenciaAssociation {
 		}
 		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
 			association: 'vicepresidenciaEjecutiva',
-			attributes: ['id', 'name'],
+			attributes: ['id', 'name', 'directivaId'],
 			include: [directivaInclude]
 		}
 		const cargoInclude: IncludeOptions = {
@@ -37,8 +35,9 @@ export class VicepresidenciaAssociation {
 			through: { attributes: [] }
 		}
 
-		options.include = [vicepresidenciaEjecutivaInclude, cargoInclude, 'employee']
-
+		options.include = [vicepresidenciaEjecutivaInclude, cargoInclude]
+		// Cast to our custom type to make TypeScript aware of the filter keys.
+		const whereFilters = options.where ?? {}
 		// --- 2. Apply Nested Filters Accumulatively ---
 		// These filters are applied to the correct level of the nested include structure.
 		if ('cargoId' in whereFilters) {
@@ -54,9 +53,7 @@ export class VicepresidenciaAssociation {
 			delete whereFilters.directivaId
 		}
 
-		console.log(whereFilters)
 		options.where = whereFilters
-		console.log(options.where)
 
 		return options
 	}

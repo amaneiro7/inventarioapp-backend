@@ -1,5 +1,5 @@
 import { RegionModel } from './RegionSchema'
-import { CriteriaToSequelizeConverter } from '../../../../Shared/infrastructure/criteria/CriteriaToSequelizeConverter'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -11,12 +11,12 @@ import { type RegionRepository } from '../../domain/RegionRepository'
 
 /**
  * @class SequelizeRegionRepository
- * @extends CriteriaToSequelizeConverter
+ * @extends SequelizeCriteriaConverter
  * @implements {RegionRepository}
  * @description Concrete implementation of the RegionRepository using Sequelize.
  * Handles data persistence for Region entities, including caching mechanisms.
  */
-export class SequelizeRegionRepository extends CriteriaToSequelizeConverter implements RegionRepository {
+export class SequelizeRegionRepository extends SequelizeCriteriaConverter implements RegionRepository {
 	private readonly cacheKey: string = 'regions'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
