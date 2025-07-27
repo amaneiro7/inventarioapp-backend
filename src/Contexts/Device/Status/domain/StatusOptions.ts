@@ -1,3 +1,7 @@
+/**
+ * @constant StatusOptions
+ * @description A read-only object mapping status keys to their corresponding IDs.
+ */
 export const StatusOptions = {
 	INUSE: '1',
 	INALMACEN: '2',
@@ -10,7 +14,11 @@ export const StatusOptions = {
 	JORNADA: '9'
 } as const
 
-export const statusOptionsName = {
+/**
+ * @constant statusOptionsName
+ * @description A read-only record mapping status IDs to their corresponding display names.
+ */
+export const statusOptionsName: Record<(typeof StatusOptions)[keyof typeof StatusOptions], string> = {
 	[StatusOptions.INUSE]: 'En Uso',
 	[StatusOptions.INALMACEN]: 'En Almacen',
 	[StatusOptions.PORDESINCORPORAR]: 'Por Desincorporar',
@@ -22,4 +30,8 @@ export const statusOptionsName = {
 	[StatusOptions.JORNADA]: 'Jornada'
 }
 
+/**
+ * @type StatusOptionKey
+ * @description A union type representing all possible status option keys.
+ */
 export type StatusOptionKey = keyof typeof statusOptionsName
