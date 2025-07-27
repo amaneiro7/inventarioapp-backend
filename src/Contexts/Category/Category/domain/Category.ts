@@ -4,16 +4,15 @@ import { CategoryName } from './CategoryName'
 import { type CategoryPrimitives } from './Category.dto'
 
 /**
- * Represents a category entity.
- *
  * @class Category
+ * @description Represents the Category domain entity. This class encapsulates the business logic
+ * and ensures the integrity of a category's data through the use of Value Objects.
  */
 export class Category {
 	/**
-	 * Creates an instance of Category.
-	 * @param {CategoryId} id - The unique identifier for the category.
-	 * @param {CategoryName} name - The name of the category.
-	 * @param {MainCategoryId} mainCategoryId - The identifier of the main category this category belongs to.
+	 * @param {CategoryId} id The unique identifier for the category.
+	 * @param {CategoryName} name The name of the category.
+	 * @param {MainCategoryId} mainCategoryId The identifier of the main category this category belongs to.
 	 */
 	constructor(
 		private readonly id: CategoryId,
@@ -22,11 +21,11 @@ export class Category {
 	) {}
 
 	/**
-	 * Creates a Category instance from its primitive representation.
-	 *
 	 * @static
-	 * @param {CategoryPrimitives} primitives - The primitive data of the category.
-	 * @returns {Category} A new Category instance.
+	 * @method fromPrimitives
+	 * @description Reconstructs a `Category` instance from its primitive representation.
+	 * @param {CategoryPrimitives} primitives The primitive data of the category.
+	 * @returns {Category} A new `Category` instance.
 	 */
 	static fromPrimitives(primitives: CategoryPrimitives): Category {
 		return new Category(
@@ -37,9 +36,9 @@ export class Category {
 	}
 
 	/**
-	 * Converts the Category instance to its primitive representation.
-	 *
-	 * @returns {CategoryPrimitives} The primitive data of the category.
+	 * @method toPrimitive
+	 * @description Converts the `Category` instance into its primitive, serializable representation.
+	 * @returns {CategoryPrimitives} The primitive representation of the category.
 	 */
 	toPrimitive(): CategoryPrimitives {
 		return {
@@ -50,24 +49,27 @@ export class Category {
 	}
 
 	/**
-	 * Gets the value of the category's ID.
-	 * @type {CategoryId['value']}
+	 * @getter idValue
+	 * @description Returns the primitive value of the category's ID.
+	 * @returns {CategoryId['value']}
 	 */
 	get idValue(): CategoryId['value'] {
 		return this.id.value
 	}
 
 	/**
-	 * Gets the value of the category's name.
-	 * @type {CategoryName['value']}
+	 * @getter nameValue
+	 * @description Returns the primitive value of the category's name.
+	 * @returns {CategoryName['value']}
 	 */
 	get nameValue(): CategoryName['value'] {
 		return this.name.value
 	}
 
 	/**
-	 * Gets the value of the main category's ID.
-	 * @type {MainCategoryId['value']}
+	 * @getter mainCategoryValue
+	 * @description Returns the primitive value of the main category's ID.
+	 * @returns {MainCategoryId['value']}
 	 */
 	get mainCategoryValue(): MainCategoryId['value'] {
 		return this.mainCategoryId.value

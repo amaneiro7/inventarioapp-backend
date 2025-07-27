@@ -2,56 +2,36 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
 /**
- * Represents a category name value object.
- * Ensures that the category name is valid.
- *
  * @class CategoryName
- * @extends {StringValueObject}
+ * @extends StringValueObject
+ * @description Represents the Value Object for a Category's name.
+ * It encapsulates validation rules for the category name.
  */
 export class CategoryName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 5
+	private readonly MIN_LENGTH = 5
+	private readonly MAX_LENGTH = 100
 
 	/**
-	 * Creates an instance of CategoryName.
-	 * @param {string} value - The value of the category name.
+	 * @param {string} value The raw string value of the category name.
+	 * @throws {InvalidArgumentError} If the provided name does not meet the length constraints.
 	 */
 	constructor(readonly value: string) {
 		super(value)
-
-		this.ensureIsValidName(value)
+		this.ensureNameHasValidLength(value)
 	}
 
 	/**
-	 * Converts the CategoryName to its primitive string value.
-	 *
-	 * @returns {string} The primitive value.
-	 */
-	toPrimitives(): string {
-		return this.value
-	}
-
-	/**
-	 * Ensures that the provided name is valid.
-	 *
 	 * @private
-	 * @param {string} value - The name to validate.
-	 * @throws {InvalidArgumentError} If the name is not valid.
+	 * @method ensureNameHasValidLength
+	 * @description Validates that the category name's length is within the allowed range.
+	 * @param {string} name The category name to validate.
+	 * @throws {InvalidArgumentError} If the name's length is invalid.
 	 */
-	private ensureIsValidName(value: string): void {
-		if (!this.isCategoryNameValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+	private ensureNameHasValidLength(name: string): void {
+		if (name.length < this.MIN_LENGTH || name.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`<${name}> no es un nombre de categoría válido. Debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
-	}
-
-	/**
-	 * Checks if the category name is valid based on its length.
-	 *
-	 * @private
-	 * @param {string} name - The name to check.
-	 * @returns {boolean} True if the name is valid, false otherwise.
-	 */
-	private isCategoryNameValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

@@ -1,9 +1,8 @@
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
 /**
- * Represents a category's unique identifier.
- *
  * @class CategoryId
- * @extends {StringValueObject}
+ * @extends StringValueObject
+ * @description Represents the Value Object for a Category's unique identifier.
  */
 export class CategoryId extends StringValueObject {}

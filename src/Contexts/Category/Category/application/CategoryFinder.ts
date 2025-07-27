@@ -4,34 +4,29 @@ import { type CategoryDto } from '../domain/Category.dto'
 import { type CategoryRepository } from '../domain/CategoryRepository'
 
 /**
- * Service to find a category by its ID.
- *
- * @class CategoriesFinder
+ * @description Use case for finding a Category entity by its unique identifier.
  */
 export class CategoriesFinder {
-	/**
-	 * Creates an instance of CategoriesFinder.
-	 * @param {CategoryRepository} categoryRepository - The repository for categories.
-	 */
 	private readonly categoryRepository: CategoryRepository
+
 	constructor({ categoryRepository }: { categoryRepository: CategoryRepository }) {
 		this.categoryRepository = categoryRepository
 	}
 
 	/**
-	 * Executes the service to find a category.
-	 *
-	 * @param {{ id: string }} params - The parameters for finding a category, containing the ID.
-	 * @returns {Promise<CategoryDto>} A promise that resolves to the found category.
-	 * @throws {CategoryDoesNotExistError} If the category with the given ID does not exist.
+	 * @description Executes the category finding process.
+	 * @param {{ id: string }} params The parameters for finding the category.
+	 * @param {string} params.id The unique identifier of the category to find.
+	 * @returns {Promise<CategoryDto>} A promise that resolves to the found Category DTO.
+	 * @throws {CategoryDoesNotExistError} If no category with the provided ID is found.
+	 * @throws {InvalidArgumentError} If the provided ID is not valid.
 	 */
-	async run(params: { id: string }): Promise<CategoryDto> {
-		const { id } = params
-		const categoryId = new CategoryId(id).value
-		const category = await this.categoryRepository.searchById(categoryId)
+	async run({ id }: { id: string }): Promise<CategoryDto> {
+		const categoryId = new CategoryId(id)
+		const category = await this.categoryRepository.searchById(categoryId.value)
 
 		if (!category) {
-			throw new CategoryDoesNotExistError(categoryId)
+			throw new CategoryDoesNotExistError(categoryId.value)
 		}
 
 		return category

@@ -1,15 +1,15 @@
 /**
- * @file Defines constants related to categories, providing a single source of truth for category data.
- * This file consolidates various scattered constants into a structured and more manageable format.
+ * @file Defines constants for predefined category data, serving as a single source of truth.
+ * This file consolidates scattered constants into a structured and manageable format.
  * @author Andres Maneiro
  */
 
 /**
- * An array of all available categories with their properties.
- * Using `as const` ensures that the array and its objects are read-only.
+ * @constant CATEGORIES
+ * @description An immutable array of all available categories with their core properties.
  * @type {Readonly<Array<{id: string, key: string, name: string}>>}
  */
-export const CATEGORIES: Readonly<Array<{ id: string; key: string; name: string }>> = [
+export const CATEGORIES = [
 	{ id: '1', key: 'COMPUTADORAS', name: 'Computadoras' },
 	{ id: '2', key: 'SERVIDORES', name: 'Servidores' },
 	{ id: '3', key: 'LAPTOPS', name: 'Laptops' },
@@ -38,9 +38,9 @@ export const CATEGORIES: Readonly<Array<{ id: string; key: string; name: string 
 ] as const
 
 /**
- * A record mapping category keys to their corresponding IDs.
- * @example
- * CategoryIds.COMPUTADORAS // '1'
+ * @constant CategoryIds
+ * @description A record mapping category keys to their corresponding IDs for quick lookups.
+ * @example `CategoryIds.COMPUTADORAS` returns `'1'`.
  */
 export const CategoryIds = Object.fromEntries(CATEGORIES.map(c => [c.key, c.id])) as Record<
 	(typeof CATEGORIES)[number]['key'],
@@ -48,9 +48,9 @@ export const CategoryIds = Object.fromEntries(CATEGORIES.map(c => [c.key, c.id])
 >
 
 /**
- * A record mapping category keys to their corresponding names.
- * @example
- * CategoryNames.COMPUTADORAS // 'Computadoras'
+ * @constant CategoryNames
+ * @description A record mapping category keys to their corresponding display names.
+ * @example `CategoryNames.COMPUTADORAS` returns `'Computadoras'`.
  */
 export const CategoryNames = Object.fromEntries(CATEGORIES.map(c => [c.key, c.name])) as Record<
 	(typeof CATEGORIES)[number]['key'],
@@ -58,10 +58,9 @@ export const CategoryNames = Object.fromEntries(CATEGORIES.map(c => [c.key, c.na
 >
 
 /**
- * A record mapping category IDs to their corresponding names.
- * This is useful for displaying the category name from its ID.
- * @example
- * CategoryDefaultData['1'] // 'Computadoras'
+ * @constant CategoryDefaultData
+ * @description A record mapping category IDs to their corresponding display names.
+ * @example `CategoryDefaultData['1']` returns `'Computadoras'`.
  */
 export const CategoryDefaultData = Object.fromEntries(CATEGORIES.map(c => [c.id, c.name])) as Record<
 	(typeof CATEGORIES)[number]['id'],
@@ -69,14 +68,19 @@ export const CategoryDefaultData = Object.fromEntries(CATEGORIES.map(c => [c.id,
 >
 
 /**
- * Union type representing all possible category ID values.
+ * @type CategoryIdValues
+ * @description A union type representing all possible category ID values.
  */
 export type CategoryIdValues = (typeof CATEGORIES)[number]['id']
+
 /**
- * Union type representing all possible category name values.
+ * @type CategoryNameValues
+ * @description A union type representing all possible category name values.
  */
 export type CategoryNameValues = (typeof CATEGORIES)[number]['name']
+
 /**
- * Union type representing all possible category key values.
+ * @type CategoryKey
+ * @description A union type representing all possible category key values.
  */
 export type CategoryKey = (typeof CATEGORIES)[number]['key']

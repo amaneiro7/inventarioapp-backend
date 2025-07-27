@@ -11,62 +11,58 @@ import { type CategoryName } from '../../domain/CategoryName'
 import { type CategoryRepository } from '../../domain/CategoryRepository'
 
 /**
- * Sequelize implementation of the CategoryRepository.
- * Handles data persistence for Category entities using Sequelize, with caching capabilities.
- *
  * @class SequelizeCategoryRepository
- * @extends {SequelizeCriteriaConverter}
+ * @extends SequelizeCriteriaConverter
  * @implements {CategoryRepository}
+ * @description Concrete implementation of the `CategoryRepository` using Sequelize.
+ * It handles database operations for the Category entity and includes caching to improve performance.
  */
 export class SequelizeCategoryRepository extends SequelizeCriteriaConverter implements CategoryRepository {
-	private readonly cacheKey: string = 'categories'
-
-	/**
-	 * Creates an instance of SequelizeCategoryRepository.
-	 * @param {CacheService} cache - The cache service for storing and retrieving cached data.
-	 */
+	private readonly cacheKeyPrefix = 'categories'
 	private readonly cache: CacheService
+
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
 	}
 
 	/**
-	 * Retrieves a paginated list of categories based on the provided criteria.
-	 * Results are cached to improve performance.
-	 *
-	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
-	 * @returns {Promise<ResponseDB<CategoryDto>>} A promise that resolves to a paginated response of categories.
+	 * @method searchAll
+	 * @description Retrieves a paginated list of categories based on specified criteria.
+	 * Caches the results to optimize performance for repeated queries.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<CategoryDto>>} A promise resolving to a paginated response of category DTOs.
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CategoryDto>> {
-		const options = this.convert(criteria)
-		options.include = ['mainCategory']
-		return await this.cache.getCachedData<ResponseDB<CategoryDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			criteria: criteria,
-			ex: TimeTolive.VERY_LONG,
-			fetchFunction: async () => {
-				const { count, rows } = await CategoryModel.findAndCountAll(options)
+		const sequelizeOptions = this.convert(criteria)
+		sequelizeOptions.include = ['mainCategory']
+		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 
+		return this.cache.getCachedData<ResponseDB<CategoryDto>>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const { count, rows } = await CategoryModel.findAndCountAll(sequelizeOptions)
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
-				} as unknown as ResponseDB<CategoryDto>
+				} as ResponseDB<CategoryDto>
 			}
 		})
 	}
 
 	/**
-	 * Retrieves a single category by its unique identifier.
-	 * Results are cached for faster subsequent lookups.
-	 *
-	 * @param {Primitives<CategoryId>} id - The ID of the category to search for.
-	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, otherwise null.
+	 * @method searchById
+	 * @description Retrieves a single category by its unique identifier.
+	 * Caches the result for faster subsequent lookups.
+	 * @param {Primitives<CategoryId>} id The ID of the category to find.
+	 * @returns {Promise<CategoryDto | null>} A promise resolving to the category DTO if found, otherwise null.
 	 */
 	async searchById(id: Primitives<CategoryId>): Promise<CategoryDto | null> {
-		return await this.cache.getCachedData<CategoryDto | null>({
-			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
+		return this.cache.getCachedData<CategoryDto | null>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findByPk(id)
 				return category ? (category.get({ plain: true }) as CategoryDto) : null
@@ -75,16 +71,17 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * Retrieves a single category by its name.
-	 * Results are cached for faster subsequent lookups.
-	 *
-	 * @param {Primitives<CategoryName>} name - The name of the category to search for.
-	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, otherwise null.
+	 * @method searchByName
+	 * @description Retrieves a single category by its name.
+	 * Caches the result for faster subsequent lookups.
+	 * @param {Primitives<CategoryName>} name The name of the category to find.
+	 * @returns {Promise<CategoryDto | null>} A promise resolving to the category DTO if found, otherwise null.
 	 */
 	async searchByName(name: Primitives<CategoryName>): Promise<CategoryDto | null> {
-		return await this.cache.getCachedData<CategoryDto | null>({
-			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
+		return this.cache.getCachedData<CategoryDto | null>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findOne({ where: { name } })
 				return category ? (category.get({ plain: true }) as CategoryDto) : null

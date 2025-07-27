@@ -5,43 +5,46 @@ import { type CategoryId } from './CategoryId'
 import { type CategoryName } from './CategoryName'
 
 /**
- * Represents the basic structure of a Category.
+ * @interface Category
+ * @description Defines the core properties of a Category entity.
  */
 export interface Category {
 	/**
-	 * The unique identifier of the category.
-	 * @type {Primitives<CategoryId>}
+	 * @property {Primitives<CategoryId>} id The unique identifier of the category.
 	 */
 	id: Primitives<CategoryId>
 	/**
-	 * The name of the category.
-	 * @type {Primitives<CategoryName>}
+	 * @property {Primitives<CategoryName>} name The name of the category.
 	 */
 	name: Primitives<CategoryName>
 	/**
-	 * The identifier of the main category this category belongs to.
-	 * @type {Primitives<MainCategoryId>}
+	 * @property {Primitives<MainCategoryId>} mainCategoryId The identifier of the main category this sub-category belongs to.
 	 */
 	mainCategoryId: Primitives<MainCategoryId>
 }
 
 /**
- * Type for creating a new category, omitting the 'id'.
+ * @type CategoryParams
+ * @description Represents the set of parameters required to create a new Category.
+ * The 'id' is omitted as it is typically generated automatically.
  */
 export type CategoryParams = Omit<Category, 'id'>
 
 /**
- * Represents the primitive type of a Category.
+ * @type CategoryPrimitives
+ * @description Represents the primitive, serializable state of a Category entity.
+ * This type is ideal for data transfer, persistence, or logging.
  */
 export type CategoryPrimitives = Category
 
 /**
- * Data Transfer Object for a Category, including the main category data.
+ * @type CategoryDto
+ * @description Represents a Data Transfer Object (DTO) for the Category entity.
+ * It includes the full main category object for client-side display.
  */
 export type CategoryDto = Category & {
 	/**
-	 * The main category object associated with this category.
-	 * @type {MainCategoryDto}
+	 * @property {MainCategoryDto} mainCategory The main category DTO associated with this category.
 	 */
 	mainCategory: MainCategoryDto
 }

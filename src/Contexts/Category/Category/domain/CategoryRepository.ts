@@ -5,37 +5,36 @@ import { type CategoryId } from './CategoryId'
 import { type CategoryName } from './CategoryName'
 
 /**
- * Abstract repository for accessing category data.
- *
- * @export
  * @abstract
  * @class CategoryRepository
+ * @description Defines the contract for data persistence operations related to the Category entity.
+ * This abstraction allows for different storage implementations while maintaining a consistent interface.
  */
 export abstract class CategoryRepository {
 	/**
-	 * Searches for all categories matching the given criteria.
-	 *
 	 * @abstract
-	 * @param {Criteria} criteria - The criteria to apply.
-	 * @returns {Promise<ResponseDB<CategoryDto>>} A promise that resolves to the search results.
+	 * @method searchAll
+	 * @description Retrieves a paginated list of categories based on a set of criteria.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<CategoryDto>>} A promise that resolves to a paginated response of category DTOs.
 	 */
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<CategoryDto>>
 
 	/**
-	 * Searches for a category by its ID.
-	 *
 	 * @abstract
-	 * @param {CategoryId['value']} id - The ID of the category.
-	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category or null if not found.
+	 * @method searchById
+	 * @description Finds a single category by its unique identifier.
+	 * @param {CategoryId['value']} id The ID of the category to search for.
+	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, or null otherwise.
 	 */
 	abstract searchById(id: CategoryId['value']): Promise<CategoryDto | null>
 
 	/**
-	 * Searches for a category by its name.
-	 *
 	 * @abstract
-	 * @param {CategoryName['value']} name - The name of the category.
-	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category or null if not found.
+	 * @method searchByName
+	 * @description Finds a single category by its name.
+	 * @param {CategoryName['value']} name The name of the category to search for.
+	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, or null otherwise.
 	 */
 	abstract searchByName(name: CategoryName['value']): Promise<CategoryDto | null>
 }
