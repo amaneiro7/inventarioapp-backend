@@ -7,23 +7,24 @@ import { type VicepresidenciaDto, type VicepresidenciaParams } from '../domain/V
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
+/**
+ * @description Use case for updating an existing Vicepresidencia entity.
+ */
 export class VicepresidenciaUpdater {
 	private readonly updateVicepresidenciaUseCase: UpdateVicepresidenciaUseCase
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 	private readonly cargoRepository: CargoRepository
-	constructor({
-		vicepresidenciaRepository,
-		vicepresidenciaEjecutivaRepository,
-		cargoRepository
-	}: {
+
+	constructor(dependencies: {
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 		cargoRepository: CargoRepository
 	}) {
-		this.vicepresidenciaRepository = vicepresidenciaRepository
-		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
-		this.cargoRepository = cargoRepository
+		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
+		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
+		this.cargoRepository = dependencies.cargoRepository
+
 		this.updateVicepresidenciaUseCase = new UpdateVicepresidenciaUseCase(
 			this.vicepresidenciaRepository,
 			this.vicepresidenciaEjecutivaRepository,
@@ -31,6 +32,12 @@ export class VicepresidenciaUpdater {
 		)
 	}
 
+	/**
+	 * @description Executes the Vicepresidencia update process.
+	 * @param {{ id: string; params: Partial<VicepresidenciaParams> }} data The parameters for updating the Vicepresidencia.
+	 * @returns {Promise<void>} A promise that resolves when the Vicepresidencia is successfully updated.
+	 * @throws {DepartmentDoesNotExistError} If the Vicepresidencia with the provided ID does not exist.
+	 */
 	async run({ id, params }: { id: string; params: Partial<VicepresidenciaParams> }): Promise<void> {
 		const vpeId = new DepartmentId(id)
 
@@ -40,7 +47,6 @@ export class VicepresidenciaUpdater {
 		}
 
 		const vpeEntity = Vicepresidencia.fromPrimitives(vpe)
-		// Se verifica que el departamento nivel 1 exista, y se actualize
 		await this.updateVicepresidenciaUseCase.execute({
 			params,
 			entity: vpeEntity

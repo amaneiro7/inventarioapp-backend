@@ -10,9 +10,8 @@ import {
 } from './Vicepresidencia.dto'
 
 /**
- * Esta clase es el segundo nivel del organigrama laboral
+ * @description Represents the Vicepresidencia domain entity, the third level in the organizational chart.
  */
-
 export class Vicepresidencia extends IDepartment {
 	constructor(
 		id: DepartmentId,
@@ -24,12 +23,10 @@ export class Vicepresidencia extends IDepartment {
 	}
 
 	static create(params: VicepresidenciaParams): Vicepresidencia {
-		const id = DepartmentId.random().value
-		const cargos = params.cargos.map(cargo => new CargoId(cargo))
 		return new Vicepresidencia(
-			new DepartmentId(id),
+			DepartmentId.random(),
 			new DepartmentName(params.name),
-			cargos,
+			params.cargos.map(cargo => new CargoId(cargo)),
 			new DepartmentId(params.vicepresidenciaEjecutivaId)
 		)
 	}

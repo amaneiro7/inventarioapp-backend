@@ -2,8 +2,8 @@ import {
 	DataTypes,
 	Model,
 	type BelongsToManyAddAssociationsMixin,
-	type BelongsToManyGetAssociationsMixin,
 	type BelongsToManySetAssociationsMixin,
+	type BelongsToManyGetAssociationsMixin,
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -15,6 +15,9 @@ import { type CargoId } from '../../../Cargo/domain/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
+/**
+ * @description Sequelize model for the `Vicepresidencia` entity.
+ */
 export class VicepresidenciaModel
 	extends Model<Omit<VicepresidenciaDto, 'vicepresidenciaEjecutiva' | 'cargos'>>
 	implements VicepresidenciaDto
@@ -25,50 +28,33 @@ export class VicepresidenciaModel
 	declare vicepresidenciaEjecutiva: VicepresidenciaEjecutivaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
-	// // Métodos de asociación
+	// Association Mixins
 	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>
 	declare addCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static associate(models: Sequelize['models']): void {
 		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
 		})
-		this.hasMany(models.Departamento, {
-			as: 'departamento',
-			foreignKey: 'vicepresidenciaId'
-		})
-		this.hasMany(models.Employee, {
-			as: 'employee',
-			foreignKey: 'vicepresidenciaId'
-		}) // Un Directiva pertenece a un Employee
+		this.hasMany(models.Departamento, { as: 'departamento', foreignKey: 'vicepresidenciaId' })
+		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'vicepresidenciaId' })
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
 			through: 'cargo_vicepresidencia',
 			foreignKey: 'vicepresidenciaId',
 			otherKey: 'cargoId'
-		}) // Un Directiva tiene muchos Cargos
+		})
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		VicepresidenciaModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: true
-				},
-				vicepresidenciaEjecutivaId: {
-					type: DataTypes.UUID,
-					allowNull: false
-				}
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false, unique: true },
+				vicepresidenciaEjecutivaId: { type: DataTypes.UUID, allowNull: false }
 			},
 			{
 				sequelize,

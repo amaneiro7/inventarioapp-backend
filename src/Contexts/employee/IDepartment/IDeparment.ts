@@ -1,13 +1,8 @@
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type Cargo } from '../Cargo/domain/Cargo.dto'
 import { CargoId } from '../Cargo/domain/CargoId'
 import { DepartmentId } from './DepartmentId'
 import { DepartmentName } from './DepartmentName'
-
-/**
- * Esta clase se usa como fabrica para crear otras clases
- * que heredan de ella *
- */
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type Cargo } from '../Cargo/domain/Cargo.dto'
 
 export interface DepartmentPrimitives {
 	id: Primitives<DepartmentId>
@@ -15,6 +10,9 @@ export interface DepartmentPrimitives {
 	cargos: Primitives<CargoId>[]
 }
 
+/**
+ * @description Base class for department entities, providing common properties and methods.
+ */
 export class IDepartment {
 	constructor(
 		private readonly id: DepartmentId,
@@ -23,9 +21,9 @@ export class IDepartment {
 	) {}
 
 	static create(params: Omit<DepartmentPrimitives, 'id'>): IDepartment {
-		const id = DepartmentId.random().value
+		const id = DepartmentId.random()
 		const cargos = params.cargos.map(cargo => new CargoId(cargo))
-		return new IDepartment(new DepartmentId(id), new DepartmentName(params.name), cargos)
+		return new IDepartment(id, new DepartmentName(params.name), cargos)
 	}
 
 	toPrimitive(): DepartmentPrimitives {
@@ -44,10 +42,6 @@ export class IDepartment {
 		return this.name.value
 	}
 
-	// get centroCostoValue(): Primitives<CodCentroCosto> {
-	// 	return this.centroCostoId.value
-	// }
-
 	get CargosValue(): Primitives<CargoId>[] {
 		return this.cargos.map(cargo => cargo.value)
 	}
@@ -59,10 +53,6 @@ export class IDepartment {
 	updateName(name: Primitives<DepartmentName>): void {
 		this.name = new DepartmentName(name)
 	}
-
-	// updateCodCentroCosto(codCentroCosto: Primitives<CodCentroCosto>): void {
-	// 	this.centroCostoId = new CodCentroCosto(codCentroCosto)
-	// }
 
 	updateCargos(cargoIds: Primitives<CargoId>[]): void {
 		this.cargos = cargoIds.map(cargo => new CargoId(cargo))
