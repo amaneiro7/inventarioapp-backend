@@ -55,7 +55,7 @@
 		"cors": "2.8.5",
 		"dotenv": "17.2.1",
 		"errorhandler": "1.5.1",
-		"eslint": "9.31.0",
+		"eslint": "9.32.0",
 		"express": "4.21.2",
 		"express-promise-router": "4.1.1",
 		"express-rate-limit": "8.0.1",
@@ -84,8 +84,8 @@
 		"zod": "4.0.10"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.31.0",
-		"@eslint/json": "0.13.0",
+		"@eslint/js": "9.32.0",
+		"@eslint/json": "0.13.1",
 		"@types/bcrypt": "6.0.0",
 		"@types/compression": "1.8.1",
 		"@types/cookie-parser": "1.4.9",
@@ -110,7 +110,7 @@
 		"swagger-autogen": "2.23.7",
 		"ts-node": "10.9.2",
 		"typescript": "5.8.3",
-		"typescript-eslint": "8.37.0"
+		"typescript-eslint": "8.38.0"
 	},
 	"lint-staged": {
 		"*.{ts,js}": [
