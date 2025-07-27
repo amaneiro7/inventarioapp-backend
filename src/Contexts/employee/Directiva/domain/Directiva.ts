@@ -5,9 +5,8 @@ import { type CargoId } from '../../Cargo/domain/CargoId'
 import { type DirectivaDto } from './Directiva.dto'
 
 /**
- * Esta clase es el nivel mas alto del organigrama laboral
+ * @description Represents the Directiva domain entity, the highest level in the organizational chart.
  */
-
 export class Directiva extends IDepartment {
 	constructor(id: DepartmentId, name: DepartmentName, cargos: CargoId[]) {
 		super(id, name, cargos)

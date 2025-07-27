@@ -6,22 +6,29 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type DirectivaParams, type DirectivaDto } from '../domain/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
+/**
+ * @description Use case for updating an existing Directiva entity.
+ */
 export class DirectivaUpdater {
 	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
 	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
 	private readonly cargoRepository: CargoRepository
-	constructor({
-		cargoRepository,
-		directivaRepository
-	}: {
+
+	constructor(dependencies: {
 		directivaRepository: DepartmentRepository<DirectivaDto>
 		cargoRepository: CargoRepository
 	}) {
-		this.cargoRepository = cargoRepository
-		this.directivaRepository = directivaRepository
+		this.cargoRepository = dependencies.cargoRepository
+		this.directivaRepository = dependencies.directivaRepository
 		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
 	}
 
+	/**
+	 * @description Executes the Directiva update process.
+	 * @param {{ id: string; params: Partial<DirectivaParams> }} data The parameters for updating the Directiva.
+	 * @returns {Promise<void>} A promise that resolves when the Directiva is successfully updated.
+	 * @throws {DepartmentDoesNotExistError} If the Directiva with the provided ID does not exist.
+	 */
 	async run({ id, params }: { id: string; params: Partial<DirectivaParams> }): Promise<void> {
 		const directivaId = new DepartmentId(id)
 
