@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type DeviceId } from '../../domain/DeviceId'
@@ -25,6 +24,11 @@ import { type LocationDto } from '../../../../Location/Location/domain/Location.
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
 import { type StatusDto } from '../../../Status/domain/Status.dto'
 
+/**
+ * @class DeviceModel
+ * @extends Model
+ * @description Sequelize model for the `Device` entity. Defines the table structure, columns, and associations.
+ */
 export class DeviceModel
 	extends Model<
 		Omit<
@@ -69,97 +73,60 @@ export class DeviceModel
 	declare updatedAt: Date
 	declare createdAt: Date
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Category, {
-			as: 'category',
-			foreignKey: 'categoryId'
-		}) // A device belongs to a category
-		this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' }) // A device belongs to a brand
-		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelId' }) // A device belongs to a model series
-		this.belongsTo(models.Status, { as: 'status', foreignKey: 'statusId' }) // A device belongs to a status
-		this.hasOne(models.DeviceHardDrive, {
-			as: 'hardDrive',
-			foreignKey: 'deviceId'
-		}) // A device has one hard drive
-		this.hasOne(models.DeviceComputer, {
-			as: 'computer',
-			foreignKey: 'deviceId'
-		}) // A device has one computer
-		this.hasOne(models.DeviceMonitoring, {
-			as: 'deviceMonitoring',
-			foreignKey: 'deviceId'
-		}) // A device has one device Monitoring
-		this.hasOne(models.DeviceMFP, { as: 'mfp', foreignKey: 'deviceId' }) // A device has one multifuncional printer
-		this.belongsTo(models.Employee, {
-			as: 'employee',
-			foreignKey: 'employeeId'
-		}) // A device belongs to an employee
-		this.belongsTo(models.Location, {
-			as: 'location',
-			foreignKey: 'locationId'
-		}) // A device belongs to a location
-		this.hasMany(models.History, { as: 'history', foreignKey: 'deviceId' }) // A device can have many history
+	/**
+	 * @static
+	 * @method associate
+	 * @description Defines the relationships between the `DeviceModel` and other models.
+	 * @param {Sequelize['models']} models An object containing all initialized Sequelize models.
+	 */
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
+		this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' })
+		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelId' })
+		this.belongsTo(models.Status, { as: 'status', foreignKey: 'statusId' })
+		this.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employeeId' })
+		this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' })
+		this.hasOne(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'deviceId' })
+		this.hasOne(models.DeviceComputer, { as: 'computer', foreignKey: 'deviceId' })
+		this.hasOne(models.DeviceMonitoring, { as: 'deviceMonitoring', foreignKey: 'deviceId' })
+		this.hasOne(models.DeviceMFP, { as: 'mfp', foreignKey: 'deviceId' })
+		this.hasMany(models.History, { as: 'history', foreignKey: 'deviceId' })
 	}
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		DeviceModel.init(
+
+	/**
+	 * @static
+	 * @method initialize
+	 * @description Initializes the `DeviceModel` with its schema definition and configuration.
+	 * @param {Sequelize} sequelize The Sequelize instance.
+	 */
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				activo: {
-					allowNull: true,
-					type: DataTypes.STRING,
-					unique: true
-				},
-				serial: {
-					allowNull: true,
-					type: DataTypes.STRING,
-					unique: true
-				},
-				statusId: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				categoryId: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				brandId: {
-					type: DataTypes.UUID,
-					allowNull: false
-				},
-				modelId: {
-					type: DataTypes.UUID,
-					allowNull: false
-				},
-				employeeId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				activo: { type: DataTypes.STRING, unique: true, allowNull: true },
+				serial: { type: DataTypes.STRING, unique: true, allowNull: true },
+				statusId: { type: DataTypes.STRING, allowNull: false },
+				categoryId: { type: DataTypes.STRING, allowNull: false },
+				brandId: { type: DataTypes.UUID, allowNull: false },
+				modelId: { type: DataTypes.UUID, allowNull: false },
+				employeeId: { type: DataTypes.UUID, allowNull: true },
 				locationId: {
 					type: DataTypes.UUID,
 					allowNull: true,
 					validate: {
 						onlyNullIf(value: Primitives<DeviceLocation>) {
 							if (this.statusId !== StatusId.StatusOptions.DESINCORPORADO && value === null) {
-								throw new Error('Solo puede estar vacío si el estatus esta marcado como desincoporado')
+								throw new Error('La ubicación solo puede ser nula si el estatus es "Desincorporado".')
 							}
 						}
 					}
 				},
-				observation: {
-					type: DataTypes.TEXT,
-					allowNull: true
-				},
-				stockNumber: {
-					type: DataTypes.STRING,
-					allowNull: true
-				}
+				observation: { type: DataTypes.TEXT, allowNull: true },
+				stockNumber: { type: DataTypes.STRING, allowNull: true }
 			},
 			{
 				modelName: 'Device',
+				tableName: 'devices',
 				timestamps: true,
 				underscored: true,
 				sequelize,

@@ -4,7 +4,20 @@ import { StatusId } from '../../Status/domain/StatusId'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type Device } from './Device'
 
+/**
+ * @class DeviceStatus
+ * @extends StatusId
+ * @description Represents the Value Object for a Device's status.
+ * It encapsulates business logic related to status validation and updates.
+ */
 export class DeviceStatus extends StatusId {
+	/**
+	 * @static
+	 * @method updateStatusField
+	 * @description Handles the logic for updating a device's status.
+	 * @param {{ repository: StatusRepository; status?: Primitives<StatusId>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
 	static async updateStatusField({
 		repository,
 		status,
@@ -14,20 +27,20 @@ export class DeviceStatus extends StatusId {
 		status?: Primitives<StatusId>
 		entity: Device
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo status no realiza ninguna acción
-		if (status === undefined) {
+		if (status === undefined || entity.statusValue === status) {
 			return
 		}
-		// Verifica que si el status actual y el nuevo status son iguales no realice una busqueda en el repositorio
-		if (entity.statusValue === status) {
-			return
-		}
-		// Verifica que el status no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el status pasado
 		await DeviceStatus.ensureStatusExit({ repository, status })
-		// Actualiza el campo status de la entidad {@link Device} con el nuevo status
 		entity.updateStatus(status)
 	}
 
+	/**
+	 * @static
+	 * @method ensureStatusExit
+	 * @description Checks if a status exists in the repository.
+	 * @param {{ repository: StatusRepository; status: Primitives<StatusId> }} params The parameters for the check.
+	 * @throws {StatusDoesNotExistError} If the status does not exist.
+	 */
 	static async ensureStatusExit({
 		repository,
 		status
@@ -35,11 +48,8 @@ export class DeviceStatus extends StatusId {
 		repository: StatusRepository
 		status: Primitives<StatusId>
 	}): Promise<void> {
-		// Searches for a device with the given status in the database
-		const deviceWithStatus = await repository.searchById(new StatusId(status).value)
-		// If a device with the given status exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given status
-		if (!deviceWithStatus) {
+		const existingStatus = await repository.searchById(new StatusId(status).value)
+		if (!existingStatus) {
 			throw new StatusDoesNotExistError(status)
 		}
 	}

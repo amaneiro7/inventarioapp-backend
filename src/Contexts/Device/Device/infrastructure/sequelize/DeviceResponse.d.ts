@@ -1,3 +1,7 @@
+/**
+ * @type ClearComputerDataset
+ * @description Defines the structure for a flattened computer device dataset, used for data exports.
+ */
 export type ClearComputerDataset = {
 	id: string
 	Usuario: string
@@ -23,6 +27,10 @@ export type ClearComputerDataset = {
 	'Fecha de Modificacion': string
 }
 
+/**
+ * @type ClearDefaultDataset
+ * @description Defines the structure for a flattened default device dataset, used for data exports.
+ */
 export type ClearDefaultDataset = {
 	id: string
 	Usuario: string

@@ -3,52 +3,68 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
 import { DeviceStatus } from './DeviceStatus'
+import { StatusOptions } from '../../Status/domain/StatusOptions'
 
+/**
+ * @class DeviceStocknumber
+ * @extends AcceptedNullValueObject
+ * @description Represents the Value Object for a Device's stock number.
+ * It encapsulates validation rules based on the device's status.
+ */
 export class DeviceStocknumber extends AcceptedNullValueObject<string> {
-	private readonly NAME_MAX_LENGTH = 10
-	private readonly NAME_MIN_LENGTH = 2
+	private readonly MIN_LENGTH = 2
+	private readonly MAX_LENGTH = 10
 
 	constructor(
 		readonly value: string | null,
 		private readonly status: Primitives<DeviceStatus>
 	) {
 		super(value)
-
 		this.ensureIsValid(value, this.status)
 	}
 
-	toPrimitives(): string | null {
-		return this.value
-	}
-
+	/**
+	 * @private
+	 * @method ensureIsValid
+	 * @description Validates the stock number based on its length and the device's status.
+	 * @param {Primitives<DeviceStocknumber>} value The stock number to validate.
+	 * @param {Primitives<DeviceStatus>} status The status of the device.
+	 * @throws {InvalidArgumentError} If the stock number is invalid.
+	 */
 	private ensureIsValid(value: Primitives<DeviceStocknumber>, status: Primitives<DeviceStatus>): void {
 		if (value === null) return
-		if (!(value?.length >= this.NAME_MIN_LENGTH && value?.length <= this.NAME_MAX_LENGTH)) {
-			throw new InvalidArgumentError(`<${value}> exceeded the maximum length`)
+
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`El número de stock debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
-		if (![DeviceStatus.StatusOptions.INALMACEN, DeviceStatus.StatusOptions.PORDESINCORPORAR].includes(status)) {
-			throw new InvalidArgumentError('The device cannot have a stock number if it is not in the warehouse')
+
+		const inStorage = StatusOptions.INALMACEN === status || StatusOptions.PORDESINCORPORAR === status
+		if (!inStorage) {
+			throw new InvalidArgumentError(
+				'Un dispositivo solo puede tener número de stock si está en almacén o por desincorporar.'
+			)
 		}
 	}
 
-	static async updateStockNumberField({
+	/**
+	 * @static
+	 * @method updateStockNumberField
+	 * @description Handles the logic for updating a device's stock number.
+	 * @param {{ stockNumber?: Primitives<DeviceStocknumber>; entity: Device }} params The parameters for updating.
+	 * @returns {void}
+	 */
+	static updateStockNumberField({
 		stockNumber,
 		entity
 	}: {
 		stockNumber?: Primitives<DeviceStocknumber>
 		entity: Device
-	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de observacion no realiza ninguna acción
-		if (stockNumber === undefined) {
+	}): void {
+		if (stockNumber === undefined || entity.stockNumberValue === stockNumber) {
 			return
 		}
-		// Verifica que si el valor del campo observacion actual y el nuevo valor observacion son iguales no realiza un cambio
-		if (entity.stockNumberValue === stockNumber) {
-			return
-		}
-
-		const status = entity.statusValue
-		// Actualiza el campo observacion de la entidad {@link Device} con el nuevo observacion
-		entity.updateStockNumber(stockNumber, status)
+		entity.updateStockNumber(stockNumber, entity.statusValue)
 	}
 }

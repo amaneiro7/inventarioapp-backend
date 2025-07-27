@@ -91,6 +91,7 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 			{
 				modelName: 'Category',
 				tableName: 'categories', // Explicitly define table name
+				underscored: true,
 				timestamps: false,
 				sequelize
 			}

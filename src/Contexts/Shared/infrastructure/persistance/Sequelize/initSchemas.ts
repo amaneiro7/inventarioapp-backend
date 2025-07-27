@@ -1,6 +1,6 @@
-import { type Sequelize } from 'sequelize'
 import { resolve } from 'node:path'
 import { globSync } from 'glob'
+import { type Sequelize } from 'sequelize'
 
 interface IModelinstance {
 	initialize: (sequelize: Sequelize) => Promise<void>

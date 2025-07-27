@@ -9,3 +9,17 @@ export const StatusOptions = {
 	DISPONIBLE: '8',
 	JORNADA: '9'
 } as const
+
+export const statusOptionsName = {
+	[StatusOptions.INUSE]: 'En Uso',
+	[StatusOptions.INALMACEN]: 'En Almacen',
+	[StatusOptions.PORDESINCORPORAR]: 'Por Desincorporar',
+	[StatusOptions.DESINCORPORADO]: 'Desincorporado',
+	[StatusOptions.PRESTAMO]: 'Préstamo',
+	[StatusOptions.CONTINGENCIA]: 'Contingencia',
+	[StatusOptions.GUARDIA]: 'Guardia',
+	[StatusOptions.DISPONIBLE]: 'Disponible',
+	[StatusOptions.JORNADA]: 'Jornada'
+}
+
+export type StatusOptionKey = keyof typeof statusOptionsName

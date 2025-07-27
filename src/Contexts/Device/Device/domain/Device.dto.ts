@@ -21,6 +21,10 @@ import { type DeviceMFPDto } from '../../../Features/MFP/domain/MFP.dto'
 import { type DeviceHardDriveDto } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type HistoryDto } from '../../../History/domain/History.dto'
 
+/**
+ * @interface Device
+ * @description Defines the core properties of a Device entity.
+ */
 export interface Device {
 	id: Primitives<DeviceId>
 	serial: Primitives<DeviceSerial>
@@ -35,10 +39,24 @@ export interface Device {
 	stockNumber: Primitives<DeviceStocknumber>
 }
 
+/**
+ * @type DevicePrimitives
+ * @description Represents the primitive, serializable state of a Device entity.
+ */
 export type DevicePrimitives = Device
 
+/**
+ * @type DeviceParams
+ * @description Represents the set of parameters required to create a new Device.
+ * The 'id' is omitted as it is generated automatically.
+ */
 export type DeviceParams = Omit<Device, 'id'>
 
+/**
+ * @type DeviceDto
+ * @description Represents a Data Transfer Object (DTO) for the Device entity,
+ * including all its related data for comprehensive client-side display.
+ */
 export type DeviceDto = Device & {
 	status: StatusDto
 	category: CategoryDto

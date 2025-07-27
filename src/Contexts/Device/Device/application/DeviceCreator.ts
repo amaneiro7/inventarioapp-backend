@@ -1,4 +1,4 @@
-import { JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { ComputerValidation } from '../../../Features/Computer/application/ComputerValidation'
 import { DeviceComputer } from '../../../Features/Computer/domain/Computer'
 import { HardDriveValidation } from '../../../Features/HardDrive/HardDrive/application/HardDriveValidation'
@@ -14,7 +14,6 @@ import { DeviceLocation } from '../domain/DeviceLocation'
 import { DeviceModelSeries } from '../domain/DeviceModelSeries'
 import { DeviceSerial } from '../domain/DeviceSerial'
 import { DeviceStatus } from '../domain/DeviceStatus'
-
 import { type DeviceRepository } from '../domain/DeviceRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
@@ -27,6 +26,10 @@ import { type DeviceHardDriveParams } from '../../../Features/HardDrive/HardDriv
 import { type DeviceMFPParams } from '../../../Features/MFP/domain/MFP.dto'
 import { type DeviceMonitoringRepository } from '../../DeviceMonitoring/domain/repository/DeviceMonitoringRepository'
 
+/**
+ * @description Use case for creating a new Device entity. It handles the creation of different device types
+ * (Computer, Hard Drive, MFP, etc.) and ensures all business rules and validations are met before persistence.
+ */
 export class DeviceCreator {
 	private readonly deviceRepository: DeviceRepository
 	private readonly modelSeriesRepository: ModelSeriesRepository
@@ -37,17 +40,8 @@ export class DeviceCreator {
 	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
 	private readonly computerValidation: ComputerValidation
 	private readonly hardDriveValidation: HardDriveValidation
-	constructor({
-		deviceRepository,
-		modelSeriesRepository,
-		statusRepository,
-		employeeRepository,
-		locationRepository,
-		historyRepository,
-		deviceMonitoringRepository,
-		computerValidation,
-		hardDriveValidation
-	}: {
+
+	constructor(dependencies: {
 		deviceRepository: DeviceRepository
 		modelSeriesRepository: ModelSeriesRepository
 		statusRepository: StatusRepository
@@ -58,95 +52,106 @@ export class DeviceCreator {
 		computerValidation: ComputerValidation
 		hardDriveValidation: HardDriveValidation
 	}) {
-		this.deviceRepository = deviceRepository
-		this.modelSeriesRepository = modelSeriesRepository
-		this.statusRepository = statusRepository
-		this.employeeRepository = employeeRepository
-		this.locationRepository = locationRepository
-		this.historyRepository = historyRepository
-		this.deviceMonitoringRepository = deviceMonitoringRepository
-		this.computerValidation = computerValidation
-		this.hardDriveValidation = hardDriveValidation
+		this.deviceRepository = dependencies.deviceRepository
+		this.modelSeriesRepository = dependencies.modelSeriesRepository
+		this.statusRepository = dependencies.statusRepository
+		this.employeeRepository = dependencies.employeeRepository
+		this.locationRepository = dependencies.locationRepository
+		this.historyRepository = dependencies.historyRepository
+		this.deviceMonitoringRepository = dependencies.deviceMonitoringRepository
+		this.computerValidation = dependencies.computerValidation
+		this.hardDriveValidation = dependencies.hardDriveValidation
 	}
 
+	/**
+	 * @description Executes the device creation process.
+	 * @param {{ params: DeviceParams; user?: JwtPayloadUser }} data The data for creating the device.
+	 * @returns {Promise<void>} A promise that resolves when the device is successfully created.
+	 * @throws {InvalidArgumentError} If the user is not provided.
+	 * @throws {Error} If there is an error during the save process.
+	 */
 	async run({ params, user }: { params: DeviceParams; user?: JwtPayloadUser }): Promise<void> {
-		const { categoryId } = params
-		let device
+		if (!user?.sub) {
+			throw new InvalidArgumentError('User is required to perform this action')
+		}
 
-		// Si es computadora
-		if (DeviceComputer.isComputerCategory({ categoryId })) {
-			device = await this.computerValidation.run(params as DeviceComputerParams)
-		}
-		// Si es Disco Duro
-		else if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
-			device = await this.hardDriveValidation.run(params as DeviceHardDriveParams)
-		}
-		// Si es Impresora Multifuncional
-		else if (MFP.isMFPCategory({ categoryId })) {
-			device = MFP.create(params as DeviceMFPParams)
-		}
-		// Si es otro
-		else {
-			device = Device.create(params)
-		}
-		const { generic } = await DeviceModelSeries.ensureModelSeriesExit({
-			repository: this.modelSeriesRepository,
-			modelSeries: params.modelId,
-			brand: params.brandId,
-			category: categoryId
-		})
-		await Promise.all([
-			DeviceActivo.ensureActivoDoesNotExit({
-				repository: this.deviceRepository,
-				activo: params.activo
-			}),
-			DeviceStatus.ensureStatusExit({
-				repository: this.statusRepository,
-				status: params.statusId
-			}),
-			DeviceEmployee.ensureEmployeeExit({
-				repository: this.employeeRepository,
-				employee: params.employeeId
-			}),
-			DeviceLocation.ensureLocationExit({
-				repository: this.locationRepository,
-				location: params.locationId,
-				status: params.statusId
-			}),
-			DeviceSerial.ensureSerialDoesNotExit({
-				repository: this.deviceRepository,
-				serial: params.serial
-			}),
-			DeviceSerial.isSerialCanBeNull({
-				generic: generic,
-				serial: params.serial
-			})
-		])
+		const device = await this.createDeviceEntity(params)
+		const { generic } = await this.validateDeviceRelations(params)
+
+		DeviceSerial.isSerialCanBeNull({ generic, serial: params.serial })
+
 		const devicePrimitives = device.toPrimitives()
 
 		try {
 			await this.deviceRepository.save(devicePrimitives)
-			if (!user?.sub) {
-				throw new InvalidArgumentError('user is required')
-			}
+			await this.createInitialHistory(device, user.sub, devicePrimitives)
 
-			await new HistoryCreator({ historyRepository: this.historyRepository }).run({
-				deviceId: device.idValue,
-				userId: user?.sub,
-				employeeId: device.employeeeValue,
-				action: 'CREATE',
-				newData: devicePrimitives as unknown as Record<string, unknown>,
-				oldData: {},
-				createdAt: new Date()
-			})
-
-			if (DeviceComputer.isComputerCategory({ categoryId })) {
+			if (DeviceComputer.isComputerCategory({ categoryId: params.categoryId })) {
 				await new DeviceMonitoringCreator({ deviceMonitoringRepository: this.deviceMonitoringRepository }).run({
 					deviceId: devicePrimitives.id
 				})
 			}
-		} catch {
-			throw new Error('Error al guardar el dispositivo o crear el historial')
+		} catch (error) {
+			throw new Error(
+				`Error while saving the device or creating history: ${error instanceof Error ? error.message : 'Unknown error'}`
+			)
 		}
+	}
+
+	private async createDeviceEntity(params: DeviceParams): Promise<Device> {
+		const { categoryId } = params
+
+		if (DeviceComputer.isComputerCategory({ categoryId })) {
+			return this.computerValidation.run(params as DeviceComputerParams)
+		}
+		if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
+			return this.hardDriveValidation.run(params as DeviceHardDriveParams)
+		}
+		if (MFP.isMFPCategory({ categoryId })) {
+			return MFP.create(params as DeviceMFPParams)
+		}
+
+		return Device.create(params)
+	}
+
+	private async validateDeviceRelations(params: DeviceParams) {
+		const { modelId, brandId, categoryId, activo, statusId, employeeId, locationId, serial } = params
+
+		const modelSeries = await DeviceModelSeries.ensureModelSeriesExit({
+			repository: this.modelSeriesRepository,
+			modelSeries: modelId,
+			brand: brandId,
+			category: categoryId
+		})
+
+		await Promise.all([
+			DeviceActivo.ensureActivoDoesNotExit({ repository: this.deviceRepository, activo }),
+			DeviceStatus.ensureStatusExit({ repository: this.statusRepository, status: statusId }),
+			DeviceEmployee.ensureEmployeeExit({ repository: this.employeeRepository, employee: employeeId }),
+			DeviceLocation.ensureLocationExit({
+				repository: this.locationRepository,
+				location: locationId,
+				status: statusId
+			}),
+			DeviceSerial.ensureSerialDoesNotExit({ repository: this.deviceRepository, serial })
+		])
+
+		return { generic: modelSeries.generic }
+	}
+
+	private async createInitialHistory(
+		device: Device,
+		userId: string,
+		devicePrimitives: ReturnType<Device['toPrimitives']>
+	) {
+		await new HistoryCreator({ historyRepository: this.historyRepository }).run({
+			deviceId: device.idValue,
+			userId,
+			employeeId: device.employeeeValue,
+			action: 'CREATE',
+			newData: devicePrimitives as unknown as Record<string, unknown>,
+			oldData: {},
+			createdAt: new Date()
+		})
 	}
 }

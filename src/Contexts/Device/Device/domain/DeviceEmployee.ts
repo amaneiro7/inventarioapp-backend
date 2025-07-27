@@ -3,82 +3,91 @@ import { DeviceStatus } from './DeviceStatus'
 import { EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
+import { type StatusOptionKey, StatusOptions, statusOptionsName } from '../../Status/domain/StatusOptions'
 import { type Device } from './Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
-import { StatusOptions } from '../../Status/domain/StatusOptions'
 
+/**
+ * @class DeviceEmployee
+ * @extends AcceptedNullValueObject
+ * @description Represents the Value Object for a Device's assigned employee.
+ * It encapsulates validation rules based on the device's status.
+ */
 export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeId>> {
 	constructor(
 		readonly value: Primitives<EmployeeId> | null,
 		private readonly status: Primitives<DeviceStatus>
 	) {
 		super(value)
-		this.ensureEmployeeConditionDependsOfStatus({
+		this.ensureEmployeeConditionDependsOnStatus({
 			employee: this.value,
 			status: this.status
 		})
 		this.ensureIsValidEmployeeId(value)
 	}
 
-	toPrimitives(): Primitives<EmployeeId> | null {
-		return this.value
-	}
-
+	/**
+	 * @private
+	 * @method ensureIsValidEmployeeId
+	 * @description Validates that the employee ID is a valid UUID.
+	 * @param {Primitives<EmployeeId> | null} id The employee ID to validate.
+	 */
 	private ensureIsValidEmployeeId(id: Primitives<EmployeeId> | null): void {
-		if (!this.isValid(id)) {
-			throw new InvalidArgumentError('EmployeeId is required')
+		if (id !== null) {
+			new EmployeeId(id) // This will throw an error if the UUID is invalid
 		}
 	}
 
-	private isValid(id: Primitives<EmployeeId> | null): boolean {
-		if (id === null) return true
-		const employeeId = new EmployeeId(id)
-		if (employeeId instanceof EmployeeId) {
-			return true
-		}
-
-		return false
-	}
-
-	ensureEmployeeConditionDependsOfStatus({
+	/**
+	 * @private
+	 * @method ensureEmployeeConditionDependsOnStatus
+	 * @description Enforces business rules regarding employee assignment based on device status.
+	 * @throws {InvalidArgumentError} If a business rule is violated.
+	 */
+	private ensureEmployeeConditionDependsOnStatus({
 		employee,
 		status
 	}: {
 		employee: Primitives<EmployeeId> | null
 		status: Primitives<DeviceStatus>
 	}): void {
-		if (status === StatusOptions.PRESTAMO && employee === null) {
+		const isAssignedStatus =
+			status === StatusOptions.PRESTAMO ||
+			status === StatusOptions.CONTINGENCIA ||
+			status === StatusOptions.GUARDIA
+		const isUnassignedStatus = status === StatusOptions.DISPONIBLE || status === StatusOptions.JORNADA
+		const isStorageStatus =
+			status === StatusOptions.INALMACEN ||
+			status === StatusOptions.PORDESINCORPORAR ||
+			status === StatusOptions.DESINCORPORADO
+
+		const statusName = statusOptionsName[status as StatusOptionKey] ?? ''
+
+		if (isAssignedStatus && employee === null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en "préstamo"'
+				`Un dispositivo con estatus '${statusName}' debe estar asignado a un empleado.`
 			)
 		}
-		if (status === StatusOptions.CONTINGENCIA && employee === null) {
+		if (isUnassignedStatus && employee !== null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en "contingencia"'
+				`Un dispositivo con estatus '${statusName}' no puede tener un empleado asignado.`
 			)
 		}
-		if (status === StatusOptions.GUARDIA && employee === null) {
+		if (isStorageStatus && employee !== null) {
 			throw new InvalidArgumentError(
-				'El dispositivo debe estar asignado a un usuario si el estatus es en "guardia"'
+				'Un dispositivo en almacén o desincorporado no puede tener un empleado asignado.'
 			)
-		}
-		if (status === StatusOptions.DISPONIBLE && employee !== null) {
-			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus es "disponible"')
-		}
-		if (status === StatusOptions.JORNADA && employee !== null) {
-			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus es "jornada"')
-		}
-		if (
-			(status === StatusOptions.INALMACEN ||
-				status === StatusOptions.DESINCORPORADO ||
-				status === StatusOptions.PORDESINCORPORAR) &&
-			employee !== null
-		) {
-			throw new InvalidArgumentError('El dispositivo no puede tener empleado si el estatus no está en uso')
 		}
 	}
 
+	/**
+	 * @static
+	 * @method updateEmployeeField
+	 * @description Handles the logic for updating a device's assigned employee.
+	 * @param {{ repository: EmployeeRepository; employee?: Primitives<DeviceEmployee>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
 	static async updateEmployeeField({
 		repository,
 		employee,
@@ -88,21 +97,20 @@ export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeI
 		employee?: Primitives<DeviceEmployee>
 		entity: Device
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo empleado no realiza ninguna acción
-		if (employee === undefined) {
+		if (employee === undefined || entity.employeeeValue === employee) {
 			return
 		}
-		// Verifica que si el valor actual y el nuevo valor son iguales no realice ningún cambio
-		if (entity.employeeeValue === employee) {
-			return
-		}
-		// Verifica que el empleado exista en la base de datos, si no existe lanza un error {@link EmployeeDoesNotExistError} con el empleado pasado
 		await DeviceEmployee.ensureEmployeeExit({ repository, employee })
-		// Actualiza el campo empleado de la entidad {@link Device} con el nuevo empleado
-		const status = entity.statusValue
-		entity.updateEmployee(employee, status)
+		entity.updateEmployee(employee, entity.statusValue)
 	}
 
+	/**
+	 * @static
+	 * @method ensureEmployeeExit
+	 * @description Checks if an employee exists in the repository.
+	 * @param {{ repository: EmployeeRepository; employee: Primitives<DeviceEmployee> }} params The parameters for the check.
+	 * @throws {EmployeeDoesNotExistError} If the employee does not exist.
+	 */
 	static async ensureEmployeeExit({
 		repository,
 		employee
@@ -110,15 +118,11 @@ export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeI
 		repository: EmployeeRepository
 		employee: Primitives<DeviceEmployee>
 	}): Promise<void> {
-		// If the empleado is null, it does not exist, so we don't need to do any verification
 		if (employee === null) {
 			return
 		}
-		// Searches for a device with the given empleado in the database
-		const deviceWithEmployee = await repository.searchById(new EmployeeId(employee).toString())
-		// If a device with the given empleado exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given empleado
-		if (!deviceWithEmployee) {
+		const existingEmployee = await repository.searchById(new EmployeeId(employee).value)
+		if (!existingEmployee) {
 			throw new EmployeeDoesNotExistError(employee)
 		}
 	}

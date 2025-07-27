@@ -8,23 +8,33 @@ import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
 import { type DeviceRepository } from '../domain/DeviceRepository'
 
+/**
+ * @description Service for generating an Excel file (Buffer) containing device data based on specified criteria.
+ */
 export class DeviceExcelService {
 	private readonly deviceRepository: DeviceRepository
+
 	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
 		this.deviceRepository = deviceRepository
 	}
+
+	/**
+	 * @description Executes the Excel file generation process.
+	 * @param {SearchByCriteriaQuery} query The query containing filters and orderings.
+	 * @returns {Promise<Buffer>} A promise that resolves to a Buffer containing the Excel file data.
+	 */
 	async run(query: SearchByCriteriaQuery): Promise<Buffer> {
-		// Recuperar los datos de la base de datos usando Sequelize
-		const filters = query.filters.map(filter => {
-			return new Filter(
-				new FilterField(filter.field),
-				FilterOperator.fromValue(filter.operator),
-				new FilterValue(filter.value)
-			)
-		})
+		const filters = query.filters.map(
+			filter =>
+				new Filter(
+					new FilterField(filter.field),
+					FilterOperator.fromValue(filter.operator),
+					new FilterValue(filter.value)
+				)
+		)
 		const order = Order.fromValues(query.orderBy ?? 'locationId', query.orderType)
 		const criteria = new Criteria(new Filters(filters), order)
 
-		return await this.deviceRepository.donwload(criteria)
+		return this.deviceRepository.donwload(criteria)
 	}
 }

@@ -12,6 +12,11 @@ import { DeviceStatus } from './DeviceStatus'
 import { DeviceStocknumber } from './DeviceStock'
 import { type DevicePrimitives, type DeviceParams } from './Device.dto'
 
+/**
+ * @class Device
+ * @description Represents the core Device domain entity. This class encapsulates the business logic
+ * and ensures data integrity through the use of Value Objects.
+ */
 export class Device {
 	constructor(
 		private readonly id: DeviceId,
@@ -27,6 +32,13 @@ export class Device {
 		private stockNumber: DeviceStocknumber
 	) {}
 
+	/**
+	 * @static
+	 * @method create
+	 * @description Factory method to create a new `Device` instance with a random ID.
+	 * @param {DeviceParams} params The parameters for creating the device.
+	 * @returns {Device} A new `Device` instance.
+	 */
 	static create(params: DeviceParams): Device {
 		const id = DeviceId.random().value
 		return new Device(
@@ -44,6 +56,51 @@ export class Device {
 		)
 	}
 
+	/**
+	 * @static
+	 * @method fromPrimitives
+	 * @description Reconstructs a `Device` instance from its primitive representation.
+	 * @param {DevicePrimitives} primitives The primitive data of the device.
+	 * @returns {Device} A `Device` instance.
+	 */
+	static fromPrimitives(primitives: DevicePrimitives): Device {
+		return new Device(
+			new DeviceId(primitives.id),
+			new DeviceSerial(primitives.serial),
+			new DeviceActivo(primitives.activo),
+			new DeviceStatus(primitives.statusId),
+			new CategoryId(primitives.categoryId),
+			new BrandId(primitives.brandId),
+			new DeviceModelSeries(primitives.modelId),
+			new DeviceEmployee(primitives.employeeId, primitives.statusId),
+			new DeviceLocation(primitives.locationId),
+			new DeviceObservation(primitives.observation),
+			new DeviceStocknumber(primitives.stockNumber, primitives.statusId)
+		)
+	}
+
+	/**
+	 * @method toPrimitive
+	 * @description Converts the `Device` instance into its primitive, serializable representation.
+	 * @returns {DevicePrimitives} The primitive representation of the device.
+	 */
+	toPrimitives(): DevicePrimitives {
+		return {
+			id: this.idValue,
+			serial: this.serialValue,
+			activo: this.activoValue,
+			statusId: this.statusValue,
+			categoryId: this.categoryValue,
+			brandId: this.brandValue,
+			modelId: this.modelSeriesValue,
+			employeeId: this.employeeeValue,
+			locationId: this.locationValue,
+			observation: this.observationValue,
+			stockNumber: this.stockNumberValue
+		}
+	}
+
+	// --- Update Methods ---
 	updateSerial(newSerial: Primitives<DeviceSerial>): void {
 		this.serial = new DeviceSerial(newSerial)
 	}
@@ -84,38 +141,7 @@ export class Device {
 		this.stockNumber = new DeviceStocknumber(stockNumber, status)
 	}
 
-	static fromPrimitives(primitives: DevicePrimitives): Device {
-		return new Device(
-			new DeviceId(primitives.id),
-			new DeviceSerial(primitives.serial),
-			new DeviceActivo(primitives.activo),
-			new DeviceStatus(primitives.statusId),
-			new CategoryId(primitives.categoryId),
-			new BrandId(primitives.brandId),
-			new DeviceModelSeries(primitives.modelId),
-			new DeviceEmployee(primitives.employeeId, primitives.statusId),
-			new DeviceLocation(primitives.locationId),
-			new DeviceObservation(primitives.observation),
-			new DeviceStocknumber(primitives.stockNumber, primitives.statusId)
-		)
-	}
-
-	toPrimitives(): DevicePrimitives {
-		return {
-			id: this.idValue,
-			serial: this.serialValue,
-			activo: this.activoValue,
-			statusId: this.statusValue,
-			categoryId: this.categoryValue,
-			brandId: this.brandValue,
-			modelId: this.modelSeriesValue,
-			employeeId: this.employeeeValue,
-			locationId: this.locationValue,
-			observation: this.observationValue,
-			stockNumber: this.stockNumberValue
-		}
-	}
-
+	// --- Getters for primitive values ---
 	get idValue(): Primitives<DeviceId> {
 		return this.id.value
 	}
@@ -155,6 +181,7 @@ export class Device {
 	get observationValue(): Primitives<DeviceObservation> {
 		return this.observation.value
 	}
+
 	get stockNumberValue(): Primitives<DeviceStocknumber> {
 		return this.stockNumber.value
 	}

@@ -9,6 +9,12 @@ import { type LocationRepository } from '../../../Location/Location/domain/Locat
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { StatusOptions } from '../../Status/domain/StatusOptions'
 
+/**
+ * @class DeviceLocation
+ * @extends AcceptedNullValueObject
+ * @description Represents the Value Object for a Device's location.
+ * It encapsulates validation rules based on the device's status.
+ */
 export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationId>> {
 	constructor(value: Primitives<LocationId> | null) {
 		super(value)
@@ -16,46 +22,50 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 	}
 
 	private ensureIsValidLocationId(id: Primitives<LocationId> | null): void {
-		if (!this.isValid(id)) {
-			throw new InvalidArgumentError('Location is required')
+		if (id !== null) {
+			new LocationId(id) // This will throw an error if the UUID is invalid
 		}
 	}
 
-	private isValid(id: Primitives<LocationId> | null): boolean {
-		if (id === null) return true
-		const employeeId = new LocationId(id)
-		if (employeeId instanceof LocationId) {
-			return true
-		}
-
-		return false
-	}
+	/**
+	 * @static
+	 * @method ensureDeviceBelongsToAppropiateLocationDependsOfStatus
+	 * @description Enforces business rules regarding location assignment based on device status.
+	 * @param {Primitives<TypeOfSiteId>} typeOfSite The type of site for the location.
+	 * @param {Primitives<DeviceStatus>} status The status of the device.
+	 * @throws {InvalidArgumentError} If a business rule is violated.
+	 */
 	static ensureDeviceBelongsToAppropiateLocationDependsOfStatus(
 		typeOfSite: Primitives<TypeOfSiteId>,
 		status: Primitives<DeviceStatus>
 	): void {
-		if (
-			(status === StatusOptions.INUSE ||
-				status === StatusOptions.PRESTAMO ||
-				status === StatusOptions.CONTINGENCIA ||
-				status === StatusOptions.GUARDIA ||
-				status === StatusOptions.DISPONIBLE ||
-				status === StatusOptions.JORNADA) &&
-			typeOfSite === TypeOfSiteId.TypeOfSiteOptions.ALMACEN
-		) {
-			throw new InvalidArgumentError('Si el dispositivo esta en uso no puede estar en el almacén')
+		const isInUse =
+			status === StatusOptions.INUSE ||
+			status === StatusOptions.PRESTAMO ||
+			status === StatusOptions.CONTINGENCIA ||
+			status === StatusOptions.GUARDIA ||
+			status === StatusOptions.DISPONIBLE ||
+			status === StatusOptions.JORNADA
+		const isStorage = status === StatusOptions.INALMACEN || status === StatusOptions.PORDESINCORPORAR
+
+		if (isInUse && typeOfSite === TypeOfSiteId.TypeOfSiteOptions.ALMACEN) {
+			throw new InvalidArgumentError('Un dispositivo en uso no puede estar ubicado en un almacén.')
 		}
-		if (
-			(status === StatusOptions.INALMACEN, status === StatusOptions.PORDESINCORPORAR) &&
-			typeOfSite !== TypeOfSiteId.TypeOfSiteOptions.ALMACEN
-		) {
-			throw new InvalidArgumentError('The device is not in use can only be located in the warehouse')
+		if (isStorage && typeOfSite !== TypeOfSiteId.TypeOfSiteOptions.ALMACEN) {
+			throw new InvalidArgumentError('Un dispositivo en almacén solo puede estar ubicado en un almacén.')
 		}
 		if (status === StatusOptions.DESINCORPORADO && typeOfSite !== null) {
-			throw new InvalidArgumentError('The device cannot have a location if status is desincorporated')
+			throw new InvalidArgumentError('Un dispositivo desincorporado no puede tener una ubicación asignada.')
 		}
 	}
 
+	/**
+	 * @static
+	 * @method updateLocationField
+	 * @description Handles the logic for updating a device's location.
+	 * @param {{ repository: LocationRepository; location?: Primitives<DeviceLocation>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
 	static async updateLocationField({
 		repository,
 		location,
@@ -65,25 +75,20 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 		location?: Primitives<DeviceLocation>
 		entity: Device
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo location no realiza ninguna acción
-		if (location === undefined) {
+		if (location === undefined || entity.locationValue === location) {
 			return
 		}
-		// Verifica que si el location actual y el nuevo location son iguales no realice una busqueda en el repositorio
-		if (entity.locationValue === location) {
-			return
-		}
-		// Verifica que el location no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el location pasado
-		const status = entity.statusValue
-		await DeviceLocation.ensureLocationExit({
-			repository,
-			location,
-			status
-		})
-		// Actualiza el campo location de la entidad {@link Device} con el nuevo location
+		await DeviceLocation.ensureLocationExit({ repository, location, status: entity.statusValue })
 		entity.updateLocation(location)
 	}
 
+	/**
+	 * @static
+	 * @method ensureLocationExit
+	 * @description Checks if a location exists and is valid for the given device status.
+	 * @param {{ repository: LocationRepository; location: Primitives<DeviceLocation>; status: Primitives<DeviceStatus> }} params The parameters for the check.
+	 * @throws {LocationDoesNotExistError} If the location does not exist.
+	 */
 	static async ensureLocationExit({
 		repository,
 		location,
@@ -93,18 +98,13 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 		location: Primitives<DeviceLocation>
 		status: Primitives<DeviceStatus>
 	}): Promise<void> {
-		// If the location is null, it does not exist, so we don't need to do any verification
 		if (!location) {
 			return
 		}
-		// Searches for a device with the given location in the database
-		const deviceWithLocation = await repository.searchById(new LocationId(location).toString())
-		// If a device with the given location exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given location
-		if (deviceWithLocation === null) {
+		const existingLocation = await repository.searchById(new LocationId(location).value)
+		if (!existingLocation) {
 			throw new LocationDoesNotExistError(location)
 		}
-		const typeOfSite = deviceWithLocation.typeOfSiteId
-		this.ensureDeviceBelongsToAppropiateLocationDependsOfStatus(typeOfSite, status)
+		this.ensureDeviceBelongsToAppropiateLocationDependsOfStatus(existingLocation.typeOfSiteId, status)
 	}
 }

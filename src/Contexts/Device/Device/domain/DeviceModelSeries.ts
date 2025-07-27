@@ -8,7 +8,20 @@ import { ModelSeriesDoesNotExistError } from '../../../ModelSeries/ModelSeries/d
 import { ModelSeriesId } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 
+/**
+ * @class DeviceModelSeries
+ * @extends ModelSeriesId
+ * @description Represents the Value Object for a Device's model series.
+ * It encapsulates business logic related to model series validation and updates.
+ */
 export class DeviceModelSeries extends ModelSeriesId {
+	/**
+	 * @static
+	 * @method updateModelField
+	 * @description Handles the logic for updating a device's model, brand, and category.
+	 * @param {{ repository: ModelSeriesRepository; modelSeries?: Primitives<ModelSeriesId>; category?: Primitives<CategoryId>; brand?: Primitives<BrandId>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
 	static async updateModelField({
 		repository,
 		modelSeries,
@@ -22,27 +35,29 @@ export class DeviceModelSeries extends ModelSeriesId {
 		brand?: Primitives<BrandId>
 		entity: Device
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo model no realiza ninguna acción
-		if (modelSeries === undefined) {
+		if (modelSeries === undefined || entity.modelSeriesValue === modelSeries) {
 			return
 		}
-		// Verifica que si el model actual y el nuevo model son iguales no realice una busqueda en el repositorio
-		if (entity.modelSeriesValue === modelSeries) {
-			return
-		}
-		// Verifica que el model no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el model pasado
 		const { brandId, categoryId } = await DeviceModelSeries.ensureModelSeriesExit({
 			repository,
 			modelSeries,
 			category,
 			brand
 		})
-		// Actualiza el campo model de la entidad {@link Device} con el nuevo model
 		entity.updateCategoryId(categoryId)
 		entity.updateBrandId(brandId)
 		entity.updateModelId(modelSeries)
 	}
 
+	/**
+	 * @static
+	 * @method ensureModelSeriesExit
+	 * @description Checks if a model series exists and if the provided brand and category match.
+	 * @param {{ repository: ModelSeriesRepository; modelSeries: Primitives<ModelSeriesId>; category?: Primitives<CategoryId>; brand?: Primitives<BrandId> }} params The parameters for the check.
+	 * @returns {Promise<ModelSeriesDto>} The model series DTO if it exists and is valid.
+	 * @throws {ModelSeriesDoesNotExistError} If the model series does not exist.
+	 * @throws {InvalidArgumentError} If the brand or category do not match the model series.
+	 */
 	static async ensureModelSeriesExit({
 		repository,
 		modelSeries,
@@ -54,17 +69,16 @@ export class DeviceModelSeries extends ModelSeriesId {
 		category?: Primitives<CategoryId>
 		brand?: Primitives<BrandId>
 	}): Promise<ModelSeriesDto> {
-		// Searches for a device with the given model in the database
-		const deviceWithModel = await repository.searchById(new ModelSeriesId(modelSeries).toString())
-		// If a device with the given model exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given model
-		if (!deviceWithModel) {
+		const existingModel = await repository.searchById(new ModelSeriesId(modelSeries).value)
+		if (!existingModel) {
 			throw new ModelSeriesDoesNotExistError(modelSeries)
 		}
-		const { brandId, categoryId } = deviceWithModel
-		if (brandId !== brand || categoryId !== category) {
-			throw new InvalidArgumentError('the category and branch do not match for this model.')
+		if (brand && existingModel.brandId !== brand) {
+			throw new InvalidArgumentError('La marca no coincide con el modelo seleccionado.')
 		}
-		return deviceWithModel
+		if (category && existingModel.categoryId !== category) {
+			throw new InvalidArgumentError('La categoría no coincide con el modelo seleccionado.')
+		}
+		return existingModel
 	}
 }

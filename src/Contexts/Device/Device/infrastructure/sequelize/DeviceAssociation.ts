@@ -1,20 +1,18 @@
-/**
- * @class DeviceAssociation
- * @description A utility class to build complex Sequelize query options for the Device model.
- * It dynamically constructs nested includes and applies filters and order clauses based on a Criteria object.
- * This class is optimized to handle a large number of potential filters in a scalable way.
- */
 import { type IncludeOptions, type Order, type FindOptions } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+/**
+ * @class DeviceAssociation
+ * @description A utility class to build complex Sequelize query options for the Device model.
+ * It dynamically constructs nested includes and applies filters and order clauses based on a Criteria object.
+ */
 export class DeviceAssociation {
 	/**
 	 * @method convertFilterLocation
-	 * @description Converts a Criteria object into a Sequelize FindOptions object. It maps filters and orderings
-	 * to their respective nested associations (e.g., computer, employee, location) using a configuration-based approach.
-	 *
+	 * @description Converts a Criteria object into a Sequelize FindOptions object by mapping filters and orderings
+	 * to their respective nested associations.
 	 * @param {Criteria} criteria The criteria object containing filters, order, and pagination.
 	 * @param {FindOptions} options The base Sequelize options to be modified.
 	 * @returns {FindOptions} The fully constructed Sequelize FindOptions object.
@@ -472,12 +470,11 @@ export class DeviceAssociation {
 
 		return options
 	}
+
 	/**
 	 * @private
 	 * @method transformOrder
-	 * @description Transforms a simple order format (e.g., ['cityId', 'ASC']) into a nested format
-	 * that Sequelize can use for ordering on associated tables (e.g., ['location', 'site', 'city', 'name', 'ASC']).
-	 *
+	 * @description Transforms a simple order format into a nested format for Sequelize.
 	 * @param {Order | undefined} order The order configuration from the criteria.
 	 * @returns {Order | undefined} A Sequelize-compatible nested order configuration.
 	 */

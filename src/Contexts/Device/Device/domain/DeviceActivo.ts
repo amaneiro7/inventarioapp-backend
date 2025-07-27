@@ -4,46 +4,57 @@ import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
 import { type DeviceRepository } from './DeviceRepository'
-export class DeviceActivo extends AcceptedNullValueObject<string> {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 4
 
-	private readonly notLowerCase = /^[^a-z]*$/
-	private readonly notSpecialCharacterOnlyGuiones = /^[^\W_]*-?[^\W_]*$/
-	private errors: string[] = []
+/**
+ * @class DeviceActivo
+ * @extends AcceptedNullValueObject
+ * @description Represents the Value Object for a Device's asset number (activo).
+ * It encapsulates validation rules and business logic related to the asset number.
+ */
+export class DeviceActivo extends AcceptedNullValueObject<string> {
+	private readonly MIN_LENGTH = 4
+	private readonly MAX_LENGTH = 100
+	private readonly NO_LOWERCASE_REGEX = /^[^a-z]*$/
+	private readonly NO_SPECIAL_CHARS_REGEX = /^[\w-]*$/
 
 	constructor(value: string | null) {
 		super(value)
 		this.ensureIsValidActivo(this.value)
 	}
 
-	toPrimitives(): string | null {
-		return this.value
-	}
-
+	/**
+	 * @private
+	 * @method ensureIsValidActivo
+	 * @description Validates the asset number based on several rules.
+	 * @param {string | null} value The asset number to validate.
+	 * @throws {InvalidArgumentError} If the asset number is invalid.
+	 */
 	private ensureIsValidActivo(value: string | null): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> ${this.errors.join(' ')}`)
+		if (value === null) return
+
+		const errors: string[] = []
+		if (!this.NO_SPECIAL_CHARS_REGEX.test(value)) {
+			errors.push('Cannot contain special characters')
+		}
+		if (!this.NO_LOWERCASE_REGEX.test(value)) {
+			errors.push('Must be in uppercase')
+		}
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			errors.push(`Must be between ${this.MIN_LENGTH} and ${this.MAX_LENGTH} characters`)
+		}
+
+		if (errors.length > 0) {
+			throw new InvalidArgumentError(`<${value}> is not a valid asset number: ${errors.join(', ')}`)
 		}
 	}
 
-	private isValid(name: string | null): boolean {
-		if (name === null) return true
-		const isHasNotSpecialCharacterOnlyGuiones = this.notSpecialCharacterOnlyGuiones.test(name)
-		if (!isHasNotSpecialCharacterOnlyGuiones) {
-			this.errors.push(`${name}: El Activo no puede contener caracteres especiales`)
-		}
-		const isNotHasLowerCharacter = this.notLowerCase.test(name)
-		if (!isNotHasLowerCharacter) {
-			this.errors.push('El Activo debe estar en mayúsculas')
-		}
-		const isNameValidLength = name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-		if (!isNameValidLength) {
-			this.errors.push(`El Activo debe tener entre ${this.NAME_MIN_LENGTH} y ${this.NAME_MAX_LENGTH} caracteres`)
-		}
-		return isHasNotSpecialCharacterOnlyGuiones && isNotHasLowerCharacter && isNameValidLength
-	}
-
+	/**
+	 * @static
+	 * @method updateActivoField
+	 * @description Handles the logic for updating a device's asset number.
+	 * @param {{ repository: DeviceRepository; activo?: Primitives<DeviceActivo>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
 	static async updateActivoField({
 		repository,
 		activo,
@@ -53,20 +64,20 @@ export class DeviceActivo extends AcceptedNullValueObject<string> {
 		activo?: Primitives<DeviceActivo>
 		entity: Device
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo activo no realiza ninguna acción
-		if (activo === undefined) {
+		if (activo === undefined || entity.activoValue === activo) {
 			return
 		}
-		// Verifica que si el activo actual y el nuevo activo son iguales no realice una busqueda en el repositorio
-		if (entity.activoValue === activo) {
-			return
-		}
-		// Verifica que el activo no exista en la base de datos, si existe lanza un error {@link DeviceAlreadyExistError} con el activo pasado
 		await DeviceActivo.ensureActivoDoesNotExit({ repository, activo })
-		// Actualiza el campo activo de la entidad {@link Device} con el nuevo activo
 		entity.updateActivo(activo)
 	}
 
+	/**
+	 * @static
+	 * @method ensureActivoDoesNotExit
+	 * @description Checks if an asset number already exists in the repository.
+	 * @param {{ repository: DeviceRepository; activo: Primitives<DeviceActivo> }} params The parameters for the check.
+	 * @throws {DeviceAlreadyExistError} If the asset number already exists.
+	 */
 	static async ensureActivoDoesNotExit({
 		repository,
 		activo
@@ -74,15 +85,11 @@ export class DeviceActivo extends AcceptedNullValueObject<string> {
 		repository: DeviceRepository
 		activo: Primitives<DeviceActivo>
 	}): Promise<void> {
-		// If the activo is null, it does not exist, so we don't need to do any verification
 		if (activo === null) {
 			return
 		}
-		// Searches for a device with the given activo in the database
-		const deviceWithActivo = await repository.searchByActivo(new DeviceActivo(activo).toString())
-		// If a device with the given activo exists, it means that it already exists in the database,
-		// so we need to throw a {@link DeviceAlreadyExistError} with the given activo
-		if (deviceWithActivo !== null) {
+		const existingDevice = await repository.searchByActivo(new DeviceActivo(activo).value)
+		if (existingDevice) {
 			throw new DeviceAlreadyExistError(activo)
 		}
 	}

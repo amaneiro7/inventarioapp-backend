@@ -3,48 +3,50 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
 
+/**
+ * @class DeviceObservation
+ * @extends AcceptedNullValueObject
+ * @description Represents the Value Object for a Device's observation notes.
+ * It ensures the observation text does not exceed a maximum length.
+ */
 export class DeviceObservation extends AcceptedNullValueObject<string> {
-	private readonly NAME_MAX_LENGTH = 1000
-	private readonly NAME_MIN_LENGTH = 0
+	private readonly MAX_LENGTH = 1000
 
 	constructor(readonly value: string | null) {
 		super(value)
-
-		this.ensureIsValidActivo(value)
+		this.ensureIsValidObservation(value)
 	}
 
-	toPrimitives(): string | null {
-		return this.value
-	}
-
-	private ensureIsValidActivo(value: string | null): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> exceeded the maximum length`)
+	/**
+	 * @private
+	 * @method ensureIsValidObservation
+	 * @description Validates that the observation text does not exceed the maximum length.
+	 * @param {string | null} value The observation text to validate.
+	 * @throws {InvalidArgumentError} If the observation is too long.
+	 */
+	private ensureIsValidObservation(value: string | null): void {
+		if (value !== null && value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(`<${value}> supera la longitud máxima de ${this.MAX_LENGTH} caracteres.`)
 		}
 	}
 
-	private isValid(name: string | null): boolean {
-		if (name === null) return true
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-	}
-
-	// TODO cambiar que observation no acepte null pero si string vacios
-	static async updateObservationField({
+	/**
+	 * @static
+	 * @method updateObservationField
+	 * @description Handles the logic for updating a device's observation field.
+	 * @param {{ observation?: Primitives<DeviceObservation>; entity: Device }} params The parameters for updating.
+	 * @returns {Promise<void>}
+	 */
+	static updateObservationField({
 		observation,
 		entity
 	}: {
 		observation?: Primitives<DeviceObservation>
 		entity: Device
-	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de observacion no realiza ninguna acción
-		if (observation === undefined) {
+	}): void {
+		if (observation === undefined || entity.observationValue === observation) {
 			return
 		}
-		// Verifica que si el valor del campo observacion actual y el nuevo valor observacion son iguales no realiza un cambio
-		if (entity.observationValue === observation) {
-			return
-		}
-		// Actualiza el campo observacion de la entidad {@link Device} con el nuevo observacion
 		entity.updateObservation(observation)
 	}
 }
