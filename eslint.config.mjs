@@ -11,4 +11,4 @@ export default defineConfig([
   tseslint.configs.recommended,
   { files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },
   { files: ["**/*.jsonc"], plugins: { json }, language: "json/jsonc", extends: ["json/recommended"] },
-], [globalIgnores(['node_modules/*', 'dist', '**.config.js', '**/migrations/*', '**/seeders/*'])]);
+], [globalIgnores(['node_modules/*', 'dist', 'src/Contexts/Shared/infrastructure/persistance/Sequelize/config.js', '*.Sequelize/config.js', '**/migrations/*', '**/seeders/*'])]);
