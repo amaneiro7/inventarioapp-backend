@@ -46,32 +46,34 @@ export async function fetchAndAggregateHDDData(): Promise<AggregatedHDDData[]> {
  * @returns {AggregatedHDDData[]} The transformed and sorted HDD data.
  */
 function transformHDDData(rawData: RawHDDData[]): AggregatedHDDData[] {
-	const hddCapacityMap = rawData.reduce((acc, item) => {
+	const hddCapacityMap = new Map<string, AggregatedHDDData>()
+
+	for (const item of rawData) {
 		const { hddCapacityName, hddTypeName, count } = item
 		const countAsNumber = Number(count)
 		const hddCapacityNameWithGB = `${hddCapacityName} GB`
 
-		let capacityEntry = acc.get(hddCapacityNameWithGB)
-		if (!capacityEntry) {
-			capacityEntry = { name: hddCapacityNameWithGB, count: 0, hddType: [] }
-			acc.set(hddCapacityNameWithGB, capacityEntry)
+		// Ensure capacity entry exists
+		if (!hddCapacityMap.has(hddCapacityNameWithGB)) {
+			hddCapacityMap.set(hddCapacityNameWithGB, { name: hddCapacityNameWithGB, count: 0, hddType: [] })
 		}
-
+		const capacityEntry = hddCapacityMap.get(hddCapacityNameWithGB)!
 		capacityEntry.count += countAsNumber
+
+		// Find or create HDD type entry
 		const existingType = capacityEntry.hddType.find(type => type.name === hddTypeName)
 		if (existingType) {
 			existingType.count += countAsNumber
 		} else {
 			capacityEntry.hddType.push({ name: hddTypeName, count: countAsNumber })
 		}
+	}
 
-		return acc
-	}, new Map<string, AggregatedHDDData>())
-
-	const transformedData = Array.from(hddCapacityMap.values()).map(hddCapacity => ({
-		...hddCapacity,
-		hddType: hddCapacity.hddType.sort((a, b) => a.name.localeCompare(b.name))
-	}))
+	// Convert map to array and sort nested structures
+	const transformedData = Array.from(hddCapacityMap.values())
+	for (const hddCapacity of transformedData) {
+		hddCapacity.hddType.sort((a, b) => a.name.localeCompare(b.name))
+	}
 
 	return transformedData.sort((a, b) => a.name.localeCompare(b.name))
 }

@@ -1,25 +1,97 @@
+import { Op } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
 import { TypeOfSiteList } from '../../../../Location/TypeOfSite/domain/TypeOfSiteList'
-import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { Op } from 'sequelize'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type CountOSByRegionRepository } from '../../domain/CountOSByRegionRepository'
 
+// --- Type Definitions for OS by Region Data ---
+
+/** Represents the raw, flat data structure returned from the Sequelize query. */
+interface RawOSByRegionData {
+	operatingSystemName: string
+	administrativeRegionName: string
+	regionName: string
+	stateName: string
+	cityName: string
+	siteName: string
+	locationName: string
+	typeOfSiteName: string
+	count: string | number
+}
+
+/** A generic interface for a geographical entity with nested children, specific to OS data. */
+interface OSGeoEntity {
+	name: string
+	count: number
+	typeOfSiteCount: Record<string, number>
+}
+
+// Specific types for each level of the geographical hierarchy for OS data
+export type OSLocationData = { name: string; typeOfSite: string; count: number }
+export type OSSiteData = OSGeoEntity & {
+	locations: OSLocationData[]
+}
+export type OSCityData = OSGeoEntity & {
+	sites: OSSiteData[]
+}
+export type OSStateData = OSGeoEntity & {
+	cities: OSCityData[]
+}
+export type OSRegionData = OSGeoEntity & {
+	states: OSStateData[]
+}
+export type OSAdministrativeRegionData = OSGeoEntity & {
+	regions: OSRegionData[]
+}
+
+/** Represents the final aggregated data for an Operating System, including a breakdown by region. */
+export interface AggregatedOSByRegionData {
+	name: string
+	count: number
+	typeOfSiteCount: Record<string, number>
+	administrativeRegion: OSAdministrativeRegionData[]
+}
+
+/**
+ * @class SequelizeCountOSByRegionRepository
+ * @implements {CountOSByRegionRepository}
+ * @description Repository for fetching and processing OS counts grouped by geographical region.
+ */
+
+/** Represents the final aggregated data for an Operating System, including a breakdown by region. */
+export interface AggregatedOSByRegionData {
+	name: string
+	count: number
+	typeOfSiteCount: Record<string, number>
+	administrativeRegion: OSAdministrativeRegionData[]
+}
+
+/**
+ * @class SequelizeCountOSByRegionRepository
+ * @implements {CountOSByRegionRepository}
+ * @description Repository for fetching and processing OS counts grouped by geographical region.
+ */
 export class SequelizeCountOSByRegionRepository implements CountOSByRegionRepository {
-	private readonly cacheKey: string = 'dashboard'
+	private readonly cacheKey: string = 'dashboard:computer-osByRegion'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
 	}
 
-	async run(): Promise<{}> {
+	/**
+	 * @method run
+	 * @description Retrieves and transforms data about OS counts by region.
+	 * @returns {Promise<AggregatedOSByRegionData[]>} A promise that resolves to the aggregated data.
+	 */
+	async run(): Promise<AggregatedOSByRegionData[]> {
 		return await this.cache.getCachedData({
-			cacheKey: `computer-osByRegion-${this.cacheKey}`,
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('computer.operatingSystem.name'), 'operatingSystemName'],
 						[sequelize.col('location.name'), 'locationName'],
@@ -46,18 +118,8 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 							association: 'computer',
 							required: true,
 							attributes: [],
-							where: {
-								operatingSystemId: {
-									[Op.ne]: null
-								}
-							},
-							include: [
-								{
-									association: 'operatingSystem',
-									required: true,
-									attributes: []
-								}
-							]
+							where: { operatingSystemId: { [Op.ne]: null } },
+							include: [{ association: 'operatingSystem', required: true, attributes: [] }]
 						},
 						{
 							association: 'location',
@@ -118,138 +180,132 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 						[sequelize.col('location.name'), 'ASC']
 					],
 					raw: true
-				})
-				const operatingSystemMap = new Map()
-				result.forEach((item: any) => {
-					const {
-						administrativeRegionName,
-						regionName,
-						stateName,
-						cityName,
-						siteName,
-						locationName,
-						typeOfSiteName,
-						operatingSystemName,
-						count
-					} = item
-					const countNumber = Number(count) // Convertir a número entero
+				})) as unknown as RawOSByRegionData[]
 
-					if (!operatingSystemMap.has(operatingSystemName)) {
-						operatingSystemMap.set(operatingSystemName, {
-							name: operatingSystemName,
-							count: 0,
-							typeOfSiteCount: {},
-							administrativeRegion: new Map()
-						})
-					}
-
-					const operatingSystem = operatingSystemMap.get(operatingSystemName)
-					operatingSystem.count += countNumber
-					operatingSystem.typeOfSiteCount![typeOfSiteName] =
-						(operatingSystem.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!operatingSystem.administrativeRegion.has(administrativeRegionName)) {
-						operatingSystem.administrativeRegion.set(administrativeRegionName, {
-							name: administrativeRegionName,
-							count: 0,
-							typeOfSiteCount: {},
-							regions: new Map()
-						})
-					}
-
-					const administrativeRegion = operatingSystem.administrativeRegion.get(administrativeRegionName)
-					administrativeRegion.count += countNumber
-					administrativeRegion.typeOfSiteCount![typeOfSiteName] =
-						(administrativeRegion.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!administrativeRegion.regions.has(regionName)) {
-						administrativeRegion.regions.set(regionName, {
-							name: regionName,
-							count: 0,
-							typeOfSiteCount: {},
-							states: new Map()
-						})
-					}
-
-					const region = administrativeRegion.regions.get(regionName)
-					region.count += countNumber
-					region.typeOfSiteCount![typeOfSiteName] =
-						(region.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!region.states.has(stateName)) {
-						region.states.set(stateName, {
-							name: stateName,
-							count: 0,
-							typeOfSiteCount: {},
-							cities: new Map()
-						})
-					}
-
-					const state = region.states.get(stateName)
-					state.count += countNumber
-					state.typeOfSiteCount![typeOfSiteName] = (state.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!state.cities.has(cityName)) {
-						state.cities.set(cityName, {
-							name: cityName,
-							count: 0,
-							typeOfSiteCount: {},
-							sites: new Map()
-						})
-					}
-
-					const city = state.cities.get(cityName)
-					city.count += countNumber
-					city.typeOfSiteCount![typeOfSiteName] = (city.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!city.sites.has(siteName)) {
-						city.sites.set(siteName, {
-							name: siteName,
-							count: 0,
-							typeOfSiteCount: {},
-							locations: new Map()
-						})
-					}
-					const site = city.sites.get(siteName)
-					site.count += countNumber
-					site.typeOfSiteCount![typeOfSiteName] = (site.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!site.locations.has(locationName)) {
-						site.locations.set(locationName, {
-							name: locationName,
-							typeOfSite: typeOfSiteName,
-							count: countNumber
-						})
-					} else {
-						site.locations.get(locationName).count += countNumber
-					}
-				})
-
-				// Convertir los mapas a arrays
-				const transformedData = Array.from(operatingSystemMap.values()).map((operatingSystem: any) => ({
-					...operatingSystem,
-					administrativeRegion: Array.from(operatingSystem.administrativeRegion.values()).map(
-						(administrativeRegion: any) => ({
-							...administrativeRegion,
-							regions: Array.from(administrativeRegion.regions.values()).map((region: any) => ({
-								...region,
-								states: Array.from(region.states.values()).map((state: any) => ({
-									...state,
-									cities: Array.from(state.cities.values()).map((city: any) => ({
-										...city,
-										sites: Array.from(city.sites.values()).map((site: any) => ({
-											...site,
-											locations: Array.from(site.locations.values())
-										}))
-									}))
-								}))
-							}))
-						})
-					)
-				}))
-
-				return transformedData
+				return await this.transformOSByRegionData(result)
 			}
 		})
+	}
+
+	/**
+	 * @private
+	 * @method transformOSByRegionData
+	 * @description Transforms the deeply nested raw OS by region data into a structured, hierarchical format.
+	 * @param {RawOSByRegionData[]} rawData - The raw data from the database.
+	 * @returns {AggregatedOSByRegionData[]} The transformed data.
+	 */
+
+	private async transformOSByRegionData(rawData: RawOSByRegionData[]): Promise<AggregatedOSByRegionData[]> {
+		const osMap = new Map<string, AggregatedOSByRegionData>()
+
+		for (const item of rawData) {
+			const {
+				administrativeRegionName,
+				regionName,
+				stateName,
+				cityName,
+				siteName,
+				locationName,
+				typeOfSiteName,
+				operatingSystemName,
+				count
+			} = item
+			const countAsNumber = Number(count)
+
+			// Operating System Level
+			if (!osMap.has(operatingSystemName)) {
+				osMap.set(operatingSystemName, {
+					name: operatingSystemName,
+					count: 0,
+					typeOfSiteCount: {},
+					administrativeRegion: []
+				})
+			}
+			const osEntry = osMap.get(operatingSystemName)!
+			osEntry.count += countAsNumber
+			osEntry.typeOfSiteCount[typeOfSiteName] = (osEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			// Administrative Region Level
+			let adminRegionEntry = osEntry.administrativeRegion.find(c => c.name === administrativeRegionName)
+			if (!adminRegionEntry) {
+				adminRegionEntry = {
+					name: administrativeRegionName,
+					count: 0,
+					typeOfSiteCount: {},
+					regions: []
+				}
+				osEntry.administrativeRegion.push(adminRegionEntry)
+			}
+			adminRegionEntry.count += countAsNumber
+			adminRegionEntry.typeOfSiteCount[typeOfSiteName] =
+				(adminRegionEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			// Region Level
+			let regionEntry = adminRegionEntry.regions.find(c => c.name === regionName)
+			if (!regionEntry) {
+				regionEntry = {
+					name: regionName,
+					count: 0,
+					typeOfSiteCount: {},
+					states: []
+				}
+				adminRegionEntry.regions.push(regionEntry)
+			}
+			regionEntry.count += countAsNumber
+			regionEntry.typeOfSiteCount[typeOfSiteName] =
+				(regionEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			// State Level
+			let stateEntry = regionEntry.states.find(c => c.name === stateName)
+			if (!stateEntry) {
+				stateEntry = {
+					name: stateName,
+					count: 0,
+					typeOfSiteCount: {},
+					cities: []
+				}
+				regionEntry.states.push(stateEntry)
+			}
+			stateEntry.count += countAsNumber
+			stateEntry.typeOfSiteCount[typeOfSiteName] =
+				(stateEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			// City Level
+			let cityEntry = stateEntry.cities.find(c => c.name === cityName)
+			if (!cityEntry) {
+				cityEntry = {
+					name: cityName,
+					count: 0,
+					typeOfSiteCount: {},
+					sites: []
+				}
+				stateEntry.cities.push(cityEntry)
+			}
+			cityEntry.count += countAsNumber
+			cityEntry.typeOfSiteCount[typeOfSiteName] = (cityEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			// Site Level
+			let siteEntry = cityEntry.sites.find(c => c.name === siteName)
+			if (!siteEntry) {
+				siteEntry = {
+					name: siteName,
+					count: 0,
+					typeOfSiteCount: {},
+					locations: []
+				}
+				cityEntry.sites.push(siteEntry)
+			}
+			siteEntry.count += countAsNumber
+			siteEntry.typeOfSiteCount[typeOfSiteName] = (siteEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
+
+			//locations Level
+			siteEntry.locations.push({
+				name: locationName,
+				typeOfSite: typeOfSiteName,
+				count: countAsNumber
+			})
+		}
+
+		return Array.from(osMap.values())
 	}
 }

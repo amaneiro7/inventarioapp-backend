@@ -1,14 +1,14 @@
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceModel } from '../../../../Device/infrastructure/sequelize/DeviceSchema'
 import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategory'
-import { type RawStatusCountData } from './types'
+import { type RawStatusCountData, type StatusCountData } from './types'
 
 /**
  * @function fetchAndProcessStatusData
  * @description Fetches and processes computer status data from the database.
- * @returns {Promise<Array<{ name: string; count: number }>>} A promise that resolves to the processed status data.
+ * @returns {Promise<StatusCountData[]>} A promise that resolves to the processed status data.
  */
-export async function fetchAndProcessStatusData(): Promise<Array<{ name: string; count: number }>> {
+export async function fetchAndProcessStatusData(): Promise<StatusCountData[]> {
 	const result = (await DeviceModel.findAll({
 		attributes: [
 			[sequelize.col('status.name'), 'name'],

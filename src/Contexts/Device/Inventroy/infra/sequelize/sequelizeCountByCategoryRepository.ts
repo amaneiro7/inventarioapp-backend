@@ -5,19 +5,51 @@ import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainC
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 
+// --- Type Definitions for Category Data ---
+
+/** Represents the raw data structure returned from the Sequelize query. */
+interface RawCategoryData {
+	name: string
+	typeOfSiteName: string
+	count: string | number
+}
+
+/** Represents aggregated data for a type of site within a category. */
+interface TypeOfSiteData {
+	name: string
+	count: number
+}
+
+/** Represents the final aggregated data for a category, including a breakdown by site type. */
+export interface AggregatedCategoryData {
+	name: string
+	count: number
+	typeOfSite: TypeOfSiteData[]
+}
+
+/**
+ * @class SequelizeCountByCategoryRepository
+ * @implements {CountByCategoryRepository}
+ * @description Repository for fetching and processing device counts grouped by category for the dashboard.
+ */
 export class SequelizeCountByCategoryRepository implements CountByCategoryRepository {
-	private readonly cacheKey: string = 'dashboard'
+	private readonly cacheKey: string = 'dashboard:computer-category'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
 	}
 
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-category-${this.cacheKey}`,
+	/**
+	 * @method run
+	 * @description Retrieves and transforms data about device counts by category and site type.
+	 * @returns {Promise<AggregatedCategoryData[]>} A promise that resolves to the aggregated data.
+	 */
+	async run(): Promise<AggregatedCategoryData[]> {
+		return await this.cache.getCachedData<AggregatedCategoryData[]>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('category.name'), 'name'],
 						[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
@@ -44,32 +76,36 @@ export class SequelizeCountByCategoryRepository implements CountByCategoryReposi
 						[sequelize.col('location.typeOfSite.name'), 'ASC']
 					],
 					raw: true
-				})
-				return result.reduce((acc: any[], category: any) => {
-					const categoryIndex = acc.findIndex(c => c.name === category.name)
+				})) as unknown as RawCategoryData[]
 
-					if (categoryIndex === -1) {
-						acc.push({
-							name: category.name,
-							count: Number(category.count),
-							typeOfSite: [
-								{
-									name: category.typeOfSiteName,
-									count: Number(category.count)
-								}
-							]
-						})
-					} else {
-						acc[categoryIndex].count += Number(category.count)
-						acc[categoryIndex].typeOfSite.push({
-							name: category.typeOfSiteName,
-							count: Number(category.count)
-						})
-					}
-
-					return acc
-				}, [])
+				return this.transformCategoryData(result)
 			}
 		})
+	}
+
+	/**
+	 * @private
+	 * @method transformCategoryData
+	 * @description Transforms raw category data into a structured, aggregated format.
+	 * @param {RawCategoryData[]} rawData - The raw data from the database.
+	 * @returns {AggregatedCategoryData[]} The transformed data.
+	 */
+	private transformCategoryData(rawData: RawCategoryData[]): AggregatedCategoryData[] {
+		const categoryMap = new Map<string, AggregatedCategoryData>()
+
+		for (const item of rawData) {
+			const { name, typeOfSiteName, count } = item
+			const countAsNumber = Number(count)
+
+			if (!categoryMap.has(name)) {
+				categoryMap.set(name, { name, count: 0, typeOfSite: [] })
+			}
+
+			const categoryEntry = categoryMap.get(name)!
+			categoryEntry.count += countAsNumber
+			categoryEntry.typeOfSite.push({ name: typeOfSiteName, count: countAsNumber })
+		}
+
+		return Array.from(categoryMap.values())
 	}
 }

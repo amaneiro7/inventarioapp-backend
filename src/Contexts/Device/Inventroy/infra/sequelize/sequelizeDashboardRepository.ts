@@ -4,7 +4,7 @@ import { type ComputerDashboardRepository } from '../../domain/ComputerDashboard
 import { fetchAndAggregateHDDData } from './dashboard/hddDashboard'
 import { fetchAndProcessStatusData } from './dashboard/statusDashboard'
 import { fetchAndAggregateBrandData } from './dashboard/brandDashboard'
-import { type AggregatedBrandData, type AggregatedHDDData } from './dashboard/types'
+import { type AggregatedBrandData, type AggregatedHDDData, type StatusCountData } from './dashboard/types'
 
 /**
  * @class SequelizeComputerDashboardRepository
@@ -39,11 +39,11 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 	 * @method countByStatus
 	 * @description Retrieves the count of computers, grouped by their operational status.
 	 * The data is cached for performance optimization.
-	 * @returns {Promise<Array<{ name: string; count: number }>>} A promise that resolves to an array of status counts.
+	 * @returns {Promise<StatusCountData[]>} A promise that resolves to an array of status counts.
 	 */
-	async countByStatus(): Promise<Array<{ name: string; count: number }>> {
+	async countByStatus(): Promise<StatusCountData[]> {
 		const cacheKey = this.generateCacheKey('status')
-		return await this.cache.getCachedData<Array<{ name: string; count: number }>>({
+		return await this.cache.getCachedData<StatusCountData[]>({
 			cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: fetchAndProcessStatusData

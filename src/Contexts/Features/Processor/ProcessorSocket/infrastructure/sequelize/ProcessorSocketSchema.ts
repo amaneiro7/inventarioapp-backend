@@ -8,10 +8,10 @@ export class ProcessorSocketModel extends Model<ProcessorSocketDto> implements P
 	declare id: Primitives<ProcessorSocketId>
 	declare name: Primitives<ProcessorSocketName>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		// this.hasMany(models.ModelLaptop, { as: 'modelLaptop' }) // An processor socket can have many laptops
-		// this.hasMany(models.ModelComputer, { as: 'modelComputer' }) // An processor socket can have many computers
-	}
+	// static async associate(models: Sequelize['models']): Promise<void> {
+	// 	this.hasMany(models.ModelLaptop, { as: 'modelLaptop' }) // An processor socket can have many laptops
+	// 	this.hasMany(models.ModelComputer, { as: 'modelComputer' }) // An processor socket can have many computers
+	// }
 
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		ProcessorSocketModel.init(

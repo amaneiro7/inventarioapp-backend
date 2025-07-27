@@ -4,17 +4,19 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
 import { type StatusDashboardRepository } from '../../domain/StatusDashboardRepository'
 
-// Interface for the raw data returned from the Sequelize query
+// --- Type Definitions for Status Dashboard ---
+
+/** Represents the raw data structure returned from the Sequelize query. */
 interface RawStatusData {
 	categoryName: string
 	statusName: string
 	count: string | number
 }
 
-// Interface for the aggregated dashboard data
-interface AggregatedDashboardData {
+/** Represents the final aggregated data structure for the status dashboard. */
+export interface AggregatedDashboardData {
 	overall: Record<string, number>
-	[category: string]: Record<string, number> | Record<string, number>
+	[category: string]: Record<string, number> // Each category will have a record of its status counts
 }
 
 /**
@@ -25,7 +27,7 @@ interface AggregatedDashboardData {
  * Utilizes caching for improved performance.
  */
 export class SequelizeStatusDashboardRepository implements StatusDashboardRepository {
-	private readonly cacheKey: string = 'statusDashboard'
+	private readonly cacheKey: string = 'dashboard:status'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -34,14 +36,10 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 	/**
 	 * @method run
 	 * @description Retrieves aggregated device status data grouped by category.
-	 * @returns {Promise<{ total: number; status: AggregatedDashboardData }>} A promise that resolves to an object
-	 * containing the total count of devices and their status breakdown by category.
+	 * @returns {Promise<{ total: number; status: AggregatedDashboardData }>} A promise that resolves to the dashboard data.
 	 */
 	async run(): Promise<{ total: number; status: AggregatedDashboardData }> {
-		return await this.cache.getCachedData<{
-			total: number
-			status: AggregatedDashboardData
-		}>({
+		return await this.cache.getCachedData<{ total: number; status: AggregatedDashboardData }>({
 			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
@@ -52,14 +50,8 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 						[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 					],
 					include: [
-						{
-							association: 'category',
-							attributes: []
-						},
-						{
-							association: 'status',
-							attributes: []
-						}
+						{ association: 'category', attributes: [] },
+						{ association: 'status', attributes: [] }
 					],
 					group: ['category.name', 'status.name'],
 					raw: true
@@ -72,20 +64,14 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 					const { statusName, categoryName, count } = device
 					const countNumber = Number(count)
 
-					// Sum to overall total
 					totalDevices += countNumber
-
-					// Aggregate to overall status counts
 					acc.overall[statusName] = (acc.overall[statusName] || 0) + countNumber
 
-					// Ensure category section exists
 					if (!acc[categoryName]) {
 						acc[categoryName] = {}
 					}
-
-					// Aggregate status within category
-					;(acc[categoryName] as Record<string, number>)[statusName] =
-						((acc[categoryName] as Record<string, number>)[statusName] || 0) + countNumber
+					const categoryStatus = acc[categoryName] as Record<string, number>
+					categoryStatus[statusName] = (categoryStatus[statusName] || 0) + countNumber
 
 					return acc
 				}, initialDashboardState)

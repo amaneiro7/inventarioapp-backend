@@ -1,46 +1,47 @@
 /**
- * @interface RawHDDData
- * @description Represents the raw data structure returned from the `countTotalHDD` query.
+ * @file Defines the data structures and types for the inventory dashboard.
+ * These interfaces ensure type safety across database queries, data transformations, and API responses.
  */
+
+// --- HDD Data Types ---
+
+/** Represents the raw, flat data structure returned from the HDD-related Sequelize query. */
 export interface RawHDDData {
 	hddCapacityName: string
 	hddTypeName: string
 	count: string | number
 }
 
-/**
- * @interface HDDTypeData
- * @description Represents the aggregated data for a specific HDD type, including its name and count.
- */
+/** Represents aggregated data for a specific HDD type (e.g., SSD, NVMe). */
 export interface HDDTypeData {
 	name: string
 	count: number
 }
 
-/**
- * @interface AggregatedHDDData
- * @description Represents the fully aggregated HDD data, including the capacity name, total count,
- * and a breakdown by HDD type.
- */
+/** Represents the fully aggregated data for an HDD capacity, including a breakdown by type. */
 export interface AggregatedHDDData {
 	name: string
 	count: number
 	hddType: HDDTypeData[]
 }
 
-/**
- * @interface RawStatusCountData
- * @description Represents the raw data structure for device counts by status.
- */
+// --- Status Data Types ---
+
+/** Represents the raw data for device counts by status from the Sequelize query. */
 export interface RawStatusCountData {
 	name: string
 	count: string | number
 }
 
-/**
- * @interface RawBrandCountData
- * @description Represents the raw data structure for device counts by brand, model, and site type.
- */
+/** Represents a single, processed status entry with a numeric count. */
+export interface StatusCountData {
+	name: string
+	count: number
+}
+
+// --- Brand Data Types ---
+
+/** Represents the raw, flat data for device counts by brand, model, and site type. */
 export interface RawBrandCountData {
 	categoryName: string
 	brandName: string
@@ -49,20 +50,13 @@ export interface RawBrandCountData {
 	count: string | number
 }
 
-/**
- * @interface TypeOfSiteAggregatedData
- * @description Represents aggregated data for a type of site, including its name and count.
- */
+/** Represents aggregated data for a type of site within a model's context. */
 export interface TypeOfSiteAggregatedData {
 	name: string
 	count: number
 }
 
-/**
- * @interface ModelAggregatedData
- * @description Represents aggregated data for a device model, including its name, category, count,
- * and a breakdown by site type.
- */
+/** Represents aggregated data for a device model, including a breakdown by site type. */
 export interface ModelAggregatedData {
 	name: string
 	category: string
@@ -70,11 +64,7 @@ export interface ModelAggregatedData {
 	typeOfSite: TypeOfSiteAggregatedData[]
 }
 
-/**
- * @interface AggregatedBrandData
- * @description Represents the fully aggregated data for a brand, including its name, total count,
- * and a breakdown by model.
- */
+/** Represents the fully aggregated data for a brand, including a breakdown by model. */
 export interface AggregatedBrandData {
 	name: string
 	count: number

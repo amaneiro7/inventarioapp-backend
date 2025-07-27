@@ -1,5 +1,5 @@
 export interface Database {
-	createConfig(): any
+	createConfig(): unknown
 	connet(): Promise<void>
 	close(): Promise<void>
 }

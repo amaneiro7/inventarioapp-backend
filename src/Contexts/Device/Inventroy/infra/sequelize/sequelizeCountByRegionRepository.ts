@@ -7,19 +7,58 @@ import { TypeOfSiteList } from '../../../../Location/TypeOfSite/domain/TypeOfSit
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { Op } from 'sequelize'
 
+// --- Type Definitions for Region Data ---
+
+/** Represents the raw, flat data structure returned from the Sequelize query. */
+interface RawRegionData {
+	administrativeRegionName: string
+	regionName: string
+	stateName: string
+	cityName: string
+	siteName: string
+	locationName: string
+	typeOfSiteName: string
+	count: string | number
+}
+
+/** A generic interface for a geographical entity with nested children. */
+interface GeoEntity {
+	name: string
+	count: number
+	typeOfSiteCount: Record<string, number>
+}
+
+// Specific types for each level of the geographical hierarchy
+export type LocationData = { name: string; typeOfSite: string; count: number }
+export type SiteData = GeoEntity & { locations: LocationData[] }
+export type CityData = GeoEntity & { sites: SiteData[] }
+export type StateData = GeoEntity & { cities: CityData[] }
+export type RegionData = GeoEntity & { states: StateData[] }
+export type AdministrativeRegionData = GeoEntity & { regions: RegionData[] }
+
+/**
+ * @class SequelizeCountByRegionRepository
+ * @implements {CountByRegionRepository}
+ * @description Repository for fetching and processing device counts grouped by geographical region.
+ */
 export class SequelizeCountByRegionRepository implements CountByRegionRepository {
-	private readonly cacheKey: string = 'dashboard'
+	private readonly cacheKey: string = 'dashboard:computer-region'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
 	}
 
-	async run(): Promise<{}> {
-		return await this.cache.getCachedData({
-			cacheKey: `computer-region-${this.cacheKey}`,
+	/**
+	 * @method run
+	 * @description Retrieves and transforms data about device counts by region.
+	 * @returns {Promise<AdministrativeRegionData[]>} A promise that resolves to the aggregated data.
+	 */
+	async run(): Promise<AdministrativeRegionData[]> {
+		return await this.cache.getCachedData<AdministrativeRegionData[]>({
+			cacheKey: this.cacheKey,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const result = await DeviceModel.findAll({
+				const result = (await DeviceModel.findAll({
 					attributes: [
 						[sequelize.col('location.name'), 'locationName'],
 						[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
@@ -37,9 +76,7 @@ export class SequelizeCountByRegionRepository implements CountByRegionRepository
 						{
 							association: 'category',
 							attributes: [],
-							where: {
-								mainCategoryId: MainCategoryList.COMPUTER
-							}
+							where: { mainCategoryId: MainCategoryList.COMPUTER }
 						},
 						{
 							association: 'location',
@@ -48,9 +85,7 @@ export class SequelizeCountByRegionRepository implements CountByRegionRepository
 								{
 									association: 'typeOfSite',
 									attributes: [],
-									where: {
-										[Op.or]: [{ id: TypeOfSiteList.AGENCIA }, { id: TypeOfSiteList.TORRE }]
-									}
+									where: { [Op.or]: [{ id: TypeOfSiteList.AGENCIA }, { id: TypeOfSiteList.TORRE }] }
 								},
 								{
 									association: 'site',
@@ -99,117 +134,112 @@ export class SequelizeCountByRegionRepository implements CountByRegionRepository
 						[sequelize.col('location.name'), 'ASC']
 					],
 					raw: true
-				})
-				const regionMap = new Map()
-				result.forEach((item: any) => {
-					const {
-						administrativeRegionName,
-						regionName,
-						stateName,
-						cityName,
-						siteName,
-						locationName,
-						typeOfSiteName,
-						count
-					} = item
-					const countNumber = Number(count) // Convertir a número entero
+				})) as unknown as RawRegionData[]
 
-					if (!regionMap.has(administrativeRegionName)) {
-						regionMap.set(administrativeRegionName, {
-							name: administrativeRegionName,
-							count: 0,
-							typeOfSiteCount: {},
-							regions: new Map()
-						})
-					}
-
-					const administrativeRegion = regionMap.get(administrativeRegionName)
-					administrativeRegion.count += countNumber
-					administrativeRegion.typeOfSiteCount![typeOfSiteName] =
-						(administrativeRegion.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!administrativeRegion.regions.has(regionName)) {
-						administrativeRegion.regions.set(regionName, {
-							name: regionName,
-							count: 0,
-							typeOfSiteCount: {},
-							states: new Map()
-						})
-					}
-
-					const region = administrativeRegion.regions.get(regionName)
-					region.count += countNumber
-					region.typeOfSiteCount![typeOfSiteName] =
-						(region.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!region.states.has(stateName)) {
-						region.states.set(stateName, {
-							name: stateName,
-							count: 0,
-							typeOfSiteCount: {},
-							cities: new Map()
-						})
-					}
-
-					const state = region.states.get(stateName)
-					state.count += countNumber
-					state.typeOfSiteCount![typeOfSiteName] = (state.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!state.cities.has(cityName)) {
-						state.cities.set(cityName, {
-							name: cityName,
-							count: 0,
-							typeOfSiteCount: {},
-							sites: new Map()
-						})
-					}
-
-					const city = state.cities.get(cityName)
-					city.count += countNumber
-					city.typeOfSiteCount![typeOfSiteName] = (city.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!city.sites.has(siteName)) {
-						city.sites.set(siteName, {
-							name: siteName,
-							count: 0,
-							typeOfSiteCount: {},
-							locations: new Map()
-						})
-					}
-					const site = city.sites.get(siteName)
-					site.count += countNumber
-					site.typeOfSiteCount![typeOfSiteName] = (site.typeOfSiteCount![typeOfSiteName] || 0) + countNumber
-
-					if (!site.locations.has(locationName)) {
-						site.locations.set(locationName, {
-							name: locationName,
-							typeOfSite: typeOfSiteName,
-							count: countNumber
-						})
-					} else {
-						site.locations.get(locationName).count += countNumber
-					}
-				})
-
-				// Convertir los mapas a arrays
-				const transformedData = Array.from(regionMap.values()).map((administrativeRegion: any) => ({
-					...administrativeRegion,
-					regions: Array.from(administrativeRegion.regions.values()).map((region: any) => ({
-						...region,
-						states: Array.from(region.states.values()).map((state: any) => ({
-							...state,
-							cities: Array.from(state.cities.values()).map((city: any) => ({
-								...city,
-								sites: Array.from(city.sites.values()).map((site: any) => ({
-									...site,
-									locations: Array.from(site.locations.values())
-								}))
-							}))
-						}))
-					}))
-				}))
-				return transformedData
+				return this.transformRegionData(result)
 			}
 		})
+	}
+
+	/**
+	 * @private
+	 * @method transformRegionData
+	 * @description Transforms the deeply nested raw region data into a structured, hierarchical format.
+	 * @param {RawRegionData[]} rawData - The raw data from the database.
+	 * @returns {AdministrativeRegionData[]} The transformed data.
+	 */
+	private transformRegionData(rawData: RawRegionData[]): AdministrativeRegionData[] {
+		const adminRegionMap = new Map<string, AdministrativeRegionData>()
+
+		for (const item of rawData) {
+			const {
+				administrativeRegionName,
+				regionName,
+				stateName,
+				cityName,
+				siteName,
+				locationName,
+				typeOfSiteName,
+				count
+			} = item
+			const countAsNumber = Number(count)
+
+			// Administrative Region Level
+			if (!adminRegionMap.has(administrativeRegionName)) {
+				adminRegionMap.set(administrativeRegionName, {
+					name: administrativeRegionName,
+					count: 0,
+					typeOfSiteCount: {},
+					regions: []
+				})
+			}
+			const adminRegionEntry = adminRegionMap.get(administrativeRegionName)!
+			adminRegionEntry.count += countAsNumber
+			adminRegionEntry.typeOfSiteCount[typeOfSiteName] =
+				(adminRegionEntry.typeOfSiteCount[typeOfSiteName] || 0) + countAsNumber
+
+			// Region Level
+			let regionEntry = adminRegionEntry.regions.find(c => c.name === regionName)
+			if (!regionEntry) {
+				regionEntry = {
+					name: regionName,
+					count: 0,
+					typeOfSiteCount: {},
+					states: []
+				}
+				adminRegionEntry.regions.push(regionEntry)
+			}
+			regionEntry.count += countAsNumber
+			regionEntry.typeOfSiteCount[typeOfSiteName] =
+				(regionEntry.typeOfSiteCount[typeOfSiteName] || 0) + countAsNumber
+
+			// State Level
+			let stateEntry = regionEntry.states.find(c => c.name === stateName)
+			if (!stateEntry) {
+				stateEntry = {
+					name: stateName,
+					count: 0,
+					typeOfSiteCount: {},
+					cities: []
+				}
+				regionEntry.states.push(stateEntry)
+			}
+			stateEntry.count += countAsNumber
+			stateEntry.typeOfSiteCount[typeOfSiteName] =
+				(stateEntry.typeOfSiteCount[typeOfSiteName] || 0) + countAsNumber
+
+			// City Level
+			let cityEntry = stateEntry.cities.find(c => c.name === cityName)
+			if (!cityEntry) {
+				cityEntry = {
+					name: cityName,
+					count: 0,
+					typeOfSiteCount: {},
+					sites: []
+				}
+				stateEntry.cities.push(cityEntry)
+			}
+			cityEntry.count += countAsNumber
+			cityEntry.typeOfSiteCount[typeOfSiteName] = (cityEntry.typeOfSiteCount[typeOfSiteName] || 0) + countAsNumber
+
+			// Site Level
+			let siteEntry = cityEntry.sites.find(c => c.name === siteName)
+			if (!siteEntry) {
+				siteEntry = {
+					name: siteName,
+					count: 0,
+					typeOfSiteCount: {},
+					locations: []
+				}
+				cityEntry.sites.push(siteEntry)
+			}
+			siteEntry.count += countAsNumber
+			siteEntry.typeOfSiteCount[typeOfSiteName] = (siteEntry.typeOfSiteCount[typeOfSiteName] || 0) + countAsNumber
+
+			// Location Level
+			siteEntry.locations.push({ name: locationName, typeOfSite: typeOfSiteName, count: countAsNumber })
+		}
+
+		return Array.from(adminRegionMap.values())
 	}
 }

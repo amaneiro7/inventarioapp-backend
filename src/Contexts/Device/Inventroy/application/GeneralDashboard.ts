@@ -7,6 +7,10 @@ import { type TotalFinantialPrintersRepository } from '../domain/TotalFinantialP
 import { type TotalPrintersRepository } from '../domain/TotalPrintersRepository'
 import { type TotalScreensRepository } from '../domain/TotalScreensRepository'
 
+/**
+ * @class GeneralDashboard
+ * @description Application service to orchestrate the fetching of all data for the general inventory dashboard.
+ */
 export class GeneralDashboard {
 	private readonly totalComputerRepository: TotalComputerRepository
 	private readonly totalScreensRepository: TotalScreensRepository
@@ -45,7 +49,12 @@ export class GeneralDashboard {
 		this.totalCountByCategoryRepository = totalCountByCategoryRepository
 	}
 
-	async run(): Promise<{}> {
+	/**
+	 * @method run
+	 * @description Executes all data-fetching operations in parallel for the general dashboard.
+	 * @returns {Promise<object>} A promise that resolves to the complete dashboard data object.
+	 */
+	async run(): Promise<object> {
 		const [
 			totalByCategory,
 			totalComputer,
@@ -65,6 +74,7 @@ export class GeneralDashboard {
 			this.totalAgenciesRepository.run(),
 			this.totalAdministrativeSitesRepository.run()
 		])
+
 		return {
 			totalByCategory,
 			totalComputer,

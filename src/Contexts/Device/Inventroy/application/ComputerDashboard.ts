@@ -9,6 +9,11 @@ import { type TotalActiveUsersRepository } from '../domain/TotalActiveUsersRepos
 import { type TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
 import { type TotalComputerRepository } from '../domain/TotalComputerRepository'
 
+/**
+ * @class ComputerDashboard
+ * @description Application service to orchestrate the fetching of all data required for the computer-specific dashboard.
+ * It gathers data from multiple repositories and aggregates it into a single response.
+ */
 export class ComputerDashboard {
 	private readonly computerDashboardRepository: ComputerDashboardRepository
 	private readonly countOSByRegionRepository: CountOSByRegionRepository
@@ -55,7 +60,12 @@ export class ComputerDashboard {
 		this.countByRegionRepository = countByRegionRepository
 	}
 
-	async run(): Promise<{}> {
+	/**
+	 * @method run
+	 * @description Executes all the necessary data-fetching operations in parallel and returns the combined result.
+	 * @returns {Promise<object>} A promise that resolves to the complete dashboard data object.
+	 */
+	async run(): Promise<object> {
 		const [
 			total,
 			status,
@@ -83,6 +93,7 @@ export class ComputerDashboard {
 			this.computerMemoryRamModulesRepository.run(),
 			this.countOSByRegionRepository.run()
 		])
+
 		return {
 			total,
 			activeEmployees,

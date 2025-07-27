@@ -1,10 +1,10 @@
 import { Op } from 'sequelize'
+import { sequelize } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { HistoryModel } from './HistorySchema'
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../Shared/domain/CacheService'
-import { sequelize } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { type TotalChangeLastThreMonthsByCategoryRepository } from '../../domain/TotalChangeLastThreMonthsByCategoryRepository'
 import { MainCategoryList } from '../../../Category/MainCategory/domain/MainCategory'
+import { type TotalChangeLastThreMonthsByCategoryRepository } from '../../domain/TotalChangeLastThreMonthsByCategoryRepository'
 
 // Interface for the raw data returned from the Sequelize query
 interface RawHistoryData {
