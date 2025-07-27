@@ -11,6 +11,7 @@ export interface AuthResponseDto {
 		name: string
 		lastName: string
 		email: string
+		roleId: string
 		role: RolePrimitives
 	}
 	accessToken: string

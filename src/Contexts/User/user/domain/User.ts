@@ -83,8 +83,9 @@ export class User {
 	 * @returns {boolean} True if the user is a super admin, false otherwise.
 	 */
 	static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
+		const parseToStringRole = String(roleId)
 		const acceptedAdminRoles = [RoleId.Options.ADMIN, RoleId.Options.COORD]
-		return acceptedAdminRoles.includes(roleId)
+		return acceptedAdminRoles.includes(parseToStringRole)
 	}
 
 	/**

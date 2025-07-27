@@ -5,7 +5,10 @@ import { type Controller } from '../controller'
 import { type TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
 
 export class AuthLogoutController implements Controller {
-	constructor(private readonly tokenDenylistService: TokenDenylistService) {}
+	private readonly tokenDenylistService: TokenDenylistService
+	constructor({ tokenDenylistService }: { tokenDenylistService: TokenDenylistService }) {
+		this.tokenDenylistService = tokenDenylistService
+	}
 
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
