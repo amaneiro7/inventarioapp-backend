@@ -1,24 +1,6 @@
 import { BooleanValueObject } from '../../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
-export class ProcessorHasThreads extends BooleanValueObject {
-	constructor(readonly value: boolean) {
-		super(value)
-
-		this.ensureIsValid(value)
-	}
-
-	toPrimitives(): boolean {
-		return this.value
-	}
-
-	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-		}
-	}
-
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-}
+/**
+ * @description Represents whether a processor has threads.
+ */
+export class ProcessorHasThreads extends BooleanValueObject {}

@@ -3,7 +3,14 @@ import { HardDriveCapacityId } from '../../HardDriveCapacity/domain/HardDriveCap
 import { type HardDriveCapacityRepository } from '../../HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type DeviceHardDrive } from './HardDrive'
 
+/**
+ * @description Represents the hard drive capacity in the context of a device.
+ */
 export class HDDCapacity extends HardDriveCapacityId {
+	/**
+	 * @description Handles the logic for updating a device's hard drive capacity.
+	 * @param {{ repository: HardDriveCapacityRepository; hardDriveCapacity?: Primitives<HDDCapacity>; entity: DeviceHardDrive }} params The parameters for updating.
+	 */
 	static async updateHardDriveCapacityField({
 		repository,
 		hardDriveCapacity,
@@ -13,20 +20,10 @@ export class HDDCapacity extends HardDriveCapacityId {
 		hardDriveCapacity?: Primitives<HDDCapacity>
 		entity: DeviceHardDrive
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de la capacidad del Disco Duro no realiza ninguna acción
-		if (hardDriveCapacity === undefined) {
+		if (hardDriveCapacity === undefined || entity.hardDriveCapacityValue === hardDriveCapacity) {
 			return
 		}
-		// Verifica que si el valor actual y el nuevo valor son iguales no realice ningún cambio
-		if (entity.employeeeValue === hardDriveCapacity) {
-			return
-		}
-		// Verifica que el valor de la capacidad del Disco Duro exista en la base de datos, si no existe lanza un error {@link EmployeeDoesNotExistError} con el valor de la capacidad del Disco Duro pasado
-		await HardDriveCapacityId.ensureHardDriveCapacityExit({
-			repository,
-			hardDriveCapacity
-		})
-		// Actualiza el campo valor de la capacidad del Disco Duro de la entidad {@link Device} con el nuevo valor de la capacidad del Disco Duro
+		await HardDriveCapacityId.ensureHardDriveCapacityExit({ repository, hardDriveCapacity })
 		entity.updateHardDriveCapacity(hardDriveCapacity)
 	}
 }

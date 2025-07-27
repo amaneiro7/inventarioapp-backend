@@ -7,53 +7,34 @@ import { type HardDriveTypeRepository } from '../../HardDrive/HardDriveType/doma
 import { type DeviceComputer } from './Computer'
 
 /**
- * Represents the hard drive type of a computer, which can be null.
+ * @description Represents the hard drive type of a computer, which can be null.
  */
 export class ComputerHardDriveType extends AcceptedNullValueObject<Primitives<HardDriveTypeId>> {
-	/**
-	 * Creates an instance of ComputerHardDriveType.
-	 * @param value - The ID of the hard drive type, or null.
-	 * @param hardDriveCapacity - The capacity of the hard drive.
-	 */
 	constructor(
 		readonly value: Primitives<HardDriveTypeId> | null,
 		readonly hardDriveCapacity: Primitives<ComputerHardDriveCapacity>
 	) {
 		super(value)
-		this.ensureIfHardDriveisNullHardDriveTypeIsNullAsWell(this.value, this.hardDriveCapacity)
+		this.ensureIfHardDriveIsNullHardDriveTypeIsNullAsWell(this.value, this.hardDriveCapacity)
 		this.ensureIsValidHardDriveTypeId(value)
 	}
 
-	/**
-	 * Converts the hard drive type to its primitive value.
-	 * @returns The hard drive type ID or null.
-	 */
-	toPrimitives(): Primitives<HardDriveTypeId> | null {
-		return this.value
-	}
-
 	private ensureIsValidHardDriveTypeId(id: Primitives<HardDriveTypeId> | null): void {
-		if (!this.isValid(id)) {
-			throw new InvalidArgumentError('HardDriveTypeId is required')
+		if (id !== null) {
+			new HardDriveTypeId(id)
 		}
 	}
 
-	private ensureIfHardDriveisNullHardDriveTypeIsNullAsWell(
+	private ensureIfHardDriveIsNullHardDriveTypeIsNullAsWell(
 		hardDriveType: Primitives<ComputerHardDriveType>,
 		hardDriveCapacity: Primitives<ComputerHardDriveCapacity>
 	): void {
 		if (hardDriveCapacity !== null && hardDriveType === null) {
-			throw new InvalidArgumentError('HardDrive Type cannot be null if hdd capacity has a value')
+			throw new InvalidArgumentError('El tipo de disco duro no puede ser nulo si se especifica una capacidad.')
 		}
 		if (hardDriveCapacity === null && hardDriveType !== null) {
-			throw new InvalidArgumentError('Hard Drive type cannot have a value if hdd capacity is null')
+			throw new InvalidArgumentError('No se puede especificar un tipo de disco duro si no hay capacidad.')
 		}
-	}
-
-	private isValid(id: Primitives<HardDriveTypeId> | null): boolean {
-		if (id === null) return true
-		const hardDriveTypeId = new HardDriveTypeId(id)
-		return hardDriveTypeId instanceof HardDriveTypeId
 	}
 
 	static async updateHardDriveTypeField({
@@ -65,21 +46,10 @@ export class ComputerHardDriveType extends AcceptedNullValueObject<Primitives<Ha
 		hardDriveType?: Primitives<ComputerHardDriveType>
 		entity: DeviceComputer
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de la capacidad del Disco Duro no realiza ninguna acción
-		if (hardDriveType === undefined) {
+		if (hardDriveType === undefined || entity.hardDriveTypeValue === hardDriveType) {
 			return
 		}
-		// Verifica que si el valor actual y el nuevo valor son iguales no realice ningún cambio
-		if (entity.hardDriveTypeValue === hardDriveType) {
-			return
-		}
-		// Verifica que el valor de la capacidad del Disco Duro exista en la base de datos, si no existe lanza un error {@link EmployeeDoesNotExistError} con el valor de la capacidad del Disco Duro pasado
-		await HardDriveTypeId.ensureHardDriveTypeExit({
-			repository,
-			hardDriveType
-		})
-		// Actualiza el campo valor de la capacidad del Disco Duro de la entidad {@link Device} con el nuevo valor de la capacidad del Disco Duro
-		const hardDriveCapacity = entity.hardDriveCapacityValue
-		entity.updateHardDriveType(hardDriveType, hardDriveCapacity)
+		await HardDriveTypeId.ensureHardDriveTypeExit({ repository, hardDriveType })
+		entity.updateHardDriveType(hardDriveType, entity.hardDriveCapacityValue)
 	}
 }

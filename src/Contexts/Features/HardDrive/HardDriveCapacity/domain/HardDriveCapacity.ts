@@ -2,6 +2,10 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type HardDriveCapacityDto, type HardDriveCapacityPrimitives } from './HardDriveCapacity.dto'
 import { HardDriveCapacityId } from './HardDriveCapacityId'
 import { HardDriveCapacityValue } from './HardDriveCapacityValue'
+
+/**
+ * @description Represents the HardDriveCapacity domain entity.
+ */
 export class HardDriveCapacity {
 	constructor(
 		private readonly id: HardDriveCapacityId,

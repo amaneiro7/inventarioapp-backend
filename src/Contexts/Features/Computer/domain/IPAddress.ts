@@ -6,34 +6,24 @@ import { type DeviceComputer } from './Computer'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**
- * Represents an IP address, which can be null.
+ * @description Represents an IP address, which can be null.
  */
 export class IPAddress extends AcceptedNullValueObject<string> {
-	private readonly IPADRRESS_VALIDATION =
+	private readonly IP_ADDRESS_REGEX =
 		/^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3}$/
 
-	/**
-	 * Creates an instance of IPAddress.
-	 * @param value - The IP address string, or null.
-	 * @param status - The status of the device.
-	 */
-	constructor(readonly value: string | null, private readonly status: Primitives<DeviceStatus>) {
+	constructor(
+		readonly value: string | null,
+		private readonly status: Primitives<DeviceStatus>
+	) {
 		super(value)
 		this.ensureIsStatusIsInUseIPAddressIsRequired(this.status, this.value)
 		this.ensureIsValid(value)
 	}
 
-	/**
-	 * Converts the IP address to its primitive value.
-	 * @returns The IP address string or null.
-	 */
-	toPrimitives(): string | null {
-		return this.value
-	}
-
 	private ensureIsValid(value: string | null): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid IP Address`)
+		if (value !== null && !this.IP_ADDRESS_REGEX.test(value)) {
+			throw new InvalidArgumentError(`<${value}> no es una dirección IP válida.`)
 		}
 	}
 
@@ -41,41 +31,36 @@ export class IPAddress extends AcceptedNullValueObject<string> {
 		status: Primitives<DeviceStatus>,
 		ipAddress: Primitives<IPAddress>
 	): void {
-		if (status === StatusOptions.INUSE && !ipAddress) {
-			throw new InvalidArgumentError('IP Address is required when status is in use')
+		const isInUse =
+			status === StatusOptions.INUSE ||
+			status === StatusOptions.PRESTAMO ||
+			status === StatusOptions.CONTINGENCIA ||
+			status === StatusOptions.JORNADA ||
+			status === StatusOptions.GUARDIA
+
+		const isNotInUse =
+			status === StatusOptions.INALMACEN ||
+			status === StatusOptions.DESINCORPORADO ||
+			status === StatusOptions.PORDESINCORPORAR
+
+		if (isInUse && !ipAddress) {
+			throw new InvalidArgumentError('Se requiere una dirección IP cuando el estado está en uso.')
 		}
-		if (
-			(status === StatusOptions.INALMACEN ||
-				status === StatusOptions.DESINCORPORADO ||
-				status === StatusOptions.PORDESINCORPORAR) &&
-			!!ipAddress
-		) {
-			throw new InvalidArgumentError('IP Address is not required when status is not in use')
+		if (isNotInUse && ipAddress) {
+			throw new InvalidArgumentError('No se requiere una dirección IP cuando el estado no está en uso.')
 		}
 	}
 
-	private isValid(name: string | null): boolean {
-		if (name === null) return true
-		return this.IPADRRESS_VALIDATION.test(name)
-	}
-
-	static async updateIPAddressField({
+	static updateIPAddressField({
 		ipAddress,
 		entity
 	}: {
 		ipAddress?: Primitives<IPAddress>
 		entity: DeviceComputer
-	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de dirección IP no realiza ninguna acción
-		if (ipAddress === undefined) {
+	}): void {
+		if (ipAddress === undefined || entity.ipAddressValue === ipAddress) {
 			return
 		}
-		// Verifica que si el valor del campo dirección IP actual y el nuevo valor dirección IP son iguales no realiza un cambio
-		if (entity.ipAddressValue === ipAddress) {
-			return
-		}
-		// Actualiza el campo dirección IP de la entidad {@link Device} con el nuevo dirección IP
-		const status = entity.statusValue
-		entity.updateIPAddress(ipAddress, status)
+		entity.updateIPAddress(ipAddress, entity.statusValue)
 	}
 }

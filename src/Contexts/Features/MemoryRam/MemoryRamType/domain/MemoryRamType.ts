@@ -3,6 +3,9 @@ import { type MemoryRamTypeDto, type MemoryRamTypePrimitives } from './MemoryRam
 import { MemoryRamTypeId } from './MemoryRamTypeId'
 import { MemoryRamTypeName } from './MemoryRamTypeName'
 
+/**
+ * @description Represents the MemoryRamType domain entity.
+ */
 export class MemoryRamType {
 	constructor(
 		private readonly id: MemoryRamTypeId,

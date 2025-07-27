@@ -1,39 +1,35 @@
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { NumberValueObject } from '../../../Shared/domain/value-object/NumberValueObject'
 
-// Define a class for representing memory ram capacity as a value object
+/**
+ * @description Represents the total memory RAM capacity of a device.
+ */
 export class MemoryRamCapacity extends NumberValueObject {
-	//private readonly min = 0
-	private readonly max = 32
-	private readonly numStep = 9
-	private readonly minStep = this.max / Math.pow(2, this.numStep - 1)
-	// Constructor for the MemoryRamCapacityValue class
-	constructor(readonly value: number) {
-		super(value) // Call the constructor of the parent class
+	private readonly MAX_CAPACITY = 32
+	private readonly MIN_STEP = this.MAX_CAPACITY / Math.pow(2, 8) // 0.125
 
-		// Ensure the validity of the memory ram capacity value
+	constructor(readonly value: number) {
+		super(value)
 		this.ensureIsValid(value)
 	}
 
-	// Convert the memory ram capacity value to its primitive representation
-	toPrimitives(): number {
-		return this.value
-	}
-
-	// Ensure the validity of the memory ram capacity value
+	/**
+	 * @description Ensures the validity of the memory RAM capacity value.
+	 * @param {number} value The value to validate.
+	 * @throws {InvalidArgumentError} If the value is not valid.
+	 */
 	private ensureIsValid(value: number): void {
 		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid ram capacity`)
+			throw new InvalidArgumentError(`<${value}> no es una capacidad de RAM válida.`)
 		}
 	}
 
 	/**
-	 * Check if the provided memory RAM capacity value is valid
-	 *
-	 * @param value - The memory RAM capacity value to be checked
-	 * @returns true if the value is a power of 2 and not zero, and is a multiple of 512, otherwise returns false
+	 * @description Checks if the provided memory RAM capacity value is valid.
+	 * @param {number} value The value to check.
+	 * @returns {boolean} True if the value is a valid capacity, false otherwise.
 	 */
 	private isValid(value: number): boolean {
-		return value % this.minStep === 0
+		return value % this.MIN_STEP === 0
 	}
 }

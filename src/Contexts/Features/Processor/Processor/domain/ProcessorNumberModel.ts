@@ -1,27 +1,23 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
+/**
+ * @description Represents the model number of a processor.
+ */
 export class ProcessorNumberModel extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 3
+	private readonly MIN_LENGTH = 3
+	private readonly MAX_LENGTH = 100
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
 	private ensureIsValidName(value: string): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid number model name`)
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`El número de modelo debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
-	}
-
-	private isValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

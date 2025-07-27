@@ -4,13 +4,22 @@ import { type ResponseService } from '../../../../Shared/domain/ResponseType'
 import { type MemoryRamTypeDto } from '../domain/MemoryRam.dto'
 import { type MemoryRamTypeRepository } from '../domain/MemoryRamTypeRepository'
 
+/**
+ * @description Use case for retrieving all MemoryRamType entities.
+ */
 export class MemoryRamTypeFinderAll extends GetAllBaseService<MemoryRamTypeDto> {
 	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
+
 	constructor({ memoryRamTypeRepository }: { memoryRamTypeRepository: MemoryRamTypeRepository }) {
 		super()
 		this.memoryRamTypeRepository = memoryRamTypeRepository
 	}
 
+	/**
+	 * @description Executes the process of finding all memory RAM types.
+	 * @param {Criteria} criteria The criteria for filtering and pagination.
+	 * @returns {Promise<ResponseService<MemoryRamTypeDto>>} A paginated response of memory RAM types.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<MemoryRamTypeDto>> {
 		const { data, total } = await this.memoryRamTypeRepository.searchAll(criteria)
 		return this.response({

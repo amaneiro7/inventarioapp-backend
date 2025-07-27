@@ -5,102 +5,64 @@ import { ProcessorId } from '../domain/ProcessorId'
 import { type ProcessorParams } from '../domain/Processor.dto'
 import { type ProcessorRepository } from '../domain/ProcessorRepository'
 
+/**
+ * @description Use case for updating an existing Processor entity.
+ */
 export class ProcessorUpdater {
 	private readonly processorRepository: ProcessorRepository
+
 	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
 		this.processorRepository = processorRepository
 	}
 
+	/**
+	 * @description Executes the processor update process.
+	 * @param {{ id: string; params: Partial<ProcessorParams> }} data The data for updating the processor.
+	 * @returns {Promise<void>} A promise that resolves when the processor is successfully updated.
+	 * @throws {ProcessorDoesNotExistError} If the processor with the provided ID does not exist.
+	 */
 	async run({ id, params }: { id: string; params: Partial<ProcessorParams> }): Promise<void> {
-		const { productCollection, numberModel, cores, frequency, threads } = params
-
 		const processorId = new ProcessorId(id).value
-
 		const processor = await this.processorRepository.searchById(processorId)
-		if (processor === null) {
+
+		if (!processor) {
 			throw new ProcessorDoesNotExistError(processorId)
 		}
 
 		const processorEntity = Processor.fromPrimitives(processor)
 
-		await this.updateProductCollection({
-			processorEntity,
-			productCollection
-		})
-		await this.ensureProcessorNumberValueDoesNotExist({
-			numberModel,
-			processorEntity
-		})
-		await this.updateCores({ cores, processorEntity })
-		await this.updateFrequency({ frequency, processorEntity })
-		await this.updateThreads({ threads, processorEntity })
+		await this.updateFields(processorEntity, params)
 
 		await this.processorRepository.save(processorEntity.toPrimitive())
 	}
 
-	private async updateProductCollection({
-		productCollection,
-		processorEntity
-	}: {
-		productCollection?: ProcessorParams['productCollection']
-		processorEntity: Processor
-	}): Promise<void> {
-		if (productCollection === undefined) return
-		if (processorEntity.productCollectionValue === productCollection) return
+	private async updateFields(entity: Processor, params: Partial<ProcessorParams>): Promise<void> {
+		const { productCollection, numberModel, cores, frequency, threads } = params
 
-		processorEntity.updateProductCollection(productCollection)
-	}
-	private async updateCores({
-		cores,
-		processorEntity
-	}: {
-		cores?: ProcessorParams['cores']
-		processorEntity: Processor
-	}): Promise<void> {
-		if (cores === undefined) return
-		if (processorEntity.coresValue === cores) return
-
-		processorEntity.updateCores(cores)
-	}
-	private async updateFrequency({
-		frequency,
-		processorEntity
-	}: {
-		frequency?: ProcessorParams['frequency']
-		processorEntity: Processor
-	}): Promise<void> {
-		if (frequency === undefined) return
-		if (processorEntity.frequencyValue === frequency) return
-
-		processorEntity.updateFrequency(frequency)
-	}
-	private async updateThreads({
-		threads,
-		processorEntity
-	}: {
-		threads?: ProcessorParams['threads']
-		processorEntity: Processor
-	}): Promise<void> {
-		if (threads === undefined) return
-		if (processorEntity.threadsValue === threads) return
-
-		processorEntity.updateThreads(threads)
+		if (productCollection !== undefined) {
+			entity.updateProductCollection(productCollection)
+		}
+		if (cores !== undefined) {
+			entity.updateCores(cores)
+		}
+		if (frequency !== undefined) {
+			entity.updateFrequency(frequency)
+		}
+		if (threads !== undefined) {
+			entity.updateThreads(threads)
+		}
+		if (numberModel !== undefined) {
+			await this.ensureProcessorNumberValueDoesNotExist(numberModel, entity)
+			entity.updateNumberModel(numberModel)
+		}
 	}
 
-	private async ensureProcessorNumberValueDoesNotExist({
-		numberModel,
-		processorEntity
-	}: {
-		numberModel?: ProcessorParams['numberModel']
-		processorEntity: Processor
-	}): Promise<void> {
-		if (numberModel === undefined) {
+	private async ensureProcessorNumberValueDoesNotExist(numberModel: string, entity: Processor): Promise<void> {
+		if (entity.numberModelValue === numberModel) {
 			return
 		}
-		if (processorEntity.numberModelValue === numberModel) {
-			return
-		}
-		if ((await this.processorRepository.searchByNumberModel(numberModel)) !== null) {
+		const existingProcessor = await this.processorRepository.searchByNumberModel(numberModel)
+		if (existingProcessor) {
 			throw new ProcessorAlreadyExistError(numberModel)
 		}
 	}

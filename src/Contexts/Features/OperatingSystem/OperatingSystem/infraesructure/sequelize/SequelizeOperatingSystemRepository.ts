@@ -3,63 +3,46 @@ import { type OperatingSystemDto } from '../../domain/OperatingSystem.dto'
 import { type OperatingSystemId } from '../../domain/OperatingSystemId'
 import { type OperatingSystemRepository } from '../../domain/OperatingSystemRepository'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { CacheService } from '../../../../../Shared/domain/CacheService'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { OperatingSystemModel } from './OperatingSystemSchema'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
- * @class SequelizeOperatingSystemRepository
- * @extends SequelizeCriteriaConverter
- * @implements {OperatingSystemRepository}
- * @description Concrete implementation of the OperatingSystemRepository using Sequelize.
- * Handles data persistence for OperatingSystem entities, including caching mechanisms.
+ * @description Sequelize implementation of the OperatingSystemRepository.
  */
 export class SequelizeOperatingSystemRepository
 	extends SequelizeCriteriaConverter
 	implements OperatingSystemRepository
 {
-	private readonly cacheKey: string = 'operatingSystem'
+	private readonly cacheKeyPrefix = 'operatingSystem'
 	private readonly cache: CacheService
+
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
 	}
 
-	/**
-	 * @method searchAll
-	 * @description Retrieves a paginated list of OperatingSystem entities based on the provided criteria.
-	 * Utilizes caching to improve performance for repeated queries.
-	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
-	 * @returns {Promise<ResponseDB<OperatingSystemDto>>} A promise that resolves to a paginated response containing OperatingSystem DTOs.
-	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<OperatingSystemDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData<ResponseDB<OperatingSystemDto>>({
-			criteria,
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+
+		return this.cache.getCachedData<ResponseDB<OperatingSystemDto>>({
+			cacheKey,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await OperatingSystemModel.findAndCountAll(options)
-				return {
-					data: rows.map(row => row.get({ plain: true })),
-					total: count
-				}
+				return { data: rows.map(row => row.get({ plain: true })), total: count }
 			}
 		})
 	}
 
-	/**
-	 * @method searchById
-	 * @description Retrieves a single OperatingSystem entity by its unique identifier.
-	 * Utilizes caching for direct ID lookups.
-	 * @param {Primitives<OperatingSystemId>} id - The ID of the OperatingSystem to search for.
-	 * @returns {Promise<OperatingSystemDto | null>} A promise that resolves to the OperatingSystem DTO if found, or null otherwise.
-	 */
 	async searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null> {
-		return await this.cache.getCachedData<OperatingSystemDto | null>({
-			cacheKey: `${this.cacheKey}:id:${id}`,
+		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
+
+		return this.cache.getCachedData<OperatingSystemDto | null>({
+			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const operatingSystem = await OperatingSystemModel.findByPk(id)

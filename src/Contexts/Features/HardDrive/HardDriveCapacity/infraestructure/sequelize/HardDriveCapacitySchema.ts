@@ -4,37 +4,27 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type HardDriveCapacityDto } from '../../domain/HardDriveCapacity.dto'
 import { type HardDriveCapacityValue } from '../../domain/HardDriveCapacityValue'
 
+/**
+ * @description Sequelize model for the `HardDriveCapacity` entity.
+ */
 export class HardDriveCapacityModel extends Model<HardDriveCapacityDto> implements HardDriveCapacityDto {
 	declare id: Primitives<HardDriveCapacityId>
 	declare name: Primitives<HardDriveCapacityValue>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.hasMany(models.DeviceHardDrive, {
-			as: 'hardDrive',
-			foreignKey: 'hardDriveCapacityId'
-		}) // A hard drive capacity can have many hard drive
-		this.hasMany(models.DeviceComputer, {
-			as: 'computer',
-			foreignKey: 'hardDriveCapacityId'
-		}) // A hard drive capacity can have many computer
+	static associate(models: Sequelize['models']): void {
+		this.hasMany(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'hardDriveCapacityId' })
+		this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'hardDriveCapacityId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		HardDriveCapacityModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					unique: true
-				}
+				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.INTEGER, allowNull: false, unique: true }
 			},
 			{
 				modelName: 'HardDriveCapacity',
+				tableName: 'hard_drive_capacities',
 				timestamps: false,
 				underscored: true,
 				sequelize

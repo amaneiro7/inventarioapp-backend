@@ -1,43 +1,29 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
-// Define a class for representing hard drive Type as a value object
+/**
+ * @description Represents the name of a memory RAM type.
+ */
 export class MemoryRamTypeName extends StringValueObject {
-	// Define a constant map of accepted hard drive capacities
-	private readonly ACCEPTED_VALUES: Record<string, string> = {
-		DDR2: 'DDR2',
-		DDR2L: 'DDR2L',
-		DDR3: 'DDR3',
-		DD3L: 'DD3L',
-		DDR4: 'DDR4',
-		DDR4L: 'DDR4L',
-		DDR5: 'DDR5',
-		DDR5L: 'DDR5L'
-	}
+	private readonly ACCEPTED_VALUES: Set<string> = new Set([
+		'DDR2',
+		'DDR2L',
+		'DDR3',
+		'DD3L',
+		'DDR4',
+		'DDR4L',
+		'DDR5',
+		'DDR5L'
+	])
 
-	// Constructor for the MemoryRamTypeName class
 	constructor(readonly value: string) {
-		super(value) // Call the constructor of the parent class
-
-		// Ensure the validity of the hard drive Type value
+		super(value)
 		this.ensureIsValidName(value)
 	}
 
-	// Convert the hard drive Type value to its primitive representation
-	toPrimitives(): string {
-		return this.value
-	}
-
-	// Ensure the validity of the hard drive Type value
 	private ensureIsValidName(value: string): void {
-		if (this.isMemoryRamTypeNameValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+		if (!this.ACCEPTED_VALUES.has(value)) {
+			throw new InvalidArgumentError(`<${value}> no es un tipo de memoria RAM válido.`)
 		}
-	}
-
-	// Check if the memory ram Type value is valid
-	private isMemoryRamTypeNameValid(value: string): boolean {
-		// Check if the value is in the accepted values
-		return Object.values(this.ACCEPTED_VALUES).includes(value)
 	}
 }

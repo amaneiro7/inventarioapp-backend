@@ -4,37 +4,27 @@ import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
 import { type MemoryRamTypeName } from '../../domain/MemoryRamTypeName'
 import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
 
+/**
+ * @description Sequelize model for the `MemoryRamType` entity.
+ */
 export class MemoryRamTypeModel extends Model<MemoryRamTypeDto> implements MemoryRamTypeDto {
 	declare id: Primitives<MemoryRamTypeId>
 	declare name: Primitives<MemoryRamTypeName>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.hasMany(models.ModelComputer, {
-			as: 'modelComputer',
-			foreignKey: 'memoryRamTypeId'
-		}) // A memory ram type can have many model
-		this.hasMany(models.ModelLaptop, {
-			as: 'modelLaptop',
-			foreignKey: 'memoryRamTypeId'
-		}) // A memory ram type can have many laptop
+	static associate(models: Sequelize['models']): void {
+		this.hasMany(models.ModelComputer, { as: 'modelComputer', foreignKey: 'memoryRamTypeId' })
+		this.hasMany(models.ModelLaptop, { as: 'modelLaptop', foreignKey: 'memoryRamTypeId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		MemoryRamTypeModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: true
-				}
+				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false, unique: true }
 			},
 			{
 				modelName: 'MemoryRamType',
+				tableName: 'memory_ram_types',
 				timestamps: false,
 				underscored: true,
 				sequelize

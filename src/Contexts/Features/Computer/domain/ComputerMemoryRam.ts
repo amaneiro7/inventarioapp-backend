@@ -3,74 +3,53 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceComputer } from './Computer'
 
 /**
- * Represents the memory RAM modules of a computer.
+ * @description Represents the memory RAM modules of a computer.
  */
 export class ComputerMemoryRam {
-	/**
-	 * Creates an instance of ComputerMemoryRam.
-	 * @param value - An array of memory RAM values.
-	 */
 	constructor(readonly value: MemoryRamValues[]) {}
 
 	/**
-	 * Converts the memory RAM values to their primitive representation.
-	 * @returns An array of primitive memory RAM values.
+	 * @description Converts the memory RAM values to their primitive representation.
+	 * @returns {Primitives<MemoryRamValues>[]} An array of primitive memory RAM values.
 	 */
-	public toPrimitives(): Primitives<MemoryRamValues>[] {
+	toPrimitives(): Primitives<MemoryRamValues>[] {
 		return this.value.map(memValue => memValue.value)
 	}
 
 	/**
-	 * Creates a ComputerMemoryRam instance from an array of primitive values.
-	 * @param memoryRamValues - An array of primitive memory RAM values.
-	 * @returns A new ComputerMemoryRam instance.
+	 * @description Creates a `ComputerMemoryRam` instance from an array of primitive values.
+	 * @param {Primitives<MemoryRamValues>[]} memoryRamValues An array of primitive memory RAM values.
+	 * @returns {ComputerMemoryRam} A new `ComputerMemoryRam` instance.
 	 */
-	static fromPrimitives(memoryRamValues: Primitives<MemoryRamValues>[]) {
+	static fromPrimitives(memoryRamValues: Primitives<MemoryRamValues>[]): ComputerMemoryRam {
 		return new ComputerMemoryRam(memoryRamValues.map(MemoryRamValues.fromValues))
 	}
 
 	/**
-	 * Checks if there are no memory RAM modules.
-	 * @returns True if there are no memory RAM modules, false otherwise.
-	 */
-	isEmpty(): boolean {
-		return this.value.length === 0
-	}
-
-	/**
-	 * Calculates the total amount of memory RAM.
-	 * @param value - An array of primitive memory RAM values.
-	 * @returns The total amount of memory RAM.
+	 * @description Calculates the total amount of memory RAM.
+	 * @param {Primitives<MemoryRamValues>[]} value An array of primitive memory RAM values.
+	 * @returns {number} The total amount of memory RAM.
 	 */
 	static totalAmount(value: Primitives<MemoryRamValues>[]): number {
 		return value.reduce((total, val) => total + Number(val), 0)
 	}
 
 	/**
-	 * Checks if the total memory RAM is zero.
-	 * @param value - An array of primitive memory RAM values.
-	 * @returns True if the total memory RAM is zero, false otherwise.
+	 * @description Handles the logic for updating the memory RAM of a computer entity.
+	 * @param {{ memoryRam?: Primitives<MemoryRamValues>[]; entity: DeviceComputer }} params The parameters for updating.
 	 */
-	isZeroTotalMemory(value: Primitives<MemoryRamValues>[]): boolean {
-		return ComputerMemoryRam.totalAmount(value) === 0
-	}
-
-	static async updateMemoryRam({
+	static updateMemoryRam({
 		memoryRam,
 		entity
 	}: {
 		memoryRam?: Primitives<MemoryRamValues>[]
 		entity: DeviceComputer
-	}): Promise<void> {
-		if (memoryRam === undefined) {
-			return
-		}
-		if (JSON.stringify(entity.memoryRamValue) === JSON.stringify(memoryRam)) {
+	}): void {
+		if (memoryRam === undefined || JSON.stringify(entity.memoryRamValue) === JSON.stringify(memoryRam)) {
 			return
 		}
 		entity.updateMemoryRam(memoryRam)
-		const status = entity.statusValue
 		const newMemRamValue = ComputerMemoryRam.totalAmount(memoryRam)
-		entity.updateMemoryRamCapacity(newMemRamValue, status)
+		entity.updateMemoryRamCapacity(newMemRamValue, entity.statusValue)
 	}
 }

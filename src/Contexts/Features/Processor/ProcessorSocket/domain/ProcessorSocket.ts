@@ -3,6 +3,9 @@ import { type ProcessorSocketDto, type ProcessorSocketPrimitives } from './Proce
 import { ProcessorSocketId } from './ProcessorSocketId'
 import { ProcessorSocketName } from './ProcessorSocketName'
 
+/**
+ * @description Represents the ProcessorSocket domain entity.
+ */
 export class ProcessorSocket {
 	constructor(
 		private readonly id: ProcessorSocketId,

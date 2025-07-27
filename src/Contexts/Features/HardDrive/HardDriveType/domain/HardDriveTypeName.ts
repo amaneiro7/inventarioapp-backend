@@ -1,39 +1,20 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
-// Define a class for representing hard drive Type as a value object
+/**
+ * @description Represents the name of a hard drive type.
+ */
 export class HardDriveTypeName extends StringValueObject {
-	// Define a constant map of accepted hard drive capacities
-	private readonly ACCEPTED_VALUES: Record<string, string> = {
-		HDD: 'HDD',
-		SDD: 'SDD',
-		SDDM2: 'SDD M.2',
-		IDE: 'IDE'
-	}
+	private readonly ACCEPTED_VALUES: Set<string> = new Set(['HDD', 'SDD', 'SDD M.2', 'IDE'])
 
-	// Constructor for the HardDriveTypeName class
 	constructor(readonly value: string) {
-		super(value) // Call the constructor of the parent class
-
-		// Ensure the validity of the hard drive Type value
+		super(value)
 		this.ensureIsValidName(value)
 	}
 
-	// Convert the hard drive Type value to its primitive representation
-	toPrimitives(): string {
-		return this.value
-	}
-
-	// Ensure the validity of the hard drive Type value
 	private ensureIsValidName(value: string): void {
-		if (this.isHardDriveTypeNameValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+		if (!this.ACCEPTED_VALUES.has(value)) {
+			throw new InvalidArgumentError(`<${value}> no es un tipo de disco duro válido.`)
 		}
-	}
-
-	// Check if the hard drive Type value is valid
-	private isHardDriveTypeNameValid(value: string): boolean {
-		// Check if the value is in the accepted values
-		return Object.values(this.ACCEPTED_VALUES).includes(value)
 	}
 }

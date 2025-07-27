@@ -13,7 +13,6 @@ import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
 import { ComputerName } from './ComputerName'
 import { ComputerProcessor } from './ComputerProcessor'
 import { ComputerMemoryRam } from './ComputerMemoryRam'
-import { MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { ComputerMemoryRamCapacity } from './ComputerMemoryRamCapacity'
 import { ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
 import { ComputerHardDriveType } from './ComputerHardDriveType'
@@ -23,17 +22,14 @@ import { MACAddress } from './MACAddress'
 import { IPAddress } from './IPAddress'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
+import { type MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { type DeviceComputerParams, type DeviceComputerPrimitives } from './Computer.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**
- * Represents a computer device, extending the base Device class with specific properties.
+ * @description Represents a computer device, extending the base Device class with specific properties.
  */
 export class DeviceComputer extends Device {
-	/**
-	 * Creates an instance of DeviceComputer.
-	 * @param params - The parameters for creating a computer device.
-	 */
 	constructor(
 		id: DeviceId,
 		serial: DeviceSerial,
@@ -70,21 +66,14 @@ export class DeviceComputer extends Device {
 			observation,
 			stockNumber
 		)
-
 		if (!DeviceComputer.isComputerCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('Este dispositivo no pertenece a la categoría de computadora')
+			throw new InvalidArgumentError('This device does not belong to the computer category')
 		}
 	}
 
-	/**
-	 * Creates a new DeviceComputer instance from primitive values.
-	 * @param params - The primitive values for creating the computer device.
-	 * @returns A new DeviceComputer instance.
-	 */
 	static create(params: DeviceComputerParams): DeviceComputer {
-		const id = DeviceId.random().value
 		return new DeviceComputer(
-			new DeviceId(id),
+			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
 			new DeviceStatus(params.statusId),
@@ -108,38 +97,19 @@ export class DeviceComputer extends Device {
 		)
 	}
 
-	/**
-	 * Checks if a given category ID corresponds to a computer category.
-	 * @param categoryId - The category ID to check.
-	 * @returns True if it is a computer category, false otherwise.
-	 */
 	static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const acceptedComputerCategories: CategoryValues[] = [
+		const acceptedCategories: string[] = [
 			CategoryValues.COMPUTADORAS,
 			CategoryValues.ALLINONE,
 			CategoryValues.LAPTOPS,
 			CategoryValues.SERVIDORES
 		]
-		return acceptedComputerCategories.some(key => key === categoryId)
+		return acceptedCategories.includes(categoryId)
 	}
 
-	/**
-	 * Converts the DeviceComputer instance to its primitive representation.
-	 * @returns The primitive representation of the DeviceComputer.
-	 */
 	toPrimitives(): DeviceComputerPrimitives {
 		return {
-			id: this.idValue,
-			serial: this.serialValue,
-			activo: this.activoValue,
-			statusId: this.statusValue,
-			categoryId: this.categoryValue,
-			brandId: this.brandValue,
-			modelId: this.modelSeriesValue,
-			employeeId: this.employeeeValue,
-			locationId: this.locationValue,
-			observation: this.observationValue,
-			stockNumber: this.stockNumberValue,
+			...super.toPrimitives(),
 			computerName: this.computerNameValue,
 			processorId: this.processorValue,
 			memoryRam: this.memoryRamValue,
@@ -153,11 +123,6 @@ export class DeviceComputer extends Device {
 		}
 	}
 
-	/**
-	 * Creates a DeviceComputer instance from its primitive representation.
-	 * @param primitives - The primitive representation of the DeviceComputer.
-	 * @returns A new DeviceComputer instance.
-	 */
 	static fromPrimitives(primitives: DeviceComputerPrimitives): DeviceComputer {
 		return new DeviceComputer(
 			new DeviceId(primitives.id),
@@ -188,6 +153,7 @@ export class DeviceComputer extends Device {
 		)
 	}
 
+	// Update methods
 	updateComputerName(newComputerName: Primitives<ComputerName>, statusId: Primitives<DeviceStatus>): void {
 		this.computerName = new ComputerName(newComputerName, statusId)
 	}
@@ -199,6 +165,7 @@ export class DeviceComputer extends Device {
 	updateMemoryRam(newMemoryRam: Primitives<MemoryRamValues>[]): void {
 		this.memoryRam = ComputerMemoryRam.fromPrimitives(newMemoryRam)
 	}
+
 	updateMemoryRamCapacity(
 		newMemoryRamCapacity: Primitives<ComputerMemoryRamCapacity>,
 		status: Primitives<DeviceStatus>
@@ -243,6 +210,7 @@ export class DeviceComputer extends Device {
 		this.macAddress = new MACAddress(newMACAddress)
 	}
 
+	// Getters
 	get computerNameValue(): Primitives<ComputerName> {
 		return this.computerName.value
 	}

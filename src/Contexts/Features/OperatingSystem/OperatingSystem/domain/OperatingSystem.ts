@@ -3,6 +3,9 @@ import { type OperatingSystemDto, type OperatingSystemPrimitives } from './Opera
 import { OperatingSystemId } from './OperatingSystemId'
 import { OperatingSystemVersion } from './OperatingSystemVersion'
 
+/**
+ * @description Represents the OperatingSystem domain entity.
+ */
 export class OperatingSystem {
 	constructor(
 		private readonly id: OperatingSystemId,

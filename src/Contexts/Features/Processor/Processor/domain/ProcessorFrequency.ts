@@ -1,42 +1,27 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
+/**
+ * @description Represents the frequency of a processor.
+ */
 export class ProcessorFrequency {
-	private readonly MIN = 1
-	private readonly MAX = 6
+	private readonly MIN_GHZ = 1
+	private readonly MAX_GHZ = 6
+	readonly value: number
 
-	constructor(readonly value: number | string) {
-		const parsedValue = this.convertToNumber(value)
-		this.value = parsedValue
-		this.ensureIsValidName(this.value)
+	constructor(value: string | number) {
+		this.value = this.parseAndValidate(value)
 	}
 
-	private convertToNumber(value: string | number): number {
-		if (typeof value === 'number') {
-			return value
-		} else if (typeof value === 'string') {
-			const numericString = value.replace(/[^\d.]/g, '') // Eliminar caracteres no numéricos
-			return parseFloat(numericString)
-		} else {
-			throw new Error('Invalid value type. Must be string or number.')
+	private parseAndValidate(value: string | number): number {
+		const numericValue = typeof value === 'string' ? parseFloat(value.replace(/[^\d.]/g, '')) : value
+
+		if (isNaN(numericValue) || numericValue < this.MIN_GHZ || numericValue > this.MAX_GHZ) {
+			throw new InvalidArgumentError(`<${value}> no es una frecuencia de procesador válida.`)
 		}
+		return numericValue
 	}
 
-	toPrimitives(): Primitives<ProcessorFrequency> {
-		if (typeof this.value !== 'number') {
-			throw new InvalidArgumentError('Invalid processor frequency type')
-		}
-		const frequencyInGHz = this.value.toFixed(2)
-		return `${frequencyInGHz} GHz`
-	}
-
-	private ensureIsValidName(value: number): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid processor frequency`)
-		}
-	}
-
-	private isValid(value: number): boolean {
-		return value >= this.MIN && value <= this.MAX
+	toPrimitives(): string {
+		return `${this.value.toFixed(2)} GHz`
 	}
 }

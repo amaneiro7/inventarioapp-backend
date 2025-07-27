@@ -1,7 +1,7 @@
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
 import { type HardDriveTypeRepository } from '../../domain/HardDriveTypeRepository'
-import { CacheService } from '../../../../../Shared/domain/CacheService'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { HardDriveTypeModel } from './HardDriveTypeSchema'
 import { type HardDriveTypeDto } from '../../domain/HardDriveType.dto'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
@@ -10,53 +10,36 @@ import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
- * @class SequelizeHardDriveTypeRepository
- * @extends SequelizeCriteriaConverter
- * @implements {HardDriveTypeRepository}
- * @description Concrete implementation of the HardDriveTypeRepository using Sequelize.
- * Handles data persistence for HardDriveType entities, including caching mechanisms.
+ * @description Sequelize implementation of the HardDriveTypeRepository.
  */
 export class SequelizeHardDriveTypeRepository extends SequelizeCriteriaConverter implements HardDriveTypeRepository {
-	private readonly cacheKey: string = 'hardDriveType'
+	private readonly cacheKeyPrefix = 'hardDriveType'
 	private readonly cache: CacheService
+
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
 	}
 
-	/**
-	 * @method searchAll
-	 * @description Retrieves a paginated list of HardDriveType entities based on the provided criteria.
-	 * Utilizes caching to improve performance for repeated queries.
-	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
-	 * @returns {Promise<ResponseDB<HardDriveTypeDto>>} A promise that resolves to a paginated response containing HardDriveType DTOs.
-	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<HardDriveTypeDto>> {
 		const options = this.convert(criteria)
-		return await this.cache.getCachedData<ResponseDB<HardDriveTypeDto>>({
-			criteria,
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+
+		return this.cache.getCachedData<ResponseDB<HardDriveTypeDto>>({
+			cacheKey,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await HardDriveTypeModel.findAndCountAll(options)
-				return {
-					data: rows.map(row => row.get({ plain: true })),
-					total: count
-				}
+				return { data: rows.map(row => row.get({ plain: true })), total: count }
 			}
 		})
 	}
 
-	/**
-	 * @method searchById
-	 * @description Retrieves a single HardDriveType entity by its unique identifier.
-	 * Utilizes caching for direct ID lookups.
-	 * @param {Primitives<HardDriveTypeId>} id - The ID of the HardDriveType to search for.
-	 * @returns {Promise<HardDriveTypeDto | null>} A promise that resolves to the HardDriveType DTO if found, or null otherwise.
-	 */
 	async searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null> {
-		return await this.cache.getCachedData<HardDriveTypeDto | null>({
-			cacheKey: `${this.cacheKey}:id:${id}`,
+		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
+
+		return this.cache.getCachedData<HardDriveTypeDto | null>({
+			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const hardDriveType = await HardDriveTypeModel.findByPk(id)

@@ -8,6 +8,9 @@ import { ProcessorName } from './ProcessorName'
 import { ProcessorNumberModel } from './ProcessorNumberModel'
 import { ProcessorProductCollection } from './ProcessorProductCollection'
 
+/**
+ * @description Represents the Processor domain entity.
+ */
 export class Processor {
 	constructor(
 		private readonly id: ProcessorId,

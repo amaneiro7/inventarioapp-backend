@@ -16,6 +16,9 @@ import { DeviceStocknumber } from '../../../Device/Device/domain/DeviceStock'
 import { type DeviceMFPParams, type DeviceMFPPrimitives } from './MFP.dto'
 import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
+/**
+ * @description Represents a Multifunctional Printer (MFP) device, extending the base Device class.
+ */
 export class MFP extends Device {
 	constructor(
 		id: DeviceId,
@@ -44,15 +47,14 @@ export class MFP extends Device {
 			observation,
 			stockNumber
 		)
+		if (!MFP.isMFPCategory({ categoryId: categoryId.value })) {
+			throw new InvalidArgumentError('This device does not belong to the MFP category')
+		}
 	}
 
 	static create(params: DeviceMFPParams): MFP {
-		if (!MFP.isMFPCategory({ categoryId: params.categoryId })) {
-			throw new InvalidArgumentError('No pertenece a esta categoria')
-		}
-		const id = DeviceId.random().value
 		return new MFP(
-			new DeviceId(id),
+			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
 			new DeviceStatus(params.statusId),
@@ -68,23 +70,12 @@ export class MFP extends Device {
 	}
 
 	static isMFPCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const acceptedComputerCategories: CategoryValues[] = [CategoryValues.MFP]
-		return acceptedComputerCategories.some(category => category === categoryId)
+		return categoryId === CategoryValues.MFP
 	}
 
 	toPrimitives(): DeviceMFPPrimitives {
 		return {
-			id: this.idValue,
-			serial: this.serialValue,
-			activo: this.activoValue,
-			statusId: this.statusValue,
-			categoryId: this.categoryValue,
-			brandId: this.brandValue,
-			modelId: this.modelSeriesValue,
-			employeeId: this.employeeeValue,
-			locationId: this.locationValue,
-			observation: this.observationValue,
-			stockNumber: this.stockNumberValue,
+			...super.toPrimitives(),
 			ipAddress: this.ipAddressValue
 		}
 	}

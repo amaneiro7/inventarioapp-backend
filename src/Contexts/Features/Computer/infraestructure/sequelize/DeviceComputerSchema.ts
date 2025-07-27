@@ -33,6 +33,10 @@ export interface DeviceComputerCreationAttributes
 	> {
 	deviceId: Primitives<DeviceId>
 }
+
+/**
+ * @description Sequelize model for the `DeviceComputer` entity.
+ */
 export class DeviceComputerModel
 	extends Model<DeviceComputerCreationAttributes>
 	implements DeviceComputerCreationAttributes
@@ -51,116 +55,47 @@ export class DeviceComputerModel
 	declare macAddress: Primitives<MACAddress>
 	declare ipAddress: Primitives<IPAddress>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Category, {
-			as: 'category',
-			foreignKey: 'categoryId'
-		}) // A computer belongs to a category
-		this.belongsTo(models.Device, { as: 'device', foreignKey: 'device_id' }) // A computer belongs to a device
-		this.belongsTo(models.Processor, {
-			as: 'processor',
-			foreignKey: 'processorId'
-		}) // A computer belongs to a processor
-		this.belongsTo(models.HardDriveCapacity, {
-			as: 'hardDriveCapacity',
-			foreignKey: 'hardDriveCapacityId'
-		}) // A computer belongs to a hard drive
-		this.belongsTo(models.HardDriveType, {
-			as: 'hardDriveType',
-			foreignKey: 'hardDriveTypeId'
-		}) // A computer belongs to a hard drive
-		this.belongsTo(models.OperatingSystemVersion, {
-			as: 'operatingSystem',
-			foreignKey: 'operatingSystemId'
-		}) // A computer belongs to an operating system
-		this.belongsTo(models.OperatingSystemArq, {
-			as: 'operatingSystemArq',
-			foreignKey: 'operatingSystemArqId'
-		}) // A computer belongs to an operating system arq
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
+		this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' })
+		this.belongsTo(models.Processor, { as: 'processor', foreignKey: 'processorId' })
+		this.belongsTo(models.HardDriveCapacity, { as: 'hardDriveCapacity', foreignKey: 'hardDriveCapacityId' })
+		this.belongsTo(models.HardDriveType, { as: 'hardDriveType', foreignKey: 'hardDriveTypeId' })
+		this.belongsTo(models.OperatingSystemVersion, { as: 'operatingSystem', foreignKey: 'operatingSystemId' })
+		this.belongsTo(models.OperatingSystemArq, { as: 'operatingSystemArq', foreignKey: 'operatingSystemArqId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		DeviceComputerModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					allowNull: false,
-					primaryKey: true
-				},
+				id: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
 				categoryId: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					validate: {
-						isIn: {
-							args: [
-								[
-									CategoryValues.COMPUTADORAS,
-									CategoryValues.ALLINONE,
-									CategoryValues.LAPTOPS,
-									CategoryValues.SERVIDORES
-								]
-							],
-							msg: 'No pertenece a esta categoria'
-						}
+						isIn: [
+							[
+								CategoryValues.COMPUTADORAS,
+								CategoryValues.ALLINONE,
+								CategoryValues.LAPTOPS,
+								CategoryValues.SERVIDORES
+							]
+						]
 					}
 				},
-				deviceId: {
-					type: DataTypes.UUID,
-					allowNull: false
-				},
-				computerName: {
-					allowNull: true,
-					type: DataTypes.STRING,
-					unique: true
-				},
-				processorId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				memoryRam: {
-					type: DataTypes.ARRAY(DataTypes.DECIMAL),
-					allowNull: true
-				},
-				memoryRamCapacity: {
-					type: DataTypes.DECIMAL,
-					allowNull: false
-				},
-				hardDriveCapacityId: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				hardDriveTypeId: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				operatingSystemId: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					field: 'operating_system_version_id'
-				},
-				operatingSystemArqId: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				macAddress: {
-					type: DataTypes.MACADDR,
-					allowNull: true,
-					unique: true
-				},
-				ipAddress: {
-					type: DataTypes.INET,
-					allowNull: true,
-					validate: {
-						isIPv4: true
-					}
-				}
+				deviceId: { type: DataTypes.UUID, allowNull: false },
+				computerName: { type: DataTypes.STRING, unique: true, allowNull: true },
+				processorId: { type: DataTypes.UUID, allowNull: true },
+				memoryRam: { type: DataTypes.ARRAY(DataTypes.DECIMAL), allowNull: true },
+				memoryRamCapacity: { type: DataTypes.DECIMAL, allowNull: false },
+				hardDriveCapacityId: { type: DataTypes.STRING, allowNull: true },
+				hardDriveTypeId: { type: DataTypes.STRING, allowNull: true },
+				operatingSystemId: { type: DataTypes.STRING, allowNull: true, field: 'operating_system_version_id' },
+				operatingSystemArqId: { type: DataTypes.STRING, allowNull: true },
+				macAddress: { type: DataTypes.MACADDR, unique: true, allowNull: true },
+				ipAddress: { type: DataTypes.INET, allowNull: true, validate: { isIPv4: true } }
 			},
-			{
-				modelName: 'DeviceComputer',
-				underscored: true,
-				timestamps: true,
-				sequelize
-			}
+			{ modelName: 'DeviceComputer', timestamps: true, underscored: true, sequelize }
 		)
 	}
 }

@@ -4,8 +4,27 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type HardDriveCapacityDto } from './HardDriveCapacity.dto'
 import { type HardDriveCapacityId } from './HardDriveCapacityId'
 
+/**
+ * @abstract
+ * @class HardDriveCapacityRepository
+ * @description Defines the contract for data persistence operations related to the HardDriveCapacity entity.
+ */
 export abstract class HardDriveCapacityRepository {
+	/**
+	 * @abstract
+	 * @method searchAll
+	 * @description Retrieves a paginated list of hard drive capacities.
+	 * @param {Criteria} criteria The criteria for filtering and pagination.
+	 * @returns {Promise<ResponseDB<HardDriveCapacityDto>>} A paginated response of hard drive capacity DTOs.
+	 */
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<HardDriveCapacityDto>>
 
+	/**
+	 * @abstract
+	 * @method searchById
+	 * @description Finds a single hard drive capacity by its ID.
+	 * @param {Primitives<HardDriveCapacityId>} id The ID of the capacity to search for.
+	 * @returns {Promise<HardDriveCapacityDto | null>} A promise that resolves to the DTO if found, or null otherwise.
+	 */
 	abstract searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null>
 }

@@ -2,6 +2,10 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type OperatingSystemArqDto, type OperatingSystemArqPrimitives } from './OperatingSystemArq.dto'
 import { OperatingSystemArqId } from './OperatingSystemArqID'
 import { OperatingSystemArqName } from './OperatingSystemArqName'
+
+/**
+ * @description Represents the OperatingSystemArq domain entity.
+ */
 export class OperatingSystemArq {
 	constructor(
 		private readonly id: OperatingSystemArqId,

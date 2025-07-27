@@ -3,6 +3,9 @@ import { type HardDriveTypeDto, type HardDriveTypePrimitives } from './HardDrive
 import { HardDriveTypeId } from './HardDriveTypeId'
 import { HardDriveTypeName } from './HardDriveTypeName'
 
+/**
+ * @description Represents the HardDriveType domain entity.
+ */
 export class HardDriveType {
 	constructor(
 		private readonly id: HardDriveTypeId,

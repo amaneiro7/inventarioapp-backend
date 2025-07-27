@@ -17,7 +17,8 @@ import { type MACAddress } from './MACAddress'
 import { type IPAddress } from './IPAddress'
 
 /**
- * Represents the structure of a computer device, extending the base Device interface.
+ * @interface DeviceComputer
+ * @description Extends the base Device interface with computer-specific properties.
  */
 export interface DeviceComputer extends Device {
 	computerName: Primitives<ComputerName>
@@ -33,23 +34,14 @@ export interface DeviceComputer extends Device {
 }
 
 /**
- * Represents the primitive type of a DeviceComputer, extending the base DevicePrimitives.
+ * @type DeviceComputerPrimitives
+ * @description Represents the primitive, serializable state of a DeviceComputer entity.
  */
-export type DeviceComputerPrimitives = DevicePrimitives & {
-	computerName: Primitives<ComputerName>
-	processorId: Primitives<ComputerProcessor>
-	memoryRam: Primitives<MemoryRamValues>[]
-	memoryRamCapacity: Primitives<ComputerMemoryRamCapacity>
-	hardDriveCapacityId: Primitives<ComputerHardDriveCapacity>
-	hardDriveTypeId: Primitives<ComputerHardDriveType>
-	operatingSystemId: Primitives<ComputerOperatingSystem>
-	operatingSystemArqId: Primitives<ComputerOperatingSystemArq>
-	macAddress: Primitives<MACAddress>
-	ipAddress: Primitives<IPAddress>
-}
+export type DeviceComputerPrimitives = DevicePrimitives & DeviceComputer
 
 /**
- * Represents the parameters for creating a new computer device, extending the base Device interface.
+ * @type DeviceComputerParams
+ * @description Represents the parameters required to create a new computer device.
  */
 export type DeviceComputerParams = Device & {
 	computerName: Primitives<ComputerName>
@@ -64,7 +56,8 @@ export type DeviceComputerParams = Device & {
 }
 
 /**
- * Data Transfer Object for a DeviceComputer, including related entities.
+ * @type DeviceComputerDto
+ * @description Data Transfer Object for a DeviceComputer, including related entities.
  */
 export type DeviceComputerDto = DeviceComputer & {
 	processor: ProcessorDto
@@ -73,4 +66,3 @@ export type DeviceComputerDto = DeviceComputer & {
 	operatingSystem: OperatingSystemDto
 	operatingSystemArq: OperatingSystemArqDto
 }
-
