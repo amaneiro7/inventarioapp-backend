@@ -1,1 +1,1 @@
-export type NewableClass<T> = new (...args: unknown[]) => T
+export type NewableClass<T> = new (...args: any[]) => T
