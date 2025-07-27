@@ -32,7 +32,7 @@ import { type InputTypeRepository } from '../../InputType/domain/InputTypeReposi
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
-import { type ModelSeriesParams } from '../domain/ModelSeries.dto'
+import { type ModelSeriesDto, type ModelSeriesParams } from '../domain/ModelSeries.dto'
 import { type KeyboardModelsParams } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 import { type MouseModelsParams } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
 import { type PrinteModelsParams } from '../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
