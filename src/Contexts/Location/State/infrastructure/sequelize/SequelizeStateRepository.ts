@@ -38,7 +38,7 @@ export class SequelizeStateRepository extends SequelizeCriteriaConverter impleme
 		return await this.cache.getCachedData<ResponseDB<StateDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await StateModel.findAndCountAll(options)
 				return {
@@ -59,7 +59,7 @@ export class SequelizeStateRepository extends SequelizeCriteriaConverter impleme
 	async searchById(id: Primitives<StateId>): Promise<StateDto | null> {
 		return await this.cache.getCachedData<StateDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const state = await StateModel.findByPk(id)
 				return state ? (state.get({ plain: true }) as StateDto) : null

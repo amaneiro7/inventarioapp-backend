@@ -56,7 +56,7 @@ export class SequelizeCountByRegionRepository implements CountByRegionRepository
 	async run(): Promise<AdministrativeRegionData[]> {
 		return await this.cache.getCachedData<AdministrativeRegionData[]>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

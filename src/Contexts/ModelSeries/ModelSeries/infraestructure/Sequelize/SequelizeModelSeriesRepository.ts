@@ -69,7 +69,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.MEDIUM,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(options)
 				return {
@@ -96,7 +96,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.MEDIUM,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
@@ -118,7 +118,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	async searchById(id: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const modelSeries = await ModelSeriesModel.findByPk(id, {
 					include: [
@@ -147,7 +147,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	async searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesDto[]> {
 		return await this.cache.getCachedData<ModelSeriesDto[]>({
 			cacheKey: `${this.cacheKey}:category:${categoryId}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const rows = await ModelSeriesModel.findAll({
 					where: { categoryId },
@@ -168,7 +168,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	async searchByName(name: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const modelSeries = await ModelSeriesModel.findOne({
 					where: { name },

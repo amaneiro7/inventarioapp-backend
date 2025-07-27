@@ -28,7 +28,7 @@ export class SequelizeTotalPrintersRepository implements TotalPrintersRepository
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await DeviceModel.count({
 					include: [

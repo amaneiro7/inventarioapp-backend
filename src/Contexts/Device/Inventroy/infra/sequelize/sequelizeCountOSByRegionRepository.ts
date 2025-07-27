@@ -89,7 +89,7 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 	async run(): Promise<AggregatedOSByRegionData[]> {
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

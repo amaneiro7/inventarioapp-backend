@@ -39,7 +39,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 		return await this.cache.getCachedData<ResponseDB<UserPrimitivesOptional>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await UserModel.findAndCountAll(opt)
 
@@ -61,7 +61,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 	async searchByEmail(userEmail: string): Promise<UserPrimitives | null> {
 		return await this.cache.getCachedData<UserPrimitives | null>({
 			cacheKey: `${this.cacheKey}:email:${userEmail}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const user = await UserModel.findOne({
 					where: { email: userEmail },
@@ -83,7 +83,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 	async searchById(id: Primitives<UserId>): Promise<UserPrimitives | null> {
 		return await this.cache.getCachedData<UserPrimitives | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const user = await UserModel.findByPk(id, {
 					include: ['role']

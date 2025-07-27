@@ -54,7 +54,7 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 	async run(): Promise<AggregatedMemoryModuleData[]> {
 		return await this.cache.getCachedData<AggregatedMemoryModuleData[]>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

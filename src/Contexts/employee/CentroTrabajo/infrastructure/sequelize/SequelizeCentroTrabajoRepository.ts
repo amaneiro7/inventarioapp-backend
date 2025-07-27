@@ -38,7 +38,7 @@ export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter
 		return await this.cache.getCachedData<ResponseDB<CentroTrabajoDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CentroTrabajoModel.findAndCountAll(options)
 				return {
@@ -59,7 +59,7 @@ export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter
 	async searchById(id: Primitives<CentroTrabajoId>): Promise<Nullable<CentroTrabajoDto>> {
 		return await this.cache.getCachedData<Nullable<CentroTrabajoDto>>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const centroTrabajo = await CentroTrabajoModel.findByPk(id)
 				return centroTrabajo ? (centroTrabajo.get({ plain: true }) as CentroTrabajoDto) : null
@@ -77,7 +77,7 @@ export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter
 	async searchByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>> {
 		return await this.cache.getCachedData<Nullable<CentroTrabajoDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const centroTrabajo = await CentroTrabajoModel.findOne({ where: { name } })
 				return centroTrabajo ? (centroTrabajo.get({ plain: true }) as CentroTrabajoDto) : null

@@ -47,7 +47,7 @@ export class SequelizeCountByCategoryRepository implements CountByCategoryReposi
 	async run(): Promise<AggregatedCategoryData[]> {
 		return await this.cache.getCachedData<AggregatedCategoryData[]>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

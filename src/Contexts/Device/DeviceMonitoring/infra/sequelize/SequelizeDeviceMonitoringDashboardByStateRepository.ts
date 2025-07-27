@@ -42,7 +42,7 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 		const opt = DeviceMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				// Cast the result of findAll to our specific type for type safety.
 				const devices = (await DeviceMonitoringModel.findAll(opt)) as unknown as DeviceCountByState[]

@@ -49,7 +49,7 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 	async run(): Promise<AggregatedOSData[]> {
 		return await this.cache.getCachedData<AggregatedOSData[]>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

@@ -42,7 +42,7 @@ export class SequelizeDirectivaRepository
 		return await this.cache.getCachedData<ResponseDB<DirectivaDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DirectivaModel.findAndCountAll(options)
 				return {
@@ -64,7 +64,7 @@ export class SequelizeDirectivaRepository
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DirectivaDto>> {
 		return await this.cache.getCachedData<Nullable<DirectivaDto>>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const directiva = await DirectivaModel.findByPk(id, {
 					include: [
@@ -90,7 +90,7 @@ export class SequelizeDirectivaRepository
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<DirectivaDto>> {
 		return await this.cache.getCachedData<Nullable<DirectivaDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const directiva = await DirectivaModel.findOne({ where: { name } })
 				return directiva ? (directiva.get({ plain: true }) as DirectivaDto) : null

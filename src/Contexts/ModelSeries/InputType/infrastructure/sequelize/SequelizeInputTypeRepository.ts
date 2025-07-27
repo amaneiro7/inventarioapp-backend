@@ -36,7 +36,7 @@ export class SequelizeInputTypeRepository extends SequelizeCriteriaConverter imp
 		return await this.cache.getCachedData<ResponseDB<InputTypeDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await InputTypeModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeInputTypeRepository extends SequelizeCriteriaConverter imp
 	async searchById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null> {
 		return await this.cache.getCachedData<InputTypeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const inputType = await InputTypeModel.findByPk(id)
 				return inputType ? inputType.get({ plain: true }) : null

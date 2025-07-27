@@ -36,7 +36,7 @@ export class SequelizeStatusRepository extends SequelizeCriteriaConverter implem
 		return await this.cache.getCachedData<ResponseDB<StatusDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await StatusModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeStatusRepository extends SequelizeCriteriaConverter implem
 	async searchById(id: Primitives<StatusId>): Promise<StatusDto | null> {
 		return await this.cache.getCachedData<StatusDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const status = await StatusModel.findByPk(id)
 				return status ? status.get({ plain: true }) : null

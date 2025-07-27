@@ -39,7 +39,7 @@ export class SequelizeOperatingSystemRepository
 		return await this.cache.getCachedData<ResponseDB<OperatingSystemDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await OperatingSystemModel.findAndCountAll(options)
 				return {
@@ -60,7 +60,7 @@ export class SequelizeOperatingSystemRepository
 	async searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null> {
 		return await this.cache.getCachedData<OperatingSystemDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const operatingSystem = await OperatingSystemModel.findByPk(id)
 				return operatingSystem ? operatingSystem.get({ plain: true }) : null

@@ -32,7 +32,7 @@ export class SequelizeDeviceMonitoringDashboardRepository
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const devices = (await DeviceMonitoringModel.findAll(opt)) as unknown as DeviceCountByStatus[]
 

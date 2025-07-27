@@ -39,7 +39,7 @@ export class SequelizeHardDriveCapacityRepository
 		return await this.cache.getCachedData<ResponseDB<HardDriveCapacityDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await HardDriveCapacityModel.findAndCountAll(options)
 				return {
@@ -60,7 +60,7 @@ export class SequelizeHardDriveCapacityRepository
 	async searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null> {
 		return await this.cache.getCachedData<HardDriveCapacityDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const hardDriveCapacity = await HardDriveCapacityModel.findByPk(id)
 				return hardDriveCapacity ? hardDriveCapacity.get({ plain: true }) : null

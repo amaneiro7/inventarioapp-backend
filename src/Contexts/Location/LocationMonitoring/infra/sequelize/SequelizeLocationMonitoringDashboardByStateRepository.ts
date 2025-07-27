@@ -44,7 +44,7 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 
 		return await this.cache.getCachedData({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const locations = (await LocationMonitoringModel.findAll(opt)) as unknown as LocationCountByState[]
 

@@ -36,7 +36,7 @@ export class SequelizeRolesRepository extends SequelizeCriteriaConverter impleme
 		return await this.cache.getCachedData<ResponseDB<RoleDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await RolesModel.findAndCountAll(options)
 				return {
@@ -56,7 +56,7 @@ export class SequelizeRolesRepository extends SequelizeCriteriaConverter impleme
 	async searchById(id: Primitives<RoleId>): Promise<RoleDto | null> {
 		return await this.cache.getCachedData<RoleDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const role = await RolesModel.findByPk(id)
 				return role ? role.get({ plain: true }) : null

@@ -27,7 +27,7 @@ export class SequelizeTotalAdministrativeSitesRepository implements TotalAdminis
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await SiteModels.count({
 					include: [

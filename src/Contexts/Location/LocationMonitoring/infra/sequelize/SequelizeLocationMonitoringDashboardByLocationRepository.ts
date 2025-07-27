@@ -58,7 +58,7 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 		return await this.cache.getCachedData<DashboardByLocationData>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				try {
 					const rawData = (await LocationMonitoringModel.findAll(

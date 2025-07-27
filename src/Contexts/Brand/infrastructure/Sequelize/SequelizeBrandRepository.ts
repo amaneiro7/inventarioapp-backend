@@ -39,7 +39,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 
 		return this.cache.getCachedData<ResponseDB<BrandDto>>({
 			cacheKey,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await BrandModel.findAndCountAll(finalOptions)
 				return {
@@ -61,7 +61,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<BrandDto | null>({
 			cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const brand = await BrandModel.findByPk(id, {
 					include: [
@@ -88,7 +88,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<BrandDto | null>({
 			cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const brand = await BrandModel.findOne({ where: { name } })
 				return brand ? (brand.get({ plain: true }) as BrandDto) : null

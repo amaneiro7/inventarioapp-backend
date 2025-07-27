@@ -36,7 +36,7 @@ export class SequelizeMemoryRamTypeRepository extends SequelizeCriteriaConverter
 		return await this.cache.getCachedData<ResponseDB<MemoryRamTypeDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await MemoryRamTypeModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeMemoryRamTypeRepository extends SequelizeCriteriaConverter
 	async searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null> {
 		return await this.cache.getCachedData<MemoryRamTypeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const memoryRamType = await MemoryRamTypeModel.findByPk(id)
 				return memoryRamType ? memoryRamType.get({ plain: true }) : null

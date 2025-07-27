@@ -38,7 +38,7 @@ export class SequelizeRegionRepository extends SequelizeCriteriaConverter implem
 		return await this.cache.getCachedData<ResponseDB<RegionDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await RegionModel.findAndCountAll(options)
 				return {
@@ -59,7 +59,7 @@ export class SequelizeRegionRepository extends SequelizeCriteriaConverter implem
 	async searchById(id: Primitives<RegionId>): Promise<RegionDto | null> {
 		return await this.cache.getCachedData<RegionDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const region = await RegionModel.findByPk(id)
 				return region ? (region.get({ plain: true }) as RegionDto) : null

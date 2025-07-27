@@ -32,7 +32,7 @@ export class SequelizeLocationMonitoringDashboardRepository
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const locations = (await LocationMonitoringModel.findAll(opt)) as unknown as LocationCountByStatus[]
 

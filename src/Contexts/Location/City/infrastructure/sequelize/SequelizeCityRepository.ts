@@ -38,7 +38,7 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 		return await this.cache.getCachedData<ResponseDB<CityDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CityModel.findAndCountAll(options)
 				return {
@@ -60,7 +60,7 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	async searchById(id: Primitives<CityId>): Promise<CityDto | null> {
 		return await this.cache.getCachedData<CityDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const city = await CityModel.findByPk(id, {
 					include: [
@@ -90,7 +90,7 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	async searchByName(name: Primitives<CityName>): Promise<CityDto | null> {
 		return await this.cache.getCachedData<CityDto | null>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const city = await CityModel.findOne({
 					where: { name }

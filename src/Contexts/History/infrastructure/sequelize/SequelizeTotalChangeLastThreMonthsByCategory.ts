@@ -47,7 +47,7 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
 
 		return await this.cache.getCachedData({
 			cacheKey: specificCacheKey,
-			ex: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const cutoffDate = new Date()
 				cutoffDate.setMonth(cutoffDate.getMonth() - months)

@@ -36,7 +36,7 @@ export class SequelizeTotalCountByCategoryRepository implements TotalCountByCate
 	async run(): Promise<Array<{ name: string; count: number }>> {
 		return await this.cache.getCachedData<Array<{ name: string; count: number }>>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const categories = (await DeviceModel.findAll({
 					attributes: [

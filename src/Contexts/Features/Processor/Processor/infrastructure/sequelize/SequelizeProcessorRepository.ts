@@ -36,7 +36,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 		return await this.cache.getCachedData<ResponseDB<ProcessorDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await ProcessorModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 	async searchById(id: string): Promise<ProcessorDto | null> {
 		return await this.cache.getCachedData<ProcessorDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const processor = await ProcessorModel.findByPk(id)
 				return processor ? processor.get({ plain: true }) : null
@@ -75,7 +75,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 	async searchByNumberModel(numberModel: Primitives<ProcessorNumberModel>): Promise<ProcessorDto | null> {
 		return await this.cache.getCachedData<ProcessorDto | null>({
 			cacheKey: `${this.cacheKey}:numberModel:${numberModel}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const processor = await ProcessorModel.findOne({ where: { numberModel } })
 				return processor ? processor.get({ plain: true }) : null

@@ -46,7 +46,7 @@ export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRe
 	async run(): Promise<AggregatedMemoryCapacityData[]> {
 		return await this.cache.getCachedData<AggregatedMemoryCapacityData[]>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

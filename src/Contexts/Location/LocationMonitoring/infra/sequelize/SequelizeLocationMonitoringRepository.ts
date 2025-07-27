@@ -45,7 +45,7 @@ export class SequelizeLocationMonitoringRepository
 		return await this.cache.getCachedData<ResponseDB<LocationMonitoringDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationMonitoringModel.findAndCountAll(opt)
 				return {
@@ -75,7 +75,7 @@ export class SequelizeLocationMonitoringRepository
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData<LocationMonitoringDto[]>({
 			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const rows = await LocationMonitoringModel.findAll({
 					offset,
@@ -104,7 +104,7 @@ export class SequelizeLocationMonitoringRepository
 	async searchById(id: string): Promise<LocationMonitoringDto | null> {
 		return await this.cache.getCachedData<LocationMonitoringDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const locationMonitoring = await LocationMonitoringModel.findByPk(id)
 				return locationMonitoring ? (locationMonitoring.get({ plain: true }) as LocationMonitoringDto) : null

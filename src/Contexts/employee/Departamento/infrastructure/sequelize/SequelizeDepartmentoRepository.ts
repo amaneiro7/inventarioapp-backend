@@ -44,7 +44,7 @@ export class SequelizeDepartamentoRepository
 		return await this.cache.getCachedData<ResponseDB<DepartamentoDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DepartamentoModel.findAndCountAll(opt)
 				return {
@@ -66,7 +66,7 @@ export class SequelizeDepartamentoRepository
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
 		return await this.cache.getCachedData<Nullable<DepartamentoDto>>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const departamento = await DepartamentoModel.findByPk(id, {
 					include: [
@@ -109,7 +109,7 @@ export class SequelizeDepartamentoRepository
 	async searchByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoDto>> {
 		return await this.cache.getCachedData<Nullable<DepartamentoDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const departamento = await DepartamentoModel.findOne({ where: { name } })
 				return departamento ? (departamento.get({ plain: true }) as DepartamentoDto) : null

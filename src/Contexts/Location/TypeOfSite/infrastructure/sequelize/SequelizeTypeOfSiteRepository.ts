@@ -37,7 +37,7 @@ export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter im
 		return await this.cache.getCachedData<ResponseDB<TypeOfSiteDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await TypeOfSiteModel.findAndCountAll(options)
 				return {
@@ -58,7 +58,7 @@ export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter im
 	async searchById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null> {
 		return await this.cache.getCachedData<TypeOfSiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const typeOfSite = await TypeOfSiteModel.findByPk(id)
 				return typeOfSite ? typeOfSite.get({ plain: true }) : null

@@ -41,7 +41,7 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 	async run(): Promise<{ total: number; status: AggregatedDashboardData }> {
 		return await this.cache.getCachedData<{ total: number; status: AggregatedDashboardData }>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const devices = (await DeviceModel.findAll({
 					attributes: [

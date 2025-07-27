@@ -49,7 +49,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		return await this.cache.getCachedData<ResponseDB<VicepresidenciaEjecutivaDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await VicepresidenciaEjecutivaModel.findAndCountAll(options)
 
@@ -72,7 +72,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return await this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const vicepresidenciaEjecutiva = await VicepresidenciaEjecutivaModel.findByPk(id, {
 					include: [
@@ -101,7 +101,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		return await this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const vicepresidenciaEjecutiva = await VicepresidenciaEjecutivaModel.findOne({ where: { name } })
 				return vicepresidenciaEjecutiva

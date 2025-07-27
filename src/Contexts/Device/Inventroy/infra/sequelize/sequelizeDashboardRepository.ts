@@ -30,7 +30,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 		const cacheKey = this.generateCacheKey('hdd')
 		return await this.cache.getCachedData<AggregatedHDDData[]>({
 			cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: fetchAndAggregateHDDData
 		})
 	}
@@ -45,7 +45,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 		const cacheKey = this.generateCacheKey('status')
 		return await this.cache.getCachedData<StatusCountData[]>({
 			cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: fetchAndProcessStatusData
 		})
 	}
@@ -60,7 +60,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 		const cacheKey = this.generateCacheKey('brand')
 		return await this.cache.getCachedData<AggregatedBrandData[]>({
 			cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: fetchAndAggregateBrandData
 		})
 	}

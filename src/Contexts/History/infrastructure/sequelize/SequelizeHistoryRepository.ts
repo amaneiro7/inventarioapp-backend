@@ -36,7 +36,7 @@ export class SequelizeHistoryRepository extends SequelizeCriteriaConverter imple
 		return await this.cache.getCachedData<ResponseDB<HistoryDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await HistoryModel.findAndCountAll(opt)
 				return {

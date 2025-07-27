@@ -40,7 +40,7 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<LocationDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await LocationModel.findAndCountAll(opt)
 				return {
@@ -65,7 +65,7 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<LocationDto>>({
 			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await LocationModel.findAndCountAll(opt)
 				return {
@@ -87,7 +87,7 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 	async searchById(id: Primitives<LocationId>): Promise<LocationDto | null> {
 		return await this.cache.getCachedData<LocationDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const location = await LocationModel.findByPk(id, {
 					include: [
@@ -123,7 +123,7 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 	async searchByName(name: Primitives<LocationName>): Promise<LocationDto | null> {
 		return await this.cache.getCachedData<LocationDto | null>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const location = await LocationModel.findOne({ where: { name } })
 				return location ? (location.get({ plain: true }) as LocationDto) : null

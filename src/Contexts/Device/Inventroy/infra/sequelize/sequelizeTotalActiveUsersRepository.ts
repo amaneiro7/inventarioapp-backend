@@ -25,7 +25,7 @@ export class SequelizeTotalActiveUsersRepository implements TotalActiveUsersRepo
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				return await EmployeeModel.count({
 					where: {

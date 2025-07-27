@@ -61,7 +61,7 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 
 		return await this.cache.getCachedData<DashboardByLocationData>({
 			cacheKey: this.cacheKey,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			criteria,
 			fetchFunction: async () => {
 				try {

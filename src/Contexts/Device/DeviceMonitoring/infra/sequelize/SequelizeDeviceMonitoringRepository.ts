@@ -42,7 +42,7 @@ export class SequelizeDeviceMonitoringRepository
 		return await this.cache.getCachedData<ResponseDB<DeviceMonitoringDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
-			ex: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceMonitoringModel.findAndCountAll(opt)
 				return {
@@ -72,7 +72,7 @@ export class SequelizeDeviceMonitoringRepository
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData<DeviceMonitoringDto[]>({
 			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const rows = await DeviceMonitoringModel.findAll({
 					offset,
@@ -108,7 +108,7 @@ export class SequelizeDeviceMonitoringRepository
 	async searchById(id: string): Promise<DeviceMonitoringDto | null> {
 		return await this.cache.getCachedData<DeviceMonitoringDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const deviceMonitoring = await DeviceMonitoringModel.findByPk(id)
 				return deviceMonitoring ? (deviceMonitoring.get({ plain: true }) as DeviceMonitoringDto) : null

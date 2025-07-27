@@ -36,7 +36,7 @@ export class SequelizeHardDriveTypeRepository extends SequelizeCriteriaConverter
 		return await this.cache.getCachedData<ResponseDB<HardDriveTypeDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await HardDriveTypeModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeHardDriveTypeRepository extends SequelizeCriteriaConverter
 	async searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null> {
 		return await this.cache.getCachedData<HardDriveTypeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const hardDriveType = await HardDriveTypeModel.findByPk(id)
 				return hardDriveType ? hardDriveType.get({ plain: true }) : null

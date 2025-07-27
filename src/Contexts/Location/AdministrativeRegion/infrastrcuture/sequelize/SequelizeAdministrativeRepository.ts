@@ -41,7 +41,7 @@ export class SequelizeAdministrativeRegionRepository
 		return await this.cache.getCachedData<ResponseDB<AdministrativeRegionDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await AdministrativeRegionModel.findAndCountAll(options)
 				return {
@@ -62,7 +62,7 @@ export class SequelizeAdministrativeRegionRepository
 	async searchById(id: Primitives<AdministrativeRegionId>): Promise<AdministrativeRegionDto | null> {
 		return await this.cache.getCachedData<AdministrativeRegionDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const administrativeRegion = await AdministrativeRegionModel.findByPk(id)
 				return administrativeRegion ? administrativeRegion.get({ plain: true }) : null

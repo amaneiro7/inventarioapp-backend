@@ -39,7 +39,7 @@ export class SequelizeProcessorSocketRepository
 		return await this.cache.getCachedData<ResponseDB<ProcessorSocketDto>>({
 			criteria,
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await ProcessorSocketModel.findAndCountAll(options)
 				return {
@@ -60,7 +60,7 @@ export class SequelizeProcessorSocketRepository
 	async searchById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null> {
 		return await this.cache.getCachedData<ProcessorSocketDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const processorSocket = await ProcessorSocketModel.findByPk(id)
 				return processorSocket ? processorSocket.get({ plain: true }) : null

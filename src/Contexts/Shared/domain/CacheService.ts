@@ -12,7 +12,7 @@ import { type Criteria } from './criteria/Criteria'
 interface GetCachedDataOptions<T> {
 	cacheKey: string
 	criteria?: Criteria
-	ex?: TimeTolive
+	ttl?: TimeTolive
 	fetchFunction: () => Promise<T>
 }
 
@@ -40,7 +40,7 @@ export class CacheService {
 	 * @returns {Promise<T>} A promise that resolves to the cached or fetched data.
 	 */
 	async getCachedData<T>(options: GetCachedDataOptions<T>): Promise<T> {
-		const { cacheKey, criteria, fetchFunction, ex } = options
+		const { cacheKey, criteria, fetchFunction, ttl } = options
 
 		// Generate the final unique cache key, incorporating criteria hash if provided.
 		const finalCacheKey = this.generaCacheKeyFromCriteriaPattern({
@@ -63,7 +63,7 @@ export class CacheService {
 		const data = await fetchFunction()
 
 		// Attempt to set the newly fetched data in cache.
-		await this.setCachedData({ cacheKey: finalCacheKey, data, ex })
+		await this.setCachedData({ cacheKey: finalCacheKey, data, ttl })
 
 		return data
 	}
@@ -76,13 +76,13 @@ export class CacheService {
 	 * @param {object} params - The parameters for setting cache data.
 	 * @param {string} params.cacheKey - The unique key for the cache entry.
 	 * @param {T} params.data - The data to store in the cache.
-	 * @param {TimeTolive} [params.ex] - Optional time-to-live for the cache entry.
+	 * @param {TimeTolive} [params.ttl] - Optional time-to-live for the cache entry.
 	 * @returns {Promise<void>} A promise that resolves when the data is successfully stored.
 	 */
-	async setCachedData<T>({ cacheKey, data, ex }: { cacheKey: string; data: T; ex?: TimeTolive }): Promise<void> {
+	async setCachedData<T>({ cacheKey, data, ttl }: { cacheKey: string; data: T; ttl?: TimeTolive }): Promise<void> {
 		try {
 			// Serialize the data to a JSON string before storing.
-			await this.cacheRepository.set(cacheKey, JSON.stringify(data), ex)
+			await this.cacheRepository.set(cacheKey, JSON.stringify(data), ttl)
 		} catch (error) {
 			console.error(`CacheService: Error setting data for key ${cacheKey}:`, error)
 		}

@@ -38,7 +38,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<EmployeeDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
@@ -63,7 +63,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<EmployeeDto>>({
 			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
@@ -84,7 +84,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	async searchByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:email:${email}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne({
 					where: {
@@ -107,7 +107,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	async searchById(id: string): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findByPk(id, {
 					include: [
@@ -136,7 +136,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:query:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne(this.convert(criteria))
 				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null

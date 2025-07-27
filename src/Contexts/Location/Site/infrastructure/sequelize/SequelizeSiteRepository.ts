@@ -37,7 +37,7 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 		return await this.cache.getCachedData<ResponseDB<SiteDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.MEDIUM,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const { count, rows } = await SiteModels.findAndCountAll(options)
 				return {
@@ -59,7 +59,7 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 	async searchById(id: Primitives<SiteId>): Promise<SiteDto | null> {
 		return await this.cache.getCachedData<SiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const site = await SiteModels.findByPk(id, {
 					include: [

@@ -41,7 +41,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 		return await this.cache.getCachedData<ResponseDB<CargoDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
-			ex: TimeTolive.LONG,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CargoModel.findAndCountAll(opt)
 				return {
@@ -63,7 +63,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 	async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
 		return await this.cache.getCachedData<Nullable<CargoDto>>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const cargo = await CargoModel.findByPk(id, {
 					include: [
@@ -90,7 +90,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 	async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
 		return await this.cache.getCachedData<Nullable<CargoDto>>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const cargo = await CargoModel.findOne({ where: { name } })
 				return cargo ? (cargo.get({ plain: true }) as CargoDto) : null

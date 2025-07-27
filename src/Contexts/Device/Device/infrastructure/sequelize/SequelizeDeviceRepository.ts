@@ -44,7 +44,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		return await this.cache.getCachedData<ResponseDB<DeviceDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria: criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(options)
 				return {
@@ -70,7 +70,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		return await this.cache.getCachedData<ResponseDB<DeviceDto>>({
 			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria: criteria,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const { count: total, rows: data } = await DeviceModel.findAndCountAll(deviceOptions)
 
@@ -93,7 +93,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	async searchById(id: string): Promise<DeviceDto | null> {
 		return await this.cache.getCachedData<DeviceDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findByPk(id, {
 					include: [
@@ -157,7 +157,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	async searchByActivo(activo: string): Promise<DeviceDto | null> {
 		return await this.cache.getCachedData<DeviceDto | null>({
 			cacheKey: `${this.cacheKey}:activo:${activo}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { activo } })
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
@@ -175,7 +175,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	async searchBySerial(serial: string): Promise<DeviceDto | null> {
 		return await this.cache.getCachedData<DeviceDto | null>({
 			cacheKey: `${this.cacheKey}:serial:${serial}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { serial } })
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
@@ -193,7 +193,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	async searchByComputerName(computerName: string): Promise<DeviceDto | null> {
 		return await this.cache.getCachedData({
 			cacheKey: `${this.cacheKey}:computerName:${computerName}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const data = await DeviceModel.findOne({
 					include: [

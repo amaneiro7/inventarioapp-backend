@@ -36,7 +36,7 @@ export class SequelizeLocationStatusRepository extends SequelizeCriteriaConverte
 		return await this.cache.getCachedData<ResponseDB<LocationStatusDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ex: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationStatusModel.findAndCountAll(options)
 				return {
@@ -57,7 +57,7 @@ export class SequelizeLocationStatusRepository extends SequelizeCriteriaConverte
 	async searchById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null> {
 		return await this.cache.getCachedData<LocationStatusDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const locationStatus = await LocationStatusModel.findByPk(id)
 				return locationStatus ? locationStatus.get({ plain: true }) : null
