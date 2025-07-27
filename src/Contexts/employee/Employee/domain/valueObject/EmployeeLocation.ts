@@ -9,6 +9,10 @@ import { type Employee } from '../entity/Employee'
 interface EmployeeLocationProps {
 	value: Primitives<LocationId> | null
 }
+
+/**
+ * @description Represents the location ID of an employee.
+ */
 export class EmployeeLocationId extends AcceptedNullValueObject<Primitives<LocationId>> {
 	constructor(value: Primitives<LocationId> | null) {
 		super(value)
@@ -17,9 +21,14 @@ export class EmployeeLocationId extends AcceptedNullValueObject<Primitives<Locat
 
 	private ensureIsValidLocation({ value }: EmployeeLocationProps): void {
 		if (value !== null && !(new LocationId(value) instanceof LocationId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de location válido.`)
+			throw new InvalidArgumentError(`'${value}' no es un ID de ubicación válido.`) // Improved error message
 		}
 	}
+
+	/**
+	 * @description Handles the logic for updating the location field of an employee.
+	 * @param {{ repository: LocationRepository; locationId?: Primitives<LocationId> | null; entity: Employee }} params The parameters for updating.
+	 */
 	static async updateLocationField({
 		repository,
 		locationId,
@@ -36,6 +45,11 @@ export class EmployeeLocationId extends AcceptedNullValueObject<Primitives<Locat
 		entity.updateLocation(locationId)
 	}
 
+	/**
+	 * @description Ensures that the specified location exists in the repository.
+	 * @param {{ repository: LocationRepository; locationId: Primitives<LocationId> | null }} params The parameters for the check.
+	 * @throws {LocationDoesNotExistError} If the location does not exist.
+	 */
 	static async ensureLocationExists({
 		repository,
 		locationId
@@ -44,11 +58,9 @@ export class EmployeeLocationId extends AcceptedNullValueObject<Primitives<Locat
 		locationId: Primitives<LocationId> | null
 	}): Promise<void> {
 		if (!locationId) return
-		if (locationId) {
-			const exists = await repository.searchById(new LocationId(locationId).value)
-			if (!exists) {
-				throw new LocationDoesNotExistError('La ubicación especificada no existe.')
-			}
+		const exists = await repository.searchById(new LocationId(locationId).value)
+		if (!exists) {
+			throw new LocationDoesNotExistError('La ubicación especificada no existe.')
 		}
 	}
 }

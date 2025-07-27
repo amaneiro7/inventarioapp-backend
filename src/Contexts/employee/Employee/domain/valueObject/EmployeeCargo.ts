@@ -11,6 +11,10 @@ interface EmployeeCargoProps {
 	value: Primitives<CargoId> | null
 	type: Primitives<EmployeeType>
 }
+
+/**
+ * @description Represents the cargo (job title) of an employee.
+ */
 export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> {
 	constructor(
 		value: Primitives<CargoId> | null,
@@ -22,13 +26,18 @@ export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> 
 
 	private ensureIsValidCargo({ value, type }: EmployeeCargoProps): void {
 		if (type !== EmployeeTypes.GENERIC && value === null) {
-			throw new InvalidArgumentError('El cargo es requerida para este tipo de empleado.')
+			throw new InvalidArgumentError('El cargo es requerido para este tipo de empleado.')
 		}
 
 		if (value !== null && !(new CargoId(value) instanceof CargoId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de cargo válido.`)
+			throw new InvalidArgumentError(`'${value}' no es un ID de cargo válido.`) // Improved error message
 		}
 	}
+
+	/**
+	 * @description Handles the logic for updating the cargo field of an employee.
+	 * @param {{ repository: CargoRepository; cargoId?: Primitives<CargoId> | null; entity: Employee }} params The parameters for updating.
+	 */
 	static async updateCargoField({
 		repository,
 		cargoId,
@@ -45,6 +54,11 @@ export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> 
 		entity.updateCargo(cargoId, entity.typeValue)
 	}
 
+	/**
+	 * @description Ensures that the specified cargo exists in the repository.
+	 * @param {{ repository: CargoRepository; cargoId: Primitives<CargoId> | null }} params The parameters for the check.
+	 * @throws {CargoDoesNotExistError} If the cargo does not exist.
+	 */
 	static async ensureCargoExists({
 		repository,
 		cargoId
@@ -53,11 +67,9 @@ export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> 
 		cargoId: Primitives<CargoId> | null
 	}): Promise<void> {
 		if (!cargoId) return
-		if (cargoId) {
-			const exists = await repository.searchById(new CargoId(cargoId).value)
-			if (!exists) {
-				throw new CargoDoesNotExistError()
-			}
+		const exists = await repository.searchById(new CargoId(cargoId).value)
+		if (!exists) {
+			throw new CargoDoesNotExistError()
 		}
 	}
 }

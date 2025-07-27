@@ -1,18 +1,17 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { CentroTrabajoId } from '../../../CentroTrabajo/domain/CentroTrabajoId'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-// import { CentroCostoDoesNotExistError } from '../../../CentroCosto/domain/CentroCostoDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
-// import { type CentroCostoRepository } from '../../../CentroCosto/domain/CentroCostoRepository'
-// import { type CentroTrabajoRepository } from '../../../CentroTrabajo/domain/CentroTrabajoRepository'
-// import { type Employee } from '../entity/Employee'
 
 interface EmployeCentroTrabajoProps {
 	value: Primitives<CentroTrabajoId> | null
 	type: Primitives<EmployeeType>
 }
 
+/**
+ * @description Represents the CentroTrabajo (work center) of an employee.
+ */
 export class EmployeCentroTrabajo extends AcceptedNullValueObject<Primitives<CentroTrabajoId>> {
 	constructor(
 		value: Primitives<CentroTrabajoId> | null,
@@ -28,35 +27,7 @@ export class EmployeCentroTrabajo extends AcceptedNullValueObject<Primitives<Cen
 		}
 
 		if (value !== null && !(new CentroTrabajoId(value) instanceof CentroTrabajoId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de centro de trabajo válido.`)
+			throw new InvalidArgumentError(`'${value}' no es un ID de centro de trabajo válido.`) // Improved error message
 		}
 	}
-
-	// static async updateCentroTrabajoIdField({
-	// 	repository,
-	// 	centroTrabajoId,
-	// 	entity
-	// }: {
-	// 	repository: CentroTrabajoRepository
-	// 	centroTrabajoId?: Primitives<EmployeCentroTrabajo>
-	// 	entity: Employee
-	// }): Promise<void> {
-	// 	if (centroTrabajoId === undefined || centroTrabajoId === entity.centroTrabajoValue) {
-	// 		return
-	// 	}
-	// 	await this.ensureCentroCostoExist({ centroCosto: centroTrabajoId, repository })
-	// 	entity.updateCentroTrabajo(centroTrabajoId, entity.typeValue)
-	// }
-
-	// static async ensureCentroCostoExist({
-	// 	centroCosto,
-	// 	repository
-	// }: {
-	// 	centroCosto?: Primitives<EmployeCentroTrabajo>
-	// 	repository: CentroCostoRepository
-	// }): Promise<void> {
-	// 	if (centroCosto && (await repository.searchById(centroCosto)) === null) {
-	// 		throw new CentroCostoDoesNotExistError()
-	// 	}
-	// }
 }

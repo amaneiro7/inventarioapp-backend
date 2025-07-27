@@ -1,8 +1,11 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { EmployeeId } from '../valueObject/EmployeeId'
 import { Password } from './Password'
 
+/**
+ * @description Service for managing an employee's password.
+ */
 export class ServiceEmployeePassword {
 	constructor(
 		private readonly empployeeId: EmployeeId,
@@ -12,10 +15,16 @@ export class ServiceEmployeePassword {
 	get employeePasswordValue(): Primitives<Password> {
 		return this.password.value
 	}
+
 	get employeeEmployeeValue(): Primitives<EmployeeId> {
 		return this.empployeeId.value
 	}
 
+	/**
+	 * @description Updates the employee's password.
+	 * @param {{ oldPassword: Primitives<Password>; newPassword: Primitives<Password>; reTypePassword: Primitives<Password> }} params The parameters for updating the password.
+	 * @throws {InvalidArgumentError} If the new password is the same as the old one, or if new passwords do not match.
+	 */
 	updatePassword({
 		oldPassword,
 		newPassword,
@@ -26,13 +35,11 @@ export class ServiceEmployeePassword {
 		reTypePassword: Primitives<Password>
 	}): void {
 		if (oldPassword === newPassword) {
-			throw new InvalidArgumentError('La contraseña es igual a la anterior')
+			throw new InvalidArgumentError('La nueva contraseña no puede ser igual a la anterior.')
 		}
-		if (newPassword === reTypePassword) {
-			throw new InvalidArgumentError('La nueva contraseña y la contraseña de confirmación no coinciden')
+		if (newPassword !== reTypePassword) {
+			throw new InvalidArgumentError('La nueva contraseña y la confirmación de la contraseña no coinciden.')
 		}
-		if (oldPassword !== newPassword) {
-			this.password = new Password(newPassword)
-		}
+		this.password = new Password(newPassword)
 	}
 }

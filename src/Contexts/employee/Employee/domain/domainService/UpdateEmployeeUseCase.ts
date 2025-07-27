@@ -32,9 +32,19 @@ interface UpdateEmployeeRepositories {
 	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	readonly cargoRepository: CargoRepository
 }
+
+/**
+ * @description Use case for updating an existing Employee, including validation of associated entities.
+ */
 export class UpdateEmployeeUseCase {
 	constructor(private readonly repository: UpdateEmployeeRepositories) {}
 
+	/**
+	 * @description Executes the update of an employee.
+	 * @param {{ entity: Employee; params: Partial<Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>> }} data The parameters for updating the employee.
+	 * @returns {Promise<void>} A promise that resolves when the employee is successfully updated.
+	 * @throws {Error} If the employee is generic or no longer working.
+	 */
 	public async execute({
 		entity,
 		params
@@ -42,15 +52,10 @@ export class UpdateEmployeeUseCase {
 		params: Partial<Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>>
 		entity: Employee
 	}): Promise<void> {
-		if (EmployeeTypes.GENERIC === entity.typeValue) {
-			throw new Error('Los usuarios genericos no se les puede actualizar sus propiedades')
-		}
-		if (entity.isStillWorkingValue === false) {
-			throw new Error(
-				'Los usuarios que ya se encuentran desvinculados no se les puede actualizar sus propiedades'
-			)
-		}
+		// Validate if the employee can be updated
+		this.ensureEmployeeCanBeUpdated(entity)
 
+		// Update fields in parallel
 		await Promise.all([
 			EmployeeUserName.updateUserNameField({
 				userName: params.userName,
@@ -75,7 +80,6 @@ export class UpdateEmployeeUseCase {
 				repository: this.repository.cargoRepository,
 				entity
 			}),
-
 			EmployeeDirectiva.updateDirectivaField({
 				directivaId: params.directivaId,
 				repository: this.repository.directivaRepository,
@@ -99,5 +103,14 @@ export class UpdateEmployeeUseCase {
 			PhoneNumber.updatePhoneNumber({ phoneNumber: params.phone, entity }),
 			Extension.updateExtension({ entity, extension: params.extension })
 		])
+	}
+
+	private ensureEmployeeCanBeUpdated(entity: Employee): void {
+		if (entity.typeValue === EmployeeTypes.GENERIC) {
+			throw new Error('Los usuarios genéricos no pueden ser actualizados.')
+		}
+		if (entity.isStillWorkingValue === false) {
+			throw new Error('Los usuarios desvinculados no pueden ser actualizados.')
+		}
 	}
 }

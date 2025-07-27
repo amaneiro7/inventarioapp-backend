@@ -3,26 +3,27 @@ import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
-import { type FiltersPrimitives } from '../../../../Shared/domain/criteria/Filter'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
-// import { Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 
 interface EmployeeCedulaProps {
 	value: number | null
 	type: Primitives<EmployeeType>
 }
+
+/**
+ * @description Represents the national identification number (cedula) of an employee.
+ */
 export class EmployeeCedula extends AcceptedNullValueObject<number> {
-	private static readonly MAX_CEDULA = 200000000
 	private static readonly MIN_CEDULA = 1
+	private static readonly MAX_CEDULA = 200000000
 
 	constructor(
 		value: number | null,
 		private readonly type: Primitives<EmployeeType>
 	) {
 		super(value)
-
 		this.ensureIsValidCedula({ value, type: this.type })
 	}
 
@@ -39,47 +40,35 @@ export class EmployeeCedula extends AcceptedNullValueObject<number> {
 			(!Number.isInteger(value) || value < EmployeeCedula.MIN_CEDULA || value > EmployeeCedula.MAX_CEDULA)
 		) {
 			throw new InvalidArgumentError(
-				`<${value}> no es una cédula válida. Debe ser un número entero entre ${EmployeeCedula.MIN_CEDULA} y ${EmployeeCedula.MAX_CEDULA}.`
+				`'${value}' no es una cédula válida. Debe ser un número entero entre ${EmployeeCedula.MIN_CEDULA} y ${EmployeeCedula.MAX_CEDULA}.`
 			)
 		}
 	}
 
+	/**
+	 * @description Ensures that the employee's cedula does not already exist for a currently working employee.
+	 * @param {{ cedula?: Primitives<EmployeeCedula>; repository: EmployeeRepository }} params The parameters for the check.
+	 * @throws {EmployeeAlreadyExistError} If the cedula is already in use by a working employee.
+	 */
 	static async ensureCedulaDoesNotExis({
 		cedula,
 		repository
 	}: {
 		cedula?: Primitives<EmployeeCedula>
 		repository: EmployeeRepository
-	}) {
+	}): Promise<void> {
 		if (!cedula) {
 			return
 		}
-		const query: FiltersPrimitives[] = [
-			{
-				field: 'cedula',
-				operator: Operator.EQUAL,
-				value: cedula
-			}
-		]
-		const criteria = await CreateCriteria.execute({ filters: query })
-		const existingCedula = await repository.searchByQuery(criteria)
-		if (existingCedula !== null) {
-			throw new EmployeeAlreadyExistError(`el empleado con la cedula ${cedula} ya existe`)
+		const criteria = await CreateCriteria.execute({
+			filters: [
+				{ field: 'cedula', operator: Operator.EQUAL, value: cedula },
+				{ field: 'isStillWorking', operator: Operator.EQUAL, value: true }
+			]
+		})
+		const existingEmployee = await repository.searchByQuery(criteria)
+		if (existingEmployee) {
+			throw new EmployeeAlreadyExistError(`El empleado con la cédula '${cedula}' ya existe.`) // Improved error message
 		}
 	}
-
-	// static async updateCedulaField({
-	// 	cedula,
-	// 	entity
-	// }: {
-	// 	cedula?: Primitives<EmployeeCedula>
-	// 	entity: {
-	// 		updateCedula: Employee
-	// 		cedulaValue: Primitives<EmployeeCedula> | null
-	// 	}
-	// }): Promise<void> {
-	// 	if (cedula !== undefined && cedula !== entity.cedulaValue) {
-	// 		entity.updateCedula(cedula)
-	// 	}
-	// }
 }

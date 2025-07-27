@@ -1,8 +1,19 @@
-import { Order, type FindOptions, type IncludeOptions } from 'sequelize'
+import { type Order, type FindOptions, type IncludeOptions } from 'sequelize'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-
+/**
+ * @class EmployeeAssociation
+ * @description A utility class to build complex Sequelize query options for the Employee model.
+ * It handles the dynamic construction of deeply nested includes and applies filters and order clauses to them.
+ */
 export class EmployeeAssociation {
-	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
+	/**
+	 * @static
+	 * @method convertFilter
+	 * @description Modifies a Sequelize FindOptions object to include Employee associations.
+	 * @param {Criteria} criteria The criteria object.
+	 * @param {FindOptions} options The base Sequelize options object to be modified.
+	 * @returns {FindOptions} The enhanced Sequelize FindOptions object with includes and nested filters.
+	 */ static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 
 		// ------------------- 1. INCLUDES DEFINITION -------------------

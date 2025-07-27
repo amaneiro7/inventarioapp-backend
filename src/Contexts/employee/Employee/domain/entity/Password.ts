@@ -2,65 +2,45 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { PasswordService } from '../../../../User/user/domain/PasswordService'
 
+/**
+ * @description Represents an employee's password.
+ */
 export class Password extends StringValueObject {
-	private readonly HAS_MIN_LENGTH = 8
-	private readonly hasUppercase = /[A-Z]/
-	private readonly hasLowercase = /[a-z]/
-	private readonly hasNumber = /\d/
-	private readonly hasSpecialCharacter = /[!@#$%^&()*.]/
+	private readonly MIN_LENGTH = 8
+	private readonly HAS_UPPERCASE = /[A-Z]/
+	private readonly HAS_LOWERCASE = /[a-z]/
+	private readonly HAS_NUMBER = /\d/
+	private readonly HAS_SPECIAL_CHARACTER = /[!@#$%^&()*.]/
 
 	static readonly defaultPassword = 'Avion01.'
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidPassword(value)
-
-		this.value = PasswordService.hash(this.value)
+		this.value = PasswordService.hash(this.value) // Hash the password before storing
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
-	/**
-	 * Ensures that the provided password is valid.
-	 *
-	 * @param {string} value - The password value to be validated.
-	 * @throws {InvalidArgumentError} If the password is invalid, an error is thrown.
-	 */
 	private ensureIsValidPassword(value: string): void {
-		// Create an empty array to store any validation errors
-		const errors = []
+		const errors: string[] = []
 
-		// Check if the password length is less than the minimum required length
-		if (value.length < this.HAS_MIN_LENGTH) {
-			errors.push('La contraseña debe tener al menos 8 caracteres')
+		if (value.length < this.MIN_LENGTH) {
+			errors.push('La contraseña debe tener al menos 8 caracteres.')
 		}
-
-		// Check if the password contains at least one uppercase letter
-		if (!this.hasUppercase.test(value)) {
+		if (!this.HAS_UPPERCASE.test(value)) {
 			errors.push('La contraseña debe contener al menos una letra mayúscula.')
 		}
-
-		// Check if the password contains at least one lowercase letter
-		if (!this.hasLowercase.test(value)) {
+		if (!this.HAS_LOWERCASE.test(value)) {
 			errors.push('La contraseña debe contener al menos una letra minúscula.')
 		}
-
-		// Check if the password contains at least one number
-		if (!this.hasNumber.test(value)) {
+		if (!this.HAS_NUMBER.test(value)) {
 			errors.push('La contraseña debe contener al menos un número.')
 		}
-
-		// Check if the password contains at least one special character
-		if (!this.hasSpecialCharacter.test(value)) {
+		if (!this.HAS_SPECIAL_CHARACTER.test(value)) {
 			errors.push('La contraseña debe contener al menos un carácter especial.')
 		}
 
-		// If there are any validation errors, throw an InvalidArgumentError with the joined error messages
 		if (errors.length > 0) {
-			throw new InvalidArgumentError(errors.join(' '))
+			throw new InvalidArgumentError(`Contraseña inválida: ${errors.join(' ')}`)
 		}
 	}
 }

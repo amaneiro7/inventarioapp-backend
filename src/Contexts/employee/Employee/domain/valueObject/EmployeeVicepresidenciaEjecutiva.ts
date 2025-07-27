@@ -11,6 +11,10 @@ interface EmployeeVicepresidenciaEjecutivaProps {
 	value: Primitives<DepartmentId> | null
 	directivaId: Primitives<DepartmentId> | null
 }
+
+/**
+ * @description Represents the executive vicepresidencia of an employee.
+ */
 export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Primitives<DepartmentId>> {
 	constructor(
 		value: Primitives<DepartmentId> | null,
@@ -23,14 +27,19 @@ export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Pr
 	private ensureIsValidVicepresidenciaEjecutiva({ value, directivaId }: EmployeeVicepresidenciaEjecutivaProps): void {
 		if (directivaId === null && value !== null) {
 			throw new InvalidArgumentError(
-				'Si la directiva jerárquica no ha sido asignada, no se puede asignar una vicepresidencia ejecutiva'
+				'Si la directiva jerárquica no ha sido asignada, no se puede asignar una vicepresidencia ejecutiva.'
 			)
 		}
 
 		if (value !== null && !(new DepartmentId(value) instanceof DepartmentId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de vicepresidencia ejecutiva válido.`)
+			throw new InvalidArgumentError(`'${value}' no es un ID de vicepresidencia ejecutiva válido.`) // Improved error message
 		}
 	}
+
+	/**
+	 * @description Handles the logic for updating the executive vicepresidencia field of an employee.
+	 * @param {{ repository: DepartmentRepository<VicepresidenciaEjecutivaDto>; vicepresidenciaEjecutivaId?: Primitives<DepartmentId> | null; entity: Employee }} params The parameters for updating.
+	 */
 	static async updateVicepresidenciaEjecutivaField({
 		repository,
 		vicepresidenciaEjecutivaId,
@@ -50,6 +59,11 @@ export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Pr
 		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId, entity.directivaValue)
 	}
 
+	/**
+	 * @description Ensures that the specified executive vicepresidencia exists in the repository.
+	 * @param {{ repository: DepartmentRepository<VicepresidenciaEjecutivaDto>; vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null }} params The parameters for the check.
+	 * @throws {DepartmentDoesNotExistError} If the executive vicepresidencia does not exist.
+	 */
 	static async ensureVicepresidenciaEjecutivaExists({
 		repository,
 		vicepresidenciaEjecutivaId
@@ -58,11 +72,9 @@ export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Pr
 		vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
 	}): Promise<void> {
 		if (!vicepresidenciaEjecutivaId) return
-		if (vicepresidenciaEjecutivaId) {
-			const exists = await repository.searchById(new DepartmentId(vicepresidenciaEjecutivaId).value)
-			if (!exists) {
-				throw new DepartmentDoesNotExistError('La VicepresidenciaEjecutiva especificada no existe.')
-			}
+		const exists = await repository.searchById(new DepartmentId(vicepresidenciaEjecutivaId).value)
+		if (!exists) {
+			throw new DepartmentDoesNotExistError('La Vicepresidencia Ejecutiva especificada no existe.')
 		}
 	}
 }

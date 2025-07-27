@@ -4,53 +4,59 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 import { type Employee } from '../entity/Employee'
 
+/**
+ * @description Represents the last name of an employee.
+ */
 export class EmployeeLastName extends AcceptedNullValueObject<string> {
-	private readonly NAME_MAX_LENGTH = 50
-	private readonly NAME_MIN_LENGTH = 3
-	private readonly Regex = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
+	private readonly MIN_LENGTH = 3
+	private readonly MAX_LENGTH = 50
+	private readonly VALID_REGEX = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
 
 	constructor(
 		value: string | null,
 		private readonly type: Primitives<EmployeeType>
 	) {
 		super(value)
-
 		this.ensureIsValidName({ value, type: this.type })
 	}
 
 	private ensureIsValidName({ value, type }: { value: string | null; type: Primitives<EmployeeType> }): void {
-		// Create an empty array to store any validation errors
-		const errors = []
+		const errors: string[] = []
+
 		if (type !== EmployeeTypes.GENERIC && !value) {
-			errors.push('El nombre es requerido para este tipo de empleado.')
+			errors.push('El apellido es requerido para este tipo de empleado.')
 		}
+
 		if (value) {
-			if (value.length < this.NAME_MIN_LENGTH) {
-				errors.push(`El apellido debe ser mayor a ${this.NAME_MIN_LENGTH} caracteres`)
+			if (value.length < this.MIN_LENGTH) {
+				errors.push(`Debe ser mayor a ${this.MIN_LENGTH} caracteres.`)
 			}
-			if (value.length > this.NAME_MAX_LENGTH) {
-				errors.push(`El apellido debe ser menor a ${this.NAME_MAX_LENGTH} caracteres`)
+			if (value.length > this.MAX_LENGTH) {
+				errors.push(`Debe ser menor a ${this.MAX_LENGTH} caracteres.`)
 			}
-			if (!this.Regex.test(value)) {
+			if (!this.VALID_REGEX.test(value)) {
 				errors.push(
-					`La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final al menos que sea un apellido compuesto`
+					'La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final a menos que sea un apellido compuesto.'
 				)
 			}
 		}
 
 		if (errors.length > 0) {
-			throw new InvalidArgumentError(errors.join(', '))
+			throw new InvalidArgumentError(`El apellido del empleado '${value}' no es válido: ${errors.join(', ')}`)
 		}
 	}
 
-	static async updateLastNameField({
+	/**
+	 * @description Handles the logic for updating the last name field of an employee.
+	 * @param {{ lastName?: Primitives<EmployeeLastName>; entity: Employee }} params The parameters for updating.
+	 */
+	static updateLastNameField({
 		lastName,
 		entity
 	}: {
 		lastName?: Primitives<EmployeeLastName>
 		entity: Employee
-	}): Promise<void> {
-		// Solo si se ha pasado un nuevo apellido y es diferente al actual se actualiza
+	}): void {
 		if (lastName !== undefined && entity.lastNameValue !== lastName) {
 			entity.updateLastName(lastName, entity.typeValue)
 		}

@@ -13,6 +13,9 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 
+/**
+ * @description Use case for updating an existing Employee entity.
+ */
 export class EmployeeUpdater {
 	private readonly updateEmployeeUseCase: UpdateEmployeeUseCase
 	private readonly employeeRepository: EmployeeRepository
@@ -22,15 +25,8 @@ export class EmployeeUpdater {
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
-	constructor({
-		employeeRepository,
-		locationRepository,
-		directivaRepository,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository,
-		departamentoRepository,
-		cargoRepository
-	}: {
+
+	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
 		directivaRepository: DepartmentRepository<DirectivaDto>
@@ -39,13 +35,14 @@ export class EmployeeUpdater {
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
 	}) {
-		this.employeeRepository = employeeRepository
-		this.locationRepository = locationRepository
-		this.directivaRepository = directivaRepository
-		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
-		this.vicepresidenciaRepository = vicepresidenciaRepository
-		this.departamentoRepository = departamentoRepository
-		this.cargoRepository = cargoRepository
+		this.employeeRepository = dependencies.employeeRepository
+		this.locationRepository = dependencies.locationRepository
+		this.directivaRepository = dependencies.directivaRepository
+		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
+		this.departamentoRepository = dependencies.departamentoRepository
+		this.cargoRepository = dependencies.cargoRepository
+
 		this.updateEmployeeUseCase = new UpdateEmployeeUseCase({
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,
@@ -57,6 +54,12 @@ export class EmployeeUpdater {
 		})
 	}
 
+	/**
+	 * @description Executes the employee update process.
+	 * @param {{ id: Primitives<EmployeeId>; params: Partial<EmployeeParams> }} data The parameters for updating the employee.
+	 * @returns {Promise<void>} A promise that resolves when the employee is successfully updated.
+	 * @throws {EmployeeDoesNotExistError} If the employee with the provided ID does not exist.
+	 */
 	async run({ id, params }: { id: Primitives<EmployeeId>; params: Partial<EmployeeParams> }): Promise<void> {
 		const employeeId = new EmployeeId(id).value
 		const employee = await this.employeeRepository.searchById(employeeId)

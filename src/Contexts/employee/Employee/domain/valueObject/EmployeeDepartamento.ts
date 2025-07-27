@@ -12,6 +12,10 @@ interface EmployeeDepartamentoProps {
 	value: Primitives<DepartmentId> | null
 	vicepresidenciaId: Primitives<EmployeeVicepresidencia>
 }
+
+/**
+ * @description Represents the department of an employee.
+ */
 export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<DepartmentId>> {
 	constructor(
 		value: Primitives<DepartmentId> | null,
@@ -24,14 +28,19 @@ export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<Dep
 	private ensureIsValidDepartamento({ value, vicepresidenciaId }: EmployeeDepartamentoProps): void {
 		if (vicepresidenciaId === null && value !== null) {
 			throw new InvalidArgumentError(
-				'Si la vicepresidencia no ha sido asignada, no se puede asignar un departamento'
+				'Si la vicepresidencia no ha sido asignada, no se puede asignar un departamento.'
 			)
 		}
 
 		if (value !== null && !(new DepartmentId(value) instanceof DepartmentId)) {
-			throw new InvalidArgumentError(`<${value}> no es un ID de departamento válido.`)
+			throw new InvalidArgumentError(`'${value}' no es un ID de departamento válido.`) // Improved error message
 		}
 	}
+
+	/**
+	 * @description Handles the logic for updating the department field of an employee.
+	 * @param {{ repository: DepartmentRepository<DepartamentoDto>; departamentoId?: Primitives<DepartmentId> | null; entity: Employee }} params The parameters for updating.
+	 */
 	static async updateDepartamentoField({
 		repository,
 		departamentoId,
@@ -48,6 +57,11 @@ export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<Dep
 		entity.updateDepartamento(departamentoId, entity.vicepresidenciaValue)
 	}
 
+	/**
+	 * @description Ensures that the specified department exists in the repository.
+	 * @param {{ repository: DepartmentRepository<DepartamentoDto>; departamentoId: Primitives<DepartmentId> | null }} params The parameters for the check.
+	 * @throws {DepartmentDoesNotExistError} If the department does not exist.
+	 */
 	static async ensureDepartamentoExists({
 		repository,
 		departamentoId
@@ -56,11 +70,9 @@ export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<Dep
 		departamentoId: Primitives<DepartmentId> | null
 	}): Promise<void> {
 		if (!departamentoId) return
-		if (departamentoId) {
-			const exists = await repository.searchById(new DepartmentId(departamentoId).value)
-			if (!exists) {
-				throw new DepartmentDoesNotExistError('El eepartamento especificado no existe.')
-			}
+		const exists = await repository.searchById(new DepartmentId(departamentoId).value)
+		if (!exists) {
+			throw new DepartmentDoesNotExistError('El departamento especificado no existe.')
 		}
 	}
 }

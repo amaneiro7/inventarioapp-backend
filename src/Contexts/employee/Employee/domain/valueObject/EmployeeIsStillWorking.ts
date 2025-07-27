@@ -2,15 +2,21 @@ import { BooleanValueObject } from '../../../../Shared/domain/value-object/Boole
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
 
+/**
+ * @description Represents whether an employee is still working.
+ */
 export class EmployeeIsStillWorking extends BooleanValueObject {
-	static async updateIsStillWorkingFieldField({
+	/**
+	 * @description Handles the logic for updating the 'isStillWorking' field of an employee.
+	 * @param {{ isStillWorking?: Primitives<EmployeeIsStillWorking>; entity: Employee }} params The parameters for updating.
+	 */
+	static updateIsStillWorkingFieldField({
 		isStillWorking,
 		entity
 	}: {
 		isStillWorking?: Primitives<EmployeeIsStillWorking>
 		entity: Employee
-	}): Promise<void> {
-		// Solo si se ha pasado un nuevo nombre y es diferente al actual se actualiza
+	}): void {
 		if (isStillWorking !== undefined && entity.isStillWorkingValue !== isStillWorking) {
 			entity.updateIsStillWorking(isStillWorking)
 		}

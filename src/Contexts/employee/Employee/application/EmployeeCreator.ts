@@ -10,6 +10,9 @@ import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { Employee } from '../domain/entity/Employee'
 
+/**
+ * @description Use case for creating a new Employee entity.
+ */
 export class EmployeeCreator {
 	private readonly createEmployeeUseCase: CreateEmployeeUseCase
 	private readonly employeeRepository: EmployeeRepository
@@ -19,15 +22,8 @@ export class EmployeeCreator {
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
-	constructor({
-		employeeRepository,
-		locationRepository,
-		directivaRepository,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository,
-		departamentoRepository,
-		cargoRepository
-	}: {
+
+	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
 		directivaRepository: DepartmentRepository<DirectivaDto>
@@ -36,13 +32,14 @@ export class EmployeeCreator {
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
 	}) {
-		this.employeeRepository = employeeRepository
-		this.locationRepository = locationRepository
-		this.directivaRepository = directivaRepository
-		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
-		this.vicepresidenciaRepository = vicepresidenciaRepository
-		this.departamentoRepository = departamentoRepository
-		this.cargoRepository = cargoRepository
+		this.employeeRepository = dependencies.employeeRepository
+		this.locationRepository = dependencies.locationRepository
+		this.directivaRepository = dependencies.directivaRepository
+		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
+		this.departamentoRepository = dependencies.departamentoRepository
+		this.cargoRepository = dependencies.cargoRepository
+
 		this.createEmployeeUseCase = new CreateEmployeeUseCase({
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,
@@ -54,6 +51,11 @@ export class EmployeeCreator {
 		})
 	}
 
+	/**
+	 * @description Executes the employee creation process.
+	 * @param {{ params: EmployeeParams }} data The parameters for creating the employee.
+	 * @returns {Promise<void>} A promise that resolves when the employee is successfully created.
+	 */
 	async run({ params }: { params: EmployeeParams }): Promise<void> {
 		await this.createEmployeeUseCase.execute(params)
 

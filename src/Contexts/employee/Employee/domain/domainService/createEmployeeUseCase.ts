@@ -7,7 +7,7 @@ import { EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
 import { EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
 import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
 import { EmployeeCargo } from '../valueObject/EmployeeCargo'
-
+import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../../Location/Location/domain/LocationRepository'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
@@ -17,7 +17,6 @@ import { type EmployeeParams } from '../entity/Employee.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
 
 interface CreateEmployeeRepositories {
 	readonly employeeRepository: EmployeeRepository
@@ -29,9 +28,17 @@ interface CreateEmployeeRepositories {
 	readonly cargoRepository: CargoRepository
 }
 
+/**
+ * @description Use case for creating a new Employee, including validation of all associated entities.
+ */
 export class CreateEmployeeUseCase {
 	constructor(private readonly repository: CreateEmployeeRepositories) {}
 
+	/**
+	 * @description Executes the creation of a new employee.
+	 * @param {EmployeeParams} params The parameters for creating the employee.
+	 * @returns {Promise<void>} A promise that resolves when the employee is successfully created.
+	 */
 	public async execute(params: EmployeeParams): Promise<void> {
 		await Promise.all([
 			EmployeeUserName.ensureIsStillWorkingUserNameDoesNotExist({

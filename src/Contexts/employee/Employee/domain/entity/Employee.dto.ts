@@ -24,6 +24,10 @@ import { type EmployeeVicepresidencia } from '../valueObject/EmployeeVicepreside
 import { type EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
 import { type EmployeeCargo } from '../valueObject/EmployeeCargo'
 
+/**
+ * @interface Employee
+ * @description Defines the core properties of an Employee entity.
+ */
 export type Employee = {
 	id: Primitives<EmployeeId>
 	userName: Primitives<EmployeeUserName>
@@ -45,10 +49,23 @@ export type Employee = {
 	phone: Primitives<PhoneNumber>[]
 }
 
+/**
+ * @type EmployeePrimitives
+ * @description Represents the primitive, serializable state of an Employee entity.
+ */
 export type EmployeePrimitives = Employee
 
+/**
+ * @type EmployeeParams
+ * @description Represents the parameters required to create a new Employee.
+ */
 export type EmployeeParams = Omit<Employee, 'id'>
 
+/**
+ * @type EmployeeDto
+ * @description Represents a Data Transfer Object (DTO) for the Employee entity,
+ * including all its related department and location DTOs.
+ */
 export type EmployeeDto = Employee & {
 	location: LocationDto
 	directiva: Omit<DirectivaDto, 'cargos'>

@@ -1,9 +1,12 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-// import { type Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypes } from './EmployeeType'
 
+/**
+ * @enum Nationalities
+ * @description Defines the accepted nationalities for an employee.
+ */
 export enum Nationalities {
 	V = 'V',
 	E = 'E'
@@ -13,6 +16,10 @@ interface EmployeeNationalityProps {
 	value: Nationalities | null
 	type: Primitives<EmployeeType>
 }
+
+/**
+ * @description Represents the nationality of an employee.
+ */
 export class EmployeeNationality extends AcceptedNullValueObject<Nationalities> {
 	constructor(
 		value: Nationalities | null,
@@ -29,25 +36,12 @@ export class EmployeeNationality extends AcceptedNullValueObject<Nationalities> 
 
 		if (value !== null && !Object.values(Nationalities).includes(value)) {
 			throw new InvalidArgumentError(
-				`Nacionalidad inválida: ${value}. Las opciones válidas son: ${Object.values(Nationalities).join(', ')}`
-			)
+				`Nacionalidad inválida: '${value}'. Las opciones válidas son: ${Object.values(Nationalities).join(', ')}.`
+			) // Improved error message
 		}
 	}
 
 	protected throwErrorForInvalidValue(value: Nationalities): void {
 		throw new InvalidArgumentError(`Nacionalidad inválida (uso interno): ${value}`)
 	}
-
-	// se creo el método pero de momento se deja inhabilitado ya que en principio no se va a poder actualizar la cédula
-	// static async updateNationalityField({
-	// 	nationality,
-	// 	entity
-	// }: {
-	// 	nationality?: Primitives<EmployeeNationality>
-	// 	entity: Employee
-	// }): Promise<void> {
-	// 	if (nationality !== undefined && nationality !== entity.nationalityValue) {
-	// 		entity.updateNationality(nationality)
-	// 	}
-	// }
 }

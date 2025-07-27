@@ -26,6 +26,9 @@ import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
+/**
+ * @description Sequelize model for the `Employee` entity.
+ */
 export class EmployeeModel
 	extends Model<
 		Omit<
@@ -53,7 +56,6 @@ export class EmployeeModel
 	declare cargoId: Primitives<CargoId>
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
-	// joins
 	declare location: LocationDto
 	declare directiva: Omit<DirectivaDto, 'cargos'>
 	declare vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
@@ -61,126 +63,47 @@ export class EmployeeModel
 	declare departamento: Omit<DepartamentoDto, 'cargos'>
 	declare cargo: Omit<CargoDto, 'departamentos' | 'vicepresidencias' | 'vicepresidenciaEjecutivas' | 'directivas'>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' }) // An employee belongs to a cargo
-		this.belongsTo(models.Location, {
-			as: 'location',
-			foreignKey: 'locationId'
-		}) // An employee belongs to a location
-		this.belongsTo(models.Directiva, {
-			as: 'directiva',
-			foreignKey: 'directivaId'
-		}) // An employee belongs to a directvia
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' })
+		this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' })
+		this.belongsTo(models.Directiva, { as: 'directiva', foreignKey: 'directivaId' })
 		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
-		}) // An employee belongs to a vicepresidenciaEjecutiva
-		this.belongsTo(models.Vicepresidencia, {
-			as: 'vicepresidencia',
-			foreignKey: 'vicepresidenciaId'
 		})
-		this.belongsTo(models.Departamento, {
-			as: 'departamento',
-			foreignKey: 'departamentoId'
-		}) // An employee belongs to a departamento
-		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' }) // An employee has many devices
-		this.hasMany(models.History, {
-			as: 'history',
-			foreignKey: 'employeeId'
-		}) // An employee has many histories
+		this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' })
+		this.belongsTo(models.Departamento, { as: 'departamento', foreignKey: 'departamentoId' })
+		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' })
+		this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		EmployeeModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				userName: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: false
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				userName: { type: DataTypes.STRING, allowNull: false, unique: false },
 				type: {
-					type: DataTypes.ENUM(EmployeeTypes.GENERIC, EmployeeTypes.REGULAR, EmployeeTypes.SERVICE),
+					type: DataTypes.ENUM(...Object.values(EmployeeTypes)),
 					allowNull: false,
 					defaultValue: EmployeeTypes.REGULAR
 				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				lastName: {
-					type: DataTypes.STRING,
-					allowNull: true
-				},
-				email: {
-					type: DataTypes.STRING,
-					allowNull: true,
-					validate: {
-						isEmail: true
-					}
-				},
-				isStillWorking: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					defaultValue: true
-				},
-				employeeCode: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-					unique: true
-				},
-				nationality: {
-					type: DataTypes.ENUM(Nationalities.V, Nationalities.E),
-					allowNull: true
-				},
-				cedula: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-					unique: true
-				},
-				locationId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				directivaId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				vicepresidenciaEjecutivaId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				vicepresidenciaId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				departamentoId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				cargoId: {
-					type: DataTypes.UUID,
-					allowNull: true
-				},
-				extension: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
-					defaultValue: []
-				},
-				phone: {
-					type: DataTypes.ARRAY(DataTypes.STRING),
-					defaultValue: []
-				}
+				name: { type: DataTypes.STRING, allowNull: true },
+				lastName: { type: DataTypes.STRING, allowNull: true },
+				email: { type: DataTypes.STRING, allowNull: true, validate: { isEmail: true } },
+				isStillWorking: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+				employeeCode: { type: DataTypes.INTEGER, allowNull: true, unique: true },
+				nationality: { type: DataTypes.ENUM(...Object.values(Nationalities)), allowNull: true },
+				cedula: { type: DataTypes.INTEGER, allowNull: true, unique: true },
+				locationId: { type: DataTypes.UUID, allowNull: true },
+				directivaId: { type: DataTypes.UUID, allowNull: true },
+				vicepresidenciaEjecutivaId: { type: DataTypes.UUID, allowNull: true },
+				vicepresidenciaId: { type: DataTypes.UUID, allowNull: true },
+				departamentoId: { type: DataTypes.UUID, allowNull: true },
+				cargoId: { type: DataTypes.UUID, allowNull: true },
+				extension: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
+				phone: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] }
 			},
-			{
-				modelName: 'Employee',
-				timestamps: true,
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'Employee', tableName: 'employees', timestamps: true, underscored: true, sequelize }
 		)
 	}
 }
