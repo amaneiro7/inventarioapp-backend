@@ -29,6 +29,12 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 	 * @returns {Promise<void>}
 	 */
 	static async associate(models: SequelizeModels): Promise<void> {
+		this.belongsToMany(models.Brand, {
+			as: 'brands',
+			through: 'category_brand',
+			foreignKey: 'categoryId',
+			otherKey: 'brandId'
+		})
 		// A category belongs to one main category
 		this.belongsTo(models.MainCategory, {
 			as: 'mainCategory',

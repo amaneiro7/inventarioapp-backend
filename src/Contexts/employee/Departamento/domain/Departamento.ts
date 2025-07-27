@@ -1,8 +1,8 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { IDepartment } from '../../IDepartment/IDeparment'
 import { CargoId } from '../../Cargo/domain/CargoId'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
 
 export class Departamento extends IDepartment {

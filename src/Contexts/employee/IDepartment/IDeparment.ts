@@ -1,7 +1,6 @@
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type Cargo } from '../Cargo/domain/Cargo.dto'
 import { CargoId } from '../Cargo/domain/CargoId'
-// import { CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
 import { DepartmentId } from './DepartmentId'
 import { DepartmentName } from './DepartmentName'
 

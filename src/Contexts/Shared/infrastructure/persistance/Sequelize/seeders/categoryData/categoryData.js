@@ -13,7 +13,17 @@ const categoryOnlyNames = {
 	BAM: 'BAMs',
 	MFP: 'Impresoras Multifuncionales',
 	PHONE: 'Celulares',
-	SCANNER: 'Escaners'
+	SCANNER: 'Escaners',
+	ANTENAS: 'Antenas',
+	CABLEUSB: 'Cable USB',
+	CAMARAS: 'Camaras',
+	WEBCAM: 'WebCam',
+	IPAD: 'IPAD',
+	CORNETAS: 'Cornetas',
+	DOCKING: 'Docking',
+	LAPIZOPTICO: 'Lapiz Optico',
+	CONVERTIDORVGAHDMI: 'Convertidor de VGA - HDMI',
+	MIC: 'Micrófono'
 }
 
 const categoryData = [
@@ -31,7 +41,17 @@ const categoryData = [
 	{ id: '12', name: 'BAMs' },
 	{ id: '13', name: 'Impresoras Multifuncionales' },
 	{ id: '14', name: 'Celulares' },
-	{ id: '15', name: 'Escaners' }
+	{ id: '15', name: 'Escaners' },
+	{ id: '16', name: 'Antenas' },
+	{ id: '17', name: 'Cable USB' },
+	{ id: '18', name: 'Camaras' },
+	{ id: '19', name: 'IPAD' },
+	{ id: '20', name: 'WebCam' },
+	{ id: '21', name: 'Cornetas' },
+	{ id: '22', name: 'Docking' },
+	{ id: '23', name: 'Lapiz Optico' },
+	{ id: '24', name: 'Convertidor de VGA - HDMI' },
+	{ id: '25', name: 'Micrófono' }
 ]
 
 module.exports = { categoryData, categoryOnlyNames }

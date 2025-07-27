@@ -3,9 +3,11 @@ import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persi
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { type BrandRepository } from '../../domain/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
-import { type BrandDto } from '../../domain/Brand.dto'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
+import { type BrandPrimitives, type BrandDto } from '../../domain/Brand.dto'
+import { sequelize } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { BrandAssociation } from './BrandAssociation'
 
 /**
  * @class SequelizeBrandRepository
@@ -32,17 +34,18 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<BrandDto>> {
 		const options = this.convert(criteria)
+		const opt = BrandAssociation.convertFilter(criteria, options)
 
 		return await this.cache.getCachedData<ResponseDB<BrandDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
 			ex: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await BrandModel.findAndCountAll(options)
+				const { count, rows } = await BrandModel.findAndCountAll(opt)
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true })) // Ensure plain objects are returned
-				}
+				} as unknown as ResponseDB<BrandDto>
 			}
 		})
 	}
@@ -59,8 +62,16 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const brand = await BrandModel.findByPk(id)
-				return brand ? brand.get({ plain: true }) : null
+				const brand = await BrandModel.findByPk(id, {
+					include: [
+						{
+							association: 'categories',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
+						}
+					]
+				})
+				return brand ? (brand.get({ plain: true }) as BrandDto) : null
 			}
 		})
 	}
@@ -78,7 +89,7 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 			ex: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const brand = await BrandModel.findOne({ where: { name } })
-				return brand ? brand.get({ plain: true }) : null
+				return brand ? (brand.get({ plain: true }) as BrandDto) : null
 			}
 		})
 	}
@@ -90,16 +101,36 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 	 * @param {BrandDto} payload - The Brand data to be saved.
 	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 */
-	async save(payload: BrandDto): Promise<void> {
-		// Use upsert for atomic create or update operation
-		await BrandModel.upsert(payload)
+	async save(payload: BrandPrimitives): Promise<void> {
+		const transaction = await sequelize.transaction()
+		try {
+			const { categories, ...restPayload } = payload
+			// Use upsert for atomic create or update operation
+			const [brandInstance] = await BrandModel.upsert(restPayload, { transaction, returning: true })
 
-		// Invalidate relevant cache entries
-		// Assuming removeCachedData with a base key clears all entries starting with that key.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		// Also invalidate specific entries if they were cached
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${payload.name}` })
+			// handle associations
+			if (brandInstance) {
+				console.log(brandInstance)
+				await brandInstance.setCategories(categories, { transaction })
+			}
+
+			await transaction.commit()
+			// Invalidate relevant cache entries
+			// Assuming removeCachedData with a base key clears all entries starting with that key.
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			// Also invalidate specific entries if they were cached
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${payload.name}` })
+		} catch (error: unknown) {
+			await transaction.rollback()
+			let errorMessage = 'An unknown error occurred while saving the Brands.'
+			if (error instanceof Error) {
+				errorMessage = `Error saving Brand: ${error.message}`
+			} else if (typeof error === 'string') {
+				errorMessage = `Error saving Brand: ${error}`
+			}
+			throw new Error(errorMessage)
+		}
 	}
 
 	/**

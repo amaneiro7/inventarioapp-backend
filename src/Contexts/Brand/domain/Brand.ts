@@ -1,6 +1,8 @@
-import { type BrandParams, type BrandPrimitives } from './Brand.dto'
 import { BrandId } from './BrandId'
 import { BrandName } from './BrandName'
+import { CategoryId } from '../../Category/Category/domain/CategoryId'
+import { type Category } from '../../Category/Category/domain/Category.dto'
+import { type BrandDto, type BrandParams, type BrandPrimitives } from './Brand.dto'
 
 /**
  * @class Brand
@@ -12,10 +14,12 @@ export class Brand {
 	 * @private
 	 * @param {BrandId} id - The unique identifier of the brand.
 	 * @param {BrandName} name - The name of the brand.
+	 * @param {CategoryId[]} categories - The name of the brand.
 	 */
 	constructor(
 		private readonly id: BrandId,
-		private name: BrandName
+		private name: BrandName,
+		private categories: CategoryId[]
 	) {}
 
 	/**
@@ -27,7 +31,8 @@ export class Brand {
 	 */
 	static create(params: BrandParams): Brand {
 		const id = BrandId.random().value
-		return new Brand(new BrandId(id), new BrandName(params.name))
+		const categories = params.categories.map(categoryId => new CategoryId(categoryId))
+		return new Brand(new BrandId(id), new BrandName(params.name), categories)
 	}
 
 	/**
@@ -39,6 +44,14 @@ export class Brand {
 		this.name = new BrandName(newName)
 	}
 
+	updateCategories(categoryIds: CategoryId['value'][]): void {
+		this.categories = categoryIds.map(categoryId => new CategoryId(categoryId))
+	}
+
+	static addCategoryIds(categories: Category[]): CategoryId[] {
+		return categories.map(category => new CategoryId(category.id))
+	}
+
 	/**
 	 * @static
 	 * @method fromPrimitives
@@ -46,8 +59,12 @@ export class Brand {
 	 * @param {BrandPrimitives} primitives - The primitive representation of the brand.
 	 * @returns {Brand} A Brand instance.
 	 */
-	static fromPrimitives(primitives: BrandPrimitives): Brand {
-		return new Brand(new BrandId(primitives.id), new BrandName(primitives.name))
+	static fromPrimitives(primitives: BrandDto): Brand {
+		return new Brand(
+			new BrandId(primitives.id),
+			new BrandName(primitives.name),
+			this.addCategoryIds(primitives.categories)
+		)
 	}
 
 	/**
@@ -58,7 +75,8 @@ export class Brand {
 	toPrimitive(): BrandPrimitives {
 		return {
 			id: this.id.value,
-			name: this.name.value
+			name: this.name.value,
+			categories: this.categoriesValue
 		}
 	}
 
@@ -76,5 +94,9 @@ export class Brand {
 	 */
 	get nameValue(): BrandName['value'] {
 		return this.name.value
+	}
+
+	get categoriesValue(): CategoryId['value'][] {
+		return this.categories.map(category => category.value)
 	}
 }

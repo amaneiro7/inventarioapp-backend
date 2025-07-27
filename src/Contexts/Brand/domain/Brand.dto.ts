@@ -1,3 +1,5 @@
+import { type CategoryDto } from '../../Category/Category/domain/Category.dto'
+import { type CategoryId } from '../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type BrandId } from './BrandId'
 import { type BrandName } from './BrandName'
@@ -17,7 +19,12 @@ export interface Brand {
  * @description Represents the parameters required to create a new Brand.
  * It omits the 'id' property as it's typically generated upon creation.
  */
-export type BrandParams = Omit<Brand, 'id'>
+export type BrandParams = Omit<
+	Brand & {
+		categories: Primitives<CategoryId>[]
+	},
+	'id'
+>
 
 /**
  * @type BrandPrimitives
@@ -25,7 +32,9 @@ export type BrandParams = Omit<Brand, 'id'>
  * This type is useful for serialization/deserialization or when interacting with data stores.
  * Currently, it mirrors the `Brand` interface.
  */
-export type BrandPrimitives = Brand
+export type BrandPrimitives = Brand & {
+	categories: Primitives<CategoryId>[]
+}
 
 /**
  * @type BrandDto
@@ -33,4 +42,6 @@ export type BrandPrimitives = Brand
  * This type is used for transferring brand data between different layers of the application.
  * Currently, it mirrors the `Brand` interface.
  */
-export type BrandDto = Brand
+export type BrandDto = Brand & {
+	categories: CategoryDto[]
+}
