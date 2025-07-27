@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
-import { StatusList } from '../../../Status/domain/StatusList'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { type TotalCountByCategoryRepository } from '../../domain/TotalCountByCategoryRepository'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
@@ -58,7 +58,7 @@ export class SequelizeTotalCountByCategoryRepository implements TotalCountByCate
 							attributes: [],
 							where: {
 								[Op.not]: {
-									id: StatusList.DESINCORPORADO
+									id: StatusOptions.DESINCORPORADO
 								}
 							}
 						}

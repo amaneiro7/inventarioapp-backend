@@ -1,7 +1,7 @@
 import { Op, type FindOptions, type IncludeOptions, type Order } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
-import { StatusList } from '../../../Status/domain/StatusList'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 
 /**
  * A utility class to build the complex Sequelize FindOptions for general device monitoring searches.
@@ -53,7 +53,7 @@ export class DeviceMonitoringAssociation {
 
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			where: { statusId: StatusList.INUSE },
+			where: { statusId: StatusOptions.INUSE },
 			include: [computerInclude, locationInclude, employeeInclude]
 		}
 

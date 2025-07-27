@@ -1,8 +1,8 @@
 import { Op, type FindOptions, type IncludeOptions } from 'sequelize'
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { StatusList } from '../../../Status/domain/StatusList'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 
 /**
  * A utility class to build the complex Sequelize FindOptions for the main Device Monitoring Dashboard.
@@ -18,11 +18,35 @@ export class DeviceMonitoringDashboardAssociation {
 	 */
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
 		// Define the nested include structure using named variables for clarity and type safety.
-		const administrativeRegionInclude: IncludeOptions = { association: 'administrativeRegion', required: true, attributes: [] }
-		const regionInclude: IncludeOptions = { association: 'region', required: true, attributes: [], include: [administrativeRegionInclude] }
-		const stateInclude: IncludeOptions = { association: 'state', required: true, attributes: [], include: [regionInclude] }
-		const cityInclude: IncludeOptions = { association: 'city', required: true, attributes: [], include: [stateInclude] }
-		const siteInclude: IncludeOptions = { association: 'site', required: true, attributes: [], include: [cityInclude] }
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			attributes: [],
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = {
+			association: 'state',
+			required: true,
+			attributes: [],
+			include: [regionInclude]
+		}
+		const cityInclude: IncludeOptions = {
+			association: 'city',
+			required: true,
+			attributes: [],
+			include: [stateInclude]
+		}
+		const siteInclude: IncludeOptions = {
+			association: 'site',
+			required: true,
+			attributes: [],
+			include: [cityInclude]
+		}
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
 		const computerInclude: IncludeOptions = {
@@ -40,7 +64,7 @@ export class DeviceMonitoringDashboardAssociation {
 
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			where: { statusId: StatusList.INUSE },
+			where: { statusId: StatusOptions.INUSE },
 			required: true,
 			attributes: [], // No attributes needed, just for joining
 			include: [computerInclude, locationInclude]

@@ -1,7 +1,7 @@
 import { Op, type FindOptions, type IncludeOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { StatusList } from '../../../Status/domain/StatusList'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 /**
@@ -85,7 +85,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 		// Level 0 (Root)
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			where: { statusId: StatusList.INUSE },
+			where: { statusId: StatusOptions.INUSE },
 			required: true,
 			include: [computerInclude, locationInclude, employeeInclude]
 		}

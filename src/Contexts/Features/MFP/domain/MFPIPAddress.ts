@@ -1,4 +1,5 @@
 import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -36,7 +37,7 @@ export class MFPIPAddress extends AcceptedNullValueObject<string> {
 		status: Primitives<DeviceStatus>,
 		ipAddress: Primitives<MFPIPAddress>
 	): void {
-		if (status === DeviceStatus.StatusOptions.INUSE && ipAddress === null) {
+		if (status === StatusOptions.INUSE && ipAddress === null) {
 			throw new InvalidArgumentError('IP Address is required when status is in use') // Throw an error if IP Address is null when computer status is in use
 		}
 	}

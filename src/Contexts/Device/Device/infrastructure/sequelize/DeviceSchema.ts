@@ -1,4 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type DeviceId } from '../../domain/DeviceId'
@@ -12,7 +13,6 @@ import { type DeviceModelSeries } from '../../domain/DeviceModelSeries'
 import { type DeviceStatus } from '../../domain/DeviceStatus'
 import { type DeviceStocknumber } from '../../domain/DeviceStock'
 import { type DeviceDto } from '../../domain/Device.dto'
-import { StatusId } from '../../../Status/domain/StatusId'
 import { type BrandDto } from '../../../../Brand/domain/Brand.dto'
 import { type CategoryDto } from '../../../../Category/Category/domain/Category.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
@@ -115,7 +115,7 @@ export class DeviceModel
 					allowNull: true,
 					validate: {
 						onlyNullIf(value: Primitives<DeviceLocation>) {
-							if (this.statusId !== StatusId.StatusOptions.DESINCORPORADO && value === null) {
+							if (this.statusId !== StatusOptions.DESINCORPORADO && value === null) {
 								throw new Error('La ubicación solo puede ser nula si el estatus es "Desincorporado".')
 							}
 						}

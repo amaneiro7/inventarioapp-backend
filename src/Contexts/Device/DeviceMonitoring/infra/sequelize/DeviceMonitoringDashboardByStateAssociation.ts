@@ -1,7 +1,7 @@
 import { Op, type FindOptions, type IncludeOptions } from 'sequelize'
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { StatusList } from '../../../Status/domain/StatusList'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 /**
@@ -19,11 +19,35 @@ export class DeviceMonitoringDashboardByStateAssociation {
 	 */
 	static buildDashboardFindOptions(criteria: Criteria, options: FindOptions): FindOptions {
 		// Define the nested include structure using named variables for clarity and type safety.
-		const administrativeRegionInclude: IncludeOptions = { association: 'administrativeRegion', required: true, attributes: [] }
-		const regionInclude: IncludeOptions = { association: 'region', required: true, attributes: [], include: [administrativeRegionInclude] }
-		const stateInclude: IncludeOptions = { association: 'state', required: true, attributes: [], include: [regionInclude] }
-		const cityInclude: IncludeOptions = { association: 'city', required: true, attributes: [], include: [stateInclude] }
-		const siteInclude: IncludeOptions = { association: 'site', required: true, attributes: [], include: [cityInclude] }
+		const administrativeRegionInclude: IncludeOptions = {
+			association: 'administrativeRegion',
+			required: true,
+			attributes: []
+		}
+		const regionInclude: IncludeOptions = {
+			association: 'region',
+			required: true,
+			attributes: [],
+			include: [administrativeRegionInclude]
+		}
+		const stateInclude: IncludeOptions = {
+			association: 'state',
+			required: true,
+			attributes: [],
+			include: [regionInclude]
+		}
+		const cityInclude: IncludeOptions = {
+			association: 'city',
+			required: true,
+			attributes: [],
+			include: [stateInclude]
+		}
+		const siteInclude: IncludeOptions = {
+			association: 'site',
+			required: true,
+			attributes: [],
+			include: [cityInclude]
+		}
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
 
 		const computerInclude: IncludeOptions = {
@@ -41,7 +65,7 @@ export class DeviceMonitoringDashboardByStateAssociation {
 
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			where: { statusId: StatusList.INUSE },
+			where: { statusId: StatusOptions.INUSE },
 			required: true,
 			attributes: [],
 			include: [computerInclude, locationInclude]
