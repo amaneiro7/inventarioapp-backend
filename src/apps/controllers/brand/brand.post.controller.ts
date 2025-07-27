@@ -4,18 +4,13 @@ import { type BrandCreator } from '../../../Contexts/Brand/application/BrandCrea
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { BrandDependencies } from '../../di/brand/brand.di'
-interface BrandRequest extends Request {
-	body: {
-		name: string
-	}
-}
 
 export class BrandPostController implements Controller {
-	async run(req: BrandRequest, res: Response, next: NextFunction): Promise<void> {
+	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { name } = req.body
+			const params = req.body
 			const create: BrandCreator = container.resolve(BrandDependencies.Creator)
-			await create.run({ name })
+			await create.run(params)
 			res.status(httpStatus[201].statusCode).json({
 				message: 'Marca creada exitosamente'
 			})
