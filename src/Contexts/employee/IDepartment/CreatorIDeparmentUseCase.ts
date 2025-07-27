@@ -3,18 +3,28 @@ import { type CargoRepository } from '../Cargo/domain/CargoRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../Cargo/domain/CargoId'
 
+/**
+ * @description Use case for creating a new department, including validation of associated cargos.
+ */
 export class CreateIDepartementUseCase {
 	constructor(private readonly cargoRepository: CargoRepository) {}
 
+	/**
+	 * @description Executes the creation of a new department.
+	 * @param {{ cargos: Primitives<CargoId>[] }} params The parameters for creating the department.
+	 * @returns {Promise<void>} A promise that resolves when the department is successfully created.
+	 * @throws {CargoDoesNotExistError} If any of the associated cargos do not exist.
+	 */
 	public async execute({ cargos }: { cargos: Primitives<CargoId>[] }): Promise<void> {
-		await Promise.all([this.ensureCargoExists(cargos)])
+		await this.ensureCargoExists(cargos)
 	}
 
 	private async ensureCargoExists(cargos: Primitives<CargoId>[]): Promise<void> {
-		for (const cargoId of cargos) {
-			if ((await this.cargoRepository.searchById(cargoId)) === null) {
+		const cargoExistenceChecks = cargos.map(async cargoId => {
+			if (!(await this.cargoRepository.searchById(cargoId))) {
 				throw new CargoDoesNotExistError()
 			}
-		}
+		})
+		await Promise.all(cargoExistenceChecks)
 	}
 }

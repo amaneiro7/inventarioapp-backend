@@ -1,15 +1,21 @@
-import { IDepartment } from './IDeparment'
+import { type IDepartment } from './IDeparment'
 import { CargoDoesNotExistError } from '../Cargo/domain/CargoDoesNotExistError'
-// import { CentroCostoDoesNotExistError } from '../CentroCosto/domain/CentroCostoDoesNotExistError'
 import { type CargoRepository } from '../Cargo/domain/CargoRepository'
 import { type CargoId } from '../Cargo/domain/CargoId'
-// import { type CentroCostoRepository } from '../CentroCosto/domain/CentroCostoRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-// import { type CodCentroCosto } from '../CentroCosto/domain/CodCentroCosto'
 
+/**
+ * @description Use case for updating a department, including validation of associated cargos.
+ */
 export class UpdateIDeparmentUseCase {
 	constructor(private readonly cargoRepository: CargoRepository) {}
 
+	/**
+	 * @description Executes the update of a department.
+	 * @param {{ entity: IDepartment; params: Partial<{ cargos: Primitives<CargoId>[] }> }} data The parameters for updating the department.
+	 * @returns {Promise<void>} A promise that resolves when the department is successfully updated.
+	 * @throws {CargoDoesNotExistError} If any of the associated cargos do not exist.
+	 */
 	public async execute({
 		params: { cargos },
 		entity
@@ -19,23 +25,8 @@ export class UpdateIDeparmentUseCase {
 			cargos: Primitives<CargoId>[]
 		}>
 	}): Promise<void> {
-		await Promise.all([this.ensureCargoExists({ cargos, entity })])
+		await this.ensureCargoExists({ cargos, entity })
 	}
-
-	// private async ensureCentroCostoExists({
-	// 	entity,
-	// 	centroCostoId
-	// }: {
-	// 	centroCostoId?: Primitives<CodCentroCosto>
-	// 	entity: IDepartment
-	// }): Promise<void> {
-	// 	if (!centroCostoId || entity.centroCostoValue === centroCostoId) return
-
-	// 	if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
-	// 		throw new CentroCostoDoesNotExistError()
-	// 	}
-	// 	entity.updateCodCentroCosto(centroCostoId)
-	// }
 
 	private async ensureCargoExists({
 		entity,
@@ -46,28 +37,18 @@ export class UpdateIDeparmentUseCase {
 	}): Promise<void> {
 		if (!cargos) return
 
-		// Asegurarse que no existan valores duplicados
 		const uniqueCargos = Array.from(new Set(cargos))
-		// Se crea una nueva lista con los cargos nuevos, que no estan en la lista actual
-		const newCargos = this.getNewCargos(entity.CargosValue, uniqueCargos)
+		const newCargos = uniqueCargos.filter(cargoId => !entity.CargosValue.includes(cargoId))
 
-		// Si la lista es 0, no hay cargos nuevos
 		if (newCargos.length > 0) {
-			// Se verifica que cada cargo exista
-			await Promise.all(
-				newCargos.map(async cargoId => {
-					if ((await this.cargoRepository.searchById(cargoId)) === null) {
-						throw new CargoDoesNotExistError()
-					}
-				})
-			)
+			const cargoExistenceChecks = newCargos.map(async cargoId => {
+				if (!(await this.cargoRepository.searchById(cargoId))) {
+					throw new CargoDoesNotExistError()
+				}
+			})
+			await Promise.all(cargoExistenceChecks)
 		}
 
 		entity.updateCargos(cargos)
-	}
-
-	// Funcion para filtrar solo los cargos nuevos que no estan en la lista actual
-	private getNewCargos(currentList: string[], newList: string[]): string[] {
-		return newList.filter(cargoId => !currentList.includes(cargoId))
 	}
 }
