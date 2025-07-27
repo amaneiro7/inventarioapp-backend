@@ -3,7 +3,6 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { DeviceMonitoringDashboardByLocationAssociation } from './DeviceMonitoringDashboardByLocationAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import {
 	type LocationData,
@@ -14,39 +13,38 @@ import {
 import { type DeviceMonitoringDashboardByLocationRepository } from '../../domain/repository/DeviceMonitoringDashboardByLocationRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
-// --- Type definitions for clarity and type safety ---
-
-// Represents the structure of each record returned by the database query.
+// Type definitions for clarity and type safety
 interface RawDeviceMonitoringData {
 	statusName: (typeof MonitoringStatuses)[keyof typeof MonitoringStatuses]
 	locationName: string
 	admRegionName: string
 	siteName: string
 	vpeName: string
-	count: string | number // The count can be a string from some DB drivers.
+	count: string | number
 }
 
-// Internal representation for a location while processing.
 interface ProcessingLocationData extends Omit<LocationData, 'vpeName'> {
-	vpeName: Set<string> // Use a Set to efficiently store unique vpeName values.
+	vpeName: Set<string>
 }
 
-// Internal representation for a site while processing.
 interface ProcessingSiteData extends Omit<SiteData, 'locations'> {
 	locations: Map<string, ProcessingLocationData>
 }
 
-// Internal representation for an administrative region while processing.
 interface ProcessingAdmRegionData extends Omit<AdmRegionData, 'sites'> {
 	sites: Map<string, ProcessingSiteData>
 }
 
+/**
+ * @description Sequelize implementation of the DeviceMonitoringDashboardByLocationRepository.
+ */
 export class SequelizeDeviceMonitoringDashboardByLocationRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringDashboardByLocationRepository
 {
-	private readonly cacheKey: string = 'deviceMonitoringDashboardByLocation'
+	private readonly cacheKey = 'deviceMonitoringDashboardByLocation'
 	private readonly cache: CacheService
+
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
@@ -59,46 +57,34 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 			baseOptions
 		)
 
-		return await this.cache.getCachedData<DashboardByLocationData>({
-			cacheKey: this.cacheKey,
+		return this.cache.getCachedData<DashboardByLocationData>({
+			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			ttl: TimeTolive.SHORT,
-			criteria,
 			fetchFunction: async () => {
-				try {
-					const rawDevices = (await DeviceMonitoringModel.findAll(
-						findOptions
-					)) as unknown as RawDeviceMonitoringData[]
-					return this.processRawDataWithReduce(rawDevices)
-				} catch (error) {
-					console.error('Error fetching or processing device monitoring data:', error)
-					throw new Error('Failed to retrieve device monitoring dashboard data.')
-				}
+				const rawDevices = (await DeviceMonitoringModel.findAll(
+					findOptions
+				)) as unknown as RawDeviceMonitoringData[]
+				return this.processRawDataWithReduce(rawDevices)
 			}
 		})
 	}
 
 	/**
-	 * Processes raw monitoring data into a hierarchical and sorted structure using a single reduce function.
-	 * @param rawData - Array of raw data objects from the database.
-	 * @returns Transformed and sorted DashboardByLocationData.
+	 * @description Processes raw monitoring data into a hierarchical structure using a single reduce function.
+	 * @param {RawDeviceMonitoringData[]} rawData Array of raw data objects from the database.
+	 * @returns {DashboardByLocationData} Transformed dashboard data.
 	 */
 	private processRawDataWithReduce(rawData: RawDeviceMonitoringData[]): DashboardByLocationData {
-		// The accumulator for the reduce function is a Map of administrative regions.
 		const admRegionMap = rawData.reduce((acc, item) => {
 			const { statusName, locationName, admRegionName, siteName, vpeName, count } = item
 			const countNumber = Number(count)
 
-			// --- Administrative Region Level ---
 			let admRegion = acc.get(admRegionName)
 			if (!admRegion) {
-				admRegion = {
-					name: admRegionName,
-					sites: new Map<string, ProcessingSiteData>()
-				}
+				admRegion = { name: admRegionName, sites: new Map<string, ProcessingSiteData>() }
 				acc.set(admRegionName, admRegion)
 			}
 
-			// --- Site Level ---
 			let site = admRegion.sites.get(siteName)
 			if (!site) {
 				site = {
@@ -111,23 +97,15 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 				admRegion.sites.set(siteName, site)
 			}
 
-			// --- Location Level ---
 			let location = site.locations.get(locationName)
 			if (!location) {
-				location = {
-					name: locationName,
-					total: 0,
-					onlineCount: 0,
-					offlineCount: 0,
-					vpeName: new Set<string>()
-				}
+				location = { name: locationName, total: 0, onlineCount: 0, offlineCount: 0, vpeName: new Set<string>() }
 				site.locations.set(locationName, location)
 			}
 
-			// --- Update Counts and Data ---
 			site.total += countNumber
 			location.total += countNumber
-			location.vpeName.add(vpeName) // Add vpeName to the Set for uniqueness.
+			location.vpeName.add(vpeName)
 
 			if (statusName === MonitoringStatuses.ONLINE) {
 				site.onlineCount += countNumber
@@ -140,8 +118,6 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 			return acc
 		}, new Map<string, ProcessingAdmRegionData>())
 
-		// --- Convert Maps to Arrays for Final DTO Structure ---
-		// The data is already sorted by the database query, so no need to sort here.
 		return Array.from(admRegionMap.values()).map(admRegion => ({
 			name: admRegion.name,
 			sites: Array.from(admRegion.sites.values()).map(site => ({
@@ -154,7 +130,6 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 					total: location.total,
 					onlineCount: location.onlineCount,
 					offlineCount: location.offlineCount,
-					// Convert the Set to an Array for the final DTO.
 					vpeName: Array.from(location.vpeName)
 				}))
 			}))

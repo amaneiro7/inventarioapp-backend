@@ -11,6 +11,10 @@ import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/valu
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
 import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
+/**
+ * @description Service responsible for monitoring the status of devices by pinging them.
+ * It extends a generic MonitoringService to handle the core logic of polling, status updates, and logging.
+ */
 export class DeviceMonitoringService extends MonitoringService<
 	DeviceMonitoringDto,
 	DeviceMonitoringPrimitives,
@@ -21,23 +25,25 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected readonly pingService: PingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
-	constructor({
-		deviceMonitoringRepository,
-		logger,
-		pingLogger,
-		pingService
-	}: {
+
+	constructor(dependencies: {
 		deviceMonitoringRepository: DeviceMonitoringRepository
 		pingService: PingService
 		logger: Logger
 		pingLogger: PingLogger
 	}) {
-		super(deviceMonitoringRepository, pingService, logger, pingLogger)
-		this.deviceMonitoringRepository = deviceMonitoringRepository
-		this.pingService = pingService
-		this.logger = logger
-		this.pingLogger = pingLogger
+		super(
+			dependencies.deviceMonitoringRepository,
+			dependencies.pingService,
+			dependencies.logger,
+			dependencies.pingLogger
+		)
+		this.deviceMonitoringRepository = dependencies.deviceMonitoringRepository
+		this.pingService = dependencies.pingService
+		this.logger = dependencies.logger
+		this.pingLogger = dependencies.pingLogger
 	}
+
 	protected readonly monitoringConfig: MonitoringServiceConfig = {
 		concurrencyLimit: config.monitoring.device.deviceMonitoringConcurrencyLimit,
 		startDayOfWeek: config.monitoring.device.deviceMonitoringStartDayOfWeek,
@@ -59,15 +65,19 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected createMonitoringEntity(item: DeviceMonitoringDto): DeviceMonitoring {
 		return DeviceMonitoring.fromPrimitives(item)
 	}
+
 	protected createMonitoringPayload(item: DeviceMonitoring): DeviceMonitoringPrimitives {
 		return item.toPrimitive()
 	}
+
 	protected async getIpAddress(item: DeviceMonitoringDto): Promise<string | null | undefined> {
-		return item?.device?.computer?.ipAddress
+		return item.device?.computer?.ipAddress
 	}
+
 	protected async getExpectedHostname(item: DeviceMonitoringDto): Promise<string | null | undefined> {
-		return item?.device?.computer?.computerName
+		return item.device?.computer?.computerName
 	}
+
 	protected validatePingResult({
 		expectedHostname,
 		pingResult

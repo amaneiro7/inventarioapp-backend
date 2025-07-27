@@ -5,7 +5,6 @@ import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/domain/va
 import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
 import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
 import { MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
-
 import {
 	type DeviceMonitoringDto,
 	type DeviceMonitoringParams,
@@ -13,6 +12,11 @@ import {
 } from './DeviceMonitoring.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
+/**
+ * @class DeviceMonitoring
+ * @extends Monitoring
+ * @description Represents the DeviceMonitoring domain entity, extending the base Monitoring entity.
+ */
 export class DeviceMonitoring extends Monitoring {
 	constructor(
 		id: MonitoringId,
@@ -25,10 +29,16 @@ export class DeviceMonitoring extends Monitoring {
 		super(id, status, lastScan, lastSuccess, lastFailed)
 	}
 
+	/**
+	 * @static
+	 * @method create
+	 * @description Factory method to create a new `DeviceMonitoring` instance.
+	 * @param {DeviceMonitoringParams} params The parameters for creating the entity.
+	 * @returns {DeviceMonitoring} A new `DeviceMonitoring` instance.
+	 */
 	static create(params: DeviceMonitoringParams): DeviceMonitoring {
-		const id = MonitoringId.random().value
 		return new DeviceMonitoring(
-			new MonitoringId(id),
+			MonitoringId.random(),
 			new DeviceId(params.deviceId),
 			new MonitoringStatus(params.status),
 			new MonitoringLastScan(params.lastScan),
@@ -36,6 +46,14 @@ export class DeviceMonitoring extends Monitoring {
 			new MonitoringLastFailed(params.lastFailed)
 		)
 	}
+
+	/**
+	 * @static
+	 * @method fromPrimitives
+	 * @description Reconstructs a `DeviceMonitoring` instance from its primitive representation.
+	 * @param {DeviceMonitoringDto} primitives The primitive data.
+	 * @returns {DeviceMonitoring} A `DeviceMonitoring` instance.
+	 */
 	static fromPrimitives(primitives: DeviceMonitoringDto): DeviceMonitoring {
 		return new DeviceMonitoring(
 			new MonitoringId(primitives.id),
@@ -47,6 +65,11 @@ export class DeviceMonitoring extends Monitoring {
 		)
 	}
 
+	/**
+	 * @method toPrimitive
+	 * @description Converts the `DeviceMonitoring` instance into its primitive representation.
+	 * @returns {DeviceMonitoringPrimitives} The primitive representation.
+	 */
 	toPrimitive(): DeviceMonitoringPrimitives {
 		return {
 			id: this.idValue,
@@ -58,6 +81,11 @@ export class DeviceMonitoring extends Monitoring {
 		}
 	}
 
+	/**
+	 * @getter deviceValue
+	 * @description Returns the primitive value of the device's ID.
+	 * @returns {Primitives<DeviceId>}
+	 */
 	get deviceValue(): Primitives<DeviceId> {
 		return this.deviceId.value
 	}
