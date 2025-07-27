@@ -5,25 +5,19 @@ import { type BrandDto } from '../domain/Brand.dto'
 import { type BrandRepository } from '../domain/BrandRepository'
 
 /**
- * @class BrandFinderAll
- * @extends GetAllBaseService<BrandDto>
- * @description Use case for retrieving all Brand entities, with support for criteria-based filtering and pagination.
+ * @description Use case for retrieving all Brand entities, with support for criteria-based filtering, sorting, and pagination.
  */
 export class BrandFinderAll extends GetAllBaseService<BrandDto> {
-	/**
-	 * @constructor
-	 * @param {BrandRepository} brandRepository - The repository responsible for Brand data persistence.
-	 */
 	private readonly brandRepository: BrandRepository
+
 	constructor({ brandRepository }: { brandRepository: BrandRepository }) {
 		super()
 		this.brandRepository = brandRepository
 	}
 
 	/**
-	 * @method run
 	 * @description Executes the process of finding all brands based on the provided criteria.
-	 * @param {Criteria} criteria - The criteria object for filtering, sorting, and pagination.
+	 * @param {Criteria} criteria The criteria object for filtering, sorting, and pagination.
 	 * @returns {Promise<ResponseService<BrandDto>>} A promise that resolves to a paginated response containing Brand DTOs.
 	 */
 	async run(criteria: Criteria): Promise<ResponseService<BrandDto>> {

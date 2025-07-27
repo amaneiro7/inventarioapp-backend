@@ -17,25 +17,26 @@ import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
 
 /**
  * @class BrandModel
- * @extends Model<BrandDto>
+ * @extends Model<Omit<BrandDto, 'categories'>>
  * @implements {BrandDto}
- * @description Sequelize model for the Brand entity. Defines the table structure and associations
- * for brands in the database.
+ * @description Sequelize model for the `Brand` entity. It defines the table structure,
+ * columns, and associations for brands in the database.
  */
 export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements BrandDto {
 	/**
-	 * @property {Primitives<BrandId>} id
-	 * @description The unique identifier of the brand (UUID).
+	 * @property {Primitives<BrandId>} id The primary key, a UUID representing the brand's unique identifier.
 	 */
 	declare id: Primitives<BrandId>
 	/**
-	 * @property {Primitives<BrandName>} name
-	 * @description The name of the brand. Must be unique.
+	 * @property {Primitives<BrandName>} name The name of the brand. Must be unique.
 	 */
 	declare name: Primitives<BrandName>
+	/**
+	 * @property {CategoryDto[]} categories The categories associated with this brand. This is a virtual property populated via associations.
+	 */
 	declare categories: CategoryDto[]
 
-	// Métodos de asociación
+	// --- Association Mixins (provided by Sequelize) ---
 	declare getCategories: BelongsToManyGetAssociationsMixin<CategoryModel>
 	declare addCategories: BelongsToManyAddAssociationsMixin<CategoryModel, Primitives<CategoryId>>
 	declare setCategories: BelongsToManySetAssociationsMixin<CategoryModel, Primitives<CategoryId>>
@@ -44,14 +45,15 @@ export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements B
 	/**
 	 * @static
 	 * @method associate
-	 * @description Defines associations with other Sequelize models.
-	 * A Brand can have many Model Series and many Devices.
-	 * @param {SequelizeModels} models - An object containing all initialized Sequelize models.
-	 * @returns {Promise<void>}
+	 * @description Defines the relationships between the `BrandModel` and other models in the system.
+	 * @param {SequelizeModels} models An object containing all initialized Sequelize models.
 	 */
-	static async associate(models: SequelizeModels): Promise<void> {
-		this.hasMany(models.Model, { as: 'model', foreignKey: 'brandId' }) // A brand can have many model series
-		this.hasMany(models.Device, { as: 'device', foreignKey: 'brandId' }) // A brand can have many device
+	static associate(models: SequelizeModels): void {
+		// A brand can be associated with many ModelSeries
+		this.hasMany(models.Model, { as: 'model', foreignKey: 'brandId' })
+		// A brand can be associated with many Devices
+		this.hasMany(models.Device, { as: 'device', foreignKey: 'brandId' })
+		// A brand belongs to many Categories through the 'category_brand' join table
 		this.belongsToMany(models.Category, {
 			as: 'categories',
 			through: 'category_brand',
@@ -63,11 +65,10 @@ export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements B
 	/**
 	 * @static
 	 * @method initialize
-	 * @description Initializes the BrandModel with its schema definition.
-	 * @param {Sequelize} sequelize - The Sequelize instance.
-	 * @returns {Promise<void>}
+	 * @description Initializes the `BrandModel` with its schema definition and configuration.
+	 * @param {Sequelize} sequelize The Sequelize instance.
 	 */
-	static async initialize(sequelize: Sequelize): Promise<void> {
+	static initialize(sequelize: Sequelize): void {
 		BrandModel.init(
 			{
 				id: {
@@ -83,6 +84,7 @@ export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements B
 			},
 			{
 				modelName: 'Brand',
+				tableName: 'brands', // Explicitly define table name for clarity
 				timestamps: true,
 				underscored: true,
 				sequelize

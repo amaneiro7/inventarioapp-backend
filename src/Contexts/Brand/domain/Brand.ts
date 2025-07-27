@@ -1,20 +1,18 @@
 import { BrandId } from './BrandId'
 import { BrandName } from './BrandName'
 import { CategoryId } from '../../Category/Category/domain/CategoryId'
-import { type Category } from '../../Category/Category/domain/Category.dto'
 import { type BrandDto, type BrandParams, type BrandPrimitives } from './Brand.dto'
 
 /**
  * @class Brand
- * @description Represents the Brand domain entity. Encapsulates brand-specific business logic
- * and ensures the integrity of brand data using Value Objects.
+ * @description Represents the Brand domain entity. This class encapsulates the business logic
+ * and ensures the integrity of a brand's data through the use of Value Objects.
  */
 export class Brand {
 	/**
-	 * @private
-	 * @param {BrandId} id - The unique identifier of the brand.
-	 * @param {BrandName} name - The name of the brand.
-	 * @param {CategoryId[]} categories - The name of the brand.
+	 * @param {BrandId} id The unique identifier of the brand.
+	 * @param {BrandName} name The name of the brand.
+	 * @param {CategoryId[]} categories An array of category value objects associated with the brand.
 	 */
 	constructor(
 		private readonly id: BrandId,
@@ -25,51 +23,36 @@ export class Brand {
 	/**
 	 * @static
 	 * @method create
-	 * @description Factory method to create a new Brand instance with a randomly generated ID.
-	 * @param {BrandParams} params - The parameters required to create a brand (e.g., name).
-	 * @returns {Brand} A new Brand instance.
+	 * @description Factory method to create a new `Brand` instance.
+	 * It generates a random UUID for the brand's ID.
+	 * @param {BrandParams} params The parameters required to create a brand (name and category IDs).
+	 * @returns {Brand} A new `Brand` instance.
 	 */
 	static create(params: BrandParams): Brand {
-		const id = BrandId.random().value
+		const id = BrandId.random()
+		const name = new BrandName(params.name)
 		const categories = params.categories.map(categoryId => new CategoryId(categoryId))
-		return new Brand(new BrandId(id), new BrandName(params.name), categories)
-	}
-
-	/**
-	 * @method updateName
-	 * @description Updates the name of the brand.
-	 * @param {BrandName['value']} newName - The new name for the brand.
-	 */
-	updateName(newName: BrandName['value']): void {
-		this.name = new BrandName(newName)
-	}
-
-	updateCategories(categoryIds: CategoryId['value'][]): void {
-		this.categories = categoryIds.map(categoryId => new CategoryId(categoryId))
-	}
-
-	static addCategoryIds(categories: Category[]): CategoryId[] {
-		return categories.map(category => new CategoryId(category.id))
+		return new Brand(id, name, categories)
 	}
 
 	/**
 	 * @static
 	 * @method fromPrimitives
-	 * @description Reconstructs a Brand instance from its primitive representation.
-	 * @param {BrandPrimitives} primitives - The primitive representation of the brand.
-	 * @returns {Brand} A Brand instance.
+	 * @description Reconstructs a `Brand` instance from its primitive representation (DTO).
+	 * @param {BrandDto} primitives The primitive data of the brand.
+	 * @returns {Brand} A `Brand` instance.
 	 */
 	static fromPrimitives(primitives: BrandDto): Brand {
 		return new Brand(
 			new BrandId(primitives.id),
 			new BrandName(primitives.name),
-			this.addCategoryIds(primitives.categories)
+			primitives.categories.map(category => new CategoryId(category.id))
 		)
 	}
 
 	/**
 	 * @method toPrimitive
-	 * @description Converts the Brand instance to its primitive representation.
+	 * @description Converts the `Brand` instance into its primitive, serializable representation.
 	 * @returns {BrandPrimitives} The primitive representation of the brand.
 	 */
 	toPrimitive(): BrandPrimitives {
@@ -81,21 +64,46 @@ export class Brand {
 	}
 
 	/**
-	 * @property {string} idValue
-	 * @description Getter for the primitive value of the brand's ID.
+	 * @method updateName
+	 * @description Updates the name of the brand.
+	 * @param {BrandName['value']} newName The new name for the brand.
+	 */
+	updateName(newName: BrandName['value']): void {
+		this.name = new BrandName(newName)
+	}
+
+	/**
+	 * @method updateCategories
+	 * @description Replaces the brand's associated categories with a new list.
+	 * @param {CategoryId['value'][]} categoryIds An array of category IDs to set.
+	 */
+	updateCategories(categoryIds: CategoryId['value'][]): void {
+		this.categories = categoryIds.map(categoryId => new CategoryId(categoryId))
+	}
+
+	/**
+	 * @getter idValue
+	 * @description Returns the primitive value of the brand's ID.
+	 * @returns {BrandId['value']}
 	 */
 	get idValue(): BrandId['value'] {
 		return this.id.value
 	}
 
 	/**
-	 * @property {string} nameValue
-	 * @description Getter for the primitive value of the brand's name.
+	 * @getter nameValue
+	 * @description Returns the primitive value of the brand's name.
+	 * @returns {BrandName['value']}
 	 */
 	get nameValue(): BrandName['value'] {
 		return this.name.value
 	}
 
+	/**
+	 * @getter categoriesValue
+	 * @description Returns the primitive values of the brand's associated category IDs.
+	 * @returns {CategoryId['value'][]}
+	 */
 	get categoriesValue(): CategoryId['value'][] {
 		return this.categories.map(category => category.value)
 	}
