@@ -5,27 +5,20 @@ import { type MainCategoryDto } from '../domain/MainCategory.dto'
 import { type MainCategoryRepository } from '../domain/MainCategoryRepository'
 
 /**
- * Service to find all main categories based on a given criteria.
- *
- * @class MainCategoriesFinderAll
- * @extends {GetAllBaseService<MainCategoryDto>}
+ * @description Use case for retrieving all Main Category entities, with support for criteria-based filtering, sorting, and pagination.
  */
 export class MainCategoriesFinderAll extends GetAllBaseService<MainCategoryDto> {
-	/**
-	 * Creates an instance of MainCategoriesFinderAll.
-	 * @param {MainCategoryRepository} mainCategoryRepository - The repository for main categories.
-	 */
 	private readonly mainCategoryRepository: MainCategoryRepository
+
 	constructor({ mainCategoryRepository }: { mainCategoryRepository: MainCategoryRepository }) {
 		super()
 		this.mainCategoryRepository = mainCategoryRepository
 	}
 
 	/**
-	 * Executes the service to find all main categories.
-	 *
-	 * @param {Criteria} criteria - The criteria to apply for searching.
-	 * @returns {Promise<ResponseService<MainCategoryDto>>} A promise that resolves to the search results.
+	 * @description Executes the process of finding all main categories based on the provided criteria.
+	 * @param {Criteria} criteria The criteria object for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseService<MainCategoryDto>>} A promise that resolves to a paginated response containing Main Category DTOs.
 	 */
 	async run(criteria: Criteria): Promise<ResponseService<MainCategoryDto>> {
 		const { data, total } = await this.mainCategoryRepository.searchAll(criteria)

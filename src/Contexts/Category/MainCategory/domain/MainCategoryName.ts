@@ -2,56 +2,36 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
 /**
- * Represents a main category name value object.
- * Ensures that the main category name is valid.
- *
  * @class MainCategoryName
- * @extends {StringValueObject}
+ * @extends StringValueObject
+ * @description Represents the Value Object for a Main Category's name.
+ * It encapsulates validation rules for the main category name.
  */
 export class MainCategoryName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 5
+	private readonly MIN_LENGTH = 5
+	private readonly MAX_LENGTH = 100
 
 	/**
-	 * Creates an instance of MainCategoryName.
-	 * @param {string} value - The value of the main category name.
+	 * @param {string} value The raw string value of the main category name.
+	 * @throws {InvalidArgumentError} If the provided name does not meet the length constraints.
 	 */
 	constructor(readonly value: string) {
 		super(value)
-
-		this.ensureIsValidName(value)
+		this.ensureNameHasValidLength(value)
 	}
 
 	/**
-	 * Converts the MainCategoryName to its primitive string value.
-	 *
-	 * @returns {string} The primitive value.
-	 */
-	toPrimitives(): string {
-		return this.value
-	}
-
-	/**
-	 * Ensures that the provided name is valid.
-	 *
 	 * @private
-	 * @param {string} value - The name to validate.
-	 * @throws {InvalidArgumentError} If the name is not valid.
+	 * @method ensureNameHasValidLength
+	 * @description Validates that the main category name's length is within the allowed range.
+	 * @param {string} name The main category name to validate.
+	 * @throws {InvalidArgumentError} If the name's length is invalid.
 	 */
-	private ensureIsValidName(value: string): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`Este <${value}> no es un nombre de categoria válido`)
+	private ensureNameHasValidLength(name: string): void {
+		if (name.length < this.MIN_LENGTH || name.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`<${name}> no es un nombre de categoría principal válido. Debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
-	}
-
-	/**
-	 * Checks if the main category name is valid based on its length.
-	 *
-	 * @private
-	 * @param {string} name - The name to check.
-	 * @returns {boolean} True if the name is valid, false otherwise.
-	 */
-	private isValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

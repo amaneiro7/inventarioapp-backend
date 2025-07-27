@@ -3,32 +3,36 @@ import { type MainCategoryId } from './MainCategoryId'
 import { type MainCategoryName } from './MainCategoryName'
 
 /**
- * Represents the basic structure of a Main Category.
+ * @interface MainCategory
+ * @description Defines the core properties of a Main Category entity.
  */
 export interface MainCategory {
 	/**
-	 * The unique identifier of the main category.
-	 * @type {Primitives<MainCategoryId>}
+	 * @property {Primitives<MainCategoryId>} id The unique identifier of the main category.
 	 */
 	id: Primitives<MainCategoryId>
 	/**
-	 * The name of the main category.
-	 * @type {Primitives<MainCategoryName>}
+	 * @property {Primitives<MainCategoryName>} name The name of the main category.
 	 */
 	name: Primitives<MainCategoryName>
 }
 
 /**
- * Type for creating a new main category, omitting the 'id'.
+ * @type MainCategoryParams
+ * @description Represents the set of parameters required to create a new Main Category.
+ * The 'id' is omitted as it is typically generated automatically.
  */
 export type MainCategoryParams = Omit<MainCategory, 'id'>
 
 /**
- * Represents the primitive type of a Main Category.
+ * @type MainCategoryPrimitives
+ * @description Represents the primitive, serializable state of a Main Category entity.
+ * This type is ideal for data transfer, persistence, or logging.
  */
 export type MainCategoryPrimitives = MainCategory
 
 /**
- * Data Transfer Object for a Main Category.
+ * @type MainCategoryDto
+ * @description Represents a Data Transfer Object (DTO) for the Main Category entity.
  */
 export type MainCategoryDto = MainCategory

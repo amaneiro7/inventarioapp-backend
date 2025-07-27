@@ -2,18 +2,15 @@ import { ApiError } from '../../../Shared/domain/errors/ApiError'
 import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 /**
- * Error thrown when a main category is not found.
- *
- * @export
  * @class MainCategoryDoesNotExistError
- * @extends {ApiError}
+ * @extends ApiError
+ * @description Error thrown when an operation is attempted on a main category that is not found in the database.
  */
 export class MainCategoryDoesNotExistError extends ApiError {
 	/**
-	 * Creates an instance of MainCategoryDoesNotExistError.
-	 * @param {string} value - The identifier of the main category that does not exist.
+	 * @param {string} id The ID of the main category that was not found.
 	 */
-	constructor(public readonly value: string) {
-		super(httpStatus[404].statusCode, `La categoria no existe`)
+	constructor(public readonly id: string) {
+		super(httpStatus[404].statusCode, `La categoría principal con el ID '${id}' no existe.`)
 	}
 }

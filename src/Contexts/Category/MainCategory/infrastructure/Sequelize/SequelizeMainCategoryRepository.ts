@@ -10,42 +10,38 @@ import { type MainCategoryId } from '../../domain/MainCategoryId'
 import { type MainCategoryRepository } from '../../domain/MainCategoryRepository'
 
 /**
- * Sequelize implementation of the MainCategoryRepository.
- * Handles data persistence for MainCategory entities using Sequelize, with caching capabilities.
- *
  * @class SequelizeMainCategoryRepository
- * @extends {SequelizeCriteriaConverter}
+ * @extends SequelizeCriteriaConverter
  * @implements {MainCategoryRepository}
+ * @description Concrete implementation of the `MainCategoryRepository` using Sequelize.
+ * It handles database operations for the Main Category entity and includes caching.
  */
 export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter implements MainCategoryRepository {
-	private readonly cacheKey: string = 'mainCategories'
-
-	/**
-	 * Creates an instance of SequelizeMainCategoryRepository.
-	 * @param {CacheService} cache - The cache service for storing and retrieving cached data.
-	 */
+	private readonly cacheKeyPrefix = 'mainCategories'
 	private readonly cache: CacheService
+
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
 	}
 
 	/**
-	 * Retrieves a paginated list of main categories based on the provided criteria.
-	 * Results are cached to improve performance.
-	 *
-	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
-	 * @returns {Promise<ResponseDB<MainCategoryDto>>} A promise that resolves to a paginated response of main categories.
+	 * @method searchAll
+	 * @description Retrieves a paginated list of main categories based on specified criteria.
+	 * Caches the results to optimize performance.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<MainCategoryDto>>} A promise resolving to a paginated response of main category DTOs.
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<MainCategoryDto>> {
-		const options = this.convert(criteria)
-		options.include = ['category']
-		return await this.cache.getCachedData<ResponseDB<MainCategoryDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			criteria: criteria,
-			ex: TimeTolive.LONG,
+		const sequelizeOptions = this.convert(criteria)
+		sequelizeOptions.include = ['category']
+		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+
+		return this.cache.getCachedData<ResponseDB<MainCategoryDto>>({
+			cacheKey,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await MainCategoryModel.findAndCountAll(options)
+				const { count, rows } = await MainCategoryModel.findAndCountAll(sequelizeOptions)
 				return {
 					data: rows.map(row => row.get({ plain: true })),
 					total: count
@@ -55,16 +51,17 @@ export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter 
 	}
 
 	/**
-	 * Retrieves a single main category by its unique identifier.
-	 * Results are cached for faster subsequent lookups.
-	 *
-	 * @param {Primitives<MainCategoryId>} id - The ID of the main category to search for.
-	 * @returns {Promise<MainCategoryDto | null>} A promise that resolves to the main category DTO if found, otherwise null.
+	 * @method searchById
+	 * @description Retrieves a single main category by its unique identifier.
+	 * Caches the result for faster lookups.
+	 * @param {Primitives<MainCategoryId>} id The ID of the main category to find.
+	 * @returns {Promise<MainCategoryDto | null>} A promise resolving to the main category DTO if found, otherwise null.
 	 */
 	async searchById(id: Primitives<MainCategoryId>): Promise<MainCategoryDto | null> {
-		return await this.cache.getCachedData<MainCategoryDto | null>({
-			cacheKey: `${this.cacheKey}:id:${id}`,
-			ex: TimeTolive.SHORT,
+		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
+		return this.cache.getCachedData<MainCategoryDto | null>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const mainCategory = await MainCategoryModel.findByPk(id)
 				return mainCategory ? mainCategory.get({ plain: true }) : null

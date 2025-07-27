@@ -5,28 +5,27 @@ import { type MainCategoryDto } from './MainCategory.dto'
 import { type MainCategoryId } from './MainCategoryId'
 
 /**
- * Abstract repository for accessing main category data.
- *
- * @export
  * @abstract
  * @class MainCategoryRepository
+ * @description Defines the contract for data persistence operations related to the Main Category entity.
+ * This abstraction allows for different storage implementations while maintaining a consistent interface.
  */
 export abstract class MainCategoryRepository {
 	/**
-	 * Searches for all main categories matching the given criteria.
-	 *
 	 * @abstract
-	 * @param {Criteria} criteria - The criteria to apply.
-	 * @returns {Promise<ResponseDB<MainCategoryDto>>} A promise that resolves to the search results.
+	 * @method searchAll
+	 * @description Retrieves a paginated list of main categories based on a set of criteria.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<MainCategoryDto>>} A promise that resolves to a paginated response of main category DTOs.
 	 */
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<MainCategoryDto>>
 
 	/**
-	 * Searches for a main category by its ID.
-	 *
 	 * @abstract
-	 * @param {MainCategoryId['value']} id - The ID of the main category.
-	 * @returns {Promise<Nullable<MainCategoryDto>>} A promise that resolves to the main category or null if not found.
+	 * @method searchById
+	 * @description Finds a single main category by its unique identifier.
+	 * @param {MainCategoryId['value']} id The ID of the main category to search for.
+	 * @returns {Promise<Nullable<MainCategoryDto>>} A promise that resolves to the main category DTO if found, or null otherwise.
 	 */
 	abstract searchById(id: MainCategoryId['value']): Promise<Nullable<MainCategoryDto>>
 }
