@@ -9,20 +9,28 @@ import { type CentroCostoRepository } from '../../CentroCosto/domain/CentroCosto
 import { type CodCentroCosto } from '../../CentroCosto/domain/CodCentroCosto'
 import { type CentroTrabajoParams } from '../domain/CentroTrabajo.dto'
 
+/**
+ * @description Use case for updating an existing CentroTrabajo entity.
+ */
 export class CentroTrabajoUpdater {
 	private readonly centroTrabajoRepository: CentroTrabajoRepository
 	private readonly centroCostoRepository: CentroCostoRepository
-	constructor({
-		centroCostoRepository,
-		centroTrabajoRepository
-	}: {
+
+	constructor(dependencies: {
 		centroTrabajoRepository: CentroTrabajoRepository
 		centroCostoRepository: CentroCostoRepository
 	}) {
-		this.centroCostoRepository = centroCostoRepository
-		this.centroTrabajoRepository = centroTrabajoRepository
+		this.centroCostoRepository = dependencies.centroCostoRepository
+		this.centroTrabajoRepository = dependencies.centroTrabajoRepository
 	}
 
+	/**
+	 * @description Executes the CentroTrabajo update process.
+	 * @param {{ id: Primitives<CentroTrabajoId>; params: Partial<CentroTrabajoParams> }} data The parameters for updating the CentroTrabajo.
+	 * @returns {Promise<void>} A promise that resolves when the CentroTrabajo is successfully updated.
+	 * @throws {CentroTrabajoDoesNotExistError} If the CentroTrabajo with the provided ID does not exist.
+	 * @throws {CentroCostoDoesNotExistError} If the associated CentroCosto does not exist.
+	 */
 	async run({
 		id,
 		params: { name, centroCostoId }
@@ -38,45 +46,29 @@ export class CentroTrabajoUpdater {
 		}
 
 		const centroTrabajoEntity = CentroTrabajo.fromPrimitives(centroTrabajo)
-		await this.updateCentroTrabajoUseCase({
-			name,
-			entity: centroTrabajoEntity
-		})
-		await this.updateCentroCostoUseCase({
-			centroCostoId,
-			entity: centroTrabajoEntity
-		})
+		this.updateCentroTrabajoName(name, centroTrabajoEntity)
+		await this.updateCentroCosto(centroCostoId, centroTrabajoEntity)
 
 		await this.centroTrabajoRepository.save(centroTrabajoEntity.toPrimitive())
 	}
 
-	private async updateCentroTrabajoUseCase({
-		entity,
-		name
-	}: {
-		name?: Primitives<CentroTrabajoName>
-		entity: CentroTrabajo
-	}): Promise<void> {
-		if (!name) return
-
-		if (entity.nameValue === name) return
-
+	private updateCentroTrabajoName(name: Primitives<CentroTrabajoName> | undefined, entity: CentroTrabajo): void {
+		if (name === undefined || entity.nameValue === name) {
+			return
+		}
 		entity.updateName(name)
 	}
-	private async updateCentroCostoUseCase({
-		entity,
-		centroCostoId
-	}: {
-		centroCostoId?: Primitives<CodCentroCosto>
-		entity: CentroTrabajo
-	}): Promise<void> {
-		if (!centroCostoId) return
 
-		if (entity.centroCostoValue === centroCostoId) return
-		if ((await this.centroCostoRepository.searchById(centroCostoId)) === null) {
+	private async updateCentroCosto(
+		centroCostoId: Primitives<CodCentroCosto> | undefined,
+		entity: CentroTrabajo
+	): Promise<void> {
+		if (centroCostoId === undefined || entity.centroCostoValue === centroCostoId) {
+			return
+		}
+		if (!(await this.centroCostoRepository.searchById(centroCostoId))) {
 			throw new CentroCostoDoesNotExistError()
 		}
-
 		entity.updateCentroCosto(centroCostoId)
 	}
 }

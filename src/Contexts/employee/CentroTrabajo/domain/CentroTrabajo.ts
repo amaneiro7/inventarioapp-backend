@@ -4,6 +4,9 @@ import { CentroTrabajoName } from './CentroTrabajoName'
 import { CentroTrabajoId } from './CentroTrabajoId'
 import { type CentroTrabajoDto, type CentroTrabajoParams, type CentroTrabajoPrimitives } from './CentroTrabajo.dto'
 
+/**
+ * @description Represents the CentroTrabajo domain entity.
+ */
 export class CentroTrabajo {
 	constructor(
 		private readonly id: CentroTrabajoId,
@@ -17,14 +20,6 @@ export class CentroTrabajo {
 			new CentroTrabajoName(name),
 			new CodCentroCosto(centroCostoId)
 		)
-	}
-
-	updateName(newName: Primitives<CentroTrabajoName>): void {
-		this.name = new CentroTrabajoName(newName)
-	}
-
-	updateCentroCosto(newCentroCosto: Primitives<CodCentroCosto>): void {
-		this.centroCostoId = new CodCentroCosto(newCentroCosto)
 	}
 
 	static fromPrimitives(primitives: CentroTrabajoDto): CentroTrabajo {
@@ -43,6 +38,14 @@ export class CentroTrabajo {
 		}
 	}
 
+	updateName(newName: Primitives<CentroTrabajoName>): void {
+		this.name = new CentroTrabajoName(newName)
+	}
+
+	updateCentroCosto(newCentroCosto: Primitives<CodCentroCosto>): void {
+		this.centroCostoId = new CodCentroCosto(newCentroCosto)
+	}
+
 	get idValue(): Primitives<CentroTrabajoId> {
 		return this.id.value
 	}
@@ -50,6 +53,7 @@ export class CentroTrabajo {
 	get nameValue(): Primitives<CentroTrabajoName> {
 		return this.name.value
 	}
+
 	get centroCostoValue(): Primitives<CodCentroCosto> {
 		return this.centroCostoId.value
 	}
