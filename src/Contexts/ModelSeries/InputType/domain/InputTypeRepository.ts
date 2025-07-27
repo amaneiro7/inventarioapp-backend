@@ -4,8 +4,27 @@ import { type InputTypeDto } from './InputType.dto'
 import { type InputTypeId } from './InputTypeId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
+/**
+ * @abstract
+ * @class InputTypeRepository
+ * @description Defines the contract for data persistence operations related to the InputType entity.
+ */
 export abstract class InputTypeRepository {
+	/**
+	 * @abstract
+	 * @method searchAll
+	 * @description Retrieves a paginated list of input types.
+	 * @param {Criteria} criteria The criteria for filtering and pagination.
+	 * @returns {Promise<ResponseDB<InputTypeDto>>} A paginated response of DTOs.
+	 */
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<InputTypeDto>>
 
+	/**
+	 * @abstract
+	 * @method searchById
+	 * @description Finds a single input type by its ID.
+	 * @param {Primitives<InputTypeId>} id The ID of the input type to search for.
+	 * @returns {Promise<InputTypeDto | null>} A promise that resolves to the DTO if found, or null otherwise.
+	 */
 	abstract searchById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null>
 }

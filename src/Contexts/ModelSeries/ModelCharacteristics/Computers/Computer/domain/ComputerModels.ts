@@ -16,6 +16,9 @@ import { type ComputerModelsParams, type ComputerModelsPrimitives } from './Comp
 import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
+/**
+ * @description Represents a computer model, extending the base ModelSeries class.
+ */
 export class ComputerModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -35,9 +38,8 @@ export class ComputerModels extends ModelSeries {
 	}
 
 	static create(params: ComputerModelsParams): ComputerModels {
-		const id = ModelSeriesId.random().value
 		return new ComputerModels(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -52,18 +54,18 @@ export class ComputerModels extends ModelSeries {
 		)
 	}
 
-	public static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = [
+	static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		const acceptedCategories: string[] = [
 			CategoryValues.COMPUTADORAS,
 			CategoryValues.ALLINONE,
 			CategoryValues.SERVIDORES
 		]
-		return AcceptedComputerCategories.some(category => category === categoryId)
+		return acceptedCategories.includes(categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ComputerModels {
 		if (!primitives.modelComputer) {
-			throw new Error('Error al extraer los datos de modelos de computadora')
+			throw new Error('Computer model data is missing')
 		}
 		return new ComputerModels(
 			new ModelSeriesId(primitives.id),
@@ -83,11 +85,7 @@ export class ComputerModels extends ModelSeries {
 
 	toPrimitives(): ComputerModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
+			...super.toPrimitives(),
 			memoryRamTypeId: this.memoryRamTypeValue,
 			memoryRamSlotQuantity: this.memoryRamSlotQuantityValue,
 			hasBluetooth: this.hasBluetoothValue,

@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type ModelSeriesId } from '../../../../../ModelSeries/domain/ModelSeriesId'
@@ -21,6 +20,9 @@ interface LaptopModelsCreationAttributes extends Omit<LaptopModelsDto, 'memoryRa
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
+/**
+ * @description Sequelize model for the `LaptopModels` entity.
+ */
 export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> implements LaptopModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -35,82 +37,32 @@ export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> imp
 	declare batteryModel: Primitives<BatteryModelName>
 	declare memoryRamType: MemoryRamTypeDto
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Model, {
-			as: 'model',
-			foreignKey: 'modelSeriesId'
-		}) // A Laptop model belongs to a model
-		this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
-		// this.belongsTo(models.ProcessorSocket, { as: 'processorSocket' }) // A computer model belongs to a processor socket
-		this.belongsTo(models.MemoryRamType, { as: 'memoryRamType' }) // A computer model belongs to a memory ram
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' })
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
+		this.belongsTo(models.MemoryRamType, { as: 'memoryRamType', foreignKey: 'memoryRamTypeId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		LaptopModelsModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				modelSeriesId: {
-					type: DataTypes.UUID,
-					unique: true,
-					allowNull: false
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				modelSeriesId: { type: DataTypes.UUID, unique: true, allowNull: false },
 				categoryId: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					validate: {
-						isIn: {
-							args: [[CategoryValues.LAPTOPS]],
-							msg: 'Solo puede pertenecer a la categoria de Laptops'
-						}
-					}
+					validate: { isIn: [[CategoryValues.LAPTOPS]] }
 				},
-				memoryRamTypeId: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				memoryRamSlotQuantity: {
-					type: DataTypes.INTEGER,
-					allowNull: false
-				},
-				hasBluetooth: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_bluetooth'
-				},
-				hasWifiAdapter: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_wifi_adapter'
-				},
-				hasDVI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_dvi'
-				},
-				hasHDMI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_hdmi'
-				},
-				hasVGA: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_vga'
-				},
-				batteryModel: {
-					type: DataTypes.STRING,
-					allowNull: false
-				}
+				memoryRamTypeId: { type: DataTypes.STRING, allowNull: false },
+				memoryRamSlotQuantity: { type: DataTypes.INTEGER, allowNull: false },
+				hasBluetooth: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_bluetooth' },
+				hasWifiAdapter: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_wifi_adapter' },
+				hasDVI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_dvi' },
+				hasHDMI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_hdmi' },
+				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' },
+				batteryModel: { type: DataTypes.STRING, allowNull: false }
 			},
-			{
-				modelName: 'ModelLaptop',
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'ModelLaptop', tableName: 'model_laptops', underscored: true, sequelize }
 		)
 	}
 }

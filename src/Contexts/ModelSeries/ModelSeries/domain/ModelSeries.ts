@@ -5,6 +5,10 @@ import { ModelSeriesId } from './ModelSeriesId'
 import { ModelSeriesName } from './ModelSeriesName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
+
+/**
+ * @description Represents the ModelSeries domain entity.
+ */
 export class ModelSeries {
 	constructor(
 		private readonly id: ModelSeriesId,
@@ -15,30 +19,13 @@ export class ModelSeries {
 	) {}
 
 	static create(params: ModelSeriesParams): ModelSeries {
-		const id = ModelSeriesId.random().value
 		return new ModelSeries(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic)
 		)
-	}
-
-	updateName(newName: Primitives<ModelSeriesName>): void {
-		this.name = new ModelSeriesName(newName)
-	}
-
-	updateCategoryId(newCategoryId: Primitives<CategoryId>): void {
-		this.categoryId = new CategoryId(newCategoryId)
-	}
-
-	updateBrandId(newBrandId: Primitives<BrandId>): void {
-		this.brandId = new BrandId(newBrandId)
-	}
-
-	updateGeneric(generic: Primitives<Generic>): void {
-		this.generic = new Generic(generic)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ModelSeries {
@@ -61,6 +48,22 @@ export class ModelSeries {
 		}
 	}
 
+	updateName(newName: Primitives<ModelSeriesName>): void {
+		this.name = new ModelSeriesName(newName)
+	}
+
+	updateCategoryId(newCategoryId: Primitives<CategoryId>): void {
+		this.categoryId = new CategoryId(newCategoryId)
+	}
+
+	updateBrandId(newBrandId: Primitives<BrandId>): void {
+		this.brandId = new BrandId(newBrandId)
+	}
+
+	updateGeneric(generic: Primitives<Generic>): void {
+		this.generic = new Generic(generic)
+	}
+
 	get idValue(): Primitives<ModelSeriesId> {
 		return this.id.value
 	}
@@ -76,6 +79,7 @@ export class ModelSeries {
 	get brandIdValue(): Primitives<BrandId> {
 		return this.brandId.value
 	}
+
 	get genericValue(): Primitives<Generic> {
 		return this.generic.value
 	}

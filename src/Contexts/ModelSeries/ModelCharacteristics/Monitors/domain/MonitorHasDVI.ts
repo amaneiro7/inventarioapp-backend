@@ -1,38 +1,19 @@
 import { BooleanValueObject } from '../../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { MonitorModels } from './MonitorModels'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type MonitorModels } from './MonitorModels'
 
+/**
+ * @description Represents a boolean value indicating if a monitor has a DVI port.
+ */
 export class MonitorHasDVI extends BooleanValueObject {
-	constructor(readonly value: boolean) {
-		super(value)
-
-		this.ensureIsValid(value)
-	}
-
-	toPrimitives(): boolean {
-		return this.value
-	}
-
-	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-		}
-	}
-
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-
-	static async updateDVIField(params: { hasDVI: Primitives<MonitorHasDVI>; entity: MonitorModels }): Promise<void> {
-		if (params.hasDVI === undefined) {
+	/**
+	 * @description Handles the logic for updating the DVI field of a monitor model.
+	 * @param {{ hasDVI: Primitives<MonitorHasDVI>; entity: MonitorModels }} params The parameters for updating.
+	 */
+	static updateDVIField(params: { hasDVI: Primitives<MonitorHasDVI>; entity: MonitorModels }): void {
+		if (params.hasDVI === undefined || params.entity.hasDVIValue === params.hasDVI) {
 			return
 		}
-
-		if (params.entity.hasDVIValue === params.hasDVI) {
-			return
-		}
-
 		params.entity.updateHasDVI(params.hasDVI)
 	}
 }

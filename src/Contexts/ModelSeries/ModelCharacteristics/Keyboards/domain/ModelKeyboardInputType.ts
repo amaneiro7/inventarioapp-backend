@@ -1,38 +1,41 @@
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { InputTypePrimitives } from '../../../InputType/domain/InputType.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { InputTypeId } from '../../../InputType/domain/InputTypeId'
-import { InputTypeRepository } from '../../../InputType/domain/InputTypeRepository'
-import { KeyboardModels } from './KeyboadModels'
+import { type InputTypeRepository } from '../../../InputType/domain/InputTypeRepository'
+import { type KeyboardModels } from './KeyboadModels'
 
+/**
+ * @description Represents the input type for a keyboard model.
+ */
 export class ModelKeyboardInputType extends InputTypeId {
+	/**
+	 * @description Handles the logic for updating the input type field of a keyboard model.
+	 * @param {{ repository: InputTypeRepository; inputTypeId: Primitives<InputTypeId>; entity: KeyboardModels }} params The parameters for updating.
+	 */
 	static async updateInputTypeField(params: {
 		repository: InputTypeRepository
 		inputTypeId: Primitives<InputTypeId>
 		entity: KeyboardModels
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de categoria no realiza ninguna acción
-		if (params.inputTypeId === undefined) {
+		if (params.inputTypeId === undefined || params.entity.inputTypeValue === params.inputTypeId) {
 			return
 		}
-		// Verifica que si la categoria actual y el nuevo valor de categoria son iguales no realice una busqueda en el repositorio
-		if (params.entity.inputTypeValue === params.inputTypeId) {
-			return
-		}
-		// Verifica que la categoria no exista en la base de datos, si existe lanza un error {@link BrandAlreadyExistError} con el valor de categoria
-		await ModelKeyboardInputType.ensureInputTypeExist({
-			repository: params.repository,
-			inputTypeId: params.inputTypeId
-		})
-		// Actualiza el campo Brand de la entidad {@link ModelSeries} con el nuevo valor de categoria
+		await this.ensureInputTypeExist(params.repository, params.inputTypeId)
 		params.entity.updateInputType(params.inputTypeId)
 	}
-	static async ensureInputTypeExist(params: {
-		repository: InputTypeRepository
+
+	/**
+	 * @description Ensures that the specified input type exists in the repository.
+	 * @param repository The repository to search in.
+	 * @param inputTypeId The ID of the input type to check.
+	 * @throws {Error} If the input type does not exist.
+	 */
+	static async ensureInputTypeExist(
+		repository: InputTypeRepository,
 		inputTypeId: Primitives<InputTypeId>
-	}): Promise<void> {
-		const isInputTypeExist: InputTypePrimitives | null = await params.repository.searchById(params.inputTypeId)
-		if (isInputTypeExist === null) {
-			throw new Error('InputType does not exist')
+	): Promise<void> {
+		const isInputTypeExist = await repository.searchById(inputTypeId)
+		if (!isInputTypeExist) {
+			throw new Error('El tipo de entrada no existe.')
 		}
 	}
 }

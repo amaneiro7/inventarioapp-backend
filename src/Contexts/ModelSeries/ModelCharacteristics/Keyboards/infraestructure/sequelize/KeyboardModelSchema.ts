@@ -4,8 +4,8 @@ import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId
 import { type InputTypeId } from '../../../../InputType/domain/InputTypeId'
 import { type HasFingerPrintReader } from '../../domain/HasFingerPrintReader'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { KeyboardModelsDto } from '../../domain/KeyboardModels.dto'
-import { InputType } from '../../../../InputType/domain/InputType.dto'
+import { type KeyboardModelsDto } from '../../domain/KeyboardModels.dto'
+import { type InputTypeDto } from '../../../../InputType/domain/InputType.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsDto, 'inputType'> {
@@ -14,66 +14,37 @@ interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsDto, 'inpu
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
+/**
+ * @description Sequelize model for the `KeyboardModels` entity.
+ */
 export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes> implements KeyboardModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>
 	declare inputTypeId: Primitives<InputTypeId>
 	declare hasFingerPrintReader: Primitives<HasFingerPrintReader>
-	declare inputType: InputType
+	declare inputType: InputTypeDto
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Model, {
-			as: 'model',
-			foreignKey: 'modelSeriesId'
-		}) // A keyboard model belongs to a model
-		this.belongsTo(models.Category, {
-			as: 'category',
-			foreignKey: 'categoryId'
-		}) // A keyboard model belongs to a category
-		this.belongsTo(models.InputType, {
-			as: 'inputType',
-			foreignKey: 'inputTypeId'
-		}) // A keyboard model belongs to a InputTypes
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' })
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
+		this.belongsTo(models.InputType, { as: 'inputType', foreignKey: 'inputTypeId' })
 	}
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		KeyboardModelsModel.init(
+
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				modelSeriesId: {
-					type: DataTypes.UUID,
-					unique: true,
-					allowNull: false
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				modelSeriesId: { type: DataTypes.UUID, unique: true, allowNull: false },
 				categoryId: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					validate: {
-						isIn: {
-							args: [[CategoryValues.KEYBOARD]],
-							msg: 'Solo puede pertenecer a la categoria de Teclados'
-						}
-					}
+					validate: { isIn: [[CategoryValues.KEYBOARD]] }
 				},
-				inputTypeId: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				hasFingerPrintReader: {
-					type: DataTypes.BOOLEAN,
-					defaultValue: false,
-					field: 'has_fingerprint_reader'
-				}
+				inputTypeId: { type: DataTypes.STRING, allowNull: false },
+				hasFingerPrintReader: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'has_fingerprint_reader' }
 			},
-			{
-				modelName: 'ModelKeyboard',
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'ModelKeyboard', tableName: 'model_keyboards', underscored: true, sequelize }
 		)
 	}
 }

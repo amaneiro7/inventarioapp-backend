@@ -1,42 +1,25 @@
 import { BooleanValueObject } from '../../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { KeyboardModels } from './KeyboadModels'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type KeyboardModels } from './KeyboadModels'
 
+/**
+ * @description Represents a boolean value indicating if a device has a fingerprint reader.
+ */
 export class HasFingerPrintReader extends BooleanValueObject {
-	constructor(readonly value: boolean) {
-		super(value)
-
-		this.ensureIsValid(value)
-	}
-
-	toPrimitives(): boolean {
-		return this.value
-	}
-
-	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-		}
-	}
-
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-
-	static async updateFingerprintField(params: {
+	/**
+	 * @description Handles the logic for updating the fingerprint reader field of a keyboard model.
+	 * @param {{ hasFingerPrintReader: Primitives<HasFingerPrintReader>; entity: KeyboardModels }} params The parameters for updating.
+	 */
+	static updateFingerprintField(params: {
 		hasFingerPrintReader: Primitives<HasFingerPrintReader>
 		entity: KeyboardModels
-	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor del lector de huella no realiza ninguna acción
-		if (params.hasFingerPrintReader === undefined) {
+	}): void {
+		if (
+			params.hasFingerPrintReader === undefined ||
+			params.entity.hasFingerPrintReaderValue === params.hasFingerPrintReader
+		) {
 			return
 		}
-		// Verifica que si el actual y el nuevo valor son iguales no realice una busqueda en el repositorio
-		if (params.entity.hasFingerPrintReaderValue === params.hasFingerPrintReader) {
-			return
-		}
-		// Actualiza el campo hasFingerPrintReader de la entidad {@link ModelSeries} con el nuevo valor del lector de huella
 		params.entity.updateHasFingerPrintReader(params.hasFingerPrintReader)
 	}
 }

@@ -1,41 +1,22 @@
 import { BooleanValueObject } from '../../../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { ComputerModels } from './ComputerModels'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type ComputerModels } from './ComputerModels'
 
+/**
+ * @description Represents a boolean value indicating if a device has a Wi-Fi adapter.
+ */
 export class HasWifiAdapter extends BooleanValueObject {
-	constructor(readonly value: boolean) {
-		super(value)
-
-		this.ensureIsValid(value)
-	}
-
-	toPrimitives(): boolean {
-		return this.value
-	}
-
-	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-		}
-	}
-
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-
-	static async updateWifiAdapterField(params: {
+	/**
+	 * @description Handles the logic for updating the Wi-Fi adapter field of a computer model.
+	 * @param {{ hasWifiAdapter: Primitives<HasWifiAdapter>; entity: ComputerModels }} params The parameters for updating.
+	 */
+	static updateWifiAdapterField(params: {
 		hasWifiAdapter: Primitives<HasWifiAdapter>
 		entity: ComputerModels
-	}): Promise<void> {
-		if (params.hasWifiAdapter === undefined) {
+	}): void {
+		if (params.hasWifiAdapter === undefined || params.entity.hasWifiAdapterValue === params.hasWifiAdapter) {
 			return
 		}
-
-		if (params.entity.hasWifiAdapterValue === params.hasWifiAdapter) {
-			return
-		}
-
 		params.entity.updateHasWifiAdapter(params.hasWifiAdapter)
 	}
 }

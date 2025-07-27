@@ -1,17 +1,19 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
-import { ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
+import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { HasFingerPrintReader } from './HasFingerPrintReader'
-import { KeyboardModelsParams, KeyboardModelsPrimitives } from './KeyboardModels.dto'
+import { type KeyboardModelsParams, type KeyboardModelsPrimitives } from './KeyboardModels.dto'
 import { ModelKeyboardInputType } from './ModelKeyboardInputType'
 
+/**
+ * @description Represents a keyboard model, extending the base ModelSeries class.
+ */
 export class KeyboardModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -26,9 +28,8 @@ export class KeyboardModels extends ModelSeries {
 	}
 
 	static create(params: KeyboardModelsParams): KeyboardModels {
-		const id = String(ModelSeriesId.random())
 		return new KeyboardModels(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -38,14 +39,13 @@ export class KeyboardModels extends ModelSeries {
 		)
 	}
 
-	public static isKeyboardCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedKeyboardCategories: CategoryValues[] = [CategoryValues.KEYBOARD]
-		return AcceptedKeyboardCategories.some(category => category === categoryId)
+	static isKeyboardCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		return categoryId === CategoryValues.KEYBOARD
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): KeyboardModels {
 		if (!primitives.modelKeyboard) {
-			throw new Error('Error al cargar la información de teclados')
+			throw new Error('Keyboard model data is missing')
 		}
 		return new KeyboardModels(
 			new ModelSeriesId(primitives.id),
@@ -60,11 +60,7 @@ export class KeyboardModels extends ModelSeries {
 
 	toPrimitives(): KeyboardModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
+			...super.toPrimitives(),
 			inputTypeId: this.inputTypeValue,
 			hasFingerPrintReader: this.hasFingerPrintReaderValue
 		}
@@ -73,6 +69,7 @@ export class KeyboardModels extends ModelSeries {
 	get inputTypeValue(): Primitives<ModelKeyboardInputType> {
 		return this.InputTypeId.value
 	}
+
 	get hasFingerPrintReaderValue(): Primitives<HasFingerPrintReader> {
 		return this.hasFingerPrintReader.value
 	}
@@ -80,6 +77,7 @@ export class KeyboardModels extends ModelSeries {
 	updateHasFingerPrintReader(newValue: Primitives<HasFingerPrintReader>): void {
 		this.hasFingerPrintReader = new HasFingerPrintReader(newValue)
 	}
+
 	updateInputType(newValue: Primitives<ModelKeyboardInputType>): void {
 		this.InputTypeId = new ModelKeyboardInputType(newValue)
 	}

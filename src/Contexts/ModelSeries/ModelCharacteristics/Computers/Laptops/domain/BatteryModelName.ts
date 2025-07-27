@@ -1,44 +1,39 @@
 import { InvalidArgumentError } from '../../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../../../../Shared/domain/value-object/StringValueObject'
-import { LaptopsModels } from './LaptopsModels'
+import { type LaptopsModels } from './LaptopsModels'
 
+/**
+ * @description Represents the model name of a battery.
+ */
 export class BatteryModelName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 20
-	private readonly NAME_MIN_LENGTH = 3
+	private readonly MIN_LENGTH = 3
+	private readonly MAX_LENGTH = 20
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
 	private ensureIsValidName(value: string): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid battery model name`)
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`El modelo de batería debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
 	}
 
-	private isValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-	}
-
-	static async updateBatteryModelField(params: {
+	/**
+	 * @description Handles the logic for updating the battery model field of a laptop model.
+	 * @param {{ batteryModel: Primitives<BatteryModelName>; entity: LaptopsModels }} params The parameters for updating.
+	 */
+	static updateBatteryModelField(params: {
 		batteryModel: Primitives<BatteryModelName>
 		entity: LaptopsModels
-	}): Promise<void> {
-		if (params.batteryModel === undefined) {
+	}): void {
+		if (params.batteryModel === undefined || params.entity.batteryModelValue === params.batteryModel) {
 			return
 		}
-
-		if (params.entity.batteryModelValue === params.batteryModel) {
-			return
-		}
-
 		params.entity.updateBatterModel(params.batteryModel)
 	}
 }

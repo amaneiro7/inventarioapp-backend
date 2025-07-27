@@ -1,5 +1,4 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -7,11 +6,13 @@ import { ModelSeriesId } from '../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { CartridgeModel } from './CartridgeModel'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-
 import { type PrinteModelsParams, type PrinteModelsPrimitives } from './ModelPrinters.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 
+/**
+ * @description Represents a printer model, extending the base ModelSeries class.
+ */
 export class ModelPrinters extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -26,11 +27,10 @@ export class ModelPrinters extends ModelSeries {
 
 	static create(params: PrinteModelsParams): ModelPrinters {
 		if (!this.isPrinterCategory({ categoryId: params.categoryId })) {
-			throw new Error('Invalid category for printer model The category must be "printer"')
+			throw new Error('La categoría debe ser de tipo impresora.')
 		}
-		const id = ModelSeriesId.random().value
 		return new ModelPrinters(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -39,14 +39,14 @@ export class ModelPrinters extends ModelSeries {
 		)
 	}
 
-	public static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = [CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]
-		return AcceptedComputerCategories.some(category => category === categoryId)
+	static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		const acceptedCategories: string[] = [CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]
+		return acceptedCategories.includes(categoryId)
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ModelPrinters {
 		if (!primitives.modelPrinter) {
-			throw new Error('Error al cargar información de impresoras')
+			throw new Error('Printer model data is missing')
 		}
 		return new ModelPrinters(
 			new ModelSeriesId(primitives.id),
@@ -60,11 +60,7 @@ export class ModelPrinters extends ModelSeries {
 
 	toPrimitives(): PrinteModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
+			...super.toPrimitives(),
 			cartridgeModel: this.cartridgeModelValue
 		}
 	}

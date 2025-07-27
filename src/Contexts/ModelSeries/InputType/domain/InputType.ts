@@ -3,8 +3,14 @@ import { InputTypeName } from './InputTypeName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type InputTypeDto, type InputTypePrimitives } from './InputType.dto'
 
+/**
+ * @description Represents the InputType domain entity.
+ */
 export class InputType {
-	constructor(private readonly id: InputTypeId, private readonly name: InputTypeName) {}
+	constructor(
+		private readonly id: InputTypeId,
+		private readonly name: InputTypeName
+	) {}
 
 	static fromPrimitives(primitives: InputTypeDto): InputType {
 		return new InputType(new InputTypeId(primitives.id), new InputTypeName(primitives.name))

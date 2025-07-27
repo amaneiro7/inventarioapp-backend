@@ -1,11 +1,10 @@
 import { BrandId } from '../../../../../Brand/domain/BrandId'
-
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
-import { ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
+import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../../ModelSeries/domain/ModelSeriesName'
 import { ComputerModels } from '../../Computer/domain/ComputerModels'
@@ -18,6 +17,9 @@ import { MemoryRamSlotQuantity } from '../../Computer/domain/MemoryRamSlotQuanti
 import { BatteryModelName } from './BatteryModelName'
 import { type LaptopModelsParams, type LaptopModelsPrimitives } from './LaptopsModels.dto'
 
+/**
+ * @description Represents a laptop model, extending the ComputerModels class.
+ */
 export class LaptopsModels extends ComputerModels {
 	constructor(
 		id: ModelSeriesId,
@@ -51,9 +53,8 @@ export class LaptopsModels extends ComputerModels {
 	}
 
 	static create(params: LaptopModelsParams): LaptopsModels {
-		const id = String(ModelSeriesId.random())
 		return new LaptopsModels(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -69,14 +70,13 @@ export class LaptopsModels extends ComputerModels {
 		)
 	}
 
-	public static isLaptopCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedComputerCategories: CategoryValues[] = [CategoryValues.LAPTOPS]
-		return AcceptedComputerCategories.some(category => category === categoryId)
+	static isLaptopCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		return categoryId === CategoryValues.LAPTOPS
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): LaptopsModels {
 		if (!primitives.modelLaptop) {
-			throw new Error('Error al cargar la información de modelos de Laptos')
+			throw new Error('Laptop model data is missing')
 		}
 		return new LaptopsModels(
 			new ModelSeriesId(primitives.id),
@@ -97,18 +97,7 @@ export class LaptopsModels extends ComputerModels {
 
 	toPrimitives(): LaptopModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
-			memoryRamTypeId: this.memoryRamTypeValue,
-			memoryRamSlotQuantity: this.memoryRamSlotQuantityValue,
-			hasBluetooth: this.hasBluetoothValue,
-			hasWifiAdapter: this.hasWifiAdapterValue,
-			hasDVI: this.hasDVIValue,
-			hasHDMI: this.hasHDMIValue,
-			hasVGA: this.hasVGAValue,
+			...super.toPrimitives(),
 			batteryModel: this.batteryModelValue
 		}
 	}

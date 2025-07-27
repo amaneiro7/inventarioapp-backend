@@ -1,45 +1,39 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { type ModelPrinters } from './ModelPrinters'
 
-import { ModelPrinters } from './ModelPrinters'
-
+/**
+ * @description Represents the model of a printer cartridge.
+ */
 export class CartridgeModel extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 20
-	private readonly NAME_MIN_LENGTH = 3
+	private readonly MIN_LENGTH = 3
+	private readonly MAX_LENGTH = 20
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
 	private ensureIsValidName(value: string): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid cartridge mode`)
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`El modelo de cartucho debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
 	}
 
-	private isValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-	}
-
-	static async updateCartridgeModelField(params: {
+	/**
+	 * @description Handles the logic for updating the cartridge model field of a printer model.
+	 * @param {{ cartridgeModel: Primitives<CartridgeModel>; entity: ModelPrinters }} params The parameters for updating.
+	 */
+	static updateCartridgeModelField(params: {
 		cartridgeModel: Primitives<CartridgeModel>
 		entity: ModelPrinters
-	}): Promise<void> {
-		if (params.cartridgeModel === undefined) {
+	}): void {
+		if (params.cartridgeModel === undefined || params.entity.cartridgeModelValue === params.cartridgeModel) {
 			return
 		}
-
-		if (params.entity.cartridgeModelValue === params.cartridgeModel) {
-			return
-		}
-
 		params.entity.updateCartridgeModel(params.cartridgeModel)
 	}
 }

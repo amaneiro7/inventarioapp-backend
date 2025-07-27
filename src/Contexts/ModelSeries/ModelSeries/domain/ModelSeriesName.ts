@@ -1,35 +1,35 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesRepository } from './ModelSeriesRepository'
-import { BrandId } from '../../../Brand/domain/BrandId'
+import { type BrandId } from '../../../Brand/domain/BrandId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { ModelSeries } from './ModelSeries'
+import { type ModelSeries } from './ModelSeries'
 import { ModelSeriesAlreadyExistError } from './ModelSeriesAlreadyExistError'
 
+/**
+ * @description Represents the name of a model series.
+ */
 export class ModelSeriesName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 2
+	private readonly MIN_LENGTH = 2
+	private readonly MAX_LENGTH = 100
 
 	constructor(readonly value: string) {
 		super(value)
-
-		this.ensureIsValid(value)
+		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): Primitives<ModelSeriesName> {
-		return this.value
-	}
-
-	private ensureIsValid(value: Primitives<ModelSeriesName>): void {
-		if (this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid model series name`)
+	private ensureIsValidName(value: string): void {
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(
+				`El nombre del modelo debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} caracteres.`
+			)
 		}
 	}
 
-	private isValid(name: Primitives<ModelSeriesName>): boolean {
-		return name.length <= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
-	}
-
+	/**
+	 * @description Handles the logic for updating the name field of a model series.
+	 * @param {{ repository: ModelSeriesRepository; name?: Primitives<ModelSeriesName>; entity: ModelSeries }} params The parameters for updating.
+	 */
 	static async updateNameField({
 		repository,
 		name,
@@ -39,25 +39,19 @@ export class ModelSeriesName extends StringValueObject {
 		name?: Primitives<ModelSeriesName>
 		entity: ModelSeries
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo nombre no realiza ninguna acción
-		if (name === undefined) {
-			return
-		}
-		// Verifica que si el nombre actual y el nuevo nombre son iguales no realice una busqueda en el repositorio
-		if (entity.nameValue === name) {
+		if (name === undefined || entity.nameValue === name) {
 			return
 		}
 		const brandId = entity.brandIdValue
-		// Verifica que el nombre no exista en la base de datos, si existe lanza un error {@link ModelSeriesAlreadyExistError} con el nombre pasado
-		await ModelSeriesName.ensureModelNameDoesNotExist({
-			repository,
-			name,
-			brandId
-		})
-		// Actualiza el campo nomber de la entidad {@link ModelSeries} con el nuevo nombre
+		await ModelSeriesName.ensureModelNameDoesNotExist({ repository, name, brandId })
 		entity.updateName(name)
 	}
 
+	/**
+	 * @description Checks if a model name already exists in the repository for the given brand.
+	 * @param {{ repository: ModelSeriesRepository; name: Primitives<ModelSeriesName>; brandId: Primitives<BrandId> }} params The parameters for the check.
+	 * @throws {ModelSeriesAlreadyExistError} If the model name already exists for the same brand.
+	 */
 	static async ensureModelNameDoesNotExist({
 		repository,
 		name,
@@ -67,17 +61,13 @@ export class ModelSeriesName extends StringValueObject {
 		name: Primitives<ModelSeriesName>
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
-		// Busca por un modelo con el nombre suministrador en la base de datos
 		const modelSeries = await repository.searchByName(name)
-		// si el resultado es nulo significa que no existe por ende el nombre esta disponible
 		if (!modelSeries) {
 			return
 		}
-		// Pueden existir dos nombres iguales siempre y cuando pertenezcan a dos marcas distintas
 		if (modelSeries.brandId !== brandId) {
 			return
 		}
-		// si el resultado es distinto de nulo significa que existe por ende el nombre no esta disponible
 		throw new ModelSeriesAlreadyExistError(name)
 	}
 }

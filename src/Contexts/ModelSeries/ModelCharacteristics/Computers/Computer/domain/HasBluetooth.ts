@@ -1,41 +1,19 @@
 import { BooleanValueObject } from '../../../../../Shared/domain/value-object/BooleanValueObject'
-import { InvalidArgumentError } from '../../../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { ComputerModels } from './ComputerModels'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type ComputerModels } from './ComputerModels'
 
+/**
+ * @description Represents a boolean value indicating if a device has Bluetooth.
+ */
 export class HasBluetooth extends BooleanValueObject {
-	constructor(readonly value: boolean) {
-		super(value)
-
-		this.ensureIsValid(value)
-	}
-
-	toPrimitives(): boolean {
-		return this.value
-	}
-
-	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
-		}
-	}
-
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-
-	static async updateBluetoothField(params: {
-		hasBluetooth: Primitives<HasBluetooth>
-		entity: ComputerModels
-	}): Promise<void> {
-		if (params.hasBluetooth === undefined) {
+	/**
+	 * @description Handles the logic for updating the Bluetooth field of a computer model.
+	 * @param {{ hasBluetooth: Primitives<HasBluetooth>; entity: ComputerModels }} params The parameters for updating.
+	 */
+	static updateBluetoothField(params: { hasBluetooth: Primitives<HasBluetooth>; entity: ComputerModels }): void {
+		if (params.hasBluetooth === undefined || params.entity.hasBluetoothValue === params.hasBluetooth) {
 			return
 		}
-
-		if (params.entity.hasBluetoothValue === params.hasBluetooth) {
-			return
-		}
-
 		params.entity.updateHasBluetooth(params.hasBluetooth)
 	}
 }

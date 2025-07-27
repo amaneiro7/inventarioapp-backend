@@ -1,27 +1,21 @@
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
+/**
+ * @description Represents the name of an input type.
+ */
 export class InputTypeName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 100
-	private readonly NAME_MIN_LENGTH = 5
+	private readonly MIN_LENGTH = 5
+	private readonly MAX_LENGTH = 100
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
-
 	private ensureIsValidName(value: string): void {
-		if (!this.isBrandNameValid(value)) {
-			throw new InvalidArgumentError(`<${value}> is not a valid name`)
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			throw new InvalidArgumentError(`<${value}> no es un nombre de tipo de entrada válido.`)
 		}
-	}
-
-	private isBrandNameValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 }

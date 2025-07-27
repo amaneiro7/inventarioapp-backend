@@ -1,7 +1,15 @@
 import { type Order, type FindOptions, type IncludeOptions } from 'sequelize'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-
+/**
+ * @description A utility class to build complex Sequelize query options for the ModelSeries model.
+ */
 export class ModelAssociation {
+	/**
+	 * @description Converts a Criteria object into a fully configured Sequelize FindOptions object.
+	 * @param {Criteria} criteria The criteria object containing filters and ordering.
+	 * @param {FindOptions} options The base FindOptions to be modified.
+	 * @returns {FindOptions} The configured Sequelize FindOptions object.
+	 */
 	convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 		const mainCategoryInclude: IncludeOptions = {

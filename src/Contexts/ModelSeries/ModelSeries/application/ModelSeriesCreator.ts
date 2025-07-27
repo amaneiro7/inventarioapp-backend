@@ -24,148 +24,112 @@ import { type PrinteModelsParams } from '../../ModelCharacteristics/Printers/dom
 import { type MouseModelsParams } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
 import { type KeyboardModelsParams } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 
-// Create the ModelSeriesCreator class
+interface Repository {
+	modelSeriesRepository: ModelSeriesRepository
+	inputTypeRepository: InputTypeRepository
+	memoryRamTypeRepository: MemoryRamTypeRepository
+	categoryRepository: CategoryRepository
+	brandRepository: BrandRepository
+}
+
+/**
+ * @description Use case for creating a new ModelSeries entity, handling different model types.
+ */
 export class ModelSeriesCreator {
 	private readonly modelSeriesRepository: ModelSeriesRepository
 	private readonly inputTypeRepository: InputTypeRepository
 	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
 	private readonly categoryRepository: CategoryRepository
 	private readonly brandRepository: BrandRepository
-	constructor({
-		brandRepository,
-		categoryRepository,
-		inputTypeRepository,
-		memoryRamTypeRepository,
-		modelSeriesRepository
-	}: {
-		modelSeriesRepository: ModelSeriesRepository
-		inputTypeRepository: InputTypeRepository
-		memoryRamTypeRepository: MemoryRamTypeRepository
-		categoryRepository: CategoryRepository
-		brandRepository: BrandRepository
-	}) {
-		this.brandRepository = brandRepository
-		this.categoryRepository = categoryRepository
-		this.inputTypeRepository = inputTypeRepository
-		this.memoryRamTypeRepository = memoryRamTypeRepository
-		this.modelSeriesRepository = modelSeriesRepository
+
+	constructor(repositories: Repository) {
+		this.modelSeriesRepository = repositories.modelSeriesRepository
+		this.inputTypeRepository = repositories.inputTypeRepository
+		this.memoryRamTypeRepository = repositories.memoryRamTypeRepository
+		this.categoryRepository = repositories.categoryRepository
+		this.brandRepository = repositories.brandRepository
 	}
 
-	// Define the run method to create model series
-	async run({ name, categoryId, brandId, generic, ...otherParams }: ModelSeriesParams): Promise<void> {
-		let modelSeries
+	async run(params: ModelSeriesParams): Promise<void> {
+		const { name, categoryId, brandId } = params
 
-		// Create the model series based on the category
+		await this.validateRelations({ categoryId, brandId, name })
+
+		const modelSeries = await this.createModelSeries({
+			params,
+			repositories: {
+				modelSeriesRepository: this.modelSeriesRepository,
+				inputTypeRepository: this.inputTypeRepository,
+				memoryRamTypeRepository: this.memoryRamTypeRepository,
+				categoryRepository: this.categoryRepository,
+				brandRepository: this.brandRepository
+			}
+		})
+
+		await this.modelSeriesRepository.save(modelSeries.toPrimitives())
+	}
+
+	private async validateRelations({
+		categoryId,
+		brandId,
+		name
+	}: {
+		categoryId: string
+		brandId: string
+		name: string
+	}): Promise<void> {
+		await Promise.all([
+			ModelSeriesCategory.ensureCategoryExist({ repository: this.categoryRepository, categoryId }),
+			ModelSeriesBrand.ensureBrandExist({ repository: this.brandRepository, brandId }),
+			ModelSeriesName.ensureModelNameDoesNotExist({ repository: this.modelSeriesRepository, name, brandId })
+		])
+	}
+
+	private async createModelSeries({
+		params,
+		repositories
+	}: {
+		params: ModelSeriesParams
+		repositories: Repository
+	}): Promise<ModelSeries> {
+		const { categoryId } = params
+
 		if (ComputerModels.isComputerCategory({ categoryId })) {
-			// Check if the category is a computer
-			// If it is a computer category, extract computer-specific parameters
-			const computerParams = otherParams as ComputerModelsParams
-			await ComputerMemoryRamType.ensureInputTypeExist({
-				repository: this.memoryRamTypeRepository,
-				memoryRamTypeId: computerParams.memoryRamTypeId
-			})
-			// Create a computer model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = ComputerModels.create({
-				...computerParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else if (LaptopsModels.isLaptopCategory({ categoryId })) {
-			// Check if the category is a laptop
-			// If it is a laptop category, extract laptop-specific parameters
-			const laptopParams = otherParams as LaptopModelsParams
-			await ComputerMemoryRamType.ensureInputTypeExist({
-				repository: this.memoryRamTypeRepository,
-				memoryRamTypeId: laptopParams.memoryRamTypeId
-			})
-			// Create a laptop model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = LaptopsModels.create({
-				...laptopParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else if (MonitorModels.isMonitorCategory({ categoryId })) {
-			// Check if the category is a monitor
-			// If it is a monitor category, extract monitor-specific parameters
-			const monitorParams = otherParams as MonitorModelsParams
-			// Create a monitor model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = MonitorModels.create({
-				...monitorParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else if (ModelPrinters.isPrinterCategory({ categoryId })) {
-			// Check if the category is a printer
-			// If it is a printer category, extract printer-specific parameters
-			const printerParams = otherParams as PrinteModelsParams
-			// Create a printer model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = ModelPrinters.create({
-				...printerParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-			// If it is a keyboard category, extract keyboard-specific parameters
-			const keyboardParams = otherParams as KeyboardModelsParams
-			await ModelKeyboardInputType.ensureInputTypeExist({
-				repository: this.inputTypeRepository,
-				inputTypeId: keyboardParams.inputTypeId
-			})
-			// Create a keyboard model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = KeyboardModels.create({
-				...keyboardParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else if (MouseModels.isMouseCategory({ categoryId })) {
-			// If it is a Mouse category, extract Mouse-specific parameters
-			const mouseParams = otherParams as MouseModelsParams
-			await ModelMouseInputType.ensureInputTypeExist({
-				repository: this.inputTypeRepository,
-				inputTypeId: mouseParams.inputTypeId
-			})
-			// Create a Mouse model series with the extracted parameters, name, category ID, and brand ID
-			modelSeries = MouseModels.create({
-				...mouseParams,
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
-		} else {
-			// If the category does not match any specific type, create a general model series with the name, category ID, and brand ID
-			modelSeries = ModelSeries.create({
-				name,
-				categoryId,
-				brandId,
-				generic
-			})
+			const computerParams = params as ComputerModelsParams
+			await ComputerMemoryRamType.ensureInputTypeExist(
+				repositories.memoryRamTypeRepository,
+				computerParams.memoryRamTypeId
+			)
+			return ComputerModels.create(computerParams)
+		}
+		if (LaptopsModels.isLaptopCategory({ categoryId })) {
+			const computerParams = params as LaptopModelsParams
+			await ComputerMemoryRamType.ensureInputTypeExist(
+				repositories.memoryRamTypeRepository,
+				computerParams.memoryRamTypeId
+			)
+			return LaptopsModels.create(computerParams)
+		}
+		if (MonitorModels.isMonitorCategory({ categoryId })) {
+			return MonitorModels.create(params as MonitorModelsParams)
+		}
+		if (ModelPrinters.isPrinterCategory({ categoryId })) {
+			return ModelPrinters.create(params as PrinteModelsParams)
+		}
+		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
+			const keyboardParams = params as KeyboardModelsParams
+			await ModelKeyboardInputType.ensureInputTypeExist(
+				repositories.inputTypeRepository,
+				keyboardParams.inputTypeId
+			)
+			return KeyboardModels.create(keyboardParams)
+		}
+		if (MouseModels.isMouseCategory({ categoryId })) {
+			const mouseParams = params as MouseModelsParams
+			await ModelMouseInputType.ensureInputTypeExist(repositories.inputTypeRepository, mouseParams.inputTypeId)
+			return MouseModels.create(mouseParams)
 		}
 
-		await ModelSeriesCategory.ensureCategoryExist({
-			repository: this.categoryRepository,
-			categoryId
-		})
-		await ModelSeriesBrand.ensureBrandExist({
-			repository: this.brandRepository,
-			brandId
-		})
-		await ModelSeriesName.ensureModelNameDoesNotExist({
-			repository: this.modelSeriesRepository,
-			name,
-			brandId
-		})
-		// Save the model series
-		await this.modelSeriesRepository.save(modelSeries.toPrimitives())
+		return ModelSeries.create(params)
 	}
 }

@@ -4,13 +4,22 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type InputTypeDto } from '../domain/InputType.dto'
 import { type InputTypeRepository } from '../domain/InputTypeRepository'
 
+/**
+ * @description Use case for retrieving all InputType entities.
+ */
 export class InputTypeFinderAll extends GetAllBaseService<InputTypeDto> {
 	private readonly inputTypeRepository: InputTypeRepository
+
 	constructor({ inputTypeRepository }: { inputTypeRepository: InputTypeRepository }) {
 		super()
 		this.inputTypeRepository = inputTypeRepository
 	}
 
+	/**
+	 * @description Executes the process of finding all input types.
+	 * @param {Criteria} criteria The criteria for filtering and pagination.
+	 * @returns {Promise<ResponseService<InputTypeDto>>} A paginated response of input types.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<InputTypeDto>> {
 		const { data, total } = await this.inputTypeRepository.searchAll(criteria)
 		return this.response({

@@ -1,5 +1,4 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-
 import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type MemoryRamSlotQuantity } from '../../domain/MemoryRamSlotQuantity'
@@ -20,6 +19,9 @@ interface ComputerModelsCreationAttributes extends Omit<ComputerModelsDto, 'memo
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
+/**
+ * @description Sequelize model for the `ComputerModels` entity.
+ */
 export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes> implements ComputerModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -33,77 +35,33 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
 	declare hasVGA: Primitives<HasVGA>
 	declare memoryRamType: MemoryRamType
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Model, {
-			as: 'model',
-			foreignKey: 'modelSeriesId'
-		}) // A computer model belongs to a model
-		this.belongsTo(models.Category, { as: 'category' }) // A computer model belongs to a category
-		// this.belongsTo(models.ProcessorSocket, { as: 'processorSocket' }) // A computer model belongs to a processor socket
-		this.belongsTo(models.MemoryRamType, { as: 'memoryRamType' }) // A computer model belongs to a memory ram
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' })
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
+		this.belongsTo(models.MemoryRamType, { as: 'memoryRamType', foreignKey: 'memoryRamTypeId' })
 	}
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		ComputerModelsModel.init(
+
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				modelSeriesId: {
-					type: DataTypes.UUID,
-					unique: true,
-					allowNull: false
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				modelSeriesId: { type: DataTypes.UUID, unique: true, allowNull: false },
 				categoryId: {
 					type: DataTypes.STRING,
 					allowNull: false,
 					validate: {
-						isIn: {
-							args: [[CategoryValues.COMPUTADORAS, CategoryValues.SERVIDORES, CategoryValues.ALLINONE]],
-							msg: 'Solo puede pertenecer a la categoria de Computadoras, Servidores o All in One'
-						}
+						isIn: [[CategoryValues.COMPUTADORAS, CategoryValues.SERVIDORES, CategoryValues.ALLINONE]]
 					}
 				},
-				memoryRamTypeId: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				memoryRamSlotQuantity: {
-					type: DataTypes.INTEGER,
-					allowNull: false
-				},
-				hasBluetooth: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_bluetooth'
-				},
-				hasWifiAdapter: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_wifi_adapter'
-				},
-				hasDVI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_dvi'
-				},
-				hasHDMI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_hdmi'
-				},
-				hasVGA: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_vga'
-				}
+				memoryRamTypeId: { type: DataTypes.STRING, allowNull: false },
+				memoryRamSlotQuantity: { type: DataTypes.INTEGER, allowNull: false },
+				hasBluetooth: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_bluetooth' },
+				hasWifiAdapter: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_wifi_adapter' },
+				hasDVI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_dvi' },
+				hasHDMI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_hdmi' },
+				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' }
 			},
-			{
-				modelName: 'ModelComputer',
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'ModelComputer', tableName: 'model_computers', underscored: true, sequelize }
 		)
 	}
 }

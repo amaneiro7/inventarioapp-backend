@@ -1,38 +1,31 @@
 import { BooleanValueObject } from '../../../Shared/domain/value-object/BooleanValueObject'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { ModelSeries } from './ModelSeries'
+import { type ModelSeries } from './ModelSeries'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
+/**
+ * @description Represents whether a model series is generic (true) or specific (false).
+ */
 export class Generic extends BooleanValueObject {
 	constructor(readonly value: boolean) {
 		super(value)
-
 		this.ensureIsValid(value)
 	}
 
-	toPrimitives(): boolean {
-		return this.value
-	}
-
 	private ensureIsValid(value: boolean): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`This <${value}> is not a valid type`)
+		if (typeof value !== 'boolean') {
+			throw new InvalidArgumentError(`El valor <${value}> no es un tipo booleano válido para genérico.`)
 		}
 	}
 
-	private isValid(value: boolean): boolean {
-		return typeof value === 'boolean'
-	}
-
-	static async updateGenericField(params: { generic?: Primitives<Generic>; entity: ModelSeries }): Promise<void> {
-		if (params.generic === undefined) {
+	/**
+	 * @description Handles the logic for updating the generic field of a model series.
+	 * @param {{ generic?: Primitives<Generic>; entity: ModelSeries }} params The parameters for updating.
+	 */
+	static updateGenericField(params: { generic?: Primitives<Generic>; entity: ModelSeries }): void {
+		if (params.generic === undefined || params.entity.genericValue === params.generic) {
 			return
 		}
-
-		if (params.entity.genericValue === params.generic) {
-			return
-		}
-
 		params.entity.updateGeneric(params.generic)
 	}
 }

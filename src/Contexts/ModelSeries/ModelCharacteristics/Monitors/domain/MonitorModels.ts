@@ -1,5 +1,4 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -14,6 +13,9 @@ import { MonitorHasHDMI } from './MonitorHasHDMI'
 import { MonitorHasVGA } from './MonitorHasVGA'
 import { MonitorScreenSize } from './MonitorScreenSize'
 
+/**
+ * @description Represents a monitor model, extending the base ModelSeries class.
+ */
 export class MonitorModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -31,12 +33,10 @@ export class MonitorModels extends ModelSeries {
 
 	static create(params: MonitorModelsParams): MonitorModels {
 		if (!this.isMonitorCategory({ categoryId: params.categoryId })) {
-			throw new Error('Invalid category')
+			throw new Error('Invalid category for monitor model')
 		}
-
-		const id = ModelSeriesId.random().value
 		return new MonitorModels(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -48,14 +48,13 @@ export class MonitorModels extends ModelSeries {
 		)
 	}
 
-	public static isMonitorCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedMonitorCategories: CategoryValues[] = [CategoryValues.MONITORES]
-		return AcceptedMonitorCategories.some(category => category === categoryId)
+	static isMonitorCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		return categoryId === CategoryValues.MONITORES
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): MonitorModels {
 		if (!primitives.modelMonitor) {
-			throw new Error('Error al cargar la información de Monitores')
+			throw new Error('Monitor model data is missing')
 		}
 		return new MonitorModels(
 			new ModelSeriesId(primitives.id),
@@ -72,11 +71,7 @@ export class MonitorModels extends ModelSeries {
 
 	toPrimitives(): MonitorModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
+			...super.toPrimitives(),
 			screenSize: this.screenSizeValue,
 			hasDVI: this.hasDVIValue,
 			hasHDMI: this.hasHDMIValue,
@@ -103,12 +98,15 @@ export class MonitorModels extends ModelSeries {
 	updateScreenSize(newValue: Primitives<MonitorScreenSize>): void {
 		this.screenSize = new MonitorScreenSize(newValue)
 	}
+
 	updateHasDVI(newValue: Primitives<MonitorHasDVI>): void {
 		this.hasDVI = new MonitorHasDVI(newValue)
 	}
+
 	updateHasHDMI(newValue: Primitives<MonitorHasHDMI>): void {
 		this.hasHDMI = new MonitorHasHDMI(newValue)
 	}
+
 	updateHasVGA(newValue: Primitives<MonitorHasVGA>): void {
 		this.hasVGA = new MonitorHasVGA(newValue)
 	}

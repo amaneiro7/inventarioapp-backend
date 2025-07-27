@@ -3,35 +3,42 @@ import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeries } from './ModelSeries'
 
+/**
+ * @description Represents the brand of a model series.
+ */
 export class ModelSeriesBrand extends BrandId {
+	/**
+	 * @description Handles the logic for updating the brand field of a model series.
+	 * @param {{ repository: BrandRepository; brandId?: Primitives<BrandId>; entity: ModelSeries }} params The parameters for updating.
+	 */
 	static async updateBrandField(params: {
 		repository: BrandRepository
 		brandId?: Primitives<BrandId>
 		entity: ModelSeries
 	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor de categoria no realiza ninguna acción
-		if (params.brandId === undefined) {
+		if (params.brandId === undefined || params.entity.brandIdValue === params.brandId) {
 			return
 		}
-		// Verifica que si la categoria actual y el nuevo valor de categoria son iguales no realice una busqueda en el repositorio
-		if (params.entity.brandIdValue === params.brandId) {
-			return
-		}
-		// Verifica que la categoria no exista en la base de datos, si existe lanza un error {@link BrandAlreadyExistError} con el valor de categoria
-		await ModelSeriesBrand.ensureBrandExist({
-			repository: params.repository,
-			brandId: params.brandId
-		})
-		// Actualiza el campo Brand de la entidad {@link ModelSeries} con el nuevo valor de categoria
+		await this.ensureBrandExist({ repository: params.repository, brandId: params.brandId })
 		params.entity.updateBrandId(params.brandId)
 	}
-	static async ensureBrandExist(params: {
+
+	/**
+	 * @description Ensures that the specified brand exists in the repository.
+	 * @param repository The repository to search in.
+	 * @param brandId The ID of the brand to check.
+	 * @throws {Error} If the brand does not exist.
+	 */
+	static async ensureBrandExist({
+		repository,
+		brandId
+	}: {
 		repository: BrandRepository
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
-		const isBrandExist = await params.repository.searchById(params.brandId)
+		const isBrandExist = await repository.searchById(brandId)
 		if (!isBrandExist) {
-			throw new Error('Brand does not exist')
+			throw new Error('La marca no existe.')
 		}
 	}
 }

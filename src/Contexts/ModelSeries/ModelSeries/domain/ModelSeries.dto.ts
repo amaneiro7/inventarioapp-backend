@@ -13,6 +13,10 @@ import { type KeyboardModelsDto } from '../../ModelCharacteristics/Keyboards/dom
 import { type MonitorModelsDto } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
 import { type MouseModelsDto } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
 
+/**
+ * @interface ModelSeries
+ * @description Defines the core properties of a ModelSeries entity.
+ */
 export interface ModelSeries {
 	id: Primitives<ModelSeriesId>
 	name: Primitives<ModelSeriesName>
@@ -20,10 +24,23 @@ export interface ModelSeries {
 	brandId: Primitives<BrandId>
 	generic: Primitives<Generic>
 }
+
+/**
+ * @type ModelSeriesParams
+ * @description Represents the parameters required to create a new ModelSeries.
+ */
 export type ModelSeriesParams = Omit<ModelSeries, 'id'>
 
+/**
+ * @type ModelSeriesPrimitives
+ * @description Represents the primitive, serializable state of a ModelSeries entity.
+ */
 export type ModelSeriesPrimitives = ModelSeries
 
+/**
+ * @type ModelSeriesDto
+ * @description Data Transfer Object for a ModelSeries, including all its related data.
+ */
 export type ModelSeriesDto = ModelSeries & {
 	category: CategoryDto
 	brand: BrandDto

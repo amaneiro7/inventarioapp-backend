@@ -15,6 +15,9 @@ interface MonitorModelsCreationAttributes extends MonitorModelsDto {
 	modelSeriesId: Primitives<ModelSeriesId>
 }
 
+/**
+ * @description Sequelize model for the `MonitorModels` entity.
+ */
 export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> implements MonitorModelsDto {
 	declare id: Primitives<ModelSeriesId>
 	declare modelSeriesId: Primitives<ModelSeriesId>
@@ -24,62 +27,27 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
 	declare hasHDMI: Primitives<MonitorHasHDMI>
 	declare hasVGA: Primitives<MonitorHasVGA>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Model, {
-			as: 'model',
-			foreignKey: 'modelSeriesId'
-		}) // A monitor model belongs to a model
-		this.belongsTo(models.Category, { as: 'category' }) // A monitor model belongs to a category
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' })
+		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		MonitorModelsModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				modelSeriesId: {
-					type: DataTypes.UUID,
-					unique: true,
-					allowNull: false
-				},
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				modelSeriesId: { type: DataTypes.UUID, unique: true, allowNull: false },
 				categoryId: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					validate: {
-						isIn: {
-							args: [[CategoryValues.MONITORES]],
-							msg: 'Solo puede pertenecer a la categoria de Monitores'
-						}
-					}
+					validate: { isIn: [[CategoryValues.MONITORES]] }
 				},
-				screenSize: {
-					type: DataTypes.STRING,
-					allowNull: false
-				},
-				hasDVI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_dvi'
-				},
-				hasHDMI: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_hdmi'
-				},
-				hasVGA: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					field: 'has_vga'
-				}
+				screenSize: { type: DataTypes.STRING, allowNull: false },
+				hasDVI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_dvi' },
+				hasHDMI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_hdmi' },
+				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' }
 			},
-			{
-				modelName: 'ModelMonitor',
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'ModelMonitor', tableName: 'model_monitors', underscored: true, sequelize }
 		)
 	}
 }

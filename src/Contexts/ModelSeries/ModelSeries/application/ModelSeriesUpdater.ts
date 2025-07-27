@@ -40,180 +40,138 @@ import { type MonitorModelsParams } from '../../ModelCharacteristics/Monitors/do
 import { type LaptopModelsParams } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
 import { type ComputerModelsParams } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
 
+/**
+ * @description Use case for updating an existing ModelSeries entity.
+ */
 export class ModelSeriesUpdater {
 	private readonly modelSeriesRepository: ModelSeriesRepository
 	private readonly inputTypeRepository: InputTypeRepository
 	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
 	private readonly categoryRepository: CategoryRepository
 	private readonly brandRepository: BrandRepository
-	constructor({
-		brandRepository,
-		categoryRepository,
-		inputTypeRepository,
-		memoryRamTypeRepository,
-		modelSeriesRepository
-	}: {
+
+	constructor(dependencies: {
 		modelSeriesRepository: ModelSeriesRepository
 		inputTypeRepository: InputTypeRepository
 		memoryRamTypeRepository: MemoryRamTypeRepository
 		categoryRepository: CategoryRepository
 		brandRepository: BrandRepository
 	}) {
-		this.brandRepository = brandRepository
-		this.categoryRepository = categoryRepository
-		this.inputTypeRepository = inputTypeRepository
-		this.memoryRamTypeRepository = memoryRamTypeRepository
-		this.modelSeriesRepository = modelSeriesRepository
+		this.modelSeriesRepository = dependencies.modelSeriesRepository
+		this.inputTypeRepository = dependencies.inputTypeRepository
+		this.memoryRamTypeRepository = dependencies.memoryRamTypeRepository
+		this.categoryRepository = dependencies.categoryRepository
+		this.brandRepository = dependencies.brandRepository
 	}
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
 		const modelSeriesId = new ModelSeriesId(id).value
-
 		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
 
 		if (!modelSeries) {
 			throw new ModelSeriesDoesNotExistError(id)
 		}
 
-		const { categoryId } = modelSeries
+		const modelEntity = this.createModelEntity(modelSeries)
 
-		let modelEntity
-		// Actualizar la tabla de Teclado
+		await this.updateModelFields(modelEntity, params)
+
+		await this.modelSeriesRepository.save(modelEntity.toPrimitives())
+	}
+
+	private createModelEntity(modelSeries: ModelSeriesDto): ModelSeries {
+		const { categoryId } = modelSeries
 		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-			modelEntity = KeyboardModels.fromPrimitives(modelSeries)
+			return KeyboardModels.fromPrimitives(modelSeries)
+		}
+		if (MouseModels.isMouseCategory({ categoryId })) {
+			return MouseModels.fromPrimitives(modelSeries)
+		}
+		if (ModelPrinters.isPrinterCategory({ categoryId })) {
+			return ModelPrinters.fromPrimitives(modelSeries)
+		}
+		if (MonitorModels.isMonitorCategory({ categoryId })) {
+			return MonitorModels.fromPrimitives(modelSeries)
+		}
+		if (LaptopsModels.isLaptopCategory({ categoryId })) {
+			return LaptopsModels.fromPrimitives(modelSeries)
+		}
+		if (ComputerModels.isComputerCategory({ categoryId })) {
+			return ComputerModels.fromPrimitives(modelSeries)
+		}
+		return ModelSeries.fromPrimitives(modelSeries)
+	}
+
+	private async updateModelFields(entity: ModelSeries, params: Partial<ModelSeriesParams>): Promise<void> {
+		await this.updateMainModel({ params, entity })
+
+		if (entity instanceof KeyboardModels) {
 			const keyboardParams = params as KeyboardModelsParams
 			await ModelKeyboardInputType.updateInputTypeField({
 				repository: this.inputTypeRepository,
 				inputTypeId: keyboardParams.inputTypeId,
-				entity: modelEntity
+				entity
 			})
 			await HasFingerPrintReader.updateFingerprintField({
 				hasFingerPrintReader: keyboardParams.hasFingerPrintReader,
-				entity: modelEntity
+				entity
 			})
-		}
-		// Actualizar la tabla de Mouse
-		if (MouseModels.isMouseCategory({ categoryId })) {
-			modelEntity = MouseModels.fromPrimitives(modelSeries)
+		} else if (entity instanceof MouseModels) {
 			const mouseParams = params as MouseModelsParams
 			await ModelMouseInputType.updateInputTypeField({
 				repository: this.inputTypeRepository,
 				inputTypeId: mouseParams.inputTypeId,
-				entity: modelEntity
+				entity
 			})
-		}
-		// Actualizar la tabla de Impresora laser y tinta
-		else if (ModelPrinters.isPrinterCategory({ categoryId })) {
-			modelEntity = ModelPrinters.fromPrimitives(modelSeries)
+		} else if (entity instanceof ModelPrinters) {
 			const printerParams = params as PrinteModelsParams
-			await CartridgeModel.updateCartridgeModelField({
-				cartridgeModel: printerParams.cartridgeModel,
-				entity: modelEntity
-			})
-		}
-		// Actualizar la tabla de monitores
-		else if (MonitorModels.isMonitorCategory({ categoryId })) {
-			modelEntity = MonitorModels.fromPrimitives(modelSeries)
+			await CartridgeModel.updateCartridgeModelField({ cartridgeModel: printerParams.cartridgeModel, entity })
+		} else if (entity instanceof MonitorModels) {
 			const monitorParams = params as MonitorModelsParams
 			await Promise.all([
-				MonitorHasDVI.updateDVIField({
-					hasDVI: monitorParams.hasDVI,
-					entity: modelEntity
-				}),
-				MonitorHasVGA.updateVGAField({
-					hasVGA: monitorParams.hasVGA,
-					entity: modelEntity
-				}),
-				MonitorHasHDMI.updateDVIField({
-					hasHDMI: monitorParams.hasHDMI,
-					entity: modelEntity
-				}),
-				MonitorScreenSize.updateScreenSizeField({
-					ScreenSize: monitorParams.screenSize,
-					entity: modelEntity
-				})
+				MonitorHasDVI.updateDVIField({ hasDVI: monitorParams.hasDVI, entity }),
+				MonitorHasVGA.updateVGAField({ hasVGA: monitorParams.hasVGA, entity }),
+				MonitorHasHDMI.updateDVIField({ hasHDMI: monitorParams.hasHDMI, entity }),
+				MonitorScreenSize.updateScreenSizeField({ ScreenSize: monitorParams.screenSize, entity })
 			])
-		}
-		// Actualizar la tabla de Laptop
-		else if (LaptopsModels.isLaptopCategory({ categoryId })) {
-			modelEntity = LaptopsModels.fromPrimitives(modelSeries)
+		} else if (entity instanceof LaptopsModels) {
 			const laptopParams = params as LaptopModelsParams
 			await Promise.all([
-				HasVGA.updateVGAField({
-					hasVGA: laptopParams.hasVGA,
-					entity: modelEntity
-				}),
-				HasDVI.updateDVIField({
-					hasDVI: laptopParams.hasDVI,
-					entity: modelEntity
-				}),
-				HasHDMI.updateDVIField({
-					hasHDMI: laptopParams.hasHDMI,
-					entity: modelEntity
-				}),
-				HasBluetooth.updateBluetoothField({
-					hasBluetooth: laptopParams.hasBluetooth,
-					entity: modelEntity
-				}),
-				HasWifiAdapter.updateWifiAdapterField({
-					hasWifiAdapter: laptopParams.hasWifiAdapter,
-					entity: modelEntity
-				}),
-				BatteryModelName.updateBatteryModelField({
-					batteryModel: laptopParams.batteryModel,
-					entity: modelEntity
-				}),
+				HasVGA.updateVGAField({ hasVGA: laptopParams.hasVGA, entity }),
+				HasDVI.updateDVIField({ hasDVI: laptopParams.hasDVI, entity }),
+				HasHDMI.updateDVIField({ hasHDMI: laptopParams.hasHDMI, entity }),
+				HasBluetooth.updateBluetoothField({ hasBluetooth: laptopParams.hasBluetooth, entity }),
+				HasWifiAdapter.updateWifiAdapterField({ hasWifiAdapter: laptopParams.hasWifiAdapter, entity }),
+				BatteryModelName.updateBatteryModelField({ batteryModel: laptopParams.batteryModel, entity }),
 				MemoryRamSlotQuantity.updateMemoryRamSlotQuantityField({
 					memoryRamSlotQuantity: laptopParams.memoryRamSlotQuantity,
-					entity: modelEntity
+					entity
 				}),
 				ComputerMemoryRamType.updateInputTypeField({
 					repository: this.memoryRamTypeRepository,
 					memoryRamTypeId: laptopParams.memoryRamTypeId,
-					entity: modelEntity
+					entity
 				})
 			])
-		}
-		// Actualizar la tabla de Computadoras
-		else if (ComputerModels.isComputerCategory({ categoryId })) {
-			modelEntity = ComputerModels.fromPrimitives(modelSeries)
+		} else if (entity instanceof ComputerModels) {
 			const computerParams = params as ComputerModelsParams
 			await Promise.all([
-				HasVGA.updateVGAField({
-					hasVGA: computerParams.hasVGA,
-					entity: modelEntity
-				}),
-				HasDVI.updateDVIField({
-					hasDVI: computerParams.hasDVI,
-					entity: modelEntity
-				}),
-				HasHDMI.updateDVIField({
-					hasHDMI: computerParams.hasHDMI,
-					entity: modelEntity
-				}),
-				HasBluetooth.updateBluetoothField({
-					hasBluetooth: computerParams.hasBluetooth,
-					entity: modelEntity
-				}),
-				HasWifiAdapter.updateWifiAdapterField({
-					hasWifiAdapter: computerParams.hasWifiAdapter,
-					entity: modelEntity
-				}),
+				HasVGA.updateVGAField({ hasVGA: computerParams.hasVGA, entity }),
+				HasDVI.updateDVIField({ hasDVI: computerParams.hasDVI, entity }),
+				HasHDMI.updateDVIField({ hasHDMI: computerParams.hasHDMI, entity }),
+				HasBluetooth.updateBluetoothField({ hasBluetooth: computerParams.hasBluetooth, entity }),
+				HasWifiAdapter.updateWifiAdapterField({ hasWifiAdapter: computerParams.hasWifiAdapter, entity }),
 				MemoryRamSlotQuantity.updateMemoryRamSlotQuantityField({
 					memoryRamSlotQuantity: computerParams.memoryRamSlotQuantity,
-					entity: modelEntity
+					entity
 				}),
 				ComputerMemoryRamType.updateInputTypeField({
 					repository: this.memoryRamTypeRepository,
 					memoryRamTypeId: computerParams.memoryRamTypeId,
-					entity: modelEntity
+					entity
 				})
 			])
-		} else {
-			modelEntity = ModelSeries.fromPrimitives(modelSeries)
 		}
-		await this.updateMainModel({ params, entity: modelEntity })
-		await this.modelSeriesRepository.save(modelEntity.toPrimitives())
 	}
 
 	private async updateMainModel({
@@ -229,16 +187,8 @@ export class ModelSeriesUpdater {
 				categoryId: params.categoryId,
 				entity
 			}),
-			ModelSeriesBrand.updateBrandField({
-				repository: this.brandRepository,
-				brandId: params.brandId,
-				entity
-			}),
-			ModelSeriesName.updateNameField({
-				repository: this.modelSeriesRepository,
-				name: params.name,
-				entity
-			}),
+			ModelSeriesBrand.updateBrandField({ repository: this.brandRepository, brandId: params.brandId, entity }),
+			ModelSeriesName.updateNameField({ repository: this.modelSeriesRepository, name: params.name, entity }),
 			Generic.updateGenericField({ generic: params.generic, entity })
 		])
 	}

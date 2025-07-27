@@ -1,5 +1,4 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
-
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -11,6 +10,9 @@ import { ModelSeriesName } from '../../../ModelSeries/domain/ModelSeriesName'
 import { ModelMouseInputType } from './ModelMouseInputType'
 import { type MouseModelsPrimitives, type MouseModelsParams } from './MouseModels.dto'
 
+/**
+ * @description Represents a mouse model, extending the base ModelSeries class.
+ */
 export class MouseModels extends ModelSeries {
 	constructor(
 		id: ModelSeriesId,
@@ -24,9 +26,8 @@ export class MouseModels extends ModelSeries {
 	}
 
 	static create(params: MouseModelsParams): MouseModels {
-		const id = String(ModelSeriesId.random())
 		return new MouseModels(
-			new ModelSeriesId(id),
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -35,14 +36,13 @@ export class MouseModels extends ModelSeries {
 		)
 	}
 
-	public static isMouseCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		const AcceptedMouseCategories: CategoryValues[] = [CategoryValues.MOUSE]
-		return AcceptedMouseCategories.some(category => category === categoryId)
+	static isMouseCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		return categoryId === CategoryValues.MOUSE
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): MouseModels {
 		if (!primitives.modelMouse) {
-			throw new Error('Error al cargar la información de mouses')
+			throw new Error('Mouse model data is missing')
 		}
 		return new MouseModels(
 			new ModelSeriesId(primitives.id),
@@ -56,11 +56,7 @@ export class MouseModels extends ModelSeries {
 
 	toPrimitives(): MouseModelsPrimitives {
 		return {
-			id: this.idValue,
-			name: this.nameValue,
-			categoryId: this.categoryIdValue,
-			brandId: this.brandIdValue,
-			generic: this.genericValue,
+			...super.toPrimitives(),
 			inputTypeId: this.inputTypeValue
 		}
 	}
