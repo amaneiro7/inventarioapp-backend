@@ -10,6 +10,9 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaParams, type VicepresidenciaEjecutivaDto } from './VicepresidenciaEjecutiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
 
+/**
+ * @description Use case for updating an existing VicepresidenciaEjecutiva, including validation of associated entities.
+ */
 export class UpdateVicepresidenciaEjecutivaUseCase {
 	constructor(
 		private readonly vicepresidenciaEjecutivaaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>,
@@ -17,6 +20,13 @@ export class UpdateVicepresidenciaEjecutivaUseCase {
 		private readonly cargoRepository: CargoRepository
 	) {}
 
+	/**
+	 * @description Executes the update of a vicepresidencia ejecutiva.
+	 * @param {{ entity: VicepresidenciaEjecutiva; params: Partial<VicepresidenciaEjecutivaParams> }} data The parameters for updating.
+	 * @returns {Promise<void>} A promise that resolves when the vicepresidencia ejecutiva is successfully updated.
+	 * @throws {DepartmentAlreadyExistError} If a vicepresidencia ejecutiva with the new name already exists.
+	 * @throws {DepartmentDoesNotExistError} If the associated directiva or any cargo does not exist.
+	 */
 	public async execute({
 		params: { name, directivaId, cargos },
 		entity
@@ -39,12 +49,10 @@ export class UpdateVicepresidenciaEjecutivaUseCase {
 		name?: Primitives<DepartmentName>
 		entity: VicepresidenciaEjecutiva
 	}): Promise<void> {
-		if (!name) return
+		if (!name || entity.nameValue === name) return
 
-		if (entity.nameValue === name) return
-
-		if ((await this.vicepresidenciaEjecutivaaRepository.searchByName(name)) !== null) {
-			throw new DepartmentAlreadyExistError('La vicepresidenciaEjecutiva')
+		if (await this.vicepresidenciaEjecutivaaRepository.searchByName(name)) {
+			throw new DepartmentAlreadyExistError('La vicepresidencia ejecutiva')
 		}
 		entity.updateName(name)
 	}
@@ -56,11 +64,9 @@ export class UpdateVicepresidenciaEjecutivaUseCase {
 		directivaId?: Primitives<DepartmentId>
 		entity: VicepresidenciaEjecutiva
 	}): Promise<void> {
-		if (!directivaId) return
+		if (!directivaId || entity.directivaValue === directivaId) return
 
-		if (entity.directivaValue !== directivaId) return
-
-		if ((await this.directivaRepository.searchById(directivaId)) === null) {
+		if (!(await this.directivaRepository.searchById(directivaId))) {
 			throw new DepartmentDoesNotExistError('La directiva')
 		}
 		entity.updateDirectiva(directivaId)

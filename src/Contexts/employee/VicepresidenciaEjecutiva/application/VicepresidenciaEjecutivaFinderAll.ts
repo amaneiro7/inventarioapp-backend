@@ -4,8 +4,12 @@ import { type VicepresidenciaEjecutivaDto } from '../domain/VicepresidenciaEjecu
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 
+/**
+ * @description Use case for retrieving all VicepresidenciaEjecutiva entities.
+ */
 export class VicepresidenciaEjecutivaFinderAll extends GetAllBaseService<VicepresidenciaEjecutivaDto> {
 	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+
 	constructor({
 		vicepresidenciaEjecutivaRepository
 	}: {
@@ -15,6 +19,11 @@ export class VicepresidenciaEjecutivaFinderAll extends GetAllBaseService<Vicepre
 		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
 	}
 
+	/**
+	 * @description Executes the process of finding all VicepresidenciaEjecutiva entities.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseService<VicepresidenciaEjecutivaDto>>} A paginated response of VicepresidenciaEjecutiva entities.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<VicepresidenciaEjecutivaDto>> {
 		const { data, total } = await this.vicepresidenciaEjecutivaRepository.searchAll(criteria)
 
