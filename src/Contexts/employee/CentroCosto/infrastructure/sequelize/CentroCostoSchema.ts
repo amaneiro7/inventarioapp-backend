@@ -4,52 +4,24 @@ import { type CodCentroCosto } from '../../domain/CodCentroCosto'
 import { type CentroCostoName } from '../../domain/CentroCostoName'
 import { type CentroCostoDto } from '../../domain/CentroCosto.dto'
 
+/**
+ * @description Sequelize model for the `CentroCosto` entity.
+ */
 export class CentroCostoModel extends Model<CentroCostoDto> implements CentroCostoDto {
 	declare id: Primitives<CodCentroCosto>
 	declare name: Primitives<CentroCostoName>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		// this.hasMany(models.Directiva, {
-		// 	as: 'directiva',
-		// 	foreignKey: 'centroCostoId'
-		// }) // Un CentroCosto puede tener muchas directiva
-		// this.hasMany(models.VicepresidenciaEjecutiva, {
-		// 	as: 'vicepresidenciaEjecutiva',
-		// 	foreignKey: 'centroCostoId'
-		// }) // Un CentroCosto puede tener muchas Vicepresidencia Ejecutiva
-		// this.hasMany(models.Vicepresidencia, {
-		// 	as: 'vicepresidencia',
-		// 	foreignKey: 'centroCostoId'
-		// }) // Un CentroCosto puede tener muchos Vicepresidencia
-		// this.hasMany(models.Departamento, {
-		// 	as: 'departamento',
-		// 	foreignKey: 'centroCostoId'
-		// }) // Un CentroCosto puede tener muchos Departamento
-		this.hasMany(models.CentroTrabajo, {
-			as: 'centroTrabajo',
-			foreignKey: 'centroCostoId'
-		}) // Un CentroCosto puede tener muchos CentroTrabajo
+	static associate(models: Sequelize['models']): void {
+		this.hasMany(models.CentroTrabajo, { as: 'centroTrabajo', foreignKey: 'centroCostoId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		CentroCostoModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.STRING,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					allowNull: false,
-					type: DataTypes.STRING
-				}
+				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false }
 			},
-			{
-				modelName: 'CentroCosto',
-				timestamps: true,
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'CentroCosto', tableName: 'centro_costos', timestamps: true, underscored: true, sequelize }
 		)
 	}
 }

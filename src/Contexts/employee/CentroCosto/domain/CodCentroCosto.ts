@@ -1,35 +1,31 @@
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
+/**
+ * @description Represents the code of a CentroCosto.
+ */
 export class CodCentroCosto extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 4
-	private readonly NAME_MIN_LENGTH = 1
-	private readonly REGEX = /^\d+$/
+	private readonly MIN_LENGTH = 1
+	private readonly MAX_LENGTH = 4
+	private readonly NUMERIC_REGEX = /^\d+$/
 
 	constructor(readonly value: string) {
 		super(value)
-
-		this.ensureIsValidName(value)
+		this.ensureIsValidCode(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
+	private ensureIsValidCode(value: string): void {
+		const errors: string[] = []
 
-	private ensureIsValidName(value: string): void {
-		if (!this.isNumeric(value)) {
-			throw new InvalidArgumentError('El código del centro costo debe ser numerico')
+		if (!this.NUMERIC_REGEX.test(value)) {
+			errors.push('Debe ser numérico.')
 		}
-		if (!this.isCentroCostoLengthValid(value)) {
-			throw new InvalidArgumentError(`<${value}> no es un codigo de centro costo válido`)
+		if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+			errors.push(`Debe tener entre ${this.MIN_LENGTH} y ${this.MAX_LENGTH} dígitos.`)
 		}
-	}
 
-	private isNumeric(name: string): boolean {
-		return this.REGEX.test(name)
-	}
-
-	private isCentroCostoLengthValid(name: string): boolean {
-		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
+		if (errors.length > 0) {
+			throw new InvalidArgumentError(`El código de centro de costo '${value}' no es válido: ${errors.join(', ')}`)
+		}
 	}
 }

@@ -3,6 +3,9 @@ import { type CentroCostoDto, type CentroCostoParams, type CentroCostoPrimitives
 import { CentroCostoName } from './CentroCostoName'
 import { CodCentroCosto } from './CodCentroCosto'
 
+/**
+ * @description Represents the CentroCosto domain entity.
+ */
 export class CentroCosto {
 	constructor(
 		private readonly id: CodCentroCosto,
@@ -13,19 +16,19 @@ export class CentroCosto {
 		return new CentroCosto(new CodCentroCosto(id), new CentroCostoName(name))
 	}
 
-	updateName(newName: Primitives<CentroCostoName>): void {
-		this.name = new CentroCostoName(newName)
-	}
-
 	static fromPrimitives(primitives: CentroCostoDto): CentroCosto {
 		return new CentroCosto(new CodCentroCosto(primitives.id), new CentroCostoName(primitives.name))
 	}
 
 	toPrimitive(): CentroCostoPrimitives {
 		return {
-			id: this.id.value,
-			name: this.name.value
+			id: this.idValue,
+			name: this.nameValue
 		}
+	}
+
+	updateName(newName: Primitives<CentroCostoName>): void {
+		this.name = new CentroCostoName(newName)
 	}
 
 	get idValue(): Primitives<CodCentroCosto> {
