@@ -1,58 +1,49 @@
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { User } from './User'
+import { type User } from './User'
 
+/**
+ * @description Represents the last name of a user.
+ */
 export class UserLastName extends StringValueObject {
-	private readonly NAME_MAX_LENGTH = 50
-	private readonly NAME_MIN_LENGTH = 3
-	private readonly Regex = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
+	private readonly MIN_LENGTH = 3
+	private readonly MAX_LENGTH = 50
+	private readonly VALID_REGEX = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
 
 	constructor(readonly value: string) {
 		super(value)
-
 		this.ensureIsValidName(value)
 	}
 
-	toPrimitives(): string {
-		return this.value
-	}
 	private ensureIsValidName(value: string): void {
-		// Create an empty array to store any validation errors
-		const errors = []
-		if (value.length < this.NAME_MIN_LENGTH) {
-			errors.push(`El apellido del usuario debe ser mayor a ${this.NAME_MIN_LENGTH} caracteres`)
+		const errors: string[] = []
+
+		if (value.length < this.MIN_LENGTH) {
+			errors.push(`Debe ser mayor a ${this.MIN_LENGTH} caracteres.`)
 		}
-		if (value.length > this.NAME_MAX_LENGTH) {
-			errors.push(`El apellido del usuario debe ser menor a ${this.NAME_MAX_LENGTH} caracteres`)
+		if (value.length > this.MAX_LENGTH) {
+			errors.push(`Debe ser menor a ${this.MAX_LENGTH} caracteres.`)
 		}
-		if (!this.Regex.test(value)) {
+		if (!this.VALID_REGEX.test(value)) {
 			errors.push(
-				`La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final al menos que sea un nombre compuesto`
+				'La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final a menos que sea un nombre compuesto.'
 			)
 		}
 
 		if (errors.length > 0) {
-			throw new InvalidArgumentError(errors.join(', '))
+			throw new InvalidArgumentError(`El apellido del usuario '${value}' no es válido: ${errors.join(', ')}`)
 		}
 	}
 
-	static async updateLastNameField({
-		lastName,
-		entity
-	}: {
-		lastName?: Primitives<UserLastName>
-		entity: User
-	}): Promise<void> {
-		// Si no se ha pasado un nuevo valor del apellido no realiza ninguna acción
-		if (lastName === undefined) {
+	/**
+	 * @description Handles the logic for updating the last name field of a user.
+	 * @param {{ lastName?: Primitives<UserLastName>; entity: User }} params The parameters for updating.
+	 */
+	static updateLastNameField({ lastName, entity }: { lastName?: Primitives<UserLastName>; entity: User }): void {
+		if (lastName === undefined || entity.lastNameValue === lastName) {
 			return
 		}
-		// Verifica que si el valor del campo del apellido actual y el nuevo valor del apellido son iguales no realiza un cambio
-		if (entity.lastNameValue === lastName) {
-			return
-		}
-		// Actualiza el campo del apellido de la entidad {@link User} con el nuevo apellido
-		entity.updateName(lastName)
+		entity.updateLastName(lastName)
 	}
 }

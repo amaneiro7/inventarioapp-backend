@@ -23,8 +23,7 @@ export class BrandAssociation {
 		const categoryInclude: IncludeOptions = {
 			association: 'categories',
 			attributes: ['id', 'name'],
-			through: {},
-			required: true
+			through: {}
 		}
 
 		options.include = [categoryInclude]

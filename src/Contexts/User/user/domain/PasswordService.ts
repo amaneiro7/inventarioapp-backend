@@ -1,23 +1,27 @@
 import bcrypt from 'bcrypt'
 import { InvalidCredentialsError } from '../../../Auth/domain/InvalidCredentialsError'
 
+/**
+ * @description Provides utility methods for hashing and comparing passwords.
+ */
 export class PasswordService {
-	// Define the function that takes in a password and returns a hashed string
+	/**
+	 * @description Hashes a plain-text password using bcrypt.
+	 * @param {string} password The plain-text password to hash.
+	 * @returns {string} The hashed password.
+	 */
 	static hash(password: string): string {
-		// Define the number of salt rounds
 		const saltRounds = 10
-
-		// Use the bcrypt library to hash the password with the specified number of salt rounds
-		const hashedPassword = bcrypt.hashSync(password, saltRounds)
-
-		// Return the hashed password
-		return hashedPassword
+		return bcrypt.hashSync(password, saltRounds)
 	}
 
-	// Define a function named 'compare' that takes in two parameters: 'password' and 'hash'
+	/**
+	 * @description Compares a plain-text password with a hashed password.
+	 * @param {string} password The plain-text password.
+	 * @param {string} hash The hashed password to compare against.
+	 * @throws {InvalidCredentialsError} If the password does not match the hash.
+	 */
 	static compare(password: string, hash: string): void {
-		// Use the 'bcrypt.compareSync' method to compare the 'password' with the 'hash'
-		// Return the result of the comparison
 		const isMatch = bcrypt.compareSync(password, hash)
 		if (!isMatch) {
 			throw new InvalidCredentialsError()

@@ -2,18 +2,28 @@ import { UserId } from '../domain/UserId'
 import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
-
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserPrimitives } from '../domain/User'
 import { type UserRepository } from '../domain/UserRepository'
 
+/**
+ * @description Use case for finding a user by their ID.
+ */
 export class UserFinder {
 	private readonly userRepository: UserRepository
+
 	constructor({ userRepository }: { userRepository: UserRepository }) {
 		this.userRepository = userRepository
 	}
 
+	/**
+	 * @description Executes the user finding process by ID.
+	 * @param {{ id: Primitives<UserId>; user?: JwtPayloadUser }} params The parameters for finding the user.
+	 * @returns {Promise<Omit<UserPrimitives, 'password'>>} A promise that resolves to the found user's primitive data (excluding password).
+	 * @throws {UserDoesNotExistError} If the user is not found or if the user is an admin (to prevent exposing admin data).
+	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
+	 */
 	async run({
 		id,
 		user
@@ -22,21 +32,23 @@ export class UserFinder {
 		id: Primitives<UserId>
 	}): Promise<Omit<UserPrimitives, 'password'>> {
 		isSuperAdmin({ user })
-		const userId = new UserId(id).value
-		const findUser = await this.userRepository.searchById(userId)
 
-		if (findUser === null) {
+		const userId = new UserId(id).value
+		const foundUser = await this.userRepository.searchById(userId)
+
+		if (!foundUser) {
 			throw new UserDoesNotExistError(userId)
 		}
 
-		if (findUser.roleId === RoleId.Options.ADMIN) {
-			throw new UserDoesNotExistError('')
+		if (`${foundUser.roleId}` === `${RoleId.Options.ADMIN}`) {
+			throw new UserDoesNotExistError('Usuario no encontrado.') // Generic error to hide admin existence
 		}
+
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { password, ...res } = findUser
+		const { password, ...rest } = foundUser
 		return {
-			...res,
-			roleId: `${res.roleId}`
+			...rest,
+			roleId: `${rest.roleId}`
 		}
 	}
 }

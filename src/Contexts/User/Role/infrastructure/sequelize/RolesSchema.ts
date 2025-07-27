@@ -4,34 +4,24 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type RoleId } from '../../domain/RoleId'
 import { type RoleName } from '../../domain/RoleName'
 
+/**
+ * @description Sequelize model for the `Role` entity.
+ */
 export class RolesModel extends Model<RoleDto> implements RoleDto {
 	declare id: Primitives<RoleId>
 	declare name: Primitives<RoleName>
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.hasMany(models.User, { as: 'user', foreignKey: 'roleId' }) // A role can have many users
+
+	static associate(models: Sequelize['models']): void {
+		this.hasMany(models.User, { as: 'user', foreignKey: 'roleId' })
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		RolesModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.INTEGER,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: true
-				}
+				id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false, unique: true }
 			},
-			{
-				modelName: 'Role',
-				tableName: 'role',
-				timestamps: false,
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'Role', tableName: 'roles', timestamps: false, underscored: true, sequelize }
 		)
 	}
 }

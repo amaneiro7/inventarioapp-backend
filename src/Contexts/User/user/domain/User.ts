@@ -1,4 +1,4 @@
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { RoleId } from '../../Role/domain/RoleId'
 import { UserEmail } from './UserEmail'
 import { UserId } from './UserId'
@@ -9,7 +9,6 @@ import { UserPassword } from './UserPassword'
 /**
  * @interface UserPrimitives
  * @description Represents the primitive data types of a User entity.
- * Includes `userSecret` for refresh token rotation and invalidation.
  */
 export interface UserPrimitives {
 	id: Primitives<UserId>
@@ -21,7 +20,7 @@ export interface UserPrimitives {
 }
 
 /**
- * @interface UserPrimitivesOptional
+ * @type UserPrimitivesOptional
  * @description Represents optional primitive data types for updating a User entity.
  */
 export type UserPrimitivesOptional = Partial<UserPrimitives>
@@ -32,15 +31,6 @@ export type UserPrimitivesOptional = Partial<UserPrimitives>
  * and ensures the integrity of user data using Value Objects.
  */
 export class User {
-	/**
-	 * @private
-	 * @param {UserId} id - The unique identifier of the user.
-	 * @param {UserEmail} email - The email address of the user.
-	 * @param {UserName} name - The first name of the user.
-	 * @param {RoleId} roleId - The role ID of the user.
-	 * @param {UserLastName} lastName - The last name of the user.
-	 * @param {UserPassword} password - The hashed password of the user.
-	 */
 	constructor(
 		private readonly id: UserId,
 		private email: UserEmail,
@@ -54,18 +44,14 @@ export class User {
 	 * @static
 	 * @method create
 	 * @description Factory method to create a new User instance with a randomly generated ID and default password.
-	 * @param {object} params - The parameters required to create a user.
-	 * @param {Primitives<UserEmail>} params.email - The user's email.
-	 * @param {Primitives<UserName>} params.name - The user's first name.
-	 * @param {Primitives<UserLastName>} params.lastName - The user's last name.
-	 * @param {Primitives<RoleId>} params.roleId - The user's role ID.
+	 * @param {object} params The parameters required to create a user.
 	 * @returns {User} A new User instance.
 	 */
 	static create({ email, name, lastName, roleId }: Omit<UserPrimitives, 'id' | 'password' | 'userSecret'>): User {
-		const id = UserId.random().value
+		const id = UserId.random()
 		const password = UserPassword.defaultPassword
 		return new User(
-			new UserId(id),
+			id,
 			new UserEmail(email),
 			new UserName(name),
 			new RoleId(roleId),
@@ -78,8 +64,7 @@ export class User {
 	 * @static
 	 * @method isSuperAdmin
 	 * @description Checks if a user has super admin privileges based on their role ID.
-	 * @param {object} params - The parameters for the check.
-	 * @param {Primitives<RoleId>} params.roleId - The role ID to check.
+	 * @param {{ roleId: Primitives<RoleId> }} params The role ID to check.
 	 * @returns {boolean} True if the user is a super admin, false otherwise.
 	 */
 	static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
@@ -92,7 +77,7 @@ export class User {
 	 * @static
 	 * @method fromPrimitives
 	 * @description Reconstructs a User instance from its primitive representation.
-	 * @param {UserPrimitives} primitives - The primitive representation of the user.
+	 * @param {UserPrimitives} primitives The primitive representation of the user.
 	 * @returns {User} A User instance.
 	 */
 	static fromPrimitives(primitives: UserPrimitives): User {
@@ -125,7 +110,7 @@ export class User {
 	/**
 	 * @method updateEmail
 	 * @description Updates the email of the user.
-	 * @param {Primitives<UserEmail>} newEmail - The new email for the user.
+	 * @param {Primitives<UserEmail>} newEmail The new email for the user.
 	 */
 	updateEmail(newEmail: Primitives<UserEmail>): void {
 		this.email = new UserEmail(newEmail)
@@ -134,7 +119,7 @@ export class User {
 	/**
 	 * @method updateName
 	 * @description Updates the first name of the user.
-	 * @param {Primitives<UserName>} newName - The new first name for the user.
+	 * @param {Primitives<UserName>} newName The new first name for the user.
 	 */
 	updateName(newName: Primitives<UserName>): void {
 		this.name = new UserName(newName)
@@ -143,7 +128,7 @@ export class User {
 	/**
 	 * @method updateLastName
 	 * @description Updates the last name of the user.
-	 * @param {Primitives<UserLastName>} newLastName - The new last name for the user.
+	 * @param {Primitives<UserLastName>} newLastName The new last name for the user.
 	 */
 	updateLastName(newLastName: Primitives<UserLastName>): void {
 		this.lastName = new UserLastName(newLastName)
@@ -152,7 +137,7 @@ export class User {
 	/**
 	 * @method updateRole
 	 * @description Updates the role of the user.
-	 * @param {Primitives<RoleId>} newRole - The new role ID for the user.
+	 * @param {Primitives<RoleId>} newRole The new role ID for the user.
 	 */
 	updateRole(newRole: Primitives<RoleId>): void {
 		this.roleId = new RoleId(newRole)
@@ -161,7 +146,7 @@ export class User {
 	/**
 	 * @method updatePassword
 	 * @description Updates the password of the user.
-	 * @param {Primitives<UserPassword>} newPassword - The new password for the user.
+	 * @param {Primitives<UserPassword>} newPassword The new password for the user.
 	 */
 	updatePassword(newPassword: Primitives<UserPassword>): void {
 		this.password = new UserPassword(newPassword)

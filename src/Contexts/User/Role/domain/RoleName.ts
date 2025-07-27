@@ -1,5 +1,9 @@
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
+/**
+ * @description Represents the name of a role.
+ */
 export class RoleName extends StringValueObject {
 	static readonly ACCEPTED_VALUES: Record<string, string> = {
 		ADMIN: 'Admin',
@@ -10,16 +14,20 @@ export class RoleName extends StringValueObject {
 
 	constructor(readonly value: string) {
 		super(value)
+		this.ensureIsValidName(value)
+	}
+
+	private ensureIsValidName(value: string): void {
 		if (!RoleName.isValid(value)) {
-			throw new Error(RoleName.invalidMessage(value))
+			throw new InvalidArgumentError(RoleName.invalidMessage(value))
 		}
 	}
 
-	public static isValid(value: string): boolean {
+	static isValid(value: string): boolean {
 		return Object.values(this.ACCEPTED_VALUES).includes(value)
 	}
 
-	public static invalidMessage(value: string): string {
-		return `${value} no es un role válido`
+	static invalidMessage(value: string): string {
+		return `'${value}' no es un rol válido.`
 	}
 }
