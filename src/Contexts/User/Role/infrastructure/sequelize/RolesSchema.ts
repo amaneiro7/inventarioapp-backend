@@ -21,7 +21,7 @@ export class RolesModel extends Model<RoleDto> implements RoleDto {
 				id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false },
 				name: { type: DataTypes.STRING, allowNull: false, unique: true }
 			},
-			{ modelName: 'Role', tableName: 'roles', timestamps: false, underscored: true, sequelize }
+			{ modelName: 'Role', tableName: 'role', timestamps: false, underscored: true, sequelize }
 		)
 	}
 }
