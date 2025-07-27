@@ -5,6 +5,9 @@ import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartamentoDto, type DepartamentoParams, type DepartamentoPrimitives } from './Departamento.dto'
 
+/**
+ * @description Represents the Departamento domain entity.
+ */
 export class Departamento extends IDepartment {
 	constructor(
 		id: DepartmentId,
@@ -16,14 +19,9 @@ export class Departamento extends IDepartment {
 	}
 
 	static create(params: DepartamentoParams): Departamento {
-		const id = DepartmentId.random().value
+		const id = DepartmentId.random()
 		const cargos = params.cargos.map(cargo => new CargoId(cargo))
-		return new Departamento(
-			new DepartmentId(id),
-			new DepartmentName(params.name),
-			cargos,
-			new DepartmentId(params.vicepresidenciaId)
-		)
+		return new Departamento(id, new DepartmentName(params.name), cargos, new DepartmentId(params.vicepresidenciaId))
 	}
 
 	static fromPrimitives(primitives: DepartamentoDto): Departamento {

@@ -9,6 +9,9 @@ import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DepartamentoDto, type DepartamentoParams } from './Departamento.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 
+/**
+ * @description Use case for creating a new Departamento, including validation of associated entities.
+ */
 export class CreateDepartamentoUseCase {
 	constructor(
 		private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>,
@@ -16,26 +19,31 @@ export class CreateDepartamentoUseCase {
 		private readonly cargoRepository: CargoRepository
 	) {}
 
+	/**
+	 * @description Executes the creation of a new departamento.
+	 * @param {DepartamentoParams} params The parameters for creating the departamento.
+	 * @returns {Promise<void>} A promise that resolves when the departamento is successfully created.
+	 * @throws {DepartmentAlreadyExistError} If a departamento with the same name already exists.
+	 * @throws {DepartmentDoesNotExistError} If the associated vicepresidencia or any cargo does not exist.
+	 */
 	public async execute({ name, vicepresidenciaId, cargos }: DepartamentoParams): Promise<void> {
 		const createIDepartementUseCase = new CreateIDepartementUseCase(this.cargoRepository)
 		await Promise.all([
-			// Se verifica que el departamento 2 exista
 			this.ensureVicepresidenciaExists(vicepresidenciaId),
-			// Se verifica que el departamento 3 no exista
 			this.ensureDepartamentoDoesNotExist(name),
 			createIDepartementUseCase.execute({ cargos })
 		])
 	}
 
 	private async ensureDepartamentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
-		if ((await this.departamentoRepository.searchByName(name)) !== null) {
-			throw new DepartmentAlreadyExistError('La Genrecia, coordinación o departamento')
+		if (await this.departamentoRepository.searchByName(name)) {
+			throw new DepartmentAlreadyExistError('La gerencia, coordinación o departamento')
 		}
 	}
 
 	private async ensureVicepresidenciaExists(vicepresidenciaId: Primitives<DepartmentId>): Promise<void> {
-		if ((await this.vicepresidenciaRepository.searchById(vicepresidenciaId)) === null) {
-			throw new DepartmentDoesNotExistError('La vicepresidencia ')
+		if (!(await this.vicepresidenciaRepository.searchById(vicepresidenciaId))) {
+			throw new DepartmentDoesNotExistError('La vicepresidencia')
 		}
 	}
 }

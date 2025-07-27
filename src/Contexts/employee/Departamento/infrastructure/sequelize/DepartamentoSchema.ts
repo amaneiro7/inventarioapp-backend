@@ -15,6 +15,9 @@ import { type DepartamentoDto } from '../../domain/Departamento.dto'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 
+/**
+ * @description Sequelize model for the `Departamento` entity.
+ */
 export class DepartamentoModel
 	extends Model<Omit<DepartamentoDto, 'cargos' | 'vicepresiedncia'>>
 	implements DepartamentoDto
@@ -25,21 +28,15 @@ export class DepartamentoModel
 	declare vicepresiedncia: VicepresidenciaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
-	// Métodos de asociación
+	// Association Mixins
 	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>
 	declare addCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
-		this.belongsTo(models.Vicepresidencia, {
-			as: 'vicepresidencia',
-			foreignKey: 'vicepresidenciaId'
-		})
-		this.hasMany(models.Employee, {
-			as: 'employee',
-			foreignKey: 'departamentoId'
-		})
+	static associate(models: Sequelize['models']): void {
+		this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' })
+		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'departamentoId' })
 		this.belongsToMany(models.Cargo, {
 			as: 'cargos',
 			through: 'cargo_departamento',
@@ -48,30 +45,14 @@ export class DepartamentoModel
 		})
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		DepartamentoModel.init(
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: true
-				},
-				vicepresidenciaId: {
-					type: DataTypes.UUID,
-					allowNull: false
-				}
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false, unique: true },
+				vicepresidenciaId: { type: DataTypes.UUID, allowNull: false }
 			},
-			{
-				sequelize,
-				modelName: 'Departamento',
-				timestamps: true,
-				underscored: true
-			}
+			{ sequelize, modelName: 'Departamento', tableName: 'departamentos', timestamps: true, underscored: true }
 		)
 	}
 }
