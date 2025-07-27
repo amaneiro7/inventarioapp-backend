@@ -10,6 +10,9 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 
+/**
+ * @description Use case for updating an existing Cargo entity.
+ */
 export class CargoUpdater {
 	private readonly updateCargoUseCase: UpdateCargoUseCase
 	private readonly cargoRepository: CargoRepository
@@ -17,24 +20,19 @@ export class CargoUpdater {
 	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-	constructor({
-		cargoRepository,
-		departamentoRepository,
-		directivaRepository,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository
-	}: {
+
+	constructor(dependencies: {
 		cargoRepository: CargoRepository
+		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		directivaRepository: DepartmentRepository<DirectivaDto>
 		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-		departamentoRepository: DepartmentRepository<DepartamentoDto>
 	}) {
-		this.cargoRepository = cargoRepository
-		this.departamentoRepository = departamentoRepository
-		this.directivaRepository = directivaRepository
-		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
-		this.vicepresidenciaRepository = vicepresidenciaRepository
+		this.cargoRepository = dependencies.cargoRepository
+		this.departamentoRepository = dependencies.departamentoRepository
+		this.directivaRepository = dependencies.directivaRepository
+		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
 
 		this.updateCargoUseCase = new UpdateCargoUseCase({
 			cargoRepository: this.cargoRepository,
@@ -45,6 +43,12 @@ export class CargoUpdater {
 		})
 	}
 
+	/**
+	 * @description Executes the cargo update process.
+	 * @param {{ id: string; params: Partial<CargoParams> }} data The parameters for updating the cargo.
+	 * @returns {Promise<void>} A promise that resolves when the cargo is successfully updated.
+	 * @throws {CargoDoesNotExistError} If the cargo with the provided ID does not exist.
+	 */
 	async run({ id, params }: { id: string; params: Partial<CargoParams> }): Promise<void> {
 		const cargoId = new CargoId(id)
 

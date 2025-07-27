@@ -1,9 +1,12 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { CargoDto, type CargoParams, type CargoPrimitives } from './Cargo.dto'
+import { type CargoDto, type CargoParams, type CargoPrimitives } from './Cargo.dto'
 import { CargoId } from './CargoId'
 import { CargoName } from './CargoName'
 
+/**
+ * @description Represents the Cargo domain entity.
+ */
 export class Cargo {
 	constructor(
 		private readonly id: CargoId,
@@ -15,13 +18,13 @@ export class Cargo {
 	) {}
 
 	static create(params: CargoParams): Cargo {
-		const id = CargoId.random().value
+		const id = CargoId.random()
 		const directivas = params.directivas.map(deps => new DepartmentId(deps))
 		const vicepresidenciasEjecutivas = params.vicepresidenciasEjecutivas.map(deps => new DepartmentId(deps))
 		const vicepresidencias = params.vicepresidencias.map(deps => new DepartmentId(deps))
 		const departamentos = params.departamentos.map(deps => new DepartmentId(deps))
 		return new Cargo(
-			new CargoId(id),
+			id,
 			new CargoName(params.name),
 			directivas,
 			vicepresidenciasEjecutivas,
@@ -63,12 +66,15 @@ export class Cargo {
 	get directivasValue(): Primitives<DepartmentId>[] {
 		return this.directivas.map(directiva => directiva.value)
 	}
+
 	get vicepresidenciasEjecutivasValue(): Primitives<DepartmentId>[] {
 		return this.vicepresidenciasEjecutivas.map(vpe => vpe.value)
 	}
+
 	get vicepresidenciasValue(): Primitives<DepartmentId>[] {
 		return this.vicepresidencias.map(vp => vp.value)
 	}
+
 	get departamentosValue(): Primitives<DepartmentId>[] {
 		return this.departamentos.map(deps => deps.value)
 	}
@@ -80,12 +86,15 @@ export class Cargo {
 	updateDirectivas(directivasIds: Primitives<DepartmentId>[]): void {
 		this.directivas = directivasIds.map(dir => new DepartmentId(dir))
 	}
+
 	updateVicepresidenciaEjecutivas(vicepresidenciaEjecutivasIds: Primitives<DepartmentId>[]): void {
 		this.vicepresidenciasEjecutivas = vicepresidenciaEjecutivasIds.map(vpe => new DepartmentId(vpe))
 	}
+
 	updateVicepresidencias(vicepresidenciasIds: Primitives<DepartmentId>[]): void {
 		this.vicepresidencias = vicepresidenciasIds.map(vp => new DepartmentId(vp))
 	}
+
 	updateDepartamentos(departamentoIds: Primitives<DepartmentId>[]): void {
 		this.departamentos = departamentoIds.map(deps => new DepartmentId(deps))
 	}

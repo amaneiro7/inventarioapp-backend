@@ -8,6 +8,9 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 
+/**
+ * @description Use case for creating a new Cargo entity.
+ */
 export class CargoCreator {
 	private readonly createCargoUseCase: CreateCargoUseCase
 	private readonly cargoRepository: CargoRepository
@@ -15,24 +18,19 @@ export class CargoCreator {
 	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-	constructor({
-		cargoRepository,
-		departamentoRepository,
-		directivaRepository,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository
-	}: {
+
+	constructor(dependencies: {
 		cargoRepository: CargoRepository
+		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		directivaRepository: DepartmentRepository<DirectivaDto>
 		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-		departamentoRepository: DepartmentRepository<DepartamentoDto>
 	}) {
-		this.cargoRepository = cargoRepository
-		this.departamentoRepository = departamentoRepository
-		this.directivaRepository = directivaRepository
-		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
-		this.vicepresidenciaRepository = vicepresidenciaRepository
+		this.cargoRepository = dependencies.cargoRepository
+		this.departamentoRepository = dependencies.departamentoRepository
+		this.directivaRepository = dependencies.directivaRepository
+		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
+		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
 
 		this.createCargoUseCase = new CreateCargoUseCase({
 			cargoRepository: this.cargoRepository,
@@ -43,31 +41,35 @@ export class CargoCreator {
 		})
 	}
 
+	/**
+	 * @description Executes the cargo creation process.
+	 * @param {{ params: CargoParams }} data The parameters for creating the cargo.
+	 * @returns {Promise<void>} A promise that resolves when the cargo is successfully created.
+	 */
 	async run({
 		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas }
 	}: {
 		params: CargoParams
 	}): Promise<void> {
-		const departamentosSinDuplicados: CargoParams['departamentos'] = Array.from(new Set(departamentos))
-		const directivasSinDuplicados: CargoParams['directivas'] = Array.from(new Set(directivas))
-		const vicepresidenciasSinDuplicados: CargoParams['vicepresidencias'] = Array.from(new Set(vicepresidencias))
-		const vicepresidenciasEjecutivasSinDuplicados: CargoParams['vicepresidenciasEjecutivas'] = Array.from(
-			new Set(vicepresidenciasEjecutivas)
-		)
+		const uniqueDepartamentos = Array.from(new Set(departamentos))
+		const uniqueDirectivas = Array.from(new Set(directivas))
+		const uniqueVicepresidencias = Array.from(new Set(vicepresidencias))
+		const uniqueVicepresidenciasEjecutivas = Array.from(new Set(vicepresidenciasEjecutivas))
+
 		await this.createCargoUseCase.execute({
 			name,
-			departamentos: departamentosSinDuplicados,
-			directivas: directivasSinDuplicados,
-			vicepresidencias: vicepresidenciasSinDuplicados,
-			vicepresidenciasEjecutivas: vicepresidenciasEjecutivasSinDuplicados
+			departamentos: uniqueDepartamentos,
+			directivas: uniqueDirectivas,
+			vicepresidencias: uniqueVicepresidencias,
+			vicepresidenciasEjecutivas: uniqueVicepresidenciasEjecutivas
 		})
 
 		const cargo = Cargo.create({
 			name,
-			departamentos: departamentosSinDuplicados,
-			directivas: directivasSinDuplicados,
-			vicepresidencias: vicepresidenciasSinDuplicados,
-			vicepresidenciasEjecutivas: vicepresidenciasEjecutivasSinDuplicados
+			departamentos: uniqueDepartamentos,
+			directivas: uniqueDirectivas,
+			vicepresidencias: uniqueVicepresidencias,
+			vicepresidenciasEjecutivas: uniqueVicepresidenciasEjecutivas
 		})
 
 		await this.cargoRepository.save(cargo.toPrimitive())

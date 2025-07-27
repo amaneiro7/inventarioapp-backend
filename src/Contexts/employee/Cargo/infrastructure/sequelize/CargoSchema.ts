@@ -20,6 +20,9 @@ import { type DirectivaModel } from '../../../Directiva/infrastructure/sequelize
 import { type VicepresidenciaEjecutivaModel } from '../../../VicepresidenciaEjecutiva/infrastructure/sequelize/VicepresidenciaEjecutivaSchema'
 import { type VicepresidenciaModel } from '../../../Vicepresidencia/infrastructure/sequelize/VicepresidenciaSchema'
 
+/**
+ * @description Sequelize model for the `Cargo` entity.
+ */
 export class CargoModel
 	extends Model<Omit<CargoDto, 'departamentos' | 'vicepresidencias' | 'directivas' | 'vicepresidenciasEjecutivas'>>
 	implements CargoDto
@@ -31,12 +34,11 @@ export class CargoModel
 	declare vicepresidenciasEjecutivas: VicepresidenciaEjecutivaDto[]
 	declare vicepresidencias: VicepresidenciaDto[]
 
-	// Métodos de asociación directiva
+	// Association Mixins
 	declare getDirectiva: BelongsToManyGetAssociationsMixin<DirectivaModel>
 	declare addDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
 	declare setDirectivas: BelongsToManySetAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
 	declare removeDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
-	// Métodos de asociación vicepresidencia ejecutiva
 	declare getVicepresidenciaEjecutiva: BelongsToManyGetAssociationsMixin<VicepresidenciaEjecutivaModel>
 	declare addVicepresidenciaEjecutiva: BelongsToManyAddAssociationsMixin<
 		VicepresidenciaEjecutivaModel,
@@ -50,18 +52,16 @@ export class CargoModel
 		VicepresidenciaEjecutivaModel,
 		Primitives<DepartmentId>
 	>
-	// Métodos de asociación vicepresidencia
 	declare getVicepresidencia: BelongsToManyGetAssociationsMixin<VicepresidenciaModel>
 	declare addVicepresidencia: BelongsToManyAddAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
 	declare setVicepresidencias: BelongsToManySetAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
 	declare removeVicepresidencia: BelongsToManyAddAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
-	// Métodos de asociación departamentos
 	declare getDepartamento: BelongsToManyGetAssociationsMixin<DepartamentoModel>
 	declare addDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 	declare setDepartamentos: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 	declare removeDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static associate(models: Sequelize['models']): void {
 		this.belongsToMany(models.Directiva, {
 			as: 'directivas',
 			through: 'cargo_directiva',
@@ -88,26 +88,14 @@ export class CargoModel
 		})
 		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'cargoId' })
 	}
-	static async initialize(sequelize: Sequelize): Promise<void> {
-		CargoModel.init(
+
+	static initialize(sequelize: Sequelize): void {
+		this.init(
 			{
-				id: {
-					type: DataTypes.UUID,
-					primaryKey: true,
-					allowNull: false
-				},
-				name: {
-					type: DataTypes.STRING,
-					allowNull: false,
-					unique: true
-				}
+				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
+				name: { type: DataTypes.STRING, allowNull: false, unique: true }
 			},
-			{
-				modelName: 'Cargo',
-				timestamps: true,
-				underscored: true,
-				sequelize
-			}
+			{ modelName: 'Cargo', tableName: 'cargos', timestamps: true, underscored: true, sequelize }
 		)
 	}
 }

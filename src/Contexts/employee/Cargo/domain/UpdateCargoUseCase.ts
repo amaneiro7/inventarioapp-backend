@@ -25,9 +25,19 @@ interface UpdateCargoParams {
 	entity: Cargo
 }
 
+/**
+ * @description Use case for updating an existing Cargo, including validation of associated departments.
+ */
 export class UpdateCargoUseCase {
 	constructor(private readonly repository: DepartmentRepositories) {}
 
+	/**
+	 * @description Executes the update of a cargo.
+	 * @param {UpdateCargoParams} data The parameters for updating the cargo.
+	 * @returns {Promise<void>} A promise that resolves when the cargo is successfully updated.
+	 * @throws {CargoAlreadyExistError} If a cargo with the new name already exists.
+	 * @throws {DepartmentDoesNotExistError} If any of the associated department IDs do not exist.
+	 */
 	public async execute({
 		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas },
 		entity
@@ -74,7 +84,7 @@ export class UpdateCargoUseCase {
 	}): Promise<void> {
 		if (!name || entity.nameValue === name) return
 		const existingCargo = await this.repository.cargoRepository.searchByName(name)
-		if (existingCargo !== null) {
+		if (existingCargo) {
 			throw new CargoAlreadyExistError(name)
 		}
 		entity.updateName(name)
@@ -102,12 +112,13 @@ export class UpdateCargoUseCase {
 
 		await Promise.all(
 			newDepartmentIds.map(async departmentId => {
-				if ((await repository.searchById(departmentId)) === null) {
+				if (!(await repository.searchById(departmentId))) {
 					throw new DepartmentDoesNotExistError(`La ${departmentType}`)
 				}
 			})
 		)
 
+		// Update the entity's department list based on the departmentType
 		switch (departmentType) {
 			case 'gerencia, coordinación o departamento':
 				entity.updateDepartamentos(departmentIds)

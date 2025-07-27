@@ -4,12 +4,22 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type CargoDto } from '../domain/Cargo.dto'
 import { type CargoRepository } from '../domain/CargoRepository'
 
+/**
+ * @description Use case for retrieving all Cargo entities.
+ */
 export class CargoFinderAll extends GetAllBaseService<CargoDto> {
 	private readonly cargoRepository: CargoRepository
+
 	constructor({ cargoRepository }: { cargoRepository: CargoRepository }) {
 		super()
 		this.cargoRepository = cargoRepository
 	}
+
+	/**
+	 * @description Executes the process of finding all cargos.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseService<CargoDto>>} A paginated response of cargos.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<CargoDto>> {
 		const { data, total } = await this.cargoRepository.searchAll(criteria)
 
