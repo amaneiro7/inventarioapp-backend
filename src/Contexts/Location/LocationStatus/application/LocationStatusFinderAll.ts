@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type LocationStatusDto } from '../domain/LocationStatus.dto'
 import { type LocationStatusRepository } from '../domain/LocationStatusRepository'
 
+/**
+ * Service to find all location statuses based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class LocationStatusFinderAll extends GetAllBaseService<LocationStatusDto> {
 	private readonly locationStatusRepository: LocationStatusRepository
 	constructor({ locationStatusRepository }: { locationStatusRepository: LocationStatusRepository }) {
@@ -11,6 +15,11 @@ export class LocationStatusFinderAll extends GetAllBaseService<LocationStatusDto
 		this.locationStatusRepository = locationStatusRepository
 	}
 
+	/**
+	 * Runs the service to retrieve location statuses.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<LocationStatusDto>>} A promise that resolves to a paginated response of location status DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<LocationStatusDto>> {
 		const { data, total } = await this.locationStatusRepository.searchAll(criteria)
 		return this.response({
