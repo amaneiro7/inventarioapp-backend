@@ -4,6 +4,7 @@ import { type ProcessorSocketGetAllController } from '../../controllers/processo
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { ProcessorSocketDependencies } from '../../di/processor/processor-socket.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: ProcessorSocketGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de sockets obtenida con éxito.
 	 */
-	router.get('/processorsockets/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/processorsockets/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

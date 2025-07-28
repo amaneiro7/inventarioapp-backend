@@ -6,6 +6,7 @@ import { type DirectivaGetController } from '../../controllers/employee/directiv
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { DirectivaDependencies } from '../../di/employee/directiva.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: DirectivaGetAllController = container.resolve(DirectivaDependencies.GetAllController)
@@ -27,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de directivas obtenida con éxito.
 	 */
-	router.get('/directivas/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/directivas/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

@@ -4,6 +4,7 @@ import { type OperatingSystemArqGetAllController } from '../../controllers/opera
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { OperatingSystemArqDependencies } from '../../di/operating-system/operating-system-arq.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: OperatingSystemArqGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de arquitecturas obtenida con éxito.
 	 */
-	router.get('/operatingsystemarqs/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/operatingsystemarqs/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

@@ -6,6 +6,7 @@ import { type CargoGetController } from '../../controllers/employee/cargo.get.co
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { CargoDependencies } from '../../di/employee/cargo.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: CargoGetAllController = container.resolve(CargoDependencies.GetAllController)
@@ -27,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de cargos obtenida con éxito.
 	 */
-	router.get('/cargos/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/cargos/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

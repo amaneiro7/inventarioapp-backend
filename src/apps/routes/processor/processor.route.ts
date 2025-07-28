@@ -7,6 +7,7 @@ import { type ProcessorPostController } from '../../controllers/processor/proces
 import { type ProcessorGetController } from '../../controllers/processor/processor.get.controller'
 import { type ProcessorGetAllController } from '../../controllers/processor/processor.get-all.controller'
 import { type ProcessorDeleteController } from '../../controllers/processor/processor.delete.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: ProcessorGetController = container.resolve(ProcessorDependencies.GetController)
@@ -29,7 +30,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de procesadores obtenida con éxito.
 	 */
-	router.get('/processors/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/processors/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

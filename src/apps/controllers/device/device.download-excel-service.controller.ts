@@ -7,7 +7,18 @@ import { container } from '../../di/container'
 import { DeviceDependencies } from '../../di/device/device.di'
 import { SearchByCriteriaQuery } from '../../../Contexts/Shared/domain/SearchByCriteriaQuery'
 
+/**
+ * Controller for downloading device data as an Excel file.
+ */
 export class DeviceDownloadExcelServiceController implements Controller {
+	/**
+	 * Handles the request to download device data.
+	 * It uses the `req.criteria` (populated by `criteriaConverterMiddleware`) to filter and sort the data.
+	 * @param {Request} req - The Express request object, containing criteria in `req.criteria`.
+	 * @param {Response} res - The Express response object.
+	 * @param {NextFunction} next - The Express next middleware function.
+	 * @returns {Promise<void>} A promise that resolves when the Excel file is sent or an error is passed to the next middleware.
+	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { filters, orderBy, orderType, limit, offset } = req.query

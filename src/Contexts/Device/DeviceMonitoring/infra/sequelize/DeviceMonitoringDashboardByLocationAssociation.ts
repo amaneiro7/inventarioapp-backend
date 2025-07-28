@@ -134,10 +134,12 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 
 		// Filter by IP address (using safe iLike operator)
 		if ('ipAddress' in whereFilters) {
-			const ipAddress = whereFilters.ipAddress as string
+			const subnetFilter = whereFilters.ipAddress as { [key: symbol]: string }
+			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+
 			computerInclude.where = {
 				...computerInclude.where,
-				ipAddress: { [Op.iLike]: `%${ipAddress}%` }
+				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
 			}
 			delete whereFilters.ipAddress
 		}

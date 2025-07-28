@@ -2,6 +2,7 @@ import { Op, type FindOptions, type IncludeOptions, type Order } from 'sequelize
 import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { StatusOptions } from '../../../Status/domain/StatusOptions'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
  * A utility class to build the complex Sequelize FindOptions for general device monitoring searches.
@@ -72,8 +73,13 @@ export class DeviceMonitoringAssociation {
 		}
 
 		if ('ipAddress' in whereFilters) {
-			const ipAddress = whereFilters.ipAddress as string
-			computerInclude.where = { ...computerInclude.where, ipAddress: { [Op.iLike]: `%${ipAddress}%` } }
+			const subnetFilter = whereFilters.ipAddress as { [key: symbol]: string }
+			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+
+			computerInclude.where = {
+				...computerInclude.where,
+				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
+			}
 			delete whereFilters.ipAddress
 		}
 

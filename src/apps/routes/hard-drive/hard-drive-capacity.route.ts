@@ -4,6 +4,7 @@ import { type HardDriveCapacityGetAllController } from '../../controllers/hard-d
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { HardDriveCapacityDependencies } from '../../di/hard-drive/hard-drive-capacity.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: HardDriveCapacityGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de capacidades obtenida con éxito.
 	 */
-	router.get('/harddrivecapacities/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/harddrivecapacities/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

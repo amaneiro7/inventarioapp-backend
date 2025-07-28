@@ -7,12 +7,24 @@ import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-statu
 import { container } from '../../di/container'
 import { AuthDependencies } from '../../di/auth/auth.di'
 import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'
+import { ERROR_MESSAGES } from '../../constants/messages'
 
+/**
+ * Controller for refreshing authentication tokens.
+ */
 export class AuthRefreshTokenController implements Controller {
+	/**
+	 * Handles the token refresh request.
+	 * It expects a `JwtPayloadUser` in `req.user` to refresh the token.
+	 * @param {Request} req - The Express request object.
+	 * @param {Response} res - The Express response object.
+	 * @param {NextFunction} next - The Express next middleware function.
+	 * @returns {Promise<void>} A promise that resolves when the response is sent or an error is passed to the next middleware.
+	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const jwtToken = req?.user as JwtPayloadUser
-			if (!jwtToken) throw new ApiError(httpStatus[401].statusCode, 'Token not provided')
+			if (!jwtToken) throw new ApiError(httpStatus[401].statusCode, ERROR_MESSAGES.TOKEN_NOT_PROVIDED)
 
 			const refreshToken: AuthRefreshTokenUseCase = container.resolve(AuthDependencies.RefreshTokenUseCase)
 			const { user, accessToken } = await refreshToken.run(jwtToken)

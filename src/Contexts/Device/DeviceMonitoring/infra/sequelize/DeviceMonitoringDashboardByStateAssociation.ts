@@ -97,8 +97,13 @@ export class DeviceMonitoringDashboardByStateAssociation {
 		}
 
 		if ('ipAddress' in whereFilters) {
-			const ipAddress = whereFilters.ipAddress as string
-			computerInclude.where = { ...computerInclude.where, ipAddress: { [Op.iLike]: `%${ipAddress}%` } }
+			const subnetFilter = whereFilters.ipAddress as { [key: symbol]: string }
+			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+
+			computerInclude.where = {
+				...computerInclude.where,
+				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
+			}
 			delete whereFilters.ipAddress
 		}
 

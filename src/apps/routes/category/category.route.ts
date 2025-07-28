@@ -4,6 +4,7 @@ import { type CategoryGetController } from '../../controllers/category/category.
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { CategoryDependencies } from '../../di/category/category.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: CategoryGetController = container.resolve(CategoryDependencies.GetController)
@@ -23,7 +24,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de categorías obtenida con éxito.
 	 */
-	router.get('/categories/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/categories/',
+		authenticate,
+		criteriaConverterMiddleware,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

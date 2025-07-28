@@ -5,6 +5,7 @@ import { type RegionGetController } from '../../controllers/location/region.get.
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { RegionDependencies } from '../../di/location/region.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: RegionGetController = container.resolve(RegionDependencies.GetController)
@@ -25,7 +26,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de regiones obtenida con éxito.
 	 */
-	router.get('/regions/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/regions/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

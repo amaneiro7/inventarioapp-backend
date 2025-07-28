@@ -4,6 +4,7 @@ import { type MainCategoryGetController } from '../../controllers/main-category/
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { MainCategoryDependencies } from '../../di/main-category/main-category.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: MainCategoryGetController = container.resolve(MainCategoryDependencies.GetController)
@@ -23,7 +24,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de categorías principales obtenida con éxito.
 	 */
-	router.get('/maincategories/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/maincategories/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

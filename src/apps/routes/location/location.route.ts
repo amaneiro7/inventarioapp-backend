@@ -12,6 +12,7 @@ import { type LocationPingStatusController } from '../../controllers/location/lo
 import { type LocationMonitoringDashboardGetController } from '../../controllers/location/location-monitoring-dashboard.controller'
 import { type LocationMonitoringDashboardByStateGetController } from '../../controllers/location/location-monitoring-dashboard-by-state.controller'
 import { type LocationMonitoringDashboardByLocationGetController } from '../../controllers/location/location-monitoring-dashboard-by-location.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: LocationGetController = container.resolve(LocationDependencies.GetController)
@@ -74,7 +75,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/locations/', authenticate, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/locations/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -90,7 +91,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de ubicaciones obtenida con éxito.
 	 */
-	router.get('/locations/all', authenticate, getAllController.run.bind(getAllController))
+	router.get('/locations/all', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -109,6 +110,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/ping-status',
 		authenticate,
+		criteriaConverterMiddleware,
 		locationPingStatusController.run.bind(locationPingStatusController)
 	)
 
@@ -129,6 +131,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/dashboard/monitoring',
 		authenticate,
+		criteriaConverterMiddleware,
 		locationMonitoringDashboardGetController.run.bind(locationMonitoringDashboardGetController)
 	)
 
@@ -149,6 +152,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/dashboard/monitoringbystate',
 		authenticate,
+		criteriaConverterMiddleware,
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
 	)
 
@@ -166,6 +170,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/locations/dashboard/monitoringbylocation',
+		criteriaConverterMiddleware,
 		locationMonitoringDashboardByLocationGetController.run.bind(locationMonitoringDashboardByLocationGetController)
 	)
 

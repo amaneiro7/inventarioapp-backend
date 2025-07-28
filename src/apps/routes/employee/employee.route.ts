@@ -8,6 +8,7 @@ import { type EmployeePostController } from '../../controllers/employee/employee
 import { type EmployeePatchController } from '../../controllers/employee/employee.patch.controller'
 import { type EmployeeDeleteController } from '../../controllers/employee/employee.delete.controller'
 import { type EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: EmployeeGetController = container.resolve(EmployeeDependencies.GetController)
@@ -59,7 +60,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/employees/', authenticate, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/employees/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -73,7 +74,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de empleados obtenida con éxito.
 	 */
-	router.get('/employees/all', getAllController.run.bind(getAllController))
+	router.get('/employees/all', criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

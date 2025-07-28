@@ -6,6 +6,7 @@ import { type CentroCostoGetController } from '../../controllers/employee/centro
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { CentroCostoDependencies } from '../../di/employee/centro-costo.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: CentroCostoGetAllController = container.resolve(CentroCostoDependencies.GetAllController)
@@ -27,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de centros de costo obtenida con éxito.
 	 */
-	router.get('/centrocostos/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/centrocostos/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

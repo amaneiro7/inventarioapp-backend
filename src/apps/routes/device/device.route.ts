@@ -16,6 +16,7 @@ import { type DevicePingStatusController } from '../../controllers/device/device
 import { type DeviceMonitoringDashboardGetController } from '../../controllers/device/device-monitoring-dashboard.controller'
 import { type DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
 import { type DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -82,7 +83,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/devices/', authenticate, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/devices/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -98,7 +99,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Estado de ping obtenido.
 	 */
-	router.get('/devices/ping-status', authenticate, devicePingStatusController.run.bind(devicePingStatusController))
+	router.get(
+		'/devices/ping-status',
+		authenticate,
+		criteriaConverterMiddleware,
+		devicePingStatusController.run.bind(devicePingStatusController)
+	)
 
 	/**
 	 * @swagger
@@ -119,24 +125,28 @@ export const register = async (router: Router) => {
 	 *               type: string
 	 *               format: binary
 	 */
-	router.get('/devices/download', authenticate, download.run.bind(download))
+	router.get('/devices/download', authenticate, criteriaConverterMiddleware, download.run.bind(download))
 
 	router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
 
 	router.get(
 		'/devices/dashboard/monitoring',
 		authenticate,
+		criteriaConverterMiddleware,
 		deviceMonitoringDashboardGetController.run.bind(deviceMonitoringDashboardGetController)
 	)
 
 	router.get(
 		'/devices/dashboard/monitoringbystate',
 		authenticate,
+		criteriaConverterMiddleware,
 		deviceMonitoringDashboardByStateGetController.run.bind(deviceMonitoringDashboardByStateGetController)
 	)
 
 	router.get(
 		'/devices/dashboard/monitoringbylocation',
+		authenticate,
+		criteriaConverterMiddleware,
 		deviceMonitoringDashboardByLocationGetController.run.bind(deviceMonitoringDashboardByLocationGetController)
 	)
 

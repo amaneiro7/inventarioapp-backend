@@ -4,6 +4,7 @@ import { type StatusDashboardGetController } from '../../controllers/status/stat
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { StatusDependencies } from '../../di/status/status.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: StatusGetAllController = container.resolve(StatusDependencies.GetAllController)
@@ -25,7 +26,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de estados obtenida con éxito.
 	 */
-	router.get('/status/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/status/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

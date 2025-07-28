@@ -6,6 +6,7 @@ import { type CentroTrabajoGetController } from '../../controllers/employee/cent
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { CentroTrabajoDependencies } from '../../di/employee/centro-trabajo.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: CentroTrabajoGetAllController = container.resolve(
@@ -29,7 +30,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de centros de trabajo obtenida con éxito.
 	 */
-	router.get('/centrotrabajos/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/centrotrabajos/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

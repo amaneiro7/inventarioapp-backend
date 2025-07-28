@@ -4,6 +4,7 @@ import { type OperatingSystemGetAllController } from '../../controllers/operatin
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { OperatingSystemDependencies } from '../../di/operating-system/operating-system.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: OperatingSystemGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de sistemas operativos obtenida con éxito.
 	 */
-	router.get('/operatingsystems/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/operatingsystems/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

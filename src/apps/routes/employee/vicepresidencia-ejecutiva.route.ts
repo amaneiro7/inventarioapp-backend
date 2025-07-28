@@ -6,6 +6,7 @@ import { type VicepresidenciaEjecutivaGetController } from '../../controllers/em
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { VicepresidenciaEjecutivaDependencies } from '../../di/employee/vicepresidencia-ejecutiva.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: VicepresidenciaEjecutivaGetAllController = container.resolve(
@@ -35,7 +36,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista obtenida con éxito.
 	 */
-	router.get('/vicepresidenciaejecutivas/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/vicepresidenciaejecutivas/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

@@ -4,6 +4,7 @@ import { type LocationStatusGetAllController } from '../../controllers/location/
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { LocationStatusDependencies } from '../../di/location/operational-status.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: LocationStatusGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de estados operacionales obtenida con éxito.
 	 */
-	router.get('/operationalstatus/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/operationalstatus/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

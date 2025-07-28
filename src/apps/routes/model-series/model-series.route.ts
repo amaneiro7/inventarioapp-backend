@@ -8,6 +8,7 @@ import { type ModelSeriesPostController } from '../../controllers/model-series/m
 import { type ModelSeriesPatchController } from '../../controllers/model-series/model-series.patch.controller'
 import { type ModelSeriesSearchByCriteriaController } from '../../controllers/model-series/model-series.search-by-criteria.controller'
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)
@@ -62,7 +63,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/models/', authenticate, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/models/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -78,7 +79,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de modelos/series obtenida con éxito.
 	 */
-	router.get('/models/all', authenticate, getAllController.run.bind(getAllController))
+	router.get('/models/all', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -99,7 +100,7 @@ export const register = async (router: Router) => {
 	 *               type: string
 	 *               format: binary
 	 */
-	router.get('/models/download', authenticate, download.run.bind(download))
+	router.get('/models/download', authenticate, criteriaConverterMiddleware, download.run.bind(download))
 
 	/**
 	 * @swagger

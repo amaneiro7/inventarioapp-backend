@@ -6,6 +6,7 @@ import { type DepartamentoGetController } from '../../controllers/employee/depar
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { DepartamentoDependencies } from '../../di/employee/departamento.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: DepartamentoGetAllController = container.resolve(DepartamentoDependencies.GetAllController)
@@ -27,7 +28,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de departamentos obtenida con éxito.
 	 */
-	router.get('/departamentos/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/departamentos/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

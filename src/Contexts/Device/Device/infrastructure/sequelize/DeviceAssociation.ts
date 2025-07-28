@@ -329,7 +329,7 @@ export class DeviceAssociation {
 			const ipAddressValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
 
 			computerInclude.where = {
-				...(computerInclude.where ?? {}),
+				...computerInclude.where,
 				ipAddress: sequelize.literal(`ip_address::text ILIKE '%${ipAddressValue}%'`)
 			}
 

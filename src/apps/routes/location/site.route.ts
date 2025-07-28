@@ -7,6 +7,7 @@ import { type SiteGetController } from '../../controllers/location/site.get.cont
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { SiteDependencies } from '../../di/location/site.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: SiteGetAllController = container.resolve(SiteDependencies.GetAllController)
@@ -29,7 +30,7 @@ export const register = async (router: Router) => {
 	 *         description: Lista de sitios obtenida con éxito.
 
 	 */
-	router.get('/sites/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/sites/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

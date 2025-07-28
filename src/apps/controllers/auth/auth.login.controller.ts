@@ -10,7 +10,17 @@ type ReqUser = UserPrimitives & {
 	role: RolePrimitives
 }
 
+/**
+ * Controller for user login.
+ */
 export class AuthLoginController implements Controller {
+	/**
+	 * Handles the user login request.
+	 * @param {Request} req - The Express request object.
+	 * @param {Response} res - The Express response object.
+	 * @param {NextFunction} next - The Express next middleware function.
+	 * @returns {Promise<void>} A promise that resolves when the response is sent or an error is passed to the next middleware.
+	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const user = req.user as ReqUser

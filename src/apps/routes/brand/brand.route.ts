@@ -6,6 +6,7 @@ import { type BrandPostController } from '../../controllers/brand/brand.post.con
 import { type BrandPatchController } from '../../controllers/brand/brand.patch.controller'
 import { type BrandGetFinderController } from '../../controllers/brand/brand.get.controller'
 import { BrandDependencies } from '../../di/brand/brand.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: BrandGetFinderController = container.resolve(BrandDependencies.GetController)
@@ -27,7 +28,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de marcas obtenida con éxito.
 	 */
-	router.get('/brands/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/brands/',
+		authenticate,
+		criteriaConverterMiddleware,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger

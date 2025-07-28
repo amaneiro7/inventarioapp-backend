@@ -4,6 +4,7 @@ import { type HardDriveTypeGetAllController } from '../../controllers/hard-drive
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { HardDriveTypeDependencies } from '../../di/hard-drive/hard-drive-type.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: HardDriveTypeGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de tipos obtenida con éxito.
 	 */
-	router.get('/harddrivetypes/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/harddrivetypes/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

@@ -10,6 +10,7 @@ import { type UserDeleteController } from '../../controllers/user/user.delete.co
 import { type UserGetByEmailController } from '../../controllers/user/user.get-by-email.controller'
 import { type UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { type UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: UserGetController = container.resolve(UserDependencies.GetController)
@@ -39,7 +40,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de usuarios obtenida con éxito.
 	 */
-	router.get('/users/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/users/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

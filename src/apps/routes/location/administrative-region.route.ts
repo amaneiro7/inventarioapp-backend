@@ -3,6 +3,7 @@ import { type AdministrativeRegionGetAllController } from '../../controllers/loc
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { AdministrativeRegionDependencies } from '../../di/location/administrative-region.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: AdministrativeRegionGetAllController = container.resolve(
@@ -23,5 +24,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de regiones administrativas obtenida con éxito.
 	 */
-	router.get('/administrativeregions/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/administrativeregions/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

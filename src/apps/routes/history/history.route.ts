@@ -4,6 +4,7 @@ import { type HistoryDashboardGetController } from '../../controllers/history/hi
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { HistoryDependencies } from '../../di/history/history.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: HistoryGetAllController = container.resolve(HistoryDependencies.GetAllController)
@@ -26,7 +27,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de historiales obtenida con éxito.
 	 */
-	router.get('/histories/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/histories/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

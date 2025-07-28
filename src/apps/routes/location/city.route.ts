@@ -7,6 +7,7 @@ import { type CityGetController } from '../../controllers/location/city.get.cont
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { CityDependencies } from '../../di/location/city.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getController: CityGetController = container.resolve(CityDependencies.GetController)
@@ -28,7 +29,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de ciudades obtenida con éxito.
 	 */
-	router.get('/cities/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/cities/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

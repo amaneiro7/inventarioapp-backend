@@ -4,6 +4,7 @@ import { type MemoryRamTypeGetAllController } from '../../controllers/memory-ram
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { MemoryRamTypeDependencies } from '../../di/memory-ram/memory-ram-type.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
 	const getAllController: MemoryRamTypeGetAllController = container.resolve(
@@ -24,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de tipos de memoria RAM obtenida con éxito.
 	 */
-	router.get('/memoryramtypes/', authenticate, getAllController.run.bind(getAllController))
+	router.get(
+		'/memoryramtypes/',
+		authenticate,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }
