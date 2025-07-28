@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type LocationDto } from '../domain/Location.dto'
 import { type LocationRepository } from '../domain/LocationRepository'
 
+/**
+ * Service to search for Locations based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class LocationSearchByCriteria extends GetAllBaseService<LocationDto> {
 	private readonly locationRepository: LocationRepository
 	constructor({ locationRepository }: { locationRepository: LocationRepository }) {
@@ -11,6 +15,11 @@ export class LocationSearchByCriteria extends GetAllBaseService<LocationDto> {
 		this.locationRepository = locationRepository
 	}
 
+	/**
+	 * Runs the service to retrieve locations matching the criteria.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<LocationDto>>} A promise that resolves to a paginated response of location DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<LocationDto>> {
 		const { data, total } = await this.locationRepository.searchAll(criteria)
 		return this.response({

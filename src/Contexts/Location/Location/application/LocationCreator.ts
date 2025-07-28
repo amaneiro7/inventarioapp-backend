@@ -11,6 +11,9 @@ import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
 import { type LocationMonitoringRepository } from '../../LocationMonitoring/domain/repository/LocationMonitoringRepository'
 
+/**
+ * Service to create a new Location.
+ */
 export class LocationCreator {
 	private readonly locationRepository: LocationRepository
 	private readonly typeOfSiteRepository: TypeOfSiteRepository
@@ -37,6 +40,12 @@ export class LocationCreator {
 		this.locationMonitoringRepository = locationMonitoringRepository
 	}
 
+	/**
+	 * Runs the service to create a new location.
+	 * It performs several validations before creating the location and its monitoring entry.
+	 * @param {LocationParams} params - The parameters for creating the location.
+	 * @returns {Promise<void>} A promise that resolves when the location and its monitoring are successfully created.
+	 */
 	async run(params: LocationParams): Promise<void> {
 		const location = Location.create(params)
 

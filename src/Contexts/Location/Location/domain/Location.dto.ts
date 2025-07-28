@@ -9,6 +9,9 @@ import { type LocationSite } from './LocationSite'
 import { type LocationSubnet } from './LocationSubnet'
 import { type LocationTypeOfSite } from './LocationTypeOfSite'
 
+/**
+ * Represents the core properties of a Location.
+ */
 export interface Location {
 	id: Primitives<LocationId>
 	name: Primitives<LocationName>
@@ -17,9 +20,20 @@ export interface Location {
 	subnet: Primitives<LocationSubnet>
 	locationStatusId: Primitives<LocationStatusId>
 }
+
+/**
+ * Represents the primitive type of a Location, suitable for data transfer.
+ */
 export type LocationPrimitives = Location
+
+/**
+ * Represents the parameters required to create a new Location, excluding the ID.
+ */
 export type LocationParams = Omit<Location, 'id'>
 
+/**
+ * Represents the Data Transfer Object (DTO) for a Location, including its associated TypeOfSite, Site, and OperationalStatus.
+ */
 export type LocationDto = Location & {
 	typeOfSite: TypeOfSiteDto
 	site: SiteDto

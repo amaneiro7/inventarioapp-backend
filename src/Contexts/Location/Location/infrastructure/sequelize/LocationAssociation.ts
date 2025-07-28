@@ -2,7 +2,17 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type FindOptions, type IncludeOptions } from 'sequelize'
 
+/**
+ * A utility class for handling associations in Location queries.
+ */
 export class LocationAssociation {
+	/**
+	 * Converts filter criteria into Sequelize FindOptions.
+	 *
+	 * @param {Criteria} criteria - The criteria to convert.
+	 * @param {FindOptions} options - The initial find options.
+	 * @returns {FindOptions} The updated find options with associations.
+	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 
@@ -65,6 +75,8 @@ export class LocationAssociation {
 
 			delete whereFilters.administrativeRegionId
 		}
+
+		options.where = whereFilters
 
 		return options
 	}

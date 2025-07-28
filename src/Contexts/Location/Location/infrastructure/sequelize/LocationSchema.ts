@@ -12,6 +12,9 @@ import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationSt
 import { type LocationOperationalStatus } from '../../domain/LocationOperationalStatus'
 import { type LocationStatusDto } from '../../../LocationStatus/domain/LocationStatus.dto'
 
+/**
+ * Represents the Location model in the database.
+ */
 export class LocationModel
 	extends Model<Omit<LocationDto, 'site' | 'typeOfSite' | 'operationalStatus'>>
 	implements LocationDto
@@ -27,7 +30,10 @@ export class LocationModel
 	declare site: SiteDto
 	declare operationalStatus: LocationStatusDto
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	/**
+	 * Associates the Location model with other models.
+	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 */ static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.TypeOfSite, {
 			as: 'typeOfSite',
 			foreignKey: 'typeOfSiteId'
@@ -47,7 +53,11 @@ export class LocationModel
 			foreignKey: 'locationId'
 		}) // A location has one location Monitoring
 	}
-	static async initialize(sequelize: Sequelize): Promise<void> {
+
+	/**
+	 * Initializes the Location model.
+	 * @param {Sequelize} sequelize - The Sequelize instance.
+	 */ static async initialize(sequelize: Sequelize): Promise<void> {
 		LocationModel.init(
 			{
 				id: {

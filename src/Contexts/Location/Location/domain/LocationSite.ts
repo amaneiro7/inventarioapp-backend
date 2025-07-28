@@ -4,7 +4,20 @@ import { SiteId } from '../../Site/domain/SiteId'
 import { SiteRepository } from '../../Site/domain/SiteRepository'
 import { Location } from './Location'
 
+/**
+ * Represents the Site ID associated with a Location.
+ * Extends SiteId and provides static methods for updating and ensuring site existence.
+ */
 export class LocationSite extends SiteId {
+	/**
+	 * Updates the site field of a Location entity.
+	 * @param {{ repository: SiteRepository; site?: Primitives<SiteId>; entity: Location }} params - Parameters for updating the site.
+	 * @param {SiteRepository} params.repository - The site repository for existence checks.
+	 * @param {Primitives<SiteId>} [params.site] - The new site ID for the location (optional).
+	 * @param {Location} params.entity - The Location entity to update.
+	 * @returns {Promise<void>} A promise that resolves when the site is updated or no action is needed.
+	 * @throws {SiteDoesNotExistError} If the new site ID does not exist.
+	 */
 	static async updateSiteField({
 		repository,
 		site,
@@ -27,6 +40,14 @@ export class LocationSite extends SiteId {
 		entity.updateSite(site)
 	}
 
+	/**
+	 * Ensures that a site exists in the repository.
+	 * @param {{ repository: SiteRepository; site: Primitives<SiteId> }} params - Parameters for the existence check.
+	 * @param {SiteRepository} params.repository - The site repository to perform the search.
+	 * @param {Primitives<SiteId>} params.site - The site ID to check for existence.
+	 * @returns {Promise<void>} A promise that resolves if the site exists, or rejects with SiteDoesNotExistError.
+	 * @throws {SiteDoesNotExistError} If the site does not exist.
+	 */
 	static async ensureSiteExit({
 		repository,
 		site

@@ -13,6 +13,9 @@ import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
 import { type LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
 
+/**
+ * Service to update an existing Location.
+ */
 export class LocationUpdater {
 	private readonly locationRepository: LocationRepository
 	private readonly typeOfSiteRepository: TypeOfSiteRepository
@@ -35,6 +38,13 @@ export class LocationUpdater {
 		this.locationStatusRepository = locationStatusRepository
 	}
 
+	/**
+	 * Runs the service to update a location.
+	 * It validates the existence of the location and updates its fields if provided.
+	 * @param {{ id: Primitives<LocationId>; params: Partial<LocationParams> }} params - The parameters for updating the location (id, and partial location data).
+	 * @returns {Promise<void>} A promise that resolves when the location is successfully updated.
+	 * @throws {LocationDoesNotExistError} If the location with the given ID does not exist.
+	 */
 	async run({ id, params }: { id: Primitives<LocationId>; params: Partial<LocationParams> }): Promise<void> {
 		const locationId = new LocationId(id).value
 		const location = await this.locationRepository.searchById(locationId)
