@@ -3,7 +3,6 @@ import { FilterField } from '../../domain/criteria/FilterField'
 import { FilterOperator } from '../../domain/criteria/FilterOperator'
 import { FilterValue } from '../../domain/criteria/FilterValue'
 
- 
 export interface FilterType {
 	value: string
 	operator: string

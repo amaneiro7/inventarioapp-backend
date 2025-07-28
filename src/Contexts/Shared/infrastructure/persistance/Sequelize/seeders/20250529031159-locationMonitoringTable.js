@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up (queryInterface, Sequelize) {
+	async up(queryInterface, Sequelize) {
 		// Primero, consulta los datos necesarios de la tabla 'locations'
 		const locations = await queryInterface.sequelize.query(
 			`SELECT
@@ -37,7 +37,7 @@ module.exports = {
 		}
 	},
 
-	async down (queryInterface, Sequelize) {
+	async down(queryInterface, Sequelize) {
 		// Opción 2 (Más drástica, si el seed siempre limpia la tabla):
 		await queryInterface.bulkDelete('location_monitorings', null, {})
 		// console.log('Se eliminaron todos los registros de "location_monitorings".');

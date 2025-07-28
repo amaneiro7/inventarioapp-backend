@@ -1,4 +1,8 @@
-import { type AggregatedBrandData, type AggregatedHDDData, type StatusCountData } from '../infra/sequelize/dashboard/types'
+import {
+	type AggregatedBrandData,
+	type AggregatedHDDData,
+	type StatusCountData
+} from '../infra/sequelize/dashboard/types'
 
 /**
  * @abstract class ComputerDashboardRepository

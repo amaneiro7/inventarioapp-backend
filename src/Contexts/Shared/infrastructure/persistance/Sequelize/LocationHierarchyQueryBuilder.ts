@@ -8,9 +8,21 @@ import { type IncludeOptions, type WhereOptions } from 'sequelize'
  */
 export class LocationHierarchyQueryBuilder {
 	// These properties hold the state of the include objects, allowing filters to be added.
-	public readonly administrativeRegionInclude: IncludeOptions = { association: 'administrativeRegion', required: true, attributes: [] }
-	public readonly regionInclude: IncludeOptions = { association: 'region', required: true, include: [this.administrativeRegionInclude] }
-	public readonly stateInclude: IncludeOptions = { association: 'state', required: true, include: [this.regionInclude] }
+	public readonly administrativeRegionInclude: IncludeOptions = {
+		association: 'administrativeRegion',
+		required: true,
+		attributes: []
+	}
+	public readonly regionInclude: IncludeOptions = {
+		association: 'region',
+		required: true,
+		include: [this.administrativeRegionInclude]
+	}
+	public readonly stateInclude: IncludeOptions = {
+		association: 'state',
+		required: true,
+		include: [this.regionInclude]
+	}
 	public readonly cityInclude: IncludeOptions = { association: 'city', required: true, include: [this.stateInclude] }
 	public readonly siteInclude: IncludeOptions = { association: 'site', required: true, include: [this.cityInclude] }
 	public readonly typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite', attributes: [] }
