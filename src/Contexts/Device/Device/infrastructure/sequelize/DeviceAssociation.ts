@@ -254,6 +254,7 @@ export class DeviceAssociation {
 
 		// Poder filtrar por main category
 		if ('mainCategoryId' in whereFilters) {
+			categoryInclude.required = true
 			mainCategoryInclude.where = {
 				id: whereFilters.mainCategoryId
 			}
