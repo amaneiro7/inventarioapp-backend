@@ -6,18 +6,27 @@ import { type StateName } from '../../domain/StateName'
 import { type RegionId } from '../../../Region/domain/RegionId'
 import { type RegionDto } from '../../../Region/domain/Region.dto'
 
+/**
+ * Represents the State model in the database.
+ */
 export class StateModel extends Model<Omit<StateDto, 'region'>> implements StateDto {
 	declare region: RegionDto
 	declare id: Primitives<StateId>
 	declare regionId: Primitives<RegionId>
 	declare name: Primitives<StateName>
 
-	static async associate(models: Sequelize['models']): Promise<void> {
+	/**
+	 * Associates the State model with other models.
+	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 */ static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Region, { as: 'region', foreignKey: 'regionId' }) // A state belongs to region
 		this.hasMany(models.City, { as: 'city', foreignKey: 'stateId' }) // A state has many cities
 	}
 
-	static async initialize(sequelize: Sequelize): Promise<void> {
+	/**
+	 * Initializes the State model.
+	 * @param {Sequelize} sequelize - The Sequelize instance.
+	 */ static async initialize(sequelize: Sequelize): Promise<void> {
 		StateModel.init(
 			{
 				id: {

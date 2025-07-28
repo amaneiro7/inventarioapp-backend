@@ -1,8 +1,17 @@
 import { type FindOptions, type IncludeOptions } from 'sequelize'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
+/**
+ * A utility class for handling associations in State queries.
+ */
 export class StateAssociation {
-	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
+	/**
+	 * Converts filter criteria into Sequelize FindOptions.
+	 *
+	 * @param {Criteria} criteria - The criteria to convert.
+	 * @param {FindOptions} options - The initial find options.
+	 * @returns {FindOptions} The updated find options with associations.
+	 */ static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where }
 		const administrativeRegionInclude: IncludeOptions = {
 			association: 'administrativeRegion',
