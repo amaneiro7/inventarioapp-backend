@@ -1,18 +1,21 @@
 import { resolve } from 'node:path'
 import { globSync } from 'glob'
 import { type Sequelize } from 'sequelize'
+import { config } from '../../config'
 
 interface IModelinstance {
 	initialize: (sequelize: Sequelize) => Promise<void>
 	associate: (models: Sequelize['models']) => Promise<void>
 }
 
-const path = 'src/**/*Schema.*'
-const routes = globSync(path)
 export async function initilizarModels(sequelize: Sequelize): Promise<void> {
+	const isProduction = config.isProd
+	const path = isProduction ? 'dist/src/**/*Schema.js' : 'src/**/*Schema.*'
+	const routes = globSync(path)
 	const modules: IModelinstance[] = []
 	for (const route of routes) {
-		const routePath = await import(resolve(route))
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
+		const routePath = require(resolve(process.cwd(), route))
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [_, instance] = Object.entries(routePath)[0]
 		modules.push(instance as IModelinstance)
