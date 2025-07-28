@@ -1,3 +1,5 @@
+import { validateReqSchema } from '../index'
+import { postDeviceSchema, patchDeviceSchema, deleteDeviceSchema } from './device.validator'
 import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
@@ -198,7 +200,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/devices/', authenticate, postController.run.bind(postController))
+	router.post('/devices/', authenticate, postDeviceSchema, validateReqSchema, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -230,7 +232,13 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Dispositivo no encontrado.
 	 */
-	router.patch('/devices/:id', authenticate, patchController.run.bind(patchController))
+	router.patch(
+		'/devices/:id',
+		authenticate,
+		patchDeviceSchema,
+		validateReqSchema,
+		patchController.run.bind(patchController)
+	)
 
 	/**
 	 * @swagger
@@ -255,5 +263,11 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Dispositivo no encontrado.
 	 */
-	router.delete('devices/:id', authenticate, deleteController.run.bind(deleteController))
+	router.delete(
+		'devices/:id',
+		authenticate,
+		deleteDeviceSchema,
+		validateReqSchema,
+		deleteController.run.bind(deleteController)
+	)
 }

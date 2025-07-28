@@ -45,7 +45,7 @@ export class Server {
 			res.send('Servidor de Inventario funcionando correctamente')
 		})
 
-		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+		this.express.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 		registerRoutes({ express: this.express })
 
 		this.express.use(errorHandler(this.logger))

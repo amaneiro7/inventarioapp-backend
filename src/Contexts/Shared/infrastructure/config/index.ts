@@ -106,7 +106,7 @@ type Config = {
 export const config: Config = {
 	env,
 	isProd: env === 'production',
-	baseApiUrl: '/api/v2',
+	baseApiUrl: '/api/v1',
 	port,
 	postgres: {
 		user: postgresUser,

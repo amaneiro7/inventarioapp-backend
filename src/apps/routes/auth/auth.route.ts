@@ -1,3 +1,5 @@
+import { validateReqSchema } from '../index'
+import { loginSchema } from './auth.validator'
 import { loginLimiter } from '../../Middleware/loginRateLimit'
 import passport from 'passport'
 import { type Router, type Request, type Response, type NextFunction } from 'express'
@@ -56,6 +58,8 @@ export const register = async (router: Router) => {
 	router.post(
 		'/auth/login/local',
 		loginLimiter,
+		loginSchema, // <-- Validación añadida
+		validateReqSchema, // <-- Middleware que comprueba el resultado
 		(req: Request, res: Response, next: NextFunction) => {
 			passport.authenticate(
 				StrategyOptions.LOCAL,

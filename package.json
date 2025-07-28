@@ -106,6 +106,7 @@
 		"globals": "16.3.0",
 		"node-notifier": "10.0.1",
 		"nodemon": "3.1.10",
+		"prettier": "^3.6.2",
 		"sequelize-cli": "6.6.3",
 		"terser": "^5.43.1",
 		"ts-node": "10.9.2",
