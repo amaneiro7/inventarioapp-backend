@@ -1,4 +1,4 @@
-import express, { json, urlencoded, type Request, type Response, type Express } from 'express'
+import express, { Router, json, urlencoded, type Request, type Response } from 'express'
 import * as http from 'node:http'
 import * as https from 'node:https'
 import * as fs from 'node:fs/promises'
@@ -13,13 +13,13 @@ import { morganLog } from './Middleware/morgan'
 import { security } from './Middleware/security'
 import { errorHandler } from './Middleware/errorHandler'
 import { registerRoutes } from './routes'
-import { swaggerSpec } from '../Contexts/Shared/infrastructure/documentation/swagger'
+import { swaggerSpec } from './Middleware/swagger'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 
 export class Server {
 	readonly port: string
 	private readonly logger: Logger
-	private express: Express
+	private express: express.Express
 	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key')
 	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt')
 	httpServer?: http.Server | https.Server
@@ -46,8 +46,9 @@ export class Server {
 		})
 
 		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-
-		registerRoutes({ express: this.express })
+		const router = Router()
+		this.express.use('/api/v1', router)
+		registerRoutes({ router })
 
 		this.express.use(errorHandler(this.logger))
 	}

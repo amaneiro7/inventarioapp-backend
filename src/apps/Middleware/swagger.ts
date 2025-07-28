@@ -1,44 +1,47 @@
 import swaggerJsdoc from 'swagger-jsdoc'
-import swaggerAutogen from 'swagger-autogen'
-
-/**
- * @description The main Swagger document configuration.
- * This object defines the basic information for the API, such as the title, description, and host.
- */
-const doc = {
-	info: {
-		title: 'Inventario APP',
-		description: 'Portal de soporte técnico para el manejo de inventarios de equipos de computación',
-		host: 'localhost:5000/api/v1',
-		basePath: '/',
-		schemes: ['http', 'https'],
-		consumes: ['application/json'],
-		produces: ['application/json']
-	}
-}
-
-const outputFile = './swagger-output.json'
-const routes = ['./src/apps/routes/index.ts']
+import { config } from '../../Contexts/Shared/infrastructure/config'
 
 /**
  * @description Options for `swagger-jsdoc` to generate Swagger documentation from JSDoc comments.
  */
 const options = {
-	swaggerDefinition: {
-		openapi: '3.0.0',
+	openapi: '3.0.0',
+	definition: {
 		info: {
-			title: 'Inventario App',
+			title: 'Inventario App API',
 			version: '1.0.0',
-			description: 'Aplicación para el manejo del inventarios de equipos y personal de la empresa'
-		}
+			description: 'API para la gestión de inventarios de equipos y personal de la empresa.'
+		},
+		servers: [
+			{
+				url: `http://localhost:${config.port}/api/v1`,
+				description: 'Servidor de desarrollo (HTTP)'
+			},
+			{
+				url: `https://localhost:${config.port}/api/v1`,
+				description: 'Servidor de desarrollo (HTTPS)'
+			}
+		],
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: 'http',
+					scheme: 'bearer',
+					bearerFormat: 'JWT',
+					description: 'Autenticación JWT con token Bearer'
+				}
+			}
+		},
+		security: [
+			{
+				bearerAuth: []
+			}
+		]
 	},
-	apis: ['src/**/*.route.*']
+	apis: ['./src/apps/routes/**/*.ts', './src/apps/controllers/**/*.ts'] // Rutas a los archivos con comentarios JSDoc
 }
-
-// Automatically generate the Swagger output file
-swaggerAutogen()(outputFile, routes, doc)
 
 /**
  * @description The generated Swagger documentation object.
  */
-export const swaggerDocs = swaggerJsdoc(options)
+export const swaggerSpec = swaggerJsdoc(options)
