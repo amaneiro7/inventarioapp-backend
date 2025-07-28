@@ -1,4 +1,4 @@
-import express, { Router, json, urlencoded, type Request, type Response } from 'express'
+import express, { json, urlencoded, type Request, type Response } from 'express'
 import * as http from 'node:http'
 import * as https from 'node:https'
 import * as fs from 'node:fs/promises'
@@ -46,9 +46,7 @@ export class Server {
 		})
 
 		this.express.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-		const router = Router()
-		this.express.use('/api/v1', router)
-		registerRoutes({ router })
+		registerRoutes({ express: this.express })
 
 		this.express.use(errorHandler(this.logger))
 	}

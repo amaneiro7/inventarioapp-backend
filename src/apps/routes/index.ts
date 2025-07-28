@@ -1,11 +1,13 @@
-import { type Router, type NextFunction, type Request, type Response } from 'express'
+import { Router, type NextFunction, type Request, type Response, type Express } from 'express'
 import { resolve } from 'node:path'
 import { sync } from 'fast-glob'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { validationResult, type ValidationError } from 'express-validator'
 import { config } from '../../Contexts/Shared/infrastructure/config'
 
-export function registerRoutes({ router }: { router: Router }) {
+export function registerRoutes({ express }: { express: Express }) {
+	const router = Router()
+	express.use('/api/v1', router)
 	const isProduction = config.isProd
 	const routePath = isProduction ? 'dist/src/**/*.route.js' : 'src/**/*.route.ts'
 	const routes = sync(routePath)
