@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type RegionDto } from '../domain/Region.dto'
 import { type RegionRepository } from '../domain/RegionRepository'
 
+/**
+ * Service to find all Regions based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class RegionFinderAll extends GetAllBaseService<RegionDto> {
 	private readonly regionRepository: RegionRepository
 	constructor({ regionRepository }: { regionRepository: RegionRepository }) {
@@ -11,6 +15,11 @@ export class RegionFinderAll extends GetAllBaseService<RegionDto> {
 		this.regionRepository = regionRepository
 	}
 
+	/**
+	 * Runs the service to retrieve regions.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<RegionDto>>} A promise that resolves to a paginated response of region DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<RegionDto>> {
 		const { data, total } = await this.regionRepository.searchAll(criteria)
 		return this.response({

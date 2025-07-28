@@ -6,12 +6,19 @@ import { type RegionName } from '../../domain/RegionName'
 import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/AdministrativeRegionId'
 import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/AdministrativeRegion.dto'
 
+/**
+ * Represents the Region model in the database.
+ */
 export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> implements RegionDto {
 	declare id: Primitives<RegionId>
 	declare name: Primitives<RegionName>
 	declare administrativeRegionId: Primitives<AdministrativeRegionId>
 	declare administrativeRegion: AdministrativeRegionDto
 
+	/**
+	 * Associates the Region model with other models.
+	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 */
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.AdministrativeRegion, {
 			as: 'administrativeRegion',
@@ -19,6 +26,11 @@ export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> 
 		}) // A Region belongs to Administrative Region
 		this.hasMany(models.State, { as: 'state', foreignKey: 'regionId' }) // An Region can hava many states
 	}
+
+	/**
+	 * Initializes the Region model.
+	 * @param {Sequelize} sequelize - The Sequelize instance.
+	 */
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		RegionModel.init(
 			{
