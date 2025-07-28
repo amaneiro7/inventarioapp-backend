@@ -7,6 +7,9 @@ import { type CityParams } from '../domain/City.dto'
 import { type StateRepository } from '../../State/domain/StateRepository'
 import { type CityRepository } from '../domain/CityRepository'
 
+/**
+ * Service to update an existing City.
+ */
 export class CityUpdater {
 	private readonly cityRepository: CityRepository
 	private readonly stateRepository: StateRepository
@@ -21,6 +24,13 @@ export class CityUpdater {
 		this.stateRepository = stateRepository
 	}
 
+	/**
+	 * Runs the service to update a city.
+	 * It validates the existence of the city and updates its name and state if provided.
+	 * @param {{ id: string; params: Partial<CityParams> }} params - The parameters for updating the city (id, and partial city data).
+	 * @returns {Promise<void>} A promise that resolves when the city is successfully updated.
+	 * @throws {CityDoesNotExistError} If the city with the given ID does not exist.
+	 */
 	async run({ id, params }: { id: string; params: Partial<CityParams> }): Promise<void> {
 		const city = new CityId(id)
 
