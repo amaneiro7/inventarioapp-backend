@@ -38,6 +38,13 @@ interface ProcessingAdmRegionData extends Omit<AdmRegionData, 'sites'> {
 	sites: Map<string, ProcessingSiteData>
 }
 
+/**
+ * @class SequelizeLocationMonitoringDashboardByLocationRepository
+ * @extends SequelizeCriteriaConverter
+ * @implements {LocationMonitoringDashboardByLocationRepository}
+ * @description Concrete implementation of the LocationMonitoringDashboardByLocationRepository using Sequelize.
+ * Handles data retrieval and aggregation for location monitoring dashboard data by location, including caching mechanisms.
+ */
 export class SequelizeLocationMonitoringDashboardByLocationRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardByLocationRepository
@@ -49,7 +56,12 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 		this.cache = cache
 	}
 
-	async run(criteria: Criteria): Promise<DashboardByLocationData> {
+	/**
+	 * Retrieves aggregated location monitoring dashboard data by location.
+	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
+	 * @returns {Promise<DashboardByLocationData>} A promise that resolves to the aggregated dashboard data by location.
+	 * @throws {Error} If fetching or processing data fails.
+	 */ async run(criteria: Criteria): Promise<DashboardByLocationData> {
 		const baseOptions = this.convert(criteria)
 		const findOptions = LocationMonitoringDashboardByLocationAssociation.buildDashboardFindOptions(
 			criteria,
@@ -75,8 +87,8 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 
 	/**
 	 * Processes raw monitoring data into a hierarchical and sorted structure using a single reduce function.
-	 * @param rawData - Array of raw data objects from the database.
-	 * @returns Transformed and sorted DashboardByLocationData.
+	 * @param {RawLocationMonitoringData[]} rawData - Array of raw data objects from the database.
+	 * @returns {DashboardByLocationData} Transformed and sorted DashboardByLocationData.
 	 */
 	private processRawDataWithReduce(rawData: RawLocationMonitoringData[]): DashboardByLocationData {
 		const admRegionMap = rawData.reduce((acc, item) => {

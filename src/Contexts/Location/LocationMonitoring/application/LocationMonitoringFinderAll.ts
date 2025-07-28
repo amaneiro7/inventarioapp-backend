@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type LocationMonitoringMapped } from '../domain/entity/LocationMonitoring.dto'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 
+/**
+ * Service to find all LocationMonitoring entries based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class LocationMonitoringFinderAll extends GetAllBaseService<LocationMonitoringMapped> {
 	private readonly locationMonitoringRepository: LocationMonitoringRepository
 	constructor({ locationMonitoringRepository }: { locationMonitoringRepository: LocationMonitoringRepository }) {
@@ -11,6 +15,12 @@ export class LocationMonitoringFinderAll extends GetAllBaseService<LocationMonit
 		this.locationMonitoringRepository = locationMonitoringRepository
 	}
 
+	/**
+	 * Runs the service to retrieve location monitoring entries.
+	 * Maps the raw data to a more user-friendly format including location name, subnet, and site details.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<LocationMonitoringMapped>>} A promise that resolves to a paginated response of mapped location monitoring DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<LocationMonitoringMapped>> {
 		const { data, total } = await this.locationMonitoringRepository.searchAll(criteria)
 

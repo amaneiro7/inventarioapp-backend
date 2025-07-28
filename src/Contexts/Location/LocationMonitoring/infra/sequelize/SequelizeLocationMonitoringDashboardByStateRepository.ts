@@ -27,6 +27,13 @@ interface AggregatedData {
 	byStateMap: Map<string, StateData>
 }
 
+/**
+ * @class SequelizeLocationMonitoringDashboardByStateRepository
+ * @extends SequelizeCriteriaConverter
+ * @implements {LocationMonitoringDashboardByStateRepository}
+ * @description Concrete implementation of the LocationMonitoringDashboardByStateRepository using Sequelize.
+ * Handles data retrieval and aggregation for location monitoring dashboard data by state, including caching mechanisms.
+ */
 export class SequelizeLocationMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardByStateRepository
@@ -38,7 +45,11 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 		this.cache = cache
 	}
 
-	async run(criteria: Criteria): Promise<DashboardByStateData> {
+	/**
+	 * Retrieves aggregated location monitoring dashboard data by state.
+	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
+	 * @returns {Promise<DashboardByStateData>} A promise that resolves to the aggregated dashboard data by state.
+	 */ async run(criteria: Criteria): Promise<DashboardByStateData> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 

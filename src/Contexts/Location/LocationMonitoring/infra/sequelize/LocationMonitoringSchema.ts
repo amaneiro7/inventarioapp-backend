@@ -5,6 +5,10 @@ import { type LocationDto } from '../../../Location/domain/Location.dto'
 import { type MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
 import { type MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
 import { type MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
+
+/**
+ * Represents the LocationMonitoring model in the database.
+ */
 export class LocationMonitoringModel
 	extends Model<Omit<LocationMonitoringDto, 'location'>>
 	implements LocationMonitoringDto
@@ -17,9 +21,18 @@ export class LocationMonitoringModel
 	declare lastFailed: MonitoringLastFailed['value']
 	declare location: LocationDto
 
+	/**
+	 * Associates the LocationMonitoring model with other models.
+	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 */
 	static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.Location, { as: 'location', foreignKey: 'location_id' }) // A Location Monitoring belongs to a location
 	}
+
+	/**
+	 * Initializes the LocationMonitoring model.
+	 * @param {Sequelize} sequelize - The Sequelize instance.
+	 */
 	static async initialize(sequelize: Sequelize): Promise<void> {
 		LocationMonitoringModel.init(
 			{

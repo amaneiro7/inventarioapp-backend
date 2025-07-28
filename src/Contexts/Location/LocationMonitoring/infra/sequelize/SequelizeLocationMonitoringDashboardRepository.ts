@@ -14,6 +14,13 @@ interface LocationCountByStatus {
 	count: string | number
 }
 
+/**
+ * @class SequelizeLocationMonitoringDashboardRepository
+ * @extends SequelizeCriteriaConverter
+ * @implements {LocationMonitoringDashboardRepository}
+ * @description Concrete implementation of the LocationMonitoringDashboardRepository using Sequelize.
+ * Handles data retrieval and aggregation for overall location monitoring dashboard data, including caching mechanisms.
+ */
 export class SequelizeLocationMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardRepository
@@ -25,7 +32,11 @@ export class SequelizeLocationMonitoringDashboardRepository
 		this.cache = cache
 	}
 
-	async run(criteria: Criteria): Promise<DashboardData> {
+	/**
+	 * Retrieves aggregated overall location monitoring dashboard data.
+	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
+	 * @returns {Promise<DashboardData>} A promise that resolves to the aggregated overall dashboard data.
+	 */ async run(criteria: Criteria): Promise<DashboardData> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringDashboardAssociation.buildDashboardFindOptions(criteria, options)
 

@@ -12,6 +12,10 @@ import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/valu
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
 import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
+/**
+ * Service responsible for monitoring locations. Extends the generic MonitoringService.
+ * Handles pinging locations, updating their status, and logging monitoring activities.
+ */
 export class LocationMonitoringService extends MonitoringService<
 	LocationMonitoringDto,
 	LocationMonitoringPrimitives,
@@ -22,6 +26,15 @@ export class LocationMonitoringService extends MonitoringService<
 	protected readonly pingService: PingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
+
+	/**
+	 * Constructs a new LocationMonitoringService instance.
+	 * @param {{ locationMonitoringRepository: LocationMonitoringRepository; pingService: PingService; logger: Logger; pingLogger: PingLogger }} params - The constructor parameters.
+	 * @param {LocationMonitoringRepository} params.locationMonitoringRepository - The repository for location monitoring data.
+	 * @param {PingService} params.pingService - The service used to perform network pings.
+	 * @param {Logger} params.logger - The logger instance for general logging.
+	 * @param {PingLogger} params.pingLogger - The logger instance specifically for ping results.
+	 */
 	constructor({
 		locationMonitoringRepository,
 		logger,
@@ -40,7 +53,9 @@ export class LocationMonitoringService extends MonitoringService<
 		this.pingLogger = pingLogger
 	}
 
-	protected monitoringConfig: MonitoringServiceConfig = {
+	/**
+	 * Configuration for location monitoring, loaded from application config.
+	 */ protected monitoringConfig: MonitoringServiceConfig = {
 		concurrencyLimit: config.monitoring.location.locationMonitoringConcurrencyLimit,
 		startDayOfWeek: config.monitoring.location.locationMonitoringStartDayOfWeek,
 		endDayOfWeek: config.monitoring.location.locationMonitoringEndDayOfWeek,
@@ -50,36 +65,72 @@ export class LocationMonitoringService extends MonitoringService<
 		disableTimeChecks: config.monitoring.location.isLocationMonitoringDisableTimeChecks
 	}
 
-	protected getMonitoringName(): string {
+	/**
+	 * Returns the name of the monitoring service.
+	 * @returns {string} The monitoring name, which is 'Location'.
+	 */ protected getMonitoringName(): string {
 		return 'Location'
 	}
 
-	protected async getIpAddress(item: LocationMonitoringDto): Promise<string | null | undefined> {
+	/**
+	 * Retrieves the IP address from a LocationMonitoringDto.
+	 * Converts the subnet to a host IP if available.
+	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
+	 * @returns {Promise<string | null | undefined>} The IP address or null/undefined if not available.
+	 */ protected async getIpAddress(item: LocationMonitoringDto): Promise<string | null | undefined> {
 		const subnet = item?.location?.subnet
 		return await convertSubnetToHostIp(subnet)
 	}
-	protected async getExpectedHostname(): Promise<string | null | undefined> {
+
+	/**
+	 * Retrieves the expected hostname. Not applicable for locations.
+	 * @returns {Promise<string | null | undefined>} Always returns undefined.
+	 */ protected async getExpectedHostname(): Promise<string | null | undefined> {
 		// Hostname is not applicable for locations
 		return undefined
 	}
 
-	protected getMonitoringId(item: LocationMonitoringDto): Primitives<MonitoringId> {
+	/**
+	 * Retrieves the monitoring ID from a LocationMonitoringDto.
+	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
+	 * @returns {Primitives<MonitoringId>} The monitoring ID.
+	 */ protected getMonitoringId(item: LocationMonitoringDto): Primitives<MonitoringId> {
 		return item.id
 	}
 
-	protected createMonitoringEntity(item: LocationMonitoringDto): LocationMonitoring {
+	/**
+	 * Creates a LocationMonitoring entity from a DTO.
+	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
+	 * @returns {LocationMonitoring} A new LocationMonitoring entity.
+	 */ protected createMonitoringEntity(item: LocationMonitoringDto): LocationMonitoring {
 		return LocationMonitoring.fromPrimitives(item)
 	}
-	protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
+
+	/**
+	 * Converts a LocationMonitoring entity to its primitive payload representation.
+	 * @param {LocationMonitoring} item - The location monitoring entity.
+	 * @returns {LocationMonitoringPrimitives} The primitive payload.
+	 */ protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
 		return item.toPrimitive()
 	}
-	protected validatePingResult(): boolean {
+
+	/**
+	 * Validates the ping result. No hostname validation for locations.
+	 * @returns {boolean} Always returns true.
+	 */ protected validatePingResult(): boolean {
 		// No hostname validation for locations, always return true
 
 		return true
 	}
 
-	protected updateMonitoringEntityStatus(
+	/**
+	 * Updates the status and timestamps of a LocationMonitoring entity.
+	 * @param {LocationMonitoring} entity - The entity to update.
+	 * @param {MonitoringStatuses} status - The new monitoring status.
+	 * @param {Date | null} lastSuccess - The timestamp of the last successful scan.
+	 * @param {Date | null} lastFailed - The timestamp of the last failed scan.
+	 * @param {Date | null} lastScan - The timestamp of the last scan.
+	 */ protected updateMonitoringEntityStatus(
 		entity: LocationMonitoring,
 		status: MonitoringStatuses,
 		lastSuccess: Date | null,
