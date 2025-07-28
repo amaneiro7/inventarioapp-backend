@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type TypeOfSiteDto } from '../domain/TypeOfSite.dto'
 import { type TypeOfSiteRepository } from '../domain/TypeOfSiteRepository'
 
+/**
+ * Service to find all TypeOfSites based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class TypeOfSiteFinderAll extends GetAllBaseService<TypeOfSiteDto> {
 	private readonly typeOfSiteRepository: TypeOfSiteRepository
 	constructor({ typeOfSiteRepository }: { typeOfSiteRepository: TypeOfSiteRepository }) {
@@ -11,6 +15,11 @@ export class TypeOfSiteFinderAll extends GetAllBaseService<TypeOfSiteDto> {
 		this.typeOfSiteRepository = typeOfSiteRepository
 	}
 
+	/**
+	 * Runs the service to retrieve types of sites.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<TypeOfSiteDto>>} A promise that resolves to a paginated response of type of site DTOs.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<TypeOfSiteDto>> {
 		const { data, total } = await this.typeOfSiteRepository.searchAll(criteria)
 		return this.response({
