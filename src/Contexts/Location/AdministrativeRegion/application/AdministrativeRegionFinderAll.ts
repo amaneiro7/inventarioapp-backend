@@ -4,6 +4,10 @@ import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type AdministrativeRegionDto } from '../domain/AdministrativeRegion.dto'
 import { type AdministrativeRegionRepository } from '../domain/AdministrativeRegionRepository'
 
+/**
+ * Service to find all administrative regions based on provided criteria.
+ * Extends GetAllBaseService for common pagination and response handling.
+ */
 export class AdministrativeRegionFinderAll extends GetAllBaseService<AdministrativeRegionDto> {
 	private readonly administrativeRegionRepository: AdministrativeRegionRepository
 	constructor({
@@ -15,6 +19,11 @@ export class AdministrativeRegionFinderAll extends GetAllBaseService<Administrat
 		this.administrativeRegionRepository = administrativeRegionRepository
 	}
 
+	/**
+	 * Runs the service to retrieve administrative regions.
+	 * @param {Criteria} criteria - The criteria for searching, filtering, and pagination.
+	 * @returns {Promise<ResponseService<AdministrativeRegionDto>>} A promise that resolves to a paginated response of administrative regions.
+	 */
 	async run(criteria: Criteria): Promise<ResponseService<AdministrativeRegionDto>> {
 		const { data, total } = await this.administrativeRegionRepository.searchAll(criteria)
 		return this.response({
