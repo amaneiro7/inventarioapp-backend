@@ -1,11 +1,12 @@
 import { sync } from 'fast-glob'
 import { resolve } from 'node:path'
 import { type AwilixContainer, createContainer } from 'awilix'
+import { config } from '../../Contexts/Shared/infrastructure/config'
 
 export const container = createContainer({ injectionMode: 'PROXY', strict: true })
 
 export async function registerDI(container: AwilixContainer) {
-	const routePath = 'src/**/*.di.*'
+	const routePath = config.isProd ? 'dist/src/**/*.di.*' : 'src/**/*.di.*'
 	const routes = sync(routePath)
 	routes.forEach(async route => {
 		await register({ routePath: route, container })

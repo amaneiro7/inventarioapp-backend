@@ -1,4 +1,4 @@
-import express, { json, urlencoded, type Request, type Response } from 'express'
+import express, { json, urlencoded, type Request, type Response, type Express } from 'express'
 import * as http from 'node:http'
 import * as https from 'node:https'
 import * as fs from 'node:fs/promises'
@@ -19,7 +19,7 @@ import { type Logger } from '../Contexts/Shared/domain/Logger'
 export class Server {
 	readonly port: string
 	private readonly logger: Logger
-	private express: express.Express
+	private express: Express
 	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key')
 	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt')
 	httpServer?: http.Server | https.Server

@@ -6,9 +6,10 @@
 	"type": "commonjs",
 	"scripts": {
 		"build": "tsc --build",
+		"minify": "terser dist/**/*.js -c -m -o dist/",
 		"clean": "tsc --build --clean",
-		"start": "node ./dist/src/apps/start.js",
-		"start:bun": "bun ./dist/src/apps/start.js",
+		"start": "cross-env NODE_ENV=production node ./dist/src/apps/start.js",
+		"start:bun": "cross-env NODE_ENV=production bun ./dist/src/apps/start.js",
 		"dev:node": "cross-env NODE_ENV=development nodemon ./src/apps/start.ts",
 		"dev:bun": "cross-env NODE_ENV=development bun --watch ./src/apps/start.ts",
 		"format": "prettier --write \"**/*.{ts,js,json,md}\"",
@@ -107,6 +108,7 @@
 		"nodemon": "3.1.10",
 		"sequelize-cli": "6.6.3",
 		"swagger-autogen": "2.23.7",
+		"terser": "^5.43.1",
 		"ts-node": "10.9.2",
 		"typescript": "5.8.3",
 		"typescript-eslint": "8.38.0"
