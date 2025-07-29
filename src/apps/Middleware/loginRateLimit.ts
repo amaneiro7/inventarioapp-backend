@@ -7,7 +7,11 @@ import rateLimit from 'express-rate-limit'
 export const loginLimiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 5, // Block after 5 failed attempts
-	message: 'Too many login attempts from this IP, please try again after 15 minutes',
+	message: {
+		message:
+			'Demasiados intentos de inicio de sesión desde esta IP, por favor intente de nuevo después de 15 minutos',
+		statusCode: 429
+	},
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false // Disable the `X-RateLimit-*` headers
 })
