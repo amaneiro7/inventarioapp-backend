@@ -7,7 +7,7 @@ import { config } from '../../Contexts/Shared/infrastructure/config'
 
 export function registerRoutes({ express }: { express: Express }) {
 	const router = Router()
-	express.use('/api/v1', router)
+	express.use(config.baseApiUrl, router)
 	const isProduction = config.isProd
 	const routePath = isProduction ? 'dist/src/**/*.route.js' : 'src/**/*.route.ts'
 	const routes = sync(routePath)
