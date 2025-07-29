@@ -66,7 +66,7 @@ export class ModelAssociation {
 			attributes: ['inputTypeId']
 		}
 		const processorInclude: IncludeOptions = {
-			association: 'proceessors',
+			association: 'processors',
 			through: {}
 		}
 		options.include = [
