@@ -9,6 +9,7 @@ import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { type PrinteModelsParams, type PrinteModelsPrimitives } from './ModelPrinters.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/domain/ModelSeries.dto'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
 
 /**
  * @description Represents a printer model, extending the base ModelSeries class.
@@ -20,9 +21,10 @@ export class ModelPrinters extends ModelSeries {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		private cartridgeModel: CartridgeModel
 	) {
-		super(id, name, categoryId, brandId, generic)
+		super(id, name, categoryId, brandId, generic, processors)
 	}
 
 	static create(params: PrinteModelsParams): ModelPrinters {
@@ -35,6 +37,7 @@ export class ModelPrinters extends ModelSeries {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new CartridgeModel(params.cartridgeModel)
 		)
 	}
@@ -54,6 +57,7 @@ export class ModelPrinters extends ModelSeries {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new CartridgeModel(primitives.modelPrinter.cartridgeModel)
 		)
 	}

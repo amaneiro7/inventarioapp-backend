@@ -15,6 +15,7 @@ import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { type ComputerModelsParams, type ComputerModelsPrimitives } from './ComputerModels.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
 
 /**
  * @description Represents a computer model, extending the base ModelSeries class.
@@ -26,6 +27,7 @@ export class ComputerModels extends ModelSeries {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		private memoryRamTypeId: ComputerMemoryRamType,
 		private memoryRamSlotQuantity: MemoryRamSlotQuantity,
 		private hasBluetooth: HasBluetooth,
@@ -34,7 +36,7 @@ export class ComputerModels extends ModelSeries {
 		private hasHDMI: HasHDMI,
 		private hasVGA: HasVGA
 	) {
-		super(id, name, categoryId, brandId, generic)
+		super(id, name, categoryId, brandId, generic, processors)
 	}
 
 	static create(params: ComputerModelsParams): ComputerModels {
@@ -44,6 +46,7 @@ export class ComputerModels extends ModelSeries {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new ComputerMemoryRamType(params.memoryRamTypeId),
 			new MemoryRamSlotQuantity(params.memoryRamSlotQuantity),
 			new HasBluetooth(params.hasBluetooth),
@@ -73,6 +76,7 @@ export class ComputerModels extends ModelSeries {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new ComputerMemoryRamType(primitives.modelComputer.memoryRamTypeId),
 			new MemoryRamSlotQuantity(primitives.modelComputer.memoryRamSlotQuantity),
 			new HasBluetooth(primitives.modelComputer.hasBluetooth),

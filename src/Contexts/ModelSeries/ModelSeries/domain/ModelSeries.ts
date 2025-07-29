@@ -79,7 +79,7 @@ export class ModelSeries {
 	}): void {
 		this.processors = ModelSeries.addProcessorIds({ processorIds, categoryId })
 	}
-	private static addProcessorIds({
+	static addProcessorIds({
 		processorIds,
 		categoryId
 	}: {

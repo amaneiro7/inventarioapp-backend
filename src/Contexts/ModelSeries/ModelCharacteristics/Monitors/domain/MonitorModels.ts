@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -23,12 +24,13 @@ export class MonitorModels extends ModelSeries {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		private screenSize: MonitorScreenSize,
 		private hasDVI: MonitorHasDVI,
 		private hasHDMI: MonitorHasHDMI,
 		private hasVGA: MonitorHasVGA
 	) {
-		super(id, name, categoryId, brandId, generic)
+		super(id, name, categoryId, brandId, generic, processors)
 	}
 
 	static create(params: MonitorModelsParams): MonitorModels {
@@ -41,6 +43,7 @@ export class MonitorModels extends ModelSeries {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new MonitorScreenSize(params.screenSize),
 			new MonitorHasDVI(params.hasDVI),
 			new MonitorHasHDMI(params.hasHDMI),
@@ -62,6 +65,7 @@ export class MonitorModels extends ModelSeries {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new MonitorScreenSize(primitives.modelMonitor.screenSize),
 			new MonitorHasDVI(primitives.modelMonitor.hasDVI),
 			new MonitorHasHDMI(primitives.modelMonitor.hasHDMI),

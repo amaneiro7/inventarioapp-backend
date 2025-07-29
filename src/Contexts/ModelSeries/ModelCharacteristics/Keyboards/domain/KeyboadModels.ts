@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -21,10 +22,11 @@ export class KeyboardModels extends ModelSeries {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		private InputTypeId: ModelKeyboardInputType,
 		private hasFingerPrintReader: HasFingerPrintReader
 	) {
-		super(id, name, categoryId, brandId, generic)
+		super(id, name, categoryId, brandId, generic, processors)
 	}
 
 	static create(params: KeyboardModelsParams): KeyboardModels {
@@ -34,6 +36,7 @@ export class KeyboardModels extends ModelSeries {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new ModelKeyboardInputType(params.inputTypeId),
 			new HasFingerPrintReader(params.hasFingerPrintReader)
 		)
@@ -53,6 +56,7 @@ export class KeyboardModels extends ModelSeries {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new ModelKeyboardInputType(primitives.modelKeyboard.inputTypeId),
 			new HasFingerPrintReader(primitives.modelKeyboard.hasFingerPrintReader)
 		)

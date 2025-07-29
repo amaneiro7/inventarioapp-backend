@@ -2,6 +2,7 @@ import { BrandId } from '../../../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
+import { ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
 import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
@@ -27,6 +28,7 @@ export class LaptopsModels extends ComputerModels {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		memoryRamTypeId: MemoryRamTypeId,
 		memoryRamSlotQuantity: MemoryRamSlotQuantity,
 		hasBluetooth: HasBluetooth,
@@ -42,6 +44,7 @@ export class LaptopsModels extends ComputerModels {
 			categoryId,
 			brandId,
 			generic,
+			processors,
 			memoryRamTypeId,
 			memoryRamSlotQuantity,
 			hasBluetooth,
@@ -59,6 +62,7 @@ export class LaptopsModels extends ComputerModels {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new MemoryRamTypeId(params.memoryRamTypeId),
 			new MemoryRamSlotQuantity(params.memoryRamSlotQuantity),
 			new HasBluetooth(params.hasBluetooth),
@@ -84,6 +88,7 @@ export class LaptopsModels extends ComputerModels {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new MemoryRamTypeId(primitives.modelLaptop.memoryRamTypeId),
 			new MemoryRamSlotQuantity(primitives.modelLaptop.memoryRamSlotQuantity),
 			new HasBluetooth(primitives.modelLaptop.hasBluetooth),

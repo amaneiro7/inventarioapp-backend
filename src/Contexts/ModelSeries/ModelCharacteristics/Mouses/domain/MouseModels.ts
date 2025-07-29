@@ -1,6 +1,7 @@
 import { BrandId } from '../../../../Brand/domain/BrandId'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../ModelSeries/domain/Generic'
 import { ModelSeries } from '../../../ModelSeries/domain/ModelSeries'
@@ -20,9 +21,10 @@ export class MouseModels extends ModelSeries {
 		categoryId: CategoryId,
 		brandId: BrandId,
 		generic: Generic,
+		processors: ProcessorId[],
 		private InputTypeId: ModelMouseInputType
 	) {
-		super(id, name, categoryId, brandId, generic)
+		super(id, name, categoryId, brandId, generic, processors)
 	}
 
 	static create(params: MouseModelsParams): MouseModels {
@@ -32,6 +34,7 @@ export class MouseModels extends ModelSeries {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors }),
 			new ModelMouseInputType(params.inputTypeId)
 		)
 	}
@@ -50,6 +53,7 @@ export class MouseModels extends ModelSeries {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id)),
 			new ModelMouseInputType(primitives.modelMouse.inputTypeId)
 		)
 	}
