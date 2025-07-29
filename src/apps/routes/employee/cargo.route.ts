@@ -1,5 +1,3 @@
-import { validateReqSchema } from '../index'
-import { postCargoSchema, patchCargoSchema } from './cargo.validator'
 import { type Router } from 'express'
 import { type CargoGetAllController } from '../../controllers/employee/cargo.get-all.controller'
 import { type CargoPostController } from '../../controllers/employee/cargo.post.controller'
@@ -84,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cargos/', authenticate, postCargoSchema, validateReqSchema, postController.run.bind(postController))
+	router.post('/cargos/', authenticate, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -120,11 +118,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Cargo no encontrado.
 	 */
-	router.patch(
-		'/cargos/:id',
-		authenticate,
-		patchCargoSchema,
-		validateReqSchema,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/cargos/:id', authenticate, patchController.run.bind(patchController))
 }

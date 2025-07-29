@@ -1,5 +1,3 @@
-import { validateReqSchema } from '../index'
-import { postBrandSchema, patchBrandSchema } from './brand.validator'
 import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
@@ -84,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/brands/', authenticate, postBrandSchema, validateReqSchema, postController.run.bind(postController))
+	router.post('/brands/', authenticate, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -120,11 +118,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Marca no encontrada.
 	 */
-	router.patch(
-		'/brands/:id',
-		authenticate,
-		patchBrandSchema,
-		validateReqSchema,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/brands/:id', authenticate, patchController.run.bind(patchController))
 }

@@ -1,5 +1,3 @@
-import { validateReqSchema } from '../index'
-import { postSiteSchema, patchSiteSchema } from './site.validator'
 import { type Router } from 'express'
 import { type SiteGetAllController } from '../../controllers/location/site.get-all.controller'
 import { type SitePostController } from '../../controllers/location/site.post.controller'
@@ -94,7 +92,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/sites/', authenticate, postSiteSchema, validateReqSchema, postController.run.bind(postController))
+	router.post('/sites/', authenticate, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -130,11 +128,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Sitio no encontrado.
 	 */
-	router.patch(
-		'/sites/:id',
-		authenticate,
-		patchSiteSchema,
-		validateReqSchema,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/sites/:id', authenticate, patchController.run.bind(patchController))
 }

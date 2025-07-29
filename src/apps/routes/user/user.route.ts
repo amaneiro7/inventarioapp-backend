@@ -1,12 +1,3 @@
-import { validateReqSchema } from '../index'
-import {
-	registerUserSchema,
-	updateUserSchema,
-	changePasswordSchema,
-	resetPasswordSchema,
-	getUserByEmailSchema,
-	deleteUserSchema
-} from './user.validator'
 import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
@@ -75,13 +66,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.get(
-		'/users/by-email',
-		authenticate,
-		getUserByEmailSchema,
-		validateReqSchema,
-		getByEmailController.run.bind(getByEmailController)
-	)
+	router.get('/users/by-email', authenticate, getByEmailController.run.bind(getByEmailController))
 
 	/**
 	 * @swagger
@@ -153,13 +138,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos o usuario ya existente.
 	 */
-	router.post(
-		'/users/register',
-		authenticate,
-		registerUserSchema,
-		validateReqSchema,
-		postController.run.bind(postController)
-	)
+	router.post('/users/register', authenticate, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -203,13 +182,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch(
-		'/users/update',
-		authenticate,
-		updateUserSchema,
-		validateReqSchema,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/users/update', authenticate, patchController.run.bind(patchController))
 
 	/**
 	 * @swagger
@@ -250,13 +223,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch(
-		'/users/change-password',
-		authenticate,
-		changePasswordSchema,
-		validateReqSchema,
-		changePaswwordController.run.bind(changePaswwordController)
-	)
+	router.patch('/users/change-password', authenticate, changePaswwordController.run.bind(changePaswwordController))
 
 	/**
 	 * @swagger
@@ -293,13 +260,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch(
-		'/users/reset-password',
-		authenticate,
-		resetPasswordSchema,
-		validateReqSchema,
-		resetPasswordController.run.bind(resetPasswordController)
-	)
+	router.patch('/users/reset-password', authenticate, resetPasswordController.run.bind(resetPasswordController))
 
 	/**
 	 * @swagger
@@ -324,11 +285,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.delete(
-		'users/',
-		authenticate,
-		deleteUserSchema,
-		validateReqSchema,
-		deleteController.run.bind(deleteController)
-	)
+	router.delete('users/', authenticate, deleteController.run.bind(deleteController))
 }

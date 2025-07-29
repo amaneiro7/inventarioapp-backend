@@ -1,5 +1,3 @@
-import { validateReqSchema } from '../index'
-import { postCitySchema, patchCitySchema } from './city.validator'
 import { type Router } from 'express'
 import { type CityGetAllController } from '../../controllers/location/city.get-all.controller'
 import { type CityPostController } from '../../controllers/location/city.post.controller'
@@ -89,7 +87,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cities/', authenticate, postCitySchema, validateReqSchema, postController.run.bind(postController))
+	router.post('/cities/', authenticate, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -125,11 +123,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ciudad no encontrada.
 	 */
-	router.patch(
-		'/cities/:id',
-		authenticate,
-		patchCitySchema,
-		validateReqSchema,
-		patchController.run.bind(patchController)
-	)
+	router.patch('/cities/:id', authenticate, patchController.run.bind(patchController))
 }
