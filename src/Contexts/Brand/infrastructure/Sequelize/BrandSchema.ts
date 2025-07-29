@@ -84,7 +84,7 @@ export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements B
 			},
 			{
 				modelName: 'Brand',
-				tableName: 'brands', // Explicitly define table name for clarity
+				//tableName: 'brands', // Explicitly define table name for clarity
 				timestamps: true,
 				underscored: true,
 				sequelize

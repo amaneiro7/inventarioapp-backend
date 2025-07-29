@@ -59,6 +59,7 @@ export class MainCategoryModel extends Model<MainCategoryDto> implements MainCat
 			{
 				modelName: 'MainCategory',
 				tableName: 'main_categories', // Explicitly define table name
+				underscored: true,
 				timestamps: false,
 				sequelize
 			}

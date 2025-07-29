@@ -85,12 +85,12 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 				mainCategoryId: {
 					allowNull: false,
 					type: DataTypes.STRING,
-					field: 'main_category_id' // Explicitly map to the snake_case column name
+					field: 'main_category_id'
 				}
 			},
 			{
 				modelName: 'Category',
-				tableName: 'categories', // Explicitly define table name
+				tableName: 'categories',
 				underscored: true,
 				timestamps: false,
 				sequelize,

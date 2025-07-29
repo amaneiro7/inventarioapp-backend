@@ -30,7 +30,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
  */
 export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
 	private readonly models = sequelize.models
-	private readonly cacheKey: string = 'modelSeries'
+	private readonly cacheKeyPrefix: string = 'modelSeries'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		super()
@@ -47,31 +47,13 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
 		const options = this.convert(criteria)
-		options.include = [
-			{
-				association: 'category',
-				include: ['mainCategory']
-			},
-			'brand',
-			'modelPrinter',
-			'modelMonitor',
-			{
-				association: 'modelLaptop',
-				include: ['memoryRamType']
-			},
-			{
-				association: 'modelComputer',
-				include: ['memoryRamType']
-			},
-			{ association: 'modelKeyboard', include: ['inputType'] },
-			{ association: 'modelMouse', include: ['inputType'] }
-		]
+		const modelOption = ModelAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKeyPrefix}:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
-				const { rows, count } = await ModelSeriesModel.findAndCountAll(options)
+				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
@@ -90,11 +72,10 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 */
 	async matching(criteria: Criteria): Promise<ResponseDB<ModelSeriesDto>> {
 		const options = this.convert(criteria)
-
-		const modelOption = new ModelAssociation().convertFilter(criteria, options)
+		const modelOption = ModelAssociation.convertFilter(criteria, options)
 
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
-			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
+			cacheKey: `${this.cacheKeyPrefix}:matching:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
@@ -117,7 +98,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 */
 	async searchById(id: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
-			cacheKey: `${this.cacheKey}:id:${id}`,
+			cacheKey: `${this.cacheKeyPrefix}:id:${id}`,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const modelSeries = await ModelSeriesModel.findByPk(id, {
@@ -150,7 +131,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 */
 	async searchByCategory(categoryId: Primitives<CategoryId>): Promise<ModelSeriesDto[]> {
 		return await this.cache.getCachedData<ModelSeriesDto[]>({
-			cacheKey: `${this.cacheKey}:category:${categoryId}`,
+			cacheKey: `${this.cacheKeyPrefix}:category:${categoryId}`,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const rows = await ModelSeriesModel.findAll({
@@ -171,7 +152,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 */
 	async searchByName(name: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
-			cacheKey: `${this.cacheKey}:name:${name}`,
+			cacheKey: `${this.cacheKeyPrefix}:name:${name}`,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const modelSeries = await ModelSeriesModel.findOne({
@@ -194,8 +175,9 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	async save(payload: ModelSeriesPrimitives): Promise<void> {
 		const t = await sequelize.transaction()
 		try {
+			const { processors } = payload
 			// Use upsert for the main ModelSeries entry
-			await ModelSeriesModel.upsert(payload, {
+			const [modelInstance] = await ModelSeriesModel.upsert(payload, {
 				transaction: t,
 				returning: true
 			})
@@ -220,12 +202,16 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 				await this.upsertAssociatedModel(this.models.ModelMouse, payload, t)
 			}
 
+			if (modelInstance) {
+				await modelInstance.setProcessors(processors, { transaction: t })
+			}
+
 			await t.commit()
 			// Invalidate all cache entries related to model series.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
 			// Also invalidate specific entries if they were cached by ID or name.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${payload.name}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${payload.id}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:${payload.name}` })
 		} catch (error: unknown) {
 			await t.rollback()
 			let errorMessage = 'An unknown error occurred while saving the model series.'
@@ -271,11 +257,11 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		await ModelSeriesModel.destroy({ where: { id } })
 
 		// Invalidate all cache entries related to model series.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
 		// Also invalidate specific entries if they were cached by ID or name.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${id}` })
 		if (modelSeriesToRemove) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${modelSeriesToRemove.name}` })
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:${modelSeriesToRemove.name}` })
 		}
 	}
 

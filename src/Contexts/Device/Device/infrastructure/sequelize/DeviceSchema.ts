@@ -105,14 +105,15 @@ export class DeviceModel
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
 				activo: { type: DataTypes.STRING, unique: true, allowNull: true },
 				serial: { type: DataTypes.STRING, unique: true, allowNull: true },
-				statusId: { type: DataTypes.STRING, allowNull: false },
-				categoryId: { type: DataTypes.STRING, allowNull: false },
-				brandId: { type: DataTypes.UUID, allowNull: false },
-				modelId: { type: DataTypes.UUID, allowNull: false },
-				employeeId: { type: DataTypes.UUID, allowNull: true },
+				statusId: { type: DataTypes.STRING, allowNull: false, field: 'status_id' },
+				categoryId: { type: DataTypes.STRING, allowNull: false, field: 'category_id' },
+				brandId: { type: DataTypes.UUID, allowNull: false, field: 'brand_id' },
+				modelId: { type: DataTypes.UUID, allowNull: false, field: 'model_id' },
+				employeeId: { type: DataTypes.UUID, allowNull: true, field: 'employee_id' },
 				locationId: {
 					type: DataTypes.UUID,
 					allowNull: true,
+					field: 'location_id',
 					validate: {
 						onlyNullIf(value: Primitives<DeviceLocation>) {
 							if (this.statusId !== StatusOptions.DESINCORPORADO && value === null) {
