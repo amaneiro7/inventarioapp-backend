@@ -93,7 +93,10 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 				tableName: 'categories', // Explicitly define table name
 				underscored: true,
 				timestamps: false,
-				sequelize
+				sequelize,
+				indexes: [
+					{ fields: ['mainCategoryId'], name: 'category_main_category_id_idx' } // New index
+				]
 			}
 		)
 	}

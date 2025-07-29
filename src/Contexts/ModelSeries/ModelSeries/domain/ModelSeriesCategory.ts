@@ -23,7 +23,7 @@ export class ModelSeriesCategory extends CategoryId {
 		categoryId?: Primitives<CategoryId>
 		entity: ModelSeries
 	}): Promise<void> {
-		if (params.categoryId === undefined || params.entity.categoryIdValue === params.categoryId) {
+		if (params.categoryId === undefined || params.entity.categoryValue === params.categoryId) {
 			return
 		}
 		await this.ensureCategoryExist({ repository: params.repository, categoryId: params.categoryId })

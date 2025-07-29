@@ -7,6 +7,7 @@ import { type ProcessorNumberModel } from '../../domain/ProcessorNumberModel'
 import { type ProcessorCores } from '../../domain/ProcessorCores'
 import { type ProcessorHasThreads } from '../../domain/ProcessorIsThreads'
 import { type ProcessorFrequency } from '../../domain/ProcessorFrequency'
+import { SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Processor` entity.
@@ -20,8 +21,14 @@ export class ProcessorModel extends Model<ProcessorDto> implements ProcessorDto 
 	declare threads: Primitives<ProcessorHasThreads>
 	declare frequency: Primitives<ProcessorFrequency>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.hasMany(models.DeviceComputer, { as: 'computer', foreignKey: 'processorId' })
+		this.belongsToMany(models.Model, {
+			as: 'models',
+			through: 'model_processor',
+			foreignKey: 'processorId',
+			otherKey: 'modelId'
+		})
 	}
 
 	static initialize(sequelize: Sequelize): void {

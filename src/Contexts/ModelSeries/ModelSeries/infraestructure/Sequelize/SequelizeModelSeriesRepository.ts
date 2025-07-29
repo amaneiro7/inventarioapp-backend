@@ -129,7 +129,11 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 						'modelMonitor',
 						'modelPrinter',
 						'modelKeyboard',
-						'modelMouse'
+						'modelMouse',
+						{
+							association: 'processors',
+							through: { attributes: [] }
+						}
 					]
 				})
 				return modelSeries ? (modelSeries.get({ plain: true }) as ModelSeriesDto) : null

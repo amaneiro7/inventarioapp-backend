@@ -12,13 +12,21 @@ import { type PrinteModelsDto } from '../../ModelCharacteristics/Printers/domain
 import { type KeyboardModelsDto } from '../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
 import { type MonitorModelsDto } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
 import { type MouseModelsDto } from '../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
+import { type ProcessorDto } from '../../../Features/Processor/Processor/domain/Processor.dto'
+import { type ProcessorId } from '../../../Features/Processor/Processor/domain/ProcessorId'
 
 /**
  * @interface ModelSeries
  * @description Defines the core properties of a ModelSeries entity.
  */
 export interface ModelSeries {
+	/**
+	 * @property {Primitives<ModelSeriesId>} id The unique identifier of the models.
+	 */
 	id: Primitives<ModelSeriesId>
+	/**
+	 * @property {Primitives<ModelSeriesName>} name The name of the brand.
+	 */
 	name: Primitives<ModelSeriesName>
 	categoryId: Primitives<CategoryId>
 	brandId: Primitives<BrandId>
@@ -29,17 +37,30 @@ export interface ModelSeries {
  * @type ModelSeriesParams
  * @description Represents the parameters required to create a new ModelSeries.
  */
-export type ModelSeriesParams = Omit<ModelSeries, 'id'>
+export type ModelSeriesParams = Omit<
+	ModelSeries & {
+		/**
+		 * @property {Primitives<ProcessorId>[]} processors An array of processor IDs associated with the model.
+		 */
+		processors: Primitives<ProcessorId>[]
+	},
+	'id'
+>
 
 /**
  * @type ModelSeriesPrimitives
  * @description Represents the primitive, serializable state of a ModelSeries entity.
  */
-export type ModelSeriesPrimitives = ModelSeries
+export type ModelSeriesPrimitives = ModelSeries & {
+	/**
+	 * @property {Primitives<ProcessorId>[]} processors An array of processor IDs associated with the model.
+	 */
+	processors: Primitives<ProcessorId>[]
+}
 
 /**
  * @type ModelSeriesDto
- * @description Data Transfer Object for a ModelSeries, including all its related data.
+ * @description Represents a Data Transfer Object (DTO) for a ModelSeries, including all its related data.
  */
 export type ModelSeriesDto = ModelSeries & {
 	category: CategoryDto
@@ -50,6 +71,7 @@ export type ModelSeriesDto = ModelSeries & {
 	modelKeyboard: KeyboardModelsDto | null
 	modelMouse: MouseModelsDto | null
 	modelMonitor: MonitorModelsDto | null
+	processors: ProcessorDto[]
 	updatedAt: Date
 	createdAt: Date
 }

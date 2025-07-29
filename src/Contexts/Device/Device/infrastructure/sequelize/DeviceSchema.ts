@@ -130,7 +130,15 @@ export class DeviceModel
 				timestamps: true,
 				underscored: true,
 				sequelize,
-				indexes: [{ unique: true, fields: ['serial'] }]
+				indexes: [
+					{ unique: true, fields: ['serial'], name: 'device_serial_uk' },
+					{ fields: ['statusId'], name: 'device_status_idx' },
+					{ fields: ['categoryId'], name: 'device_category_idx' },
+					{ fields: ['brandId'], name: 'device_brand_idx' },
+					{ fields: ['modelId'], name: 'device_model_idx' },
+					{ fields: ['employeeId'], name: 'device_employee_idx' },
+					{ fields: ['locationId'], name: 'device_location_idx' }
+				]
 			}
 		)
 	}

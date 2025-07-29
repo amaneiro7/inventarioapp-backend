@@ -5,6 +5,8 @@ import { ModelSeriesId } from './ModelSeriesId'
 import { ModelSeriesName } from './ModelSeriesName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
+import { ProcessorId } from '../../../Features/Processor/Processor/domain/ProcessorId'
+import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
 /**
  * @description Represents the ModelSeries domain entity.
@@ -15,7 +17,8 @@ export class ModelSeries {
 		private name: ModelSeriesName,
 		private categoryId: CategoryId,
 		private brandId: BrandId,
-		private generic: Generic
+		private generic: Generic,
+		private processors: ProcessorId[]
 	) {}
 
 	static create(params: ModelSeriesParams): ModelSeries {
@@ -24,7 +27,8 @@ export class ModelSeries {
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
-			new Generic(params.generic)
+			new Generic(params.generic),
+			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors })
 		)
 	}
 
@@ -34,7 +38,8 @@ export class ModelSeries {
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
-			new Generic(primitives.generic)
+			new Generic(primitives.generic),
+			primitives.processors.map(processor => new ProcessorId(processor.id))
 		)
 	}
 
@@ -42,9 +47,10 @@ export class ModelSeries {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			categoryId: this.categoryIdValue,
+			categoryId: this.categoryValue,
 			brandId: this.brandIdValue,
-			generic: this.genericValue
+			generic: this.genericValue,
+			processors: this.pocessorsValue
 		}
 	}
 
@@ -64,6 +70,33 @@ export class ModelSeries {
 		this.generic = new Generic(generic)
 	}
 
+	updateProcessors({
+		processorIds,
+		categoryId
+	}: {
+		processorIds: Primitives<ProcessorId>[]
+		categoryId: Primitives<CategoryId>
+	}): void {
+		this.processors = ModelSeries.addProcessorIds({ processorIds, categoryId })
+	}
+	private static addProcessorIds({
+		processorIds,
+		categoryId
+	}: {
+		processorIds: Primitives<ProcessorId>[]
+		categoryId: Primitives<CategoryId>
+	}): ProcessorId[] {
+		const acceptedCategories =
+			categoryId === CategoryValues.ALLINONE ||
+			categoryId === CategoryValues.COMPUTADORAS ||
+			categoryId === CategoryValues.LAPTOPS ||
+			categoryId === CategoryValues.SERVIDORES
+		if (acceptedCategories) {
+			return processorIds.map(processorId => new ProcessorId(processorId))
+		}
+		return []
+	}
+
 	get idValue(): Primitives<ModelSeriesId> {
 		return this.id.value
 	}
@@ -72,7 +105,7 @@ export class ModelSeries {
 		return this.name.value
 	}
 
-	get categoryIdValue(): Primitives<CategoryId> {
+	get categoryValue(): Primitives<CategoryId> {
 		return this.categoryId.value
 	}
 
@@ -82,5 +115,9 @@ export class ModelSeries {
 
 	get genericValue(): Primitives<Generic> {
 		return this.generic.value
+	}
+
+	get pocessorsValue(): Primitives<ProcessorId>[] {
+		return this.processors.map(processorId => processorId.value)
 	}
 }

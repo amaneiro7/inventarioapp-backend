@@ -27,6 +27,7 @@ import { ComputerMemoryRamType } from '../../ModelCharacteristics/Computers/Comp
 import { ComputerModels } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels'
 import { Generic } from '../domain/Generic'
 import { ModelMouseInputType } from '../../ModelCharacteristics/Mouses/domain/ModelMouseInputType'
+import { ProcessorDoesNotExistError } from '../../../Features/Processor/Processor/domain/ProcessorDoesNotExistError'
 import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
 import { type InputTypeRepository } from '../../InputType/domain/InputTypeRepository'
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
@@ -39,6 +40,9 @@ import { type PrinteModelsParams } from '../../ModelCharacteristics/Printers/dom
 import { type MonitorModelsParams } from '../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
 import { type LaptopModelsParams } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
 import { type ComputerModelsParams } from '../../ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
+import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorId } from '../../../Features/Processor/Processor/domain/ProcessorId'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**
  * @description Use case for updating an existing ModelSeries entity.
@@ -49,6 +53,7 @@ export class ModelSeriesUpdater {
 	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
 	private readonly categoryRepository: CategoryRepository
 	private readonly brandRepository: BrandRepository
+	private readonly processorRepository: ProcessorRepository
 
 	constructor(dependencies: {
 		modelSeriesRepository: ModelSeriesRepository
@@ -56,12 +61,14 @@ export class ModelSeriesUpdater {
 		memoryRamTypeRepository: MemoryRamTypeRepository
 		categoryRepository: CategoryRepository
 		brandRepository: BrandRepository
+		processorRepository: ProcessorRepository
 	}) {
 		this.modelSeriesRepository = dependencies.modelSeriesRepository
 		this.inputTypeRepository = dependencies.inputTypeRepository
 		this.memoryRamTypeRepository = dependencies.memoryRamTypeRepository
 		this.categoryRepository = dependencies.categoryRepository
 		this.brandRepository = dependencies.brandRepository
+		this.processorRepository = dependencies.processorRepository
 	}
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
@@ -151,6 +158,10 @@ export class ModelSeriesUpdater {
 					repository: this.memoryRamTypeRepository,
 					memoryRamTypeId: laptopParams.memoryRamTypeId,
 					entity
+				}),
+				this.ensureProcessorsExistAndUpdate({
+					entity,
+					processors: laptopParams.processors
 				})
 			])
 		} else if (entity instanceof ComputerModels) {
@@ -169,6 +180,10 @@ export class ModelSeriesUpdater {
 					repository: this.memoryRamTypeRepository,
 					memoryRamTypeId: computerParams.memoryRamTypeId,
 					entity
+				}),
+				this.ensureProcessorsExistAndUpdate({
+					entity,
+					processors: computerParams.processors
 				})
 			])
 		}
@@ -191,5 +206,41 @@ export class ModelSeriesUpdater {
 			ModelSeriesName.updateNameField({ repository: this.modelSeriesRepository, name: params.name, entity }),
 			Generic.updateGenericField({ generic: params.generic, entity })
 		])
+	}
+
+	/**
+	 * @private
+	 * @description Ensures that new processors exist before associating them with the model series.
+	 * @param {{ entity: ModelSeries; processors?: Primitives<ProcessorId>[] }} params The parameters for the check.
+	 * @param {ModelSeries} params.entity The model series entity being updated.
+	 * @param {Primitives<ProcessorId>[]} [params.processors] The list of new processor IDs.
+	 * @returns {Promise<void>} A promise that resolves when the check is complete.
+	 * @throws {ProcessorDoesNotExistError} If a new processor ID does not exist.
+	 */
+	private async ensureProcessorsExistAndUpdate({
+		entity,
+		processors
+	}: {
+		processors?: Primitives<ProcessorId>[]
+		entity: ModelSeries
+	}): Promise<void> {
+		if (processors === undefined) {
+			return
+		}
+
+		const uniqueProcessors = [...new Set(processors)]
+		const newProcessors = uniqueProcessors.filter(processorId => !entity.pocessorsValue.includes(processorId))
+
+		if (newProcessors.length > 0) {
+			const processorExistenceChecks = newProcessors.map(async processorId => {
+				const processor = await this.processorRepository.searchById(processorId)
+				if (processor === null) {
+					throw new ProcessorDoesNotExistError(processorId)
+				}
+			})
+			await Promise.all(processorExistenceChecks)
+		}
+
+		entity.updateProcessors({ processorIds: uniqueProcessors, categoryId: entity.categoryValue })
 	}
 }

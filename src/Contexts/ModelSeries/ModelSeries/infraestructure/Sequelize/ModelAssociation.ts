@@ -65,6 +65,10 @@ export class ModelAssociation {
 			include: ['inputType'],
 			attributes: ['inputTypeId']
 		}
+		const processorInclude: IncludeOptions = {
+			association: 'proceessors',
+			through: {}
+		}
 		options.include = [
 			categoryInclude,
 			brandInclude,
@@ -73,7 +77,8 @@ export class ModelAssociation {
 			modelLaptopInclude,
 			modelComputerInclude,
 			modelKeyboardInclude,
-			modelMouseInclude
+			modelMouseInclude,
+			processorInclude
 		]
 
 		if ('mainCategoryId' in whereFilters) {
@@ -81,6 +86,10 @@ export class ModelAssociation {
 				mainCategoryId: whereFilters.mainCategoryId
 			}
 			delete whereFilters.mainCategoryId
+		}
+		if ('processorId' in whereFilters) {
+			processorInclude.where = { id: whereFilters.processorId }
+			delete whereFilters.processorId
 		}
 		// Re-assign the modified where clauses back to the options.
 		options.where = whereFilters

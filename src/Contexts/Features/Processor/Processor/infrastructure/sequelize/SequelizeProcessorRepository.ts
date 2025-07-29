@@ -8,6 +8,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type ProcessorDto, type ProcessorPrimitives } from '../../domain/Processor.dto'
 import { type ProcessorNumberModel } from '../../domain/ProcessorNumberModel'
 import { type ProcessorRepository } from '../../domain/ProcessorRepository'
+import { ProcessorAssociation } from './ProcessorAssociation'
 
 /**
  * @description Sequelize implementation of the ProcessorRepository.
@@ -22,14 +23,15 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorDto>> {
-		const options = this.convert(criteria)
+		const sequelizeOptions = this.convert(criteria)
+		const finalOptions = ProcessorAssociation.convertFilter(criteria, sequelizeOptions)
 		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<ProcessorDto>>({
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await ProcessorModel.findAndCountAll(options)
+				const { count, rows } = await ProcessorModel.findAndCountAll(finalOptions)
 				return { total: count, data: rows.map(row => row.get({ plain: true })) }
 			}
 		})

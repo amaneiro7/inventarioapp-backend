@@ -68,10 +68,10 @@ export const CategoryDefaultData = Object.fromEntries(CATEGORIES.map(c => [c.id,
 >
 
 /**
- * @type CategoryIdValues
+ * @type categoryValues
  * @description A union type representing all possible category ID values.
  */
-export type CategoryIdValues = (typeof CATEGORIES)[number]['id']
+export type categoryValues = (typeof CATEGORIES)[number]['id']
 
 /**
  * @type CategoryNameValues
