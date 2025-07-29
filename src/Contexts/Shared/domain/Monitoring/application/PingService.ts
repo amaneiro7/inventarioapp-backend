@@ -36,7 +36,10 @@ export class PingService {
 
 		try {
 			// Use execPromise with a timeout for the command itself
-			const { stdout, stderr } = await execPromise(`${command} ${pingArgs.join(' ')}`, { timeout: 8000 })
+			const { stdout, stderr } = await execPromise(`${command} ${pingArgs.join(' ')}`, {
+				timeout: 8000,
+				windowsHide: true
+			})
 
 			if (stderr) {
 				this.logger.info(`Ping command stderr for ${ipAddress}: ${stderr.trim()}`)
