@@ -17,7 +17,7 @@ export class PingLogger {
 		try {
 			await fs.mkdir(this.logDirectory, { recursive: true })
 		} catch (error) {
-			this.logger.error(`Failed to create log directory: ${this.logDirectory}, ${error}`)
+			this.logger.error(`Fallo al crear el directorio de logs: ${this.logDirectory}, ${error}`)
 		}
 	}
 
@@ -38,7 +38,7 @@ export class PingLogger {
 		try {
 			await fs.appendFile(logFilePath, logEntry, 'utf8')
 		} catch (error) {
-			this.logger.error(`Failed to write ping log to ${logFilePath}, ${error}`)
+			this.logger.error(`Fallo al escribir el log de ping en ${logFilePath}, ${error}`)
 		}
 	}
 
@@ -59,12 +59,12 @@ export class PingLogger {
 					if (diffDays > this.MAX_LOG_DAYS) {
 						const filePath = path.join(this.logDirectory, file)
 						await fs.unlink(filePath)
-						this.logger.info(`Deleted old ping log file: ${file}`)
+						this.logger.info(`Archivo de log de ping antiguo eliminado: ${file}`)
 					}
 				}
 			}
 		} catch (error) {
-			this.logger.error(`Failed to clean old ping logs: ${error}`)
+			this.logger.error(`Fallo al limpiar logs de ping antiguos: ${error}`)
 		}
 	}
 }

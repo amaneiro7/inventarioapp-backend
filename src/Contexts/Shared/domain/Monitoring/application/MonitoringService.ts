@@ -27,20 +27,19 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 	public startMonitoringLoop({ showLogs = false }: { showLogs: boolean }): void {
 		if (this.monitoringConfig.concurrencyLimit <= 0) {
-			this.logger.info('Concurrency limit must be greater than 0. Defaulting to 1.')
+			this.logger.info('El límite de concurrencia debe ser mayor que 0. Se establecerá en 1 por defecto.')
 			this.monitoringConfig.concurrencyLimit = 1
 		}
 		if (this.monitoringConfig.idleTimeMs < 0) {
-			this.logger.info('Idle time cannot be negative. Defaulting to 0.')
+			this.logger.info('El tiempo de inactividad no puede ser negativo. Se establecerá en 0 por defecto.')
 			this.monitoringConfig.idleTimeMs = 0
 		}
 		if (this.isRunning) {
-			this.logger.info(`${this.getMonitoringName()} monitoring loop is already running.`)
-			return
+			this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} ya está en ejecución.`)
 		}
 
 		this.isRunning = true
-		this.logger.info(`Starting continuous ${this.getMonitoringName()} monitoring loop...`)
+		this.logger.info(`Iniciando el bucle de monitoreo continuo de ${this.getMonitoringName()}...`)
 		this.runLoop({ showLogs })
 	}
 
@@ -50,12 +49,11 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			clearTimeout(this.timeoutId)
 			this.timeoutId = null
 		}
-		this.logger.info(`${this.getMonitoringName()} monitoring loop stopped.`)
+		this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} se ha detenido.`)
 	}
-
 	protected async runLoop({ showLogs }: { showLogs: boolean }): Promise<void> {
 		if (!this.isRunning) {
-			this.logger.info('Monitoring loop has been stopped.')
+			this.logger.info('El bucle de monitoreo ha sido detenido.')
 			return
 		}
 		const now = new Date()
@@ -75,7 +73,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		if (this.monitoringConfig.disableTimeChecks) {
 			shouldRun = true
 			this.logger.info(
-				`[${formattedISOString}] Time checks are disabled. Running ${this.getMonitoringName()} ping scan.`
+				`[${formattedISOString}] Las comprobaciones de tiempo están deshabilitadas. Ejecutando escaneo de ping de ${this.getMonitoringName()}.`
 			)
 		} else {
 			shouldRun =
@@ -86,10 +84,12 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 			if (showLogs) {
 				if (shouldRun) {
-					this.logger.info(`[${formattedISOString}] Starting ${this.getMonitoringName()} ping scan...`)
+					this.logger.info(
+						`[${formattedISOString}] Iniciando escaneo de ping de ${this.getMonitoringName()}...`
+					)
 				} else {
 					this.logger.info(
-						`[${formattedISOString}] ${this.getMonitoringName()} Skipping scan: Outside defined working hours (${
+						`[${formattedISOString}] ${this.getMonitoringName()} Saltando escaneo: Fuera del horario de trabajo definido (${
 							this.monitoringConfig.startDayOfWeek
 						}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${
 							this.monitoringConfig.endHour
@@ -127,7 +127,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		try {
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
-				message: `Starting ${this.getMonitoringName()} ping scan.`
+				message: `Iniciando escaneo de ping de ${this.getMonitoringName()}.`
 			}) // Log start of scan
 
 			const limit = pLimit(this.monitoringConfig.concurrencyLimit)
@@ -143,7 +143,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 				if (showLogs) {
 					this.logger.info(
-						`[INFO] Processing batch ${page} with ${itemsToMonitor.length} ${this.getMonitoringName()}s.`
+						`[INFO] Procesando lote ${page} con ${itemsToMonitor.length} ${this.getMonitoringName()}s.`
 					)
 				}
 
@@ -189,18 +189,18 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 			if (showLogs) {
 				this.logger.info(
-					`[INFO] All ping jobs for this scan have completed. Total monitored: ${totalMonitored}`
+					`[INFO] Todos los trabajos de ping para este escaneo han sido completados. Total monitoreado: ${totalMonitored}`
 				)
 			}
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
-				message: `Completed ${this.getMonitoringName()} ping scan.`
+				message: `Escaneo de ping de ${this.getMonitoringName()} completado.`
 			}) // Log end of scan
 		} catch (error) {
-			this.logger.error(`[ERROR] Failed to enqueue ${this.getMonitoringName()} pings: ${error}`)
+			this.logger.error(`[ERROR] Fallo al encolar pings de ${this.getMonitoringName()}: ${error}`)
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
-				message: `Error during ${this.getMonitoringName()} ping scan: ${error}`
+				message: `Error durante el escaneo de ping de ${this.getMonitoringName()}: ${error}`
 			}) // Log error
 		}
 	}
@@ -221,7 +221,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 			if (!monitoringRecord) {
 				this.logger.info(
-					`[WARN] ${this.getMonitoringName()}Monitoring record with ID ${monitoringId} not found for update.`
+					`[WARN] Registro de monitoreo de ${this.getMonitoringName()} con ID ${monitoringId} no encontrado para actualizar.`
 				)
 				return
 			}
@@ -241,7 +241,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				)
 				await this.pingLogger.logPingResult({
 					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - ONLINE (Hostname: ${
+					message: `[${this.getMonitoringName()}] ${ipAddress} - EN LÍNEA (Hostname: ${
 						pingResult.hostname ?? 'N/A'
 					})`
 				})
@@ -257,9 +257,9 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				)
 				await this.pingLogger.logPingResult({
 					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Expected: ${
+					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
 						expectedHostname ?? 'N/A'
-					}, Received: ${pingResult.hostname ?? 'N/A'})`
+					}, Recibido: ${pingResult.hostname ?? 'N/A'})`
 				})
 			}
 		} catch (error) {
@@ -273,7 +273,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				)
 				await this.pingLogger.logPingResult({
 					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - OFFLINE: ${error}`
+					message: `[${this.getMonitoringName()}] ${ipAddress} - FUERA DE LÍNEA: ${error}`
 				})
 			}
 		} finally {

@@ -14,15 +14,15 @@ export class RedisRepository implements CacheRepository {
 
 	constructor({ logger }: { logger: Logger }) {
 		this.logger = logger
-		this.client.on('error', error => this.logger.error(`'Redis Client Error', ${error}`))
+		this.client.on('error', error => this.logger.error(`Error del cliente Redis: ${error}`))
 	}
 
 	async connect(): Promise<void> {
 		try {
 			await this.client.connect()
-			this.logger.info('Connected to Redis')
+			this.logger.info('Conectado a Redis')
 		} catch (error) {
-			this.logger.error(`'Error connecting to Redis', ${error}`)
+			this.logger.error(`Error al conectar a Redis: ${error}`)
 		}
 	}
 
@@ -37,7 +37,7 @@ export class RedisRepository implements CacheRepository {
 			const value = await this.client.get(key)
 			return value
 		} catch (error) {
-			this.logger.error(`'Error getting value from Redis', ${error}`)
+			this.logger.error(`Error al obtener valor de Redis: ${error}`)
 			return null
 		}
 	}
@@ -54,7 +54,7 @@ export class RedisRepository implements CacheRepository {
 		try {
 			await this.client.set(key, value, { EX: ex })
 		} catch (error) {
-			this.logger.error(`'Error setting value in Redis: ', ${error}`)
+			this.logger.error(`Error al establecer valor en Redis: ${error}`)
 		}
 	}
 
@@ -68,7 +68,7 @@ export class RedisRepository implements CacheRepository {
 		try {
 			await this.client.del(key)
 		} catch (error) {
-			this.logger.error(`'Error deleting value in Redis: ', ${error}`)
+			this.logger.error(`Error al eliminar valor en Redis: ${error}`)
 		}
 	}
 
@@ -86,11 +86,11 @@ export class RedisRepository implements CacheRepository {
 				await this.client.del(keys)
 			}
 		} catch (error) {
-			this.logger.error(`'Error deleting values by pattern in Redis: ', ${error}`)
+			this.logger.error(`Error al eliminar valores por patrón en Redis: ${error}`)
 		}
 	}
 
 	async close(): Promise<void> {
-		await this.client.disconnect()
+		await this.client.destroy()
 	}
 }

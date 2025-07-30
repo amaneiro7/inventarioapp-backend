@@ -48,7 +48,7 @@ export class SequelizeConfig implements Database {
 
 	async close(): Promise<void> {
 		await this.sequelizeConnection.close()
-		this.logger.info('Connection to the database has been closed.')
+		this.logger.info('La conexión a la base de datos ha sido cerrada.')
 	}
 
 	/**
@@ -60,23 +60,25 @@ export class SequelizeConfig implements Database {
 			try {
 				// 2. Se usa await para manejar correctamente la promesa de autenticación.
 				await this.sequelizeConnection.authenticate()
-				this.logger.info('Connection to database has been established successfully.')
+				this.logger.info('Conexión a la base de datos establecida exitosamente.')
 				this.logger.info(`dbHost: ${host}, dbPort: ${port}, dbName: ${dbName}`)
 
 				// 3. La inicialización de modelos solo ocurre después de una conexión exitosa.
 				await initializeModels(this.sequelizeConnection)
-				this.logger.info('Sequelize models have been initialized successfully.')
+				this.logger.info('Los modelos de Sequelize han sido inicializados exitosamente.')
 
 				// Si todo es exitoso, salimos del bucle.
 				return
 			} catch (error) {
 				this.logger.error(
-					`Attempt ${attempt} of ${MAX_RETRIES}: Unable to connect to the database. Retrying in ${RETRY_DELAY_MS / 1000}s...`
+					`Intento ${attempt} de ${MAX_RETRIES}: No se pudo conectar a la base de datos. Reintentando en ${RETRY_DELAY_MS / 1000}s...`
 				)
 				this.logger.debug(`Error details: ${error}`)
 
 				if (attempt === MAX_RETRIES) {
-					this.logger.error('Maximum connection attempts reached. Could not connect to the database.')
+					this.logger.error(
+						'Se alcanzó el número máximo de intentos de conexión. No se pudo conectar a la base de datos.'
+					)
 					// Lanza el error para que la aplicación no se inicie.
 					throw new Error(`Unable to connect to the database after ${MAX_RETRIES} attempts.`)
 				}

@@ -42,7 +42,7 @@ export class PingService {
 			})
 
 			if (stderr) {
-				this.logger.info(`Ping command stderr for ${ipAddress}: ${stderr.trim()}`)
+				this.logger.info(`Error de stderr del comando ping para ${ipAddress}: ${stderr.trim()}`)
 			}
 
 			const result = this.parsePingOutput(stdout, osPlatform)
@@ -51,9 +51,9 @@ export class PingService {
 			} else {
 				// If not alive, throw an error with details
 				throw new Error(
-					`Host ${ipAddress} is unreachable. Packet loss: ${
-						result.packetLoss ?? 'unknown'
-					}%. Raw output: ${result.rawOutput.trim()}`
+					`El host ${ipAddress} es inalcanzable. Pérdida de paquetes: ${
+						result.packetLoss ?? 'desconocido'
+					}%. Salida bruta: ${result.rawOutput.trim()}`
 				)
 			}
 		} catch (rawError: unknown) {
@@ -70,23 +70,23 @@ export class PingService {
 				}
 
 				if (error.killed && error.signal === 'SIGTERM') {
-					throw new Error(`Ping to ${ipAddress} timed out after 2 seconds.`)
+					throw new Error(`Ping a ${ipAddress} agotó el tiempo de espera después de 2 segundos.`)
 				} else if (error.code === 'ENOENT') {
-					throw new Error(`Ping command not found. Is 'ping' installed and in your system's PATH?`)
+					throw new Error(`Comando ping no encontrado. ¿Está 'ping' instalado y en el PATH de su sistema?`)
 				} else if (
 					error.stdout &&
 					(error.stdout.includes('Request timed out') ||
 						error.stdout.includes('Destination host unreachable'))
 				) {
-					throw new Error(`Host ${ipAddress} is unreachable. (Ping command output indicates failure)`)
+					throw new Error(`El host ${ipAddress} es inalcanzable. (La salida del comando ping indica fallo)`)
 				} else if (error.message.includes('100% packet loss')) {
-					throw new Error(`Host ${ipAddress} is unreachable. (100% packet loss)`)
+					throw new Error(`El host ${ipAddress} es inalcanzable. (100% de pérdida de paquetes)`)
 				} else {
-					throw new Error(`Failed to execute ping command for ${ipAddress}: ${error.message}`)
+					throw new Error(`Fallo al ejecutar el comando ping para ${ipAddress}: ${error.message}`)
 				}
 			}
 			// Fallback for cases where a non-Error was thrown
-			throw new Error(`Failed to execute ping command for ${ipAddress}: ${String(rawError)}`)
+			throw new Error(`Fallo al ejecutar el comando ping para ${ipAddress}: ${String(rawError)}`)
 		}
 	}
 

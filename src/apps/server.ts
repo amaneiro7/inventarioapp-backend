@@ -3,6 +3,7 @@ import * as http from 'node:http'
 import * as https from 'node:https'
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
+import * as os from 'node:os' // Importar el módulo os para obtener el hostname
 import swaggerUi from 'swagger-ui-express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -32,7 +33,7 @@ export class Server {
 		this.express.use(json())
 		this.express.use(urlencoded({ extended: true }))
 
-		// Security and performance middlewares
+		// Middlewares de seguridad y rendimiento
 		this.express.use(security)
 
 		this.express.use(limiter)
@@ -52,6 +53,7 @@ export class Server {
 	}
 
 	private async startHTTPS(): Promise<void> {
+		const hostname = os.hostname() // Obtener el hostname del sistema
 		try {
 			const privateKey = await fs.readFile(this.sslKeyPath, 'utf8')
 			const certificate = await fs.readFile(this.sslCertPath, 'utf8')
@@ -61,26 +63,29 @@ export class Server {
 				const env = this.express.get('env') as string
 				this.httpServer = https.createServer(credentials, this.express).listen(this.port, () => {
 					this.logger.info(
-						` Inventario Backend app is running at https://localhost:${this.port} in ${env} mode (HTTPS)`
+						`Aplicación Inventario Backend ejecutándose en https://${hostname}:${this.port} en modo ${env} (HTTPS)`
 					)
-					this.logger.info(' 	Press CTRL-C to stop\n')
+					this.logger.info('Presione CTRL-C para detener')
 					resolve()
 				})
 			})
 		} catch (error) {
-			this.logger.error(`Error al cargar los certificados HTTPS: ${error}. Iniciando servidor HTTP.`)
+			this.logger.error(
+				`Error al cargar los certificados HTTPS (${this.sslKeyPath}, ${this.sslCertPath}): ${error}. Iniciando servidor HTTP.`
+			)
 			await this.startHTTP()
 		}
 	}
 
 	private async startHTTP(): Promise<void> {
+		const hostname = os.hostname() // Obtener el hostname del sistema
 		await new Promise<void>(resolve => {
 			const env = this.express.get('env') as string
 			this.httpServer = this.express.listen(this.port, () => {
 				this.logger.info(
-					` Inventario Backend app is running at http://localhost:${this.port} in ${env} mode (HTTP)`
+					`Aplicación Inventario Backend ejecutándose en http://${hostname}:${this.port} en modo ${env} (HTTP)`
 				)
-				this.logger.info(' 	Press CTRL-C to stop\n')
+				this.logger.info('Presione CTRL-C para detener')
 				resolve()
 			})
 		})
