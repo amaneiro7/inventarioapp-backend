@@ -25,8 +25,12 @@ export class HistoryAssociation {
 		const empñpyeeInclude: IncludeOptions = { association: 'employee', attributes: [] }
 		const deviceInclude: IncludeOptions = {
 			association: 'device',
-			attributes: ['serial', 'updatedAt'],
-			include: [{ association: 'category', attributes: ['name'] }]
+			attributes: ['serial', 'categoryId'],
+			include: [
+				{ association: 'category', attributes: ['name'] },
+				{ association: 'brand', attributes: ['name'] },
+				{ association: 'model', attributes: ['name'] }
+			]
 		}
 
 		options.include = [userInclude, empñpyeeInclude, deviceInclude]
