@@ -70,12 +70,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre de la directiva.
-	 *                 example: "Junta Directiva"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '201':
 	 *         description: Directiva creada con éxito.
@@ -106,12 +101,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre de la directiva.
-	 *                 example: "Comité Ejecutivo"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '200':
 	 *         description: Directiva actualizada con éxito.

@@ -31,16 +31,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               email:
-	 *                 type: string
-	 *                 description: Correo electrónico del usuario.
-	 *                 example: "test@example.com"
-	 *               password:
-	 *                 type: string
-	 *                 description: Contraseña del usuario.
-	 *                 example: "password123"
+	 *             $ref: '#/components/schemas/UserLogin'
 	 *     responses:
 	 *       '200':
 	 *         description: Autenticación exitosa.

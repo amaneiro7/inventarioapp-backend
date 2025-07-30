@@ -70,12 +70,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre de la marca.
-	 *                 example: "HP"
+	 *             $ref: '#/components/schemas/Brand'
 	 *     responses:
 	 *       '201':
 	 *         description: Marca creada con éxito.
@@ -106,12 +101,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre de la marca.
-	 *                 example: "Hewlett-Packard"
+	 *             $ref: '#/components/schemas/Brand'
 	 *     responses:
 	 *       '200':
 	 *         description: Marca actualizada con éxito.

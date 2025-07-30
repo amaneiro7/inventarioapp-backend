@@ -71,16 +71,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre de la ciudad.
-	 *                 example: "Caracas"
-	 *               stateId:
-	 *                 type: string
-	 *                 description: ID del estado al que pertenece la ciudad.
-	 *                 example: "uuid-del-estado"
+	 *             $ref: '#/components/schemas/City'
 	 *     responses:
 	 *       '201':
 	 *         description: Ciudad creada con éxito.
@@ -111,12 +102,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre de la ciudad.
-	 *                 example: "Valencia"
+	 *             $ref: '#/components/schemas/City'
 	 *     responses:
 	 *       '200':
 	 *         description: Ciudad actualizada con éxito.

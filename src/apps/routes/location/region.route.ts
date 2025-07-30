@@ -75,12 +75,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre de la región.
-	 *                 example: "Región Central"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '200':
 	 *         description: Región actualizada con éxito.

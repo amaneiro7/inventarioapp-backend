@@ -108,30 +108,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               email:
-	 *                 type: string
-	 *                 format: email
-	 *                 description: Correo electrónico del nuevo usuario.
-	 *                 example: "nuevo.usuario@example.com"
-	 *               password:
-	 *                 type: string
-	 *                 format: password
-	 *                 description: Contraseña del nuevo usuario.
-	 *                 example: "passwordSegura123"
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre del nuevo usuario.
-	 *                 example: "Juan"
-	 *               lastName:
-	 *                 type: string
-	 *                 description: Apellido del nuevo usuario.
-	 *                 example: "Pérez"
-	 *               roleId:
-	 *                 type: string
-	 *                 description: ID del rol asignado al usuario.
-	 *                 example: "uuid-del-rol"
+	 *             $ref: '#/components/schemas/UserRegister'
 	 *     responses:
 	 *       '201':
 	 *         description: Usuario registrado con éxito.
@@ -155,25 +132,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               id:
-	 *                 type: string
-	 *                 description: ID del usuario a actualizar.
-	 *                 example: "uuid-del-usuario"
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre del usuario.
-	 *                 example: "Juan Carlos"
-	 *               lastName:
-	 *                 type: string
-	 *                 description: Nuevo apellido del usuario.
-	 *                 example: "González"
-	 *               email:
-	 *                 type: string
-	 *                 format: email
-	 *                 description: Nuevo correo electrónico del usuario.
-	 *                 example: "juan.gonzalez@example.com"
+	 *             $ref: '#/components/schemas/UserUpdate'
 	 *     responses:
 	 *       '200':
 	 *         description: Usuario actualizado con éxito.
@@ -199,22 +158,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               id:
-	 *                 type: string
-	 *                 description: ID del usuario cuya contraseña se va a cambiar.
-	 *                 example: "uuid-del-usuario"
-	 *               oldPassword:
-	 *                 type: string
-	 *                 format: password
-	 *                 description: Contraseña actual del usuario.
-	 *                 example: "passwordActual"
-	 *               newPassword:
-	 *                 type: string
-	 *                 format: password
-	 *                 description: Nueva contraseña para el usuario.
-	 *                 example: "nuevaPasswordSegura"
+	 *             $ref: '#/components/schemas/UserChangePassword'
 	 *     responses:
 	 *       '200':
 	 *         description: Contraseña cambiada con éxito.
@@ -240,18 +184,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               email:
-	 *                 type: string
-	 *                 format: email
-	 *                 description: Correo electrónico del usuario cuya contraseña se va a restablecer.
-	 *                 example: "usuario@example.com"
-	 *               newPassword:
-	 *                 type: string
-	 *                 format: password
-	 *                 description: Nueva contraseña para el usuario.
-	 *                 example: "passwordRestablecida"
+	 *             $ref: '#/components/schemas/UserResetPassword'
 	 *     responses:
 	 *       '200':
 	 *         description: Contraseña restablecida con éxito.

@@ -72,20 +72,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre del sitio.
-	 *                 example: "Agencia Principal"
-	 *               cityId:
-	 *                 type: string
-	 *                 description: ID de la ciudad a la que pertenece el sitio.
-	 *                 example: "uuid-de-ciudad"
-	 *               typeOfSiteId:
-	 *                 type: string
-	 *                 description: ID del tipo de sitio.
-	 *                 example: "uuid-de-tipo-de-sitio"
+	 *             $ref: '#/components/schemas/Site'
 	 *     responses:
 	 *       '201':
 	 *         description: Sitio creado con éxito.
@@ -116,12 +103,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre del sitio.
-	 *                 example: "Agencia Central"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '200':
 	 *         description: Sitio actualizado con éxito.

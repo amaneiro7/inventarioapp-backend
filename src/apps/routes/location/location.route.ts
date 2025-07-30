@@ -214,8 +214,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Datos de la ubicación a crear (el esquema completo es extenso).
+	 *             $ref: '#/components/schemas/Location'
 	 *     responses:
 	 *       '201':
 	 *         description: Ubicación creada con éxito.
@@ -246,8 +245,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Campos de la ubicación a actualizar.
+	 *             $ref: '#/components/schemas/Location'
 	 *     responses:
 	 *       '200':
 	 *         description: Ubicación actualizada con éxito.

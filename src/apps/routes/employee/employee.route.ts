@@ -116,8 +116,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Datos del empleado a crear (el esquema completo es extenso).
+	 *             $ref: '#/components/schemas/Employee'
 	 *     responses:
 	 *       '201':
 	 *         description: Empleado creado con éxito.
@@ -148,8 +147,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Campos del empleado a actualizar.
+	 *             $ref: '#/components/schemas/Employee'
 	 *     responses:
 	 *       '200':
 	 *         description: Empleado actualizado con éxito.

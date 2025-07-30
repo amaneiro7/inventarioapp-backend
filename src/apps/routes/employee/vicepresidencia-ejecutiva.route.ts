@@ -83,11 +83,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre de la vicepresidencia ejecutiva.
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '201':
 	 *         description: Vicepresidencia ejecutiva creada con éxito.
@@ -118,11 +114,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre.
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '200':
 	 *         description: Actualizada con éxito.

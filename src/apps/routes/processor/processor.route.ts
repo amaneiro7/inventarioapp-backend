@@ -72,16 +72,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre del procesador.
-	 *                 example: "Intel Core i7-10700K"
-	 *               socketId:
-	 *                 type: string
-	 *                 description: ID del socket del procesador.
-	 *                 example: "uuid-del-socket"
+	 *             $ref: '#/components/schemas/Processor'
 	 *     responses:
 	 *       '201':
 	 *         description: Procesador creado con éxito.
@@ -112,12 +103,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre del procesador.
-	 *                 example: "Intel Core i9-11900K"
+	 *             $ref: '#/components/schemas/Processor'
 	 *     responses:
 	 *       '200':
 	 *         description: Procesador actualizado con éxito.

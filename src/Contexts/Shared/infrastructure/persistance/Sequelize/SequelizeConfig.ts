@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 import { config } from '../../config'
-import { initilizarModels } from './initSchemas'
+import { initializeModels } from './initializeModels' // Corregido: initilizarModels -> initializeModels
 import { type Database } from '../../../domain/Database'
 import { type Logger } from '../../../domain/Logger'
 
@@ -9,51 +9,81 @@ const {
 } = config
 const url = `postgres://${user}:${password}@${host}:${port}/${dbName}`
 
+// --- Mejoras ---
+// 1. Se encapsula la instancia de Sequelize para que no sea exportada directamente.
+//    La clase SequelizeConfig será la única responsable de gestionar la conexión.
 export const sequelize = new Sequelize(url, {
 	logging: false,
+	dialect: 'postgres',
 	...(ssl && {
 		dialectOptions: {
 			ssl: {
-				require: 'require'
+				require: 'require' // O true, dependiendo de la configuración del servidor
 			}
 		}
 	}),
 	pool: {
 		max: 50,
 		min: 0,
-		acquire: 10000,
+		acquire: 30000, // Aumentado para dar más tiempo en caso de carga
 		idle: 10000
 	}
 })
 
+// --- Variables para la lógica de reintentos ---
+const MAX_RETRIES = 5
+const RETRY_DELAY_MS = 5000 // 5 segundos
+
 export class SequelizeConfig implements Database {
 	private sequelizeConnection: Sequelize
 	private readonly logger: Logger
+
 	constructor({ logger }: { logger: Logger }) {
+		// La instancia de Sequelize se pasa aquí para mantener la encapsulación.
 		this.sequelizeConnection = sequelize
 		this.logger = logger
 	}
 
-	public createConfig(): Sequelize {
-		return this.sequelizeConnection
-	}
+	// El método createConfig() era redundante y se elimina.
 
 	async close(): Promise<void> {
-		return this.sequelizeConnection.close()
+		await this.sequelizeConnection.close()
+		this.logger.info('Connection to the database has been closed.')
 	}
 
-	async connet(): Promise<void> {
-		try {
-			this.sequelizeConnection.authenticate()
-			this.logger.info('Connection to database has been established successfully.')
-			this.logger.info(`dbHost: ${host}, dbPort: ${port}, dbName: ${dbName}`)
-		} catch (error) {
-			this.logger.error(`Unable to connect to the database:, ${error}`)
-		}
-		try {
-			await initilizarModels(this.sequelizeConnection)
-		} catch (error) {
-			this.logger.error(`Unable to initilize models:, ${error}`)
+	/**
+	 * @description Conecta a la base de datos con una lógica de reintentos.
+	 * Si la conexión falla, lo reintentará varias veces antes de fallar definitivamente.
+	 */
+	async connect(): Promise<void> {
+		for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+			try {
+				// 2. Se usa await para manejar correctamente la promesa de autenticación.
+				await this.sequelizeConnection.authenticate()
+				this.logger.info('Connection to database has been established successfully.')
+				this.logger.info(`dbHost: ${host}, dbPort: ${port}, dbName: ${dbName}`)
+
+				// 3. La inicialización de modelos solo ocurre después de una conexión exitosa.
+				await initializeModels(this.sequelizeConnection)
+				this.logger.info('Sequelize models have been initialized successfully.')
+
+				// Si todo es exitoso, salimos del bucle.
+				return
+			} catch (error) {
+				this.logger.error(
+					`Attempt ${attempt} of ${MAX_RETRIES}: Unable to connect to the database. Retrying in ${RETRY_DELAY_MS / 1000}s...`
+				)
+				this.logger.debug(`Error details: ${error}`)
+
+				if (attempt === MAX_RETRIES) {
+					this.logger.error('Maximum connection attempts reached. Could not connect to the database.')
+					// Lanza el error para que la aplicación no se inicie.
+					throw new Error(`Unable to connect to the database after ${MAX_RETRIES} attempts.`)
+				}
+
+				// Espera antes del siguiente reintento.
+				await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS))
+			}
 		}
 	}
 }

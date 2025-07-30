@@ -190,8 +190,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Datos del dispositivo a crear (el esquema completo es extenso).
+	 *             $ref: '#/components/schemas/Device'
 	 *     responses:
 	 *       '201':
 	 *         description: Dispositivo creado con éxito.
@@ -222,8 +221,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             description: Campos del dispositivo a actualizar.
+	 *             $ref: '#/components/schemas/Device'
 	 *     responses:
 	 *       '200':
 	 *         description: Dispositivo actualizado con éxito.

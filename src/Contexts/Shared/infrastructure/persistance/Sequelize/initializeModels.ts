@@ -8,7 +8,7 @@ interface IModelinstance {
 	associate: (models: Sequelize['models']) => Promise<void>
 }
 
-export async function initilizarModels(sequelize: Sequelize): Promise<void> {
+export async function initializeModels(sequelize: Sequelize): Promise<void> {
 	const isProduction = config.isProd
 	const path = isProduction ? 'dist/src/**/*Schema.js' : 'src/**/*Schema.*'
 	const routes = globSync(path)

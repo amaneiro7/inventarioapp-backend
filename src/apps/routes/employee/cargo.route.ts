@@ -70,12 +70,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre del cargo.
-	 *                 example: "Analista de Sistemas"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '201':
 	 *         description: Cargo creado con éxito.
@@ -106,12 +101,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre del cargo.
-	 *                 example: "Analista Senior de Sistemas"
+	 *             $ref: '#/components/schemas/GenericName'
 	 *     responses:
 	 *       '200':
 	 *         description: Cargo actualizado con éxito.

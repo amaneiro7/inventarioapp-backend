@@ -142,20 +142,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nombre del modelo/serie.
-	 *                 example: "Latitude 7420"
-	 *               brandId:
-	 *                 type: string
-	 *                 description: ID de la marca asociada.
-	 *                 example: "uuid-de-marca"
-	 *               categoryId:
-	 *                 type: string
-	 *                 description: ID de la categoría asociada.
-	 *                 example: "uuid-de-categoria"
+	 *             $ref: '#/components/schemas/ModelSeries'
 	 *     responses:
 	 *       '201':
 	 *         description: Modelo/serie creado con éxito.
@@ -186,12 +173,7 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             type: object
-	 *             properties:
-	 *               name:
-	 *                 type: string
-	 *                 description: Nuevo nombre del modelo/serie.
-	 *                 example: "Latitude 7430"
+	 *             $ref: '#/components/schemas/ModelSeries'
 	 *     responses:
 	 *       '200':
 	 *         description: Modelo/serie actualizado con éxito.

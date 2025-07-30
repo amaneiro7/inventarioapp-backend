@@ -17,7 +17,7 @@ async function register({ routePath, container }: { routePath: string; container
 	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	const dependencies = require(resolve(routePath))
 
-	// si el archivo no contiene un funcion llamada register no se
+	// si el archivo exportado no contiene una funcion "register" se omite
 	if (!dependencies.register) return
 	await dependencies.register(container)
 }
