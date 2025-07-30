@@ -19,15 +19,15 @@ export abstract class GetAllBaseService<DTO> {
 			data,
 			info: {
 				total,
-				page: pageNumber ?? 1,
+				page: pageNumber === undefined || pageNumber === null || pageNumber === 0 ? 1 : pageNumber,
 				totalPage: this.calcularPaginas(total, pageSize)
 			}
 		}
 	}
 
 	calcularPaginas(totalElementos: number, pageSize?: number | null): number {
-		// si el pageSize es null solo devuelve una pagina ya que esta devolviendo todos los elementos de la lista
-		if (!pageSize) return 1
+		// si el pageSize es null o 0, devuelve 1 pagina ya que esta devolviendo todos los elementos de la lista
+		if (!pageSize || pageSize === 0) return 1
 		// Calcula el número de páginas redondeando hacia arriba
 		return Math.ceil(totalElementos / pageSize)
 	}

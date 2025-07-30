@@ -61,8 +61,9 @@ export class BrandCreator {
 		if (categoryIds.length === 0) {
 			return
 		}
+		const uniqueCategories = [...new Set(categoryIds)]
 		// Create an array of promises to check for the existence of each category
-		const categoryExistenceChecks = categoryIds.map(async categoryId => {
+		const categoryExistenceChecks = uniqueCategories.map(async categoryId => {
 			const category = await this.categoryRepository.searchById(categoryId)
 			if (category === null) {
 				throw new CategoryDoesNotExistError(categoryId)

@@ -50,14 +50,29 @@ export class BrandUpdater {
 
 		const brandEntity = Brand.fromPrimitives(brand)
 
-		// Perform update validations in parallel
-		await Promise.all([
-			BrandName.updateNameField({ entity: brandEntity, repository: this.brandRepository, name: params.name }),
-			this.ensureCategoriesExistAndUpdate({ entity: brandEntity, categories: params.categories })
-		])
+		let hasChanges = false
 
-		// Save the updated entity
-		await this.brandRepository.save(brandEntity.toPrimitive())
+		if (params.name !== undefined && brandEntity.nameValue !== params.name) {
+			await BrandName.updateNameField({
+				entity: brandEntity,
+				repository: this.brandRepository,
+				name: params.name
+			})
+			hasChanges = true
+		}
+
+		if (params.categories !== undefined) {
+			const uniqueCategories = [...new Set(params.categories)]
+			if (JSON.stringify(brandEntity.categoriesValue.sort()) !== JSON.stringify(uniqueCategories.sort())) {
+				await this.ensureCategoriesExistAndUpdate({ entity: brandEntity, categories: params.categories })
+				hasChanges = true
+			}
+		}
+
+		// Save the updated entity only if it has changed
+		if (hasChanges) {
+			await this.brandRepository.save(brandEntity.toPrimitive())
+		}
 	}
 
 	/**

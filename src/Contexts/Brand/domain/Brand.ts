@@ -31,7 +31,8 @@ export class Brand {
 	static create(params: BrandParams): Brand {
 		const id = BrandId.random()
 		const name = new BrandName(params.name)
-		const categories = params.categories.map(categoryId => new CategoryId(categoryId))
+		const uniqueCategories = [...new Set(params.categories)]
+		const categories = uniqueCategories.map(categoryId => new CategoryId(categoryId))
 		return new Brand(id, name, categories)
 	}
 
@@ -43,10 +44,11 @@ export class Brand {
 	 * @returns {Brand} A `Brand` instance.
 	 */
 	static fromPrimitives(primitives: BrandDto): Brand {
+		const uniqueCategories = [...new Set(primitives.categories.map(category => category.id))]
 		return new Brand(
 			new BrandId(primitives.id),
 			new BrandName(primitives.name),
-			primitives.categories.map(category => new CategoryId(category.id))
+			uniqueCategories.map(categoryId => new CategoryId(categoryId))
 		)
 	}
 
@@ -78,7 +80,8 @@ export class Brand {
 	 * @param {CategoryId['value'][]} categoryIds An array of category IDs to set.
 	 */
 	updateCategories(categoryIds: CategoryId['value'][]): void {
-		this.categories = categoryIds.map(categoryId => new CategoryId(categoryId))
+		const uniqueCategories = [...new Set(categoryIds)]
+		this.categories = uniqueCategories.map(categoryId => new CategoryId(categoryId))
 	}
 
 	/**
@@ -105,6 +108,8 @@ export class Brand {
 	 * @returns {CategoryId['value'][]}
 	 */
 	get categoriesValue(): CategoryId['value'][] {
-		return this.categories.map(category => category.value)
+		const categroyValues = this.categories.map(category => category.value)
+		const uniqueCategories = new Set(categroyValues)
+		return [...uniqueCategories]
 	}
 }
