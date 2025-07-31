@@ -9,6 +9,7 @@ import { type UserRepository } from '../../../domain/UserRepository'
 import { type UserId } from '../../../domain/UserId'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import { Op } from 'sequelize'
 
 /**
  * @description Sequelize implementation of the UserRepository.
@@ -42,9 +43,9 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 
 		return this.cache.getCachedData<UserPrimitives | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
-				const user = await UserModel.findOne({ where: { email: userEmail }, include: ['role'] })
+				const user = await UserModel.findOne({ where: { email: { [Op.iLike]: userEmail } }, include: ['role'] })
 				return user ? user.get({ plain: true }) : null
 			}
 		})
