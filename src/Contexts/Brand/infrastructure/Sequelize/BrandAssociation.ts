@@ -22,7 +22,7 @@ export class BrandAssociation {
 
 		const categoryInclude: IncludeOptions = {
 			association: 'categories',
-			attributes: ['id', 'name'],
+			attributes: ['id', 'name', 'mainCategoryId'],
 			through: {}
 		}
 
@@ -33,6 +33,12 @@ export class BrandAssociation {
 			categoryInclude.where = { id: whereFilters.categoryId }
 			// Remove the filter from the main where clause to avoid ambiguity
 			delete whereFilters.categoryId
+		}
+		// If a mainCategoryId filter exists, apply it to the association include
+		if ('mainCategoryId' in whereFilters) {
+			categoryInclude.where = { mainCategoryId: whereFilters.mainCategoryId }
+			// Remove the filter from the main where clause to avoid ambiguity
+			delete whereFilters.mainCategoryId
 		}
 
 		options.where = whereFilters
