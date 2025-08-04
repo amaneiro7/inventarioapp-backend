@@ -1,4 +1,4 @@
-import { sign, type JwtPayload } from 'jsonwebtoken'
+import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
 import { config } from '../../Shared/infrastructure/config'
 
@@ -50,7 +50,7 @@ function generateToken({
 }: {
 	payload: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>
 	secret: string
-	expiresIn: string
+	expiresIn: SignOptions['expiresIn']
 	jti?: string
 }): string {
 	const { id, email, roleId } = payload
@@ -71,10 +71,11 @@ function generateToken({
  * @returns {string} The generated access token.
  */
 export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
+	const expiresIn: SignOptions['expiresIn'] = `${accessTokenExpiresIn}m`
 	return generateToken({
 		payload: user,
 		secret: accessTokenSecret,
-		expiresIn: accessTokenExpiresIn
+		expiresIn
 	})
 }
 
@@ -85,10 +86,11 @@ export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'email' | 
  * @returns {string} The generated refresh token.
  */
 export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
+	const expiresIn: SignOptions['expiresIn'] = `${refreshTokenExpiresIn}d`
 	return generateToken({
 		payload: user,
 		secret: refreshTokenSecret,
-		expiresIn: refreshTokenExpiresIn,
+		expiresIn,
 		jti: randomUUID()
 	})
 }

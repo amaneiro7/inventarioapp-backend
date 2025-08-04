@@ -28,11 +28,13 @@ export class AuthLogoutController implements Controller {
 
 			if (accessToken) {
 				// Add to the denylist with the access token's expiration time
-				await this.tokenDenylistService.addToDenylist(accessToken, config.accessTokenRedisExpiresIn)
+				const expiresIn = config.accessTokenExpiresIn * 60
+				await this.tokenDenylistService.addToDenylist(accessToken, expiresIn)
 			}
 			if (refreshToken) {
 				// Add to the denylist with the refresh token's expiration time
-				await this.tokenDenylistService.addToDenylist(refreshToken, config.refreshTokenRedisExpiresIn)
+				const expiresIn = 60 * 60 * 24 * config.refreshTokenExpiresIn
+				await this.tokenDenylistService.addToDenylist(refreshToken, expiresIn)
 			}
 
 			res.status(httpStatus[200].statusCode)
