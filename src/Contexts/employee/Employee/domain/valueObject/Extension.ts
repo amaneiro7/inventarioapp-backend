@@ -24,7 +24,7 @@ export class Extension extends StringValueObject {
 	 * @returns {Extension[]} An array of `Extension` instances.
 	 */
 	public static fromValues(extensions: Primitives<Extension>[]): Extension[] {
-		return extensions.filter(Boolean).map(ext => new Extension(ext)) ?? []
+		return Array.isArray(extensions) ? extensions.filter(Boolean).map(ext => new Extension(ext)) : []
 	}
 
 	private ensureIsValid(value: string): void {

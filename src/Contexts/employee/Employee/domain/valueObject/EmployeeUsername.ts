@@ -12,7 +12,7 @@ import { type Employee } from '../entity/Employee'
 export class EmployeeUserName extends StringValueObject {
 	private readonly MIN_LENGTH = 2
 	private readonly MAX_LENGTH = 20
-	private readonly VALID_REGEX = /^[a-zA-Z][a-zA-Z0-9]*$/
+	private readonly VALID_REGEX = /^[a-zA-Z0-9]*$/
 
 	constructor(readonly value: string) {
 		super(value)

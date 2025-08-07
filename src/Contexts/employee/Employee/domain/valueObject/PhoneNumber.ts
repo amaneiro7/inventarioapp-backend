@@ -24,7 +24,7 @@ export class PhoneNumber extends StringValueObject {
 	 * @returns {PhoneNumber[]} An array of `PhoneNumber` instances.
 	 */
 	public static fromValues(phones: Primitives<PhoneNumber>[]): PhoneNumber[] {
-		return phones.filter(Boolean).map(phone => new PhoneNumber(phone)) ?? []
+		return Array.isArray(phones) ? phones.filter(Boolean).map(phone => new PhoneNumber(phone)) : []
 	}
 
 	private ensureIsValid(value: string): void {
