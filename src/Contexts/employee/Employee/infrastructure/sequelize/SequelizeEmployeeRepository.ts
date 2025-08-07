@@ -115,9 +115,21 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 							association: 'devices',
 							include: ['category', 'brand', 'model', 'location', 'computer']
 						},
-						'cargo',
-						'location',
-						'departamento'
+						{ association: 'cargo', attributes: ['name'] },
+						{
+							association: 'location',
+							attributes: ['name', 'typeOfSiteId'],
+							include: [
+								{
+									association: 'site',
+									attributes: ['name', 'address']
+								}
+							]
+						},
+						{ association: 'departamento', attributes: ['name'] },
+						{ association: 'directiva', attributes: ['name'] },
+						{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
+						{ association: 'vicepresidencia', attributes: ['name'] }
 					]
 				})
 				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
