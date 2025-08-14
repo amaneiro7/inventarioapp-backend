@@ -29,7 +29,7 @@ export class SequelizeDirectivaRepository
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DirectivaDto>> {
 		const options = this.convert(criteria)
-		options.include = ['directiva']
+
 		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<DirectivaDto>>({
