@@ -9,7 +9,7 @@
  * @description An immutable array of all available categories with their core properties.
  * @type {Readonly<Array<{id: string, key: string, name: string}>>}
  */
-export const CATEGORIES = [
+export const CATEGORIES: Readonly<Array<{ id: string; key: string; name: string }>> = [
 	{ id: '1', key: 'COMPUTADORAS', name: 'Computadoras' },
 	{ id: '2', key: 'SERVIDORES', name: 'Servidores' },
 	{ id: '3', key: 'LAPTOPS', name: 'Laptops' },

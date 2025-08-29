@@ -70,10 +70,10 @@ export class SequelizeConfig implements Database {
 				// Si todo es exitoso, salimos del bucle.
 				return
 			} catch (error) {
+				this.logger.error(`Error details: ${error}`)
 				this.logger.error(
 					`Intento ${attempt} de ${MAX_RETRIES}: No se pudo conectar a la base de datos. Reintentando en ${RETRY_DELAY_MS / 1000}s...`
 				)
-				this.logger.debug(`Error details: ${error}`)
 
 				if (attempt === MAX_RETRIES) {
 					this.logger.error(

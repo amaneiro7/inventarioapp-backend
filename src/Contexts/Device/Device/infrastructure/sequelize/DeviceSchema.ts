@@ -23,6 +23,7 @@ import { type HistoryDto } from '../../../../History/domain/History.dto'
 import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
 import { type StatusDto } from '../../../Status/domain/Status.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @class DeviceModel
@@ -79,7 +80,7 @@ export class DeviceModel
 	 * @description Defines the relationships between the `DeviceModel` and other models.
 	 * @param {Sequelize['models']} models An object containing all initialized Sequelize models.
 	 */
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
 		this.belongsTo(models.Brand, { as: 'brand', foreignKey: 'brandId' })
 		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelId' })
@@ -91,6 +92,7 @@ export class DeviceModel
 		this.hasOne(models.DeviceMonitoring, { as: 'deviceMonitoring', foreignKey: 'deviceId' })
 		this.hasOne(models.DeviceMFP, { as: 'mfp', foreignKey: 'deviceId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'deviceId' })
+		this.hasMany(models.ShipmentDevice, { as: 'shipmentDevice', foreignKey: 'deviceId' })
 	}
 
 	/**

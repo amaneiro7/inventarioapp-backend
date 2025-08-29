@@ -25,6 +25,7 @@ import { type EmployeeDepartamento } from '../../domain/valueObject/EmployeeDepa
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Employee` entity.
@@ -63,7 +64,7 @@ export class EmployeeModel
 	declare departamento: Omit<DepartamentoDto, 'cargos'>
 	declare cargo: Omit<CargoDto, 'departamentos' | 'vicepresidencias' | 'vicepresidenciaEjecutivas' | 'directivas'>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' })
 		this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' })
 		this.belongsTo(models.Directiva, { as: 'directiva', foreignKey: 'directivaId' })
@@ -75,6 +76,7 @@ export class EmployeeModel
 		this.belongsTo(models.Departamento, { as: 'departamento', foreignKey: 'departamentoId' })
 		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' })
+		this.hasMany(models.Shipment, { as: 'toEmployee', foreignKey: 'receivedBy' })
 	}
 
 	static initialize(sequelize: Sequelize): void {

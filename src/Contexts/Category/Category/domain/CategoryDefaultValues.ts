@@ -1,7 +1,7 @@
 export const CategoryDefault = {
 	COMPUTERS: 'Computadoras',
 	SERVERS: 'Servidores',
-	LAPTOSP: 'Laptops',
+	LAPTOPS: 'Laptops',
 	ALLINONE: 'All in One',
 	MONITORS: 'Monitores',
 	DOCMATRIXPRINTER: 'Impresoras Financieras',

@@ -23,6 +23,8 @@ export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto 
 	 */ static async associate(models: Sequelize['models']): Promise<void> {
 		this.belongsTo(models.City, { as: 'city', foreignKey: 'cityId' }) // A Site belongs to Many City
 		this.hasMany(models.Location, { as: 'location', foreignKey: 'siteId' }) // A Site has Many Locations
+		this.hasMany(models.Shipment, { as: 'shipmentOrigin', foreignKey: 'origin' }) // A Site has Many shipmentsOrigin
+		this.hasMany(models.Shipment, { as: 'shipmentsDestination', foreignKey: 'destination' }) // A Site has Many shipmentsLocation
 	}
 
 	/**

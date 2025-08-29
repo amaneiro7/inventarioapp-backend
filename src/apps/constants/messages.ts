@@ -32,6 +32,8 @@ export const SUCCESS_MESSAGES = {
 	SITE_UPDATED: 'Sitio actualizado exitosamente',
 	MODEL_CREATED: 'Modelo creado exitosamente',
 	MODEL_UPDATED: 'Modelo actualizado exitosamente',
+	SHIPMENT_CREATED: 'Relacón de envios creado exitosamente',
+	SHIPMENT_UPDATED: 'Relación de envios actualizado exitosamente',
 	PROCESSOR_CREATED: 'Procesador creado exitosamente',
 	PROCESSOR_UPDATED: 'Procesador actualizado exitosamente',
 	PROCESSOR_DELETED: 'Procesador eliminado exitosamente',

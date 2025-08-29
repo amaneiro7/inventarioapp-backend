@@ -1,4 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationId } from '../../domain/LocationId'
 import { type TypeOfSiteId } from '../../../TypeOfSite/domain/TypeOfSiteId'
@@ -8,9 +9,9 @@ import { type SiteId } from '../../../Site/domain/SiteId'
 import { type LocationDto } from '../../domain/Location.dto'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
 import { type TypeOfSiteDto } from '../../../TypeOfSite/domain/TypeOfSite.dto'
-import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { type LocationOperationalStatus } from '../../domain/LocationOperationalStatus'
 import { type LocationStatusDto } from '../../../LocationStatus/domain/LocationStatus.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * Represents the Location model in the database.
@@ -32,8 +33,8 @@ export class LocationModel
 
 	/**
 	 * Associates the Location model with other models.
-	 * @param {Sequelize['models']} models - The models object containing all initialized models.
-	 */ static async associate(models: Sequelize['models']): Promise<void> {
+	 * @param {SequelizeModels} models - The models object containing all initialized models.
+	 */ static async associate(models: SequelizeModels): Promise<void> {
 		this.belongsTo(models.TypeOfSite, {
 			as: 'typeOfSite',
 			foreignKey: 'typeOfSiteId'

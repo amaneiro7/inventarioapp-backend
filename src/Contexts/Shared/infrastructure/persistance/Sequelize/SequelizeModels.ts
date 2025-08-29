@@ -39,6 +39,8 @@ import { type DirectivaDto } from '../../../../employee/Directiva/domain/Directi
 import { type DeviceComputerDto } from '../../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { type ShipmentDto } from '../../../../Shipment/Shipment/domain/entity/Shipment.dto'
+import { type ShipmentDeviceDto } from '../../../../Shipment/ShipmentDevice/domain/entity/ShipmentDevice.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
 	Category: ModelStatic<Model<CategoryDto>>
@@ -82,4 +84,6 @@ export type SequelizeModels = Sequelize['models'] & {
 	CentroCosto: ModelStatic<Model<CentroCostoDto>>
 	CentroTrabajo: ModelStatic<Model<CentroTrabajoDto>>
 	Directiva: ModelStatic<Model<DirectivaDto>>
+	Shipment: ModelStatic<Model<ShipmentDto>>
+	ShipmentDevice: ModelStatic<Model<ShipmentDeviceDto>>
 }

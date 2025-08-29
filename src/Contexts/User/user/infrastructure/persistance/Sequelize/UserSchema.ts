@@ -7,6 +7,7 @@ import { type RoleId } from '../../../../Role/domain/RoleId'
 import { type UserLastName } from '../../../domain/UserLastName'
 import { type UserPassword } from '../../../domain/UserPassword'
 import { type UserPrimitives } from '../../../domain/User'
+import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the User entity.
@@ -19,9 +20,10 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare lastName: Primitives<UserLastName>
 	declare password: Primitives<UserPassword>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'userId' })
+		this.hasMany(models.Shipment, { as: 'fromUser', foreignKey: 'sentBy' })
 	}
 
 	static initialize(sequelize: Sequelize): void {
