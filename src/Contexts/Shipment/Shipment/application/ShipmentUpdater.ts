@@ -44,12 +44,12 @@ export class ShipmentUpdater {
 
 		if (params.status !== undefined && shipmentEntity.statusValue !== params.status) {
 			if (params.status === StatusEnum.DELIVERED) {
-				if (params.deliveryDate === undefined || params.receivedBy === undefined) {
+				if (!params.deliveryDate || !params.receivedBy) {
 					throw new InvalidArgumentError(
 						'La fecha de entrega y quien recibe son obligatorios para entregar un envio'
 					)
 				}
-				const employee = await this.employeeRepository.searchById(params.receivedBy)
+				const employee = await this.employeeRepository.searchById(params?.receivedBy)
 				if (employee === null) {
 					throw new EmployeeDoesNotExistError(params.receivedBy)
 				}

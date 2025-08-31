@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "es2022",
 		"esModuleInterop": true,
-		"target": "es6",
+		"target": "es2024",
 		"noImplicitAny": true,
 		"incremental": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"sourceMap": false,
 		"rootDir": ".",
 		"strict": true,

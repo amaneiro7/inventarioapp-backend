@@ -51,7 +51,26 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const shipment = await ShipmentModel.findByPk(id, {
-					include: ['shipmentDevice']
+					include: [
+						{
+							association: 'fromUser',
+							attributes: ['name', 'lastName']
+						},
+						{
+							association: 'toEmployee',
+							attributes: ['name', 'lastName']
+						},
+						{
+							association: 'originLocation',
+							attributes: ['name', 'address']
+						},
+						{
+							association: 'destinationLocation',
+							attributes: ['name', 'address']
+						},
+
+						'shipmentDevice'
+					]
 				})
 				return shipment ? (shipment.get({ plain: true }) as ShipmentDto) : null
 			}
