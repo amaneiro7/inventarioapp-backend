@@ -28,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de envíos obtenida con éxito.
 	 */
-	router.get('/shipments/', criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/shipments/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
