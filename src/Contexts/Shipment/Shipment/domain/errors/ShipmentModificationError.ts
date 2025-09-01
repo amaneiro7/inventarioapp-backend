@@ -3,6 +3,6 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 export class ShipmentModificationError extends ApiError {
 	constructor(public readonly message: string) {
-		super(httpStatus[404].statusCode, message)
+		super(httpStatus[400].statusCode, message)
 	}
 }

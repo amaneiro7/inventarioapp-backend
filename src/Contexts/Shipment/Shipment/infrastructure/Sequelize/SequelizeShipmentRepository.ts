@@ -8,6 +8,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ShipmentDto } from '../../domain/entity/Shipment.dto'
+import { ShipmentAssociation } from './ShipmentAssociation'
 
 export class SequelizeShipmentRepository extends SequelizeCriteriaConverter implements ShipmentRepository {
 	private readonly cacheKeyPrefix = 'shipments'
@@ -28,14 +29,18 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ShipmentDto>> {
 		const sequelizeOptions = this.convert(criteria)
-		sequelizeOptions.include = ['shipmentDevice']
+		const opt = ShipmentAssociation.converFilter(criteria, sequelizeOptions)
+
 		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<ShipmentDto>>({
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await ShipmentModel.findAndCountAll(sequelizeOptions)
+				const { count, rows } = await ShipmentModel.findAndCountAll({
+					...opt,
+					distinct: true
+				})
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))
