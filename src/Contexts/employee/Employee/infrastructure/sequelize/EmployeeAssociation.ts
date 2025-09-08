@@ -57,13 +57,19 @@ export class EmployeeAssociation {
 			association: 'location',
 			include: [siteInclude]
 		}
+		const deviceInclude: IncludeOptions = {
+			association: 'devices',
+			include: ['category', 'brand', 'model', 'computer'],
+			separate: true
+		}
 		options.include = [
 			directivaInclude,
 			vicepresidenciaEjecutivaInclude,
 			vicepresidenciaInclude,
 			departamentoInclude,
 			cargoInclude,
-			locationInclude
+			locationInclude,
+			deviceInclude
 		]
 
 		// Poder filtrar por ubicacion - por sitio
