@@ -59,7 +59,11 @@ export class ModelAssociation {
 				include: ['inputType'],
 				attributes: ['inputTypeId', 'hasFingerPrintReader']
 			},
-			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] }
+			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] },
+			{
+				association: 'processors',
+				through: { attributes: [] }
+			}
 		]
 
 		const whereFilters = options.where ?? {}
@@ -81,71 +85,13 @@ export class ModelAssociation {
 		// Clean up custom filter keys
 		options.where = whereFilters
 
+		// When a belongsToMany association is used with ordering on other associations,
+		// Sequelize might use a subquery that hides the necessary tables for ordering.
+		// Disabling the subquery can resolve this issue.
+		options.subQuery = false
+
 		return options
 	}
-
-	// static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-	// 	const mainCategoryInclude: IncludeOptions = { association: 'mainCategory', required: true }
-	// 	const categoryInclude: IncludeOptions = {
-	// 		association: 'category',
-	// 		include: [mainCategoryInclude]
-	// 	}
-	// 	const brandInclude: IncludeOptions = { association: 'brand', attributes: ['id', 'name'] }
-	// 	//const processorInclude: IncludeOptions = { association: 'processors', through: {} }
-	// 	options.include = [
-	// 		categoryInclude,
-	// 		brandInclude,
-	// 		{ association: 'modelPrinter', attributes: ['cartridgeModel'] },
-	// 		{ association: 'modelMonitor', attributes: ['screenSize', 'hasDVI', 'hasHDMI', 'hasVGA'] },
-	// 		{
-	// 			association: 'modelLaptop',
-	// 			include: ['memoryRamType'],
-	// 			attributes: [
-	// 				'memoryRamTypeId',
-	// 				'memoryRamSlotQuantity',
-	// 				'hasBluetooth',
-	// 				'hasWifiAdapter',
-	// 				'hasDVI',
-	// 				'hasHDMI',
-	// 				'hasVGA',
-	// 				'batteryModel'
-	// 			]
-	// 		},
-	// 		{
-	// 			association: 'modelComputer',
-	// 			include: ['memoryRamType'],
-	// 			attributes: [
-	// 				'memoryRamTypeId',
-	// 				'memoryRamSlotQuantity',
-	// 				'hasBluetooth',
-	// 				'hasWifiAdapter',
-	// 				'hasDVI',
-	// 				'hasHDMI',
-	// 				'hasVGA'
-	// 			]
-	// 		},
-	// 		{
-	// 			association: 'modelKeyboard',
-	// 			include: ['inputType'],
-	// 			attributes: ['inputTypeId', 'hasFingerPrintReader']
-	// 		},
-	// 		{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] }
-	// 		//processorInclude
-	// 	]
-	// 	if (options.where && 'mainCategoryId' in options.where) {
-	// 		categoryInclude.where = {
-	// 			mainCategoryId: options.where?.mainCategoryId
-	// 		}
-	// 		delete options.where.mainCategoryId
-	// 	}
-
-	// 	// if (options.where && 'processorId' in options.where) {
-	// 	// 	processorInclude.where = { id: options.where.processorId }
-	// 	// 	delete options.where.processorId
-	// 	// }
-	// 	options.order = this.transformOrder(options.order)
-	// 	return options
-	// }
 
 	private static transformOrder(order: Order | undefined): Order | undefined {
 		if (!Array.isArray(order) || order.length === 0) {
