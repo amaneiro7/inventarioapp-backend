@@ -59,11 +59,7 @@ export class ModelAssociation {
 				include: ['inputType'],
 				attributes: ['inputTypeId', 'hasFingerPrintReader']
 			},
-			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] },
-			{
-				association: 'processors',
-				through: { attributes: [] }
-			}
+			{ association: 'modelMouse', include: ['inputType'], attributes: ['inputTypeId'] }
 		]
 
 		const whereFilters = options.where ?? {}
@@ -84,11 +80,6 @@ export class ModelAssociation {
 
 		// Clean up custom filter keys
 		options.where = whereFilters
-
-		// When a belongsToMany association is used with ordering on other associations,
-		// Sequelize might use a subquery that hides the necessary tables for ordering.
-		// Disabling the subquery can resolve this issue.
-		options.subQuery = false
 
 		return options
 	}
