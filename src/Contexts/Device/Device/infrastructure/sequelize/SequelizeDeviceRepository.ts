@@ -38,7 +38,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 		return this.cache.getCachedData<ResponseDB<DeviceDto>>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(options)
 				return { total: count, data: rows.map(row => row.get({ plain: true })) } as ResponseDB<DeviceDto>
@@ -52,7 +52,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:matching:${criteria.hash()}`
 		return this.cache.getCachedData<ResponseDB<DeviceDto>>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(deviceOptions)
 				return { total: count, data: rows.map(row => row.get({ plain: true })) } as ResponseDB<DeviceDto>
@@ -64,7 +64,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findByPk(id, {
 					include: [
@@ -107,7 +107,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:activo:${activo}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { activo } })
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
@@ -119,7 +119,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:serial:${serial}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { serial } })
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
@@ -131,7 +131,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		const cacheKey = `${this.cacheKeyPrefix}:computerName:${computerName}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const data = await DeviceModel.findOne({
 					include: [{ association: 'computer', attributes: [], where: { computerName } }]
