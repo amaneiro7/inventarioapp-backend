@@ -163,7 +163,7 @@ export class DeviceAssociation {
 		}
 		const operatingSystemInclude: IncludeOptions = {
 			association: 'operatingSystem',
-			attributes: ['name']
+			attributes: ['name', 'buildNumber', 'version']
 		}
 		const operatingSystemArqInclude: IncludeOptions = {
 			association: 'operatingSystemArq',
@@ -295,6 +295,13 @@ export class DeviceAssociation {
 				operatingSystemId: whereFilters.operatingSystemId
 			}
 			delete whereFilters.operatingSystemId
+		}
+		if ('operatingSystem' in whereFilters) {
+			operatingSystemInclude.where = {
+				...(operatingSystemInclude.where || {}),
+				name: whereFilters.operatingSystem
+			}
+			delete whereFilters.operatingSystem
 		}
 		if ('operatingSystemArqId' in whereFilters) {
 			computerInclude.where = {
