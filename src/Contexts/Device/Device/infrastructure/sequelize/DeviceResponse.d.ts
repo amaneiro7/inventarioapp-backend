@@ -21,6 +21,8 @@ export type ClearComputerDataset = {
 	'Disco Duro Total'?: string | number
 	'Tipo de Disco Duro'?: string
 	'Sistema Operativo'?: string
+	'Sistema Operativo Build Number'?: string
+	'Sistema Operativo Version'?: string
 	Arquitectura?: string
 	Observación: string | null
 	'Actualizado por'?: string
