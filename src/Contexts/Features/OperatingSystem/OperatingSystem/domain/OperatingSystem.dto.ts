@@ -1,5 +1,7 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { OperatingSystemBuildNumber } from './OperatingSystemBuildNumber'
 import { type OperatingSystemId } from './OperatingSystemId'
+import { OperatingSystemName } from './OperatingSystemName'
 import { type OperatingSystemVersion } from './OperatingSystemVersion'
 
 /**
@@ -8,7 +10,9 @@ import { type OperatingSystemVersion } from './OperatingSystemVersion'
  */
 export interface OperatingSystem {
 	id: Primitives<OperatingSystemId>
-	name: Primitives<OperatingSystemVersion>
+	name: Primitives<OperatingSystemName>
+	buildNumber: Primitives<OperatingSystemBuildNumber>
+	version: Primitives<OperatingSystemVersion>
 }
 
 /**
