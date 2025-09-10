@@ -212,16 +212,23 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 			} = item
 			const countAsNumber = Number(count)
 
+			let unifiedOsName = operatingSystemName
+			if (operatingSystemName.startsWith('Windows 10')) {
+				unifiedOsName = 'Windows 10'
+			} else if (operatingSystemName.startsWith('Windows 11')) {
+				unifiedOsName = 'Windows 11'
+			}
+
 			// Operating System Level
-			if (!osMap.has(operatingSystemName)) {
-				osMap.set(operatingSystemName, {
-					name: operatingSystemName,
+			if (!osMap.has(unifiedOsName)) {
+				osMap.set(unifiedOsName, {
+					name: unifiedOsName,
 					count: 0,
 					typeOfSiteCount: {},
 					administrativeRegion: []
 				})
 			}
-			const osEntry = osMap.get(operatingSystemName)!
+			const osEntry = osMap.get(unifiedOsName)!
 			osEntry.count += countAsNumber
 			osEntry.typeOfSiteCount[typeOfSiteName] = (osEntry.typeOfSiteCount[typeOfSiteName] ?? 0) + countAsNumber
 
