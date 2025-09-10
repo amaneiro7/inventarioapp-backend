@@ -92,10 +92,17 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 					const { osName, arqName, count } = item
 					const countAsNumber = Number(count)
 
-					let osEntry = acc.get(osName)
+					let unifiedOsName = osName
+					if (osName.startsWith('Windows 10')) {
+						unifiedOsName = 'Windows 10'
+					} else if (osName.startsWith('Windows 11')) {
+						unifiedOsName = 'Windows 11'
+					}
+
+					let osEntry = acc.get(unifiedOsName)
 					if (!osEntry) {
-						osEntry = { name: osName, count: 0, arq: [] }
-						acc.set(osName, osEntry)
+						osEntry = { name: unifiedOsName, count: 0, arq: [] }
+						acc.set(unifiedOsName, osEntry)
 					}
 
 					osEntry.count += countAsNumber

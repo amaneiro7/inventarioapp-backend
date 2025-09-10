@@ -20,8 +20,8 @@ const osName = {
 
 const operatingSystem = [
 	// Ya existen
-	{ id: '1', name: 'Windows 11', buildNumber: '26100', version: '24H2' },
-	{ id: '2', name: 'Windows 10', buildNumber: '19045', version: '22H2' },
+	{ id: '1', name: 'Windows 11 24H2', buildNumber: '26100', version: '24H2' },
+	{ id: '2', name: 'Windows 10 22H2', buildNumber: '19045', version: '22H2' },
 	{ id: '3', name: 'Windows 8.1', buildNumber: '9600', version: 'NT 6.3' },
 	{ id: '4', name: 'Windows 8', buildNumber: '9200', version: 'NT 6.2' },
 	{ id: '5', name: 'Windows 7', buildNumber: '7601', version: 'NT 6.1' },
@@ -39,22 +39,22 @@ const operatingSystem = [
 	{ id: '17', name: 'macOS Monterrey', buildNumber: '21H1320', version: '12.7.6' },
 	// Nuevos
 	{ id: '18', name: 'Windows Vista', buildNumber: '6002', version: 'NT 6.0' },
-	{ id: '19', name: 'Windows 10', buildNumber: '10242', version: 'NT 10.0' },
-	{ id: '20', name: 'Windows 10', buildNumber: '10586', version: '1511' },
-	{ id: '21', name: 'Windows 10', buildNumber: '14393', version: '1607' },
-	{ id: '22', name: 'Windows 10', buildNumber: '15063', version: '1703' },
-	{ id: '23', name: 'Windows 10', buildNumber: '16299', version: '1709' },
-	{ id: '24', name: 'Windows 10', buildNumber: '17134', version: '1803' },
-	{ id: '25', name: 'Windows 10', buildNumber: '17763', version: '1809' },
-	{ id: '26', name: 'Windows 10', buildNumber: '18362', version: '1903' },
-	{ id: '27', name: 'Windows 10', buildNumber: '18363', version: '1909' },
-	{ id: '28', name: 'Windows 10', buildNumber: '19041', version: '2004' },
-	{ id: '29', name: 'Windows 10', buildNumber: '19042', version: '20H2' },
-	{ id: '31', name: 'Windows 10', buildNumber: '19043', version: '21H1' },
-	{ id: '32', name: 'Windows 10', buildNumber: '19044', version: '21H2' },
-	{ id: '33', name: 'Windows 11', buildNumber: '22000', version: '21H2' },
-	{ id: '34', name: 'Windows 11', buildNumber: '22621', version: '22H2' },
-	{ id: '35', name: 'Windows 11', buildNumber: '22631', version: '23H2' }
+	{ id: '19', name: 'Windows 10 NT 10.0', buildNumber: '10242', version: 'NT 10.0' },
+	{ id: '20', name: 'Windows 10 1511', buildNumber: '10586', version: '1511' },
+	{ id: '21', name: 'Windows 10 1607', buildNumber: '14393', version: '1607' },
+	{ id: '22', name: 'Windows 10 1703', buildNumber: '15063', version: '1703' },
+	{ id: '23', name: 'Windows 10 1709', buildNumber: '16299', version: '1709' },
+	{ id: '24', name: 'Windows 10 1803', buildNumber: '17134', version: '1803' },
+	{ id: '25', name: 'Windows 10 1809', buildNumber: '17763', version: '1809' },
+	{ id: '26', name: 'Windows 10 1903', buildNumber: '18362', version: '1903' },
+	{ id: '27', name: 'Windows 10 1909', buildNumber: '18363', version: '1909' },
+	{ id: '28', name: 'Windows 10 2004', buildNumber: '19041', version: '2004' },
+	{ id: '29', name: 'Windows 10 20H2', buildNumber: '19042', version: '20H2' },
+	{ id: '31', name: 'Windows 10 21H1', buildNumber: '19043', version: '21H1' },
+	{ id: '32', name: 'Windows 10 21H2', buildNumber: '19044', version: '21H2' },
+	{ id: '33', name: 'Windows 11 21H2', buildNumber: '22000', version: '21H2' },
+	{ id: '34', name: 'Windows 11 22H2', buildNumber: '22621', version: '22H2' },
+	{ id: '35', name: 'Windows 11 23H2', buildNumber: '22631', version: '23H2' }
 ]
 
 module.exports = { operatingSystem, osName }
