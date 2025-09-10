@@ -202,7 +202,7 @@ export class DeviceAssociation {
 		const administrativeRegionInclude: IncludeOptions = {
 			association: 'administrativeRegion',
 			required: true,
-			attributes: []
+			attributes: ['name']
 		}
 		const regionInclude: IncludeOptions = {
 			association: 'region',
