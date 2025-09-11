@@ -77,6 +77,7 @@ export class EmployeeModel
 		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' })
 		this.hasMany(models.Shipment, { as: 'toEmployee', foreignKey: 'receivedBy' })
+		this.hasOne(models.User, { as: 'user', foreignKey: 'employeeId' })
 	}
 
 	static initialize(sequelize: Sequelize): void {

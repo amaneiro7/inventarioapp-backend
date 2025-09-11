@@ -1,5 +1,3 @@
-import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-
 /**
  * @interface AuthResponseDto
  * @description Defines the data transfer object for authentication responses.
@@ -11,8 +9,6 @@ export interface AuthResponseDto {
 		name: string
 		lastName: string
 		email: string
-		roleId: string
-		role: RolePrimitives
 	}
 	accessToken: string
 	refreshToken?: string

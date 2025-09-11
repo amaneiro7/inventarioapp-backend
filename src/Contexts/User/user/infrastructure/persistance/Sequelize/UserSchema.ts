@@ -8,6 +8,7 @@ import { type UserLastName } from '../../../domain/UserLastName'
 import { type UserPassword } from '../../../domain/UserPassword'
 import { type UserPrimitives } from '../../../domain/User'
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
 
 /**
  * @description Sequelize model for the User entity.
@@ -19,11 +20,13 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare roleId: Primitives<RoleId>
 	declare lastName: Primitives<UserLastName>
 	declare password: Primitives<UserPassword>
+	declare employeeId?: Primitives<EmployeeId>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'userId' })
 		this.hasMany(models.Shipment, { as: 'fromUser', foreignKey: 'sentBy' })
+		this.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employeeId' })
 	}
 
 	static initialize(sequelize: Sequelize): void {
@@ -33,8 +36,9 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
 				name: { type: DataTypes.STRING, allowNull: false },
 				lastName: { type: DataTypes.STRING, allowNull: false },
-				roleId: { type: DataTypes.INTEGER, allowNull: false },
-				password: { type: DataTypes.STRING(64), allowNull: false }
+				
+				password: { type: DataTypes.STRING(64), allowNull: false },
+				employeeId: { type: DataTypes.UUID, allowNull: true }
 			},
 			{
 				modelName: 'User',
@@ -44,6 +48,11 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				timestamps: true,
 				underscored: true,
 				sequelize
+			}
+		)
+	}
+}
+elize
 			}
 		)
 	}
