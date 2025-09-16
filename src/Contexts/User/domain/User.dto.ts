@@ -1,11 +1,9 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
-
-import { type UserEmail } from './UserEmail'
+import { type EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type LastLoginAt } from './LastLoginAt'
 import { type UserId } from './UserId'
-import { type UserLastName } from './UserLastName'
-import { type UserName } from './UserName'
 import { type UserPassword } from './UserPassword'
+import { type UserStatus } from './UserStatus'
 
 /**
  * @interface User
@@ -13,10 +11,8 @@ import { type UserPassword } from './UserPassword'
  */
 export interface User {
 	id: Primitives<UserId>
-	email: Primitives<UserEmail>
-	name: Primitives<UserName>
-	roleId: Primitives<RoleId>
-	lastName: Primitives<UserLastName>
+	lastLoginAt?: Primitives<LastLoginAt>
+	status: Primitives<UserStatus>
 	password: Primitives<UserPassword>
 	employeeId?: Primitives<EmployeeId>
 }
@@ -31,6 +27,4 @@ export type UserPrimitives = User
  * @type UserDto
  * @description Represents a Data Transfer Object (DTO) for the User entity.
  */
-export type UserDto = User
-
 export type UserDto = User
