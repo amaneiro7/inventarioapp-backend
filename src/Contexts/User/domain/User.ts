@@ -1,10 +1,10 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId'
 import { UserEmail } from './UserEmail'
 import { UserId } from './UserId'
 import { UserLastName } from './UserLastName'
 import { UserName } from './UserName'
 import { UserPassword } from './UserPassword'
-import { EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 
 /**
  * @interface UserPrimitives
@@ -47,7 +47,12 @@ export class User {
 	 * @param {object} params The parameters required to create a user.
 	 * @returns {User} A new User instance.
 	 */
-	static create({ email, name, lastName, employeeId }: Omit<UserPrimitives, 'id' | 'password' | 'userSecret' | 'roleId'>): User {
+	static create({
+		email,
+		name,
+		lastName,
+		employeeId
+	}: Omit<UserPrimitives, 'id' | 'password' | 'userSecret' | 'roleId'>): User {
 		const id = UserId.random()
 		const password = UserPassword.defaultPassword
 		return new User(
