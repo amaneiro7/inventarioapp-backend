@@ -51,7 +51,8 @@ export abstract class Monitoring {
 		)
 	}
 
-	updateLastSuccess(newLastSuccess: Primitives<MonitoringLastScan>): void {
+	updateLastSuccess(newLastSuccess?: Primitives<MonitoringLastScan>): void {
+		if (!newLastSuccess) return
 		this.lastSuccess = new (this.lastSuccess.constructor as new (
 			value: Primitives<MonitoringLastScan>
 		) => MonitoringLastScan)(newLastSuccess)
@@ -63,7 +64,8 @@ export abstract class Monitoring {
 		) => MonitoringLastSuccess)(newLastScan)
 	}
 
-	updateLastFailed(newLastFailed: Primitives<MonitoringLastFailed>): void {
+	updateLastFailed(newLastFailed?: Primitives<MonitoringLastFailed>): void {
+		if (!newLastFailed) return
 		this.lastFailed = new (this.lastFailed.constructor as new (
 			value: Primitives<MonitoringLastFailed>
 		) => MonitoringLastFailed)(newLastFailed)

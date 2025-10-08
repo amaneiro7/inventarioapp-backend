@@ -93,8 +93,8 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected updateMonitoringEntityStatus(
 		entity: DeviceMonitoring,
 		status: MonitoringStatuses,
-		lastSuccess: Date | null,
-		lastFailed: Date | null,
+		lastSuccess: Date | null | undefined,
+		lastFailed: Date | null | undefined,
 		lastScan: Date | null
 	): void {
 		entity.updateStatus(status)

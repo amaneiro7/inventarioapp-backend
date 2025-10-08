@@ -113,8 +113,8 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	protected abstract updateMonitoringEntityStatus(
 		entity: Entity,
 		status: MonitoringStatuses,
-		lastSuccess: Date | null,
-		lastFailed: Date | null,
+		lastSuccess: Date | null | undefined,
+		lastFailed: Date | null | undefined,
 		lastScan: Date | null
 	): void
 	protected abstract createMonitoringPayload(item: Entity): Payload
@@ -236,7 +236,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					monitoringEntity,
 					MonitoringStatuses.ONLINE,
 					new Date(),
-					null,
+					undefined,
 					new Date()
 				)
 				await this.pingLogger.logPingResult({
@@ -252,7 +252,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					monitoringEntity,
 					MonitoringStatuses.ONLINE,
 					new Date(),
-					null,
+					undefined,
 					new Date()
 				)
 				await this.pingLogger.logPingResult({
@@ -267,7 +267,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				this.updateMonitoringEntityStatus(
 					monitoringEntity,
 					MonitoringStatuses.OFFLINE,
-					null,
+					undefined,
 					new Date(),
 					new Date()
 				)
