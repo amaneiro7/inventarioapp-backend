@@ -17,7 +17,10 @@ export class EmployeeName extends AcceptedNullValueObject<string> {
 		private readonly type: Primitives<EmployeeType>
 	) {
 		super(value)
-		this.ensureIsValidName({ value, type: this.type })
+		if (value) {
+			this.value = value?.trim()
+		}
+		this.ensureIsValidName({ value: this.value, type: this.type })
 	}
 
 	private ensureIsValidName({ value, type }: { value: string | null; type: Primitives<EmployeeType> }): void {
