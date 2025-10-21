@@ -1,7 +1,7 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { type Employee } from '../entity/Employee'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
@@ -26,7 +26,7 @@ export class EmployeeName extends AcceptedNullValueObject<string> {
 	private ensureIsValidName({ value, type }: { value: string | null; type: Primitives<EmployeeType> }): void {
 		const errors: string[] = []
 
-		if (type !== EmployeeTypes.GENERIC && !value) {
+		if (type !== EmployeeTypesEnum.GENERIC && !value) {
 			errors.push('El nombre es requerido para este tipo de empleado.')
 		}
 

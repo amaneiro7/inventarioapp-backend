@@ -1,7 +1,9 @@
-import { UserId } from '../../User/user/domain/UserId'
+import { UserId } from '../../User/user/domain/valueObject/UserId'
 import { generateAccessToken, generateRefreshToken, type JwtPayloadUser } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
 import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNotExistError'
+import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
+import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
 import { type UserPrimitives } from '../../User/user/domain/User.dto'
 import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto'
@@ -38,7 +40,13 @@ export class AuthRefreshTokenUseCase {
 			employee: EmployeePrimitives
 		}
 
-		if (!user) {
+		if (
+			!user ||
+			user.status !== UserStatusEnum.ACTIVE ||
+			!user.employee ||
+			user.employee.type !== EmployeeTypesEnum.SERVICE ||
+			!user.employee.isStillWorking
+		) {
 			throw new UserDoesNotExistError(id)
 		}
 

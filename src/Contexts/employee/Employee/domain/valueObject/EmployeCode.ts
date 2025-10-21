@@ -4,7 +4,7 @@ import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteria'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
 
 interface EmployeeCodeProps {
@@ -25,7 +25,7 @@ export class EmployeeCode extends AcceptedNullValueObject<number> {
 	}
 
 	private ensureIsValidEmployeeCode({ value, type }: EmployeeCodeProps): void {
-		if (type !== EmployeeTypes.GENERIC && value === null) {
+		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
 			throw new InvalidArgumentError('El código del empleado es requerido para este tipo de empleado.')
 		}
 

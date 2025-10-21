@@ -11,13 +11,13 @@ export class LocalAuthStrategy extends LocalStrategy {
 	private readonly userLoginLocal: UserLoginLocal
 	constructor({ userLoginLocal }: { userLoginLocal: UserLoginLocal }) {
 		const options: IStrategyOptions = {
-			usernameField: 'email',
+			usernameField: 'userNameOrEmail',
 			passwordField: 'password'
 		}
 
-		super(options, async (email, password, done) => {
+		super(options, async (userNameOrEmail, password, done) => {
 			try {
-				const user = await this.userLoginLocal.run({ email, password })
+				const user = await this.userLoginLocal.run({ userNameOrEmail, password })
 				done(null, user)
 			} catch (error) {
 				done(error, false)

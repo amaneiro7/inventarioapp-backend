@@ -71,7 +71,7 @@ function generateToken({
  * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated access token.
  */
-export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
+export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${accessTokenExpiresIn}m`
 	return generateToken({
 		payload: user,
@@ -86,7 +86,7 @@ export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'email' | 
  * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated refresh token.
  */
-export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'email' | 'roleId'>): string {
+export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${refreshTokenExpiresIn}d`
 	return generateToken({
 		payload: user,

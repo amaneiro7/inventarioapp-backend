@@ -4,7 +4,7 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { CargoDoesNotExistError } from '../../../Cargo/domain/CargoDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 import { type CargoRepository } from '../../../Cargo/domain/CargoRepository'
 
 interface EmployeeCargoProps {
@@ -25,7 +25,7 @@ export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> 
 	}
 
 	private ensureIsValidCargo({ value, type }: EmployeeCargoProps): void {
-		if (type !== EmployeeTypes.GENERIC && value === null) {
+		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
 			throw new InvalidArgumentError('El cargo es requerido para este tipo de empleado.')
 		}
 

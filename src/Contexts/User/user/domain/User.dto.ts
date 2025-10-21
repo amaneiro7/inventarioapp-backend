@@ -8,6 +8,8 @@ import { type LastLoginAt } from './valueObject/LastLoginAt'
 import { type FailedAttemps } from './valueObject/FailedAttemps'
 import { type LockoutUntil } from './valueObject/LockoutUntil'
 import { type RoleId } from '../../Role/domain/RoleId'
+import { type RoleDto } from '../../Role/domain/Role.dto'
+import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 
 /**
  * @interface User
@@ -44,4 +46,7 @@ export type UserParams = Omit<User, 'id'>
  * @type UserDto
  * @description Represents a Data Transfer Object (DTO) for the User entity.
  */
-export type UserDto = User
+export type UserDto = User & {
+	role: RoleDto
+	employee: EmployeeDto
+}

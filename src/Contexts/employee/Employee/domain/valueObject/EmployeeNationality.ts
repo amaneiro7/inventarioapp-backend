@@ -1,7 +1,7 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 
 /**
  * @enum Nationalities
@@ -30,7 +30,7 @@ export class EmployeeNationality extends AcceptedNullValueObject<Nationalities> 
 	}
 
 	private ensureIsValidNationality({ value, type }: EmployeeNationalityProps): void {
-		if (type !== EmployeeTypes.GENERIC && value === null) {
+		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
 			throw new InvalidArgumentError('La nacionalidad del empleado es requerida para este tipo de empleado.')
 		}
 

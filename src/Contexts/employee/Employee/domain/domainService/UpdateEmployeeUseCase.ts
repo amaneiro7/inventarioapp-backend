@@ -1,4 +1,4 @@
-import { EmployeeTypes } from '../valueObject/EmployeeType'
+import { EmployeeTypesEnum } from '../valueObject/EmployeeType'
 import { EmployeeName } from '../valueObject/EmployeeName'
 import { EmployeeLastName } from '../valueObject/EmployeeLastName'
 import { EmployeeUserName } from '../valueObject/EmployeeUsername'
@@ -106,7 +106,7 @@ export class UpdateEmployeeUseCase {
 	}
 
 	private ensureEmployeeCanBeUpdated(entity: Employee): void {
-		if (entity.typeValue === EmployeeTypes.GENERIC) {
+		if (entity.typeValue === EmployeeTypesEnum.GENERIC) {
 			throw new Error('Los usuarios genéricos no pueden ser actualizados.')
 		}
 		if (entity.isStillWorkingValue === false) {

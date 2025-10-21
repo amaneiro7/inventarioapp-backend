@@ -5,7 +5,7 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { EmployeeAlreadyExistError } from '../Errors/EmployeeAlreadyExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../Repository/EmployeeRepository'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 
 interface EmployeeCedulaProps {
 	value: number | null
@@ -28,10 +28,10 @@ export class EmployeeCedula extends AcceptedNullValueObject<number> {
 	}
 
 	private ensureIsValidCedula({ value, type }: EmployeeCedulaProps): void {
-		if (type === EmployeeTypes.GENERIC && value !== null) {
+		if (type === EmployeeTypesEnum.GENERIC && value !== null) {
 			throw new InvalidArgumentError('La cédula del empleado no es requerida para este tipo de empleado.')
 		}
-		if (type !== EmployeeTypes.GENERIC && value === null) {
+		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
 			throw new InvalidArgumentError('La cédula del empleado es requerida para este tipo de empleado.')
 		}
 

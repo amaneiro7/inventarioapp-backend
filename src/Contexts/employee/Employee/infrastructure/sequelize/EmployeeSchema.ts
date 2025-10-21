@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { EmployeeTypes, type EmployeeType } from '../../domain/valueObject/EmployeeType'
+import { EmployeeTypesEnum, type EmployeeType } from '../../domain/valueObject/EmployeeType'
 import { Nationalities, type EmployeeNationality } from '../../domain/valueObject/EmployeeNationality'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
@@ -85,9 +85,9 @@ export class EmployeeModel
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
 				userName: { type: DataTypes.STRING, allowNull: false, unique: false },
 				type: {
-					type: DataTypes.ENUM(...Object.values(EmployeeTypes)),
+					type: DataTypes.ENUM(...Object.values(EmployeeTypesEnum)),
 					allowNull: false,
-					defaultValue: EmployeeTypes.REGULAR
+					defaultValue: EmployeeTypesEnum.REGULAR
 				},
 				name: { type: DataTypes.STRING, allowNull: true },
 				lastName: { type: DataTypes.STRING, allowNull: true },

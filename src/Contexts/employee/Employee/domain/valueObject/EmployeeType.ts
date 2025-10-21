@@ -2,10 +2,10 @@ import { EnumValueObject } from '../../../../Shared/domain/value-object/EnumValu
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 /**
- * @enum EmployeeTypes
+ * @enum EmployeeTypesEnum
  * @description Defines the possible types of employees.
  */
-export enum EmployeeTypes {
+export enum EmployeeTypesEnum {
 	GENERIC = 'generic',
 	REGULAR = 'regular',
 	SERVICE = 'service'
@@ -14,12 +14,12 @@ export enum EmployeeTypes {
 /**
  * @description Represents the type of an employee as a Value Object.
  */
-export class EmployeeType extends EnumValueObject<EmployeeTypes> {
-	constructor(public readonly value: EmployeeTypes) {
-		super(value, Object.values(EmployeeTypes))
+export class EmployeeType extends EnumValueObject<EmployeeTypesEnum> {
+	constructor(public readonly value: EmployeeTypesEnum) {
+		super(value, Object.values(EmployeeTypesEnum))
 	}
 
-	protected throwErrorForInvalidValue(value: EmployeeTypes): void {
+	protected throwErrorForInvalidValue(value: EmployeeTypesEnum): void {
 		throw new InvalidArgumentError(`Tipo de empleado inválido: '${value}'.`) // Improved error message
 	}
 }

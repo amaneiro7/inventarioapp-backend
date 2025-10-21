@@ -6,7 +6,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type Employee } from '../entity/Employee'
-import { type EmployeeType, EmployeeTypes } from './EmployeeType'
+import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 
 interface EmployeeDirectivaProps {
 	value: Primitives<DepartmentId> | null
@@ -22,7 +22,7 @@ export class EmployeeDirectiva extends AcceptedNullValueObject<Primitives<Depart
 	}
 
 	private ensureIsValidDirectiva({ value, type }: EmployeeDirectivaProps): void {
-		if (type !== EmployeeTypes.GENERIC && value === null) {
+		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
 			throw new InvalidArgumentError('La directiva jerárquica es requerida para este tipo de empleado.')
 		}
 

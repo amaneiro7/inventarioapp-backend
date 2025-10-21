@@ -6,7 +6,7 @@ import { type RoleRepository } from '../../Role/domain/RoleRepository'
 import { type EmployeeRepository } from '../../../../employee/Employee/domain/Repository/EmployeeRepository' // Import EmployeeRepository
 import { EmployeeDoesNotExistError } from '../../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError' // Import EmployeeDoesNotExistError
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { EmployeeTypes } from '../../../../employee/Employee/domain/valueObject/EmployeeType' // Import EmployeeTypes
+import { EmployeeTypesEnum } from '../../../../employee/Employee/domain/valueObject/EmployeeType' // Import EmployeeTypesEnum
 
 /**
  * @description Use case for registering a new user.
@@ -48,7 +48,7 @@ export class UserRegister {
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(payload.employeeId)
 		}
-		if (employee.type !== EmployeeTypes.SERVICE) {
+		if (employee.type !== EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
 				`El empleado con ID '${payload.employeeId}' no es de tipo 'service' y no puede tener una cuenta de usuario.`
 			)

@@ -1,6 +1,6 @@
 import { EmployeeId } from '../valueObject/EmployeeId'
 import { EmployeeUserName } from '../valueObject/EmployeeUsername'
-import { EmployeeType, EmployeeTypes } from '../valueObject/EmployeeType'
+import { EmployeeType, EmployeeTypesEnum } from '../valueObject/EmployeeType'
 import { EmployeeName } from '../valueObject/EmployeeName'
 import { EmployeeLastName } from '../valueObject/EmployeeLastName'
 import { EmployeeEmail } from '../valueObject/EmployeeEmail'
@@ -195,11 +195,11 @@ export class Employee {
 		this.lastName = new EmployeeLastName(newLastName, type)
 	}
 
-	updateType(newType: EmployeeTypes): void {
-		if (this.typeValue === EmployeeTypes.GENERIC && newType !== EmployeeTypes.GENERIC) {
+	updateType(newType: EmployeeTypesEnum): void {
+		if (this.typeValue === EmployeeTypesEnum.GENERIC && newType !== EmployeeTypesEnum.GENERIC) {
 			throw new InvalidArgumentError(`El tipo de empleado GENERIC no puede ser cambiado a ${newType}.`)
 		}
-		if (this.typeValue !== EmployeeTypes.GENERIC && newType === EmployeeTypes.GENERIC) {
+		if (this.typeValue !== EmployeeTypesEnum.GENERIC && newType === EmployeeTypesEnum.GENERIC) {
 			throw new InvalidArgumentError(`El tipo de empleado no GENERIC no puede ser cambiado a GENERIC.`)
 		}
 		this.type = new EmployeeType(newType)
