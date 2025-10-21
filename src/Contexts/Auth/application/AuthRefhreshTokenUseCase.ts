@@ -1,10 +1,11 @@
 import { UserId } from '../../User/user/domain/UserId'
 import { generateAccessToken, generateRefreshToken, type JwtPayloadUser } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
-import { UserDoesNotExistError } from '../../User/user/domain/UserDoesNotExistError'
+import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNotExistError'
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-import { type UserPrimitives } from '../../User/user/domain/User'
-import { type UserRepository } from '../../User/user/domain/UserRepository'
+import { type UserPrimitives } from '../../User/user/domain/User.dto'
+import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto'
+import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type AuthResponseDto } from '../domain/Auth.dto'
 
 /**
@@ -32,7 +33,10 @@ export class AuthRefreshTokenUseCase {
 	async run(jwtToken: JwtPayloadUser): Promise<AuthResponseDto> {
 		const id = new UserId(jwtToken.sub).value
 
-		const user = (await this.userRepository.searchById(id)) as UserPrimitives & { role: RolePrimitives }
+		const user = (await this.userRepository.searchById(id)) as UserPrimitives & {
+			role: RolePrimitives
+			employee: EmployeePrimitives
+		}
 
 		if (!user) {
 			throw new UserDoesNotExistError(id)

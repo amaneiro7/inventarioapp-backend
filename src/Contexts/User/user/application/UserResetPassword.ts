@@ -1,9 +1,9 @@
 import { User } from '../domain/User'
-import { UserId } from '../domain/UserId'
-import { UserPassword } from '../domain/UserPassword'
+import { UserId } from '../domain/valueObject/UserId'
+import { UserPassword } from '../domain/valueObject/UserPassword'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
-import { type UserRepository } from '../domain/UserRepository'
+import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
+import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
@@ -31,7 +31,7 @@ export class UserResetPassword {
 		const userToResetPassword = await this.userRepository.searchById(userId)
 
 		if (!userToResetPassword) {
-			throw new UserDoesNotExistError(id)
+			throw new UserDoesNotExistError(id) // Use id for the error
 		}
 
 		const userEntity = User.fromPrimitives(userToResetPassword)

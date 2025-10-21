@@ -1,9 +1,9 @@
-import { UserId } from '../domain/UserId'
+import { UserId } from '../domain/valueObject/UserId'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
+import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type UserRepository } from '../domain/UserRepository'
+import { type UserRepository } from '../domain/Repository/UserRepository'
 
 /**
  * @description Use case for removing a user.
@@ -29,7 +29,7 @@ export class UserRemover {
 		const userToDelete = await this.userRepository.searchById(userId)
 
 		if (!userToDelete) {
-			throw new UserDoesNotExistError(userId)
+			throw new UserDoesNotExistError(userId) // Use userId for the error
 		}
 
 		await this.userRepository.delete(id)

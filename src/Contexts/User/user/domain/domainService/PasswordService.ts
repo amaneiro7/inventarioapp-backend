@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { InvalidCredentialsError } from '../../../Auth/domain/InvalidCredentialsError'
+import { InvalidCredentialsError } from '../../../../Auth/domain/InvalidCredentialsError'
 
 /**
  * @description Provides utility methods for hashing and comparing passwords.

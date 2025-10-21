@@ -1,6 +1,6 @@
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { PasswordService } from './PasswordService'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
+import { PasswordService } from '../domainService/PasswordService'
 
 /**
  * @description Represents a user's password.
@@ -14,10 +14,15 @@ export class UserPassword extends StringValueObject {
 
 	static readonly defaultPassword = 'Avion01.'
 
-	constructor(readonly value: string) {
+	constructor(
+		readonly value: string,
+		fromPrimitives = false
+	) {
 		super(value)
-		this.ensureIsValidPassword(value)
-		this.value = PasswordService.hash(this.value) // Hash the password before storing
+		if (!fromPrimitives) {
+			this.ensureIsValidPassword(value)
+			this.value = PasswordService.hash(this.value) // Hash the password before storing
+		}
 	}
 
 	private ensureIsValidPassword(value: string): void {

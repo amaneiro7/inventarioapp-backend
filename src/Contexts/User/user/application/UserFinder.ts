@@ -1,11 +1,11 @@
-import { UserId } from '../domain/UserId'
-import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
+import { UserId } from '../domain/valueObject/UserId'
+import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type UserPrimitives } from '../domain/User'
-import { type UserRepository } from '../domain/UserRepository'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives' // Corrected path for Primitives
+import { type UserPrimitivesOptional } from '../domain/User.dto' // Use User.dto
+import { type UserRepository } from '../domain/Repository/UserRepository'
 
 /**
  * @description Use case for finding a user by their ID.
@@ -24,13 +24,8 @@ export class UserFinder {
 	 * @throws {UserDoesNotExistError} If the user is not found or if the user is an admin (to prevent exposing admin data).
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 */
-	async run({
-		id,
-		user
-	}: {
-		user?: JwtPayloadUser
-		id: Primitives<UserId>
-	}): Promise<Omit<UserPrimitives, 'password'>> {
+	async run({ id, user }: { user?: JwtPayloadUser; id: Primitives<UserId> }): Promise<UserPrimitivesOptional> {
+		// Return UserPrimitivesOptional
 		isSuperAdmin({ user })
 
 		const userId = new UserId(id).value
@@ -38,7 +33,7 @@ export class UserFinder {
 
 		if (!foundUser) {
 			throw new UserDoesNotExistError(userId)
-		}
+		} // Use userId for the error
 
 		if (`${foundUser.roleId}` === `${RoleId.Options.ADMIN}`) {
 			throw new UserDoesNotExistError('Usuario no encontrado.') // Generic error to hide admin existence

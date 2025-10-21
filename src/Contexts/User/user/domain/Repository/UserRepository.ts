@@ -1,8 +1,9 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type UserId } from './UserId'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type UserPrimitivesOptional, type UserPrimitives } from './User'
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type UserPrimitives, type UserPrimitivesOptional } from '../User.dto' // Import UserPrimitivesOptional
+import { type UserId } from '../valueObject/UserId' // Corrected path for UserId
+import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
 
 /**
  * @abstract
@@ -26,7 +27,7 @@ export abstract class UserRepository {
 	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
 	 * @returns {Promise<ResponseDB<UserPrimitivesOptional>>} A promise that resolves to a paginated response containing User DTOs.
 	 */
-	abstract searchAll(criteria: Criteria): Promise<ResponseDB<UserPrimitivesOptional>>
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<UserPrimitivesOptional>> // Updated return type
 
 	/**
 	 * @abstract
@@ -39,12 +40,12 @@ export abstract class UserRepository {
 
 	/**
 	 * @abstract
-	 * @method searchByEmail
-	 * @description Retrieves a single User entity by its email address.
-	 * @param {string} userEmail The email address of the User to search for.
+	 * @method searchByEmployeeId
+	 * @description Retrieves a single User entity by its associated employee ID.
+	 * @param {Primitives<EmployeeId>} employeeId The employee ID of the User to search for.
 	 * @returns {Promise<UserPrimitives | null>} A promise that resolves to the User DTO if found, or null otherwise.
 	 */
-	abstract searchByEmail(userEmail: string): Promise<UserPrimitives | null>
+	abstract searchByEmployeeId(employeeId: Primitives<EmployeeId>): Promise<UserPrimitives | null>
 
 	/**
 	 * @abstract

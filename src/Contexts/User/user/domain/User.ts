@@ -1,29 +1,14 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { RoleId } from '../../Role/domain/RoleId'
-import { UserEmail } from './UserEmail'
-import { UserId } from './UserId'
-import { UserLastName } from './UserLastName'
-import { UserName } from './UserName'
-import { UserPassword } from './UserPassword'
-
-/**
- * @interface UserPrimitives
- * @description Represents the primitive data types of a User entity.
- */
-export interface UserPrimitives {
-	id: Primitives<UserId>
-	email: Primitives<UserEmail>
-	name: Primitives<UserName>
-	roleId: Primitives<RoleId>
-	lastName: Primitives<UserLastName>
-	password: Primitives<UserPassword>
-}
-
-/**
- * @type UserPrimitivesOptional
- * @description Represents optional primitive data types for updating a User entity.
- */
-export type UserPrimitivesOptional = Partial<UserPrimitives>
+import { type UserParams, type UserPrimitives } from './User.dto'
+import { UserId } from './valueObject/UserId' // Corrected path for UserId
+import { UserPassword } from './valueObject/UserPassword' // Corrected path for UserPassword
+import { EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
+import { UserStatus, UserStatusEnum } from './valueObject/UserStatus'
+import { PasswordChangeAt } from './valueObject/PasswordChangeAt'
+import { LastLoginAt } from './valueObject/LastLoginAt'
+import { FailedAttemps } from './valueObject/FailedAttemps'
+import { LockoutUntil } from './valueObject/LockoutUntil'
 
 /**
  * @class User
@@ -32,12 +17,15 @@ export type UserPrimitivesOptional = Partial<UserPrimitives>
  */
 export class User {
 	constructor(
-		private readonly id: UserId,
-		private email: UserEmail,
-		private name: UserName,
-		private roleId: RoleId,
-		private lastName: UserLastName,
-		private password: UserPassword
+		private readonly id: UserId, // The unique identifier for the user.
+		private employeeId: EmployeeId, // The ID of the associated employee.
+		private roleId: RoleId, // The ID of the user's role.
+		private status: UserStatus, // The current status of the user (e.g., ACTIVE, LOCKED).
+		private password: UserPassword, // The user's hashed password.
+		private passwordChangeAt: PasswordChangeAt, // The timestamp of the last password change.
+		private lastLoginAt: LastLoginAt, // The timestamp of the last successful login.
+		private failedAttemps: FailedAttemps, // The number of consecutive failed login attempts.
+		private lockoutUntil: LockoutUntil // The timestamp until which the user is locked out.
 	) {}
 
 	/**
@@ -47,16 +35,20 @@ export class User {
 	 * @param {object} params The parameters required to create a user.
 	 * @returns {User} A new User instance.
 	 */
-	static create({ email, name, lastName, roleId }: Omit<UserPrimitives, 'id' | 'password' | 'userSecret'>): User {
+	static create(params: UserParams): User {
 		const id = UserId.random()
-		const password = UserPassword.defaultPassword
+		const password = new UserPassword(UserPassword.defaultPassword)
+		const now = new Date()
 		return new User(
 			id,
-			new UserEmail(email),
-			new UserName(name),
-			new RoleId(roleId),
-			new UserLastName(lastName),
-			new UserPassword(password)
+			new EmployeeId(params.employeeId),
+			new RoleId(params.roleId),
+			new UserStatus(UserStatusEnum.ACTIVE),
+			password,
+			new PasswordChangeAt(now),
+			new LastLoginAt(null),
+			new FailedAttemps(0),
+			new LockoutUntil(null)
 		)
 	}
 
@@ -68,9 +60,9 @@ export class User {
 	 * @returns {boolean} True if the user is a super admin, false otherwise.
 	 */
 	static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
-		const parseToStringRole = String(roleId)
-		const acceptedAdminRoles = [RoleId.Options.ADMIN, RoleId.Options.COORD]
-		return acceptedAdminRoles.includes(parseToStringRole)
+		const stringRoleId = String(roleId)
+		const acceptedAdminRoles = [String(RoleId.Options.ADMIN), String(RoleId.Options.COORD)]
+		return acceptedAdminRoles.includes(stringRoleId)
 	}
 
 	/**
@@ -83,11 +75,14 @@ export class User {
 	static fromPrimitives(primitives: UserPrimitives): User {
 		return new User(
 			new UserId(primitives.id),
-			new UserEmail(primitives.email),
-			new UserName(primitives.name),
+			new EmployeeId(primitives.employeeId),
 			new RoleId(primitives.roleId),
-			new UserLastName(primitives.lastName),
-			new UserPassword(primitives.password)
+			new UserStatus(primitives.status),
+			new UserPassword(primitives.password, true), // Assume password from DB is already hashed
+			new PasswordChangeAt(primitives.passwordChangeAt),
+			new LastLoginAt(primitives.lastLoginAt),
+			new FailedAttemps(primitives.failedAttemps),
+			new LockoutUntil(primitives.lockoutUntil)
 		)
 	}
 
@@ -99,57 +94,91 @@ export class User {
 	toPrimitives(): UserPrimitives {
 		return {
 			id: this.idValue,
-			name: this.nameValue,
-			lastName: this.lastNameValue,
-			email: this.emailValue,
+			employeeId: this.employeeIdValue,
 			roleId: this.roleValue,
-			password: this.passwordValue
+			status: this.statusValue,
+			password: this.passwordValue,
+			passwordChangeAt: this.passwordChangeAtValue,
+			lastLoginAt: this.lastLoginAtValue,
+			failedAttemps: this.failedAttempsValue,
+			lockoutUntil: this.lockoutUntilValue
 		}
 	}
 
 	/**
-	 * @method updateEmail
-	 * @description Updates the email of the user.
-	 * @param {Primitives<UserEmail>} newEmail The new email for the user.
+	 * @description Increments the failed login attempts counter.
 	 */
-	updateEmail(newEmail: Primitives<UserEmail>): void {
-		this.email = new UserEmail(newEmail)
+	incrementFailedLoginAttempts(): void {
+		this.failedAttemps = new FailedAttemps(this.failedAttemps.value + 1)
 	}
 
 	/**
-	 * @method updateName
-	 * @description Updates the first name of the user.
-	 * @param {Primitives<UserName>} newName The new first name for the user.
+	 * @description Locks the user account and sets the lockout period.
 	 */
-	updateName(newName: Primitives<UserName>): void {
-		this.name = new UserName(newName)
+	lockAccount(): void {
+		this.status = new UserStatus(UserStatusEnum.LOCKED)
+		const lockoutTime = new Date()
+		lockoutTime.setMinutes(lockoutTime.getMinutes() + 15) // Lock for 15 minutes
+		this.lockoutUntil = new LockoutUntil(lockoutTime)
 	}
 
 	/**
-	 * @method updateLastName
-	 * @description Updates the last name of the user.
-	 * @param {Primitives<UserLastName>} newLastName The new last name for the user.
+	 * @description Resets login attempts and updates last login time on successful authentication.
 	 */
-	updateLastName(newLastName: Primitives<UserLastName>): void {
-		this.lastName = new UserLastName(newLastName)
+	resetLoginAttempts(): void {
+		this.failedAttemps = new FailedAttemps(0)
+		this.lastLoginAt = new LastLoginAt(new Date())
+		this.lockoutUntil = new LockoutUntil(null)
+		if (this.statusValue === UserStatusEnum.LOCKED) {
+			this.status = new UserStatus(UserStatusEnum.ACTIVE)
+		}
+	}
+
+	/**
+	 * @description Checks if the user account is currently locked.
+	 * @returns {boolean} True if the account is locked and the lockout period has not expired.
+	 */
+	isLocked(): boolean {
+		if (this.statusValue !== UserStatusEnum.LOCKED || this.lockoutUntil.value === null) {
+			return false
+		}
+		const isStillLocked = new Date() < this.lockoutUntil.value
+		if (!isStillLocked) {
+			// If lockout time has passed, unlock the user automatically
+			this.status = new UserStatus(UserStatusEnum.ACTIVE)
+			this.lockoutUntil = new LockoutUntil(null)
+			this.failedAttemps = new FailedAttemps(0)
+			return false
+		}
+		return true
 	}
 
 	/**
 	 * @method updateRole
 	 * @description Updates the role of the user.
-	 * @param {Primitives<RoleId>} newRole The new role ID for the user.
+	 * @param {Primitives<RoleId>} newRoleId The new role ID for the user.
 	 */
-	updateRole(newRole: Primitives<RoleId>): void {
-		this.roleId = new RoleId(newRole)
+	updateRole(newRoleId: Primitives<RoleId>): void {
+		this.roleId = new RoleId(newRoleId)
+	}
+
+	/**
+	 * @method updateStatus
+	 * @description Updates the status of the user.
+	 * @param {UserStatusEnum} newStatus The new status for the user.
+	 */
+	updateStatus(newStatus: UserStatusEnum): void {
+		this.status = new UserStatus(newStatus)
 	}
 
 	/**
 	 * @method updatePassword
 	 * @description Updates the password of the user.
-	 * @param {Primitives<UserPassword>} newPassword The new password for the user.
+	 * @param {string} newPassword The new password for the user.
 	 */
-	updatePassword(newPassword: Primitives<UserPassword>): void {
+	updatePassword(newPassword: string): void {
 		this.password = new UserPassword(newPassword)
+		this.passwordChangeAt = new PasswordChangeAt(new Date())
 	}
 
 	/**
@@ -161,27 +190,11 @@ export class User {
 	}
 
 	/**
-	 * @property {string} emailValue
-	 * @description Getter for the primitive value of the user's email.
+	 * @property {string} employeeIdValue
+	 * @description Getter for the primitive value of the user's associated employee ID.
 	 */
-	get emailValue(): Primitives<UserEmail> {
-		return this.email.value
-	}
-
-	/**
-	 * @property {string} nameValue
-	 * @description Getter for the primitive value of the user's first name.
-	 */
-	get nameValue(): Primitives<UserName> {
-		return this.name.value
-	}
-
-	/**
-	 * @property {string} lastNameValue
-	 * @description Getter for the primitive value of the user's last name.
-	 */
-	get lastNameValue(): Primitives<UserLastName> {
-		return this.lastName.value
+	get employeeIdValue(): Primitives<EmployeeId> {
+		return this.employeeId.value
 	}
 
 	/**
@@ -189,7 +202,15 @@ export class User {
 	 * @description Getter for the primitive value of the user's role ID.
 	 */
 	get roleValue(): Primitives<RoleId> {
-		return this.roleId.value
+		return this.roleId.value // Corrected type to Primitives<RoleId>
+	}
+
+	/**
+	 * @property {UserStatusEnum} statusValue
+	 * @description Getter for the primitive value of the user's status.
+	 */
+	get statusValue(): UserStatusEnum {
+		return this.status.value
 	}
 
 	/**
@@ -198,5 +219,21 @@ export class User {
 	 */
 	get passwordValue(): Primitives<UserPassword> {
 		return this.password.value
+	}
+
+	get passwordChangeAtValue(): Primitives<PasswordChangeAt> {
+		return this.passwordChangeAt.value
+	}
+
+	get lastLoginAtValue(): Primitives<LastLoginAt> {
+		return this.lastLoginAt.value
+	}
+
+	get failedAttempsValue(): Primitives<FailedAttemps> {
+		return this.failedAttemps.value
+	}
+
+	get lockoutUntilValue(): Primitives<LockoutUntil> {
+		return this.lockoutUntil.value
 	}
 }

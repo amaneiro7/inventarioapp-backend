@@ -12,7 +12,7 @@ export class UsersAssociation {
 	 * @returns {FindOptions} The modified Sequelize FindOptions object.
 	 */
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = ['role']
+		options.include = ['role', 'employee'] // Include employee
 		return options
 	}
 }
