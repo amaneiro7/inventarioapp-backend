@@ -1,11 +1,13 @@
 import { generateAccessToken, generateRefreshToken } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-import { type UserPrimitives } from '../../User/user/domain/User'
+import { type UserPrimitives } from '../../User/user/domain/User.dto' // Use User.dto
 import { type AuthResponseDto } from '../domain/Auth.dto'
+import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto' // Import EmployeePrimitives
 
 type ReqUser = UserPrimitives & {
 	role: RolePrimitives
+	employee: EmployeePrimitives // Assume employee is always included
 }
 
 /**

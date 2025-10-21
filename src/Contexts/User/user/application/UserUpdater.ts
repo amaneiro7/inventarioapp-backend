@@ -1,14 +1,15 @@
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { User, type UserPrimitives } from '../domain/User'
-import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
-import { UserId } from '../domain/UserId'
-import { UserEmail } from '../domain/UserEmail'
-import { UserLastName } from '../domain/UserLastName'
-import { UserName } from '../domain/UserName'
-import { UserRole } from '../domain/UserRole'
+import { User} from '../domain/User'
+import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
+import { UserId } from '../domain/valueObject/UserId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type RoleRepository } from '../../Role/domain/RoleRepository'
-import { type UserRepository } from '../domain/UserRepository'
+import { type UserRepository } from '../domain/Repository/UserRepository'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type RoleId } from '../../Role/domain/RoleId'
+import { UserStatusEnum } from '../domain/valueObject/UserStatus'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { UserPrimitives } from '../domain/User.dto'
 
 type Payload = Omit<UserPrimitives, 'id' | 'password'>
 
@@ -29,15 +30,20 @@ export class UserUpdater {
 		this.userRepository = userRepository
 		this.roleRepository = roleRepository
 	}
-
+	
+	// Define a new type for the update payload, reflecting the new User structure
+	type UserUpdatePayload = {
+		roleId?: Primitives<RoleId>
+		status?: UserStatusEnum
+	}
 	/**
 	 * @description Executes the user update process.
-	 * @param {{ user?: JwtPayloadUser; id: string; payload: Partial<Payload> }} params The parameters for updating the user.
+	 * @param {{ user?: JwtPayloadUser; id: string; payload: UserUpdatePayload }} params The parameters for updating the user.
 	 * @returns {Promise<void>} A promise that resolves when the user is successfully updated.
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 * @throws {UserDoesNotExistError} If the user to be updated does not exist.
 	 */
-	async run({ user, id, payload }: { user?: JwtPayloadUser; id: string; payload: Partial<Payload> }): Promise<void> {
+	async run({ user, id, payload }: { user?: JwtPayloadUser; id: string; payload: UserUpdatePayload }): Promise<void> {
 		isSuperAdmin({ user })
 
 		const userId = new UserId(id).value
@@ -49,12 +55,21 @@ export class UserUpdater {
 
 		const userEntity = User.fromPrimitives(userToUpdate)
 
-		await Promise.all([
-			UserName.updateNameField({ entity: userEntity, name: payload.name }),
-			UserLastName.updateLastNameField({ entity: userEntity, lastName: payload.lastName }),
-			UserEmail.updateEmailField({ repository: this.userRepository, entity: userEntity, email: payload.email }),
-			UserRole.updateStatusField({ repository: this.roleRepository, entity: userEntity, role: payload.roleId })
-		])
+		let hasChanges = false
+
+		if (payload.roleId !== undefined && userEntity.roleValue !== payload.roleId) {
+			const role = await this.roleRepository.searchById(payload.roleId)
+			if (!role) {
+				throw new InvalidArgumentError(`El rol con ID '${payload.roleId}' no existe.`)
+			}
+			userEntity.updateRole(payload.roleId)
+			hasChanges = true
+		}
+
+		if (payload.status !== undefined && userEntity.statusValue !== payload.status) {
+			userEntity.updateStatus(payload.status)
+			hasChanges = true
+		}
 
 		await this.userRepository.save(userEntity.toPrimitives())
 	}

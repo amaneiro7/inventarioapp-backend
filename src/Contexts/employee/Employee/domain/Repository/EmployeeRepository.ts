@@ -5,6 +5,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type EmployeeDto, type EmployeePrimitives } from '../entity/Employee.dto'
 import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
 import { type EmployeeId } from '../valueObject/EmployeeId'
+import { type EmployeeUserName } from '../valueObject/EmployeeUsername' // Import EmployeeUserName
 
 /**
  * @abstract
@@ -65,6 +66,15 @@ export abstract class EmployeeRepository {
 	 * @returns {Promise<Nullable<EmployeeDto>>} A promise that resolves to the Employee DTO if found, or null otherwise.
 	 */
 	abstract searchByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>>
+
+	/**
+	 * @abstract
+	 * @method searchByUserName
+	 * @description Retrieves a single Employee entity by its username.
+	 * @param {Primitives<EmployeeUserName>} userName The username of the Employee to search for.
+	 * @returns {Promise<Nullable<EmployeeDto>>} A promise that resolves to the Employee DTO if found, or null otherwise.
+	 */
+	abstract searchByUserName(userName: Primitives<EmployeeUserName>): Promise<Nullable<EmployeeDto>>
 
 	/**
 	 * @abstract

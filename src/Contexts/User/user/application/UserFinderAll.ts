@@ -2,8 +2,8 @@ import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type UserPrimitivesOptional } from '../domain/User'
-import { type UserRepository } from '../domain/UserRepository'
+import { type UserPrimitivesOptional } from '../domain/User.dto' // Use User.dto
+import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 
 /**
@@ -37,10 +37,13 @@ export class UserFinderAll {
 			.filter(user => user.roleId !== RoleId.Options.ADMIN)
 			.map(user => ({
 				id: user.id,
-				email: user.email,
-				lastName: user.lastName,
-				name: user.name,
-				roleId: `${user.roleId}`
+				employeeId: user.employeeId, // Added employeeId
+				roleId: `${user.roleId}`,
+				status: user.status, // Added status
+				passwordChangeAt: user.passwordChangeAt, // Added passwordChangeAt
+				lastLoginAt: user.lastLoginAt, // Added lastLoginAt
+				failedAttemps: user.failedAttemps, // Added failedAttemps
+				lockoutUntil: user.lockoutUntil // Added lockoutUntil
 			}))
 
 		return {

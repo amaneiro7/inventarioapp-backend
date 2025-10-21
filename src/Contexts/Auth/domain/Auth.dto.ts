@@ -1,4 +1,6 @@
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
+import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto' // Import EmployeePrimitives
+import { type UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus' // Import UserStatusEnum
 
 /**
  * @interface AuthResponseDto
@@ -8,11 +10,11 @@ import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
 export interface AuthResponseDto {
 	user: {
 		id: string
-		name: string
-		lastName: string
-		email: string
+		employeeId: string // Added employeeId
 		roleId: string
+		status: UserStatusEnum // Added status
 		role: RolePrimitives
+		employee?: Omit<EmployeePrimitives, 'password'> // Optionally include employee details
 	}
 	accessToken: string
 	refreshToken?: string

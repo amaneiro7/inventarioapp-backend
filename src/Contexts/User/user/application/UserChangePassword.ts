@@ -1,10 +1,10 @@
 import { User } from '../domain/User'
-import { UserDoesNotExistError } from '../domain/UserDoesNotExistError'
+import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { UserId } from '../domain/UserId'
-import { PasswordService } from '../domain/PasswordService'
+import { UserId } from '../domain/valueObject/UserId'
+import { PasswordService } from '../domain/domainService/PasswordService'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type UserRepository } from '../domain/UserRepository'
+import { type UserRepository } from '../domain/Repository/UserRepository'
 
 /**
  * @description Use case for changing a user's password.
@@ -42,7 +42,7 @@ export class UserChangePassword {
 		const user = await this.userRepository.searchById(userId)
 
 		if (!user) {
-			throw new UserDoesNotExistError(payload.sub)
+			throw new UserDoesNotExistError(payload.sub) // Use payload.sub (UserId) for the error
 		}
 
 		PasswordService.compare(password, user.password)

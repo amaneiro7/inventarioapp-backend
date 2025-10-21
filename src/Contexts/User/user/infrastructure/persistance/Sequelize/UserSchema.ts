@@ -1,27 +1,34 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type UserId } from '../../../domain/UserId'
-import { type UserEmail } from '../../../domain/UserEmail'
-import { type UserName } from '../../../domain/UserName'
+import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
 import { type RoleId } from '../../../../Role/domain/RoleId'
-import { type UserLastName } from '../../../domain/UserLastName'
-import { type UserPassword } from '../../../domain/UserPassword'
-import { type UserPrimitives } from '../../../domain/User'
+import { type UserPassword } from '../../../domain/valueObject/UserPassword'
+import { type UserPrimitives } from '../../../domain/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
+import { type UserStatusEnum } from '../../../domain/valueObject/UserStatus'
+import { type PasswordChangeAt } from '../../../domain/valueObject/PasswordChangeAt'
+import { type LastLoginAt } from '../../../domain/valueObject/LastLoginAt'
+import { type FailedAttemps } from '../../../domain/valueObject/FailedAttemps'
+import { type LockoutUntil } from '../../../domain/valueObject/LockoutUntil'
 
 /**
  * @description Sequelize model for the User entity.
  */
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare id: Primitives<UserId>
-	declare email: Primitives<UserEmail>
-	declare name: Primitives<UserName>
+	declare employeeId: Primitives<EmployeeId>
 	declare roleId: Primitives<RoleId>
-	declare lastName: Primitives<UserLastName>
 	declare password: Primitives<UserPassword>
+	declare status: UserStatusEnum // Use enum type directly for Sequelize
+	declare passwordChangeAt: Primitives<PasswordChangeAt>
+	declare lastLoginAt: Primitives<LastLoginAt> | null
+	declare failedAttemps: Primitives<FailedAttemps>
+	declare lockoutUntil: Primitives<LockoutUntil> | null
 
 	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' })
+		this.belongsTo(models.Employee, { as: 'employee', foreignKey: 'employeeId' }) // Add association to Employee
 		this.hasMany(models.History, { as: 'history', foreignKey: 'userId' })
 		this.hasMany(models.Shipment, { as: 'fromUser', foreignKey: 'sentBy' })
 	}
@@ -30,11 +37,18 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 		this.init(
 			{
 				id: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
-				email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
-				name: { type: DataTypes.STRING, allowNull: false },
-				lastName: { type: DataTypes.STRING, allowNull: false },
+				employeeId: { type: DataTypes.UUID, allowNull: false, unique: true }, // EmployeeId is unique for a user
 				roleId: { type: DataTypes.INTEGER, allowNull: false },
-				password: { type: DataTypes.STRING(64), allowNull: false }
+				status: {
+					type: DataTypes.ENUM('ACTIVE', 'LOCKED', 'SUSPENDED'), // Define enum values
+					allowNull: false,
+					defaultValue: 'ACTIVE'
+				},
+				password: { type: DataTypes.STRING(64), allowNull: false },
+				passwordChangeAt: { type: DataTypes.DATE, allowNull: false },
+				lastLoginAt: { type: DataTypes.DATE, allowNull: true },
+				failedAttemps: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+				lockoutUntil: { type: DataTypes.DATE, allowNull: true }
 			},
 			{
 				modelName: 'User',

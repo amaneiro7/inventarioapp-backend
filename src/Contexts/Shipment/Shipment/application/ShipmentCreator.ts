@@ -2,17 +2,17 @@ import { Shipment } from '../domain/entity/Shipment'
 import { SiteDoesNotExistError } from '../../../Location/Site/domain/SiteDoesNotExistError'
 import { DeviceDoesNotExistError } from '../../../Device/Device/domain/DeviceDoesNotExistError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
-import { UserDoesNotExistError } from '../../../User/user/domain/UserDoesNotExistError'
+import { UserDoesNotExistError } from '../../../User/user/domain/Errors/UserDoesNotExistError'
 
 import { type ShipmentRepository } from '../domain/repository/ShipmentRepository'
 import { ShipmentDto, type ShipmentParams } from '../domain/entity/Shipment.dto'
 import { type SiteRepository } from '../../../Location/Site/domain/SiteRepository'
-import { type UserRepository } from '../../../User/user/domain/UserRepository'
+import { type UserRepository } from '../../../User/user/domain/Repository/UserRepository'
 import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ReceivedBy } from '../domain/valueObject/ReceivedBy'
 import { type SiteId } from '../../../Location/Site/domain/SiteId'
-import { type UserId } from '../../../User/user/domain/UserId'
+import { type UserId } from '../../../User/user/domain/valueObject/UserId'
 import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
@@ -107,7 +107,7 @@ export class ShipmentCreator {
 	}
 
 	private async ensureUserExist(userId: Primitives<UserId>): Promise<void> {
-		const user = await this.userRepository.searchById(userId)
+		const user = await this.userRepository.searchById(userId) // This will now fetch UserPrimitives with new fields
 		if (user === null) {
 			throw new UserDoesNotExistError(userId)
 		}

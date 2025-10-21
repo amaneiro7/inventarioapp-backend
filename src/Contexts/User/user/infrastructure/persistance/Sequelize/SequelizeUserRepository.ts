@@ -1,14 +1,15 @@
-import { type UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User'
+import { type UserPrimitivesOptional, type UserPrimitives } from '../../../domain/User.dto' // Use User.dto
 import { UserModel } from './UserSchema'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { UsersAssociation } from './UsersAssociation'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../../../Shared/domain/CacheService'
-import { type UserRepository } from '../../../domain/UserRepository'
-import { type UserId } from '../../../domain/UserId'
+import { type UserRepository } from '../../../domain/Repository/UserRepository'
+import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
 import { Op } from 'sequelize'
 
 /**
@@ -33,19 +34,27 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
 				const { count, rows } = await UserModel.findAndCountAll(opt)
-				return { total: count, data: rows.map(row => row.get({ plain: true })) }
+				// Ensure that 'password' is omitted from the returned data
+				const dataWithoutPassword = rows.map(row => {
+					const { password, ...rest } = row.get({ plain: true })
+					return rest
+				})
+				return { total: count, data: dataWithoutPassword }
 			}
 		})
 	}
 
-	async searchByEmail(userEmail: string): Promise<UserPrimitives | null> {
-		const cacheKey = `${this.cacheKeyPrefix}:email:${userEmail}`
+	// Removed searchByEmail as User entity no longer has an email field.
+	// async searchByEmail(userEmail: string): Promise<UserPrimitives | null> { ... }
+
+	async searchByEmployeeId(employeeId: Primitives<EmployeeId>): Promise<UserPrimitives | null> {
+		const cacheKey = `${this.cacheKeyPrefix}:employeeId:${employeeId}`
 
 		return this.cache.getCachedData<UserPrimitives | null>({
 			cacheKey,
-			ttl: TimeTolive.VERY_LONG,
+			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const user = await UserModel.findOne({ where: { email: { [Op.iLike]: userEmail } }, include: ['role'] })
+				const user = await UserModel.findOne({ where: { employeeId }, include: ['role', 'employee'] }) // Include employee
 				return user ? user.get({ plain: true }) : null
 			}
 		})
@@ -58,7 +67,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const user = await UserModel.findByPk(id, { include: ['role'] })
+				const user = await UserModel.findByPk(id, { include: ['role', 'employee'] }) // Include employee
 				return user ? user.get({ plain: true }) : null
 			}
 		})
@@ -78,10 +87,10 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 	}
 
 	private async invalidateCache(userData: Partial<UserPrimitives>): Promise<void> {
-		const { id, email } = userData
+		const { id, employeeId } = userData // Removed email
 		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
 		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (email) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:email:${email}`)
+		if (employeeId) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:employeeId:${employeeId}`) // Add employeeId cache key
 
 		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
 	}
