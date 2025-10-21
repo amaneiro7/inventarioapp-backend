@@ -5,7 +5,7 @@ import { type RoleId } from '../../../../Role/domain/RoleId'
 import { type UserPassword } from '../../../domain/valueObject/UserPassword'
 import { type UserPrimitives } from '../../../domain/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
+import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type UserStatusEnum } from '../../../domain/valueObject/UserStatus'
 import { type PasswordChangeAt } from '../../../domain/valueObject/PasswordChangeAt'
 import { type LastLoginAt } from '../../../domain/valueObject/LastLoginAt'
@@ -16,6 +16,9 @@ import { type LockoutUntil } from '../../../domain/valueObject/LockoutUntil'
  * @description Sequelize model for the User entity.
  */
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
+	email: unknown
+	name: unknown
+	lastName: unknown
 	declare id: Primitives<UserId>
 	declare employeeId: Primitives<EmployeeId>
 	declare roleId: Primitives<RoleId>

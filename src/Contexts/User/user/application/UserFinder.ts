@@ -1,4 +1,4 @@
-import { UserId } from '../domain/UserId'
+import { UserId } from '../domain/valueObject/UserId'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
