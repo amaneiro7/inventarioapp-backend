@@ -5,7 +5,7 @@ import { type ActionType } from './HistoryAction'
 import { type HistoryEmployee } from './HistoryEmployee'
 import { type HistoryId } from './HistoryId'
 import { type DeviceId } from '../../Device/Device/domain/DeviceId'
-import { type UserId } from '../../User/user/domain/UserId'
+import { type UserId } from '../../User/user/domain/valueObject/UserId'
 import { type CreatedAt } from './CreatedAt'
 import { type EmployeeDto } from '../../employee/Employee/domain/entity/Employee.dto'
 

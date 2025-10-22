@@ -16,9 +16,6 @@ import { type LockoutUntil } from '../../../domain/valueObject/LockoutUntil'
  * @description Sequelize model for the User entity.
  */
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
-	email: unknown
-	name: unknown
-	lastName: unknown
 	declare id: Primitives<UserId>
 	declare employeeId: Primitives<EmployeeId>
 	declare roleId: Primitives<RoleId>
