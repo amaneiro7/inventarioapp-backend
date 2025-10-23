@@ -7,19 +7,20 @@ import { PasswordChangeAt } from './valueObject/PasswordChangeAt'
 import { LastLoginAt } from './valueObject/LastLoginAt'
 import { FailedAttemps } from './valueObject/FailedAttemps'
 import { LockoutUntil } from './valueObject/LockoutUntil'
-import { type UserDto, type UserPrimitives } from './User.dto'
+import { UserParams, type UserDto, type UserPrimitives } from './User.dto'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 export class User {
 	constructor(
 		private readonly id: UserId,
 		private readonly employeeId: EmployeeId,
-		private readonly roleId: RoleId,
-		private readonly password: UserPassword,
-		private readonly status: UserStatus,
-		private readonly passwordChangeAt: PasswordChangeAt,
-		private readonly lastLoginAt: LastLoginAt,
-		private readonly failedAttemps: FailedAttemps,
-		private readonly lockoutUntil: LockoutUntil
+		private roleId: RoleId,
+		private password: UserPassword,
+		private status: UserStatus,
+		private passwordChangeAt: PasswordChangeAt,
+		private lastLoginAt: LastLoginAt,
+		private failedAttemps: FailedAttemps,
+		private lockoutUntil: LockoutUntil
 	) {}
 
 	static fromPrimitives(plainData: UserDto): User {
@@ -36,21 +37,84 @@ export class User {
 		)
 	}
 
+	static create(params: UserParams): User {
+		const id = UserId.random().value
+		const { employeeId, roleId, password } = params
+		return new User(
+			new UserId(id),
+			new EmployeeId(employeeId),
+			new RoleId(roleId),
+			new UserPassword(password),
+			new UserStatus(UserStatusEnum.ACTIVE),
+			new PasswordChangeAt(new Date()),
+			new LastLoginAt(null),
+			new FailedAttemps(0),
+			new LockoutUntil(null)
+		)
+	}
+
 	isLocked(): boolean {
 		return this.status.value === UserStatusEnum.LOCKED || this.status.value === UserStatusEnum.SUSPENDED
 	}
 
+	successLogin(): void {
+		this.failedAttemps = new FailedAttemps(0)
+		this.lockoutUntil = new LockoutUntil(null)
+		this.status = new UserStatus(UserStatusEnum.ACTIVE)
+		this.lastLoginAt = new LastLoginAt(new Date())
+	}
+
+	increaseFailedAttepns(): void {
+		this.failedAttemps = new FailedAttemps(this.failedAttemps.value + 1)
+		if (this.failedAttemps.value >= 5) {
+			this.status = new UserStatus(UserStatusEnum.LOCKED)
+			this.lockoutUntil = new LockoutUntil(new Date(Date.now() + 60000))
+		}
+	}
+
+	updatePassword(password: string): void {
+		this.password = new UserPassword(password)
+		this.passwordChangeAt = new PasswordChangeAt(new Date())
+	}
 	toPrimitives(): UserPrimitives {
 		return {
-			id: this.id.value,
-			employeeId: this.employeeId.value,
-			roleId: this.roleId.value,
-			password: this.password.value,
-			status: this.status.value,
-			passwordChangeAt: this.passwordChangeAt.value,
-			lastLoginAt: this.lastLoginAt?.value,
-			failedAttemps: this.failedAttemps.value,
-			lockoutUntil: this.lockoutUntil?.value
+			id: this.idValue,
+			employeeId: this.employeeValue,
+			roleId: this.roleValue,
+			password: this.passwordValue,
+			status: this.statusValue,
+			passwordChangeAt: this.passwordChangeAtValue,
+			lastLoginAt: this.lastLoginAtValue,
+			failedAttemps: this.failedAttempsValue,
+			lockoutUntil: this.lockoutUntilValue
 		}
+	}
+
+	get idValue(): Primitives<UserId> {
+		return this.id.value
+	}
+	get employeeValue(): Primitives<EmployeeId> {
+		return this.employeeId.value
+	}
+	get roleValue(): Primitives<RoleId> {
+		return this.roleId.value
+	}
+	get passwordValue(): Primitives<UserPassword> {
+		return this.password.value
+	}
+	get statusValue(): Primitives<UserStatus> {
+		return this.status.value
+	}
+	get passwordChangeAtValue(): Primitives<PasswordChangeAt> {
+		return this.passwordChangeAt.value
+	}
+	get lastLoginAtValue(): Primitives<LastLoginAt> {
+		return this.lastLoginAt.value
+	}
+	get failedAttempsValue(): Primitives<FailedAttemps> {
+		return this.failedAttemps.value
+	}
+	get lockoutUntilValue(): Primitives<LockoutUntil> {
+		return this.lockoutUntil.value
 	}
 }
