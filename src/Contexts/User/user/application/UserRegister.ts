@@ -1,4 +1,4 @@
-import { User, type UserParams } from '../domain/User' // Use UserParams
+import { User, type UserParams } from '../domain/entity/User' // Use UserParams
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'

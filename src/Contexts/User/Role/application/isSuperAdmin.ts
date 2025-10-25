@@ -1,6 +1,6 @@
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { User } from '../../user/domain/User'
+import { User } from '../../user/domain/entity/User'
 
 /**
  * @description Checks if the provided user has super admin privileges.

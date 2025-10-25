@@ -3,7 +3,7 @@
 import { loginLimiter } from '../../Middleware/loginRateLimit'
 import passport from 'passport'
 import { type Router, type Request, type Response, type NextFunction } from 'express'
-import { type UserDto } from '../../../Contexts/User/user/domain/User.dto'
+import { type UserDto } from '../../../Contexts/User/user/domain/entity/User.dto'
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
 import { type AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { type AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'

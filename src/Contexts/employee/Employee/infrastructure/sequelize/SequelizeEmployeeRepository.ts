@@ -9,6 +9,7 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
+import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -23,6 +24,21 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+	}
+
+	async searchByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
+		return await this.cache.getCachedData<EmployeeDto | null>({
+			cacheKey: `${this.cacheKey}:userName:${userName}`,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const employee = await EmployeeModel.findOne({
+					where: {
+						userName
+					}
+				})
+				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+			}
+		})
 	}
 
 	/**

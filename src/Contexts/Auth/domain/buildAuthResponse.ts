@@ -1,5 +1,5 @@
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-import { type UserPrimitives } from '../../User/user/domain/User.dto' // Use User.dto
+import { type UserPrimitives } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type AuthResponseDto } from './Auth.dto'
 import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto' // Import EmployeePrimitives
 

@@ -3,7 +3,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
 import { type RoleId } from '../../../../Role/domain/RoleId'
 import { type UserPassword } from '../../../domain/valueObject/UserPassword'
-import { type UserPrimitives } from '../../../domain/User.dto' // Use User.dto for UserPrimitives
+import { type UserPrimitives } from '../../../domain/entity/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type UserStatusEnum } from '../../../domain/valueObject/UserStatus'

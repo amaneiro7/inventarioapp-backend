@@ -56,7 +56,7 @@ export function clearComputerDataset({
 			Marca: getValueOrDefault(device.brand?.name, SIN_MARCA),
 			Modelo: getValueOrDefault(device.model?.name, SIN_MODELO),
 			Observación: getValueOrDefault(device.observation, SIN_OBSERVACION),
-			'Actualizado por': getValueOrDefault(lastHistoryUpdated(device.history)?.user?.email, ROOT_USER),
+			'Actualizado por': getValueOrDefault(lastHistoryUpdated(device.history)?.user?.employee?.email, ROOT_USER),
 			'Fecha de Modificacion': device.updatedAt ? new Date(device.updatedAt).toLocaleDateString() : SIN_FECHA
 		}
 

@@ -18,7 +18,7 @@ import { type HardDriveCapacityDto } from '../../../../Features/HardDrive/HardDr
 import { type HardDriveTypeDto } from '../../../../Features/HardDrive/HardDriveType/domain/HardDriveType.dto'
 import { type OperatingSystemDto } from '../../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'
 import { type OperatingSystemArqDto } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArq.dto'
-import { type UserDto } from '../../../../User/user/domain/User.dto'
+import { type UserDto } from '../../../../User/user/domain/entity/User.dto'
 import { type RoleDto } from '../../../../User/Role/domain/Role.dto'
 import { type HistoryDto } from '../../../../History/domain/History.dto'
 import { type StateDto } from '../../../../Location/State/domain/State.dto'

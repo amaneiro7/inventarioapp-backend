@@ -1,4 +1,4 @@
-import { User } from '../domain/User'
+import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { UserId } from '../domain/valueObject/UserId'

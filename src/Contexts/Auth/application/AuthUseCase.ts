@@ -1,6 +1,6 @@
 import { generateAccessToken, generateRefreshToken } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
-import { type UserDto } from '../../User/user/domain/User.dto' // Use User.dto
+import { type UserDto } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type AuthResponseDto } from '../domain/Auth.dto'
 
 type ReqUser = UserDto

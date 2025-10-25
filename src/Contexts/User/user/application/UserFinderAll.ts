@@ -2,7 +2,7 @@ import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type UserPrimitivesOptional } from '../domain/User.dto' // Use User.dto
+import { type UserPrimitivesOptional } from '../domain/entity/User.dto' // Use User.dto
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 

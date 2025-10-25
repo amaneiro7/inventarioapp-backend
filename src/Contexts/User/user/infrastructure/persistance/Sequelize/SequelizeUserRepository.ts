@@ -8,7 +8,7 @@ import { type UserRepository } from '../../../domain/Repository/UserRepository'
 import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
 // import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 // import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
-import { UserDto, UserPrimitives } from '../../../domain/User.dto'
+import { UserDto, UserPrimitives } from '../../../domain/entity/User.dto'
 import { EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
 
 /**

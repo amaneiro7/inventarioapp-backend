@@ -2,7 +2,7 @@ import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type UserPrimitivesOptional } from '../domain/User.dto' // Use User.dto
+import { type UserPrimitivesOptional } from '../domain/entity/User.dto' // Use User.dto
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository' // Import EmployeeRepository

@@ -2,7 +2,7 @@ import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
 import { config } from '../../Shared/infrastructure/config'
 
-import { type UserPrimitives } from '../../User/user/domain/User.dto' // Use User.dto
+import { type UserPrimitives } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type RoleId } from '../../User/Role/domain/RoleId'
 import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corrected path for UserId

@@ -5,7 +5,7 @@ import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNot
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
 import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-import { type UserPrimitives } from '../../User/user/domain/User.dto'
+import { type UserPrimitives } from '../../User/user/domain/entity/User.dto'
 import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type AuthResponseDto } from '../domain/Auth.dto'

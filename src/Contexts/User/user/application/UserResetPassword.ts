@@ -1,4 +1,4 @@
-import { User } from '../domain/User'
+import { User } from '../domain/entity/User'
 import { UserId } from '../domain/valueObject/UserId'
 import { UserPassword } from '../domain/valueObject/UserPassword'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'

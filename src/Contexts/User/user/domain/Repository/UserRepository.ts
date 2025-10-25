@@ -1,7 +1,7 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type UserId } from '../valueObject/UserId'
 // import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type UserDto, type UserPrimitives } from '../User.dto'
+import { type UserDto, type UserPrimitives } from '../entity/User.dto'
 // import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 
