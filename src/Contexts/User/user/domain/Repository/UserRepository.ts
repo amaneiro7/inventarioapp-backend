@@ -1,8 +1,8 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type UserId } from '../valueObject/UserId'
-// import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type UserDto, type UserPrimitives } from '../entity/User.dto'
-// import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type User, type UserPrimitives } from '../entity/User.dto'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 
 /**
@@ -20,14 +20,14 @@ export abstract class UserRepository {
 	 */
 	abstract save(user: UserPrimitives): Promise<void>
 
-	// /**
-	//  * @abstract
-	//  * @method searchAll
-	//  * @description Retrieves a paginated list of User entities based on the provided criteria.
-	//  * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
-	//  * @returns {Promise<ResponseDB<UserPrimitivesOptional>>} A promise that resolves to a paginated response containing User DTOs.
-	//  */
-	// abstract searchAll(criteria: Criteria): Promise<ResponseDB<UserDto>>
+	/**
+	 * @abstract
+	 * @method searchAll
+	 * @description Retrieves a paginated list of User entities based on the provided criteria.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<UserPrimitivesOptional>>} A promise that resolves to a paginated response containing User DTOs.
+	 */
+	abstract searchAll(criteria: Criteria): Promise<ResponseDB<User>>
 
 	/**
 	 * @abstract
@@ -36,7 +36,7 @@ export abstract class UserRepository {
 	 * @param {Primitives<UserId>} id The ID of the User to search for.
 	 * @returns {Promise<UserPrimitives | null>} A promise that resolves to the User DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<UserId>): Promise<UserDto | null>
+	abstract searchById(id: Primitives<UserId>): Promise<User | null>
 
 	/**
 	 * @abstract
@@ -54,5 +54,5 @@ export abstract class UserRepository {
 	 * @param {Primitives<EmployeeId>} employeeId The employee ID of the User to search for.
 	 * @returns {Promise<UserPrimitives | null>} A promise that resolves to the User DTO if found, or null otherwise.
 	 */
-	abstract searchByEmployeeId(employeeId: Primitives<EmployeeId>): Promise<UserDto | null>
+	abstract searchByEmployeeId(employeeId: Primitives<EmployeeId>): Promise<User | null>
 }

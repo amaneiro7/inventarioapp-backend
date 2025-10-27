@@ -2,7 +2,7 @@ import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { RoleId } from '../../Role/domain/RoleId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { type UserPrimitivesOptional } from '../domain/entity/User.dto' // Use User.dto
+import { type UserDto } from '../domain/entity/User.dto' // Use User.dto
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository' // Import EmployeeRepository
@@ -31,7 +31,7 @@ export class UserFinderByEmail {
 	/**
 	 * @description Executes the user finding process by email.
 	 * @param {{ user?: JwtPayloadUser; email: Primitives<EmployeeEmail> }} params The parameters for finding the user.
-	 * @returns {Promise<UserPrimitivesOptional>} A promise that resolves to the found user's primitive data (excluding password).
+	 * @returns {Promise<UserDto>} A promise that resolves to the found user's primitive data (excluding password).
 	 * @throws {UserDoesNotExistError} If the user is not found or if the user is an admin (to prevent exposing admin data).
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 */
@@ -41,8 +41,8 @@ export class UserFinderByEmail {
 	}: {
 		user?: JwtPayloadUser // User performing the action
 		email: Primitives<EmployeeEmail> // Email to search for
-	}): Promise<UserPrimitivesOptional> {
-		// Return UserPrimitivesOptional
+	}): Promise<UserDto> {
+		// Return UserDto
 		isSuperAdmin({ user })
 
 		// 1. Find the employee by email
@@ -63,10 +63,17 @@ export class UserFinderByEmail {
 			throw new UserDoesNotExistError('Usuario no encontrado.') // Generic error to hide admin existence
 		}
 
-		const { password, ...rest } = foundUser
 		return {
-			...rest,
-			roleId: `${rest.roleId}`
+			id: foundUser.id,
+			employeeId: foundUser.employeeId, // Added employeeId
+			roleId: foundUser.roleId, // Added roleId
+			status: foundUser.status, // Added status
+			passwordChangeAt: foundUser.passwordChangeAt, // Added passwordChangeAt
+			lastLoginAt: foundUser.lastLoginAt, // Added lastLoginAt
+			failedAttemps: foundUser.failedAttemps, // Added failedAttemps
+			lockoutUntil: foundUser.lockoutUntil, // Added lockoutUntil
+			employee: foundUser.employee, // Added employee
+			role: foundUser.role // Added role
 		}
 	}
 }

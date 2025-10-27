@@ -7,7 +7,7 @@ import { PasswordChangeAt } from '../valueObject/PasswordChangeAt'
 import { LastLoginAt } from '../valueObject/LastLoginAt'
 import { FailedAttemps } from '../valueObject/FailedAttemps'
 import { LockoutUntil } from '../valueObject/LockoutUntil'
-import { UserParams, type UserDto, type UserPrimitives } from './User.dto'
+import { type UserAuth, type UserParams, type UserPrimitives } from './User.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 export class User {
@@ -23,7 +23,7 @@ export class User {
 		private lockoutUntil: LockoutUntil
 	) {}
 
-	static fromPrimitives(plainData: UserDto): User {
+	static fromPrimitives(plainData: UserAuth): User {
 		return new User(
 			new UserId(plainData.id),
 			new EmployeeId(plainData.employeeId),
@@ -37,9 +37,10 @@ export class User {
 		)
 	}
 
-	static create(params: UserParams): User {
+	static createFromEmployee(params: Pick<UserParams, 'employeeId' | 'roleId'>): User {
 		const id = UserId.random().value
-		const { employeeId, roleId, password } = params
+		const { employeeId, roleId } = params
+		const password = UserPassword.defaultPassword
 		return new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
@@ -51,6 +52,12 @@ export class User {
 			new FailedAttemps(0),
 			new LockoutUntil(null)
 		)
+	}
+
+	static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
+		const parseToStringRole = String(roleId)
+		const acceptedAdminRoles = [RoleId.Options.ADMIN, RoleId.Options.COORD]
+		return acceptedAdminRoles.includes(parseToStringRole)
 	}
 
 	isLocked(): boolean {

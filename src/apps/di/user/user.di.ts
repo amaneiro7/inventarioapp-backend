@@ -1,6 +1,5 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { UserFinderAll } from '../../../Contexts/User/user/application/UserFinderAll'
-import { UserRegister } from '../../../Contexts/User/user/application/UserRegister'
 import { UserRemover } from '../../../Contexts/User/user/application/UserRemover'
 import { UserResetPassword } from '../../../Contexts/User/user/application/UserResetPassword'
 import { UserFinderByEmail } from '../../../Contexts/User/user/application/UserFindByEmail'
@@ -10,12 +9,13 @@ import { UserGetAllController } from '../../controllers/user/user.get-all.contro
 import { UserDeleteController } from '../../controllers/user/user.delete.controller'
 import { UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
+import { CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
 	FinderAll = 'userFinderAll',
 	FinderByEmail = 'userFinderByEmail',
-	Register = 'userRegister',
+	Register = 'createUserFromEmployee',
 	Remover = 'userRemover',
 	ChangePassword = 'userChangePassword',
 	ResetPassword = 'userResetPassword',
@@ -31,7 +31,7 @@ export const register = (container: AwilixContainer) => {
 
 		userFinderAll: asClass(UserFinderAll),
 		userFinderByEmail: asClass(UserFinderByEmail),
-		userRegister: asClass(UserRegister),
+		createUserFromEmployee: asClass(CreateUserFromEmployee),
 		userResetPassword: asClass(UserResetPassword),
 		userChangePassword: asClass(UserChangePassword),
 		userRemover: asClass(UserRemover),

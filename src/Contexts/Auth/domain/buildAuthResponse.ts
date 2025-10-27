@@ -1,26 +1,15 @@
-import { type RolePrimitives } from '../../User/Role/domain/Role.dto'
-import { type UserPrimitives } from '../../User/user/domain/entity/User.dto' // Use User.dto
+import { type UserDto } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type AuthResponseDto } from './Auth.dto'
-import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto' // Import EmployeePrimitives
-
-type UserWithRoleAndEmployee = UserPrimitives & {
-	role: RolePrimitives
-	employee: EmployeePrimitives // Assume employee is always included when building auth response
-}
 
 /**
  * @function buildAuthResponse
  * @description Constructs the authentication response object from user data and tokens.
- * @param {UserWithRoleAndEmployee} user - The user object, including their role and employee details.
+ * @param {UserDto} user - The user object, including their role and employee details.
  * @param {string} accessToken - The generated access token.
  * @param {string} [refreshToken] - The generated refresh token (optional).
  * @returns {AuthResponseDto} The authentication response DTO.
  */
-export function buildAuthResponse(
-	user: UserWithRoleAndEmployee,
-	accessToken: string,
-	refreshToken?: string
-): AuthResponseDto {
+export function buildAuthResponse(user: UserDto, accessToken: string, refreshToken?: string): AuthResponseDto {
 	const { id, employeeId, role, roleId, status, employee } = user // Updated destructuring
 	const response: AuthResponseDto = {
 		user: {

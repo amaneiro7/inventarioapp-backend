@@ -12,10 +12,11 @@ import { type RoleDto } from '../../../Role/domain/Role.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 
 /**
- * @interface User
- * @description Defines the core properties of a User entity.
+ * @interface UserAuth
+ * @description Defines the core properties of a User entity for internal use (e.g., authentication).
+ * This interface includes sensitive data.
  */
-export interface User {
+export interface UserAuth {
 	id: Primitives<UserId>
 	employeeId: Primitives<EmployeeId>
 	roleId: Primitives<RoleId> // Temporal
@@ -26,27 +27,22 @@ export interface User {
 	failedAttemps: Primitives<FailedAttemps>
 	lockoutUntil: Primitives<LockoutUntil>
 }
-// export interface User {
-// 	id: Primitives<UserId>
-// 	email: Primitives<UserEmail>
-// 	name: Primitives<UserName>
-// 	lastName: Primitives<UserLastName>
-// 	password: Primitives<UserPassword>
-// 	employeeId: Primitives<EmployeeId>[]
-// }
 
 /**
  * @type UserPrimitives
  * @description Represents the primitive, serializable state of a User entity.
  */
-export type UserPrimitives = User
-export type UserParams = Omit<User, 'id'>
+export type UserPrimitives = UserAuth
+export type UserParams = Omit<UserAuth, 'id'>
 
 /**
- * @type UserDto
- * @description Represents a Data Transfer Object (DTO) for the User entity.
+ * @interface User
+ * @description Represents the public-facing User entity, safe to expose via API.
+ * It omits sensitive data like the password.
  */
-export type UserDto = User & {
+export interface User extends UserAuth {
 	role: RoleDto
 	employee: EmployeeDto
 }
+
+export type UserDto = Omit<User, 'password'>
