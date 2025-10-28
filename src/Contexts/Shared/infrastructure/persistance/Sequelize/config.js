@@ -54,18 +54,6 @@ module.exports = {
 		seederStorage: 'sequelize',
 		seederStorageTableName: 'sequelize_data'
 	},
-	dev: {
-		username: process.env.POSTGRES_USER,
-		password: process.env.POSTGRES_PASSWORD,
-		database: process.env.POSTGRES_DB_NAME,
-		port: process.env.POSTGRES_PORT,
-		host: process.env.POSTGRES_HOST,
-		dialect: 'postgres',
-		migrationStorage: 'sequelize',
-		migrationStorageTableName: 'sequelize_migrations',
-		seederStorage: 'sequelize',
-		seederStorageTableName: 'sequelize_data'
-	},
 	test: {
 		username: 'root',
 		password: null,

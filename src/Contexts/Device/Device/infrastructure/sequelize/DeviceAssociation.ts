@@ -228,7 +228,13 @@ export class DeviceAssociation {
 			include: [
 				{
 					association: 'user',
-					attributes: ['email', 'name', 'lastName']
+					attributes: [],
+					include: [
+						{
+							association: 'employee',
+							attributes: ['name', 'lastName', 'userName', 'email']
+						}
+					]
 				},
 				'employee'
 			],
