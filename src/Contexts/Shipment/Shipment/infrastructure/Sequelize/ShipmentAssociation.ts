@@ -26,7 +26,13 @@ export class ShipmentAssociation {
 		options.include = [
 			{
 				association: 'fromUser',
-				attributes: ['name', 'lastName']
+				attributes: [],
+				include: [
+					{
+						association: 'employee',
+						attributes: ['name', 'lastName']
+					}
+				]
 			},
 			{
 				association: 'toEmployee',
