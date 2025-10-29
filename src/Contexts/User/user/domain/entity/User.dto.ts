@@ -42,7 +42,10 @@ export type UserParams = Omit<UserAuth, 'id'>
  */
 export interface User extends UserAuth {
 	role: RoleDto
-	employee: EmployeeDto
+	employee: Omit<
+		EmployeeDto,
+		'location' | 'directiva' | 'vicepresidenciaEjecutiva' | 'vicepresidencia' | 'departamento' | 'cargo'
+	>
 }
 
-export type UserDto = Omit<User, 'password'>
+export type UserDto = Omit<User, 'password' | 'failedAttemps' | 'lockoutUntil'>

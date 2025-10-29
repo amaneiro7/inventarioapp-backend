@@ -1,4 +1,4 @@
-import { type FindOptions } from 'sequelize'
+import { type IncludeOptions, type FindOptions } from 'sequelize'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 
 /**
@@ -12,7 +12,55 @@ export class UsersAssociation {
 	 * @returns {FindOptions} The modified Sequelize FindOptions object.
 	 */
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		options.include = ['role', 'employee'] // Include employee
+		console.log('Initial Options:', options)
+		const whereFilters = { ...options.where }
+
+		const employeeInclude: IncludeOptions = {
+			association: 'employee'
+		}
+		const roleInclude: IncludeOptions = {
+			association: 'role',
+			attributes: ['id', 'name']
+		}
+		options.include = [employeeInclude, roleInclude]
+
+		// Filter by employee email
+		if ('email' in whereFilters) {
+			employeeInclude.where = {
+				...employeeInclude.where,
+				email: whereFilters.email
+			}
+			delete whereFilters?.email
+		}
+		// Filter by employee email
+		if ('name' in whereFilters) {
+			employeeInclude.where = {
+				...employeeInclude.where,
+				nameemail: whereFilters.name
+			}
+			delete whereFilters?.name
+		}
+		// Filter by employee lastName
+		if ('lastName' in whereFilters) {
+			employeeInclude.where = {
+				...employeeInclude.where,
+				lastName: whereFilters.lastName
+			}
+			delete whereFilters?.lastName
+		}
+
+		// Filter by employee userName
+		if ('userName' in whereFilters) {
+			employeeInclude.where = {
+				...employeeInclude.where,
+				userName: whereFilters.userName
+			}
+			delete whereFilters?.userName
+		}
+
+		options.where = whereFilters
+		console.log('Filtering:', whereFilters)
+		console.log('Filtering2:', options)
 		return options
 	}
 }

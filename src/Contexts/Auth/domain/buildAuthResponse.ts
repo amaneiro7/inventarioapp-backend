@@ -17,6 +17,8 @@ export function buildAuthResponse(user: UserDto, accessToken: string, refreshTok
 			employeeId: employeeId, // Added employeeId
 			roleId: `${roleId}`,
 			status: status, // Added status
+			passwordChangeAt: user.passwordChangeAt,
+			lastLoginAt: user.lastLoginAt,
 			role: {
 				id: `${role.id}`,
 				name: role.name

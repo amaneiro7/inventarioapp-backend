@@ -37,9 +37,7 @@ export class UserFinderAll {
 				employeeId: userEntity.employeeId,
 				roleId: userEntity.roleId,
 				status: userEntity.status,
-				failedAttemps: userEntity.failedAttemps,
 				lastLoginAt: userEntity.lastLoginAt,
-				lockoutUntil: userEntity.lockoutUntil,
 				passwordChangeAt: userEntity.passwordChangeAt
 			}
 		})

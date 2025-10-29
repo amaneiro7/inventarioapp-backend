@@ -70,8 +70,6 @@ export class UserFinderByEmail {
 			status: foundUser.status, // Added status
 			passwordChangeAt: foundUser.passwordChangeAt, // Added passwordChangeAt
 			lastLoginAt: foundUser.lastLoginAt, // Added lastLoginAt
-			failedAttemps: foundUser.failedAttemps, // Added failedAttemps
-			lockoutUntil: foundUser.lockoutUntil, // Added lockoutUntil
 			employee: foundUser.employee, // Added employee
 			role: foundUser.role // Added role
 		}
