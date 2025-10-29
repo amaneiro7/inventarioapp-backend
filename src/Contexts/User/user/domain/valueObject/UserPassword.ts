@@ -6,26 +6,41 @@ import { PasswordService } from '../domainService/PasswordService'
  * @description Represents a user's password.
  */
 export class UserPassword extends StringValueObject {
-	private readonly MIN_LENGTH = 8
-	private readonly HAS_UPPERCASE = /[A-Z]/
-	private readonly HAS_LOWERCASE = /[a-z]/
-	private readonly HAS_NUMBER = /\d/
-	private readonly HAS_SPECIAL_CHARACTER = /[!@#$%^&()*.]/
+	private static readonly MIN_LENGTH = 8
+	private static readonly HAS_UPPERCASE = /[A-Z]/
+	private static readonly HAS_LOWERCASE = /[a-z]/
+	private static readonly HAS_NUMBER = /\d/
+	private static readonly HAS_SPECIAL_CHARACTER = /[!@#$%^&()*.]/
 
 	static readonly defaultPassword = 'Avion01.'
 
-	constructor(
-		readonly value: string,
-		fromPrimitives = false
-	) {
+	// El constructor ahora es privado para forzar el uso de los métodos estáticos.
+	private constructor(readonly value: string) {
 		super(value)
-		if (!fromPrimitives) {
-			this.ensureIsValidPassword(value)
-			this.value = PasswordService.hash(this.value) // Hash the password before storing
-		}
 	}
 
-	private ensureIsValidPassword(value: string): void {
+	/**
+	 * @description Crea una instancia de UserPassword a partir de una contraseña en texto plano.
+	 * Valida y hashea la contraseña.
+	 * @param {string} plainPassword - La contraseña en texto plano.
+	 * @returns {UserPassword}
+	 */
+	public static create(plainPassword: string): UserPassword {
+		this.ensureIsValidPassword(plainPassword)
+		const hashedPassword = PasswordService.hash(plainPassword)
+		return new UserPassword(hashedPassword)
+	}
+
+	/**
+	 * @description Crea una instancia de UserPassword a partir de un hash existente (desde la base de datos).
+	 * No realiza validación ni hasheo.
+	 * @param {string} hashedPassword - La contraseña ya hasheada.
+	 */
+	public static fromPrimitives(hashedPassword: string): UserPassword {
+		return new UserPassword(hashedPassword)
+	}
+
+	private static ensureIsValidPassword(value: string): void {
 		const errors: string[] = []
 
 		if (value.length < this.MIN_LENGTH) {

@@ -28,7 +28,7 @@ export class User {
 			new UserId(plainData.id),
 			new EmployeeId(plainData.employeeId),
 			new RoleId(plainData.roleId),
-			new UserPassword(plainData.password),
+			UserPassword.fromPrimitives(plainData.password),
 			new UserStatus(plainData.status),
 			new PasswordChangeAt(plainData.passwordChangeAt),
 			new LastLoginAt(plainData.lastLoginAt),
@@ -45,7 +45,7 @@ export class User {
 			new UserId(id),
 			new EmployeeId(employeeId),
 			new RoleId(roleId),
-			new UserPassword(password),
+			UserPassword.create(password),
 			new UserStatus(UserStatusEnum.ACTIVE),
 			new PasswordChangeAt(new Date()),
 			new LastLoginAt(null),
@@ -61,7 +61,13 @@ export class User {
 	}
 
 	isLocked(): boolean {
-		return this.status.value === UserStatusEnum.LOCKED || this.status.value === UserStatusEnum.SUSPENDED
+		if (this.status.value === UserStatusEnum.SUSPENDED) {
+			return true
+		}
+		if (this.status.value === UserStatusEnum.LOCKED) {
+			return this.lockoutUntil.value !== null && this.lockoutUntil.value > new Date()
+		}
+		return false
 	}
 
 	successLogin(): void {
@@ -74,14 +80,27 @@ export class User {
 	increaseFailedAttepns(): void {
 		this.failedAttemps = new FailedAttemps(this.failedAttemps.value + 1)
 		if (this.failedAttemps.value >= 5) {
-			this.status = new UserStatus(UserStatusEnum.LOCKED)
-			this.lockoutUntil = new LockoutUntil(new Date(Date.now() + 60000))
+			this.lockAccount()
 		}
 	}
 
 	updatePassword(password: string): void {
-		this.password = new UserPassword(password)
+		this.password = UserPassword.create(password)
 		this.passwordChangeAt = new PasswordChangeAt(new Date())
+	}
+
+	private lockAccount(): void {
+		this.status = new UserStatus(UserStatusEnum.LOCKED)
+		// Bloquea la cuenta por 5 minutos (300000 ms)
+		this.lockoutUntil = new LockoutUntil(new Date(Date.now() + 5 * 60 * 1000))
+	}
+
+	// Nuevo método para manejar el desbloqueo automático
+	unlockIfTimeExpired(): void {
+		if (this.status.value === UserStatusEnum.LOCKED && !this.isLocked()) {
+			this.status = new UserStatus(UserStatusEnum.ACTIVE)
+			this.failedAttemps = new FailedAttemps(0)
+		}
 	}
 	toPrimitives(): UserPrimitives {
 		return {

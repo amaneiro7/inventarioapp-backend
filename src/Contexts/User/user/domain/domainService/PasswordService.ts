@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-import { InvalidCredentialsError } from '../../../../Auth/domain/InvalidCredentialsError'
 
 /**
  * @description Provides utility methods for hashing and comparing passwords.
@@ -21,10 +20,7 @@ export class PasswordService {
 	 * @param {string} hash The hashed password to compare against.
 	 * @throws {InvalidCredentialsError} If the password does not match the hash.
 	 */
-	static compare(password: string, hash: string): void {
-		const isMatch = bcrypt.compareSync(password, hash)
-		if (!isMatch) {
-			throw new InvalidCredentialsError()
-		}
+	static compare(password: string, hash: string): boolean {
+		return bcrypt.compareSync(password, hash)
 	}
 }

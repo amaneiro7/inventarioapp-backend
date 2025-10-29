@@ -55,23 +55,36 @@ export class UserLoginLocal {
 			throw new InvalidCredentialsError()
 		}
 
-		// 2. Find user by employeeId
+		// 2. Buscar usuario por employeeId
 		const user = await this.userRepository.searchByEmployeeId(employee.id)
 
 		if (!user) {
-			throw new InvalidCredentialsError() // No user account associated with this employee
+			throw new InvalidCredentialsError() // Previene la enumeración de usuarios
 		}
 
 		const userEntity = User.fromPrimitives(user)
 
-		// 3. Check if account is locked
+		// 3. Desbloquear la cuenta si el tiempo de bloqueo ha expirado
+		userEntity.unlockIfTimeExpired()
+
+		// 4. Verificar si la cuenta está bloqueada (después de intentar desbloquear)
 		if (userEntity.isLocked()) {
 			throw new InvalidCredentialsError('Su cuenta está bloqueada. Por favor, contacte al administrador.')
 		}
 
-		// 4. Compare password
-		PasswordService.compare(password, user.password)
+		// 5. Comparar contraseña
+		const isMatch = PasswordService.compare(password, user.password)
+		if (!isMatch) {
+			userEntity.increaseFailedAttepns()
+			await this.userRepository.save(userEntity.toPrimitives())
+			throw new InvalidCredentialsError()
+		}
 
+		// 6. Login exitoso
+		userEntity.successLogin()
+		await this.userRepository.save(userEntity.toPrimitives())
+
+		// 7. Devolver el estado más reciente del usuario
 		return user
 	}
 }
