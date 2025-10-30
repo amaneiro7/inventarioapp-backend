@@ -1,3 +1,4 @@
+// import { User } from '../../User/user/domain/entity/User'
 import { UserId } from '../../User/user/domain/valueObject/UserId'
 import { generateAccessToken, generateRefreshToken, type JwtPayloadUser } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
@@ -43,6 +44,12 @@ export class AuthRefreshTokenUseCase {
 		) {
 			throw new UserDoesNotExistError(id)
 		}
+
+		// const userEntity = User.fromPrimitives(user)
+
+		// if (userEntity.isPasswordExpired()) {
+		// 	user.passwordExpired = true
+		// }
 
 		// Generate new tokens
 		const newRefreshToken = generateRefreshToken(user)

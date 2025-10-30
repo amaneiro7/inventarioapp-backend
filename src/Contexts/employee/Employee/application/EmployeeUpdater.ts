@@ -12,6 +12,9 @@ import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { EmployeeTypesEnum } from '../domain/valueObject/EmployeeType'
+import { UserRepository } from '../../../User/user/domain/Repository/UserRepository'
+import { User } from '../../../User/user/domain/entity/User'
 
 /**
  * @description Use case for updating an existing Employee entity.
@@ -25,6 +28,7 @@ export class EmployeeUpdater {
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
+	private readonly userRepository: UserRepository
 
 	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
@@ -34,6 +38,7 @@ export class EmployeeUpdater {
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
+		userRepository: UserRepository
 	}) {
 		this.employeeRepository = dependencies.employeeRepository
 		this.locationRepository = dependencies.locationRepository
@@ -42,6 +47,7 @@ export class EmployeeUpdater {
 		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
 		this.departamentoRepository = dependencies.departamentoRepository
 		this.cargoRepository = dependencies.cargoRepository
+		this.userRepository = dependencies.userRepository
 
 		this.updateEmployeeUseCase = new UpdateEmployeeUseCase({
 			employeeRepository: this.employeeRepository,
@@ -76,5 +82,20 @@ export class EmployeeUpdater {
 		})
 
 		await this.employeeRepository.save(employeeEntity.toPrimitive())
+
+		if (employeeEntity.typeValue === EmployeeTypesEnum.SERVICE) {
+			if (employeeEntity.isStillWorkingValue === true) {
+				return
+			}
+
+			const user = await this.userRepository.searchByEmployeeId(employeeId)
+
+			if (!user) {
+				return
+			}
+
+			const userEntity = User.fromPrimitives(user)
+			userEntity.desactivateAccount()
+		}
 	}
 }

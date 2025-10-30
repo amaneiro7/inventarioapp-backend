@@ -42,6 +42,7 @@ export type UserParams = Omit<UserAuth, 'id'>
  */
 export interface User extends UserAuth {
 	role: RoleDto
+	passwordExpired?: boolean
 	employee: Omit<
 		EmployeeDto,
 		'location' | 'directiva' | 'vicepresidenciaEjecutiva' | 'vicepresidencia' | 'departamento' | 'cargo'

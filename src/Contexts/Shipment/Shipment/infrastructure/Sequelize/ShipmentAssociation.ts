@@ -26,11 +26,11 @@ export class ShipmentAssociation {
 		options.include = [
 			{
 				association: 'fromUser',
-				attributes: [],
+				attributes: ['id', 'employeeId'],
 				include: [
 					{
 						association: 'employee',
-						attributes: ['name', 'lastName']
+						attributes: ['name', 'lastName', 'userName', 'email']
 					}
 				]
 			},
@@ -115,7 +115,7 @@ export class ShipmentAssociation {
 		}
 
 		const orderMap: Record<string, string[]> = {
-			sentBy: ['fromUser', 'name'],
+			sentBy: ['fromUser', 'employee', 'name'],
 			receivedBy: ['toEmployee', 'name'],
 			origin: ['originLocation', 'name'],
 			destination: ['destinationLocation', 'name'],

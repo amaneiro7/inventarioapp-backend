@@ -17,6 +17,8 @@ import { type EmployeeParams } from '../entity/Employee.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { EmployeeTypesEnum } from '../valueObject/EmployeeType'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 interface CreateEmployeeRepositories {
 	readonly employeeRepository: EmployeeRepository
@@ -40,6 +42,12 @@ export class CreateEmployeeUseCase {
 	 * @returns {Promise<void>} A promise that resolves when the employee is successfully created.
 	 */
 	public async execute(params: EmployeeParams): Promise<void> {
+		if (params.type === EmployeeTypesEnum.SERVICE) {
+			throw new InvalidArgumentError('No se puede crear un empleado de tipo "servicio".')
+		}
+		if (params.isStillWorking === false) {
+			throw new InvalidArgumentError('No se puede crear un empleado desvinculado.')
+		}
 		await Promise.all([
 			EmployeeUserName.ensureIsStillWorkingUserNameDoesNotExist({
 				userName: params.userName,

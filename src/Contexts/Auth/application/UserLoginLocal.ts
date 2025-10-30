@@ -80,6 +80,10 @@ export class UserLoginLocal {
 			throw new InvalidCredentialsError()
 		}
 
+		if (userEntity.isPasswordExpired()) {
+			user.passwordExpired = true
+		}
+
 		// 6. Login exitoso
 		userEntity.successLogin()
 		await this.userRepository.save(userEntity.toPrimitives())

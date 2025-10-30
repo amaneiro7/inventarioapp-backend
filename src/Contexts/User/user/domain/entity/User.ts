@@ -89,6 +89,10 @@ export class User {
 		this.passwordChangeAt = new PasswordChangeAt(new Date())
 	}
 
+	desactivateAccount(): void {
+		this.status = new UserStatus(UserStatusEnum.SUSPENDED)
+	}
+
 	private lockAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.LOCKED)
 		// Bloquea la cuenta por 5 minutos (300000 ms)
@@ -101,6 +105,15 @@ export class User {
 			this.status = new UserStatus(UserStatusEnum.ACTIVE)
 			this.failedAttemps = new FailedAttemps(0)
 		}
+	}
+
+	isPasswordExpired(daysToExpire: number = 90): boolean {
+		if (!this.passwordChangeAtValue) {
+			return true
+		}
+		const expirationDate = new Date(this.passwordChangeAtValue)
+		expirationDate.setDate(expirationDate.getDate() + daysToExpire)
+		return expirationDate < new Date()
 	}
 	toPrimitives(): UserPrimitives {
 		return {
