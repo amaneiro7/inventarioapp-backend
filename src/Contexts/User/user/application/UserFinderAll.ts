@@ -32,6 +32,7 @@ export class UserFinderAll {
 		const usersDto: UserDto[] = data.map(userEntity => {
 			return {
 				id: userEntity.id,
+				userName: userEntity.employee.userName,
 				employee: userEntity.employee,
 				role: userEntity.role,
 				employeeId: userEntity.employeeId,

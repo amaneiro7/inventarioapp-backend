@@ -6,9 +6,11 @@ import { type UserGetAllController } from '../../controllers/user/user.get-all.c
 import { type UserDeleteController } from '../../controllers/user/user.delete.controller'
 import { type UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { type UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
+import { type UserGetController } from '../../controllers/user/user.get.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
 export const register = async (router: Router) => {
+	const getController: UserGetController = container.resolve(UserDependencies.GetController)
 	const getAllController: UserGetAllController = container.resolve(UserDependencies.GetAllController)
 	const deleteController: UserDeleteController = container.resolve(UserDependencies.DeleteController)
 	const changePaswwordController: UserChangePasswordController = container.resolve(
@@ -33,6 +35,30 @@ export const register = async (router: Router) => {
 	 *         description: Lista de usuarios obtenida con éxito.
 	 */
 	router.get('/users/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	/**
+	 * @swagger
+	 * /users/{id}:
+	 *   get:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Obtener un usuario por ID
+	 *     description: Devuelve los detalles de un usuario específico buscando por su ID.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     parameters:
+	 *       - in: path
+	 *         name: id
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *         description: ID del usuario.
+	 *     responses:
+	 *       '200':
+	 *         description: Detalles del usuario.
+	 *       '404':
+	 *         description: Usuario no encontrado.
+	 */
+	router.get('/users/:id', authenticate, getController.run.bind(getController))
 
 	/**
 	 * @swagger

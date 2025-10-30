@@ -10,16 +10,20 @@ import { UserDeleteController } from '../../controllers/user/user.delete.control
 import { UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
 import { CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
+import { UserFinder } from '../../../Contexts/User/user/application/UserFinder'
+import { UserGetController } from '../../controllers/user/user.get.controller'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
 	FinderAll = 'userFinderAll',
+	Finder = 'userFinder',
 	FinderByEmail = 'userFinderByEmail',
 	Register = 'createUserFromEmployee',
 	Remover = 'userRemover',
 	ChangePassword = 'userChangePassword',
 	ResetPassword = 'userResetPassword',
 
+	GetController = 'userGetController',
 	GetAllController = 'userGetAllController',
 	DeleteController = 'userDeleteController',
 	ChangePasswordController = 'userChangePasswordController',
@@ -30,12 +34,14 @@ export const register = (container: AwilixContainer) => {
 		userRepository: asClass(SequelizeUserRepository).singleton(),
 
 		userFinderAll: asClass(UserFinderAll),
+		userFinder: asClass(UserFinder),
 		userFinderByEmail: asClass(UserFinderByEmail),
 		createUserFromEmployee: asClass(CreateUserFromEmployee),
 		userResetPassword: asClass(UserResetPassword),
 		userChangePassword: asClass(UserChangePassword),
 		userRemover: asClass(UserRemover),
 
+		userGetController: asClass(UserGetController),
 		userGetAllController: asClass(UserGetAllController),
 		userDeleteController: asClass(UserDeleteController),
 		userChangePasswordController: asClass(UserChangePasswordController),

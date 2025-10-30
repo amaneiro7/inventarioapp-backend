@@ -5,27 +5,16 @@ import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserDto } from '../domain/entity/User.dto' // Use User.dto
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository' // Import EmployeeRepository
-import { type EmployeeEmail } from '../../../employee/Employee/domain/valueObject/EmployeeEmail' // Import EmployeeEmail
+import { type UserId } from '../domain/valueObject/UserId'
 
 /**
  * @description Use case for finding a user by their email address.
  */
-export class UserFinderByEmail {
+export class UserFinder {
 	private readonly userRepository: UserRepository
 
-	// UserFinderByEmail now needs EmployeeRepository to find employee by email
-	private readonly employeeRepository: EmployeeRepository
-
-	constructor({
-		userRepository,
-		employeeRepository
-	}: {
-		userRepository: UserRepository
-		employeeRepository: EmployeeRepository
-	}) {
+	constructor({ userRepository }: { userRepository: UserRepository }) {
 		this.userRepository = userRepository
-		this.employeeRepository = employeeRepository
 	}
 
 	/**
@@ -37,26 +26,19 @@ export class UserFinderByEmail {
 	 */
 	async run({
 		user,
-		email
+		id
 	}: {
 		user?: JwtPayloadUser // User performing the action
-		email: Primitives<EmployeeEmail> // Email to search for
+		id: Primitives<UserId> // Id to search for
 	}): Promise<UserDto> {
 		// Return UserDto
 		isSuperAdmin({ user })
 
 		// 1. Find the employee by email
-		const employee = await this.employeeRepository.searchByEmail(email)
-
-		if (!employee) {
-			throw new UserDoesNotExistError(`No se encontró un empleado con el correo '${email}'.`) // Use a more specific error message
-		}
-
-		// 2. Find the user associated with this employeeId
-		const foundUser = await this.userRepository.searchByEmployeeId(employee.id)
+		const foundUser = await this.userRepository.searchById(id)
 
 		if (!foundUser) {
-			throw new UserDoesNotExistError(`No se encontró un usuario asociado al empleado con ID '${employee.id}'.`)
+			throw new UserDoesNotExistError(`No se encontró un usuario asociado al empleado con ID '${id}'.`)
 		}
 
 		if (foundUser.roleId === RoleId.Options.ADMIN) {

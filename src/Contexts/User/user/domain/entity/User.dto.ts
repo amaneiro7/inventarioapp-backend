@@ -48,4 +48,4 @@ export interface User extends UserAuth {
 	>
 }
 
-export type UserDto = Omit<User, 'password' | 'failedAttemps' | 'lockoutUntil'>
+export type UserDto = Omit<User & { userName: EmployeeDto['userName'] }, 'password' | 'failedAttemps' | 'lockoutUntil'>

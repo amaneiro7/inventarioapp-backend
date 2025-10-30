@@ -12,7 +12,6 @@ export class UsersAssociation {
 	 * @returns {FindOptions} The modified Sequelize FindOptions object.
 	 */
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		console.log('Initial Options:', options)
 		const whereFilters = { ...options.where }
 
 		const employeeInclude: IncludeOptions = {
@@ -59,8 +58,6 @@ export class UsersAssociation {
 		}
 
 		options.where = whereFilters
-		console.log('Filtering:', whereFilters)
-		console.log('Filtering2:', options)
 		return options
 	}
 }
