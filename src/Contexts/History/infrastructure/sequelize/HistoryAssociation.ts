@@ -20,7 +20,7 @@ export class HistoryAssociation {
 	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const userEmployeeInclude: IncludeOptions = {
 			association: 'employee',
-			attributes: ['name', 'lastName']
+			attributes: ['name', 'lastName', 'email', 'userName']
 		}
 		const userInclude: IncludeOptions = {
 			association: 'user',
