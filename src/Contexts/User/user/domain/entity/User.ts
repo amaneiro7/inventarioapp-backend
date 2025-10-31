@@ -92,6 +92,9 @@ export class User {
 	desactivateAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.SUSPENDED)
 	}
+	reactivateAccount(): void {
+		this.status = new UserStatus(UserStatusEnum.ACTIVE)
+	}
 
 	private lockAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.LOCKED)
@@ -105,6 +108,12 @@ export class User {
 			this.status = new UserStatus(UserStatusEnum.ACTIVE)
 			this.failedAttemps = new FailedAttemps(0)
 		}
+	}
+
+	unlcockAccount(): void {
+		this.status = new UserStatus(UserStatusEnum.ACTIVE)
+		this.failedAttemps = new FailedAttemps(0)
+		this.lockoutUntil = new LockoutUntil(null)
 	}
 
 	isPasswordExpired(daysToExpire: number = 90): boolean {

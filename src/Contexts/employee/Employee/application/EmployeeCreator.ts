@@ -1,4 +1,4 @@
-import { CreateEmployeeUseCase } from '../domain/domainService/createEmployeeUseCase'
+import { EnsureEmployeeCanBeCreated } from '../domain/domainService/EnsureEmployeeCanBeCreated'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
@@ -14,7 +14,7 @@ import { Employee } from '../domain/entity/Employee'
  * @description Use case for creating a new Employee entity.
  */
 export class EmployeeCreator {
-	private readonly createEmployeeUseCase: CreateEmployeeUseCase
+	private readonly ensureEmployeeCanBeCreated: EnsureEmployeeCanBeCreated
 	private readonly employeeRepository: EmployeeRepository
 	private readonly locationRepository: LocationRepository
 	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
@@ -40,7 +40,7 @@ export class EmployeeCreator {
 		this.departamentoRepository = dependencies.departamentoRepository
 		this.cargoRepository = dependencies.cargoRepository
 
-		this.createEmployeeUseCase = new CreateEmployeeUseCase({
+		this.ensureEmployeeCanBeCreated = new EnsureEmployeeCanBeCreated({
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,
 			directivaRepository: this.directivaRepository,
@@ -57,7 +57,7 @@ export class EmployeeCreator {
 	 * @returns {Promise<void>} A promise that resolves when the employee is successfully created.
 	 */
 	async run({ params }: { params: EmployeeParams }): Promise<void> {
-		await this.createEmployeeUseCase.execute(params)
+		await this.ensureEmployeeCanBeCreated.execute(params)
 
 		const employee = Employee.create(params)
 

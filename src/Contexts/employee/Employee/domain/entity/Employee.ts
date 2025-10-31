@@ -46,6 +46,17 @@ export class Employee {
 	) {}
 
 	static create(params: EmployeeParams): Employee {
+		if (params.type === EmployeeTypesEnum.SERVICE) {
+			throw new InvalidArgumentError(
+				'Un empleado de tipo "servicio" no se puede crear directamente. Primero debe crearse como tipo "regular" y luego marcarse como servicio.'
+			)
+		}
+
+		if (params.isStillWorking === false) {
+			throw new InvalidArgumentError(
+				'La creación de un empleado requiere que el estado laboral inicial sea "Activo". No se puede crear un empleado desvinculado.'
+			)
+		}
 		const id = EmployeeId.random()
 		return new Employee(
 			id,
@@ -197,12 +208,78 @@ export class Employee {
 
 	updateType(newType: EmployeeTypesEnum): void {
 		if (this.typeValue === EmployeeTypesEnum.GENERIC && newType !== EmployeeTypesEnum.GENERIC) {
-			throw new InvalidArgumentError(`El tipo de empleado GENERIC no puede ser cambiado a ${newType}.`)
+			throw new InvalidArgumentError(
+				`No se permite cambiar el tipo de empleado 'GENERIC' a '${newType}'. La modificación del tipo GENERIC está restringida.`
+			)
 		}
 		if (this.typeValue !== EmployeeTypesEnum.GENERIC && newType === EmployeeTypesEnum.GENERIC) {
-			throw new InvalidArgumentError(`El tipo de empleado no GENERIC no puede ser cambiado a GENERIC.`)
+			throw new InvalidArgumentError(
+				`No se permite cambiar el tipo de empleado no GENERIC a 'GENERIC'. El cambio a GENERIC está restringido.`
+			)
 		}
 		this.type = new EmployeeType(newType)
+	}
+
+	// Nuevo método para vincular a un usuario de servicio existente
+	markAsServiceUser(): void {
+		// Regla de Negocio 1: El empleado ya debe ser un usuario regular o genérico
+		if (this.typeValue === EmployeeTypesEnum.SERVICE) {
+			throw new InvalidArgumentError(
+				`El empleado con ID ${this.idValue} ya está marcado como usuario de servicio.`
+			)
+		}
+
+		// Regla de Negocio 2: Solo se puede marcar si está activamente trabajando (isStillWorking=true)
+		if (this.isStillWorkingValue === false) {
+			throw new InvalidArgumentError(
+				`No se puede marcar como usuario de servicio a un empleado desvinculado (ID: ${this.idValue}). Debe estar activo.`
+			)
+		}
+
+		// Cambio de estado de la entidad
+		this.type = new EmployeeType(EmployeeTypesEnum.SERVICE)
+	}
+
+	unmarkAsServiceUser(): void {
+		// Regla de Negocio 1: Solo puedes revertir el tipo si actualmente es SERVICE.
+		if (this.typeValue !== EmployeeTypesEnum.SERVICE) {
+			throw new InvalidArgumentError(
+				`El empleado con ID ${this.idValue} no es un usuario de servicio, es de tipo '${this.typeValue}'. Solo se puede revertir el estatus SERVICE.`
+			)
+		}
+
+		// Regla de Negocio 2: Determinar el tipo a revertir.
+		// Asumimos que si no es SERVICE, el tipo se revierte a 'REGULAR' por defecto,
+		// a menos que alguna regla de RRHH lo dicte (p.ej., basado en cargo/código).
+		// Si el tipo anterior se almacenó, lo usarías. Aquí usamos 'REGULAR' como default.
+		const defaultType = EmployeeTypesEnum.REGULAR
+
+		this.type = new EmployeeType(defaultType)
+
+		// NOTA DDD: Aquí se dispararía un Evento de Dominio:
+		// this.record(new EmployeeTypeChangedDomainEvent(this.idValue, defaultType));
+	}
+
+	// El método más importante: expresa la intención de cambio de estado
+	markAsTerminated(): void {
+		// Regla: No puedes terminar a alguien que ya fue terminado.
+		if (this.isStillWorkingValue === false) {
+			throw new InvalidArgumentError('El empleado ya se encuentra en estado "Desvinculado".')
+		}
+		this.isStillWorking = new EmployeeIsStillWorking(false)
+
+		// NOTA DDD: Aquí se dispararía un Evento de Dominio:
+		// this.record(new EmployeeStatusChangedDomainEvent(this.idValue, 'inactive'));
+		// El caso de uso UserDeactivator escucharía este evento.
+	}
+
+	// Nuevo método para manejar la re-contratación o activación
+	markAsActive(): void {
+		// Regla: No puedes activar a alguien que ya está activo.
+		if (this.isStillWorkingValue === true) {
+			throw new InvalidArgumentError('El empleado ya se encuentra en estado "Activo".')
+		}
+		this.isStillWorking = new EmployeeIsStillWorking(true)
 	}
 
 	updateEmail(newEmail: Primitives<EmployeeEmail>): void {

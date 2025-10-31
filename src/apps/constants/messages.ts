@@ -38,10 +38,12 @@ export const SUCCESS_MESSAGES = {
 	PROCESSOR_UPDATED: 'Procesador actualizado exitosamente',
 	PROCESSOR_DELETED: 'Procesador eliminado exitosamente',
 	USER_PASSWORD_UPDATED: 'Contraseña actualizada exitosamente',
-	USER_DELETED: 'Usuario eliminado exitosamente',
+	USER_DISABLED: 'Usuario deshabilitado exitosamente',
 	USER_UPDATED: 'Usuario actualizado exitosamente',
-	USER_REGISTERED: 'Usuario registrado exitosamente',
-	USER_PASSWORD_RESET: 'Se ha restablecido la contraseña con éxito'
+	USER_REGISTERED: 'Usuario de servicio registrado exitosamente',
+	USER_UNLOCK_ACCOUNT: 'Cuenta de usuario desbloqueada exitosamente',
+	USER_PASSWORD_RESET: 'Contraseña del usuario restablecida exitosamente',
+	USER_REACTIVATED: 'Cuenta de usuario reactivada exitosamente'
 }
 
 export const ERROR_MESSAGES = {

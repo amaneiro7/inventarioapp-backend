@@ -1,7 +1,8 @@
 import { EmployeeDoesNotExistError } from '../domain/Errors/EmployeeDoesNotExistError'
 import { EmployeeId } from '../domain/valueObject/EmployeeId'
-import { UpdateEmployeeUseCase } from '../domain/domainService/UpdateEmployeeUseCase'
+import { EnsureEmployeeCanBeUpdated } from '../domain/domainService/EnsureEmployeeCanBeUpdated'
 import { Employee } from '../domain/entity/Employee'
+import { EmployeeTypesEnum } from '../domain/valueObject/EmployeeType'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
@@ -12,15 +13,13 @@ import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { EmployeeTypesEnum } from '../domain/valueObject/EmployeeType'
-import { UserRepository } from '../../../User/user/domain/Repository/UserRepository'
-import { User } from '../../../User/user/domain/entity/User'
+import { type UserDesactivateAccount } from '../../../User/user/application/UserDesactivateAccount'
 
 /**
  * @description Use case for updating an existing Employee entity.
  */
 export class EmployeeUpdater {
-	private readonly updateEmployeeUseCase: UpdateEmployeeUseCase
+	private readonly ensureEmployeeCanBeUpdated: EnsureEmployeeCanBeUpdated
 	private readonly employeeRepository: EmployeeRepository
 	private readonly locationRepository: LocationRepository
 	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
@@ -28,7 +27,7 @@ export class EmployeeUpdater {
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
-	private readonly userRepository: UserRepository
+	private readonly userDesactivateAccount: UserDesactivateAccount
 
 	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
@@ -38,7 +37,7 @@ export class EmployeeUpdater {
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
-		userRepository: UserRepository
+		userDesactivateAccount: UserDesactivateAccount
 	}) {
 		this.employeeRepository = dependencies.employeeRepository
 		this.locationRepository = dependencies.locationRepository
@@ -47,9 +46,9 @@ export class EmployeeUpdater {
 		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
 		this.departamentoRepository = dependencies.departamentoRepository
 		this.cargoRepository = dependencies.cargoRepository
-		this.userRepository = dependencies.userRepository
+		this.userDesactivateAccount = dependencies.userDesactivateAccount
 
-		this.updateEmployeeUseCase = new UpdateEmployeeUseCase({
+		this.ensureEmployeeCanBeUpdated = new EnsureEmployeeCanBeUpdated({
 			employeeRepository: this.employeeRepository,
 			locationRepository: this.locationRepository,
 			directivaRepository: this.directivaRepository,
@@ -68,6 +67,9 @@ export class EmployeeUpdater {
 	 */
 	async run({ id, params }: { id: Primitives<EmployeeId>; params: Partial<EmployeeParams> }): Promise<void> {
 		const employeeId = new EmployeeId(id).value
+		// Guardamos el estado previo para la lógica de negocio posterior
+		const wasStillWorking = (await this.employeeRepository.searchById(employeeId))?.isStillWorking ?? true
+
 		const employee = await this.employeeRepository.searchById(employeeId)
 
 		if (!employee) {
@@ -76,26 +78,21 @@ export class EmployeeUpdater {
 
 		const employeeEntity = Employee.fromPrimitives(employee)
 
-		await this.updateEmployeeUseCase.execute({
+		await this.ensureEmployeeCanBeUpdated.execute({
 			entity: employeeEntity,
 			params
 		})
 
 		await this.employeeRepository.save(employeeEntity.toPrimitive())
 
-		if (employeeEntity.typeValue === EmployeeTypesEnum.SERVICE) {
-			if (employeeEntity.isStillWorkingValue === true) {
-				return
-			}
-
-			const user = await this.userRepository.searchByEmployeeId(employeeId)
-
-			if (!user) {
-				return
-			}
-
-			const userEntity = User.fromPrimitives(user)
-			userEntity.desactivateAccount()
+		// Si el empleado era de tipo 'service' y acaba de ser marcado como que ya no trabaja,
+		// ejecutamos el caso de uso para desactivar su cuenta de usuario.
+		if (
+			wasStillWorking &&
+			!employeeEntity.isStillWorkingValue &&
+			employeeEntity.typeValue === EmployeeTypesEnum.SERVICE
+		) {
+			await this.userDesactivateAccount.run({ employeeId })
 		}
 	}
 }

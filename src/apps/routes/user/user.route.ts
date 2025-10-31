@@ -2,22 +2,32 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
 import { UserDependencies } from '../../di/user/user.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { type UserGetAllController } from '../../controllers/user/user.get-all.controller'
-import { type UserDeleteController } from '../../controllers/user/user.delete.controller'
+import { type UserDisabledController } from '../../controllers/user/user.disabled.controller'
 import { type UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { type UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
 import { type UserGetController } from '../../controllers/user/user.get.controller'
-import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { type UserCreateController } from '../../controllers/user/user.create.controller'
+import { type UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
+import { type UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
 
 export const register = async (router: Router) => {
 	const getController: UserGetController = container.resolve(UserDependencies.GetController)
 	const getAllController: UserGetAllController = container.resolve(UserDependencies.GetAllController)
-	const deleteController: UserDeleteController = container.resolve(UserDependencies.DeleteController)
+	const disabledController: UserDisabledController = container.resolve(UserDependencies.DisabledController)
+	const reactivateController: UserReactivateAccountController = container.resolve(
+		UserDependencies.ReactivateAccountController
+	)
 	const changePaswwordController: UserChangePasswordController = container.resolve(
 		UserDependencies.ChangePasswordController
 	)
 	const resetPasswordController: UserResetPasswordController = container.resolve(
 		UserDependencies.ResetPasswordController
+	)
+	const createUserController: UserCreateController = container.resolve(UserDependencies.CreateController)
+	const unlockAccountController: UserUnlockAccountController = container.resolve(
+		UserDependencies.UnlockAccountController
 	)
 
 	/**
@@ -62,6 +72,36 @@ export const register = async (router: Router) => {
 
 	/**
 	 * @swagger
+	 * /users:
+	 *   post:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Crear un usuario a partir de un empleado
+	 *     description: Crea una nueva cuenta de usuario para un empleado existente.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               employeeId:
+	 *                 type: string
+	 *                 format: uuid
+	 *               roleId:
+	 *                 type: string
+	 *                 format: uuid
+	 *     responses:
+	 *       '201':
+	 *         description: Usuario creado con éxito.
+	 *       '400':
+	 *         description: Datos de entrada no válidos o el usuario ya existe.
+	 */
+	router.post('/users', authenticate, createUserController.run.bind(createUserController))
+	/**
+	 * @swagger
 	 * /users/change-password:
 	 *   patch:
 	 *     tags:
@@ -75,9 +115,9 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             $ref: '#/components/schemas/UserChangePassword'
+	 *             $ref: '#/components/schemas/UserChangePassword' # Asegúrate de que este schema esté definido en tu configuración de Swagger
 	 *     responses:
-	 *       '200':
+	 *       '201':
 	 *         description: Contraseña cambiada con éxito.
 	 *       '400':
 	 *         description: Contraseña actual incorrecta o datos no válidos.
@@ -101,9 +141,9 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             $ref: '#/components/schemas/UserResetPassword'
+	 *             $ref: '#/components/schemas/UserResetPassword' # Asegúrate de que este schema esté definido
 	 *     responses:
-	 *       '200':
+	 *       '201':
 	 *         description: Contraseña restablecida con éxito.
 	 *       '400':
 	 *         description: Datos no válidos.
@@ -114,26 +154,91 @@ export const register = async (router: Router) => {
 
 	/**
 	 * @swagger
-	 * /users:
-	 *   delete:
+	 * /users/unlock:
+	 *   patch:
 	 *     tags:
 	 *       - Usuarios
-	 *     summary: Eliminar un usuario
-	 *     description: Elimina un usuario del sistema por su ID.
+	 *     summary: Desbloquear cuenta de usuario
+	 *     description: Permite a un administrador desbloquear la cuenta de un usuario.
 	 *     security:
 	 *       - bearerAuth: []
-	 *     parameters:
-	 *       - in: query
-	 *         name: id
-	 *         required: true
-	 *         schema:
-	 *           type: string
-	 *         description: ID del usuario a eliminar.
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               id:
+	 *                 type: string
+	 *                 format: uuid
+	 *                 description: ID del usuario a desbloquear.
 	 *     responses:
-	 *       '204':
-	 *         description: Usuario eliminado con éxito.
+	 *       '200':
+	 *         description: Cuenta de usuario desbloqueada con éxito.
+	 *       '400':
+	 *         description: ID de usuario no proporcionado.
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.delete('users/', authenticate, deleteController.run.bind(deleteController))
+	router.patch('/users/unlock', authenticate, unlockAccountController.run.bind(unlockAccountController))
+
+	/**
+	 * @swagger
+	 * /users/disable:
+	 *   patch:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Deshabilitar un usuario
+	 *     description: Deshabilita la cuenta de un usuario y revierte el tipo del empleado asociado. No es una eliminación física.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               id:
+	 *                 type: string
+	 *                 format: uuid
+	 *                 description: ID del usuario a deshabilitar.
+	 *     responses:
+	 *       '200':
+	 *         description: Usuario deshabilitado con éxito.
+	 *       '400':
+	 *         description: ID de usuario no proporcionado.
+	 *       '404':
+	 *         description: Usuario no encontrado.
+	 */
+	router.patch('/users/disable', authenticate, disabledController.run.bind(disabledController))
+
+	/**
+	 * @swagger
+	 * /users/reactivate:
+	 *   patch:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Reactivar un usuario deshabilitado
+	 *     description: Reactiva una cuenta de usuario que fue previamente deshabilitada y vuelve a marcar al empleado como tipo 'servicio'.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               id:
+	 *                 type: string
+	 *                 format: uuid
+	 *                 description: ID del usuario a reactivar.
+	 *     responses:
+	 *       '200':
+	 *         description: Usuario reactivado con éxito.
+	 */
+
+	router.patch('/users/reactivate', authenticate, reactivateController.run.bind(reactivateController))
 }

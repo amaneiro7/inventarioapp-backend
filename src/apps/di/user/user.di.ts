@@ -1,50 +1,71 @@
 import { asClass, type AwilixContainer } from 'awilix'
-import { UserFinderAll } from '../../../Contexts/User/user/application/UserFinderAll'
-import { UserRemover } from '../../../Contexts/User/user/application/UserRemover'
-import { UserResetPassword } from '../../../Contexts/User/user/application/UserResetPassword'
-import { UserFinderByEmail } from '../../../Contexts/User/user/application/UserFindByEmail'
+//Repositories
 import { SequelizeUserRepository } from '../../../Contexts/User/user/infrastructure/persistance/Sequelize/SequelizeUserRepository'
+//Applications
+import { UserFinder } from '../../../Contexts/User/user/application/UserFinder'
+import { UserFinderAll } from '../../../Contexts/User/user/application/UserFinderAll'
+import { UserDisabledAccount } from '../../../Contexts/User/user/application/UserDisabledAccount'
+import { UserResetPassword } from '../../../Contexts/User/user/application/UserResetPassword'
 import { UserChangePassword } from '../../../Contexts/User/user/application/UserChangePassword'
+import { UserFinderByEmail } from '../../../Contexts/User/user/application/UserFindByEmail'
+import { CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
+import { UserDesactivateAccount } from '../../../Contexts/User/user/application/UserDesactivateAccount'
+import { UserUnlockAccount } from '../../../Contexts/User/user/application/UserUnlockAccount'
+//Controllers
+import { UserGetController } from '../../controllers/user/user.get.controller'
 import { UserGetAllController } from '../../controllers/user/user.get-all.controller'
-import { UserDeleteController } from '../../controllers/user/user.delete.controller'
+import { UserDisabledController } from '../../controllers/user/user.disabled.controller'
 import { UserChangePasswordController } from '../../controllers/user/user.change-password.controller'
 import { UserResetPasswordController } from '../../controllers/user/user.reset-password.controller'
-import { CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
-import { UserFinder } from '../../../Contexts/User/user/application/UserFinder'
-import { UserGetController } from '../../controllers/user/user.get.controller'
+import { UserCreateController } from '../../controllers/user/user.create.controller'
+import { UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
+import { UserReactivateAccount } from '../../../Contexts/User/user/application/UserReactivateAccount'
+import { UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
-	FinderAll = 'userFinderAll',
 	Finder = 'userFinder',
+	FinderAll = 'userFinderAll',
 	FinderByEmail = 'userFinderByEmail',
-	Register = 'createUserFromEmployee',
-	Remover = 'userRemover',
+	Disabled = 'userDisabledAccount',
 	ChangePassword = 'userChangePassword',
 	ResetPassword = 'userResetPassword',
+	Register = 'createUserFromEmployee',
+	UnlockAccount = 'userUnlockAccount',
+	ReactivateAccount = 'userReactivateAccount',
+	DesactivateUser = 'userDesactivateAccount',
 
 	GetController = 'userGetController',
 	GetAllController = 'userGetAllController',
-	DeleteController = 'userDeleteController',
+	DisabledController = 'userDisabledController',
+	ReactivateAccountController = 'userReactivateAccountController',
 	ChangePasswordController = 'userChangePasswordController',
-	ResetPasswordController = 'userResetPasswordController'
+	ResetPasswordController = 'userResetPasswordController',
+	CreateController = 'userCreateController',
+	UnlockAccountController = 'userUnlockAccountController'
 }
 export const register = (container: AwilixContainer) => {
 	container.register({
 		userRepository: asClass(SequelizeUserRepository).singleton(),
 
+		userDeactivateUser: asClass(UserDesactivateAccount),
 		userFinderAll: asClass(UserFinderAll),
 		userFinder: asClass(UserFinder),
 		userFinderByEmail: asClass(UserFinderByEmail),
 		createUserFromEmployee: asClass(CreateUserFromEmployee),
 		userResetPassword: asClass(UserResetPassword),
 		userChangePassword: asClass(UserChangePassword),
-		userRemover: asClass(UserRemover),
+		userDisabledAccount: asClass(UserDisabledAccount),
+		userReactivateAccount: asClass(UserReactivateAccount),
+		userUnlockAccount: asClass(UserUnlockAccount),
 
+		userCreateController: asClass(UserCreateController),
 		userGetController: asClass(UserGetController),
 		userGetAllController: asClass(UserGetAllController),
-		userDeleteController: asClass(UserDeleteController),
+		userDisabledController: asClass(UserDisabledController),
+		userReactivateAccountController: asClass(UserReactivateAccountController),
 		userChangePasswordController: asClass(UserChangePasswordController),
-		userResetPasswordController: asClass(UserResetPasswordController)
+		userResetPasswordController: asClass(UserResetPasswordController),
+		userUnlockAccountController: asClass(UserUnlockAccountController)
 	})
 }

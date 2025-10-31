@@ -31,7 +31,7 @@ interface CreateEmployeeRepositories {
 /**
  * @description Use case for creating a new Employee, including validation of all associated entities.
  */
-export class CreateEmployeeUseCase {
+export class EnsureEmployeeCanBeCreated {
 	constructor(private readonly repository: CreateEmployeeRepositories) {}
 
 	/**

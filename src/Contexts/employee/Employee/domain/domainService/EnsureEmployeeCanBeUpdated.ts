@@ -36,7 +36,7 @@ interface UpdateEmployeeRepositories {
 /**
  * @description Use case for updating an existing Employee, including validation of associated entities.
  */
-export class UpdateEmployeeUseCase {
+export class EnsureEmployeeCanBeUpdated {
 	constructor(private readonly repository: UpdateEmployeeRepositories) {}
 
 	/**
