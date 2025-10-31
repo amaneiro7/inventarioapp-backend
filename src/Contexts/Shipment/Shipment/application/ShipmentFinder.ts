@@ -1,8 +1,7 @@
 import { ShipmentId } from '../domain/valueObject/ShipmentId'
-
+import { ShipmentDoesNotExistError } from '../domain/errors/ShipmentDoesNotExistError'
 import { type ShipmentDto } from '../domain/entity/Shipment.dto'
 import { type ShipmentRepository } from '../domain/repository/ShipmentRepository'
-import { ShipmentDoesNotExistError } from '../domain/errors/ShipmentDoesNotExistError'
 
 export class ShipmentFinder {
 	private readonly shipmentRepository: ShipmentRepository
