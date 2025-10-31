@@ -1,3 +1,4 @@
+import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistError'
 import { SettingsKey } from '../domain/valueObject/SettingsKey'
 import { Settings } from '../domain/entity/Settings'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
@@ -26,7 +27,7 @@ export class SettingsUpdater {
 		const setting = await this.repository.search(settingKey)
 
 		if (!setting) {
-			throw new Error(`La configuración con la clave ${key} no existe.`)
+			throw new SettingDoesNotExistError(key)
 		}
 
 		const settingsEntity = Settings.fromPrimitives(setting)

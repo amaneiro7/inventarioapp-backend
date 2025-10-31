@@ -1,0 +1,23 @@
+[
+	{
+		"key": "SITE_NAME",
+		"value": "Mi Aplicación de Inventario",
+		"type": "string",
+		"description": "El nombre del sitio que se muestra en la interfaz de usuario.",
+		"isEditable": true
+	},
+	{
+		"key": "PASSWORD_EXPIRY_DAYS",
+		"value": "90",
+		"type": "number",
+		"description": "Número de días antes de que la contraseña de un usuario expire.",
+		"isEditable": false
+	},
+	{
+		"key": "ENABLE_DARK_MODE_BY_DEFAULT",
+		"value": "false",
+		"type": "boolean",
+		"description": "Define si el modo oscuro está habilitado por defecto para nuevos usuarios.",
+		"isEditable": true
+	}
+]

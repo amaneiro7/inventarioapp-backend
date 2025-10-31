@@ -22,7 +22,7 @@ export class UserUnlockAccount {
 	 * @description Executes the user unlock process.
 	 * 1. Ensures the acting user has super admin privileges.
 	 * 2. Finds the user to be unlocked by their ID.
-	 * 3. Calls the `unlcockAccount` method on the user entity to reset its status.
+	 * 3. Calls the `unlockAccount` method on the user entity to reset its status.
 	 * 4. Persists the changes to the user.
 	 * @param {{ user?: JwtPayloadUser; id: Primitives<UserId> }} params The parameters for unlocking the user.
 	 * @returns {Promise<void>} A promise that resolves when the user is successfully unlocked.
@@ -41,7 +41,7 @@ export class UserUnlockAccount {
 		const userEntity = User.fromPrimitives(existingUser)
 
 		// Unlock the user account
-		userEntity.unlcockAccount()
+		userEntity.unlockAccount()
 		await this.userRepository.save(userEntity.toPrimitives())
 	}
 }

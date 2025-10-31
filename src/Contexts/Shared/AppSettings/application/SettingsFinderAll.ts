@@ -2,13 +2,13 @@ import { type SettingsPrimitives } from '../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
 
 export class SettingsFinderAll {
-	private readonly settiingsRepository: SettingsRepository
+	private readonly settingsRepository: SettingsRepository
 
-	constructor(settiingsRepository: SettingsRepository) {
-		this.settiingsRepository = settiingsRepository
+	constructor(settingsRepository: SettingsRepository) {
+		this.settingsRepository = settingsRepository
 	}
 
 	async run(): Promise<SettingsPrimitives[]> {
-		return await this.settiingsRepository.searchAll()
+		return await this.settingsRepository.searchAll()
 	}
 }

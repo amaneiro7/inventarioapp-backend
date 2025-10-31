@@ -1,7 +1,9 @@
+import { SettingNotEditableError } from '../errors/SettingNotEditableError'
+import { SettingValueTypeError } from '../errors/SettingValueTypeError'
 import { SettingsDescription } from '../valueObject/SettingsDescription'
 import { SettingsIsEditable } from '../valueObject/SettingsIsEditable'
 import { SettingsKey } from '../valueObject/SettingsKey'
-import { SettingsType } from '../valueObject/SettingsType'
+import { SettingsType, SettingsTypeEnum } from '../valueObject/SettingsType'
 import { SettingsValue } from '../valueObject/SettingsValue'
 import { type Primitives } from '../../../domain/value-object/Primitives'
 import { type SettingsPrimitives } from './Settings.dto'
@@ -13,13 +15,15 @@ export class Settings {
 		private readonly type: SettingsType,
 		private readonly description: SettingsDescription,
 		private readonly isEditable: SettingsIsEditable
-	) {}
+	) {
+		this.validateValue(this.value)
+	}
 
 	static fromPrimitives(primitives: SettingsPrimitives): Settings {
 		return new Settings(
 			new SettingsKey(primitives.key),
 			new SettingsValue(primitives.value),
-			new SettingsType(primitives.type),
+			new SettingsType(primitives.type as SettingsTypeEnum),
 			new SettingsDescription(primitives.description),
 			new SettingsIsEditable(primitives.isEditable)
 		)
@@ -37,9 +41,32 @@ export class Settings {
 
 	updateValue(newValue: string): void {
 		if (!this.isEditableValue) {
-			throw new Error(`Setting with key '${this.keyValue}' is not editable.`)
+			throw new SettingNotEditableError(this.keyValue)
 		}
-		this.value = new SettingsValue(newValue)
+		const newSettingsValue = new SettingsValue(newValue)
+		this.validateValue(newSettingsValue)
+		this.value = newSettingsValue
+	}
+
+	private validateValue(value: SettingsValue): void {
+		try {
+			switch (this.type.value) {
+				case SettingsTypeEnum.NUMBER:
+					value.asNumber()
+					break
+				case SettingsTypeEnum.BOOLEAN:
+					// asBoolean() always returns a boolean, so no validation needed here
+					break
+				case SettingsTypeEnum.JSON:
+					value.asJson()
+					break
+				case SettingsTypeEnum.STRING:
+					// All values are strings initially, so no validation needed
+					break
+			}
+		} catch (error) {
+			throw new SettingValueTypeError(this.keyValue, this.typeValue, value.value, error as Error)
+		}
 	}
 
 	get keyValue(): Primitives<SettingsKey> {

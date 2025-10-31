@@ -6,7 +6,7 @@ import { type UserPassword } from '../../../domain/valueObject/UserPassword'
 import { type UserPrimitives } from '../../../domain/entity/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
-import { type UserStatusEnum } from '../../../domain/valueObject/UserStatus'
+import { UserStatusEnum } from '../../../domain/valueObject/UserStatus'
 import { type PasswordChangeAt } from '../../../domain/valueObject/PasswordChangeAt'
 import { type LastLoginAt } from '../../../domain/valueObject/LastLoginAt'
 import { type FailedAttemps } from '../../../domain/valueObject/FailedAttemps'
@@ -40,9 +40,9 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				employeeId: { type: DataTypes.UUID, allowNull: false, unique: true }, // EmployeeId is unique for a user
 				roleId: { type: DataTypes.INTEGER, allowNull: false },
 				status: {
-					type: DataTypes.ENUM('ACTIVE', 'LOCKED', 'SUSPENDED'), // Define enum values
+					type: DataTypes.ENUM(...Object.values(UserStatusEnum)), // Define enum values
 					allowNull: false,
-					defaultValue: 'ACTIVE'
+					defaultValue: UserStatusEnum.ACTIVE
 				},
 				password: { type: DataTypes.STRING(64), allowNull: false },
 				passwordChangeAt: { type: DataTypes.DATE, allowNull: false },

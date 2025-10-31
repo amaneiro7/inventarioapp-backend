@@ -1,5 +1,5 @@
 import { Primitives } from '../../../domain/value-object/Primitives'
-import { type SettingsDto, type SettingsPrimitives } from '../entity/Settings.dto'
+import { type SettingsPrimitives } from '../entity/Settings.dto'
 import { type SettingsKey } from '../valueObject/SettingsKey'
 
 /**
@@ -7,13 +7,13 @@ import { type SettingsKey } from '../valueObject/SettingsKey'
  * Define el contrato para la persistencia de la configuración.
  */
 export interface SettingsRepository {
-	searchAll(): Promise<SettingsDto[]>
+	searchAll(): Promise<SettingsPrimitives[]>
 	/**
 	 * Busca una configuración por su clave única.
 	 * @param key La clave de la configuración (e.g., 'PASSWORD_EXPIRY_DAYS').
 	 * @returns Una promesa que resuelve con la entidad Setting o null.
 	 */
-	search(key: Primitives<SettingsKey>): Promise<SettingsDto | null>
+	search(key: Primitives<SettingsKey>): Promise<SettingsPrimitives | null>
 
 	/**
 	 * Guarda o actualiza la entidad Setting.

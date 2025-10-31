@@ -110,7 +110,7 @@ export class User {
 		}
 	}
 
-	unlcockAccount(): void {
+	unlockAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
 		this.failedAttemps = new FailedAttemps(0)
 		this.lockoutUntil = new LockoutUntil(null)
