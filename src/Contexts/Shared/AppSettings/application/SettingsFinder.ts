@@ -1,13 +1,13 @@
-import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistError'
 import { SettingsKey } from '../domain/valueObject/SettingsKey'
+import { SettingsValue } from '../domain/valueObject/SettingsValue'
+import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistError'
 import { type SettingsPrimitives } from '../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
-import { SettingsValue } from '../domain/valueObject/SettingsValue'
 
 export class SettingsFinder {
 	private readonly settingsRepository: SettingsRepository
 
-	constructor(settingsRepository: SettingsRepository) {
+	constructor({ settingsRepository }: { settingsRepository: SettingsRepository }) {
 		this.settingsRepository = settingsRepository
 	}
 

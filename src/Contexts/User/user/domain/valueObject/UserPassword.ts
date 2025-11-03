@@ -12,8 +12,6 @@ export class UserPassword extends StringValueObject {
 	private static readonly HAS_NUMBER = /\d/
 	private static readonly HAS_SPECIAL_CHARACTER = /[!@#$%^&()*.]/
 
-	static readonly defaultPassword = 'Avion01.'
-
 	// El constructor ahora es privado para forzar el uso de los métodos estáticos.
 	private constructor(readonly value: string) {
 		super(value)

@@ -1,7 +1,7 @@
 [
 	{
 		"key": "DEFAULT_PASSWORD_HASH",
-		"value": "defaultPasswordHash",
+		"value": "$2b$10$j0Gg.uaZeCwHbZ4wPtw4mu1IClySAPwdtmZ3BxuHr5YKnCI8jHova",
 		"type": "string",
 		"description": "Hash de la contraseña inicial asignada a nuevos usuarios.",
 		"group": "security",
