@@ -1,11 +1,18 @@
 import pLimit from 'p-limit'
+import { AppSettingsDependencies } from '../../../../../apps/di/app-settings/app-settings.di'
+import { container } from '../../../../../apps/di/container'
 import { MonitoringStatuses } from '../domain/value-object/MonitoringStatus'
 import { type Primitives } from '../../value-object/Primitives'
 import { type PingResult, type PingService } from './PingService'
 import { type Logger } from '../../Logger'
 import { type MonitoringId } from '../domain/value-object/MonitoringId'
 import { type PingLogger } from '../infra/PingLogger'
-import { type MonitoringServiceConfig } from '../domain/entity/MonitoringConfig'
+import {
+	type MonitoringConfigDefaults,
+	type MonitoringConfigKeys,
+	type MonitoringServiceConfig
+} from '../domain/entity/MonitoringConfig'
+import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>
@@ -13,27 +20,21 @@ export interface GenericMonitoringRepository<DTO, Payload> {
 	save: (entity: Payload) => Promise<void>
 }
 
+/**
+ * @description Define las claves de configuración que un servicio de monitoreo debe proporcionar.
+ */
 export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
 	protected isRunning: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
-
+	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 	constructor(
 		protected readonly repository: R,
 		protected readonly pingService: PingService,
 		protected readonly logger: Logger,
 		protected readonly pingLogger: PingLogger
 	) {}
-	protected abstract monitoringConfig: MonitoringServiceConfig
 
-	public startMonitoringLoop({ showLogs = false }: { showLogs: boolean }): void {
-		if (this.monitoringConfig.concurrencyLimit <= 0) {
-			this.logger.info('El límite de concurrencia debe ser mayor que 0. Se establecerá en 1 por defecto.')
-			this.monitoringConfig.concurrencyLimit = 1
-		}
-		if (this.monitoringConfig.idleTimeMs < 0) {
-			this.logger.info('El tiempo de inactividad no puede ser negativo. Se establecerá en 0 por defecto.')
-			this.monitoringConfig.idleTimeMs = 0
-		}
+	public async startMonitoringLoop({ showLogs = false }: { showLogs: boolean }): Promise<void> {
 		if (this.isRunning) {
 			this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} ya está en ejecución.`)
 		}
@@ -43,7 +44,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		this.runLoop({ showLogs })
 	}
 
-	public stopMonitoringLoop(): void {
+	public async stopMonitoringLoop(): Promise<void> {
 		this.isRunning = false
 		if (this.timeoutId) {
 			clearTimeout(this.timeoutId)
@@ -51,6 +52,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		}
 		this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} se ha detenido.`)
 	}
+
 	protected async runLoop({ showLogs }: { showLogs: boolean }): Promise<void> {
 		if (!this.isRunning) {
 			this.logger.info('El bucle de monitoreo ha sido detenido.')
@@ -69,18 +71,20 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		const currentHour = now.getHours()
 		const currentDay = now.getDay()
 
+		const config = await this.loadMonitoringConfig()
+
 		let shouldRun: boolean
-		if (this.monitoringConfig.disableTimeChecks) {
+		if (config.disableTimeChecks) {
 			shouldRun = true
 			this.logger.info(
 				`[${formattedISOString}] Las comprobaciones de tiempo están deshabilitadas. Ejecutando escaneo de ping de ${this.getMonitoringName()}.`
 			)
 		} else {
 			shouldRun =
-				currentDay >= this.monitoringConfig.startDayOfWeek &&
-				currentDay <= this.monitoringConfig.endDayOfWeek &&
-				currentHour >= this.monitoringConfig.startHour &&
-				currentHour < this.monitoringConfig.endHour
+				currentDay >= config.startDayOfWeek &&
+				currentDay <= config.endDayOfWeek &&
+				currentHour >= config.startHour &&
+				currentHour < config.endHour
 
 			if (showLogs) {
 				if (shouldRun) {
@@ -89,11 +93,9 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					)
 				} else {
 					this.logger.info(
-						`[${formattedISOString}] ${this.getMonitoringName()} Saltando escaneo: Fuera del horario de trabajo definido (${
-							this.monitoringConfig.startDayOfWeek
-						}-${this.monitoringConfig.endDayOfWeek}, ${this.monitoringConfig.startHour}:00-${
-							this.monitoringConfig.endHour
-						}:00).`
+						`[${formattedISOString}] ${this.getMonitoringName()} Saltando escaneo: Fuera del horario de trabajo definido (${config.startDayOfWeek}-${
+							config.endDayOfWeek
+						}, ${config.startHour}:00-${config.endHour}:00).`
 					)
 				}
 			}
@@ -102,9 +104,58 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		if (shouldRun) {
 			await this.executePingScan({ showLogs })
 		}
-		const idleTimeMs = this.monitoringConfig.idleTimeMs * 60 * 1000
+		const idleTimeMs = config.idleTimeMs * 60 * 1000
 		this.timeoutId = setTimeout(() => this.runLoop({ showLogs }), idleTimeMs)
 	}
+
+	protected async loadMonitoringConfig(): Promise<MonitoringServiceConfig> {
+		const keys = this.getMonitoringConfigKeys()
+		const defaults = this.getMonitoringConfigDefaults()
+
+		const concurrencyLimit = await this.settingsFinder.findAsNumber({
+			key: keys.concurrencyLimit,
+			fallback: defaults.concurrencyLimit
+		})
+		const idleTimeMs = await this.settingsFinder.findAsNumber({
+			key: keys.idleTimeMs,
+			fallback: defaults.idleTimeMs
+		})
+		const startDayOfWeek = await this.settingsFinder.findAsNumber({
+			key: keys.startDayOfWeek,
+			fallback: defaults.startDayOfWeek
+		})
+		const endDayOfWeek = await this.settingsFinder.findAsNumber({
+			key: keys.endDayOfWeek,
+			fallback: defaults.endDayOfWeek
+		})
+		const startHour = await this.settingsFinder.findAsNumber({ key: keys.startHour, fallback: defaults.startHour })
+		const endHour = await this.settingsFinder.findAsNumber({ key: keys.endHour, fallback: defaults.endHour })
+		const disableTimeChecks = await this.settingsFinder.findAsBoolean({
+			key: keys.disableTimeChecks,
+			fallback: defaults.disableTimeChecks
+		})
+
+		return {
+			concurrencyLimit: concurrencyLimit > 0 ? concurrencyLimit : 1,
+			idleTimeMs: idleTimeMs >= 0 ? idleTimeMs : 0,
+			startDayOfWeek,
+			endDayOfWeek,
+			startHour,
+			endHour,
+			disableTimeChecks
+		}
+	}
+
+	/**
+	 * @description Las clases hijas deben implementar este método para proporcionar las claves de configuración específicas.
+	 */
+	protected abstract getMonitoringConfigKeys(): MonitoringConfigKeys
+
+	/**
+	 * @description Las clases hijas deben implementar este método para proporcionar los valores por defecto de la configuración.
+	 */
+	protected abstract getMonitoringConfigDefaults(): MonitoringConfigDefaults
+
 	protected abstract getMonitoringName(): string
 	protected abstract getIpAddress(item: DTO): Promise<string | null | undefined>
 	protected abstract getExpectedHostname(item?: DTO): Promise<string | null | undefined>
@@ -130,7 +181,8 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				message: `Iniciando escaneo de ping de ${this.getMonitoringName()}.`
 			}) // Log start of scan
 
-			const limit = pLimit(this.monitoringConfig.concurrencyLimit)
+			const config = await this.loadMonitoringConfig()
+			const limit = pLimit(config.concurrencyLimit)
 			// const pageSize = this.monitoringConfig?. ?? 1000 // Default to 1000 if not set
 			const pageSize = 1000 // Default to 1000 if not set
 			let page = 1

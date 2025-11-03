@@ -3,6 +3,7 @@ import { SettingValueTypeError } from '../errors/SettingValueTypeError'
 import { SettingsDescription } from '../valueObject/SettingsDescription'
 import { SettingsIsEditable } from '../valueObject/SettingsIsEditable'
 import { SettingsKey } from '../valueObject/SettingsKey'
+import { SettingsGroup } from '../valueObject/SettingsGroup'
 import { SettingsType, SettingsTypeEnum } from '../valueObject/SettingsType'
 import { SettingsValue } from '../valueObject/SettingsValue'
 import { type Primitives } from '../../../domain/value-object/Primitives'
@@ -13,6 +14,7 @@ export class Settings {
 		private readonly key: SettingsKey,
 		private value: SettingsValue,
 		private readonly type: SettingsType,
+		private readonly group: SettingsGroup,
 		private readonly description: SettingsDescription,
 		private readonly isEditable: SettingsIsEditable
 	) {
@@ -24,6 +26,7 @@ export class Settings {
 			new SettingsKey(primitives.key),
 			new SettingsValue(primitives.value),
 			new SettingsType(primitives.type as SettingsTypeEnum),
+			new SettingsGroup(primitives.group ?? ''),
 			new SettingsDescription(primitives.description),
 			new SettingsIsEditable(primitives.isEditable)
 		)
@@ -34,6 +37,7 @@ export class Settings {
 			key: this.keyValue,
 			value: this.valueValue,
 			type: this.typeValue,
+			group: this.groupValue,
 			description: this.descriptionValue,
 			isEditable: this.isEditableValue
 		}
@@ -79,6 +83,9 @@ export class Settings {
 
 	get typeValue(): Primitives<SettingsType> {
 		return this.type.value
+	}
+	get groupValue(): Primitives<SettingsGroup> {
+		return this.group.value
 	}
 
 	get descriptionValue(): Primitives<SettingsDescription> {

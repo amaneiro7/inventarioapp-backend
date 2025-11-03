@@ -7,3 +7,23 @@ export interface MonitoringServiceConfig {
 	endDayOfWeek: number // Día de la semana de fin (0=Domingo, 1=Lunes, ..., 6=Sábado)
 	disableTimeChecks?: boolean // Opcional: Si es true, ignora las restricciones de tiempo (útil para pruebas)
 }
+
+export interface MonitoringConfigKeys {
+	concurrencyLimit: string
+	idleTimeMs: string
+	startDayOfWeek: string
+	endDayOfWeek: string
+	startHour: string
+	endHour: string
+	disableTimeChecks: string
+}
+
+export interface MonitoringConfigDefaults {
+	concurrencyLimit: number
+	idleTimeMs: number
+	startDayOfWeek: number
+	endDayOfWeek: number
+	startHour: number
+	endHour: number
+	disableTimeChecks: boolean
+}

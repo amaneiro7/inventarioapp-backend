@@ -1,4 +1,5 @@
 import { User } from '../domain/entity/User'
+import { Employee } from '../../../employee/Employee/domain/entity/Employee'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
@@ -9,7 +10,8 @@ import { type RoleRepository } from '../../Role/domain/RoleRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type RoleId } from '../../Role/domain/RoleId'
 import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
-import { Employee } from '../../../employee/Employee/domain/entity/Employee'
+import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 interface CreateUserFromEmployeeParams {
 	employeeId: EmployeeId['value']
@@ -23,19 +25,23 @@ export class CreateUserFromEmployee {
 	private readonly userRepository: UserRepository
 	private readonly roleRepository: RoleRepository
 	private readonly employeeRepository: EmployeeRepository // Add EmployeeRepository
+	private readonly settingsFinder: SettingsFinder
 
 	constructor({
 		userRepository,
 		roleRepository,
-		employeeRepository
+		employeeRepository,
+		settingsFinder
 	}: {
 		userRepository: UserRepository
 		roleRepository: RoleRepository
 		employeeRepository: EmployeeRepository
+		settingsFinder: SettingsFinder
 	}) {
 		this.userRepository = userRepository
 		this.roleRepository = roleRepository
 		this.employeeRepository = employeeRepository
+		this.settingsFinder = settingsFinder
 	}
 
 	/**
@@ -74,9 +80,11 @@ export class CreateUserFromEmployee {
 		await this.employeeRepository.save(employeeEntity.toPrimitive())
 
 		// 5. Create the user entity with a generated password
+		const settings = await this.settingsFinder.run({ key: AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH })
 		const userEntity = User.createFromEmployee({
 			employeeId: payload.employeeId,
-			roleId: payload.roleId
+			roleId: payload.roleId,
+			password: settings.value as string
 		})
 		await this.userRepository.save(userEntity.toPrimitives())
 	}

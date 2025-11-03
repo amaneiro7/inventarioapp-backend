@@ -44,4 +44,11 @@ export class FileSettingsRepository implements SettingsRepository {
 		this.settings.set(setting.key, setting)
 		await this.persist()
 	}
+
+	async saveMultiple(settings: SettingsPrimitives[]): Promise<void> {
+		for (const setting of settings) {
+			this.settings.set(setting.key, setting)
+		}
+		await this.persist()
+	}
 }

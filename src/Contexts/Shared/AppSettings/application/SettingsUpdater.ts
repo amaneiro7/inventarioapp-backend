@@ -7,11 +7,16 @@ import { type SettingsRepository } from '../domain/repository/SettingsRepository
  * @description Caso de Uso para actualizar una configuración existente.
  * Es la capa de orquestación que llama al repositorio y al dominio.
  */
-export class SettingsUpdater {
-	private readonly repository: SettingsRepository
 
-	constructor(repository: SettingsRepository) {
-		this.repository = repository
+interface UpdateSettingsParams {
+	key: string
+	value: string
+}
+export class SettingsUpdater {
+	private readonly settingsRepository: SettingsRepository
+
+	constructor({ settingsRepository }: { settingsRepository: SettingsRepository }) {
+		this.settingsRepository = settingsRepository
 	}
 
 	/**
@@ -20,11 +25,11 @@ export class SettingsUpdater {
 	 * @param value El nuevo valor a establecer.
 	 * @throws {Error} Si la configuración no existe o la validación de dominio falla.
 	 */
-	async run(key: string, value: string): Promise<void> {
+	async run({ key, value }: UpdateSettingsParams): Promise<void> {
 		const settingKey = new SettingsKey(key).value
 
 		// 1. Recuperar la entidad (desde DB o archivo)
-		const setting = await this.repository.search(settingKey)
+		const setting = await this.settingsRepository.search(settingKey)
 
 		if (!setting) {
 			throw new SettingDoesNotExistError(key)
@@ -34,6 +39,6 @@ export class SettingsUpdater {
 		settingsEntity.updateValue(value)
 
 		// 3. Persistir el cambio
-		await this.repository.save(settingsEntity.toPrimitives())
+		await this.settingsRepository.save(settingsEntity.toPrimitives())
 	}
 }

@@ -9,6 +9,8 @@ import { type User as UserDto } from '../../User/user/domain/entity/User.dto'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto'
 import { type Nullable } from '../../Shared/domain/Nullable'
+import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
+import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 /**
  * @class UserLoginLocal
@@ -18,16 +20,20 @@ import { type Nullable } from '../../Shared/domain/Nullable'
 export class UserLoginLocal {
 	private readonly userRepository: UserRepository
 	private readonly employeeRepository: EmployeeRepository
+	private readonly settingsFinder: SettingsFinder
 
 	constructor({
 		userRepository,
-		employeeRepository
+		employeeRepository,
+		settingsFinder
 	}: {
 		userRepository: UserRepository
 		employeeRepository: EmployeeRepository
+		settingsFinder: SettingsFinder
 	}) {
 		this.userRepository = userRepository
 		this.employeeRepository = employeeRepository
+		this.settingsFinder = settingsFinder
 	}
 
 	/**
@@ -74,13 +80,29 @@ export class UserLoginLocal {
 
 		// 5. Comparar contraseña
 		const isMatch = PasswordService.compare(password, user.password)
+		const lockoutTimeInMinutes = await this.settingsFinder.findAsNumber({
+			key: AppSettingKeys.SECURITY.LOCKOUT_UNTIL_MINUTES,
+			fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
+		})
+		const maxAttempts = await this.settingsFinder.findAsNumber({
+			key: AppSettingKeys.SECURITY.FAILED_ATTEMPTS_LIMIT,
+			fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
+		})
 		if (!isMatch) {
-			userEntity.increaseFailedAttepns()
+			userEntity.increaseFailedAttepns({
+				lockoutTimeInMinutes,
+				maxAttempts
+			})
 			await this.userRepository.save(userEntity.toPrimitives())
 			throw new InvalidCredentialsError()
 		}
 
-		if (userEntity.isPasswordExpired()) {
+		// Verificar si la cuenta está suspendida
+		const daysToExpire = await this.settingsFinder.findAsNumber({
+			key: AppSettingKeys.SECURITY.PASSWORD_EXPIRY_DAYS,
+			fallback: AppSettingDefaults.SECURITY.PASSWORD_EXPIRY_DAYS
+		})
+		if (userEntity.isPasswordExpired(daysToExpire)) {
 			user.passwordExpired = true
 		}
 

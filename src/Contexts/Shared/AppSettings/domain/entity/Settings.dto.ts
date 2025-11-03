@@ -1,5 +1,6 @@
 import { type Primitives } from '../../../domain/value-object/Primitives'
 import { type SettingsDescription } from '../valueObject/SettingsDescription'
+import { type SettingsGroup } from '../valueObject/SettingsGroup'
 import { type SettingsIsEditable } from '../valueObject/SettingsIsEditable'
 import { type SettingsKey } from '../valueObject/SettingsKey'
 import { type SettingsType } from '../valueObject/SettingsType'
@@ -12,5 +13,10 @@ export interface SettingsPrimitives {
 	value: Primitives<SettingsValue>
 	type: Primitives<SettingsType>
 	description: Primitives<SettingsDescription>
+	group?: Primitives<SettingsGroup>
 	isEditable: Primitives<SettingsIsEditable>
+}
+
+export type SettingsDto = Omit<SettingsPrimitives, 'value'> & {
+	value: string | number | boolean | object
 }

@@ -5,6 +5,7 @@ import { type SettingsPrimitives } from '../../../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../../../domain/repository/SettingsRepository'
 import { type SettingsKey } from '../../../domain/valueObject/SettingsKey'
 import { type CacheService } from '../../../../domain/CacheService'
+import { sequelize } from '../../../../infrastructure/persistance/Sequelize/SequelizeConfig'
 
 export class SequelizeSettingsRepository implements SettingsRepository {
 	private readonly model = SequelizeSettingsModel
@@ -45,6 +46,29 @@ export class SequelizeSettingsRepository implements SettingsRepository {
 		await this.invalidateCache(setting.key)
 	}
 
+	async saveMultiple(settings: SettingsPrimitives[]): Promise<void> {
+		const transaction = await sequelize.transaction()
+		try {
+			// Usamos Promise.all para ejecutar todas las operaciones de upsert en paralelo dentro de la transacción.
+			await Promise.all(
+				settings.map(async setting => {
+					await this.model.upsert(setting, { transaction })
+				})
+			)
+
+			// Si todas las operaciones tienen éxito, confirmamos la transacción.
+			await transaction.commit()
+
+			// Una vez confirmada la transacción, invalidamos la caché.
+			await this.invalidateBulkCache(settings.map(s => s.key))
+		} catch (error) {
+			// Si alguna operación falla, revertimos todos los cambios.
+			await transaction.rollback()
+			// Propagamos el error para que la capa superior pueda manejarlo.
+			throw error
+		}
+	}
+
 	private async invalidateCache(key: string): Promise<void> {
 		const cacheKeysToRemove: string[] = [
 			`${this.cacheKeyPrefix}:all`, // Elimina el caché de 'searchAll'
@@ -52,6 +76,16 @@ export class SequelizeSettingsRepository implements SettingsRepository {
 		]
 
 		// Ejecución concurrente de la eliminación de caché
+		await Promise.all(cacheKeysToRemove.map(async cacheKey => this.cache.removeCachedData({ cacheKey })))
+	}
+
+	private async invalidateBulkCache(keys: string[]): Promise<void> {
+		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}:all`]
+
+		for (const key of keys) {
+			cacheKeysToRemove.push(`${this.cacheKeyPrefix}:key:${key}`)
+		}
+
 		await Promise.all(cacheKeysToRemove.map(async cacheKey => this.cache.removeCachedData({ cacheKey })))
 	}
 }

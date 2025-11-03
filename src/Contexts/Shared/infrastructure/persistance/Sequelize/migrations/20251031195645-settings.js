@@ -18,6 +18,10 @@ module.exports = {
 				allowNull: false,
 				defaultValue: 'string'
 			},
+			group: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
 			description: {
 				type: Sequelize.STRING,
 				allowNull: false
@@ -26,12 +30,6 @@ module.exports = {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
 				defaultValue: false
-			},
-			created_at: {
-				type: Sequelize.DATE
-			},
-			updated_at: {
-				type: Sequelize.DATE
 			}
 		})
 	},

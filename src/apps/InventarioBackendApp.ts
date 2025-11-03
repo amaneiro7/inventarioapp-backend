@@ -1,20 +1,24 @@
-import { config } from '../Contexts/Shared/infrastructure/config'
 import { Server } from './server'
+import { config } from '../Contexts/Shared/infrastructure/config'
 import { container } from './di/container'
 import { SharedDependencies } from './di/shared.di'
 import { AuthDependencies } from './di/auth/auth.di'
 import { DeviceDependencies } from './di/device/device.di'
-import { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
-import { LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
 import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
+import { AppSettingsDependencies } from './di/app-settings/app-settings.di'
+import { AppSettingKeys } from '../Contexts/Shared/AppSettings/domain/entity/SettingsKeys'
+import { type DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
+import { type LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
 import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 import { type Database } from '../Contexts/Shared/domain/Database'
+import { type SettingsFinder } from '../Contexts/Shared/AppSettings/application/SettingsFinder'
 
 export class InventarioBackendApp {
 	server?: Server
 	private readonly logger: Logger = container.resolve(SharedDependencies.Logger)
+	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 	private readonly devicePingService: DeviceMonitoringService = container.resolve(
 		DeviceDependencies.DeviceMonitoringService
 	)
@@ -41,7 +45,7 @@ export class InventarioBackendApp {
 			await this.server.listen()
 
 			// 4. Iniciar los bucles de monitoreo.
-			this.startMonitoringServices()
+			await this.startMonitoringServices()
 		} catch (error) {
 			this.logger.error(`Ocurrió un error durante el arranque de la aplicación:, ${error as Error}`)
 			// Propagar el error para que el proceso principal pueda detenerse.
@@ -89,19 +93,37 @@ export class InventarioBackendApp {
 		await cache.connect()
 	}
 
-	private startMonitoringServices(): void {
-		if (config.monitoring.location.isLocationMonitoringEnabled) {
+	private async startMonitoringServices(): Promise<void> {
+		const isLocationMonitoringEnabled = await this.isSettingEnabled(
+			AppSettingKeys.LOCATION_MONITORING.ENABLED,
+			false // default value
+		)
+		if (isLocationMonitoringEnabled) {
 			this.locationPingService.startMonitoringLoop({ showLogs: false })
 			this.logger.info('El servicio de monitoreo de ubicaciones está activo.')
 		} else {
 			this.logger.info('El servicio de monitoreo de ubicaciones está inactivo.')
 		}
 
-		if (config.monitoring.device.isDeviceMonitoringEnabled) {
+		const isDeviceMonitoringEnabled = await this.isSettingEnabled(
+			AppSettingKeys.DEVICE_MONITORING.ENABLED,
+			false // default value
+		)
+		if (isDeviceMonitoringEnabled) {
 			this.devicePingService.startMonitoringLoop({ showLogs: false })
 			this.logger.info('El servicio de monitoreo de dispositivos está activo.')
 		} else {
 			this.logger.info('El servicio de monitoreo de dispositivos está inactivo.')
+		}
+	}
+
+	private async isSettingEnabled(key: string, fallback: boolean): Promise<boolean> {
+		try {
+			return await this.settingsFinder.findAsBoolean({ key, fallback })
+		} catch (error) {
+			this.logger.info(`No se pudo obtener la configuración para "${key}". Usando valor por defecto: ${fallback}`)
+			this.logger.error(`Error al obtener la configuración "${key}": ${error as Error}`)
+			return fallback
 		}
 	}
 }

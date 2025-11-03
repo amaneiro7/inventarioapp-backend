@@ -21,4 +21,6 @@ export interface SettingsRepository {
 	 * @returns Una promesa que resuelve cuando la configuración ha sido guardada.
 	 */
 	save(setting: SettingsPrimitives): Promise<void>
+
+	saveMultiple(settings: SettingsPrimitives[]): Promise<void>
 }

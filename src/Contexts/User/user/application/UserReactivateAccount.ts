@@ -4,12 +4,14 @@ import { UserStatusEnum } from '../domain/valueObject/UserStatus'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 import { type UserId } from '../domain/valueObject/UserId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for reactivating a suspended user account.
@@ -19,16 +21,19 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 export class UserReactivateAccount {
 	private readonly userRepository: UserRepository
 	private readonly employeeRepository: EmployeeRepository // Add EmployeeRepository
-
+	private readonly settingsFinder: SettingsFinder
 	constructor({
 		userRepository,
-		employeeRepository
+		employeeRepository,
+		settingsFinder
 	}: {
 		userRepository: UserRepository
 		employeeRepository: EmployeeRepository
+		settingsFinder: SettingsFinder
 	}) {
 		this.userRepository = userRepository
 		this.employeeRepository = employeeRepository
+		this.settingsFinder = settingsFinder
 	}
 
 	/**
@@ -74,7 +79,10 @@ export class UserReactivateAccount {
 		employeeEntity.markAsServiceUser() // 4. Mark employee as 'service'
 
 		// Reactivate the user account
+		const key = AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH
+		const settings = await this.settingsFinder.run({ key })
 		userEntity.reactivateAccount()
+		userEntity.resetPasswordFromHash(settings.value as string)
 		await Promise.all([
 			this.employeeRepository.save(employeeEntity.toPrimitive()),
 			this.userRepository.save(userEntity.toPrimitives())

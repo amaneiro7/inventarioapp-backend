@@ -1,9 +1,11 @@
 'use strict'
 
+const bcrypt = require('bcrypt')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		const defaultPasswordHash = '$2a$10$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' // Reemplazar con el hash real de la contraseña por defecto
+		const saltRounds = 10
+		const defaultPasswordHash = bcrypt.hashSync('Avion01.', saltRounds)
 
 		const settingsToSeed = [
 			// CONFIGURACIONES DE SEGURIDAD
@@ -12,83 +14,164 @@ module.exports = {
 				value: defaultPasswordHash,
 				type: 'string',
 				description: 'Hash de la contraseña inicial asignada a nuevos usuarios.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'security',
+				is_editable: true
 			},
 			{
 				key: 'PASSWORD_EXPIRY_DAYS',
 				value: '90',
 				type: 'number',
 				description: 'Número de días antes de que una contraseña caduque y se requiera un cambio.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'security',
+				is_editable: true
 			},
 			{
 				key: 'FAILED_ATTEMPTS_LIMIT',
 				value: '5',
 				type: 'number',
 				description: 'Número máximo de intentos de login fallidos antes de bloquear la cuenta.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'security',
+				is_editable: true
 			},
 			{
 				key: 'LOCKOUT_UNTIL_MINUTES',
 				value: '15',
 				type: 'number',
 				description: 'Tiempo de bloqueo (en minutos) después de alcanzar el límite de intentos fallidos.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'security',
+				is_editable: true
 			},
 
 			// CONFIGURACIONES DE MONITOREO
-			{
-				key: 'DEVICE_MONITORING_ENABLED',
-				value: 'false',
-				type: 'boolean',
-				description: 'Interruptor principal para activar el monitoreo de dispositivos.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
-			},
+			// LOCATION
 			{
 				key: 'LOCATION_MONITORING_ENABLED',
 				value: 'false',
 				type: 'boolean',
 				description: 'Interruptor principal para activar el monitoreo de ubicación.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_CONCURRENCY_LIMIT',
+				value: '5',
+				type: 'number',
+				description: 'Límite de pings concurrentes para el monitoreo de ubicación.',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_IDLE_TIME_MINUTES',
+				value: '1',
+				type: 'number',
+				description: 'Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_START_HOUR', // Ejemplo: 8 para 8 AM
+				value: '7',
+				type: 'number',
+				description: 'Hora (en formato 24h) en que inicia el periodo de monitoreo.',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_END_HOUR',
+				value: '19',
+				type: 'number',
+				description: 'Hora (en formato 24h) en que finaliza el periodo de monitoreo.',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_START_DAY_OF_WEEK', // 0 (Domingo) a 6 (Sábado)
+				value: '1',
+				type: 'number',
+				description: 'Día de la semana en que inicia el monitoreo (0=Domingo, 6=Sábado).',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_END_DAY_OF_WEEK',
+				value: '6',
+				type: 'number',
+				description: 'Día de la semana en que finaliza el monitoreo (0=Domingo, 6=Sábado).',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'LOCATION_MONITORING_DISABLE_TIME_CHECKS',
+				value: 'false',
+				type: 'boolean',
+				description: 'Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).',
+				group: 'location_monitoring',
+				is_editable: true
+			},
+			// DEVICE
+			{
+				key: 'DEVICE_MONITORING_ENABLED',
+				value: 'false',
+				type: 'boolean',
+				description: 'Interruptor principal para activar el monitoreo de dispositivos.',
+				group: 'device_monitoring',
+				is_editable: true
 			},
 			{
 				key: 'DEVICE_MONITORING_CONCURRENCY_LIMIT',
 				value: '5',
 				type: 'number',
 				description: 'Límite de pings concurrentes para el monitoreo de dispositivos.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'device_monitoring',
+				is_editable: true
 			},
 			{
-				key: 'DEVICE_MONITORING_START_HOUR',
+				key: 'DEVICE_MONITORING_IDLE_TIME_MINUTES',
+				value: '1',
+				type: 'number',
+				description: 'Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.',
+				group: 'device_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'DEVICE_MONITORING_START_HOUR', // Ejemplo: 8 para 8 AM
 				value: '7',
 				type: 'number',
 				description: 'Hora (en formato 24h) en que inicia el periodo de monitoreo.',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'device_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'DEVICE_MONITORING_END_HOUR',
+				value: '19',
+				type: 'number',
+				description: 'Hora (en formato 24h) en que finaliza el periodo de monitoreo.',
+				group: 'device_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'DEVICE_MONITORING_START_DAY_OF_WEEK', // 0 (Domingo) a 6 (Sábado)
+				value: '1',
+				type: 'number',
+				description: 'Día de la semana en que inicia el monitoreo (0=Domingo, 6=Sábado).',
+				group: 'device_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'DEVICE_MONITORING_END_DAY_OF_WEEK',
+				value: '6',
+				type: 'number',
+				description: 'Día de la semana en que finaliza el monitoreo (0=Domingo, 6=Sábado).',
+				group: 'device_monitoring',
+				is_editable: true
 			},
 			{
 				key: 'DEVICE_MONITORING_DISABLE_TIME_CHECKS',
 				value: 'false',
 				type: 'boolean',
 				description: 'Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).',
-				is_editable: true,
-				created_at: new Date(),
-				updated_at: new Date()
+				group: 'device_monitoring',
+				is_editable: true
 			}
 		]
 

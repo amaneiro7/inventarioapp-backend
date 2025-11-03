@@ -67,6 +67,6 @@ export const register = (container: AwilixContainer) => {
 		deviceGetByCriteria: asClass(DeviceSearchByCriteriaController),
 		deviceExcelDownload: asClass(DeviceDownloadExcelServiceController),
 		// This service is a stateless orchestrator, so transient (default) is the best fit.
-		deviceMonitoringService: asClass(DeviceMonitoringService).scoped()
+		deviceMonitoringService: asClass(DeviceMonitoringService).singleton()
 	})
 }

@@ -1,16 +1,19 @@
-import { config } from '../../../Shared/infrastructure/config'
 import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'
+import { AppSettingDefaults, AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
 import { type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
-import { type LocationMonitoringDto, type LocationMonitoringPrimitives } from '../domain/entity/LocationMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
-import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
+import { type LocationMonitoringDto, type LocationMonitoringPrimitives } from '../domain/entity/LocationMonitoring.dto'
+import {
+	MonitoringConfigDefaults,
+	MonitoringConfigKeys
+} from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
 /**
  * Service responsible for monitoring locations. Extends the generic MonitoringService.
@@ -27,14 +30,6 @@ export class LocationMonitoringService extends MonitoringService<
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
 
-	/**
-	 * Constructs a new LocationMonitoringService instance.
-	 * @param {{ locationMonitoringRepository: LocationMonitoringRepository; pingService: PingService; logger: Logger; pingLogger: PingLogger }} params - The constructor parameters.
-	 * @param {LocationMonitoringRepository} params.locationMonitoringRepository - The repository for location monitoring data.
-	 * @param {PingService} params.pingService - The service used to perform network pings.
-	 * @param {Logger} params.logger - The logger instance for general logging.
-	 * @param {PingLogger} params.pingLogger - The logger instance specifically for ping results.
-	 */
 	constructor({
 		locationMonitoringRepository,
 		logger,
@@ -53,16 +48,28 @@ export class LocationMonitoringService extends MonitoringService<
 		this.pingLogger = pingLogger
 	}
 
-	/**
-	 * Configuration for location monitoring, loaded from application config.
-	 */ protected monitoringConfig: MonitoringServiceConfig = {
-		concurrencyLimit: config.monitoring.location.locationMonitoringConcurrencyLimit,
-		startDayOfWeek: config.monitoring.location.locationMonitoringStartDayOfWeek,
-		endDayOfWeek: config.monitoring.location.locationMonitoringEndDayOfWeek,
-		startHour: config.monitoring.location.locationMonitoringStartHour,
-		endHour: config.monitoring.location.locationMonitoringEndHour,
-		idleTimeMs: config.monitoring.location.locationMonitoringIdleTimeMs,
-		disableTimeChecks: config.monitoring.location.isLocationMonitoringDisableTimeChecks
+	protected getMonitoringConfigKeys(): MonitoringConfigKeys {
+		return {
+			concurrencyLimit: AppSettingKeys.LOCATION_MONITORING.CONCURRENCY_LIMIT,
+			idleTimeMs: AppSettingKeys.LOCATION_MONITORING.IDLE_TIME_MINUTES,
+			startDayOfWeek: AppSettingKeys.LOCATION_MONITORING.START_DAY_OF_WEEK,
+			endDayOfWeek: AppSettingKeys.LOCATION_MONITORING.END_DAY_OF_WEEK,
+			startHour: AppSettingKeys.LOCATION_MONITORING.START_HOUR,
+			endHour: AppSettingKeys.LOCATION_MONITORING.END_HOUR,
+			disableTimeChecks: AppSettingKeys.LOCATION_MONITORING.DISABLE_TIME_CHECKS
+		}
+	}
+
+	protected getMonitoringConfigDefaults(): MonitoringConfigDefaults {
+		return {
+			concurrencyLimit: AppSettingDefaults.LOCATION_MONITORING.CONCURRENCY_LIMIT,
+			idleTimeMs: AppSettingDefaults.LOCATION_MONITORING.IDLE_TIME_MINUTES,
+			startDayOfWeek: AppSettingDefaults.LOCATION_MONITORING.START_DAY_OF_WEEK,
+			endDayOfWeek: AppSettingDefaults.LOCATION_MONITORING.END_DAY_OF_WEEK,
+			startHour: AppSettingDefaults.LOCATION_MONITORING.START_HOUR,
+			endHour: AppSettingDefaults.LOCATION_MONITORING.END_HOUR,
+			disableTimeChecks: AppSettingDefaults.LOCATION_MONITORING.DISABLE_TIME_CHECKS
+		}
 	}
 
 	/**

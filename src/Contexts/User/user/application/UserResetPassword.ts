@@ -1,20 +1,29 @@
 import { User } from '../domain/entity/User'
 import { UserId } from '../domain/valueObject/UserId'
-import { UserPassword } from '../domain/valueObject/UserPassword'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
+import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for resetting a user's password to a default value.
  */
 export class UserResetPassword {
 	private readonly userRepository: UserRepository
+	private readonly settingsFinder: SettingsFinder
 
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	constructor({
+		userRepository,
+		settingsFinder
+	}: {
+		userRepository: UserRepository
+		settingsFinder: SettingsFinder
+	}) {
 		this.userRepository = userRepository
+		this.settingsFinder = settingsFinder
 	}
 
 	/**
@@ -35,8 +44,11 @@ export class UserResetPassword {
 		}
 
 		const userEntity = User.fromPrimitives(userToResetPassword)
-		const newPassword = UserPassword.defaultPassword
-		userEntity.updatePassword(newPassword)
+
+		const key = AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH
+		const settings = await this.settingsFinder.run({ key })
+
+		userEntity.resetPasswordFromHash(settings.value as string)
 
 		await this.userRepository.save(userEntity.toPrimitives())
 	}

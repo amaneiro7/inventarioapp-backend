@@ -21,7 +21,7 @@ export const register = (container: AwilixContainer) => {
 		database: asClass(SequelizeConfig).singleton(),
 		cacheRepository: asClass(RedisRepository).singleton(),
 		cache: asClass(CacheService).singleton(),
-		pingService: asClass(PingService).scoped(),
-		pingLogger: asClass(PingLogger).scoped()
+		pingService: asClass(PingService).singleton(),
+		pingLogger: asClass(PingLogger).singleton()
 	})
 }

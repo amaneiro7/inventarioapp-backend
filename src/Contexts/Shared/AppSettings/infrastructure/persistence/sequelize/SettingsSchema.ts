@@ -6,11 +6,13 @@ import { type SettingsValue } from '../../../domain/valueObject/SettingsValue'
 import { SettingsTypeEnum, type SettingsType } from '../../../domain/valueObject/SettingsType'
 import { type SettingsDescription } from '../../../domain/valueObject/SettingsDescription'
 import { type SettingsIsEditable } from '../../../domain/valueObject/SettingsIsEditable'
+import { type SettingsGroup } from '../../../domain/valueObject/SettingsGroup'
 
 export class SequelizeSettingsModel extends Model<SettingsPrimitives> implements SettingsPrimitives {
 	declare key: Primitives<SettingsKey>
 	declare value: Primitives<SettingsValue>
 	declare type: Primitives<SettingsType>
+	declare group: Primitives<SettingsGroup>
 	declare description: Primitives<SettingsDescription>
 	declare isEditable: Primitives<SettingsIsEditable>
 
@@ -34,6 +36,10 @@ export class SequelizeSettingsModel extends Model<SettingsPrimitives> implements
 					type: DataTypes.STRING,
 					allowNull: false
 				},
+				group: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
 				isEditable: {
 					type: DataTypes.BOOLEAN,
 					allowNull: false,
@@ -45,7 +51,7 @@ export class SequelizeSettingsModel extends Model<SettingsPrimitives> implements
 				modelName: 'setting',
 				tableName: 'settings',
 				underscored: true,
-				timestamps: true
+				timestamps: false
 			}
 		)
 	}

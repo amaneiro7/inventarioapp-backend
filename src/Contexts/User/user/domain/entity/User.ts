@@ -37,10 +37,9 @@ export class User {
 		)
 	}
 
-	static createFromEmployee(params: Pick<UserParams, 'employeeId' | 'roleId'>): User {
+	static createFromEmployee(params: Pick<UserParams, 'employeeId' | 'roleId' | 'password'>): User {
 		const id = UserId.random().value
-		const { employeeId, roleId } = params
-		const password = UserPassword.defaultPassword
+		const { employeeId, roleId, password } = params
 		return new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
@@ -77,10 +76,16 @@ export class User {
 		this.lastLoginAt = new LastLoginAt(new Date())
 	}
 
-	increaseFailedAttepns(): void {
+	increaseFailedAttepns({
+		lockoutTimeInMinutes,
+		maxAttempts
+	}: {
+		lockoutTimeInMinutes: number
+		maxAttempts: number
+	}): void {
 		this.failedAttemps = new FailedAttemps(this.failedAttemps.value + 1)
-		if (this.failedAttemps.value >= 5) {
-			this.lockAccount()
+		if (this.failedAttemps.value >= maxAttempts) {
+			this.lockAccount({ lockoutTimeInMinutes })
 		}
 	}
 
@@ -89,6 +94,15 @@ export class User {
 		this.passwordChangeAt = new PasswordChangeAt(new Date())
 	}
 
+	/**
+	 * @description Restablece la contraseña del usuario utilizando un hash preexistente.
+	 * No realiza validación de complejidad ni hasheo.
+	 * @param {string} hashedPassword - La contraseña ya hasheada.
+	 */
+	resetPasswordFromHash(hashedPassword: string): void {
+		this.password = UserPassword.fromPrimitives(hashedPassword)
+		this.passwordChangeAt = new PasswordChangeAt(new Date())
+	}
 	desactivateAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.SUSPENDED)
 	}
@@ -96,10 +110,10 @@ export class User {
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
 	}
 
-	private lockAccount(): void {
+	private lockAccount({ lockoutTimeInMinutes }: { lockoutTimeInMinutes: number }): void {
 		this.status = new UserStatus(UserStatusEnum.LOCKED)
 		// Bloquea la cuenta por 5 minutos (300000 ms)
-		this.lockoutUntil = new LockoutUntil(new Date(Date.now() + 5 * 60 * 1000))
+		this.lockoutUntil = new LockoutUntil(new Date(Date.now() + lockoutTimeInMinutes * 60 * 1000))
 	}
 
 	// Nuevo método para manejar el desbloqueo automático

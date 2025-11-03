@@ -1,15 +1,18 @@
-import { config } from '../../../Shared/infrastructure/config'
 import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
+import { AppSettingDefaults, AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 import { type PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
-import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
-import { type MonitoringServiceConfig } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
+import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
+import {
+	type MonitoringConfigDefaults,
+	type MonitoringConfigKeys
+} from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 
 /**
  * @description Service responsible for monitoring the status of devices by pinging them.
@@ -26,32 +29,46 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
 
-	constructor(dependencies: {
+	constructor({
+		deviceMonitoringRepository,
+		pingService,
+		logger,
+		pingLogger
+	}: {
 		deviceMonitoringRepository: DeviceMonitoringRepository
 		pingService: PingService
 		logger: Logger
 		pingLogger: PingLogger
 	}) {
-		super(
-			dependencies.deviceMonitoringRepository,
-			dependencies.pingService,
-			dependencies.logger,
-			dependencies.pingLogger
-		)
-		this.deviceMonitoringRepository = dependencies.deviceMonitoringRepository
-		this.pingService = dependencies.pingService
-		this.logger = dependencies.logger
-		this.pingLogger = dependencies.pingLogger
+		super(deviceMonitoringRepository, pingService, logger, pingLogger)
+		this.deviceMonitoringRepository = deviceMonitoringRepository
+		this.pingService = pingService
+		this.logger = logger
+		this.pingLogger = pingLogger
 	}
 
-	protected readonly monitoringConfig: MonitoringServiceConfig = {
-		concurrencyLimit: config.monitoring.device.deviceMonitoringConcurrencyLimit,
-		startDayOfWeek: config.monitoring.device.deviceMonitoringStartDayOfWeek,
-		endDayOfWeek: config.monitoring.device.deviceMonitoringEndDayOfWeek,
-		startHour: config.monitoring.device.deviceMonitoringStartHour,
-		endHour: config.monitoring.device.deviceMonitoringEndHour,
-		idleTimeMs: config.monitoring.device.deviceMonitoringIdleTimeMs,
-		disableTimeChecks: config.monitoring.device.isDeviceMonitoringDisableTimeChecks
+	protected getMonitoringConfigKeys(): MonitoringConfigKeys {
+		return {
+			concurrencyLimit: AppSettingKeys.DEVICE_MONITORING.CONCURRENCY_LIMIT,
+			idleTimeMs: AppSettingKeys.DEVICE_MONITORING.IDLE_TIME_MINUTES,
+			startDayOfWeek: AppSettingKeys.DEVICE_MONITORING.START_DAY_OF_WEEK,
+			endDayOfWeek: AppSettingKeys.DEVICE_MONITORING.END_DAY_OF_WEEK,
+			startHour: AppSettingKeys.DEVICE_MONITORING.START_HOUR,
+			endHour: AppSettingKeys.DEVICE_MONITORING.END_HOUR,
+			disableTimeChecks: AppSettingKeys.DEVICE_MONITORING.DISABLE_TIME_CHECKS
+		}
+	}
+
+	protected getMonitoringConfigDefaults(): MonitoringConfigDefaults {
+		return {
+			concurrencyLimit: AppSettingDefaults.DEVICE_MONITORING.CONCURRENCY_LIMIT,
+			idleTimeMs: AppSettingDefaults.DEVICE_MONITORING.IDLE_TIME_MINUTES,
+			startDayOfWeek: AppSettingDefaults.DEVICE_MONITORING.START_DAY_OF_WEEK,
+			endDayOfWeek: AppSettingDefaults.DEVICE_MONITORING.END_DAY_OF_WEEK,
+			startHour: AppSettingDefaults.DEVICE_MONITORING.START_HOUR,
+			endHour: AppSettingDefaults.DEVICE_MONITORING.END_HOUR,
+			disableTimeChecks: AppSettingDefaults.DEVICE_MONITORING.DISABLE_TIME_CHECKS
+		}
 	}
 
 	protected getMonitoringName(): string {
