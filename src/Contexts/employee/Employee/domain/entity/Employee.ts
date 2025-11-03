@@ -45,7 +45,7 @@ export class Employee {
 		private phone: PhoneNumber[]
 	) {}
 
-	static create(params: EmployeeParams): Employee {
+	static create(params: EmployeeParams, allowedDomains?: string[]): Employee {
 		if (params.type === EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
 				'Un empleado de tipo "servicio" no se puede crear directamente. Primero debe crearse como tipo "regular" y luego marcarse como servicio.'
@@ -64,7 +64,7 @@ export class Employee {
 			new EmployeeType(params.type),
 			new EmployeeName(params.name, params.type),
 			new EmployeeLastName(params.lastName, params.type),
-			new EmployeeEmail(params.email),
+			new EmployeeEmail(params.email, allowedDomains),
 			new EmployeeIsStillWorking(params.isStillWorking),
 			new EmployeeCode(params.employeeCode, params.type),
 			new EmployeeNationality(params.nationality, params.type),
@@ -282,8 +282,8 @@ export class Employee {
 		this.isStillWorking = new EmployeeIsStillWorking(true)
 	}
 
-	updateEmail(newEmail: Primitives<EmployeeEmail>): void {
-		this.email = new EmployeeEmail(newEmail)
+	updateEmail(newEmail: Primitives<EmployeeEmail>, allowedDomains?: string[]): void {
+		this.email = new EmployeeEmail(newEmail, allowedDomains)
 	}
 
 	updateIsStillWorking(newIsStillWorking: Primitives<EmployeeIsStillWorking>): void {

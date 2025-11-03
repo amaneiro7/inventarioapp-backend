@@ -1,8 +1,8 @@
 import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistError'
 import { SettingsKey } from '../domain/valueObject/SettingsKey'
+import { SettingsValue } from '../domain/valueObject/SettingsValue'
 import { type SettingsPrimitives } from '../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
-import { SettingsValue } from '../domain/valueObject/SettingsValue'
 
 export class SettingsFinder {
 	private readonly settingsRepository: SettingsRepository
@@ -46,6 +46,15 @@ export class SettingsFinder {
 		try {
 			const setting = await this.run({ key })
 			return new SettingsValue(setting.value).asNumber()
+		} catch {
+			return fallback
+		}
+	}
+
+	async findAsJson<T>({ key, fallback }: { key: string; fallback: T }): Promise<T> {
+		try {
+			const setting = await this.run({ key })
+			return new SettingsValue(setting.value).asJson()
 		} catch {
 			return fallback
 		}

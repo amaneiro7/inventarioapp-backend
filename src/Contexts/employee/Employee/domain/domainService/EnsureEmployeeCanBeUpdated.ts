@@ -18,10 +18,12 @@ import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.
 import { type EmployeeParams } from '../entity/Employee.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type SettingsFinder } from '../../../../Shared/AppSettings/application/SettingsFinder'
 import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
+import { AppSettingKeys } from '../../../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 interface UpdateEmployeeRepositories {
 	readonly employeeRepository: EmployeeRepository
@@ -31,6 +33,7 @@ interface UpdateEmployeeRepositories {
 	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	readonly cargoRepository: CargoRepository
+	readonly settingsFinder: SettingsFinder
 }
 
 /**
@@ -55,6 +58,11 @@ export class EnsureEmployeeCanBeUpdated {
 		// Validate if the employee can be updated
 		this.ensureEmployeeCanBeUpdated(entity)
 
+		const allowedDomains = await this.repository.settingsFinder.findAsJson<string[]>({
+			key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
+			fallback: []
+		})
+
 		// Update fields in parallel
 		await Promise.all([
 			EmployeeUserName.updateUserNameField({
@@ -68,7 +76,8 @@ export class EnsureEmployeeCanBeUpdated {
 			EmployeeEmail.updateEmailField({
 				email: params.email,
 				repository: this.repository.employeeRepository,
-				entity
+				entity,
+				allowedDomains
 			}),
 			EmployeeLocationId.updateLocationField({
 				locationId: params.locationId,

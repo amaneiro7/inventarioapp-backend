@@ -1,11 +1,14 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
+const { Json } = require('sequelize/lib/utils')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
 		const saltRounds = 10
 		const defaultPasswordHash = bcrypt.hashSync('Avion01.', saltRounds)
+
+		const allowedDomainsJson = JSON.stringify('["bnc.com.ve","banconacionaldecredito.com.ve","bncenlinea.net"]')
 
 		const settingsToSeed = [
 			// CONFIGURACIONES DE SEGURIDAD
@@ -171,6 +174,14 @@ module.exports = {
 				type: 'boolean',
 				description: 'Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).',
 				group: 'device_monitoring',
+				is_editable: true
+			},
+			{
+				key: 'ALLOWED_EMAIL_DOMAINS',
+				value: allowedDomainsJson,
+				type: 'json',
+				description: 'Lista de dominios de correo electrónico permitidos para los empleados.',
+				group: 'security',
 				is_editable: true
 			}
 		]

@@ -12,7 +12,7 @@ export class SettingsValue extends StringValueObject {
 		const normalizedValue = this.value.toLowerCase()
 		return normalizedValue === 'true' || normalizedValue === '1' || normalizedValue === 't'
 	}
-	public asJson(): object {
+	public asJson<T>(): T {
 		return JSON.parse(this.value)
 	}
 }

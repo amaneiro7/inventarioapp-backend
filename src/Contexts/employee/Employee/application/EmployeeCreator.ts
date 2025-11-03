@@ -9,6 +9,8 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { Employee } from '../domain/entity/Employee'
+import { SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 /**
  * @description Use case for creating a new Employee entity.
@@ -22,6 +24,7 @@ export class EmployeeCreator {
 	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
+	private readonly settingsFinder: SettingsFinder
 
 	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
@@ -31,6 +34,7 @@ export class EmployeeCreator {
 		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
+		settingsFinder: SettingsFinder
 	}) {
 		this.employeeRepository = dependencies.employeeRepository
 		this.locationRepository = dependencies.locationRepository
@@ -39,6 +43,7 @@ export class EmployeeCreator {
 		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
 		this.departamentoRepository = dependencies.departamentoRepository
 		this.cargoRepository = dependencies.cargoRepository
+		this.settingsFinder = dependencies.settingsFinder
 
 		this.ensureEmployeeCanBeCreated = new EnsureEmployeeCanBeCreated({
 			employeeRepository: this.employeeRepository,
@@ -58,8 +63,12 @@ export class EmployeeCreator {
 	 */
 	async run({ params }: { params: EmployeeParams }): Promise<void> {
 		await this.ensureEmployeeCanBeCreated.execute(params)
+		const allowedDomains = await this.settingsFinder.findAsJson<string[]>({
+			key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
+			fallback: []
+		})
 
-		const employee = Employee.create(params)
+		const employee = Employee.create(params, allowedDomains)
 
 		await this.employeeRepository.save(employee.toPrimitive())
 	}

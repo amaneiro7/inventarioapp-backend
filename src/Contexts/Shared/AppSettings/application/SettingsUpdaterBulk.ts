@@ -5,7 +5,7 @@ import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistE
 import { Settings } from '../domain/entity/Settings'
 
 interface UpdateSettingsBulkParams {
-	settings: Array<{ key: string; value: string }>
+	settings: { key: string; value: string }[]
 }
 
 /**

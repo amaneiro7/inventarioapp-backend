@@ -8,14 +8,16 @@ import { CreateCriteria } from '../../../../Shared/domain/criteria/CreateCriteri
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
 
 export class EmployeeEmail extends AcceptedNullValueObject<string> {
-	private static readonly VALID_EMAIL_REGEX =
-		/^(?=.*[@](?:bnc\.com\.ve)$)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[a-zA-Z0-9_-]*$/
+	// Expresión regular base para un correo electrónico válido.
+	private static readonly BASE_EMAIL_REGEX =
+		/^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[a-zA-Z0-9_-]*$/
 
-	constructor(value: string | null) {
+	constructor(value: string | null, allowedDomains?: string[]) {
 		super(value)
 
 		this.normalizeValue()
-		this.ensureIsValidEmail(value)
+		this.ensureIsValidEmailFormat(value)
+		this.ensureIsValidDomain(value, allowedDomains)
 	}
 
 	private normalizeValue(): void {
@@ -28,27 +30,45 @@ export class EmployeeEmail extends AcceptedNullValueObject<string> {
 		return this.value
 	}
 
-	private ensureIsValidEmail(email: string | null): void {
-		if (email !== null && !EmployeeEmail.VALID_EMAIL_REGEX.test(email)) {
+	private ensureIsValidEmailFormat(email: string | null): void {
+		if (email !== null && !EmployeeEmail.BASE_EMAIL_REGEX.test(email)) {
 			throw new InvalidArgumentError(`<${email}> no es un correo electrónico válido`)
 		}
 	}
 
+	private ensureIsValidDomain(email: string | null, allowedDomains?: string[]): void {
+		// Si no se proporcionan dominios permitidos o el email es nulo, no se realiza la validación.
+		if (!allowedDomains || allowedDomains.length === 0 || email === null) {
+			return
+		}
+
+		const domain = email.split('@')[1]
+		if (!domain || !allowedDomains.includes(domain)) {
+			throw new InvalidArgumentError(
+				`El dominio del correo '<${domain}>' no es válido. Dominios permitidos: ${allowedDomains.join(', ')}`
+			)
+		}
+	}
+
+	// --- Mover la lógica de estos métodos a los Casos de Uso (Application Layer) ---
+
 	static async updateEmailField({
 		repository,
 		email,
-		entity
+		entity,
+		allowedDomains
 	}: {
 		repository: EmployeeRepository
 		email?: Primitives<EmployeeEmail>
 		entity: Employee
+		allowedDomains?: string[]
 	}): Promise<void> {
 		if (email === undefined || email === entity.emailValue) {
 			return
 		}
 		if (email !== null) {
 			await EmployeeEmail.ensureEmailDoesNotExist({ repository, email })
-			entity.updateEmail(email)
+			entity.updateEmail(email, allowedDomains)
 		} else if (entity.emailValue !== null) {
 			entity.updateEmail(null)
 		}

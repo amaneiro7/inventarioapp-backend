@@ -14,6 +14,7 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type UserDesactivateAccount } from '../../../User/user/application/UserDesactivateAccount'
+import { SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for updating an existing Employee entity.
@@ -28,6 +29,7 @@ export class EmployeeUpdater {
 	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
 	private readonly cargoRepository: CargoRepository
 	private readonly userDesactivateAccount: UserDesactivateAccount
+	private readonly settingsFinder: SettingsFinder
 
 	constructor(dependencies: {
 		employeeRepository: EmployeeRepository
@@ -38,6 +40,7 @@ export class EmployeeUpdater {
 		departamentoRepository: DepartmentRepository<DepartamentoDto>
 		cargoRepository: CargoRepository
 		userDesactivateAccount: UserDesactivateAccount
+		settingsFinder: SettingsFinder
 	}) {
 		this.employeeRepository = dependencies.employeeRepository
 		this.locationRepository = dependencies.locationRepository
@@ -47,6 +50,7 @@ export class EmployeeUpdater {
 		this.departamentoRepository = dependencies.departamentoRepository
 		this.cargoRepository = dependencies.cargoRepository
 		this.userDesactivateAccount = dependencies.userDesactivateAccount
+		this.settingsFinder = dependencies.settingsFinder
 
 		this.ensureEmployeeCanBeUpdated = new EnsureEmployeeCanBeUpdated({
 			employeeRepository: this.employeeRepository,
@@ -55,7 +59,8 @@ export class EmployeeUpdater {
 			vicepresidenciaEjecutivaRepository: this.vicepresidenciaEjecutivaRepository,
 			vicepresidenciaRepository: this.vicepresidenciaRepository,
 			cargoRepository: this.cargoRepository,
-			departamentoRepository: this.departamentoRepository
+			departamentoRepository: this.departamentoRepository,
+			settingsFinder: this.settingsFinder
 		})
 	}
 
