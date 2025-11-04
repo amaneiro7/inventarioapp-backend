@@ -2,6 +2,7 @@ import { type Primitives } from '../../../domain/value-object/Primitives'
 import { type SettingsDescription } from '../valueObject/SettingsDescription'
 import { type SettingsGroup } from '../valueObject/SettingsGroup'
 import { type SettingsIsEditable } from '../valueObject/SettingsIsEditable'
+import { type SettingsIsProtected } from '../valueObject/SettingsIsProtected'
 import { type SettingsKey } from '../valueObject/SettingsKey'
 import { type SettingsType } from '../valueObject/SettingsType'
 import { type SettingsValue } from '../valueObject/SettingsValue'
@@ -15,6 +16,7 @@ export interface SettingsPrimitives {
 	description: Primitives<SettingsDescription>
 	group?: Primitives<SettingsGroup>
 	isEditable: Primitives<SettingsIsEditable>
+	isProtected: Primitives<SettingsIsProtected>
 }
 
 export type SettingsDto = Omit<SettingsPrimitives, 'value'> & {

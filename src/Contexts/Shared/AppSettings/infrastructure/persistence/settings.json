@@ -5,7 +5,8 @@
 		"type": "string",
 		"description": "Hash de la contraseña inicial asignada a nuevos usuarios.",
 		"group": "security",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": true
 	},
 	{
 		"key": "PASSWORD_EXPIRY_DAYS",
@@ -13,7 +14,8 @@
 		"type": "number",
 		"description": "Número de días antes de que una contraseña caduque y se requiera un cambio.",
 		"group": "security",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "FAILED_ATTEMPTS_LIMIT",
@@ -21,7 +23,8 @@
 		"type": "number",
 		"description": "Número máximo de intentos de login fallidos antes de bloquear la cuenta.",
 		"group": "security",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCKOUT_UNTIL_MINUTES",
@@ -29,7 +32,8 @@
 		"type": "number",
 		"description": "Tiempo de bloqueo (en minutos) después de alcanzar el límite de intentos fallidos.",
 		"group": "security",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "ALLOWED_EMAIL_DOMAINS",
@@ -37,7 +41,8 @@
 		"type": "json",
 		"description": "Lista de dominios de correo electrónico permitidos para los empleados.",
 		"group": "security",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_ENABLED",
@@ -45,7 +50,8 @@
 		"type": "boolean",
 		"description": "Interruptor principal para activar el monitoreo de ubicación.",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_CONCURRENCY_LIMIT",
@@ -53,7 +59,8 @@
 		"type": "number",
 		"description": "Límite de pings concurrentes para el monitoreo de ubicación.",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_IDLE_TIME_MINUTES",
@@ -61,14 +68,16 @@
 		"type": "number",
 		"description": "Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_END_HOUR",
@@ -76,14 +85,16 @@
 		"type": "number",
 		"description": "Hora (en formato 24h) en que finaliza el periodo de monitoreo.",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"value": "1",
 		"type": "number",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_END_DAY_OF_WEEK",
@@ -91,7 +102,8 @@
 		"type": "number",
 		"description": "Día de la semana en que finaliza el monitoreo (0=Domingo,6=Sábado).",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "LOCATION_MONITORING_DISABLE_TIME_CHECKS",
@@ -99,7 +111,8 @@
 		"type": "boolean",
 		"description": "Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).",
 		"group": "location_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_ENABLED",
@@ -107,7 +120,8 @@
 		"type": "boolean",
 		"description": "Interruptor principal para activar el monitoreo de dispositivos.",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_CONCURRENCY_LIMIT",
@@ -115,7 +129,8 @@
 		"type": "number",
 		"description": "Límite de pings concurrentes para el monitoreo de dispositivos.",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_IDLE_TIME_MINUTES",
@@ -123,14 +138,16 @@
 		"type": "number",
 		"description": "Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_END_HOUR",
@@ -138,14 +155,16 @@
 		"type": "number",
 		"description": "Hora (en formato 24h) en que finaliza el periodo de monitoreo.",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"value": "1",
 		"type": "number",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_END_DAY_OF_WEEK",
@@ -153,7 +172,8 @@
 		"type": "number",
 		"description": "Día de la semana en que finaliza el monitoreo (0=Domingo,6=Sábado).",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	},
 	{
 		"key": "DEVICE_MONITORING_DISABLE_TIME_CHECKS",
@@ -161,6 +181,7 @@
 		"type": "boolean",
 		"description": "Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).",
 		"group": "device_monitoring",
-		"is_editable": true
+		"isEditable": true,
+		"isProtected": false
 	}
 ]

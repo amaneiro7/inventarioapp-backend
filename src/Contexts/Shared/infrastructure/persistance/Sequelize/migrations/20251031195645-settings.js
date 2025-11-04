@@ -30,6 +30,11 @@ module.exports = {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
 				defaultValue: false
+			},
+			is_protected: {
+				type: Sequelize.BOOLEAN,
+				allowNull: false,
+				defaultValue: false
 			}
 		})
 	},
