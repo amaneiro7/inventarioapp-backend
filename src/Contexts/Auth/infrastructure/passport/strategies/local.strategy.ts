@@ -1,4 +1,4 @@
-import { Strategy as LocalStrategy, type IStrategyOptions } from 'passport-local'
+import { Strategy as LocalStrategy, type IStrategyOptionsWithRequest } from 'passport-local'
 import { type UserLoginLocal } from '../../../application/UserLoginLocal'
 
 /**
@@ -10,14 +10,19 @@ import { type UserLoginLocal } from '../../../application/UserLoginLocal'
 export class LocalAuthStrategy extends LocalStrategy {
 	private readonly userLoginLocal: UserLoginLocal
 	constructor({ userLoginLocal }: { userLoginLocal: UserLoginLocal }) {
-		const options: IStrategyOptions = {
+		const options: IStrategyOptionsWithRequest = {
 			usernameField: 'userNameOrEmail',
-			passwordField: 'password'
+			passwordField: 'password',
+			passReqToCallback: true
 		}
 
-		super(options, async (userNameOrEmail, password, done) => {
+		super(options, async (req, userNameOrEmail, password, done) => {
 			try {
-				const user = await this.userLoginLocal.run({ userNameOrEmail, password })
+				// Obtener la IP del cliente de forma más robusta
+				const currentIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress
+
+				console.log('currentIp', currentIp)
+				const user = await this.userLoginLocal.run({ userNameOrEmail, password, currentIp })
 				done(null, user)
 			} catch (error) {
 				done(error, false)

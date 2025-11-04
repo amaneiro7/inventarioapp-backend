@@ -1,16 +1,18 @@
+import { User } from '../../User/user/domain/entity/User'
 import { PasswordService } from '../../User/user/domain/domainService/PasswordService'
 import { InvalidCredentialsError } from '../domain/InvalidCredentialsError'
 import { EmployeeUserName } from '../../employee/Employee/domain/valueObject/EmployeeUsername'
-import { User } from '../../User/user/domain/entity/User'
 import { EmployeeEmail } from '../../employee/Employee/domain/valueObject/EmployeeEmail'
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
+import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { type SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
 import { type EmployeeRepository } from '../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type User as UserDto } from '../../User/user/domain/entity/User.dto'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/Employee.dto'
 import { type Nullable } from '../../Shared/domain/Nullable'
-import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
-import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type LastLoginIp } from '../../User/user/domain/valueObject/LastLoginIp'
 
 /**
  * @class UserLoginLocal
@@ -45,7 +47,15 @@ export class UserLoginLocal {
 	 * @returns {Promise<UserDto>} A promise that resolves to the user's data if authentication is successful.
 	 * @throws {InvalidCredentialsError} If the username does not exist, the password does not match, or the account is locked/suspended.
 	 */
-	async run({ userNameOrEmail, password }: { userNameOrEmail: string; password: string }): Promise<UserDto> {
+	async run({
+		userNameOrEmail,
+		password,
+		currentIp
+	}: {
+		userNameOrEmail: string
+		password: string
+		currentIp?: Primitives<LastLoginIp>
+	}): Promise<UserDto> {
 		let employee: Nullable<EmployeePrimitives>
 
 		// 1. Find employee by userName or email
@@ -113,7 +123,7 @@ export class UserLoginLocal {
 		}
 
 		// 6. Login exitoso
-		userEntity.successLogin()
+		userEntity.successLogin(currentIp)
 		await this.userRepository.save(userEntity.toPrimitives())
 
 		// 7. Devolver el estado más reciente del usuario

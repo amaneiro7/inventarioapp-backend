@@ -4,6 +4,7 @@ import { RoleId } from '../../../Role/domain/RoleId'
 import { UserPassword } from '../valueObject/UserPassword'
 import { UserStatus, UserStatusEnum } from '../valueObject/UserStatus'
 import { PasswordChangeAt } from '../valueObject/PasswordChangeAt'
+import { LastLoginIp } from '../valueObject/LastLoginIp'
 import { LastLoginAt } from '../valueObject/LastLoginAt'
 import { FailedAttemps } from '../valueObject/FailedAttemps'
 import { LockoutUntil } from '../valueObject/LockoutUntil'
@@ -19,6 +20,7 @@ export class User {
 		private status: UserStatus,
 		private passwordChangeAt: PasswordChangeAt,
 		private lastLoginAt: LastLoginAt,
+		private lastLoginIp: LastLoginIp,
 		private failedAttemps: FailedAttemps,
 		private lockoutUntil: LockoutUntil
 	) {}
@@ -32,6 +34,7 @@ export class User {
 			new UserStatus(plainData.status),
 			new PasswordChangeAt(plainData.passwordChangeAt),
 			new LastLoginAt(plainData.lastLoginAt),
+			new LastLoginIp(plainData.lastLoginIp),
 			new FailedAttemps(plainData.failedAttemps),
 			new LockoutUntil(plainData.lockoutUntil)
 		)
@@ -48,6 +51,7 @@ export class User {
 			new UserStatus(UserStatusEnum.ACTIVE),
 			new PasswordChangeAt(new Date()),
 			new LastLoginAt(null),
+			new LastLoginIp(null),
 			new FailedAttemps(0),
 			new LockoutUntil(null)
 		)
@@ -69,11 +73,12 @@ export class User {
 		return false
 	}
 
-	successLogin(): void {
+	successLogin(ipAddress?: Primitives<LastLoginIp>): void {
 		this.failedAttemps = new FailedAttemps(0)
 		this.lockoutUntil = new LockoutUntil(null)
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
 		this.lastLoginAt = new LastLoginAt(new Date())
+		this.lastLoginIp = new LastLoginIp(ipAddress ?? null)
 	}
 
 	increaseFailedAttepns({
@@ -147,6 +152,7 @@ export class User {
 			status: this.statusValue,
 			passwordChangeAt: this.passwordChangeAtValue,
 			lastLoginAt: this.lastLoginAtValue,
+			lastLoginIp: this.lastLoginIpValue,
 			failedAttemps: this.failedAttempsValue,
 			lockoutUntil: this.lockoutUntilValue
 		}
@@ -172,6 +178,9 @@ export class User {
 	}
 	get lastLoginAtValue(): Primitives<LastLoginAt> {
 		return this.lastLoginAt.value
+	}
+	get lastLoginIpValue(): Primitives<LastLoginIp> {
+		return this.lastLoginIp.value
 	}
 	get failedAttempsValue(): Primitives<FailedAttemps> {
 		return this.failedAttemps.value

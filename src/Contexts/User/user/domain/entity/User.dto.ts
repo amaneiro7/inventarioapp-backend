@@ -10,6 +10,7 @@ import { type LockoutUntil } from '../valueObject/LockoutUntil'
 import { type RoleId } from '../../../Role/domain/RoleId'
 import { type RoleDto } from '../../../Role/domain/Role.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
+import { type LastLoginIp } from '../valueObject/LastLoginIp'
 
 /**
  * @interface UserAuth
@@ -24,6 +25,7 @@ export interface UserAuth {
 	password: Primitives<UserPassword>
 	passwordChangeAt: Primitives<PasswordChangeAt>
 	lastLoginAt: Primitives<LastLoginAt>
+	lastLoginIp: Primitives<LastLoginIp>
 	failedAttemps: Primitives<FailedAttemps>
 	lockoutUntil: Primitives<LockoutUntil>
 }
