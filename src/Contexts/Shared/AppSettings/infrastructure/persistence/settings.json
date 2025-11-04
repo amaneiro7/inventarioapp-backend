@@ -72,6 +72,7 @@
 		"isProtected": false
 	},
 	{
+		"key": "LOCATION_MONITORING_START_HOUR",
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
@@ -89,6 +90,7 @@
 		"isProtected": false
 	},
 	{
+		"key": "DEVICE_MONITORING_ENABLED",
 		"value": "1",
 		"type": "number",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
@@ -142,6 +144,7 @@
 		"isProtected": false
 	},
 	{
+		"key": "DEVICE_MONITORING_START_HOUR",
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
@@ -159,6 +162,7 @@
 		"isProtected": false
 	},
 	{
+		"key": "DEVICE_MONITORING_START_DAY_OF_WEEK",
 		"value": "1",
 		"type": "number",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
