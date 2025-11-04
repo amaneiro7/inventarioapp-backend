@@ -1,15 +1,15 @@
 // import { validateReqSchema } from '../index'
 // import { loginSchema } from './auth.validator'
-import { loginLimiter } from '../../Middleware/loginRateLimit'
-import passport from 'passport'
 import { type Router, type Request, type Response, type NextFunction } from 'express'
+import passport from 'passport'
+import { container } from '../../di/container'
+import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/strategy-options'
+import { AuthDependencies } from '../../di/auth/auth.di'
+import { InvalidCredentialsError } from '../../../Contexts/Auth/domain/InvalidCredentialsError'
 import { type UserDto } from '../../../Contexts/User/user/domain/entity/User.dto'
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
 import { type AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { type AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'
-import { container } from '../../di/container'
-import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/strategy-options'
-import { AuthDependencies } from '../../di/auth/auth.di'
 
 export const register = async (router: Router) => {
 	const authLoginController: AuthLoginController = container.resolve(AuthDependencies.LoginController)
@@ -48,7 +48,6 @@ export const register = async (router: Router) => {
 	 */
 	router.post(
 		'/auth/login/local',
-		loginLimiter,
 		// loginSchema, // <-- Validación añadida
 		// validateReqSchema, // <-- Middleware que comprueba el resultado
 		(req: Request, res: Response, next: NextFunction) => {
@@ -58,7 +57,7 @@ export const register = async (router: Router) => {
 				}
 				if (!user) {
 					// You can create a more specific error here if you want
-					return next(new Error('Authentication failed.'))
+					return next(new InvalidCredentialsError())
 				}
 				req.user = user
 				next()

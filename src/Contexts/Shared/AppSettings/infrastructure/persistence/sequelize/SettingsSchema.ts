@@ -8,12 +8,14 @@ import { type SettingsDescription } from '../../../domain/valueObject/SettingsDe
 import { type SettingsIsEditable } from '../../../domain/valueObject/SettingsIsEditable'
 import { type SettingsGroup } from '../../../domain/valueObject/SettingsGroup'
 import { type SettingsIsProtected } from '../../../domain/valueObject/SettingsIsProtected'
+import { type SettingsName } from '../../../domain/valueObject/SettingsName'
 
 export class SequelizeSettingsModel extends Model<SettingsPrimitives> implements SettingsPrimitives {
 	declare key: Primitives<SettingsKey>
 	declare value: Primitives<SettingsValue>
 	declare type: Primitives<SettingsType>
 	declare group: Primitives<SettingsGroup>
+	declare name: Primitives<SettingsName>
 	declare description: Primitives<SettingsDescription>
 	declare isEditable: Primitives<SettingsIsEditable>
 	declare isProtected: Primitives<SettingsIsProtected>
@@ -33,6 +35,10 @@ export class SequelizeSettingsModel extends Model<SettingsPrimitives> implements
 					type: DataTypes.ENUM(...Object.values(SettingsTypeEnum)), // Define enum values
 					allowNull: false,
 					defaultValue: SettingsTypeEnum.STRING
+				},
+				name: {
+					type: DataTypes.STRING,
+					allowNull: false
 				},
 				description: {
 					type: DataTypes.STRING,

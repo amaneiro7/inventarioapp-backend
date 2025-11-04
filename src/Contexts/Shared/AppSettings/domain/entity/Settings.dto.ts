@@ -4,6 +4,7 @@ import { type SettingsGroup } from '../valueObject/SettingsGroup'
 import { type SettingsIsEditable } from '../valueObject/SettingsIsEditable'
 import { type SettingsIsProtected } from '../valueObject/SettingsIsProtected'
 import { type SettingsKey } from '../valueObject/SettingsKey'
+import { type SettingsName } from '../valueObject/SettingsName'
 import { type SettingsType } from '../valueObject/SettingsType'
 import { type SettingsValue } from '../valueObject/SettingsValue'
 
@@ -13,6 +14,7 @@ export interface SettingsPrimitives {
 	key: Primitives<SettingsKey>
 	value: Primitives<SettingsValue>
 	type: Primitives<SettingsType>
+	name: Primitives<SettingsName>
 	description: Primitives<SettingsDescription>
 	group?: Primitives<SettingsGroup>
 	isEditable: Primitives<SettingsIsEditable>

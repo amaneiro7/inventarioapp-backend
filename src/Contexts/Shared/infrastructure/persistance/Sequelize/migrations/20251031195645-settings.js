@@ -14,11 +14,15 @@ module.exports = {
 				allowNull: false
 			},
 			type: {
-				type: Sequelize.ENUM('string', 'number', 'boolean', 'json'),
+				type: Sequelize.ENUM('string', 'number', 'boolean', 'json', 'array', 'dayOfWeek'),
 				allowNull: false,
 				defaultValue: 'string'
 			},
 			group: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
+			name: {
 				type: Sequelize.STRING,
 				allowNull: false
 			},

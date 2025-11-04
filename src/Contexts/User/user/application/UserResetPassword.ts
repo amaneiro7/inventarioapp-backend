@@ -46,7 +46,6 @@ export class UserResetPassword {
 		const userEntity = User.fromPrimitives(userToResetPassword)
 
 		const settings = await this.settingsFinder.run({ key: AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH })
-		console.log(settings)
 		userEntity.resetPasswordFromHash(settings.value as string)
 
 		await this.userRepository.save(userEntity.toPrimitives())

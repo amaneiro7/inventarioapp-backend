@@ -1,6 +1,7 @@
 [
 	{
 		"key": "DEFAULT_PASSWORD_HASH",
+		"name": "Contraseña por Defecto",
 		"value": "$2b$10$j0Gg.uaZeCwHbZ4wPtw4mu1IClySAPwdtmZ3BxuHr5YKnCI8jHova",
 		"type": "string",
 		"description": "Hash de la contraseña inicial asignada a nuevos usuarios.",
@@ -10,6 +11,7 @@
 	},
 	{
 		"key": "PASSWORD_EXPIRY_DAYS",
+		"name": "Días para Expiración de Contraseña",
 		"value": "90",
 		"type": "number",
 		"description": "Número de días antes de que una contraseña caduque y se requiera un cambio.",
@@ -19,6 +21,7 @@
 	},
 	{
 		"key": "FAILED_ATTEMPTS_LIMIT",
+		"name": "Límite de Intentos Fallidos",
 		"value": "5",
 		"type": "number",
 		"description": "Número máximo de intentos de login fallidos antes de bloquear la cuenta.",
@@ -28,6 +31,7 @@
 	},
 	{
 		"key": "LOCKOUT_UNTIL_MINUTES",
+		"name": "Tiempo de Bloqueo de Cuenta (Minutos)",
 		"value": "15",
 		"type": "number",
 		"description": "Tiempo de bloqueo (en minutos) después de alcanzar el límite de intentos fallidos.",
@@ -37,8 +41,9 @@
 	},
 	{
 		"key": "ALLOWED_EMAIL_DOMAINS",
+		"name": "Dominios de Email Permitidos",
 		"value": "['bnc.com.ve','banconacionaldecredito.com.ve','bncenlinea.net']",
-		"type": "json",
+		"type": "array",
 		"description": "Lista de dominios de correo electrónico permitidos para los empleados.",
 		"group": "security",
 		"isEditable": true,
@@ -46,6 +51,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_ENABLED",
+		"name": "Activar Monitoreo de Ubicaciones",
 		"value": "false",
 		"type": "boolean",
 		"description": "Interruptor principal para activar el monitoreo de ubicación.",
@@ -55,6 +61,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_CONCURRENCY_LIMIT",
+		"name": "Límite de Concurrencia (Ubicaciones)",
 		"value": "5",
 		"type": "number",
 		"description": "Límite de pings concurrentes para el monitoreo de ubicación.",
@@ -64,6 +71,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_IDLE_TIME_MINUTES",
+		"name": "Tiempo de Inactividad (Ubicaciones)",
 		"value": "1",
 		"type": "number",
 		"description": "Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.",
@@ -73,6 +81,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_START_HOUR",
+		"name": "Hora de Inicio de Monitoreo (Ubicaciones)",
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
@@ -82,6 +91,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_END_HOUR",
+		"name": "Hora de Fin de Monitoreo (Ubicaciones)",
 		"value": "19",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que finaliza el periodo de monitoreo.",
@@ -91,8 +101,9 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_ENABLED",
+		"name": "Día de Inicio de Monitoreo (Ubicaciones)",
 		"value": "1",
-		"type": "number",
+		"type": "dayOfWeek",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
 		"group": "location_monitoring",
 		"isEditable": true,
@@ -100,8 +111,9 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_END_DAY_OF_WEEK",
+		"name": "Día de Fin de Monitoreo (Ubicaciones)",
 		"value": "6",
-		"type": "number",
+		"type": "dayOfWeek",
 		"description": "Día de la semana en que finaliza el monitoreo (0=Domingo,6=Sábado).",
 		"group": "location_monitoring",
 		"isEditable": true,
@@ -109,6 +121,7 @@
 	},
 	{
 		"key": "LOCATION_MONITORING_DISABLE_TIME_CHECKS",
+		"name": "Ignorar Límites de Tiempo (Ubicaciones)",
 		"value": "false",
 		"type": "boolean",
 		"description": "Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).",
@@ -118,6 +131,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_ENABLED",
+		"name": "Activar Monitoreo de Dispositivos",
 		"value": "false",
 		"type": "boolean",
 		"description": "Interruptor principal para activar el monitoreo de dispositivos.",
@@ -127,6 +141,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_CONCURRENCY_LIMIT",
+		"name": "Límite de Concurrencia (Dispositivos)",
 		"value": "5",
 		"type": "number",
 		"description": "Límite de pings concurrentes para el monitoreo de dispositivos.",
@@ -136,6 +151,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_IDLE_TIME_MINUTES",
+		"name": "Tiempo de Inactividad (Dispositivos)",
 		"value": "1",
 		"type": "number",
 		"description": "Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.",
@@ -145,6 +161,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_START_HOUR",
+		"name": "Hora de Inicio de Monitoreo (Dispositivos)",
 		"value": "7",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que inicia el periodo de monitoreo.",
@@ -154,6 +171,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_END_HOUR",
+		"name": "Hora de Fin de Monitoreo (Dispositivos)",
 		"value": "19",
 		"type": "number",
 		"description": "Hora (en formato 24h) en que finaliza el periodo de monitoreo.",
@@ -163,8 +181,9 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_START_DAY_OF_WEEK",
+		"name": "Día de Inicio de Monitoreo (Dispositivos)",
 		"value": "1",
-		"type": "number",
+		"type": "dayOfWeek",
 		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
 		"group": "device_monitoring",
 		"isEditable": true,
@@ -172,8 +191,9 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_END_DAY_OF_WEEK",
+		"name": "Día de Fin de Monitoreo (Dispositivos)",
 		"value": "6",
-		"type": "number",
+		"type": "dayOfWeek",
 		"description": "Día de la semana en que finaliza el monitoreo (0=Domingo,6=Sábado).",
 		"group": "device_monitoring",
 		"isEditable": true,
@@ -181,6 +201,7 @@
 	},
 	{
 		"key": "DEVICE_MONITORING_DISABLE_TIME_CHECKS",
+		"name": "Ignorar Límites de Tiempo (Dispositivos)",
 		"value": "false",
 		"type": "boolean",
 		"description": "Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).",

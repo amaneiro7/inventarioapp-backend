@@ -6,6 +6,7 @@ import { SettingsKey } from '../valueObject/SettingsKey'
 import { SettingsGroup } from '../valueObject/SettingsGroup'
 import { SettingsType, SettingsTypeEnum } from '../valueObject/SettingsType'
 import { SettingsIsProtected } from '../valueObject/SettingsIsProtected'
+import { SettingsName } from '../valueObject/SettingsName'
 import { SettingsValue } from '../valueObject/SettingsValue'
 import { type Primitives } from '../../../domain/value-object/Primitives'
 import { type SettingsPrimitives } from './Settings.dto'
@@ -16,6 +17,7 @@ export class Settings {
 		private value: SettingsValue,
 		private readonly type: SettingsType,
 		private readonly group: SettingsGroup,
+		private readonly name: SettingsName,
 		private readonly description: SettingsDescription,
 		private readonly isEditable: SettingsIsEditable,
 		private readonly isProtected: SettingsIsProtected
@@ -29,6 +31,7 @@ export class Settings {
 			new SettingsValue(primitives.value),
 			new SettingsType(primitives.type as SettingsTypeEnum),
 			new SettingsGroup(primitives.group ?? ''),
+			new SettingsName(primitives.name),
 			new SettingsDescription(primitives.description),
 			new SettingsIsEditable(primitives.isEditable),
 			new SettingsIsProtected(primitives.isProtected)
@@ -42,6 +45,7 @@ export class Settings {
 			type: this.typeValue,
 			group: this.groupValue,
 			description: this.descriptionValue,
+			name: this.nameValue,
 			isEditable: this.isEditableValue,
 			isProtected: this.isProtectedValue
 		}
@@ -94,6 +98,9 @@ export class Settings {
 
 	get descriptionValue(): Primitives<SettingsDescription> {
 		return this.description.value
+	}
+	get nameValue(): Primitives<SettingsName> {
+		return this.name.value
 	}
 
 	get isEditableValue(): Primitives<SettingsIsEditable> {

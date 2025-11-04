@@ -59,4 +59,12 @@ export class SettingsFinder {
 			return fallback
 		}
 	}
+	async findAsArray({ key, fallback }: { key: string; fallback: string[] }): Promise<string[]> {
+		try {
+			const setting = await this.run({ key })
+			return new SettingsValue(setting.value).toStringArray()
+		} catch {
+			return fallback
+		}
+	}
 }

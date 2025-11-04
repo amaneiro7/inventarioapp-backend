@@ -1,7 +1,7 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
-const { Json } = require('sequelize/lib/utils')
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
@@ -16,6 +16,7 @@ module.exports = {
 				key: 'DEFAULT_PASSWORD_HASH',
 				value: defaultPasswordHash,
 				type: 'string',
+				name: 'Contraseña por Defecto',
 				description: 'Hash de la contraseña inicial asignada a nuevos usuarios.',
 				group: 'security',
 				is_editable: true,
@@ -25,6 +26,7 @@ module.exports = {
 				key: 'PASSWORD_EXPIRY_DAYS',
 				value: '90',
 				type: 'number',
+				name: 'Días para Expiración de Contraseña',
 				description: 'Número de días antes de que una contraseña caduque y se requiera un cambio.',
 				group: 'security',
 				is_editable: true,
@@ -34,6 +36,7 @@ module.exports = {
 				key: 'FAILED_ATTEMPTS_LIMIT',
 				value: '5',
 				type: 'number',
+				name: 'Límite de Intentos Fallidos',
 				description: 'Número máximo de intentos de login fallidos antes de bloquear la cuenta.',
 				group: 'security',
 				is_editable: true,
@@ -43,7 +46,18 @@ module.exports = {
 				key: 'LOCKOUT_UNTIL_MINUTES',
 				value: '15',
 				type: 'number',
+				name: 'Tiempo de Bloqueo de Cuenta (Minutos)',
 				description: 'Tiempo de bloqueo (en minutos) después de alcanzar el límite de intentos fallidos.',
+				group: 'security',
+				is_editable: true,
+				is_protected: false
+			},
+			{
+				key: 'ALLOWED_EMAIL_DOMAINS',
+				value: allowedDomainsJson,
+				type: 'array',
+				name: 'Dominios de Email Permitidos',
+				description: 'Lista de dominios de correo electrónico permitidos para los empleados.',
 				group: 'security',
 				is_editable: true,
 				is_protected: false
@@ -55,6 +69,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_ENABLED',
 				value: 'false',
 				type: 'boolean',
+				name: 'Activar Monitoreo de Ubicaciones',
 				description: 'Interruptor principal para activar el monitoreo de ubicación.',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -64,6 +79,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_CONCURRENCY_LIMIT',
 				value: '5',
 				type: 'number',
+				name: 'Límite de Concurrencia (Ubicaciones)',
 				description: 'Límite de pings concurrentes para el monitoreo de ubicación.',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -73,6 +89,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_IDLE_TIME_MINUTES',
 				value: '1',
 				type: 'number',
+				name: 'Tiempo de Inactividad (Ubicaciones)',
 				description: 'Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -82,6 +99,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_START_HOUR', // Ejemplo: 8 para 8 AM
 				value: '7',
 				type: 'number',
+				name: 'Hora de Inicio de Monitoreo (Ubicaciones)',
 				description: 'Hora (en formato 24h) en que inicia el periodo de monitoreo.',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -91,6 +109,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_END_HOUR',
 				value: '19',
 				type: 'number',
+				name: 'Hora de Fin de Monitoreo (Ubicaciones)',
 				description: 'Hora (en formato 24h) en que finaliza el periodo de monitoreo.',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -99,7 +118,8 @@ module.exports = {
 			{
 				key: 'LOCATION_MONITORING_START_DAY_OF_WEEK', // 0 (Domingo) a 6 (Sábado)
 				value: '1',
-				type: 'number',
+				type: 'dayOfWeek',
+				name: 'Día de Inicio de Monitoreo (Ubicaciones)',
 				description: 'Día de la semana en que inicia el monitoreo (0=Domingo, 6=Sábado).',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -108,7 +128,8 @@ module.exports = {
 			{
 				key: 'LOCATION_MONITORING_END_DAY_OF_WEEK',
 				value: '6',
-				type: 'number',
+				type: 'dayOfWeek',
+				name: 'Día de Fin de Monitoreo (Ubicaciones)',
 				description: 'Día de la semana en que finaliza el monitoreo (0=Domingo, 6=Sábado).',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -118,6 +139,7 @@ module.exports = {
 				key: 'LOCATION_MONITORING_DISABLE_TIME_CHECKS',
 				value: 'false',
 				type: 'boolean',
+				name: 'Ignorar Límites de Tiempo (Ubicaciones)',
 				description: 'Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).',
 				group: 'location_monitoring',
 				is_editable: true,
@@ -128,6 +150,7 @@ module.exports = {
 				key: 'DEVICE_MONITORING_ENABLED',
 				value: 'false',
 				type: 'boolean',
+				name: 'Activar Monitoreo de Dispositivos',
 				description: 'Interruptor principal para activar el monitoreo de dispositivos.',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -137,6 +160,7 @@ module.exports = {
 				key: 'DEVICE_MONITORING_CONCURRENCY_LIMIT',
 				value: '5',
 				type: 'number',
+				name: 'Límite de Concurrencia (Dispositivos)',
 				description: 'Límite de pings concurrentes para el monitoreo de dispositivos.',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -146,6 +170,7 @@ module.exports = {
 				key: 'DEVICE_MONITORING_IDLE_TIME_MINUTES',
 				value: '1',
 				type: 'number',
+				name: 'Tiempo de Inactividad (Dispositivos)',
 				description: 'Tiempo de inactividad (en minutos) antes de considerar que un dispositivo está inactivo.',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -155,6 +180,7 @@ module.exports = {
 				key: 'DEVICE_MONITORING_START_HOUR', // Ejemplo: 8 para 8 AM
 				value: '7',
 				type: 'number',
+				name: 'Hora de Inicio de Monitoreo (Dispositivos)',
 				description: 'Hora (en formato 24h) en que inicia el periodo de monitoreo.',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -164,6 +190,7 @@ module.exports = {
 				key: 'DEVICE_MONITORING_END_HOUR',
 				value: '19',
 				type: 'number',
+				name: 'Hora de Fin de Monitoreo (Dispositivos)',
 				description: 'Hora (en formato 24h) en que finaliza el periodo de monitoreo.',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -172,7 +199,8 @@ module.exports = {
 			{
 				key: 'DEVICE_MONITORING_START_DAY_OF_WEEK', // 0 (Domingo) a 6 (Sábado)
 				value: '1',
-				type: 'number',
+				type: 'dayOfWeek',
+				name: 'Día de Inicio de Monitoreo (Dispositivos)',
 				description: 'Día de la semana en que inicia el monitoreo (0=Domingo, 6=Sábado).',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -181,7 +209,8 @@ module.exports = {
 			{
 				key: 'DEVICE_MONITORING_END_DAY_OF_WEEK',
 				value: '6',
-				type: 'number',
+				type: 'dayOfWeek',
+				name: 'Día de Fin de Monitoreo (Dispositivos)',
 				description: 'Día de la semana en que finaliza el monitoreo (0=Domingo, 6=Sábado).',
 				group: 'device_monitoring',
 				is_editable: true,
@@ -191,17 +220,9 @@ module.exports = {
 				key: 'DEVICE_MONITORING_DISABLE_TIME_CHECKS',
 				value: 'false',
 				type: 'boolean',
+				name: 'Ignorar Límites de Tiempo (Dispositivos)',
 				description: 'Establecer a true para ignorar los límites de tiempo de monitoreo (uso en QA).',
 				group: 'device_monitoring',
-				is_editable: true,
-				is_protected: false
-			},
-			{
-				key: 'ALLOWED_EMAIL_DOMAINS',
-				value: allowedDomainsJson,
-				type: 'json',
-				description: 'Lista de dominios de correo electrónico permitidos para los empleados.',
-				group: 'security',
 				is_editable: true,
 				is_protected: false
 			}
