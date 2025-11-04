@@ -39,6 +39,7 @@ export class UserFinderAll {
 				roleId: userEntity.roleId,
 				status: userEntity.status,
 				lastLoginAt: userEntity.lastLoginAt,
+				lastLoginIp: userEntity.lastLoginIp,
 				passwordChangeAt: userEntity.passwordChangeAt
 			}
 		})

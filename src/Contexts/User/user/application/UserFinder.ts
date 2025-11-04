@@ -48,13 +48,14 @@ export class UserFinder {
 		return {
 			id: foundUser.id,
 			userName: foundUser.employee.userName,
-			employeeId: foundUser.employeeId, // Added employeeId
-			roleId: foundUser.roleId, // Added roleId
-			status: foundUser.status, // Added status
-			passwordChangeAt: foundUser.passwordChangeAt, // Added passwordChangeAt
-			lastLoginAt: foundUser.lastLoginAt, // Added lastLoginAt
-			employee: foundUser.employee, // Added employee
-			role: foundUser.role // Added role
+			employeeId: foundUser.employeeId,
+			roleId: foundUser.roleId,
+			status: foundUser.status,
+			passwordChangeAt: foundUser.passwordChangeAt,
+			lastLoginAt: foundUser.lastLoginAt,
+			lastLoginIp: foundUser.lastLoginIp,
+			employee: foundUser.employee,
+			role: foundUser.role
 		}
 	}
 }
