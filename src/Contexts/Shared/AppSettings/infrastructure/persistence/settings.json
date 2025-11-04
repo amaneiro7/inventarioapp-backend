@@ -32,6 +32,14 @@
 		"is_editable": true
 	},
 	{
+		"key": "ALLOWED_EMAIL_DOMAINS",
+		"value": "['bnc.com.ve','banconacionaldecredito.com.ve','bncenlinea.net']",
+		"type": "json",
+		"description": "Lista de dominios de correo electrónico permitidos para los empleados.",
+		"group": "security",
+		"is_editable": true
+	},
+	{
 		"key": "LOCATION_MONITORING_ENABLED",
 		"value": "false",
 		"type": "boolean",

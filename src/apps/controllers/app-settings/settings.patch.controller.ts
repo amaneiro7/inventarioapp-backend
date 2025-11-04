@@ -21,8 +21,7 @@ export class SettingsPatchController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const user = req.user as JwtPayloadUser
-			isSuperAdmin({ user })
+			isSuperAdmin({ user: req.user as JwtPayloadUser })
 			const { value } = req.body
 			const { key } = req.params
 			const update: SettingsUpdater = container.resolve(AppSettingsDependencies.Updater)

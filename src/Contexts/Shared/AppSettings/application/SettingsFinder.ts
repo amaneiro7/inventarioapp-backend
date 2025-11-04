@@ -50,4 +50,13 @@ export class SettingsFinder {
 			return fallback
 		}
 	}
+
+	async findAsJson<T>({ key, fallback }: { key: string; fallback: T }): Promise<T> {
+		try {
+			const setting = await this.run({ key })
+			return new SettingsValue(setting.value).asJson()
+		} catch {
+			return fallback
+		}
+	}
 }

@@ -50,7 +50,13 @@ export class UserLoginLocal {
 
 		// 1. Find employee by userName or email
 		if (userNameOrEmail.includes('@')) {
-			const employeeEmail = new EmployeeEmail(userNameOrEmail)
+			// Obtener los dominios permitidos desde la configuración
+			const allowedDomains = await this.settingsFinder.findAsJson<string[]>({
+				key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
+				fallback: [] // Si la configuración no existe, devuelve un array vacío
+			})
+
+			const employeeEmail = new EmployeeEmail(userNameOrEmail, allowedDomains)
 			employee = await this.employeeRepository.searchByEmail(employeeEmail.value)
 		} else {
 			const employeeUserName = new EmployeeUserName(userNameOrEmail)
