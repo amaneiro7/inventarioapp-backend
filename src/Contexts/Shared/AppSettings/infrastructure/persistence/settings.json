@@ -110,6 +110,16 @@
 		"isProtected": false
 	},
 	{
+		"key": "LOCATION_MONITORING_START_DAY_OF_WEEK",
+		"name": "Día de Inicio de Monitoreo (Dispositivos)",
+		"value": "1",
+		"type": "dayOfWeek",
+		"description": "Día de la semana en que inicia el monitoreo (0=Domingo,6=Sábado).",
+		"group": "location_monitoring",
+		"isEditable": true,
+		"isProtected": false
+	},
+	{
 		"key": "LOCATION_MONITORING_END_DAY_OF_WEEK",
 		"name": "Día de Fin de Monitoreo (Ubicaciones)",
 		"value": "6",
