@@ -8,9 +8,7 @@ import { SUCCESS_MESSAGES } from '../../constants/messages'
 import { container } from '../../di/container'
 import { AppSettingsDependencies } from '../../di/app-settings/app-settings.di'
 
-interface SettingsBulkRequestBody {
-	settings: Array<{ key: string; value: string }>
-}
+type SettingsBulkRequestBody = Array<{ key: string; value: string }>
 
 export class SettingsPatchBulkController implements Controller {
 	/**
@@ -25,18 +23,18 @@ export class SettingsPatchBulkController implements Controller {
 			const user = req.user as JwtPayloadUser
 			isSuperAdmin({ user })
 
-			const { settings } = req.body
+			const settingsArray = req.body
 
-			if (!Array.isArray(settings)) {
+			if (!Array.isArray(settingsArray)) {
 				res.status(httpStatus[400].statusCode).json({
 					...httpStatus[400],
-					message: 'The "settings" field must be an array.'
+					message: 'Request body must be an array of settings.'
 				})
 				return
 			}
 
 			const updateBulk: SettingsUpdaterBulk = container.resolve(AppSettingsDependencies.UpdaterBulk)
-			await updateBulk.run({ settings })
+			await updateBulk.run({ settings: settingsArray })
 
 			res.status(httpStatus[200].statusCode).json({
 				message: SUCCESS_MESSAGES.SETTINGS_UPDATED
