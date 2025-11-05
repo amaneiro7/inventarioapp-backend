@@ -1,7 +1,7 @@
 import { type SettingsPrimitives } from '../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
 
-const MASK_VALUE = '[PROTECTED]' // El valor para enmascarar se mantiene
+const MASK_VALUE = '' // El valor para enmascarar se mantiene
 
 export class SettingsFinderAll {
 	private readonly settingsRepository: SettingsRepository
