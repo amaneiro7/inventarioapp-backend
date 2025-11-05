@@ -10,6 +10,8 @@ import { SettingsName } from '../valueObject/SettingsName'
 import { SettingsValue } from '../valueObject/SettingsValue'
 import { type Primitives } from '../../../domain/value-object/Primitives'
 import { type SettingsPrimitives } from './Settings.dto'
+import { UserPassword } from '../../../../User/user/domain/valueObject/UserPassword'
+import { AppSettingKeys } from './SettingsKeys'
 
 export class Settings {
 	constructor(
@@ -55,7 +57,13 @@ export class Settings {
 		if (!this.isEditableValue) {
 			throw new SettingNotEditableError(this.keyValue)
 		}
-		const newSettingsValue = new SettingsValue(newValue)
+		let valueToUpdate: string
+		if (this.keyValue === AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH) {
+			valueToUpdate = UserPassword.create(newValue).value
+		} else {
+			valueToUpdate = newValue
+		}
+		const newSettingsValue = new SettingsValue(valueToUpdate)
 		this.validateValue(newSettingsValue)
 		this.value = newSettingsValue
 	}

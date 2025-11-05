@@ -123,7 +123,15 @@ export class User {
 
 	// Nuevo método para manejar el desbloqueo automático
 	unlockIfTimeExpired(): void {
-		if (this.status.value === UserStatusEnum.LOCKED && !this.isLocked()) {
+		// 1. Si no hay fecha de bloqueo, no hay nada que hacer
+		if (!this.lockoutUntilValue) {
+			return
+		}
+
+		// 2. Si la fecha de bloqueo ha expirado (es menor o igual a la fecha actual)
+		if (this.lockoutUntilValue <= new Date()) {
+			// Ejecutar la accion de desbloqueo:
+			this.lockoutUntil = new LockoutUntil(null)
 			this.status = new UserStatus(UserStatusEnum.ACTIVE)
 			this.failedAttemps = new FailedAttemps(0)
 		}

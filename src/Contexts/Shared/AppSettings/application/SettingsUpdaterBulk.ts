@@ -35,7 +35,9 @@ export class SettingsUpdaterBulk {
 			}
 
 			const settingsEntity = Settings.fromPrimitives(existingSetting)
+
 			settingsEntity.updateValue(value)
+
 			settingsToSave.push(settingsEntity.toPrimitives())
 		}
 

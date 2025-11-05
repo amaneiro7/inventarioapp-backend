@@ -13,6 +13,7 @@ import { type EmployeePrimitives } from '../../employee/Employee/domain/entity/E
 import { type Nullable } from '../../Shared/domain/Nullable'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type LastLoginIp } from '../../User/user/domain/valueObject/LastLoginIp'
+import { AccountLockedError } from '../domain/AccountLockedError'
 
 /**
  * @class UserLoginLocal
@@ -85,26 +86,21 @@ export class UserLoginLocal {
 		}
 
 		const userEntity = User.fromPrimitives(user)
+		const { daysToExpire, lockoutTimeInMinutes, maxAttempts } = await this.getLoginPolicySettings()
 
 		// 3. Desbloquear la cuenta si el tiempo de bloqueo ha expirado
 		userEntity.unlockIfTimeExpired()
+		await this.userRepository.save(userEntity.toPrimitives())
 
 		// 4. Verificar si la cuenta está bloqueada (después de intentar desbloquear)
 		if (userEntity.isLocked()) {
-			throw new InvalidCredentialsError('Su cuenta está bloqueada. Por favor, contacte al administrador.')
+			throw new AccountLockedError(userEntity.lockoutUntilValue)
 		}
 
 		// 5. Comparar contraseña
 		const isMatch = PasswordService.compare(password, user.password)
-		const lockoutTimeInMinutes = await this.settingsFinder.findAsNumber({
-			key: AppSettingKeys.SECURITY.LOCKOUT_UNTIL_MINUTES,
-			fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
-		})
-		const maxAttempts = await this.settingsFinder.findAsNumber({
-			key: AppSettingKeys.SECURITY.FAILED_ATTEMPTS_LIMIT,
-			fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
-		})
 		if (!isMatch) {
+			// Aumentar intentos y bloquear si es necesario.
 			userEntity.increaseFailedAttepns({
 				lockoutTimeInMinutes,
 				maxAttempts
@@ -113,11 +109,7 @@ export class UserLoginLocal {
 			throw new InvalidCredentialsError()
 		}
 
-		// Verificar si la cuenta está suspendida
-		const daysToExpire = await this.settingsFinder.findAsNumber({
-			key: AppSettingKeys.SECURITY.PASSWORD_EXPIRY_DAYS,
-			fallback: AppSettingDefaults.SECURITY.PASSWORD_EXPIRY_DAYS
-		})
+		// 5.1. Verificar si la contraseña ha expirado
 		if (userEntity.isPasswordExpired(daysToExpire)) {
 			user.passwordExpired = true
 		}
@@ -128,5 +120,29 @@ export class UserLoginLocal {
 
 		// 7. Devolver el estado más reciente del usuario
 		return user
+	}
+
+	// Ejemplo de servicio de dominio o función privada para encapsular las búsquedas:
+	private async getLoginPolicySettings(): Promise<{
+		lockoutTimeInMinutes: number
+		maxAttempts: number
+		daysToExpire: number
+	}> {
+		// Usar Promise.all para hacer las búsquedas concurrentemente (más rápido)
+		const [lockoutTimeInMinutes, maxAttempts, daysToExpire] = await Promise.all([
+			this.settingsFinder.findAsNumber({
+				key: AppSettingKeys.SECURITY.LOCKOUT_UNTIL_MINUTES,
+				fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
+			}),
+			this.settingsFinder.findAsNumber({
+				key: AppSettingKeys.SECURITY.FAILED_ATTEMPTS_LIMIT,
+				fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
+			}),
+			this.settingsFinder.findAsNumber({
+				key: AppSettingKeys.SECURITY.PASSWORD_EXPIRY_DAYS,
+				fallback: AppSettingDefaults.SECURITY.PASSWORD_EXPIRY_DAYS
+			})
+		])
+		return { lockoutTimeInMinutes, maxAttempts, daysToExpire }
 	}
 }
