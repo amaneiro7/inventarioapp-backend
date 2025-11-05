@@ -256,3 +256,7 @@ certificate
 *.crt
 nginx.key
 nginx.keyclear
+
+settings.json
+bun.lockb
+pnpm-lock.yaml
