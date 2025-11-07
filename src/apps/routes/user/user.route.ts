@@ -11,6 +11,7 @@ import { type UserGetController } from '../../controllers/user/user.get.controll
 import { type UserCreateController } from '../../controllers/user/user.create.controller'
 import { type UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
 import { type UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
+import { UserPatchController } from '../../controllers/user/user.patch.controller'
 
 export const register = async (router: Router) => {
 	const getController: UserGetController = container.resolve(UserDependencies.GetController)
@@ -29,6 +30,8 @@ export const register = async (router: Router) => {
 	const unlockAccountController: UserUnlockAccountController = container.resolve(
 		UserDependencies.UnlockAccountController
 	)
+
+	const patchController: UserPatchController = container.resolve(UserDependencies.PatchController)
 
 	/**
 	 * @swagger
@@ -72,7 +75,7 @@ export const register = async (router: Router) => {
 
 	/**
 	 * @swagger
-	 * /users:
+	 * /users/register:
 	 *   post:
 	 *     tags:
 	 *       - Usuarios
@@ -99,7 +102,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos o el usuario ya existe.
 	 */
-	router.post('/users', authenticate, createUserController.run.bind(createUserController))
+	router.post('/users/register', authenticate, createUserController.run.bind(createUserController))
 	/**
 	 * @swagger
 	 * /users/change-password:
@@ -115,13 +118,13 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             $ref: '#/components/schemas/UserChangePassword' # Asegúrate de que este schema esté definido en tu configuración de Swagger
+	 *             $ref: '#/components/schemas/UserChangePassword'
 	 *     responses:
-	 *       '201':
+	 *       '200':
 	 *         description: Contraseña cambiada con éxito.
 	 *       '400':
 	 *         description: Contraseña actual incorrecta o datos no válidos.
-	 *       '404':
+	 *       '401':
 	 *         description: Usuario no encontrado.
 	 */
 	router.patch('/users/change-password', authenticate, changePaswwordController.run.bind(changePaswwordController))
@@ -141,10 +144,10 @@ export const register = async (router: Router) => {
 	 *       content:
 	 *         application/json:
 	 *           schema:
-	 *             $ref: '#/components/schemas/UserResetPassword' # Asegúrate de que este schema esté definido
+	 *             $ref: '#/components/schemas/UserResetPassword'
 	 *     responses:
-	 *       '201':
-	 *         description: Contraseña restablecida con éxito.
+	 *       '200':
+	 *         description: Contraseña restablecida con éxito por un administrador.
 	 *       '400':
 	 *         description: Datos no válidos.
 	 *       '404':
@@ -241,4 +244,39 @@ export const register = async (router: Router) => {
 	 */
 
 	router.patch('/users/reactivate', authenticate, reactivateController.run.bind(reactivateController))
+
+	/**
+	 * @swagger
+	 * /users/update:
+	 *   patch:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Actualizar datos de un usuario
+	 *     description: Permite a un administrador actualizar los datos de un usuario, como nombre, apellido o email.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               id:
+	 *                 type: string
+	 *                 format: uuid
+	 *               name:
+	 *                 type: string
+	 *               lastName:
+	 *                 type: string
+	 *               email:
+	 *                 type: string
+	 *                 format: email
+	 *     responses:
+	 *       '200':
+	 *         description: Usuario actualizado con éxito.
+	 *       '404':
+	 *         description: Usuario no encontrado.
+	 */
+	router.patch('/users/update', authenticate, patchController.run.bind(patchController))
 }

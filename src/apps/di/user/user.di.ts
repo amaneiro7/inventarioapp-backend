@@ -21,12 +21,15 @@ import { UserCreateController } from '../../controllers/user/user.create.control
 import { UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
 import { UserReactivateAccount } from '../../../Contexts/User/user/application/UserReactivateAccount'
 import { UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
+import { UserUpdater } from '../../../Contexts/User/user/application/UserUpdater'
+import { UserPatchController } from '../../controllers/user/user.patch.controller'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
 	Finder = 'userFinder',
 	FinderAll = 'userFinderAll',
 	FinderByEmail = 'userFinderByEmail',
+	Updater = 'userUpdater',
 	Disabled = 'userDisabledAccount',
 	ChangePassword = 'userChangePassword',
 	ResetPassword = 'userResetPassword',
@@ -42,6 +45,7 @@ export enum UserDependencies {
 	ChangePasswordController = 'userChangePasswordController',
 	ResetPasswordController = 'userResetPasswordController',
 	CreateController = 'userCreateController',
+	PatchController = 'userPatchController',
 	UnlockAccountController = 'userUnlockAccountController'
 }
 export const register = (container: AwilixContainer) => {
@@ -49,6 +53,7 @@ export const register = (container: AwilixContainer) => {
 		userRepository: asClass(SequelizeUserRepository).singleton(),
 
 		userDeactivateUser: asClass(UserDesactivateAccount),
+		userUpdater: asClass(UserUpdater),
 		userFinderAll: asClass(UserFinderAll),
 		userFinder: asClass(UserFinder),
 		userFinderByEmail: asClass(UserFinderByEmail),
@@ -60,6 +65,7 @@ export const register = (container: AwilixContainer) => {
 		userUnlockAccount: asClass(UserUnlockAccount),
 
 		userCreateController: asClass(UserCreateController),
+		userPatchController: asClass(UserPatchController),
 		userGetController: asClass(UserGetController),
 		userGetAllController: asClass(UserGetAllController),
 		userDisabledController: asClass(UserDisabledController),

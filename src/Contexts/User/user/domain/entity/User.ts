@@ -151,6 +151,11 @@ export class User {
 		expirationDate.setDate(expirationDate.getDate() + daysToExpire)
 		return expirationDate < new Date()
 	}
+
+	updateRole(roleId: Primitives<RoleId>): void {
+		this.roleId = new RoleId(roleId)
+	}
+
 	toPrimitives(): UserPrimitives {
 		return {
 			id: this.idValue,
