@@ -4,6 +4,8 @@ import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { EmployeeTypesEnum } from '../../../employee/Employee/domain/valueObject/EmployeeType'
+import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { type UserDto } from '../domain/entity/User.dto'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type RoleRepository } from '../../Role/domain/RoleRepository'
@@ -11,7 +13,6 @@ import { type EmployeeRepository } from '../../../employee/Employee/domain/Repos
 import { type RoleId } from '../../Role/domain/RoleId'
 import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
-import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 interface CreateUserFromEmployeeParams {
 	employeeId: EmployeeId['value']
@@ -53,7 +54,7 @@ export class CreateUserFromEmployee {
 	 * @throws {InvalidArgumentError} If the provided role ID does not exist.
 	 * @throws {EmployeeDoesNotExistError} If the provided employee ID does not exist.
 	 */
-	async run({ payload, user }: { payload: CreateUserFromEmployeeParams; user?: JwtPayloadUser }): Promise<void> {
+	async run({ payload, user }: { payload: CreateUserFromEmployeeParams; user?: JwtPayloadUser }): Promise<UserDto> {
 		isSuperAdmin({ user })
 
 		// 1. Validate Employee existence
@@ -80,12 +81,26 @@ export class CreateUserFromEmployee {
 		await this.employeeRepository.save(employeeEntity.toPrimitive())
 
 		// 5. Create the user entity with a generated password
-		const settings = await this.settingsFinder.run({ key: AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH })
+		const defaultHashedPassword = (
+			await this.settingsFinder.run({ key: AppSettingKeys.SECURITY.DEFAULT_PASSWORD_HASH })
+		).value
 		const userEntity = User.createFromEmployee({
 			employeeId: payload.employeeId,
 			roleId: payload.roleId,
-			password: settings.value as string
+			password: defaultHashedPassword
 		})
-		await this.userRepository.save(userEntity.toPrimitives())
+		const savedUser = await this.userRepository.save(userEntity.toPrimitives())
+		return {
+			id: savedUser.id,
+			userName: savedUser.employee.userName,
+			employeeId: savedUser.employeeId,
+			roleId: savedUser.roleId,
+			status: savedUser.status,
+			passwordChangeAt: savedUser.passwordChangeAt,
+			lastLoginAt: savedUser.lastLoginAt,
+			lastLoginIp: savedUser.lastLoginIp,
+			employee: savedUser.employee,
+			role: savedUser.role
+		}
 	}
 }

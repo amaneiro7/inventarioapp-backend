@@ -70,9 +70,17 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 		})
 	}
 
-	async save(payload: UserPrimitives): Promise<void> {
-		await UserModel.upsert(payload)
+	async save(payload: UserPrimitives): Promise<User> {
+		// Paso 1: Realizar el upsert. La opción 'include' es ignorada por upsert, así que la quitamos.
+		// 'returning: true' nos devuelve la instancia base (sin asociaciones).
+		const [userInstance] = await UserModel.upsert(payload, { returning: true })
+
+		// Paso 2: Invalidar la caché inmediatamente después de la escritura.
 		await this.invalidateCache(payload)
+
+		// Paso 3: Volver a buscar el usuario por su ID para cargar las asociaciones ('role' y 'employee').
+		// Esto garantiza que devolvemos el objeto completo y actualizado.
+		return (await this.searchById(userInstance.id)) as User
 	}
 
 	async delete(id: Primitives<UserId>): Promise<void> {

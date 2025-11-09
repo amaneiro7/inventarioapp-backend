@@ -24,8 +24,9 @@ export class UserCreateController implements Controller {
 			const payload = req.body
 			const user = req.user as JwtPayloadUser
 			const create: CreateUserFromEmployee = container.resolve(UserDependencies.Register)
-			await create.run({ user, payload })
+			const data = await create.run({ user, payload })
 			res.status(httpStatus[200].statusCode).send({
+				data,
 				message: SUCCESS_MESSAGES.USER_REGISTERED
 			})
 		} catch (error) {

@@ -18,7 +18,7 @@ export abstract class UserRepository {
 	 * @param {UserPrimitives} user The User data to be saved.
 	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 */
-	abstract save(user: UserPrimitives): Promise<void>
+	abstract save(user: UserPrimitives): Promise<User>
 
 	/**
 	 * @abstract

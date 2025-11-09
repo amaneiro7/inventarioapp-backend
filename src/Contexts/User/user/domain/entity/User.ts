@@ -42,12 +42,12 @@ export class User {
 
 	static createFromEmployee(params: Pick<UserParams, 'employeeId' | 'roleId' | 'password'>): User {
 		const id = UserId.random().value
-		const { employeeId, roleId, password } = params
+		const { employeeId, roleId, password: hashedPassword } = params
 		return new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
 			new RoleId(roleId),
-			UserPassword.create(password),
+			UserPassword.fromPrimitives(hashedPassword),
 			new UserStatus(UserStatusEnum.ACTIVE),
 			new PasswordChangeAt(new Date()),
 			new LastLoginAt(null),
