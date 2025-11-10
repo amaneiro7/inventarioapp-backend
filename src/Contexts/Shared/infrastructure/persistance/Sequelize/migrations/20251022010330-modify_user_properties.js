@@ -43,6 +43,16 @@ module.exports = {
 				},
 				{ transaction }
 			)
+			await queryInterface.addColumn(
+				'users',
+				'password_never_expires',
+				{
+					type: Sequelize.BOOLEAN,
+					allowNull: false,
+					defaultValue: false
+				},
+				{ transaction }
+			)
 
 			await queryInterface.addColumn(
 				'users',
@@ -103,6 +113,7 @@ module.exports = {
 			await queryInterface.removeColumn('users', 'employee_id', { transaction })
 			await queryInterface.removeColumn('users', 'status', { transaction })
 			await queryInterface.removeColumn('users', 'password_change_at', { transaction })
+			await queryInterface.removeColumn('users', 'password_never_expires', { transaction })
 			await queryInterface.removeColumn('users', 'last_login_at', { transaction })
 			await queryInterface.removeColumn('users', 'last_login_ip', { transaction })
 			await queryInterface.removeColumn('users', 'failed_attemps', { transaction })

@@ -70,6 +70,7 @@ export class UserFinderByEmail {
 			roleId: foundUser.roleId,
 			status: foundUser.status,
 			passwordChangeAt: foundUser.passwordChangeAt,
+			passwordNeverExpires: foundUser.passwordNeverExpires,
 			lastLoginAt: foundUser.lastLoginAt,
 			lastLoginIp: foundUser.lastLoginIp,
 			employee: foundUser.employee,

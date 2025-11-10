@@ -40,7 +40,8 @@ export class UserFinderAll {
 				status: userEntity.status,
 				lastLoginAt: userEntity.lastLoginAt,
 				lastLoginIp: userEntity.lastLoginIp,
-				passwordChangeAt: userEntity.passwordChangeAt
+				passwordChangeAt: userEntity.passwordChangeAt,
+				passwordNeverExpires: userEntity.passwordNeverExpires
 			}
 		})
 

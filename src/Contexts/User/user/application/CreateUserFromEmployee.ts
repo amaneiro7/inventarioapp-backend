@@ -97,6 +97,7 @@ export class CreateUserFromEmployee {
 			roleId: savedUser.roleId,
 			status: savedUser.status,
 			passwordChangeAt: savedUser.passwordChangeAt,
+			passwordNeverExpires: savedUser.passwordNeverExpires,
 			lastLoginAt: savedUser.lastLoginAt,
 			lastLoginIp: savedUser.lastLoginIp,
 			employee: savedUser.employee,

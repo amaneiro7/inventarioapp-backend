@@ -11,13 +11,13 @@
   },
   {
     "key": "PASSWORD_EXPIRY_DAYS",
-    "name": "Días para Expiración de Contraseña",
     "value": "90",
     "type": "number",
-    "description": "Número de días antes de que una contraseña caduque y se requiera un cambio.",
     "group": "security",
+    "description": "Número de días antes de que una contraseña caduque y se requiera un cambio.",
+    "name": "Días para Expiración de Contraseña",
     "isEditable": true,
-    "isProtected": false
+    "isProtected": true
   },
   {
     "key": "FAILED_ATTEMPTS_LIMIT",

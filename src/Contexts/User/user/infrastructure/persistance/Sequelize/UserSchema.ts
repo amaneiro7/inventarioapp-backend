@@ -12,6 +12,7 @@ import { type LastLoginAt } from '../../../domain/valueObject/LastLoginAt'
 import { type FailedAttemps } from '../../../domain/valueObject/FailedAttemps'
 import { type LockoutUntil } from '../../../domain/valueObject/LockoutUntil'
 import { type LastLoginIp } from '../../../domain/valueObject/LastLoginIp'
+import { type PasswordNeverExpires } from '../../../domain/valueObject/PasswordNeverExpires'
 
 /**
  * @description Sequelize model for the User entity.
@@ -23,6 +24,7 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare password: Primitives<UserPassword>
 	declare status: UserStatusEnum // Use enum type directly for Sequelize
 	declare passwordChangeAt: Primitives<PasswordChangeAt>
+	declare passwordNeverExpires: Primitives<PasswordNeverExpires>
 	declare lastLoginAt: Primitives<LastLoginAt>
 	declare lastLoginIp: Primitives<LastLoginIp>
 	declare failedAttemps: Primitives<FailedAttemps>
@@ -48,6 +50,7 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				},
 				password: { type: DataTypes.STRING(64), allowNull: false },
 				passwordChangeAt: { type: DataTypes.DATE, allowNull: false },
+				passwordNeverExpires: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 				lastLoginAt: { type: DataTypes.DATE, allowNull: true },
 				lastLoginIp: { type: DataTypes.INET, allowNull: true },
 				failedAttemps: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },

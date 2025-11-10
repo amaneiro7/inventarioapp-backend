@@ -11,6 +11,7 @@ import { type RoleId } from '../../../Role/domain/RoleId'
 import { type RoleDto } from '../../../Role/domain/Role.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 import { type LastLoginIp } from '../valueObject/LastLoginIp'
+import { type PasswordNeverExpires } from '../valueObject/PasswordNeverExpires'
 
 /**
  * @interface UserAuth
@@ -24,6 +25,7 @@ export interface UserAuth {
 	status: Primitives<UserStatus>
 	password: Primitives<UserPassword>
 	passwordChangeAt: Primitives<PasswordChangeAt>
+	passwordNeverExpires: Primitives<PasswordNeverExpires>
 	lastLoginAt: Primitives<LastLoginAt>
 	lastLoginIp: Primitives<LastLoginIp>
 	failedAttemps: Primitives<FailedAttemps>

@@ -19,6 +19,7 @@ export function buildAuthResponse(user: User, accessToken: string, refreshToken?
 			roleId: `${roleId}`,
 			status: status, // Added status
 			passwordChangeAt: user.passwordChangeAt,
+			passwordNeverExpires: user.passwordNeverExpires,
 			lastLoginAt: user.lastLoginAt,
 			lastLoginIp: user.lastLoginIp,
 			role: {

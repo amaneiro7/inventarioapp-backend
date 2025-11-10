@@ -4,6 +4,7 @@ import { RoleId } from '../../../Role/domain/RoleId'
 import { UserPassword } from '../valueObject/UserPassword'
 import { UserStatus, UserStatusEnum } from '../valueObject/UserStatus'
 import { PasswordChangeAt } from '../valueObject/PasswordChangeAt'
+import { PasswordNeverExpires } from '../valueObject/PasswordNeverExpires'
 import { LastLoginIp } from '../valueObject/LastLoginIp'
 import { LastLoginAt } from '../valueObject/LastLoginAt'
 import { FailedAttemps } from '../valueObject/FailedAttemps'
@@ -19,6 +20,7 @@ export class User {
 		private password: UserPassword,
 		private status: UserStatus,
 		private passwordChangeAt: PasswordChangeAt,
+		private passwordNeverExpires: PasswordNeverExpires,
 		private lastLoginAt: LastLoginAt,
 		private lastLoginIp: LastLoginIp,
 		private failedAttemps: FailedAttemps,
@@ -33,6 +35,7 @@ export class User {
 			UserPassword.fromPrimitives(plainData.password),
 			new UserStatus(plainData.status),
 			new PasswordChangeAt(plainData.passwordChangeAt),
+			new PasswordNeverExpires(plainData.passwordNeverExpires),
 			new LastLoginAt(plainData.lastLoginAt),
 			new LastLoginIp(plainData.lastLoginIp),
 			new FailedAttemps(plainData.failedAttemps),
@@ -50,6 +53,7 @@ export class User {
 			UserPassword.fromPrimitives(hashedPassword),
 			new UserStatus(UserStatusEnum.ACTIVE),
 			new PasswordChangeAt(new Date()),
+			new PasswordNeverExpires(false),
 			new LastLoginAt(null),
 			new LastLoginIp(null),
 			new FailedAttemps(0),
@@ -144,8 +148,8 @@ export class User {
 	}
 
 	isPasswordExpired(daysToExpire: number = 90): boolean {
-		if (!this.passwordChangeAtValue) {
-			return true
+		if (this.passwordNeverExpires) {
+			return false // Si la bandera está activa, nunca expira.
 		}
 		const expirationDate = new Date(this.passwordChangeAtValue)
 		expirationDate.setDate(expirationDate.getDate() + daysToExpire)
@@ -164,6 +168,7 @@ export class User {
 			password: this.passwordValue,
 			status: this.statusValue,
 			passwordChangeAt: this.passwordChangeAtValue,
+			passwordNeverExpires: this.passwordNeverExpiresValue,
 			lastLoginAt: this.lastLoginAtValue,
 			lastLoginIp: this.lastLoginIpValue,
 			failedAttemps: this.failedAttempsValue,
@@ -188,6 +193,9 @@ export class User {
 	}
 	get passwordChangeAtValue(): Primitives<PasswordChangeAt> {
 		return this.passwordChangeAt.value
+	}
+	get passwordNeverExpiresValue(): Primitives<PasswordNeverExpires> {
+		return this.passwordNeverExpires.value
 	}
 	get lastLoginAtValue(): Primitives<LastLoginAt> {
 		return this.lastLoginAt.value
