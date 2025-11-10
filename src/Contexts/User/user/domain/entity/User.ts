@@ -52,7 +52,7 @@ export class User {
 			new RoleId(roleId),
 			UserPassword.fromPrimitives(hashedPassword),
 			new UserStatus(UserStatusEnum.ACTIVE),
-			new PasswordChangeAt(new Date()),
+			new PasswordChangeAt(null), // Para que solicite cambio de contraseña
 			new PasswordNeverExpires(false),
 			new LastLoginAt(null),
 			new LastLoginIp(null),
@@ -110,7 +110,7 @@ export class User {
 	 */
 	resetPasswordFromHash(hashedPassword: string): void {
 		this.password = UserPassword.fromPrimitives(hashedPassword)
-		this.passwordChangeAt = new PasswordChangeAt(new Date())
+		this.passwordChangeAt = new PasswordChangeAt(null)
 	}
 	desactivateAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.SUSPENDED)
@@ -147,13 +147,33 @@ export class User {
 		this.lockoutUntil = new LockoutUntil(null)
 	}
 
-	isPasswordExpired(daysToExpire: number = 90): boolean {
-		if (this.passwordNeverExpires) {
-			return false // Si la bandera está activa, nunca expira.
+	isPasswordExpired(daysToExpire: number): boolean {
+		// 1. Regla de Excepción: La contraseña está marcada para no expirar.
+		if (this.passwordNeverExpiresValue) {
+			return false
 		}
-		const expirationDate = new Date(this.passwordChangeAtValue)
+
+		// --- Preparación de Fechas Base ---
+		// 2. Obtener la fecha del último cambio (es la base para el cálculo).
+		const lastChange = this.passwordChangeAtValue
+		if (!lastChange) {
+			// Si no hay fecha de último cambio, se asume que debe cambiarla.
+			return true
+		}
+
+		// 3. Crear la fecha de expiración, ajustada al inicio del día (medianoche 00:00:00).
+		// Esto previene que la expiración dependa de la hora exacta del cambio.
+		const expirationDate = new Date(lastChange)
+		expirationDate.setHours(0, 0, 0, 0) // Ajusta la hora a medianoche (inicio del día)
+		// 4. Sumar los días que la política permite (provenientes de Settings).
+		// La expiración ocurrirá al inicio del día D+daysToExpire.
 		expirationDate.setDate(expirationDate.getDate() + daysToExpire)
-		return expirationDate < new Date()
+		// 5. Ajustar la fecha actual a la medianoche (00:00:00) para una comparación por días.
+		const today = new Date()
+		today.setHours(0, 0, 0, 0)
+		// 6. Si la fecha de expiración es menor o igual a la fecha actual (medianoche), ha expirado.
+		// Usamos '<=' para incluir el día de expiración completo en el cálculo.
+		return expirationDate <= today
 	}
 
 	updateRole(roleId: Primitives<RoleId>): void {

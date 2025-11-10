@@ -110,6 +110,7 @@ export class UserLoginLocal {
 		}
 
 		// 5.1. Verificar si la contraseña ha expirado
+
 		if (userEntity.isPasswordExpired(daysToExpire)) {
 			user.passwordExpired = true
 		}
@@ -132,7 +133,7 @@ export class UserLoginLocal {
 		const [lockoutTimeInMinutes, maxAttempts, daysToExpire] = await Promise.all([
 			this.settingsFinder.findAsNumber({
 				key: AppSettingKeys.SECURITY.LOCKOUT_UNTIL_MINUTES,
-				fallback: AppSettingDefaults.SECURITY.FAILED_ATTEMPTS_LIMIT
+				fallback: AppSettingDefaults.SECURITY.LOCKOUT_UNTIL_MINUTES
 			}),
 			this.settingsFinder.findAsNumber({
 				key: AppSettingKeys.SECURITY.FAILED_ATTEMPTS_LIMIT,

@@ -49,7 +49,7 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 					defaultValue: UserStatusEnum.ACTIVE
 				},
 				password: { type: DataTypes.STRING(64), allowNull: false },
-				passwordChangeAt: { type: DataTypes.DATE, allowNull: false },
+				passwordChangeAt: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
 				passwordNeverExpires: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 				lastLoginAt: { type: DataTypes.DATE, allowNull: true },
 				lastLoginIp: { type: DataTypes.INET, allowNull: true },

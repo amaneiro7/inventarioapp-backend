@@ -38,7 +38,7 @@ module.exports = {
 				'password_change_at',
 				{
 					type: Sequelize.DATE,
-					allowNull: false,
+					allowNull: true,
 					defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
 				},
 				{ transaction }

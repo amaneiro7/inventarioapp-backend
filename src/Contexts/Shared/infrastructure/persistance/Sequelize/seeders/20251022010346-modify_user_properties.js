@@ -110,7 +110,8 @@ module.exports = {
 				// 3.3 Crear las asociaciones a partir de los resultados de la inserción
 				createdEmployeeAssociations = notFoundUsers.map((user, index) => ({
 					user: {
-						id: user.id
+						id: user.id,
+						password_never_expires: true
 					},
 					employeeId: createdEmployees[index]?.id // Usar el ID retornado
 				}))

@@ -22,6 +22,7 @@ export function buildAuthResponse(user: User, accessToken: string, refreshToken?
 			passwordNeverExpires: user.passwordNeverExpires,
 			lastLoginAt: user.lastLoginAt,
 			lastLoginIp: user.lastLoginIp,
+			passwordExpired: user.passwordExpired,
 			role: {
 				id: `${role.id}`,
 				name: role.name

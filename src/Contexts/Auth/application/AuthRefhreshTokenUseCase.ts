@@ -5,8 +5,11 @@ import { buildAuthResponse } from '../domain/buildAuthResponse'
 import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNotExistError'
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
+import { User } from '../../User/user/domain/entity/User'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type AuthResponseDto } from '../domain/Auth.dto'
+import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
+import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
 
 /**
  * @class AuthRefreshTokenUseCase
@@ -17,9 +20,17 @@ import { type AuthResponseDto } from '../domain/Auth.dto'
 export class AuthRefreshTokenUseCase {
 	// Declare userRepository as a class property
 	private readonly userRepository: UserRepository
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	private readonly settingsFinder: SettingsFinder
+	constructor({
+		userRepository,
+		settingsFinder
+	}: {
+		userRepository: UserRepository
+		settingsFinder: SettingsFinder
+	}) {
 		// Assign the passed userRepository to the class property
 		this.userRepository = userRepository
+		this.settingsFinder = settingsFinder
 	}
 
 	/**
@@ -45,11 +56,15 @@ export class AuthRefreshTokenUseCase {
 			throw new UserDoesNotExistError(id)
 		}
 
-		// const userEntity = User.fromPrimitives(user)
+		const userEntity = User.fromPrimitives(user)
+		const daysToExpire = await this.settingsFinder.findAsNumber({
+			key: AppSettingKeys.SECURITY.PASSWORD_EXPIRY_DAYS,
+			fallback: AppSettingDefaults.SECURITY.PASSWORD_EXPIRY_DAYS
+		})
 
-		// if (userEntity.isPasswordExpired()) {
-		// 	user.passwordExpired = true
-		// }
+		if (userEntity.isPasswordExpired(daysToExpire)) {
+			user.passwordExpired = true
+		}
 
 		// Generate new tokens
 		const newRefreshToken = generateRefreshToken(user)
