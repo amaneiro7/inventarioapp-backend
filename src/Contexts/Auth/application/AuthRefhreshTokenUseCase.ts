@@ -8,6 +8,7 @@ import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
 import { User } from '../../User/user/domain/entity/User'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type AuthResponseDto } from '../domain/Auth.dto'
+import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
 import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
 import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
 
@@ -63,7 +64,9 @@ export class AuthRefreshTokenUseCase {
 		})
 
 		if (userEntity.isPasswordExpired(daysToExpire)) {
-			user.passwordExpired = true
+			// La contraseña ha expirado durante la sesión.
+			const temporaryToken = generateChangePasswordToken(user)
+			throw new PasswordExpiredError(temporaryToken)
 		}
 
 		// Generate new tokens
