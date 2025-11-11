@@ -25,8 +25,6 @@ export interface JwtPayloadUser extends JwtPayload {
 	sub: Primitives<UserId> // User ID
 	employeeId: Primitives<EmployeeId> // Associated Employee ID
 	roleId: Primitives<RoleId>
-	passwordChangeAt: Date | string
-	passwordNeverExpires: boolean
 	iss: 'SoporteTecnicoBNC' // Issuer of the token
 	jti?: string // JWT ID for refresh token rotation
 }
@@ -45,26 +43,27 @@ const issuer = 'SoporteTecnicoBNC'
  * @param {string} [params.jti] - Optional JWT ID, typically used for refresh tokens.
  * @returns {string} The generated JWT string.
  */
-function generateToken({
+function generateToken<T extends Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>>({
 	payload,
 	secret,
 	expiresIn,
-	jti
+	jti,
+	purpose
 }: {
-	payload: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId' | 'passwordChangeAt' | 'passwordNeverExpires'> // Updated payload type
+	payload: T
 	secret: string
 	expiresIn: SignOptions['expiresIn']
+	purpose?: string
 	jti?: string
 }) {
-	const { id, employeeId, roleId, passwordChangeAt, passwordNeverExpires } = payload // Updated destructuring
+	const { id, employeeId, roleId } = payload // Updated destructuring
 	const tokenPayload: JwtPayloadUser = {
 		sub: id,
 		employeeId, // Added employeeId
 		roleId,
-		passwordChangeAt,
-		passwordNeverExpires,
-		iss: issuer,
-		...(jti && { jti })
+		iss: issuer, // Issuer
+		purpose,
+		jti
 	}
 	return sign(tokenPayload, secret, { expiresIn })
 }
@@ -75,9 +74,7 @@ function generateToken({
  * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated access token.
  */
-export function generateAccessToken(
-	user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId' | 'passwordChangeAt' | 'passwordNeverExpires'>
-): string {
+export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${accessTokenExpiresIn}m`
 	return generateToken({
 		payload: user,
@@ -92,14 +89,28 @@ export function generateAccessToken(
  * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated refresh token.
  */
-export function generateRefreshToken(
-	user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId' | 'passwordChangeAt' | 'passwordNeverExpires'>
-): string {
+export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${refreshTokenExpiresIn}d`
 	return generateToken({
 		payload: user,
 		secret: refreshTokenSecret,
 		expiresIn,
 		jti: randomUUID()
+	})
+}
+
+/**
+ * @function generateChangePasswordToken
+ * @description Generates a short-lived, single-purpose token for forcing a password change.
+ * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data.
+ * @returns {string} The generated temporary token.
+ */
+export function generateChangePasswordToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
+	const expiresIn: SignOptions['expiresIn'] = '10m' // Corta duración, ej. 10 minutos
+	return generateToken({
+		payload: user,
+		secret: accessTokenSecret, // Reutilizamos el secret del access token o podríamos usar uno nuevo
+		expiresIn,
+		purpose: 'change-password'
 	})
 }

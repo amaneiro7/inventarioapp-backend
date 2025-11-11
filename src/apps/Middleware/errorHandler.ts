@@ -15,8 +15,9 @@ import { type Logger } from '../../Contexts/Shared/domain/Logger'
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: Response, _next: NextFunction) => {
-	let statusCode: number
-	let message: string
+	let statusCode: number = httpStatus[500].statusCode
+	let message: string = httpStatus[500].message
+	let responseBody: Record<string, unknown> = {}
 
 	if (err instanceof ApiError) {
 		// Use the status code and message from the operational error
@@ -27,11 +28,13 @@ export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: 
 		if (config.isProd && !err.isOperational) {
 			statusCode = httpStatus[500].statusCode
 			message = httpStatus[500].message
+		} else {
+			// Si el error es operacional, incluimos su payload si existe
+			responseBody = { ...err.payload }
 		}
 	} else {
 		// For unexpected, non-ApiError types, always treat as a server error
 		statusCode = httpStatus[500].statusCode
-
 		// In production, send a generic message. In development, send the actual error message for easier debugging.
 		message = config.isProd ? httpStatus[500].message : err.message
 	}
@@ -43,9 +46,10 @@ export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: 
 	logger.error(err)
 
 	// Send a standardized JSON error response
-	res.status(statusCode).send({
+	res.status(statusCode).json({
 		status: 'error',
 		statusCode,
-		message
+		message,
+		...responseBody
 	})
 }

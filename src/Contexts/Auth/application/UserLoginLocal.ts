@@ -1,6 +1,6 @@
 import { User } from '../../User/user/domain/entity/User'
 import { PasswordService } from '../../User/user/domain/domainService/PasswordService'
-import { InvalidCredentialsError } from '../domain/InvalidCredentialsError'
+import { InvalidCredentialsError } from '../domain/error/InvalidCredentialsError'
 import { EmployeeUserName } from '../../employee/Employee/domain/valueObject/EmployeeUsername'
 import { EmployeeEmail } from '../../employee/Employee/domain/valueObject/EmployeeEmail'
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
@@ -14,6 +14,8 @@ import { type Nullable } from '../../Shared/domain/Nullable'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type LastLoginIp } from '../../User/user/domain/valueObject/LastLoginIp'
 import { AccountLockedError } from '../domain/AccountLockedError'
+import { generateChangePasswordToken } from '../domain/GenerateToken'
+import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
 
 /**
  * @class UserLoginLocal
@@ -109,10 +111,11 @@ export class UserLoginLocal {
 			throw new InvalidCredentialsError()
 		}
 
-		// 5.1. Verificar si la contraseña ha expirado
-
+		// 5.1. Verificar si la contraseña ha expirado. Si es así, lanzar un error con un token temporal.
 		if (userEntity.isPasswordExpired(daysToExpire)) {
-			user.passwordExpired = true
+			const temporaryToken = generateChangePasswordToken(user)
+			// Lanzamos un error especial que el controlador capturará
+			throw new PasswordExpiredError(temporaryToken)
 		}
 
 		// 6. Login exitoso

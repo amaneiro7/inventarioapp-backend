@@ -1,6 +1,7 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
 import { authenticate } from '../../Middleware/authenticate'
+import { authenticateTemporaryToken } from '../../Middleware/authenticateTemporaryToken'
 import { UserDependencies } from '../../di/user/user.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { type UserGetAllController } from '../../controllers/user/user.get-all.controller'
@@ -11,6 +12,7 @@ import { type UserGetController } from '../../controllers/user/user.get.controll
 import { type UserCreateController } from '../../controllers/user/user.create.controller'
 import { type UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
 import { type UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
+import { type UserForceChangePasswordController } from '../../controllers/user/user.force-change-password.controller'
 import { UserPatchController } from '../../controllers/user/user.patch.controller'
 
 export const register = async (router: Router) => {
@@ -29,6 +31,9 @@ export const register = async (router: Router) => {
 	const createUserController: UserCreateController = container.resolve(UserDependencies.CreateController)
 	const unlockAccountController: UserUnlockAccountController = container.resolve(
 		UserDependencies.UnlockAccountController
+	)
+	const forceChangePasswordController: UserForceChangePasswordController = container.resolve(
+		UserDependencies.ForceChangePasswordController
 	)
 
 	const patchController: UserPatchController = container.resolve(UserDependencies.PatchController)
@@ -128,6 +133,39 @@ export const register = async (router: Router) => {
 	 *         description: Usuario no encontrado.
 	 */
 	router.patch('/users/change-password', authenticate, changePaswwordController.run.bind(changePaswwordController))
+
+	/**
+	 * @swagger
+	 * /users/force-change-password:
+	 *   patch:
+	 *     tags:
+	 *       - Usuarios
+	 *     summary: Forzar cambio de contraseña expirada
+	 *     description: Permite a un usuario cambiar su contraseña cuando ha expirado, usando un token temporal.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             type: object
+	 *             properties:
+	 *               newPassword:
+	 *                 type: string
+	 *               reTypePassword:
+	 *                 type: string
+	 *     responses:
+	 *       '200':
+	 *         description: Contraseña cambiada con éxito. El usuario debe volver a iniciar sesión.
+	 *       '403':
+	 *         description: Token temporal inválido o expirado.
+	 */
+	router.patch(
+		'/users/force-change-password',
+		authenticateTemporaryToken,
+		forceChangePasswordController.run.bind(forceChangePasswordController)
+	)
 
 	/**
 	 * @swagger

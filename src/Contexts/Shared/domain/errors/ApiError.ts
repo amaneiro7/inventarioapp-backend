@@ -1,22 +1,38 @@
 import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
+// export class ApiError extends Error {
+// 	statusCode: number
+// 	isOperational: boolean
+// 	constructor(statusCode: number, message: string, isOperational = true, stack = '') {
+// 		super(message)
+// 		this.statusCode = statusCode
+// 		this.isOperational = isOperational
+// 		if (stack) {
+// 			this.stack = stack
+// 		} else {
+// 			Error.captureStackTrace(this, this.constructor)
+// 		}
+// 	}
+// }
 export class ApiError extends Error {
-	statusCode: number
-	isOperational: boolean
-	constructor(statusCode: number, message: string, isOperational = true, stack = '') {
+	public readonly statusCode: number
+	public readonly isOperational: boolean
+	public readonly payload?: Record<string, unknown>
+
+	constructor(statusCode: number, message: string, isOperational = true, payload?: Record<string, unknown>) {
 		super(message)
+		this.name = this.constructor.name
 		this.statusCode = statusCode
 		this.isOperational = isOperational
-		if (stack) {
-			this.stack = stack
-		} else {
-			Error.captureStackTrace(this, this.constructor)
-		}
+		this.payload = payload
+
+		// This captures the stack trace, excluding the constructor call from it.
+		Error.captureStackTrace(this, this.constructor)
 	}
 }
 
 export class InvalidArgumentError extends ApiError {
-	constructor(message: string, stack = '') {
-		super(httpStatus[400].statusCode, message, true, stack)
+	constructor(message: string) {
+		super(httpStatus[400].statusCode, message, true)
 	}
 }
