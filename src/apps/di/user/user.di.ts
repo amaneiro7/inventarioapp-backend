@@ -11,6 +11,7 @@ import { UserFinderByEmail } from '../../../Contexts/User/user/application/UserF
 import { CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
 import { UserDesactivateAccount } from '../../../Contexts/User/user/application/UserDesactivateAccount'
 import { UserUnlockAccount } from '../../../Contexts/User/user/application/UserUnlockAccount'
+import { UserUpdater } from '../../../Contexts/User/user/application/UserUpdater'
 //Controllers
 import { UserGetController } from '../../controllers/user/user.get.controller'
 import { UserGetAllController } from '../../controllers/user/user.get-all.controller'
@@ -21,8 +22,8 @@ import { UserCreateController } from '../../controllers/user/user.create.control
 import { UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
 import { UserReactivateAccount } from '../../../Contexts/User/user/application/UserReactivateAccount'
 import { UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
-import { UserUpdater } from '../../../Contexts/User/user/application/UserUpdater'
 import { UserPatchController } from '../../controllers/user/user.patch.controller'
+import { UserForceChangePasswordController } from '../../controllers/user/user.force-change-password.controller'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
@@ -37,6 +38,7 @@ export enum UserDependencies {
 	UnlockAccount = 'userUnlockAccount',
 	ReactivateAccount = 'userReactivateAccount',
 	DesactivateUser = 'userDesactivateAccount',
+	ForceChangePassword = 'userForceChangePassword',
 
 	GetController = 'userGetController',
 	GetAllController = 'userGetAllController',
@@ -46,6 +48,7 @@ export enum UserDependencies {
 	ResetPasswordController = 'userResetPasswordController',
 	CreateController = 'userCreateController',
 	PatchController = 'userPatchController',
+	ForceChangePasswordController = 'userForceChangePasswordController',
 	UnlockAccountController = 'userUnlockAccountController'
 }
 export const register = (container: AwilixContainer) => {
@@ -63,6 +66,7 @@ export const register = (container: AwilixContainer) => {
 		userDisabledAccount: asClass(UserDisabledAccount),
 		userReactivateAccount: asClass(UserReactivateAccount),
 		userUnlockAccount: asClass(UserUnlockAccount),
+		userForceChangePassword: asClass(UserForceChangePasswordController),
 
 		userCreateController: asClass(UserCreateController),
 		userPatchController: asClass(UserPatchController),
@@ -72,6 +76,7 @@ export const register = (container: AwilixContainer) => {
 		userReactivateAccountController: asClass(UserReactivateAccountController),
 		userChangePasswordController: asClass(UserChangePasswordController),
 		userResetPasswordController: asClass(UserResetPasswordController),
+		userForceChangePasswordController: asClass(UserForceChangePasswordController),
 		userUnlockAccountController: asClass(UserUnlockAccountController)
 	})
 }

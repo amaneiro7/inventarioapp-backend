@@ -1,8 +1,8 @@
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 
 interface ForceChangePasswordParams {
 	newPassword: string

@@ -13,7 +13,7 @@ import { type UserCreateController } from '../../controllers/user/user.create.co
 import { type UserUnlockAccountController } from '../../controllers/user/user.unlock-account.controller'
 import { type UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
 import { type UserForceChangePasswordController } from '../../controllers/user/user.force-change-password.controller'
-import { UserPatchController } from '../../controllers/user/user.patch.controller'
+import { type UserPatchController } from '../../controllers/user/user.patch.controller'
 
 export const register = async (router: Router) => {
 	const getController: UserGetController = container.resolve(UserDependencies.GetController)

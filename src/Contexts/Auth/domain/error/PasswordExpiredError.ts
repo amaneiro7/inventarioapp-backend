@@ -9,7 +9,7 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 export class PasswordExpiredError extends ApiError {
 	constructor(temporaryToken: string) {
 		const message = 'Tu contraseña ha expirado y debe ser cambiada.'
-		const payload = { temporaryToken }
+		const payload = { type: 'PasswordExpired', temporaryToken }
 		super(httpStatus[403].statusCode, message, true, payload) // 403 Forbidden es más apropiado aquí
 		this.name = 'PasswordExpiredError'
 	}

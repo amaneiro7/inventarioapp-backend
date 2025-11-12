@@ -1,8 +1,8 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import passport from 'passport'
 import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/strategy-options'
-import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
 import { InvalidArgumentError } from '../../Contexts/Shared/domain/errors/ApiError'
+import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
 
 /**
  * @description Middleware to authenticate requests using a temporary JWT Bearer token.
@@ -15,6 +15,7 @@ export const authenticateTemporaryToken = (req: Request, res: Response, next: Ne
 	passport.authenticate(
 		StrategyOptions.JWTBEARER,
 		{ session: false },
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(err: Error | null, user: JwtPayloadUser | false, info: any) => {
 			if (err) {
 				return next(err)
