@@ -162,7 +162,7 @@ export const register = async (router: Router) => {
 	 *         description: Token temporal inválido o expirado.
 	 */
 	router.patch(
-		'/users/force-change-password',
+		'/users/change-expired-password',
 		authenticateTemporaryToken,
 		forceChangePasswordController.run.bind(forceChangePasswordController)
 	)
