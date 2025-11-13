@@ -1,8 +1,10 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import passport from 'passport'
 import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/strategy-options'
-import { InvalidArgumentError } from '../../Contexts/Shared/domain/errors/ApiError'
 import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
+import { TokenInvalidOrExpiredError } from '../../Contexts/Auth/domain/error/TokenInvalidOrExpiredError'
+import { TokenPurposeMismatchError } from '../../Contexts/Auth/domain/error/TokenPurposeMismatchError'
+import { InvalidArgumentError } from '../../Contexts/Shared/domain/errors/ApiError'
 
 /**
  * @description Middleware to authenticate requests using a temporary JWT Bearer token.
@@ -18,18 +20,22 @@ export const authenticateTemporaryToken = (req: Request, res: Response, next: Ne
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(err: Error | null, user: JwtPayloadUser | false, info: any) => {
 			if (err) {
-				return next(err)
+				throw new InvalidArgumentError(err.message)
 			}
 			if (!user) {
-				// Handle token expiration or invalid token from passport's info
-				const message =
-					info?.message === 'jwt expired' ? 'El token temporal ha expirado.' : 'Token temporal inválido.'
-				return next(new InvalidArgumentError(message))
+				let message: string = 'Token temporal inválido.'
+
+				if (info?.message === 'jwt expired') {
+					message = 'El token temporal ha expirado.'
+				}
+
+				throw new TokenInvalidOrExpiredError(message)
 			}
 
-			// Check for the specific purpose
 			if (user.purpose !== 'change-password') {
-				return next(new InvalidArgumentError('Este token no es válido para cambiar la contraseña.'))
+				const message = `Propósito de token incorrecto. Se esperaba 'change-password', se recibió '${user.purpose}'.`
+
+				throw new TokenPurposeMismatchError(message)
 			}
 
 			req.user = user

@@ -26,9 +26,7 @@ export class UserForceChangePasswordController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const { newPassword, reTypePassword } = req.body
-			const forceChange: UserForceChangePassword = container.resolve(
-				UserDependencies.ForceChangePasswordController
-			)
+			const forceChange: UserForceChangePassword = container.resolve(UserDependencies.ForceChangePassword)
 			await forceChange.run({ user, newPassword, reTypePassword })
 			res.status(httpStatus[200].statusCode).send({ message: SUCCESS_MESSAGES.USER_PASSWORD_UPDATED })
 		} catch (error) {
