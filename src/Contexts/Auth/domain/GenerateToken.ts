@@ -13,6 +13,8 @@ export interface Tokens {
 	refreshToken: string
 }
 
+type JwtPayloadPurposes = 'access' | 'refresh' | 'change-password' | undefined
+
 /**
  * @interface JwtPayloadUser
  * @extends JwtPayload
@@ -27,7 +29,7 @@ export interface JwtPayloadUser extends JwtPayload {
 	roleId: Primitives<RoleId>
 	iss: 'SoporteTecnicoBNC' // Issuer of the token
 	jti?: string // JWT ID for refresh token rotation
-	purpose?: 'change-password' | 'access' // Propósito del token
+	purpose?: JwtPayloadPurposes // Propósito del token
 }
 
 const { accessTokenExpiresIn, refreshTokenExpiresIn, accessTokenSecret, refreshTokenSecret } = config
@@ -54,7 +56,7 @@ function generateToken<T extends Pick<UserPrimitives, 'id' | 'employeeId' | 'rol
 	payload: T
 	secret: string
 	expiresIn: SignOptions['expiresIn']
-	purpose?: 'change-password' | 'access'
+	purpose?: JwtPayloadPurposes
 	jti?: string
 }) {
 	const { id, employeeId, roleId } = payload // Updated destructuring
@@ -97,6 +99,7 @@ export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'employee
 		payload: user,
 		secret: refreshTokenSecret,
 		expiresIn,
+		purpose: 'refresh',
 		jti: randomUUID()
 	})
 }

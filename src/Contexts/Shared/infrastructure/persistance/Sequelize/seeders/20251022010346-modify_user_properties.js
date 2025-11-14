@@ -7,21 +7,37 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
-			// Get all users with their old email and all employees
-			const users = await queryInterface.sequelize.query('SELECT id, email, name, last_name FROM users', {
-				type: Sequelize.QueryTypes.SELECT,
-				transaction
-			})
+			// --- FASE 1: OBTENER DATOS NECESARIOS ---
+			console.log('Obteniendo usuarios y rol de administrador...')
+			// Get all users with their old email, role, password and all employees
+			const [users, [adminRole]] = await Promise.all([
+				queryInterface.sequelize.query('SELECT id, email, name, last_name, role_id, password FROM users', {
+					type: Sequelize.QueryTypes.SELECT,
+					transaction
+				}),
+				queryInterface.sequelize.query("SELECT id FROM role WHERE name = 'Admin'", {
+					type: Sequelize.QueryTypes.SELECT,
+					transaction
+				})
+			])
+
+			const adminRoleId = adminRole?.id
+			console.log(`Usuarios encontrados: ${users.length}. ID de Rol Admin: ${adminRoleId}`)
 
 			const employeePromises = users.map(async user => {
-				const [employee] = await queryInterface.sequelize.query(
-					'SELECT id FROM employees WHERE LOWER(email) = LOWER(:email)',
-					{
-						replacements: { email: user.email?.toLowerCase() },
-						type: Sequelize.QueryTypes.SELECT,
-						transaction
-					}
-				)
+				let employee = null
+				// Solo buscar si el usuario tiene un email
+				if (user.email) {
+					const [foundEmployee] = await queryInterface.sequelize.query(
+						'SELECT id FROM employees WHERE LOWER(email) = LOWER(:email)',
+						{
+							replacements: { email: user.email.toLowerCase() },
+							type: Sequelize.QueryTypes.SELECT,
+							transaction
+						}
+					)
+					employee = foundEmployee
+				}
 				return {
 					user,
 					employee
@@ -110,8 +126,7 @@ module.exports = {
 				// 3.3 Crear las asociaciones a partir de los resultados de la inserción
 				createdEmployeeAssociations = notFoundUsers.map((user, index) => ({
 					user: {
-						id: user.id,
-						password_never_expires: true
+						id: user.id
 					},
 					employeeId: createdEmployees[index]?.id // Usar el ID retornado
 				}))
@@ -129,11 +144,29 @@ module.exports = {
 
 				// Preparamos un array de promesas de actualización
 				const updatePromises = allAssociations.map(association => {
-					return queryInterface.bulkUpdate(
-						'users',
-						{ employee_id: association.employeeId },
-						{ id: association.user.id },
-						{ transaction }
+					const user = users.find(u => u.id === association.user.id)
+					const isUserAdmin = user?.role_id === adminRoleId
+
+					// Usamos una consulta raw para manejar de forma segura la contraseña con caracteres especiales ($)
+					// El uso de replacements previene errores de "Named bind parameter"
+					return queryInterface.sequelize.query(
+						`
+						UPDATE users
+						SET 
+							employee_id = :employeeId,
+							password_never_expires = :passwordNeverExpires,
+							password_history = ARRAY[:password]
+						WHERE id = :userId
+					`,
+						{
+							replacements: {
+								employeeId: association.employeeId,
+								passwordNeverExpires: isUserAdmin,
+								password: user.password,
+								userId: user.id
+							},
+							transaction
+						}
 					)
 				})
 

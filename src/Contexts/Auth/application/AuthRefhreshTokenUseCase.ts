@@ -1,16 +1,20 @@
-// import { User } from '../../User/user/domain/entity/User'
+import { User } from '../../User/user/domain/entity/User'
 import { UserId } from '../../User/user/domain/valueObject/UserId'
-import { generateAccessToken, generateRefreshToken, type JwtPayloadUser } from '../domain/GenerateToken'
+import {
+	generateAccessToken,
+	generateChangePasswordToken,
+	generateRefreshToken,
+	type JwtPayloadUser
+} from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
 import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNotExistError'
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
-import { User } from '../../User/user/domain/entity/User'
-import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
-import { type AuthResponseDto } from '../domain/Auth.dto'
 import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
 import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
 import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
+import { type AuthResponseDto } from '../domain/Auth.dto'
 
 /**
  * @class AuthRefreshTokenUseCase

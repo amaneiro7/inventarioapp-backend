@@ -95,6 +95,16 @@ module.exports = {
 				},
 				{ transaction }
 			)
+			await queryInterface.addColumn(
+				'users',
+				'password_history',
+				{
+					type: Sequelize.ARRAY(Sequelize.STRING(64)),
+					allowNull: false,
+					defaultValue: []
+				},
+				{ transaction }
+			)
 
 			// The removal of old columns will be done in a separate, later migration
 			// after the seeder has run successfully.
@@ -118,6 +128,7 @@ module.exports = {
 			await queryInterface.removeColumn('users', 'last_login_ip', { transaction })
 			await queryInterface.removeColumn('users', 'failed_attemps', { transaction })
 			await queryInterface.removeColumn('users', 'lockout_until', { transaction })
+			await queryInterface.removeColumn('users', 'password_history', { transaction })
 
 			// The old columns ('name', 'last_name', 'email', 'user_secret') were not removed in the 'up'
 			// function of this migration, so there is no need to add them back here.

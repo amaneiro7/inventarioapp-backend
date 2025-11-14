@@ -11,6 +11,8 @@ import { FailedAttemps } from '../valueObject/FailedAttemps'
 import { LockoutUntil } from '../valueObject/LockoutUntil'
 import { type UserAuth, type UserParams, type UserPrimitives } from './User.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { PasswordHistory } from '../valueObject/PasswordHistory'
+import { RepeatedPasswordError } from '../Errors/RepeatedPasswordError'
 
 export class User {
 	constructor(
@@ -24,7 +26,8 @@ export class User {
 		private lastLoginAt: LastLoginAt,
 		private lastLoginIp: LastLoginIp,
 		private failedAttemps: FailedAttemps,
-		private lockoutUntil: LockoutUntil
+		private lockoutUntil: LockoutUntil,
+		private passwordHistory: PasswordHistory
 	) {}
 
 	static fromPrimitives(plainData: UserAuth): User {
@@ -39,7 +42,8 @@ export class User {
 			new LastLoginAt(plainData.lastLoginAt),
 			new LastLoginIp(plainData.lastLoginIp),
 			new FailedAttemps(plainData.failedAttemps),
-			new LockoutUntil(plainData.lockoutUntil)
+			new LockoutUntil(plainData.lockoutUntil),
+			new PasswordHistory(plainData.passwordHistory ?? [])
 		)
 	}
 
@@ -57,7 +61,8 @@ export class User {
 			new LastLoginAt(null),
 			new LastLoginIp(null),
 			new FailedAttemps(0),
-			new LockoutUntil(null)
+			new LockoutUntil(null),
+			new PasswordHistory([hashedPassword])
 		)
 	}
 
@@ -98,14 +103,31 @@ export class User {
 		}
 	}
 
-	updatePassword(password: string): void {
-		this.password = UserPassword.create(password)
+	/**
+	 * @description Implementa la política de no reutilización de contraseñas.
+	 * @param password La nueva contraseña en texto plano (antes de hashear).
+	 * @throws {RepeatedPasswordError} si la nueva contraseña ha sido usada recientemente.
+	 */
+	async updatePassword(password: string): Promise<void> {
+		const newPasswordVO = UserPassword.create(password)
+		const newHashedPassword = newPasswordVO.value as string
+
+		// 1. Verificar Historial
+		if (await this.passwordHistory.exists(password)) {
+			throw new RepeatedPasswordError()
+		}
+
+		// 2. Actualizar Propiedades
+		this.password = newPasswordVO
 		this.passwordChangeAt = new PasswordChangeAt(new Date())
+
+		// 3. Actualizar Historial con el nuevo hash
+		this.passwordHistory = this.passwordHistory.add(newHashedPassword)
 	}
 
 	/**
 	 * @description Restablece la contraseña del usuario utilizando un hash preexistente.
-	 * No realiza validación de complejidad ni hasheo.
+	 * NOTA: No actualiza el historial ni la fecha de cambio para no afectar las políticas de expiración/reutilización.
 	 * @param {string} hashedPassword - La contraseña ya hasheada.
 	 */
 	resetPasswordFromHash(hashedPassword: string): void {
@@ -121,24 +143,19 @@ export class User {
 
 	private lockAccount({ lockoutTimeInMinutes }: { lockoutTimeInMinutes: number }): void {
 		this.status = new UserStatus(UserStatusEnum.LOCKED)
-		// Bloquea la cuenta por 5 minutos (300000 ms)
 		this.lockoutUntil = new LockoutUntil(new Date(Date.now() + lockoutTimeInMinutes * 60 * 1000))
 	}
 
 	// Nuevo método para manejar el desbloqueo automático
 	unlockIfTimeExpired(): void {
 		// 1. Si no hay fecha de bloqueo, no hay nada que hacer
-		if (!this.lockoutUntilValue) {
+		// 2. Si la fecha de bloqueo ha expirado (es menor o igual a la fecha actual)
+		if (!this.lockoutUntilValue || this.lockoutUntilValue > new Date()) {
 			return
 		}
 
-		// 2. Si la fecha de bloqueo ha expirado (es menor o igual a la fecha actual)
-		if (this.lockoutUntilValue <= new Date()) {
-			// Ejecutar la accion de desbloqueo:
-			this.lockoutUntil = new LockoutUntil(null)
-			this.status = new UserStatus(UserStatusEnum.ACTIVE)
-			this.failedAttemps = new FailedAttemps(0)
-		}
+		// Ejecutar la accion de desbloqueo:
+		this.unlockAccount()
 	}
 
 	unlockAccount(): void {
@@ -147,6 +164,11 @@ export class User {
 		this.lockoutUntil = new LockoutUntil(null)
 	}
 
+	/**
+	 * @description Verifica si la contraseña del usuario ha expirado según la política de días.
+	 * @param daysToExpire Número de días antes de que la contraseña expire.
+	 * @returns True si ha expirado, False si no.
+	 */
 	isPasswordExpired(daysToExpire: number): boolean {
 		// 1. Regla de Excepción: La contraseña está marcada para no expirar.
 		if (this.passwordNeverExpiresValue) {
@@ -176,6 +198,20 @@ export class User {
 		return expirationDate <= today
 	}
 
+	/**
+	 * @description Determina si el usuario está obligado a cambiar su contraseña.
+	 * (Usado típicamente en el proceso de login).
+	 */
+	mustChangePassword(daysToExpire: number): boolean {
+		// 1. Primera condición: Si passwordChangeAt es NULL (típico después de un reseteo o creación de cuenta).
+		if (!this.passwordChangeAtValue) {
+			return true
+		}
+
+		// 2. Segunda condición: Si la política de expiración lo exige.
+		return this.isPasswordExpired(daysToExpire)
+	}
+
 	updateRole(roleId: Primitives<RoleId>): void {
 		this.roleId = new RoleId(roleId)
 	}
@@ -192,7 +228,8 @@ export class User {
 			lastLoginAt: this.lastLoginAtValue,
 			lastLoginIp: this.lastLoginIpValue,
 			failedAttemps: this.failedAttempsValue,
-			lockoutUntil: this.lockoutUntilValue
+			lockoutUntil: this.lockoutUntilValue,
+			passwordHistory: this.passwordHistoryValue
 		}
 	}
 
@@ -228,5 +265,8 @@ export class User {
 	}
 	get lockoutUntilValue(): Primitives<LockoutUntil> {
 		return this.lockoutUntil.value
+	}
+	get passwordHistoryValue(): Primitives<PasswordHistory> {
+		return this.passwordHistory.value
 	}
 }

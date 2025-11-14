@@ -5,6 +5,7 @@ import passport from 'passport'
 import { container } from '../../di/container'
 import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/strategy-options'
 import { AuthDependencies } from '../../di/auth/auth.di'
+import { authenticateRefreshToken } from '../../Middleware/authenticateRefreshToken'
 import { InvalidCredentialsError } from '../../../Contexts/Auth/domain/error/InvalidCredentialsError'
 import { type UserDto } from '../../../Contexts/User/user/domain/entity/User.dto'
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
@@ -68,7 +69,7 @@ export const register = async (router: Router) => {
 
 	router.get(
 		'/auth/refresh-token',
-		passport.authenticate(StrategyOptions.JWTCOOKIE, { session: false }),
+		authenticateRefreshToken,
 		authRefreshTokenController.run.bind(authRefreshTokenController)
 	)
 

@@ -13,6 +13,7 @@ import { type FailedAttemps } from '../../../domain/valueObject/FailedAttemps'
 import { type LockoutUntil } from '../../../domain/valueObject/LockoutUntil'
 import { type LastLoginIp } from '../../../domain/valueObject/LastLoginIp'
 import { type PasswordNeverExpires } from '../../../domain/valueObject/PasswordNeverExpires'
+import { type PasswordHistory } from '../../../domain/valueObject/PasswordHistory'
 
 /**
  * @description Sequelize model for the User entity.
@@ -29,6 +30,7 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare lastLoginIp: Primitives<LastLoginIp>
 	declare failedAttemps: Primitives<FailedAttemps>
 	declare lockoutUntil: Primitives<LockoutUntil>
+	declare passwordHistory: Primitives<PasswordHistory>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' })
@@ -54,7 +56,8 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				lastLoginAt: { type: DataTypes.DATE, allowNull: true },
 				lastLoginIp: { type: DataTypes.INET, allowNull: true },
 				failedAttemps: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-				lockoutUntil: { type: DataTypes.DATE, allowNull: true }
+				lockoutUntil: { type: DataTypes.DATE, allowNull: true },
+				passwordHistory: { type: DataTypes.ARRAY(DataTypes.STRING(64)), allowNull: false, defaultValue: [] }
 			},
 			{
 				modelName: 'User',

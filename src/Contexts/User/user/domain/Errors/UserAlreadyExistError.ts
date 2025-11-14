@@ -7,5 +7,6 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 export class UserAlreadyExistError extends ApiError {
 	constructor(readonly email: string) {
 		super(httpStatus[400].statusCode, `El usuario con el correo '${email}' ya existe.`)
+		this.name = 'UserAlreadyExistError'
 	}
 }

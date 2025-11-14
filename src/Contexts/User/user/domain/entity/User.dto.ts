@@ -12,6 +12,7 @@ import { type RoleDto } from '../../../Role/domain/Role.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 import { type LastLoginIp } from '../valueObject/LastLoginIp'
 import { type PasswordNeverExpires } from '../valueObject/PasswordNeverExpires'
+import { type PasswordHistory } from '../valueObject/PasswordHistory'
 
 /**
  * @interface UserAuth
@@ -30,6 +31,7 @@ export interface UserAuth {
 	lastLoginIp: Primitives<LastLoginIp>
 	failedAttemps: Primitives<FailedAttemps>
 	lockoutUntil: Primitives<LockoutUntil>
+	passwordHistory: Primitives<PasswordHistory>
 }
 
 /**
@@ -53,4 +55,7 @@ export interface User extends UserAuth {
 	>
 }
 
-export type UserDto = Omit<User & { userName: EmployeeDto['userName'] }, 'password' | 'failedAttemps' | 'lockoutUntil'>
+export type UserDto = Omit<
+	User & { userName: EmployeeDto['userName'] },
+	'password' | 'failedAttemps' | 'lockoutUntil' | 'passwordHistory'
+>
