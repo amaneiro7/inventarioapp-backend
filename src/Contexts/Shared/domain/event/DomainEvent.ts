@@ -1,10 +1,38 @@
-export class DomainEvent {
-	public readonly occurredOn: Date
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { randomUUID } from 'node:crypto'
+export abstract class DomainEvent {
+	static EVENT_NAME: string
+	static fromPrimitives: (params: {
+		aggregateId: string
+		eventId: string
+		occurredOn: Date
+		attributes: DomainEventAttributes
+	}) => DomainEvent
 
-	protected constructor(
-		public readonly eventName: string,
-		occurredOn?: Date
-	) {
-		this.occurredOn = occurredOn ?? new Date()
+	readonly aggregateId: string
+	readonly eventId: string
+	readonly occurredOn: Date
+	readonly eventName: string
+
+	constructor(params: { eventName: string; aggregateId: string; eventId?: string; occurredOn?: Date }) {
+		const { aggregateId, eventName, eventId, occurredOn } = params
+		this.aggregateId = aggregateId
+		this.eventId = eventId || randomUUID()
+		this.occurredOn = occurredOn || new Date()
+		this.eventName = eventName
 	}
+
+	abstract toPrimitives(): DomainEventAttributes
 }
+
+export type DomainEventClass = {
+	EVENT_NAME: string
+	fromPrimitives(params: {
+		aggregateId: string
+		eventId?: string
+		occurredOn?: Date
+		attributes: DomainEventAttributes
+	}): DomainEvent
+}
+
+type DomainEventAttributes = any

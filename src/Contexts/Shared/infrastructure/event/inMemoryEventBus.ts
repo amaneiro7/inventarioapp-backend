@@ -16,7 +16,7 @@ export class InMemoryEventBus implements EventBus {
 		events.forEach(event => {
 			const subscribers = this.subscriptions.get(event.eventName)
 
-			if (subscribers !== undefined) {
+			if (subscribers) {
 				subscribers.forEach(subscriber => {
 					executions.push(subscriber(event))
 				})
@@ -40,7 +40,7 @@ export class InMemoryEventBus implements EventBus {
 		const currentSubscriptions = this.subscriptions.get(eventName)
 		const subscription = subscriber.on.bind(subscriber)
 
-		if (currentSubscriptions !== undefined) {
+		if (currentSubscriptions) {
 			currentSubscriptions.push(subscription)
 		} else {
 			this.subscriptions.set(eventName, [subscription])

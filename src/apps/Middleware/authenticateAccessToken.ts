@@ -21,7 +21,7 @@ export const authenticateAccessToken = (req: Request, res: Response, next: NextF
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(err: Error | null, user: JwtPayload | false, info: any) => {
 			if (err) {
-				throw new InvalidArgumentError(err.message)
+				return next(new InvalidArgumentError(err.message))
 			}
 			if (!user) {
 				let message: string = 'Token de Accesso inválido.'
@@ -30,13 +30,13 @@ export const authenticateAccessToken = (req: Request, res: Response, next: NextF
 					message = 'El token de accesso ha expirado.'
 				}
 
-				throw new TokenInvalidOrExpiredError(message)
+				return next(new TokenInvalidOrExpiredError(message))
 			}
 
 			if (user.purpose !== 'access') {
 				const message = `Propósito de token incorrecto. Se esperaba 'access', se recibió '${user.purpose}'.`
 
-				throw new TokenPurposeMismatchError(message)
+				return next(new TokenPurposeMismatchError(message))
 			}
 			req.user = user
 			next()

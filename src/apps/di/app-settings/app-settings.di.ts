@@ -9,6 +9,7 @@ import { SettingsUpdaterBulk } from '../../../Contexts/Shared/AppSettings/applic
 import { SettingsPatchBulkController } from '../../controllers/app-settings/settings.patch-bulk.controller'
 //import { SequelizeSettingsRepository } from '../../../Contexts/Shared/AppSettings/infrastructure/persistence/sequelize/SequelizeSettingsRepository'
 import { FileSettingsRepository } from '../../../Contexts/Shared/AppSettings/infrastructure/persistence/FileSettingsRepository'
+import { SettingsAllowedDomainsGetController } from '../../controllers/app-settings/settings.get-allowed.controller'
 
 export enum AppSettingsDependencies {
 	Repository = 'settingsRepository',
@@ -19,7 +20,8 @@ export enum AppSettingsDependencies {
 	GetController = 'settingsGetController',
 	GetAllController = 'settingsGetAllController',
 	PatchController = 'settingsPatchController',
-	PatchBulkController = 'settingsPatchBulkController'
+	PatchBulkController = 'settingsPatchBulkController',
+	AllowedDomainsGetController = 'settingsAllowedDomainsGetController'
 }
 
 export const register = (container: AwilixContainer): void => {
@@ -34,6 +36,7 @@ export const register = (container: AwilixContainer): void => {
 		settingsGetController: asClass(SettingsGetController),
 		settingsGetAllController: asClass(SettingsGetAllController),
 		settingsPatchController: asClass(SettingsPatchController),
-		settingsPatchBulkController: asClass(SettingsPatchBulkController)
+		settingsPatchBulkController: asClass(SettingsPatchBulkController),
+		settingsAllowedDomainsGetController: asClass(SettingsAllowedDomainsGetController)
 	})
 }

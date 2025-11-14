@@ -6,6 +6,7 @@ import { type SettingsGetController } from '../../controllers/app-settings/setti
 import { type SettingsGetAllController } from '../../controllers/app-settings/settings.get-all.controller'
 import { type SettingsPatchController } from '../../controllers/app-settings/settings.patch.controller'
 import { type SettingsPatchBulkController } from '../../controllers/app-settings/settings.patch-bulk.controller'
+import { SettingsAllowedDomainsGetController } from '../../controllers/app-settings/settings.get-allowed.controller'
 
 export const register = async (router: Router) => {
 	const getController: SettingsGetController = container.resolve(AppSettingsDependencies.GetController)
@@ -13,6 +14,9 @@ export const register = async (router: Router) => {
 	const patchController: SettingsPatchController = container.resolve(AppSettingsDependencies.PatchController)
 	const patchBulkController: SettingsPatchBulkController = container.resolve(
 		AppSettingsDependencies.PatchBulkController
+	)
+	const getAllowedDomainsController: SettingsAllowedDomainsGetController = container.resolve(
+		AppSettingsDependencies.AllowedDomainsGetController
 	)
 
 	/**
@@ -30,6 +34,35 @@ export const register = async (router: Router) => {
 	 *         description: Lista de configuraciones obtenida con éxito.
 	 */
 	router.get('/settings/', ...protectedRoute, getAllController.run.bind(getAllController))
+
+	/**
+	 * @swagger
+	 * /settings/allowed-domains:
+	 *   get:
+	 *     tags:
+	 *       - Configuraciones
+	 *     summary: Obtener los dominios de email permitidos
+	 *     description: Devuelve la lista de dominios de email permitidos para el registro de nuevos usuarios.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Configuración de dominios permitidos obtenida con éxito.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 key:
+	 *                   type: string
+	 *                 value:
+	 *                   type: string
+	 */
+	router.get(
+		'/settings/allowed-domains',
+		...protectedRoute,
+		getAllowedDomainsController.run.bind(getAllowedDomainsController)
+	)
 	/**
 	 * @swagger
 	 * /settings/{key}:

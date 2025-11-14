@@ -1,6 +1,7 @@
 import { SettingDoesNotExistError } from '../domain/errors/SettingsDoesNotExistError'
 import { SettingsKey } from '../domain/valueObject/SettingsKey'
 import { Settings } from '../domain/entity/Settings'
+import { EventBus } from '../../domain/event/EventBus'
 import { type SettingsRepository } from '../domain/repository/SettingsRepository'
 
 /**
@@ -14,9 +15,11 @@ interface UpdateSettingsParams {
 }
 export class SettingsUpdater {
 	private readonly settingsRepository: SettingsRepository
+	private readonly eventBus: EventBus
 
-	constructor({ settingsRepository }: { settingsRepository: SettingsRepository }) {
+	constructor({ settingsRepository, eventBus }: { settingsRepository: SettingsRepository; eventBus: EventBus }) {
 		this.settingsRepository = settingsRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -40,5 +43,7 @@ export class SettingsUpdater {
 
 		// 3. Persistir el cambio
 		await this.settingsRepository.save(settingsEntity.toPrimitives())
+		// 4. Publicar el evento en el bus de eventos
+		await this.eventBus.publish(settingsEntity.pullDomainEvents())
 	}
 }

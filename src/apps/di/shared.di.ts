@@ -5,6 +5,7 @@ import { CacheService } from '../../Contexts/Shared/domain/CacheService'
 import { SequelizeConfig } from '../../Contexts/Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { PingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService'
 import { PingLogger } from '../../Contexts/Shared/domain/Monitoring/infra/PingLogger'
+import { InMemoryEventBus } from '../../Contexts/Shared/infrastructure/event/inMemoryEventBus'
 
 export enum SharedDependencies {
 	Logger = 'logger',
@@ -12,7 +13,8 @@ export enum SharedDependencies {
 	CacheRepository = 'cacheRepository',
 	Cache = 'cache',
 	PingService = 'pingService',
-	PingLogger = 'pingLogger'
+	PingLogger = 'pingLogger',
+	EventBus = 'eventBus'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -22,6 +24,7 @@ export const register = (container: AwilixContainer) => {
 		cacheRepository: asClass(RedisRepository).singleton(),
 		cache: asClass(CacheService).singleton(),
 		pingService: asClass(PingService).singleton(),
-		pingLogger: asClass(PingLogger).singleton()
+		pingLogger: asClass(PingLogger).singleton(),
+		eventBus: asClass(InMemoryEventBus).singleton()
 	})
 }

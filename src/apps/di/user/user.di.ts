@@ -56,7 +56,7 @@ export const register = (container: AwilixContainer) => {
 	container.register({
 		userRepository: asClass(SequelizeUserRepository).singleton(),
 
-		userDeactivateUser: asClass(UserDesactivateAccount),
+		userDesactivateAccount: asClass(UserDesactivateAccount),
 		userUpdater: asClass(UserUpdater),
 		userFinderAll: asClass(UserFinderAll),
 		userFinder: asClass(UserFinder),

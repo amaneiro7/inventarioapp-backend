@@ -8,12 +8,14 @@ import { SettingsType, SettingsTypeEnum } from '../valueObject/SettingsType'
 import { SettingsIsProtected } from '../valueObject/SettingsIsProtected'
 import { SettingsName } from '../valueObject/SettingsName'
 import { SettingsValue } from '../valueObject/SettingsValue'
-import { type Primitives } from '../../../domain/value-object/Primitives'
-import { type SettingsPrimitives } from './Settings.dto'
 import { UserPassword } from '../../../../User/user/domain/valueObject/UserPassword'
 import { AppSettingKeys } from './SettingsKeys'
+import { AggregateRoot } from '../../../domain/AggregateRoot'
+import { type Primitives } from '../../../domain/value-object/Primitives'
+import { type SettingsPrimitives } from './Settings.dto'
+import { AppSettingsDomainEvent } from './AppSettingsDomainEvent'
 
-export class Settings {
+export class Settings extends AggregateRoot {
 	constructor(
 		private readonly key: SettingsKey,
 		private value: SettingsValue,
@@ -24,6 +26,7 @@ export class Settings {
 		private readonly isEditable: SettingsIsEditable,
 		private readonly isProtected: SettingsIsProtected
 	) {
+		super()
 		this.validateValue(this.value)
 	}
 
@@ -66,6 +69,8 @@ export class Settings {
 		const newSettingsValue = new SettingsValue(valueToUpdate)
 		this.validateValue(newSettingsValue)
 		this.value = newSettingsValue
+		const event = new AppSettingsDomainEvent(this.keyValue, this.valueValue)
+		this.record(event)
 	}
 
 	private validateValue(value: SettingsValue): void {

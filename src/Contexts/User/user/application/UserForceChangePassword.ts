@@ -41,7 +41,7 @@ export class UserForceChangePassword {
 
 		const userEntity = User.fromPrimitives(foundUser)
 
-		userEntity.updatePassword(newPassword)
+		await userEntity.updatePassword(newPassword)
 
 		await this.userRepository.save(userEntity.toPrimitives())
 	}

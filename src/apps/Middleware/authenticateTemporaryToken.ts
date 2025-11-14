@@ -20,7 +20,7 @@ export const authenticateTemporaryToken = (req: Request, res: Response, next: Ne
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(err: Error | null, user: JwtPayloadUser | false, info: any) => {
 			if (err) {
-				throw new InvalidArgumentError(err.message)
+				return next(new InvalidArgumentError(err.message))
 			}
 			if (!user) {
 				let message: string = 'Token temporal inválido.'
@@ -29,13 +29,13 @@ export const authenticateTemporaryToken = (req: Request, res: Response, next: Ne
 					message = 'El token temporal ha expirado.'
 				}
 
-				throw new TokenInvalidOrExpiredError(message)
+				return next(new TokenInvalidOrExpiredError(message))
 			}
 
 			if (user.purpose !== 'change-password') {
 				const message = `Propósito de token incorrecto. Se esperaba 'change-password', se recibió '${user.purpose}'.`
 
-				throw new TokenPurposeMismatchError(message)
+				return next(new TokenPurposeMismatchError(message))
 			}
 
 			req.user = user
