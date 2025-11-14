@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ModelSeriesDependencies } from '../../di/model-series/model-series.di'
 import { type ModelSeriesGetAllController } from '../../controllers/model-series/model-series.get-all.controller'
 import { type ModelSeriesGetController } from '../../controllers/model-series/model-series.get.controller'
@@ -63,7 +63,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/models/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/models/', ...protectedRoute, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -79,7 +79,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de modelos/series obtenida con éxito.
 	 */
-	router.get('/models/all', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/models/all',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -100,7 +105,7 @@ export const register = async (router: Router) => {
 	 *               type: string
 	 *               format: binary
 	 */
-	router.get('/models/download', authenticate, criteriaConverterMiddleware, download.run.bind(download))
+	router.get('/models/download', ...protectedRoute, criteriaConverterMiddleware, download.run.bind(download))
 
 	/**
 	 * @swagger
@@ -125,7 +130,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Modelo/serie no encontrado.
 	 */
-	router.get('/models/:id', authenticate, getController.run.bind(getController))
+	router.get('/models/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -149,7 +154,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/models/', authenticate, postController.run.bind(postController))
+	router.post('/models/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -180,5 +185,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Modelo/serie no encontrado.
 	 */
-	router.patch('/models/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/models/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

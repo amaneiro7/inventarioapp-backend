@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { type AdministrativeRegionGetAllController } from '../../controllers/location/administrative-region.get-all.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { AdministrativeRegionDependencies } from '../../di/location/administrative-region.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -26,7 +26,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/administrativeregions/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

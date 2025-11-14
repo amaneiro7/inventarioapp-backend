@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { type TypeOfSiteGetAllController } from '../../controllers/location/type-of-site.get-all.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { TypeOfSiteDependencies } from '../../di/location/type-of-site.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -22,5 +22,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de tipos de sitio obtenida con éxito.
 	 */
-	router.get('/typeofsites/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/typeofsites/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

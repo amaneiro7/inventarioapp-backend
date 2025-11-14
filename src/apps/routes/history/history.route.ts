@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type HistoryGetAllController } from '../../controllers/history/history.get-all.controller'
 import { type HistoryDashboardGetController } from '../../controllers/history/history-dashboard.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { HistoryDependencies } from '../../di/history/history.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de historiales obtenida con éxito.
 	 */
-	router.get('/histories/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/histories/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -43,5 +48,5 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Datos del dashboard obtenidos con éxito.
 	 */
-	router.get('/histories/dashboard/', authenticate, historyDashboard.run.bind(historyDashboard))
+	router.get('/histories/dashboard/', ...protectedRoute, historyDashboard.run.bind(historyDashboard))
 }

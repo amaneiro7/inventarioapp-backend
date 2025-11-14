@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type OperatingSystemGetAllController } from '../../controllers/operating-system/operating-system.get-all.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { OperatingSystemDependencies } from '../../di/operating-system/operating-system.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/operatingsystems/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

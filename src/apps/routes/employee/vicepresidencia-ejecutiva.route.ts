@@ -4,7 +4,7 @@ import { type VicepresidenciaEjecutivaPostController } from '../../controllers/e
 import { type VicepresidenciaEjecutivaPatchController } from '../../controllers/employee/vicepresidencia-ejecutiva.patch.controller'
 import { type VicepresidenciaEjecutivaGetController } from '../../controllers/employee/vicepresidencia-ejecutiva.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { VicepresidenciaEjecutivaDependencies } from '../../di/employee/vicepresidencia-ejecutiva.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -38,7 +38,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/vicepresidenciaejecutivas/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -66,7 +66,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Vicepresidencia ejecutiva no encontrada.
 	 */
-	router.get('/vicepresidenciaejecutivas/:id', authenticate, getController.run.bind(getController))
+	router.get('/vicepresidenciaejecutivas/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -90,7 +90,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/vicepresidenciaejecutivas/', authenticate, postController.run.bind(postController))
+	router.post('/vicepresidenciaejecutivas/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -121,5 +121,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: No encontrada.
 	 */
-	router.patch('/vicepresidenciaejecutivas/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/vicepresidenciaejecutivas/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

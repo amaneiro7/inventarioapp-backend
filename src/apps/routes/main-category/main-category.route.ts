@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type MainCategoryGetAllController } from '../../controllers/main-category/main-category.get-all.controller'
 import { type MainCategoryGetController } from '../../controllers/main-category/main-category.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { MainCategoryDependencies } from '../../di/main-category/main-category.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -26,7 +26,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/maincategories/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -54,5 +54,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Categoría principal no encontrada.
 	 */
-	router.get('/maincategories/:id', authenticate, getController.run.bind(getController))
+	router.get('/maincategories/:id', ...protectedRoute, getController.run.bind(getController))
 }

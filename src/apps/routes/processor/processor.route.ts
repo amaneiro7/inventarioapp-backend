@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ProcessorDependencies } from '../../di/processor/processor.di'
 import { type ProcessorPatchController } from '../../controllers/processor/processor.patch.controller'
 import { type ProcessorPostController } from '../../controllers/processor/processor.post.controller'
@@ -30,7 +30,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de procesadores obtenida con éxito.
 	 */
-	router.get('/processors/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/processors/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -55,7 +60,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.get('/processors/:id', authenticate, getController.run.bind(getController))
+	router.get('/processors/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -79,7 +84,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/processors/', authenticate, postController.run.bind(postController))
+	router.post('/processors/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -110,7 +115,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.patch('/processors/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/processors/:id', ...protectedRoute, patchController.run.bind(patchController))
 
 	/**
 	 * @swagger
@@ -135,5 +140,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.delete('/processors/:id', authenticate, deleteController.run.bind(deleteController))
+	router.delete('/processors/:id', ...protectedRoute, deleteController.run.bind(deleteController))
 }

@@ -1,7 +1,7 @@
 import { type Router } from 'express'
 import { type RoleGetAllController } from '../../controllers/roles/role.get-all.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { RoleDependencies } from '../../di/roles/roles.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -22,5 +22,5 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de roles obtenida con éxito.
 	 */
-	router.get('/roles/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/roles/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 }

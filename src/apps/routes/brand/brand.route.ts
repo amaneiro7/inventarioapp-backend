@@ -1,12 +1,12 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
 import { type BrandGetFinderAllController } from '../../controllers/brand/brand.get-all.controller'
 import { type BrandPostController } from '../../controllers/brand/brand.post.controller'
 import { type BrandPatchController } from '../../controllers/brand/brand.patch.controller'
 import { type BrandGetFinderController } from '../../controllers/brand/brand.get.controller'
 import { BrandDependencies } from '../../di/brand/brand.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
 	const getController: BrandGetFinderController = container.resolve(BrandDependencies.GetController)
@@ -28,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de marcas obtenida con éxito.
 	 */
-	router.get('/brands/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/brands/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -53,7 +53,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Marca no encontrada.
 	 */
-	router.get('/brands/:id', authenticate, getController.run.bind(getController))
+	router.get('/brands/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -77,7 +77,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/brands/', authenticate, postController.run.bind(postController))
+	router.post('/brands/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -108,5 +108,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Marca no encontrada.
 	 */
-	router.patch('/brands/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/brands/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

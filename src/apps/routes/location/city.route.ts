@@ -5,7 +5,7 @@ import { type CityPatchController } from '../../controllers/location/city.patch.
 import { type CityGetController } from '../../controllers/location/city.get.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { CityDependencies } from '../../di/location/city.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -29,7 +29,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de ciudades obtenida con éxito.
 	 */
-	router.get('/cities/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/cities/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -54,7 +54,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ciudad no encontrada.
 	 */
-	router.get('/cities/:id', authenticate, getController.run.bind(getController))
+	router.get('/cities/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -78,7 +78,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cities/', authenticate, postController.run.bind(postController))
+	router.post('/cities/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -109,5 +109,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ciudad no encontrada.
 	 */
-	router.patch('/cities/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/cities/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type LocationStatusGetAllController } from '../../controllers/location/location-status.get-all.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { LocationStatusDependencies } from '../../di/location/operational-status.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/operationalstatus/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

@@ -5,7 +5,7 @@ import { type SitePatchController } from '../../controllers/location/site.patch.
 import { type SiteGetController } from '../../controllers/location/site.get.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { SiteDependencies } from '../../di/location/site.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -30,7 +30,7 @@ export const register = async (router: Router) => {
 	 *         description: Lista de sitios obtenida con éxito.
 
 	 */
-	router.get('/sites/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/sites/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -55,7 +55,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Sitio no encontrado.
 	 */
-	router.get('/sites/:id', authenticate, getController.run.bind(getController))
+	router.get('/sites/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -79,7 +79,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/sites/', authenticate, postController.run.bind(postController))
+	router.post('/sites/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -110,5 +110,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Sitio no encontrado.
 	 */
-	router.patch('/sites/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/sites/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

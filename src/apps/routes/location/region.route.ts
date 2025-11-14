@@ -3,7 +3,7 @@ import { type RegionGetAllController } from '../../controllers/location/region.g
 import { type RegionPatchController } from '../../controllers/location/region.patch.controller'
 import { type RegionGetController } from '../../controllers/location/region.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { RegionDependencies } from '../../di/location/region.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -26,7 +26,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de regiones obtenida con éxito.
 	 */
-	router.get('/regions/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/regions/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -51,7 +51,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Región no encontrada.
 	 */
-	router.get('/regions/:id', authenticate, getController.run.bind(getController))
+	router.get('/regions/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -82,5 +82,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Región no encontrada.
 	 */
-	router.patch('/regions/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/regions/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

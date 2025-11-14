@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { AppSettingsDependencies } from '../../di/app-settings/app-settings.di'
 import { type SettingsGetController } from '../../controllers/app-settings/settings.get.controller'
 import { type SettingsGetAllController } from '../../controllers/app-settings/settings.get-all.controller'
@@ -29,7 +29,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de configuraciones obtenida con éxito.
 	 */
-	router.get('/settings/', authenticate, getAllController.run.bind(getAllController))
+	router.get('/settings/', ...protectedRoute, getAllController.run.bind(getAllController))
 	/**
 	 * @swagger
 	 * /settings/{key}:
@@ -53,7 +53,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Configuración no encontrada.
 	 */
-	router.get('/settings/:key', authenticate, getController.run.bind(getController))
+	router.get('/settings/:key', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -87,7 +87,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Petición mal formada o error de validación.
 	 */
-	router.patch('/settings/bulk-update', authenticate, patchBulkController.run.bind(patchBulkController))
+	router.patch('/settings/bulk-update', ...protectedRoute, patchBulkController.run.bind(patchBulkController))
 
 	/**
 	 * @swagger
@@ -122,5 +122,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Configuración no encontrada.
 	 */
-	router.patch('/settings/:key', authenticate, patchController.run.bind(patchController))
+	router.patch('/settings/:key', ...protectedRoute, patchController.run.bind(patchController))
 }

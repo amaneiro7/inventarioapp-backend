@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type MemoryRamTypeGetAllController } from '../../controllers/memory-ram/memoryRam.get-all.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { MemoryRamTypeDependencies } from '../../di/memory-ram/memory-ram-type.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/memoryramtypes/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

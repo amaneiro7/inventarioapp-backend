@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type StatusGetAllController } from '../../controllers/status/status.get-all.controller'
 import { type StatusDashboardGetController } from '../../controllers/status/status-dashboard.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { StatusDependencies } from '../../di/status/status.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -26,7 +26,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de estados obtenida con éxito.
 	 */
-	router.get('/status/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/status/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger

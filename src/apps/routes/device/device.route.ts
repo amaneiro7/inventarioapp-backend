@@ -1,6 +1,5 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
 import { DeviceDependencies } from '../../di/device/device.di'
 import { ComputerDashboardDependencies } from '../../di/device/computerDashboard.di'
 
@@ -17,6 +16,7 @@ import { type DeviceMonitoringDashboardGetController } from '../../controllers/d
 import { type DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
 import { type DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
@@ -83,7 +83,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/devices/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
+	router.get('/devices/', ...protectedRoute, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
 
 	/**
 	 * @swagger
@@ -101,7 +101,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/devices/ping-status',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		devicePingStatusController.run.bind(devicePingStatusController)
 	)
@@ -125,27 +125,87 @@ export const register = async (router: Router) => {
 	 *               type: string
 	 *               format: binary
 	 */
-	router.get('/devices/download', authenticate, criteriaConverterMiddleware, download.run.bind(download))
+	router.get('/devices/download', ...protectedRoute, criteriaConverterMiddleware, download.run.bind(download))
 
-	router.get('/devices/dashboard/computer', authenticate, computerDashboard.run.bind(computerDashboard))
+	/**
+	 * @swagger
+	 * /devices/dashboard/computer:
+	 *   get:
+	 *     tags:
+	 *       - Dashboard
+	 *       - Dispositivos
+	 *     summary: Obtener datos de dashboard para computadoras
+	 *     description: Devuelve un resumen de datos específico para los dispositivos de tipo computadora.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard de computadoras obtenidos con éxito.
+	 */
+	router.get('/devices/dashboard/computer', ...protectedRoute, computerDashboard.run.bind(computerDashboard))
 
+	/**
+	 * @swagger
+	 * /devices/dashboard/monitoring:
+	 *   get:
+	 *     tags:
+	 *       - Dashboard
+	 *       - Dispositivos
+	 *     summary: Obtener datos de monitoreo de dispositivos
+	 *     description: Devuelve datos generales del dashboard de monitoreo de dispositivos.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard de monitoreo obtenidos con éxito.
+	 */
 	router.get(
 		'/devices/dashboard/monitoring',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		deviceMonitoringDashboardGetController.run.bind(deviceMonitoringDashboardGetController)
 	)
 
+	/**
+	 * @swagger
+	 * /devices/dashboard/monitoringbystate:
+	 *   get:
+	 *     tags:
+	 *       - Dashboard
+	 *       - Dispositivos
+	 *     summary: Obtener datos de monitoreo por estado
+	 *     description: Devuelve datos del dashboard de monitoreo de dispositivos, agrupados por estado.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard de monitoreo por estado obtenidos con éxito.
+	 */
 	router.get(
 		'/devices/dashboard/monitoringbystate',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		deviceMonitoringDashboardByStateGetController.run.bind(deviceMonitoringDashboardByStateGetController)
 	)
 
+	/**
+	 * @swagger
+	 * /devices/dashboard/monitoringbylocation:
+	 *   get:
+	 *     tags:
+	 *       - Dashboard
+	 *       - Dispositivos
+	 *     summary: Obtener datos de monitoreo por ubicación
+	 *     description: Devuelve datos del dashboard de monitoreo de dispositivos, agrupados por ubicación.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Datos del dashboard de monitoreo por ubicación obtenidos con éxito.
+	 */
 	router.get(
 		'/devices/dashboard/monitoringbylocation',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		deviceMonitoringDashboardByLocationGetController.run.bind(deviceMonitoringDashboardByLocationGetController)
 	)
@@ -173,7 +233,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Dispositivo no encontrado.
 	 */
-	router.get('/devices/:id', authenticate, getController.run.bind(getController))
+	router.get('/devices/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -197,7 +257,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/devices/', authenticate, postController.run.bind(postController))
+	router.post('/devices/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -228,7 +288,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Dispositivo no encontrado.
 	 */
-	router.patch('/devices/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/devices/:id', ...protectedRoute, patchController.run.bind(patchController))
 
 	/**
 	 * @swagger
@@ -253,5 +313,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Dispositivo no encontrado.
 	 */
-	router.delete('devices/:id', authenticate, deleteController.run.bind(deleteController))
+	router.delete('devices/:id', ...protectedRoute, deleteController.run.bind(deleteController))
 }

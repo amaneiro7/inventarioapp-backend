@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type HardDriveCapacityGetAllController } from '../../controllers/hard-drive/hard-drive-capacity.get-all.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { HardDriveCapacityDependencies } from '../../di/hard-drive/hard-drive-capacity.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/harddrivecapacities/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { LocationDependencies } from '../../di/location/location.di'
 import { LocationMonitoringDependencies } from '../../di/location/location-monitoring.di'
 import { type LocationGetController } from '../../controllers/location/location.get.controller'
@@ -75,7 +75,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/locations/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
+	router.get(
+		'/locations/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		searchByCriteria.run.bind(searchByCriteria)
+	)
 
 	/**
 	 * @swagger
@@ -91,7 +96,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de ubicaciones obtenida con éxito.
 	 */
-	router.get('/locations/all', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/locations/all',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -109,7 +119,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/locations/ping-status',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		locationPingStatusController.run.bind(locationPingStatusController)
 	)
@@ -130,7 +140,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/locations/dashboard/monitoring',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		locationMonitoringDashboardGetController.run.bind(locationMonitoringDashboardGetController)
 	)
@@ -151,7 +161,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/locations/dashboard/monitoringbystate',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
 	)
@@ -197,7 +207,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ubicación no encontrada.
 	 */
-	router.get('/locations/:id', authenticate, getController.run.bind(getController))
+	router.get('/locations/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -221,7 +231,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/locations/', authenticate, postController.run.bind(postController))
+	router.post('/locations/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -252,5 +262,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ubicación no encontrada.
 	 */
-	router.patch('/locations/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/locations/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

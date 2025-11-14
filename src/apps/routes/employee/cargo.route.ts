@@ -4,9 +4,9 @@ import { type CargoPostController } from '../../controllers/employee/cargo.post.
 import { type CargoPatchController } from '../../controllers/employee/cargo.patch.controller'
 import { type CargoGetController } from '../../controllers/employee/cargo.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
 import { CargoDependencies } from '../../di/employee/cargo.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
 	const getAllController: CargoGetAllController = container.resolve(CargoDependencies.GetAllController)
@@ -28,7 +28,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de cargos obtenida con éxito.
 	 */
-	router.get('/cargos/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/cargos/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -53,7 +53,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Cargo no encontrado.
 	 */
-	router.get('/cargos/:id', authenticate, getController.run.bind(getController))
+	router.get('/cargos/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -77,7 +77,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cargos/', authenticate, postController.run.bind(postController))
+	router.post('/cargos/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -108,5 +108,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Cargo no encontrado.
 	 */
-	router.patch('/cargos/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/cargos/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

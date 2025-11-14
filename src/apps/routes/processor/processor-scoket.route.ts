@@ -2,7 +2,7 @@ import { type Router } from 'express'
 import { type ProcessorSocketGetAllController } from '../../controllers/processor/processor-socket.get-all.controller'
 
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ProcessorSocketDependencies } from '../../di/processor/processor-socket.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -27,7 +27,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/processorsockets/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

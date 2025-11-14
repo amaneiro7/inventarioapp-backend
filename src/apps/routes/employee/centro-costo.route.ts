@@ -4,9 +4,9 @@ import { type CentroCostoPostController } from '../../controllers/employee/centr
 import { type CentroCostoPatchController } from '../../controllers/employee/centro-costo.patch.controller'
 import { type CentroCostoGetController } from '../../controllers/employee/centro-costo.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
 import { CentroCostoDependencies } from '../../di/employee/centro-costo.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
 	const getAllController: CentroCostoGetAllController = container.resolve(CentroCostoDependencies.GetAllController)
@@ -28,7 +28,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de centros de costo obtenida con éxito.
 	 */
-	router.get('/centrocostos/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/centrocostos/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -53,7 +58,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Centro de costo no encontrado.
 	 */
-	router.get('/centrocostos/:id', authenticate, getController.run.bind(getController))
+	router.get('/centrocostos/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -77,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/centrocostos/', authenticate, postController.run.bind(postController))
+	router.post('/centrocostos/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -108,5 +113,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Centro de costo no encontrado.
 	 */
-	router.patch('/centrocostos/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/centrocostos/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

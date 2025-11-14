@@ -4,7 +4,7 @@ import { type DepartamentoPostController } from '../../controllers/employee/depa
 import { type DepartamentoPatchController } from '../../controllers/employee/departamento.patch.controller'
 import { type DepartamentoGetController } from '../../controllers/employee/departamento.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { DepartamentoDependencies } from '../../di/employee/departamento.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -30,7 +30,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/departamentos/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -58,7 +58,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Departamento no encontrado.
 	 */
-	router.get('/departamentos/:id', authenticate, getController.run.bind(getController))
+	router.get('/departamentos/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -82,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/departamentos/', authenticate, postController.run.bind(postController))
+	router.post('/departamentos/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -113,5 +113,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Departamento no encontrado.
 	 */
-	router.patch('/departamentos/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/departamentos/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

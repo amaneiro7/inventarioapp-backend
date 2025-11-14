@@ -4,7 +4,7 @@ import { type CentroTrabajoPostController } from '../../controllers/employee/cen
 import { type CentroTrabajoPatchController } from '../../controllers/employee/centro-trabajo.patch.controller'
 import { type CentroTrabajoGetController } from '../../controllers/employee/centro-trabajo.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { CentroTrabajoDependencies } from '../../di/employee/centro-trabajo.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -32,7 +32,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/centrotrabajos/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -60,7 +60,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Centro de trabajo no encontrado.
 	 */
-	router.get('/centrotrabajos/:id', authenticate, getController.run.bind(getController))
+	router.get('/centrotrabajos/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -84,7 +84,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/centrotrabajos/', authenticate, postController.run.bind(postController))
+	router.post('/centrotrabajos/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -115,5 +115,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Centro de trabajo no encontrado.
 	 */
-	router.patch('/centrotrabajos/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/centrotrabajos/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

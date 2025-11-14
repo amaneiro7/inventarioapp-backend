@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { authenticateTemporaryToken } from '../../Middleware/authenticateTemporaryToken'
 import { UserDependencies } from '../../di/user/user.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
@@ -52,7 +52,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de usuarios obtenida con éxito.
 	 */
-	router.get('/users/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get('/users/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 	/**
 	 * @swagger
 	 * /users/{id}:
@@ -76,7 +76,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.get('/users/:id', authenticate, getController.run.bind(getController))
+	router.get('/users/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -107,7 +107,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos o el usuario ya existe.
 	 */
-	router.post('/users/register', authenticate, createUserController.run.bind(createUserController))
+	router.post('/users/register', ...protectedRoute, createUserController.run.bind(createUserController))
 	/**
 	 * @swagger
 	 * /users/change-password:
@@ -132,7 +132,11 @@ export const register = async (router: Router) => {
 	 *       '401':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/change-password', authenticate, changePaswwordController.run.bind(changePaswwordController))
+	router.patch(
+		'/users/change-password',
+		...protectedRoute,
+		changePaswwordController.run.bind(changePaswwordController)
+	)
 
 	/**
 	 * @swagger
@@ -191,7 +195,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/reset-password', authenticate, resetPasswordController.run.bind(resetPasswordController))
+	router.patch('/users/reset-password', ...protectedRoute, resetPasswordController.run.bind(resetPasswordController))
 
 	/**
 	 * @swagger
@@ -222,7 +226,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/unlock', authenticate, unlockAccountController.run.bind(unlockAccountController))
+	router.patch('/users/unlock', ...protectedRoute, unlockAccountController.run.bind(unlockAccountController))
 
 	/**
 	 * @swagger
@@ -253,7 +257,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/disable', authenticate, disabledController.run.bind(disabledController))
+	router.patch('/users/disable', ...protectedRoute, disabledController.run.bind(disabledController))
 
 	/**
 	 * @swagger
@@ -281,7 +285,7 @@ export const register = async (router: Router) => {
 	 *         description: Usuario reactivado con éxito.
 	 */
 
-	router.patch('/users/reactivate', authenticate, reactivateController.run.bind(reactivateController))
+	router.patch('/users/reactivate', ...protectedRoute, reactivateController.run.bind(reactivateController))
 
 	/**
 	 * @swagger
@@ -316,5 +320,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/update', authenticate, patchController.run.bind(patchController))
+	router.patch('/users/update', ...protectedRoute, patchController.run.bind(patchController))
 }

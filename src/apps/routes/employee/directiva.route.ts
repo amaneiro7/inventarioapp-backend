@@ -4,7 +4,7 @@ import { type DirectivaPostController } from '../../controllers/employee/directi
 import { type DirectivaPatchController } from '../../controllers/employee/directiva.patch.controller'
 import { type DirectivaGetController } from '../../controllers/employee/directiva.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { DirectivaDependencies } from '../../di/employee/directiva.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -28,7 +28,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de directivas obtenida con éxito.
 	 */
-	router.get('/directivas/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/directivas/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -53,7 +58,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Directiva no encontrada.
 	 */
-	router.get('/directivas/:id', authenticate, getController.run.bind(getController))
+	router.get('/directivas/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -77,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/directivas/', authenticate, postController.run.bind(postController))
+	router.post('/directivas/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -108,5 +113,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Directiva no encontrada.
 	 */
-	router.patch('/directivas/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/directivas/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

@@ -4,7 +4,7 @@ import { type VicepresidenciaPostController } from '../../controllers/employee/v
 import { type VicepresidenciaPatchController } from '../../controllers/employee/vicepresidencia.patch.controller'
 import { type VicepresidenciaGetController } from '../../controllers/employee/vicepresidencia.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { VicepresidenciaDependencies } from '../../di/employee/vicepresidencia.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 
@@ -34,7 +34,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/vicepresidencias/',
-		authenticate,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -62,7 +62,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Vicepresidencia no encontrada.
 	 */
-	router.get('/vicepresidencias/:id', authenticate, getController.run.bind(getController))
+	router.get('/vicepresidencias/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -86,7 +86,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/vicepresidencias/', authenticate, postController.run.bind(postController))
+	router.post('/vicepresidencias/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -117,5 +117,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: No encontrada.
 	 */
-	router.patch('/vicepresidencias/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/vicepresidencias/:id', ...protectedRoute, patchController.run.bind(patchController))
 }

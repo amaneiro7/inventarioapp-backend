@@ -2,9 +2,9 @@ import { type Router } from 'express'
 import { type CategoryGetAllController } from '../../controllers/category/category.get-all.controller'
 import { type CategoryGetController } from '../../controllers/category/category.get.controller'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
 import { CategoryDependencies } from '../../di/category/category.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
 	const getController: CategoryGetController = container.resolve(CategoryDependencies.GetController)
@@ -26,8 +26,7 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/categories/',
-		authenticate,
-		criteriaConverterMiddleware,
+		...protectedRoute,
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -55,5 +54,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Categoría no encontrada.
 	 */
-	router.get('/categories/:id', authenticate, getController.run.bind(getController))
+	router.get('/categories/:id', ...protectedRoute, getController.run.bind(getController))
 }

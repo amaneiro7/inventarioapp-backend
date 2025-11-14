@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { EmployeeDependencies } from '../../di/employee/employee.di'
 import { type EmployeeSearchByCriteriaController } from '../../controllers/employee/employee.searchByCriteria.controller'
 import { type EmployeeGetController } from '../../controllers/employee/employee.get.controller'
@@ -60,7 +60,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/employees/', authenticate, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
+	router.get(
+		'/employees/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		searchByCriteria.run.bind(searchByCriteria)
+	)
 
 	/**
 	 * @swagger
@@ -99,7 +104,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.get('/employees/:id', authenticate, getController.run.bind(getController))
+	router.get('/employees/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -123,7 +128,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/employees/', authenticate, postController.run.bind(postController))
+	router.post('/employees/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -154,7 +159,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.patch('/employees/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/employees/:id', ...protectedRoute, patchController.run.bind(patchController))
 
 	/**
 	 * @swagger
@@ -179,5 +184,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.delete('employees/:id', authenticate, deleteController.run.bind(deleteController))
+	router.delete('employees/:id', ...protectedRoute, deleteController.run.bind(deleteController))
 }

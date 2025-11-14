@@ -1,6 +1,6 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { authenticate } from '../../Middleware/authenticate'
+import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ShipmentDependencies } from '../../di/shipment/shipment.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { type ShipmentGetFinderController } from '../../controllers/shipments/shipment.get.controller'
@@ -28,7 +28,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de envíos obtenida con éxito.
 	 */
-	router.get('/shipments/', authenticate, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/shipments/',
+		...protectedRoute,
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -53,7 +58,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Envío no encontrado.
 	 */
-	router.get('/shipments/:id', authenticate, getController.run.bind(getController))
+	router.get('/shipments/:id', ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -77,7 +82,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/shipments/', authenticate, postController.run.bind(postController))
+	router.post('/shipments/', ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -108,5 +113,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Envío no encontrado.
 	 */
-	router.patch('/shipments/:id', authenticate, patchController.run.bind(patchController))
+	router.patch('/shipments/:id', ...protectedRoute, patchController.run.bind(patchController))
 }
