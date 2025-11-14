@@ -18,7 +18,7 @@ export class PasswordHistory extends ValueObject<string[]> {
 		// No podemos comparar hashes directamente porque la "sal" los hace únicos.
 		// Debemos usar el método de comparación (ej: bcrypt.compare) contra cada hash del historial.
 		for (const historyHash of this.value) {
-			const match = PasswordService.compare(plainPassword, historyHash)
+			const match = await PasswordService.compare(plainPassword, historyHash)
 			if (match) {
 				return true // Si encontramos una coincidencia, detenemos la búsqueda.
 			}

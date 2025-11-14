@@ -52,7 +52,7 @@ export class UserChangePassword {
 		}
 
 		const userEntity = User.fromPrimitives(user)
-		userEntity.updatePassword(newPassword)
+		await userEntity.updatePassword(newPassword)
 		await this.userRepository.save(userEntity.toPrimitives())
 	}
 }
