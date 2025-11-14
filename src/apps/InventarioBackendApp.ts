@@ -15,6 +15,8 @@ import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 import { type Database } from '../Contexts/Shared/domain/Database'
 import { type SettingsFinder } from '../Contexts/Shared/AppSettings/application/SettingsFinder'
 import { type EventBus } from '../Contexts/Shared/domain/event/EventBus'
+import { RestartMonitoringServices } from './RestartMonitoringServices'
+import { DomainEventSubscriber } from '../Contexts/Shared/domain/event/DomainEventSubscriber'
 
 export class InventarioBackendApp {
 	server?: Server
@@ -26,7 +28,6 @@ export class InventarioBackendApp {
 	private readonly locationPingService: LocationMonitoringService = container.resolve(
 		LocationMonitoringDependencies.LocationMonitoringService
 	)
-	private readonly eventBus: EventBus = container.resolve(SharedDependencies.EventBus)
 
 	async start(): Promise<void> {
 		try {
@@ -50,7 +51,7 @@ export class InventarioBackendApp {
 			await this.startMonitoringServices()
 
 			// 5. Suscribirse a eventos de cambio de configuración.
-			this.subscribeToSettingsChanges()
+			this.registerDomainSubscribers()
 		} catch (error) {
 			this.logger.error(`Ocurrió un error durante el arranque de la aplicación:, ${error as Error}`)
 			// Propagar el error para que el proceso principal pueda detenerse.
@@ -98,6 +99,11 @@ export class InventarioBackendApp {
 		await cache.connect()
 	}
 
+	private async configureEventBus() {
+		const eventBus: EventBus = container.resolve(SharedDependencies.EventBus)
+		eventBus.ad
+	}
+
 	private async startMonitoringServices(): Promise<void> {
 		const isLocationMonitoringEnabled = await this.isSettingEnabled(
 			AppSettingKeys.LOCATION_MONITORING.ENABLED,
@@ -132,33 +138,18 @@ export class InventarioBackendApp {
 		}
 	}
 
-	private subscribeToSettingsChanges(): void {
-		this.eventBus.subscribe('setting:updated', async (payload: { key: string; value: string }) => {
-			const { key, value } = payload
-			const isEnabled = value.toLowerCase() === 'true'
+	private registerDomainSubscribers(): void {
+		// 1. Instanciar el suscriptor de cambios de configuración
+		const restartServicesSuscriber = new RestartMonitoringServices(
+			this.devicePingService,
+			this.locationPingService,
+			this.logger
+		)
 
-			if (key === AppSettingKeys.LOCATION_MONITORING.ENABLED) {
-				this.logger.info(
-					`[EVENT] Cambio de configuración para ${key}. Nuevo estado: ${isEnabled ? 'Activado' : 'Desactivado'}.`
-				)
-				if (isEnabled) {
-					this.locationPingService.startMonitoringLoop({ showLogs: false })
-				} else {
-					this.locationPingService.stopMonitoringLoop()
-				}
-			}
-
-			if (key === AppSettingKeys.DEVICE_MONITORING.ENABLED) {
-				this.logger.info(
-					`[EVENT] Cambio de configuración para ${key}. Nuevo estado: ${isEnabled ? 'Activado' : 'Desactivado'}.`
-				)
-				if (isEnabled) {
-					this.devicePingService.startMonitoringLoop({ showLogs: false })
-				} else {
-					this.devicePingService.stopMonitoringLoop()
-				}
-			}
-		})
-		this.logger.info('Suscrito a los cambios de configuración para los servicios de monitoreo.')
+		// 2. Registrar el suscriptr en el EventBus.
+		// Nota: Asume que tu EventBus tiene un método para registrar el suscriptor
+		// y que el bus se encarga de usar el método subscribedTo() internamente.
+		this.eventBus.publish(restartServicesSuscriber)
+		this.logger.info('Suscriptores de Eventos de Dominio registrados exitosamente.')
 	}
 }
