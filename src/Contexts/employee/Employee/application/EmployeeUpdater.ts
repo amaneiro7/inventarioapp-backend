@@ -14,7 +14,7 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type UserDesactivateAccount } from '../../../User/user/application/UserDesactivateAccount'
-import { SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for updating an existing Employee entity.

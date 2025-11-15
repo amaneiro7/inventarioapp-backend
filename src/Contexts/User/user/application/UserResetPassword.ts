@@ -2,11 +2,11 @@ import { User } from '../domain/entity/User'
 import { UserId } from '../domain/valueObject/UserId'
 import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
-import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for resetting a user's password to a default value.

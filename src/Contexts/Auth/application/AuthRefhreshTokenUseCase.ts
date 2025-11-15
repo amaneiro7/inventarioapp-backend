@@ -11,8 +11,8 @@ import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNot
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'
 import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
-import { SettingsFinder } from '../../Shared/AppSettings/application/SettingsFinder'
-import { AppSettingDefaults, AppSettingKeys } from '../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { SettingsFinder } from '../../AppSettings/application/SettingsFinder'
+import { AppSettingDefaults, AppSettingKeys } from '../../AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
 import { type AuthResponseDto } from '../domain/Auth.dto'
 

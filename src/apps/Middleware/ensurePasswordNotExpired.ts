@@ -1,6 +1,6 @@
 import { container } from '../di/container'
 import { AppSettingsDependencies } from '../di/app-settings/app-settings.di'
-import { PasswordExpiredError } from '../../Contexts/Shared/AppSettings/domain/errors/PasswordExpiredError'
+import { PasswordExpiredError } from '../../Contexts/AppSettings/domain/errors/PasswordExpiredError'
 import { type NextFunction, type Request, type Response } from 'express'
 import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
 

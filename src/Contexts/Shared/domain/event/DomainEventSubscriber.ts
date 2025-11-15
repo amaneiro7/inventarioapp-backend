@@ -1,8 +1,8 @@
-import { type DomainEvent } from './DomainEvent'
-import { type DomainEventName } from './DomainEventName'
+import { DomainEventClass, type DomainEvent } from './DomainEvent'
 
 export interface DomainEventSubscriber<T extends DomainEvent> {
 	on: (domainEvent: T) => Promise<void>
 
-	subscribedTo: () => Array<DomainEventName<T>>
+	subscribedTo: () => DomainEventClass[]
+	//subscribedTo: () => DomainEventName<T>[]
 }

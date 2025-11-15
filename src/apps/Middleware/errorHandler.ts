@@ -43,7 +43,7 @@ export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: 
 	res.locals.errorMessage = err.message
 
 	// Log the full error details for debugging purposes, regardless of the environment
-	logger.error(err)
+	logger.error(`${err.name}: ${err.message}`)
 
 	// Send a standardized JSON error response
 	res.status(statusCode).json({

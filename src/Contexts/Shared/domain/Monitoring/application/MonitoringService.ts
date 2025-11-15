@@ -12,7 +12,7 @@ import {
 	type MonitoringConfigKeys,
 	type MonitoringServiceConfig
 } from '../domain/entity/MonitoringConfig'
-import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
+import { type SettingsFinder } from '../../../../AppSettings/application/SettingsFinder'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>

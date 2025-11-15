@@ -1,7 +1,7 @@
 import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
-import { AppSettingDefaults, AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 import { type PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'

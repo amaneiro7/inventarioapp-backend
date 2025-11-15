@@ -23,3 +23,14 @@ services:
         volumes:
             - ./redis_data:/data
         command: redis-server --requirepass Man12345. --appendonly yes
+
+    rabbitmq-dev:
+        container_name: rabbitmq-dev
+        image: 'rabbitmq:3.12-management'
+        restart: unless-stopped
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        environment:
+            - RABBITMQ_DEFAULT_USER=appadmin
+            - RABBITMQ_DEFAULT_PASS=Man12345.

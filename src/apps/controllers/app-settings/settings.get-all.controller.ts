@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type SettingsFinderAll } from '../../../Contexts/Shared/AppSettings/application/SettingsFinderAll'
+import { type SettingsFinderAll } from '../../../Contexts/AppSettings/application/SettingsFinderAll'
 import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'

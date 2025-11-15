@@ -1,5 +1,6 @@
+import { Uuid } from '../value-object/Uuid'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { randomUUID } from 'node:crypto'
 export abstract class DomainEvent {
 	static EVENT_NAME: string
 	static fromPrimitives: (params: {
@@ -17,7 +18,7 @@ export abstract class DomainEvent {
 	constructor(params: { eventName: string; aggregateId: string; eventId?: string; occurredOn?: Date }) {
 		const { aggregateId, eventName, eventId, occurredOn } = params
 		this.aggregateId = aggregateId
-		this.eventId = eventId || randomUUID()
+		this.eventId = eventId || Uuid.random().value
 		this.occurredOn = occurredOn || new Date()
 		this.eventName = eventName
 	}

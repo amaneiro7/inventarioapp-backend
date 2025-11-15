@@ -7,8 +7,10 @@ export const container = createContainer({ injectionMode: 'PROXY', strict: true 
 
 export async function registerDI(container: AwilixContainer) {
 	const routePath = config.isProd ? 'dist/src/**/*.di.*' : 'src/**/*.di.*'
-	const routes = sync(routePath)
-	routes.forEach(async route => {
+	// Unimos las rutas de dependencias y las del event bus. El event bus se añade al final.
+	const allRoutes = [...sync(routePath)]
+
+	allRoutes.forEach(async route => {
 		await register({ routePath: route, container })
 	})
 }

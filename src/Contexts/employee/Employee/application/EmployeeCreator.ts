@@ -9,8 +9,8 @@ import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { Employee } from '../domain/entity/Employee'
-import { SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
-import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
+import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 
 /**
  * @description Use case for creating a new Employee entity.

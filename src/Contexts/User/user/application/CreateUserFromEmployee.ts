@@ -4,7 +4,7 @@ import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { EmployeeTypesEnum } from '../../../employee/Employee/domain/valueObject/EmployeeType'
-import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserDto } from '../domain/entity/User.dto'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'
@@ -12,7 +12,7 @@ import { type RoleRepository } from '../../Role/domain/RoleRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type RoleId } from '../../Role/domain/RoleId'
 import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
-import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 interface CreateUserFromEmployeeParams {
 	employeeId: EmployeeId['value']

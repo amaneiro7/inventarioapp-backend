@@ -18,12 +18,12 @@ import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.
 import { type EmployeeParams } from '../entity/Employee.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type SettingsFinder } from '../../../../Shared/AppSettings/application/SettingsFinder'
+import { type SettingsFinder } from '../../../../AppSettings/application/SettingsFinder'
 import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
 import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
-import { AppSettingKeys } from '../../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { AppSettingKeys } from '../../../../AppSettings/domain/entity/SettingsKeys'
 
 interface UpdateEmployeeRepositories {
 	readonly employeeRepository: EmployeeRepository

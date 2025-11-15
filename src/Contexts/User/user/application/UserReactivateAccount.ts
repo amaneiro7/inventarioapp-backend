@@ -5,13 +5,13 @@ import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { AppSettingKeys } from '../../../Shared/AppSettings/domain/entity/SettingsKeys'
+import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserId } from '../domain/valueObject/UserId'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
-import { type SettingsFinder } from '../../../Shared/AppSettings/application/SettingsFinder'
+import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 /**
  * @description Use case for reactivating a suspended user account.
