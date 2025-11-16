@@ -174,7 +174,7 @@ export class HistoryFinderAll extends GetAllBaseService<HistoryDto> {
 		suffix = ''
 	): Promise<Map<string, string>> {
 		if (ids.length === 0) return new Map()
-		const results = await Promise.all(ids.map(id => repository.searchById(id)))
+		const results = await Promise.all(ids.map(id => repository.findById(id)))
 		const map = new Map<string, string>()
 		for (const item of results) {
 			if (item) {

@@ -30,14 +30,14 @@ export abstract class CityRepository implements GenericRepository<CityDto> {
 	 * @param {Primitives<CityId>} id - The ID of the city to search for.
 	 * @returns {Promise<CityDto | null>} A promise that resolves to the city DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<CityId>): Promise<CityDto | null>
+	abstract findById(id: Primitives<CityId>): Promise<CityDto | null>
 
 	/**
 	 * Searches for a single city by its name.
 	 * @param {CityDto['name']} name - The name of the city to search for.
 	 * @returns {Promise<Nullable<CityDto>>} A promise that resolves to the city DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: CityDto['name']): Promise<Nullable<CityDto>>
+	abstract findByName(name: CityDto['name']): Promise<Nullable<CityDto>>
 
 	/**
 	 * Removes a city by its unique identifier.

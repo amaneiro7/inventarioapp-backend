@@ -50,7 +50,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		})
 	}
 
-	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	async findById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({
@@ -74,7 +74,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		})
 	}
 
-	async searchByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	async findByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({

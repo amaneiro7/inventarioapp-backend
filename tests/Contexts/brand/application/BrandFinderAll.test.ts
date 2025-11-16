@@ -12,8 +12,8 @@ describe('BrandFinderAll', () => {
 		brandRepository = {
 			save: jest.fn(),
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn(),
+			findById: jest.fn(),
+			findByName: jest.fn(),
 			remove: jest.fn()
 		}
 		brandFinderAll = new BrandFinderAll({ brandRepository })

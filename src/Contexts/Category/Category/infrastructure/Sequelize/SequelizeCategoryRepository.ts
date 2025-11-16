@@ -52,13 +52,13 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single category by its unique identifier.
 	 * Caches the result for faster subsequent lookups.
 	 * @param {Primitives<CategoryId>} id The ID of the category to find.
 	 * @returns {Promise<CategoryDto | null>} A promise resolving to the category DTO if found, otherwise null.
 	 */
-	async searchById(id: Primitives<CategoryId>): Promise<CategoryDto | null> {
+	async findById(id: Primitives<CategoryId>): Promise<CategoryDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<CategoryDto | null>({
 			cacheKey,
@@ -71,13 +71,13 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single category by its name.
 	 * Caches the result for faster subsequent lookups.
 	 * @param {Primitives<CategoryName>} name The name of the category to find.
 	 * @returns {Promise<CategoryDto | null>} A promise resolving to the category DTO if found, otherwise null.
 	 */
-	async searchByName(name: Primitives<CategoryName>): Promise<CategoryDto | null> {
+	async findByName(name: Primitives<CategoryName>): Promise<CategoryDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<CategoryDto | null>({
 			cacheKey,

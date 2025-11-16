@@ -36,7 +36,7 @@ export class ModelSeriesBrand extends BrandId {
 		repository: BrandRepository
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
-		const isBrandExist = await repository.searchById(brandId)
+		const isBrandExist = await repository.findById(brandId)
 		if (!isBrandExist) {
 			throw new Error('La marca no existe.')
 		}

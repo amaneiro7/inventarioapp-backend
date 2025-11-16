@@ -39,11 +39,11 @@ sequenceDiagram
 
     Admin->>+API: POST /users/from-employee
     API->>+App: run({ employeeId, roleId })
-    App->>+EmployeeRepo: searchById(employeeId)
+    App->>+EmployeeRepo: findById(employeeId)
     EmployeeRepo-->>-App: Retorna Employee
     App->>+UserRepo: searchByEmployeeId(employeeId)
     UserRepo-->>-App: Retorna null
-    App->>+RoleRepo: searchById(roleId)
+    App->>+RoleRepo: findByIdoleId)
     RoleRepo-->>-App: Retorna Role
     App->>+EmployeeRepo: save(employee con type='service')
     EmployeeRepo-->>-App: void

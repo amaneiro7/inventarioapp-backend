@@ -24,7 +24,7 @@ export class SiteUpdater {
 	 */
 	async run({ id, params }: { id: string; params: Partial<Omit<SitePrimitives, 'id'>> }): Promise<void> {
 		const siteId = new SiteId(id).value
-		const site = await this.siteRepository.searchById(siteId)
+		const site = await this.siteRepository.findById(siteId)
 
 		if (!site) {
 			throw new SiteDoesNotExistError(id)

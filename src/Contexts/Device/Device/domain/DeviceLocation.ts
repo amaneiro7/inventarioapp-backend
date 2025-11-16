@@ -101,7 +101,7 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 		if (!location) {
 			return
 		}
-		const existingLocation = await repository.searchById(new LocationId(location).value)
+		const existingLocation = await repository.findById(new LocationId(location).value)
 		if (!existingLocation) {
 			throw new LocationDoesNotExistError(location)
 		}

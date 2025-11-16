@@ -22,10 +22,10 @@ export abstract class MainCategoryRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single main category by its unique identifier.
 	 * @param {MainCategoryId['value']} id The ID of the main category to search for.
 	 * @returns {Promise<Nullable<MainCategoryDto>>} A promise that resolves to the main category DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: MainCategoryId['value']): Promise<Nullable<MainCategoryDto>>
+	abstract findById(id: MainCategoryId['value']): Promise<Nullable<MainCategoryDto>>
 }

@@ -12,7 +12,7 @@ export class ShipmentFinder {
 
 	async run({ id }: { id: string }): Promise<ShipmentDto> {
 		const shipmentId = new ShipmentId(id)
-		const shipment = await this.shipmentRepository.searchById(shipmentId.value)
+		const shipment = await this.shipmentRepository.findById(shipmentId.value)
 
 		if (!shipment) {
 			throw new ShipmentDoesNotExistError(shipmentId.value)

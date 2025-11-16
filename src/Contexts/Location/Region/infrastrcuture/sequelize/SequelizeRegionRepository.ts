@@ -50,13 +50,13 @@ export class SequelizeRegionRepository extends SequelizeCriteriaConverter implem
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single Region entity by its unique identifier.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<RegionId>} id - The ID of the Region to search for.
 	 * @returns {Promise<RegionDto | null>} A promise that resolves to the Region DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<RegionId>): Promise<RegionDto | null> {
+	async findById(id: Primitives<RegionId>): Promise<RegionDto | null> {
 		return await this.cache.getCachedData<RegionDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

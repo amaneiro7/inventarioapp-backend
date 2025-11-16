@@ -42,7 +42,7 @@ export class UpdateIDeparmentUseCase {
 
 		if (newCargos.length > 0) {
 			const cargoExistenceChecks = newCargos.map(async cargoId => {
-				if (!(await this.cargoRepository.searchById(cargoId))) {
+				if (!(await this.cargoRepository.findById(cargoId))) {
 					throw new CargoDoesNotExistError()
 				}
 			})

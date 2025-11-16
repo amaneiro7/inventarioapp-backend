@@ -41,6 +41,8 @@ import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDriv
 import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 import { type ShipmentDto } from '../../../../Shipment/Shipment/domain/entity/Shipment.dto'
 import { type ShipmentDeviceDto } from '../../../../Shipment/ShipmentDevice/domain/entity/ShipmentDevice.dto'
+import { type PermissionDto } from '../../../../AccessControl/Permission/domain/entity/Permission.dto'
+import { type PermissionGroupDto } from '../../../../AccessControl/PermissionGroup/domain/entity/PermissionGroup.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
 	Category: ModelStatic<Model<CategoryDto>>
@@ -86,4 +88,6 @@ export type SequelizeModels = Sequelize['models'] & {
 	Directiva: ModelStatic<Model<DirectivaDto>>
 	Shipment: ModelStatic<Model<ShipmentDto>>
 	ShipmentDevice: ModelStatic<Model<ShipmentDeviceDto>>
+	Permission: ModelStatic<Model<PermissionDto>>
+	PermissionGroup: ModelStatic<Model<PermissionGroupDto>>
 }

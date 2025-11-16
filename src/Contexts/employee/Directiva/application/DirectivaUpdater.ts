@@ -32,7 +32,7 @@ export class DirectivaUpdater {
 	async run({ id, params }: { id: string; params: Partial<DirectivaParams> }): Promise<void> {
 		const directivaId = new DepartmentId(id)
 
-		const directiva = await this.directivaRepository.searchById(directivaId.value)
+		const directiva = await this.directivaRepository.findById(directivaId.value)
 		if (!directiva) {
 			throw new DepartmentDoesNotExistError('La Directiva')
 		}

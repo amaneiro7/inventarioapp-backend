@@ -51,13 +51,13 @@ export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter 
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single main category by its unique identifier.
 	 * Caches the result for faster lookups.
 	 * @param {Primitives<MainCategoryId>} id The ID of the main category to find.
 	 * @returns {Promise<MainCategoryDto | null>} A promise resolving to the main category DTO if found, otherwise null.
 	 */
-	async searchById(id: Primitives<MainCategoryId>): Promise<MainCategoryDto | null> {
+	async findById(id: Primitives<MainCategoryId>): Promise<MainCategoryDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<MainCategoryDto | null>({
 			cacheKey,

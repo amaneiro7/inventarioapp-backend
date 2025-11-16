@@ -72,7 +72,7 @@ export class EmployeeVicepresidenciaEjecutiva extends AcceptedNullValueObject<Pr
 		vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
 	}): Promise<void> {
 		if (!vicepresidenciaEjecutivaId) return
-		const exists = await repository.searchById(new DepartmentId(vicepresidenciaEjecutivaId).value)
+		const exists = await repository.findById(new DepartmentId(vicepresidenciaEjecutivaId).value)
 		if (!exists) {
 			throw new DepartmentDoesNotExistError('La Vicepresidencia Ejecutiva especificada no existe.')
 		}

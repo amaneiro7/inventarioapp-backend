@@ -21,7 +21,7 @@ export class ModelSeriesFinder {
 	 */
 	async run({ id }: { id: string }): Promise<ModelSeriesDto> {
 		const modelSeriesId = new ModelSeriesId(id).value
-		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
+		const modelSeries = await this.modelSeriesRepository.findById(modelSeriesId)
 
 		if (!modelSeries) {
 			throw new ModelSeriesDoesNotExistError(modelSeriesId)

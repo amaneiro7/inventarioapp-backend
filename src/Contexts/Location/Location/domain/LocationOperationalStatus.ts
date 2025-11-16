@@ -55,7 +55,7 @@ export class LocationOperationalStatus extends LocationStatusId {
 		repository: LocationStatusRepository
 		operationalStatus: Primitives<LocationStatusId>
 	}): Promise<void> {
-		const isOperationalstatus = await repository.searchById(new LocationStatusId(operationalStatus).value)
+		const isOperationalstatus = await repository.findById(new LocationStatusId(operationalStatus).value)
 
 		if (isOperationalstatus === null) {
 			throw new LocationStatusIdDoesNotExistError(operationalStatus)

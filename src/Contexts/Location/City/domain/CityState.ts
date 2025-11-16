@@ -52,7 +52,7 @@ export class CityState extends StateId {
 		repository: StateRepository
 		stateId: Primitives<StateId>
 	}): Promise<void> {
-		const isStateExist = await params.repository.searchById(params.stateId)
+		const isStateExist = await params.repository.findById(params.stateId)
 		if (!isStateExist) {
 			throw new InvalidArgumentError('State does not exist')
 		}

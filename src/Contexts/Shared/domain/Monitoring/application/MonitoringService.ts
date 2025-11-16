@@ -16,7 +16,7 @@ import { type SettingsFinder } from '../../../../AppSettings/application/Setting
 
 export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>
-	searchById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
+	findById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
 	save: (entity: Payload) => Promise<void>
 }
 
@@ -213,7 +213,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 						if (ipAddress) {
 							await this.processPingJob({ monitoringId, ipAddress, expectedHostname })
 						} else {
-							const monitoringRecord = await this.repository.searchById(monitoringId)
+							const monitoringRecord = await this.repository.findById(monitoringId)
 							if (monitoringRecord) {
 								const monitoringEntity = this.createMonitoringEntity(monitoringRecord)
 								this.updateMonitoringEntityStatus(
@@ -269,7 +269,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		let monitoringEntity: Entity | null = null
 		let pingResult: PingResult | undefined
 		try {
-			const monitoringRecord = await this.repository.searchById(monitoringId)
+			const monitoringRecord = await this.repository.findById(monitoringId)
 
 			if (!monitoringRecord) {
 				this.logger.info(

@@ -57,7 +57,7 @@ export class CreateCargoUseCase {
 	}
 
 	private async ensureCargoDoesNotExist(name: Primitives<CargoName>): Promise<void> {
-		const existingCargo = await this.repository.cargoRepository.searchByName(name)
+		const existingCargo = await this.repository.cargoRepository.findByName(name)
 		if (existingCargo) {
 			throw new CargoAlreadyExistError(name)
 		}
@@ -72,7 +72,7 @@ export class CreateCargoUseCase {
 
 		await Promise.all(
 			Array.from(new Set(departmentIds)).map(async id => {
-				if (!(await repository.searchById(id))) {
+				if (!(await repository.findById(id))) {
 					throw new DepartmentDoesNotExistError(`La ${departmentType}`)
 				}
 			})

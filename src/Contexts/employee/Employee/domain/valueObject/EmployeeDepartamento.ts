@@ -70,7 +70,7 @@ export class EmployeeDepartamento extends AcceptedNullValueObject<Primitives<Dep
 		departamentoId: Primitives<DepartmentId> | null
 	}): Promise<void> {
 		if (!departamentoId) return
-		const exists = await repository.searchById(new DepartmentId(departamentoId).value)
+		const exists = await repository.findById(new DepartmentId(departamentoId).value)
 		if (!exists) {
 			throw new DepartmentDoesNotExistError('El departamento especificado no existe.')
 		}

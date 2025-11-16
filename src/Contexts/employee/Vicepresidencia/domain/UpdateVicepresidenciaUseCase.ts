@@ -51,7 +51,7 @@ export class UpdateVicepresidenciaUseCase {
 	}): Promise<void> {
 		if (!name || entity.nameValue === name) return
 
-		if (await this.vicepresidenciaaRepository.searchByName(name)) {
+		if (await this.vicepresidenciaaRepository.findByName(name)) {
 			throw new DepartmentAlreadyExistError('La vicepresidencia')
 		}
 		entity.updateName(name)
@@ -66,7 +66,7 @@ export class UpdateVicepresidenciaUseCase {
 	}): Promise<void> {
 		if (!vicepresidenciaEjecutivaId || entity.vicepresidenciaEjecutivaValue === vicepresidenciaEjecutivaId) return
 
-		if (!(await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId))) {
+		if (!(await this.vicepresidenciaEjecutivaRepository.findById(vicepresidenciaEjecutivaId))) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
 		entity.updateVicepresidenciaEjecutiva(vicepresidenciaEjecutivaId)

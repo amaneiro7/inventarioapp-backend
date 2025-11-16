@@ -36,7 +36,7 @@ export class ComputerMemoryRamType extends MemoryRamTypeId {
 		repository: MemoryRamTypeRepository,
 		memoryRamTypeId: Primitives<MemoryRamTypeId>
 	): Promise<void> {
-		const isExist = await repository.searchById(memoryRamTypeId)
+		const isExist = await repository.findById(memoryRamTypeId)
 		if (!isExist) {
 			throw new Error('El tipo de memoria RAM no existe.')
 		}

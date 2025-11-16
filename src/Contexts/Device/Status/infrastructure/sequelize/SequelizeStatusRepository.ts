@@ -37,7 +37,7 @@ export class SequelizeStatusRepository extends SequelizeCriteriaConverter implem
 		})
 	}
 
-	async searchById(id: Primitives<StatusId>): Promise<StatusDto | null> {
+	async findById(id: Primitives<StatusId>): Promise<StatusDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<StatusDto | null>({
 			cacheKey,

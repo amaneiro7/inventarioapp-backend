@@ -37,12 +37,12 @@ export abstract class LocationRepository {
 	 * @param {Primitives<LocationId>} id - The ID of the location to search for.
 	 * @returns {Promise<LocationDto | null>} A promise that resolves to the location DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<LocationId>): Promise<LocationDto | null>
+	abstract findById(id: Primitives<LocationId>): Promise<LocationDto | null>
 
 	/**
 	 * Searches for a single location by its name.
 	 * @param {Primitives<LocationName>} name - The name of the location to search for.
 	 * @returns {Promise<LocationDto | null>} A promise that resolves to the location DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: Primitives<LocationName>): Promise<LocationDto | null>
+	abstract findByName(name: Primitives<LocationName>): Promise<LocationDto | null>
 }

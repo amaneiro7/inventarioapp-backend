@@ -21,7 +21,7 @@ export class CreateIDepartementUseCase {
 
 	private async ensureCargoExists(cargos: Primitives<CargoId>[]): Promise<void> {
 		const cargoExistenceChecks = cargos.map(async cargoId => {
-			if (!(await this.cargoRepository.searchById(cargoId))) {
+			if (!(await this.cargoRepository.findById(cargoId))) {
 				throw new CargoDoesNotExistError()
 			}
 		})

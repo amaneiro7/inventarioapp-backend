@@ -31,12 +31,12 @@ export abstract class UserRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single User entity by its unique identifier.
 	 * @param {Primitives<UserId>} id The ID of the User to search for.
 	 * @returns {Promise<UserPrimitives | null>} A promise that resolves to the User DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<UserId>): Promise<User | null>
+	abstract findById(id: Primitives<UserId>): Promise<User | null>
 
 	/**
 	 * @abstract

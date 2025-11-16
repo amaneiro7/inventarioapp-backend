@@ -28,7 +28,7 @@ export class CreateDirectivaUseCase {
 	}
 
 	private async ensureDirectivaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
-		if (await this.directivaRepository.searchByName(name)) {
+		if (await this.directivaRepository.findByName(name)) {
 			throw new DepartmentAlreadyExistError('La directiva')
 		}
 	}

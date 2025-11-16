@@ -23,12 +23,12 @@ export abstract class DeviceRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single device by its unique identifier.
 	 * @param {Primitives<DeviceId>} deviceId The ID of the device to search for.
 	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the device DTO if found, or null otherwise.
 	 */
-	abstract searchById(deviceId: Primitives<DeviceId>): Promise<DeviceDto | null>
+	abstract findById(deviceId: Primitives<DeviceId>): Promise<DeviceDto | null>
 
 	/**
 	 * @abstract

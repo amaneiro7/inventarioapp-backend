@@ -36,7 +36,7 @@ export class CreateVicepresidenciaUseCase {
 	}
 
 	private async ensureVicepresidenciaDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
-		if (await this.vicepresidenciaRepository.searchByName(name)) {
+		if (await this.vicepresidenciaRepository.findByName(name)) {
 			throw new DepartmentAlreadyExistError('La vicepresidencia')
 		}
 	}
@@ -44,7 +44,7 @@ export class CreateVicepresidenciaUseCase {
 	private async ensureVicepresidenciaEjecutivaExists(
 		vicepresidenciaEjecutivaId: Primitives<DepartmentId>
 	): Promise<void> {
-		if (!(await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId))) {
+		if (!(await this.vicepresidenciaEjecutivaRepository.findById(vicepresidenciaEjecutivaId))) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}
 	}

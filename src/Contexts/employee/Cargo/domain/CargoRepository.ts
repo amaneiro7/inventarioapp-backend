@@ -23,21 +23,21 @@ export abstract class CargoRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single Cargo entity by its unique identifier.
 	 * @param {Primitives<CargoId>} id The ID of the Cargo to search for.
 	 * @returns {Promise<Nullable<CargoDto>>} A promise that resolves to the Cargo DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>>
+	abstract findById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>>
 
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single Cargo entity by its name.
 	 * @param {Primitives<CargoName>} name The name of the Cargo to search for.
 	 * @returns {Promise<Nullable<CargoDto>>} A promise that resolves to the Cargo DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>>
+	abstract findByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>>
 
 	/**
 	 * @abstract

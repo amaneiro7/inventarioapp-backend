@@ -49,13 +49,13 @@ export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter im
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single TypeOfSite entity by its unique identifier.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<TypeOfSiteId>} id - The ID of the TypeOfSite to search for.
 	 * @returns {Promise<TypeOfSiteDto | null>} A promise that resolves to the TypeOfSite DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null> {
+	async findById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null> {
 		return await this.cache.getCachedData<TypeOfSiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

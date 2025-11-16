@@ -11,8 +11,8 @@ describe('BrandFinder', () => {
 		brandRepository = {
 			save: jest.fn(),
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn(),
+			findById: jest.fn(),
+			findByName: jest.fn(),
 			remove: jest.fn()
 		}
 		brandFinder = new BrandFinder({ brandRepository })
@@ -25,26 +25,26 @@ describe('BrandFinder', () => {
 			name: 'Test Brand',
 			categories: []
 		}
-		brandRepository.searchById.mockResolvedValue(mockBrand)
+		brandRepository.findById.mockResolvedValue(mockBrand)
 
 		const foundBrand = await brandFinder.run({ id: brandId })
 
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
 		expect(foundBrand).toEqual(mockBrand)
 	})
 
 	it('should throw BrandDoesNotExistError if brand is not found', async () => {
 		const brandId = BrandId.random().value
-		brandRepository.searchById.mockResolvedValue(null)
+		brandRepository.findById.mockResolvedValue(null)
 
 		await expect(brandFinder.run({ id: brandId })).rejects.toThrow(BrandDoesNotExistError)
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
 	})
 
 	it('should throw InvalidArgumentError for an invalid UUID', async () => {
 		const invalidId = 'invalid-uuid'
 
 		await expect(brandFinder.run({ id: invalidId })).rejects.toThrow(`<${invalidId}> is not valid <BrandId>`)
-		expect(brandRepository.searchById).not.toHaveBeenCalled()
+		expect(brandRepository.findById).not.toHaveBeenCalled()
 	})
 })

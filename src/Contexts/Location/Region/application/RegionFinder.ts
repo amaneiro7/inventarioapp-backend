@@ -21,7 +21,7 @@ export class RegionFinder {
 	async run(params: { id: string }): Promise<RegionDto> {
 		const { id } = params
 		const regionId = new RegionId(id).value
-		const region = await this.regionRepository.searchById(regionId)
+		const region = await this.regionRepository.findById(regionId)
 
 		if (!region) {
 			throw new RegionDoesNotExistError(regionId)

@@ -21,7 +21,7 @@ export class SiteFinder {
 	async run(params: { id: string }): Promise<SitePrimitives> {
 		const { id } = params
 		const siteId = new SiteId(id)
-		const site = await this.siteRepository.searchById(siteId.value)
+		const site = await this.siteRepository.findById(siteId.value)
 
 		if (!site) {
 			throw new SiteDoesNotExistError(siteId.value)

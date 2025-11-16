@@ -33,7 +33,7 @@ export class ShipmentUpdater {
 
 	async run({ id, params }: { id: Primitives<ShipmentId>; params: Partial<ShipmentParams> }): Promise<void> {
 		const shipmentId = new ShipmentId(id)
-		const shipment = await this.shipmentRepository.searchById(shipmentId.value)
+		const shipment = await this.shipmentRepository.findById(shipmentId.value)
 
 		if (!shipment) {
 			throw new ShipmentDoesNotExistError(id)
@@ -49,7 +49,7 @@ export class ShipmentUpdater {
 						'La fecha de entrega y quien recibe son obligatorios para entregar un envio'
 					)
 				}
-				const employee = await this.employeeRepository.searchById(params?.receivedBy)
+				const employee = await this.employeeRepository.findById(params?.receivedBy)
 				if (employee === null) {
 					throw new EmployeeDoesNotExistError(params.receivedBy)
 				}
@@ -60,7 +60,7 @@ export class ShipmentUpdater {
 			hasChanges = true
 		}
 		if (params.destination !== undefined && shipmentEntity.destinationValue !== params.destination) {
-			const destinationLocation = await this.siteRepository.searchById(params.destination)
+			const destinationLocation = await this.siteRepository.findById(params.destination)
 			if (destinationLocation === null) {
 				throw new SiteDoesNotExistError(params.destination)
 			}

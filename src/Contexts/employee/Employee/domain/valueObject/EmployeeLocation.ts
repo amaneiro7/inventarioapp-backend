@@ -58,7 +58,7 @@ export class EmployeeLocationId extends AcceptedNullValueObject<Primitives<Locat
 		locationId: Primitives<LocationId> | null
 	}): Promise<void> {
 		if (!locationId) return
-		const exists = await repository.searchById(new LocationId(locationId).value)
+		const exists = await repository.findById(new LocationId(locationId).value)
 		if (!exists) {
 			throw new LocationDoesNotExistError('La ubicación especificada no existe.')
 		}

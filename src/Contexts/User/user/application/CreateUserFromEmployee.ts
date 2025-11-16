@@ -58,7 +58,7 @@ export class CreateUserFromEmployee {
 		isSuperAdmin({ user })
 
 		// 1. Validate Employee existence
-		const employee = await this.employeeRepository.searchById(payload.employeeId)
+		const employee = await this.employeeRepository.findById(payload.employeeId)
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(payload.employeeId)
 		}
@@ -70,7 +70,7 @@ export class CreateUserFromEmployee {
 		}
 
 		// 3. Validate Role existence
-		const role = await this.roleRepository.searchById(payload.roleId)
+		const role = await this.roleRepository.findById(payload.roleId)
 		if (!role) {
 			throw new InvalidArgumentError(`El rol con ID '${payload.roleId}' no existe.`) // Or a specific RoleDoesNotExistError
 		}

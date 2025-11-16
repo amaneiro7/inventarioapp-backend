@@ -21,10 +21,10 @@ export abstract class HardDriveCapacityRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single hard drive capacity by its ID.
 	 * @param {Primitives<HardDriveCapacityId>} id The ID of the capacity to search for.
 	 * @returns {Promise<HardDriveCapacityDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null>
+	abstract findById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null>
 }

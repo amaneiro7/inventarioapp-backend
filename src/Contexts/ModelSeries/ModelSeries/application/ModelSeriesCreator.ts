@@ -161,7 +161,7 @@ export class ModelSeriesCreator {
 		}
 		// Create an array of promises to check for the existence of each processor
 		const processorExistenceChecks = processorIds.map(async processorId => {
-			const processor = await this.processorRepository.searchById(processorId)
+			const processor = await this.processorRepository.findById(processorId)
 			if (processor === null) {
 				throw new ProcessorDoesNotExistError(processorId)
 			}

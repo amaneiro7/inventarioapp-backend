@@ -21,5 +21,5 @@ export abstract class LocationStatusRepository {
 	 * @param {Primitives<LocationStatusId>} id - The ID of the location status to search for.
 	 * @returns {Promise<LocationStatusDto | null>} A promise that resolves to the location status DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null>
+	abstract findById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null>
 }

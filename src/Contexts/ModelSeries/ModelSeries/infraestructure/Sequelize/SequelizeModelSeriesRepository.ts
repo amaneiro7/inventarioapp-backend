@@ -89,14 +89,14 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single ModelSeries entity by its unique identifier.
 	 * Includes all relevant associated models.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {string} id - The ID of the ModelSeries to search for.
 	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the ModelSeries DTO if found, or null otherwise.
 	 */
-	async searchById(id: string): Promise<ModelSeriesDto | null> {
+	async findById(id: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
 			cacheKey: `${this.cacheKeyPrefix}:id:${id}`,
 			ttl: TimeTolive.SHORT,
@@ -144,13 +144,13 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	}
 
 	/**
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single ModelSeries entity by its name.
 	 * Utilizes caching for direct name lookups.
 	 * @param {string} name - The name of the ModelSeries to search for.
 	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the ModelSeries DTO if found, or null otherwise.
 	 */
-	async searchByName(name: string): Promise<ModelSeriesDto | null> {
+	async findByName(name: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
 			cacheKey: `${this.cacheKeyPrefix}:name:${name}`,
 			ttl: TimeTolive.SHORT,

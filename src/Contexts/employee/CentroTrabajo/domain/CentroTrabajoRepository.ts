@@ -12,10 +12,10 @@ import { type CentroTrabajoName } from './CentroTrabajoName'
 export abstract class CentroTrabajoRepository extends GenericRepository<CentroTrabajoDto> {
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single CentroTrabajo entity by its name.
 	 * @param {Primitives<CentroTrabajoName>} name The name of the CentroTrabajo to search for.
 	 * @returns {Promise<Nullable<CentroTrabajoDto>>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>>
+	abstract findByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>>
 }

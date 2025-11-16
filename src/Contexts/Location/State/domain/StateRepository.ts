@@ -21,5 +21,5 @@ export abstract class StateRepository {
 	 * @param {Primitives<StateId>} id - The ID of the state to search for.
 	 * @returns {Promise<StateDto | null>} A promise that resolves to the state DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<StateId>): Promise<StateDto | null>
+	abstract findById(id: Primitives<StateId>): Promise<StateDto | null>
 }

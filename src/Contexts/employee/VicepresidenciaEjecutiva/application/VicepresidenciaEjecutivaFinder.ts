@@ -26,7 +26,7 @@ export class VicepresidenciaEjecutivaFinder {
 	async run({ id }: { id: string }): Promise<VicepresidenciaEjecutivaDto> {
 		const vicepresidenciaEjecutivaId = new DepartmentId(id).value
 		const vicepresidenciaEjecutiva =
-			await this.vicepresidenciaEjecutivaRepository.searchById(vicepresidenciaEjecutivaId)
+			await this.vicepresidenciaEjecutivaRepository.findById(vicepresidenciaEjecutivaId)
 
 		if (!vicepresidenciaEjecutiva) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')

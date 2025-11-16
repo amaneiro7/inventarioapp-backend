@@ -33,7 +33,7 @@ export class RegionUpdater {
 	async run({ id, params }: { id: string; params: Partial<RegionParams> }): Promise<void> {
 		const regionId = new RegionId(id).value
 
-		const region = await this.regionRepository.searchById(regionId)
+		const region = await this.regionRepository.findById(regionId)
 		if (!region) {
 			throw new RegionDoesNotExistError(id)
 		}

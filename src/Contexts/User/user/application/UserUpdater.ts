@@ -25,7 +25,7 @@ export class UserUpdater {
 
 	async run({ id, params }: { id: Primitives<UserId>; params: Partial<UserParams> }): Promise<void> {
 		const userId = new UserId(id)
-		const user = await this.userRepository.searchById(userId.value)
+		const user = await this.userRepository.findById(userId.value)
 
 		if (!user) {
 			throw new UserDoesNotExistError(id)
@@ -53,7 +53,7 @@ export class UserUpdater {
 		repository: RoleRepository
 		roleId: Primitives<RoleId>
 	}): Promise<void> {
-		const existingRole = await repository.searchById(new RoleId(roleId).value)
+		const existingRole = await repository.findById(new RoleId(roleId).value)
 		if (!existingRole) {
 			throw new RoleDoesNotExistError()
 		}

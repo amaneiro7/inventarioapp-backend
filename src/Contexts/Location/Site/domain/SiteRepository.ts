@@ -28,5 +28,5 @@ export abstract class SiteRepository {
 	 * @param {Primitives<SiteId>} id - The ID of the site to search for.
 	 * @returns {Promise<SiteDto | null>} A promise that resolves to the site DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<SiteId>): Promise<SiteDto | null>
+	abstract findById(id: Primitives<SiteId>): Promise<SiteDto | null>
 }

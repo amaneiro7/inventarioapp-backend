@@ -50,14 +50,14 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single City entity by its unique identifier.
 	 * Includes associated state, region, and administrative region data.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<CityId>} id - The ID of the City to search for.
 	 * @returns {Promise<CityDto | null>} A promise that resolves to the City DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<CityId>): Promise<CityDto | null> {
+	async findById(id: Primitives<CityId>): Promise<CityDto | null> {
 		return await this.cache.getCachedData<CityDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,
@@ -81,13 +81,13 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	}
 
 	/**
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single City entity by its name.
 	 * Utilizes caching for direct name lookups.
 	 * @param {Primitives<CityName>} name - The name of the City to search for.
 	 * @returns {Promise<CityDto | null>} A promise that resolves to the City DTO if found, or null otherwise.
 	 */
-	async searchByName(name: Primitives<CityName>): Promise<CityDto | null> {
+	async findByName(name: Primitives<CityName>): Promise<CityDto | null> {
 		return await this.cache.getCachedData<CityDto | null>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
 			ttl: TimeTolive.SHORT,

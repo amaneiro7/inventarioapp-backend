@@ -70,10 +70,10 @@ export class UserLoginLocal {
 			})
 
 			const employeeEmail = new EmployeeEmail(userNameOrEmail, allowedDomains)
-			employee = await this.employeeRepository.searchByEmail(employeeEmail.value)
+			employee = await this.employeeRepository.findByEmail(employeeEmail.value)
 		} else {
 			const employeeUserName = new EmployeeUserName(userNameOrEmail)
-			employee = await this.employeeRepository.searchByUserName(employeeUserName.value)
+			employee = await this.employeeRepository.findByUserName(employeeUserName.value)
 		}
 
 		if (!employee || employee.type !== EmployeeTypesEnum.SERVICE || !employee.isStillWorking) {

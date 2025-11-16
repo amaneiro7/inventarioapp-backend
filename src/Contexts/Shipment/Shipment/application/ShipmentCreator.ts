@@ -78,7 +78,7 @@ export class ShipmentCreator {
 		const uniqueDevices = [...new Set(deviceIds)]
 		const devices = await Promise.all(
 			uniqueDevices.map(async deviceId => {
-				const device = await this.deviceRepository.searchById(deviceId)
+				const device = await this.deviceRepository.findById(deviceId)
 				if (device === null) {
 					throw new DeviceDoesNotExistError(deviceId)
 				}
@@ -90,7 +90,7 @@ export class ShipmentCreator {
 	}
 
 	private async ensureSiteExist(siteId: Primitives<SiteId>): Promise<void> {
-		const location = await this.siteRepository.searchById(siteId)
+		const location = await this.siteRepository.findById(siteId)
 		if (location === null) {
 			throw new SiteDoesNotExistError(siteId)
 		}
@@ -100,14 +100,14 @@ export class ShipmentCreator {
 		if (!employeeId) {
 			return
 		}
-		const employee = await this.employeeRepository.searchById(employeeId)
+		const employee = await this.employeeRepository.findById(employeeId)
 		if (employee === null) {
 			throw new EmployeeDoesNotExistError(employeeId)
 		}
 	}
 
 	private async ensureUserExist(userId: Primitives<UserId>): Promise<void> {
-		const user = await this.userRepository.searchById(userId) // This will now fetch UserPrimitives with new fields
+		const user = await this.userRepository.findById(userId) // This will now fetch UserPrimitives with new fields
 		if (user === null) {
 			throw new UserDoesNotExistError(userId)
 		}

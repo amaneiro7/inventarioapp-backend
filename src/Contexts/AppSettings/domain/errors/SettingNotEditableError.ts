@@ -4,5 +4,6 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 export class SettingNotEditableError extends ApiError {
 	constructor(public readonly key: string) {
 		super(httpStatus[400].statusCode, `La configuración con la clave '${key}' no es editable.`)
+		this.name = 'SettingNotEditableError'
 	}
 }

@@ -39,7 +39,7 @@ export class DepartamentoUpdater {
 	 */
 	async run({ id, params }: { id: string; params: Partial<DepartamentoParams> }): Promise<void> {
 		const departamentoId = new DepartmentId(id)
-		const departamento = await this.departamentoRepository.searchById(departamentoId.value)
+		const departamento = await this.departamentoRepository.findById(departamentoId.value)
 		if (!departamento) {
 			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
 		}

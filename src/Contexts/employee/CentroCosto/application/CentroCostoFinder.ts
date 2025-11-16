@@ -22,7 +22,7 @@ export class CentroCostoFinder {
 	 */
 	async run({ id }: { id: Primitives<CodCentroCosto> }): Promise<CentroCostoDto> {
 		const codCentroCosto = new CodCentroCosto(id)
-		const centroCosto = await this.centroCostoRepository.searchById(codCentroCosto.value)
+		const centroCosto = await this.centroCostoRepository.findById(codCentroCosto.value)
 
 		if (!centroCosto) {
 			throw new CentroCostoDoesNotExistError()

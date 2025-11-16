@@ -21,10 +21,10 @@ export abstract class StatusRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single status by its unique identifier.
 	 * @param {Primitives<StatusId>} id The ID of the status to search for.
 	 * @returns {Promise<StatusDto | null>} A promise that resolves to the status DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<StatusId>): Promise<StatusDto | null>
+	abstract findById(id: Primitives<StatusId>): Promise<StatusDto | null>
 }

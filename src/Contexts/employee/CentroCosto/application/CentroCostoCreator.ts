@@ -30,7 +30,7 @@ export class CentroCostoCreator {
 	}
 
 	private async ensureCentroCostoDoesNotExist(id: Primitives<CodCentroCosto>): Promise<void> {
-		if (await this.centroCostoRepository.searchById(id)) {
+		if (await this.centroCostoRepository.findById(id)) {
 			throw new CentroCostoAlreadyExistError()
 		}
 	}

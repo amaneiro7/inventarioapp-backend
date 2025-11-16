@@ -77,14 +77,14 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single Location entity by its unique identifier.
 	 * Includes associated type of site, site, city, state, and region data.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<LocationId>} id - The ID of the Location to search for.
 	 * @returns {Promise<LocationDto | null>} A promise that resolves to the Location DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<LocationId>): Promise<LocationDto | null> {
+	async findById(id: Primitives<LocationId>): Promise<LocationDto | null> {
 		return await this.cache.getCachedData<LocationDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,
@@ -114,13 +114,13 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single Location entity by its name.
 	 * Utilizes caching for direct name lookups.
 	 * @param {Primitives<LocationName>} name - The name of the Location to search for.
 	 * @returns {Promise<LocationDto | null>} A promise that resolves to the Location DTO if found, or null otherwise.
 	 */
-	async searchByName(name: Primitives<LocationName>): Promise<LocationDto | null> {
+	async findByName(name: Primitives<LocationName>): Promise<LocationDto | null> {
 		return await this.cache.getCachedData<LocationDto | null>({
 			cacheKey: `${this.cacheKey}:name:${name}`,
 			ttl: TimeTolive.SHORT,

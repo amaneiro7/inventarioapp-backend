@@ -38,7 +38,7 @@ export class SequelizeProcessorSocketRepository
 		})
 	}
 
-	async searchById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null> {
+	async findById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<ProcessorSocketDto | null>({

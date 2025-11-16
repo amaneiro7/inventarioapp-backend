@@ -49,14 +49,14 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single Site entity by its unique identifier.
 	 * Includes associated city, state, and region data.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<SiteId>} id - The ID of the Site to search for.
 	 * @returns {Promise<SiteDto | null>} A promise that resolves to the Site DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<SiteId>): Promise<SiteDto | null> {
+	async findById(id: Primitives<SiteId>): Promise<SiteDto | null> {
 		return await this.cache.getCachedData<SiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

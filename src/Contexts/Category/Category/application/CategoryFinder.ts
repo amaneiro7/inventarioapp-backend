@@ -23,7 +23,7 @@ export class CategoriesFinder {
 	 */
 	async run({ id }: { id: string }): Promise<CategoryDto> {
 		const categoryId = new CategoryId(id)
-		const category = await this.categoryRepository.searchById(categoryId.value)
+		const category = await this.categoryRepository.findById(categoryId.value)
 
 		if (!category) {
 			throw new CategoryDoesNotExistError(categoryId.value)

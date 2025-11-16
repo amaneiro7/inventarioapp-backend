@@ -21,10 +21,10 @@ export abstract class InputTypeRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single input type by its ID.
 	 * @param {Primitives<InputTypeId>} id The ID of the input type to search for.
 	 * @returns {Promise<InputTypeDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null>
+	abstract findById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null>
 }

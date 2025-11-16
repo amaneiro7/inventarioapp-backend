@@ -23,7 +23,7 @@ export class ProcessorUpdater {
 	 */
 	async run({ id, params }: { id: string; params: Partial<ProcessorParams> }): Promise<void> {
 		const processorId = new ProcessorId(id).value
-		const processor = await this.processorRepository.searchById(processorId)
+		const processor = await this.processorRepository.findById(processorId)
 
 		if (!processor) {
 			throw new ProcessorDoesNotExistError(processorId)

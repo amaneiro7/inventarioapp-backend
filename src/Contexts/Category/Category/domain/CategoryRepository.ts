@@ -22,19 +22,19 @@ export abstract class CategoryRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single category by its unique identifier.
 	 * @param {CategoryId['value']} id The ID of the category to search for.
 	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: CategoryId['value']): Promise<CategoryDto | null>
+	abstract findById(id: CategoryId['value']): Promise<CategoryDto | null>
 
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Finds a single category by its name.
 	 * @param {CategoryName['value']} name The name of the category to search for.
 	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: CategoryName['value']): Promise<CategoryDto | null>
+	abstract findByName(name: CategoryName['value']): Promise<CategoryDto | null>
 }

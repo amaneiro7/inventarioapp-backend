@@ -48,13 +48,13 @@ export class SequelizeLocationStatusRepository extends SequelizeCriteriaConverte
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single LocationStatus entity by its unique identifier.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<LocationStatusId>} id - The ID of the LocationStatus to search for.
 	 * @returns {Promise<LocationStatusDto | null>} A promise that resolves to the LocationStatus DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null> {
+	async findById(id: Primitives<LocationStatusId>): Promise<LocationStatusDto | null> {
 		return await this.cache.getCachedData<LocationStatusDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

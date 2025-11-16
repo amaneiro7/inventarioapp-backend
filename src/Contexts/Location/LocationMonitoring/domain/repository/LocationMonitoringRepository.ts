@@ -19,7 +19,7 @@ export abstract class LocationMonitoringRepository {
 	 * @param {LocationMonitoringDto['id']} id - The ID of the location monitoring entry to search for.
 	 * @returns {Promise<LocationMonitoringDto | null>} A promise that resolves to the LocationMonitoring DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: LocationMonitoringDto['id']): Promise<LocationMonitoringDto | null>
+	abstract findById(id: LocationMonitoringDto['id']): Promise<LocationMonitoringDto | null>
 
 	/**
 	 * Searches for location monitoring entries that have a non-null IP address.

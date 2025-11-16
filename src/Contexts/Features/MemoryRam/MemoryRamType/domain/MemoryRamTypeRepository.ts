@@ -21,10 +21,10 @@ export abstract class MemoryRamTypeRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single memory RAM type by its ID.
 	 * @param {Primitives<MemoryRamTypeId>} id The ID of the type to search for.
 	 * @returns {Promise<MemoryRamTypeDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null>
+	abstract findById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null>
 }

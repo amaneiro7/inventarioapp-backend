@@ -40,7 +40,7 @@ export class CentroTrabajoUpdater {
 	}): Promise<void> {
 		const centroTrabajoId = new CentroTrabajoId(id)
 
-		const centroTrabajo = await this.centroTrabajoRepository.searchById(centroTrabajoId.value)
+		const centroTrabajo = await this.centroTrabajoRepository.findById(centroTrabajoId.value)
 		if (!centroTrabajo) {
 			throw new CentroTrabajoDoesNotExistError()
 		}
@@ -66,7 +66,7 @@ export class CentroTrabajoUpdater {
 		if (centroCostoId === undefined || entity.centroCostoValue === centroCostoId) {
 			return
 		}
-		if (!(await this.centroCostoRepository.searchById(centroCostoId))) {
+		if (!(await this.centroCostoRepository.findById(centroCostoId))) {
 			throw new CentroCostoDoesNotExistError()
 		}
 		entity.updateCentroCosto(centroCostoId)

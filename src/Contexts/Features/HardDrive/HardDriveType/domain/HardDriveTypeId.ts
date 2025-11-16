@@ -23,7 +23,7 @@ export class HardDriveTypeId extends StringValueObject {
 		if (hardDriveType === null) {
 			return
 		}
-		const existingType = await repository.searchById(hardDriveType)
+		const existingType = await repository.findById(hardDriveType)
 		if (!existingType) {
 			throw new HardDriveTypeDoesNotExistError(hardDriveType)
 		}

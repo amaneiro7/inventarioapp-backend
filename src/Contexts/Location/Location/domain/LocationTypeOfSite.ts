@@ -58,7 +58,7 @@ export class LocationTypeOfSite extends TypeOfSiteId {
 		repository: TypeOfSiteRepository
 		typeOfSite: Primitives<TypeOfSiteId>
 	}): Promise<void> {
-		const isExist = await repository.searchById(new TypeOfSiteId(typeOfSite).value)
+		const isExist = await repository.findById(new TypeOfSiteId(typeOfSite).value)
 
 		if (isExist === null) {
 			throw new TypeOfSiteDoesNotExistError(typeOfSite)

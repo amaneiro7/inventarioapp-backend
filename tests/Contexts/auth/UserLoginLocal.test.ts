@@ -53,8 +53,8 @@ describe('UserLoginLocal', () => {
 		} as unknown as jest.Mocked<UserRepository>
 
 		employeeRepositoryMock = {
-			searchByUserName: jest.fn(),
-			searchByEmail: jest.fn()
+			findByUserName: jest.fn(),
+			findByEmail: jest.fn()
 		} as unknown as jest.Mocked<EmployeeRepository>
 
 		passwordServiceMock = {
@@ -69,52 +69,52 @@ describe('UserLoginLocal', () => {
 	})
 
 	it('should login successfully with username', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue(employeePrimitives)
+		employeeRepositoryMock.findByUserName.mockResolvedValue(employeePrimitives)
 		userRepositoryMock.searchByEmployeeId.mockResolvedValue(userPrimitives)
 		passwordServiceMock.compare.mockResolvedValue(true)
 
 		const result = await userLoginLocal.run({ userNameOrEmail: 'johndoe', password: 'password123' })
 
 		expect(result).toEqual(userPrimitives)
-		expect(employeeRepositoryMock.searchByUserName).toHaveBeenCalledWith('johndoe')
+		expect(employeeRepositoryMock.findByUserName).toHaveBeenCalledWith('johndoe')
 		expect(userRepositoryMock.searchByEmployeeId).toHaveBeenCalledWith(employeePrimitives.id)
 		expect(passwordServiceMock.compare).toHaveBeenCalledWith('password123', 'hashedPassword')
 	})
 
 	it('should login successfully with email', async () => {
-		employeeRepositoryMock.searchByEmail.mockResolvedValue(employeePrimitives)
+		employeeRepositoryMock.findByEmail.mockResolvedValue(employeePrimitives)
 		userRepositoryMock.searchByEmployeeId.mockResolvedValue(userPrimitives)
 		passwordServiceMock.compare.mockResolvedValue(true)
 
 		const result = await userLoginLocal.run({ userNameOrEmail: 'john.doe@example.com', password: 'password123' })
 
 		expect(result).toEqual(userPrimitives)
-		expect(employeeRepositoryMock.searchByEmail).toHaveBeenCalledWith('john.doe@example.com')
+		expect(employeeRepositoryMock.findByEmail).toHaveBeenCalledWith('john.doe@example.com')
 	})
 
 	it('should throw InvalidCredentialsError if employee does not exist', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue(null)
+		employeeRepositoryMock.findByUserName.mockResolvedValue(null)
 		await expect(userLoginLocal.run({ userNameOrEmail: 'nonexistent', password: 'password123' })).rejects.toThrow(
 			InvalidCredentialsError
 		)
 	})
 
 	it('should throw InvalidCredentialsError if employee is not of type SERVICE', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue({ ...employeePrimitives, type: 'ADMIN' as any })
+		employeeRepositoryMock.findByUserName.mockResolvedValue({ ...employeePrimitives, type: 'ADMIN' as any })
 		await expect(userLoginLocal.run({ userNameOrEmail: 'johndoe', password: 'password123' })).rejects.toThrow(
 			InvalidCredentialsError
 		)
 	})
 
 	it('should throw InvalidCredentialsError if employee is not still working', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue({ ...employeePrimitives, isStillWorking: false })
+		employeeRepositoryMock.findByUserName.mockResolvedValue({ ...employeePrimitives, isStillWorking: false })
 		await expect(userLoginLocal.run({ userNameOrEmail: 'johndoe', password: 'password123' })).rejects.toThrow(
 			InvalidCredentialsError
 		)
 	})
 
 	it('should throw InvalidCredentialsError if user does not exist for employee', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue(employeePrimitives)
+		employeeRepositoryMock.findByUserName.mockResolvedValue(employeePrimitives)
 		userRepositoryMock.searchByEmployeeId.mockResolvedValue(null)
 		await expect(userLoginLocal.run({ userNameOrEmail: 'johndoe', password: 'password123' })).rejects.toThrow(
 			InvalidCredentialsError
@@ -122,7 +122,7 @@ describe('UserLoginLocal', () => {
 	})
 
 	it('should throw InvalidCredentialsError for a locked account', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue(employeePrimitives)
+		employeeRepositoryMock.findByUserName.mockResolvedValue(employeePrimitives)
 		userRepositoryMock.searchByEmployeeId.mockResolvedValue({ ...userPrimitives, status: UserStatusEnum.LOCKED })
 
 		await expect(userLoginLocal.run({ userNameOrEmail: 'johndoe', password: 'password123' })).rejects.toThrow(
@@ -131,7 +131,7 @@ describe('UserLoginLocal', () => {
 	})
 
 	it('should throw InvalidCredentialsError for incorrect password', async () => {
-		employeeRepositoryMock.searchByUserName.mockResolvedValue(employeePrimitives)
+		employeeRepositoryMock.findByUserName.mockResolvedValue(employeePrimitives)
 		userRepositoryMock.searchByEmployeeId.mockResolvedValue(userPrimitives)
 		passwordServiceMock.compare.mockResolvedValue(false)
 

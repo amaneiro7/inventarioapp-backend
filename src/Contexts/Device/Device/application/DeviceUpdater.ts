@@ -92,7 +92,7 @@ export class DeviceUpdater {
 		user?: JwtPayloadUser
 	}): Promise<void> {
 		const deviceId = new DeviceId(id).value
-		const device = await this.deviceRepository.searchById(deviceId)
+		const device = await this.deviceRepository.findById(deviceId)
 
 		if (!device) {
 			throw new DeviceDoesNotExistError(id)

@@ -22,7 +22,7 @@ export class CentroTrabajoFinder {
 	 */
 	async run({ id }: { id: Primitives<CentroTrabajoId> }): Promise<CentroTrabajoDto> {
 		const centroTrabajoId = new CentroTrabajoId(id)
-		const centroTrabajo = await this.centroTrabajoRepository.searchById(centroTrabajoId.value)
+		const centroTrabajo = await this.centroTrabajoRepository.findById(centroTrabajoId.value)
 
 		if (!centroTrabajo) {
 			throw new CentroTrabajoDoesNotExistError()

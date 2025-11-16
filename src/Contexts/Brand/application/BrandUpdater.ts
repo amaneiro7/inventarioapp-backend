@@ -42,7 +42,7 @@ export class BrandUpdater {
 	 */
 	async run({ id, params }: { id: Primitives<BrandId>; params: Partial<BrandParams> }): Promise<void> {
 		const brandId = new BrandId(id)
-		const brand = await this.brandRepository.searchById(brandId.value)
+		const brand = await this.brandRepository.findById(brandId.value)
 
 		if (!brand) {
 			throw new BrandDoesNotExistError(id)
@@ -100,7 +100,7 @@ export class BrandUpdater {
 
 		if (newCategories.length > 0) {
 			const categoryExistenceChecks = newCategories.map(async categoryId => {
-				const category = await this.categoryRepository.searchById(categoryId)
+				const category = await this.categoryRepository.findById(categoryId)
 				if (category === null) {
 					throw new CategoryDoesNotExistError(categoryId)
 				}

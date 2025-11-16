@@ -23,7 +23,7 @@ export class HardDriveCapacityId extends StringValueObject {
 		if (hardDriveCapacity === null) {
 			return
 		}
-		const existingCapacity = await repository.searchById(hardDriveCapacity)
+		const existingCapacity = await repository.findById(hardDriveCapacity)
 		if (!existingCapacity) {
 			throw new HardDriveCapacityDoesNotExistError(hardDriveCapacity)
 		}

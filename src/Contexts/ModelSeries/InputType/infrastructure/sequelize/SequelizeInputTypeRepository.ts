@@ -35,7 +35,7 @@ export class SequelizeInputTypeRepository extends SequelizeCriteriaConverter imp
 		})
 	}
 
-	async searchById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null> {
+	async findById(id: Primitives<InputTypeId>): Promise<InputTypeDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<InputTypeDto | null>({

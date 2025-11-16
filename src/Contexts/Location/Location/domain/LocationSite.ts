@@ -55,7 +55,7 @@ export class LocationSite extends SiteId {
 		repository: SiteRepository
 		site: Primitives<SiteId>
 	}): Promise<void> {
-		const isSiteExist = await repository.searchById(new SiteId(site).value)
+		const isSiteExist = await repository.findById(new SiteId(site).value)
 
 		if (isSiteExist === null) {
 			throw new SiteDoesNotExistError(site)

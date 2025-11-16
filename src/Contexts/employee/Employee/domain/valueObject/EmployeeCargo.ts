@@ -67,7 +67,7 @@ export class EmployeeCargo extends AcceptedNullValueObject<Primitives<CargoId>> 
 		cargoId: Primitives<CargoId> | null
 	}): Promise<void> {
 		if (!cargoId) return
-		const exists = await repository.searchById(new CargoId(cargoId).value)
+		const exists = await repository.findById(new CargoId(cargoId).value)
 		if (!exists) {
 			throw new CargoDoesNotExistError()
 		}

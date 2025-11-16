@@ -3,7 +3,7 @@ import { type Controller } from '../controller'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { ComputerDashboardDependencies } from '../../di/device/computerDashboard.di'
-import { type ComputerDashboard } from '../../../Contexts/Device/Inventroy/application/ComputerDashboard'
+import { type ComputerDashboard } from '../../../Contexts/Device/Inventory/application/ComputerDashboard'
 
 /**
  * Controller for retrieving computer dashboard data.

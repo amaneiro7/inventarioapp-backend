@@ -108,7 +108,7 @@ export class CityName extends StringValueObject {
 		name: Primitives<CityName>
 		stateId: Primitives<CityState>
 	}): Promise<void> {
-		const city = await repository.searchByName(name)
+		const city = await repository.findByName(name)
 		if (city && city.stateId === stateId) {
 			throw new CityAlreadyExistError(name)
 		}

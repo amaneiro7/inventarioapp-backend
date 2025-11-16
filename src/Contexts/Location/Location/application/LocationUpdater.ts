@@ -47,7 +47,7 @@ export class LocationUpdater {
 	 */
 	async run({ id, params }: { id: Primitives<LocationId>; params: Partial<LocationParams> }): Promise<void> {
 		const locationId = new LocationId(id).value
-		const location = await this.locationRepository.searchById(locationId)
+		const location = await this.locationRepository.findById(locationId)
 		if (location === null) {
 			throw new LocationDoesNotExistError(id)
 		}

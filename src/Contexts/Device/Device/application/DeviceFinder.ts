@@ -23,7 +23,7 @@ export class DeviceFinder {
 	 */
 	async run({ id }: { id: string }): Promise<Nullable<DeviceDto>> {
 		const deviceId = new DeviceId(id).value
-		const device = await this.deviceRepository.searchById(deviceId)
+		const device = await this.deviceRepository.findById(deviceId)
 
 		if (!device) {
 			throw new DeviceDoesNotExistError(id)

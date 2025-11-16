@@ -46,7 +46,7 @@ export class ComputerProcessor extends AcceptedNullValueObject<Primitives<Proces
 		if (processor === null) {
 			return
 		}
-		const existingProcessor = await repository.searchById(new ProcessorId(processor).value)
+		const existingProcessor = await repository.findById(new ProcessorId(processor).value)
 		if (!existingProcessor) {
 			throw new ProcessorDoesNotExistError(processor)
 		}

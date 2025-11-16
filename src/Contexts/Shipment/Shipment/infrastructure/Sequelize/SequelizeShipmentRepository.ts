@@ -49,7 +49,7 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 		})
 	}
 
-	async searchById(id: string): Promise<ShipmentDto | null> {
+	async findById(id: string): Promise<ShipmentDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<ShipmentDto | null>({
 			cacheKey,

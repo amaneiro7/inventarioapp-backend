@@ -69,7 +69,7 @@ export class DeviceModelSeries extends ModelSeriesId {
 		category?: Primitives<CategoryId>
 		brand?: Primitives<BrandId>
 	}): Promise<ModelSeriesDto> {
-		const existingModel = await repository.searchById(new ModelSeriesId(modelSeries).value)
+		const existingModel = await repository.findById(new ModelSeriesId(modelSeries).value)
 		if (!existingModel) {
 			throw new ModelSeriesDoesNotExistError(modelSeries)
 		}

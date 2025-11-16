@@ -44,7 +44,7 @@ export class VicepresidenciaEjecutivaUpdater {
 	async run({ id, params }: { id: string; params: Partial<VicepresidenciaEjecutivaParams> }): Promise<void> {
 		const vpeId = new DepartmentId(id)
 
-		const vpe = await this.vicepresidenciaEjecutivaRepository.searchById(vpeId.value)
+		const vpe = await this.vicepresidenciaEjecutivaRepository.findById(vpeId.value)
 		if (!vpe) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
 		}

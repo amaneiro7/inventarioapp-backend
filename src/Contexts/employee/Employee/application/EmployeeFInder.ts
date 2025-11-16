@@ -22,7 +22,7 @@ export class EmployeeFinder {
 	 */
 	async run({ id }: { id: Primitives<EmployeeId> }): Promise<EmployeeDto> {
 		const employeeId = new EmployeeId(id).value
-		const employee = await this.employeeRepository.searchById(employeeId)
+		const employee = await this.employeeRepository.findById(employeeId)
 
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(employeeId)

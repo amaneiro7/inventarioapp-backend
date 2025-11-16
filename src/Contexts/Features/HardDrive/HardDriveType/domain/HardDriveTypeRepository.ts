@@ -21,10 +21,10 @@ export abstract class HardDriveTypeRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single hard drive type by its ID.
 	 * @param {Primitives<HardDriveTypeId>} id The ID of the type to search for.
 	 * @returns {Promise<HardDriveTypeDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null>
+	abstract findById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null>
 }

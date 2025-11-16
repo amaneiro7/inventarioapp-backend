@@ -21,7 +21,7 @@ export class DeviceMonitoringFinder {
 	 */
 	async run({ id }: { id: string }): Promise<DeviceMonitoringDto> {
 		const deviceMonitoringId = new MonitoringId(id)
-		const deviceMonitoring = await this.deviceMonitoringRepository.searchById(deviceMonitoringId.value)
+		const deviceMonitoring = await this.deviceMonitoringRepository.findById(deviceMonitoringId.value)
 
 		if (!deviceMonitoring) {
 			throw new DeviceMonitoringDoesNotExistError(deviceMonitoringId.value)

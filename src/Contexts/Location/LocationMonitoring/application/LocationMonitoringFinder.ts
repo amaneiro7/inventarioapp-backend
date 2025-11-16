@@ -21,7 +21,7 @@ export class LocationMonitoringFinder {
 	async run(params: { id: string }): Promise<LocationMonitoringDto> {
 		const { id } = params
 		const locationMonitoringId = new MonitoringId(id)
-		const locationMonitoring = await this.locationMonitoringRepository.searchById(locationMonitoringId.value)
+		const locationMonitoring = await this.locationMonitoringRepository.findById(locationMonitoringId.value)
 
 		if (!locationMonitoring) {
 			throw new LocationMonitoringDoesNotExistError(locationMonitoringId.value)

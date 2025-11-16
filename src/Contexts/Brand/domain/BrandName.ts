@@ -80,7 +80,7 @@ export class BrandName extends StringValueObject {
 		repository: BrandRepository
 		name: Primitives<BrandName>
 	}): Promise<void> {
-		const existingBrand = await repository.searchByName(name)
+		const existingBrand = await repository.findByName(name)
 		if (existingBrand) {
 			throw new BrandAlreadyExistError(name)
 		}

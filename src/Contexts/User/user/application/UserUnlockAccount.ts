@@ -33,7 +33,7 @@ export class UserUnlockAccount {
 		isSuperAdmin({ user })
 
 		// 1. Validate User existence
-		const existingUser = await this.userRepository.searchById(id)
+		const existingUser = await this.userRepository.findById(id)
 		if (!existingUser) {
 			throw new UserDoesNotExistError(id)
 		}

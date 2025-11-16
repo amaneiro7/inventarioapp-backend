@@ -14,14 +14,14 @@ describe('BrandCreator', () => {
 		brandRepository = {
 			save: jest.fn(),
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn(),
+			findById: jest.fn(),
+			findByName: jest.fn(),
 			remove: jest.fn()
 		}
 		categoryRepository = {
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn()
+			findById: jest.fn(),
+			findByName: jest.fn()
 		}
 		brandCreator = new BrandCreator({ brandRepository, categoryRepository })
 	})
@@ -35,8 +35,8 @@ describe('BrandCreator', () => {
 		// Mock BrandName.ensureBrandNameDoesNotExist to resolve (name does not exist)
 		jest.spyOn(BrandName, 'ensureBrandNameDoesNotExist').mockResolvedValue(undefined)
 
-		// Mock categoryRepository.searchById to return a category for each ID
-		categoryRepository.searchById.mockImplementation(async (id: string) => {
+		// Mock categoryRepository.findById to return a category for each ID
+		categoryRepository.findById.mockImplementation(async (id: string) => {
 			if (id === 'category-id-1' || id === 'category-id-2') {
 				return { id, name: `Category ${id}` }
 			}
@@ -51,10 +51,10 @@ describe('BrandCreator', () => {
 			repository: brandRepository
 		})
 
-		// Expect categoryRepository.searchById to have been called for each category
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('category-id-1')
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('category-id-2')
-		expect(categoryRepository.searchById).toHaveBeenCalledTimes(2)
+		// Expect categoryRepository.findById to have been called for each category
+		expect(categoryRepository.findById).toHaveBeenCalledWith('category-id-1')
+		expect(categoryRepository.findById).toHaveBeenCalledWith('category-id-2')
+		expect(categoryRepository.findById).toHaveBeenCalledTimes(2)
 
 		// Expect brandRepository.save to have been called with the correct brand data
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
@@ -71,7 +71,7 @@ describe('BrandCreator', () => {
 		}
 
 		jest.spyOn(BrandName, 'ensureBrandNameDoesNotExist').mockResolvedValue(undefined)
-		categoryRepository.searchById.mockResolvedValue(null) // Should not be called
+		categoryRepository.findById.mockResolvedValue(null) // Should not be called
 
 		await brandCreator.run(brandParams)
 
@@ -79,7 +79,7 @@ describe('BrandCreator', () => {
 			name: brandParams.name,
 			repository: brandRepository
 		})
-		expect(categoryRepository.searchById).not.toHaveBeenCalled()
+		expect(categoryRepository.findById).not.toHaveBeenCalled()
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
 		const savedBrand = brandRepository.save.mock.calls[0][0]
 		expect(savedBrand.name).toBe(brandParams.name)
@@ -99,7 +99,7 @@ describe('BrandCreator', () => {
 
 		await expect(brandCreator.run(brandParams)).rejects.toThrow(BrandAlreadyExistError)
 		expect(brandRepository.save).not.toHaveBeenCalled()
-		expect(categoryRepository.searchById).not.toHaveBeenCalled() // Should not be called if name validation fails first
+		expect(categoryRepository.findById).not.toHaveBeenCalled() // Should not be called if name validation fails first
 	})
 
 	it('should throw CategoryDoesNotExistError if a category does not exist', async () => {
@@ -110,7 +110,7 @@ describe('BrandCreator', () => {
 
 		jest.spyOn(BrandName, 'ensureBrandNameDoesNotExist').mockResolvedValue(undefined)
 
-		categoryRepository.searchById.mockImplementation(async (id: string) => {
+		categoryRepository.findById.mockImplementation(async (id: string) => {
 			if (id === 'valid-category-id') {
 				return { id, name: 'Valid Category' } as any
 			}
@@ -118,8 +118,8 @@ describe('BrandCreator', () => {
 		})
 
 		await expect(brandCreator.run(brandParams)).rejects.toThrow(CategoryDoesNotExistError)
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('valid-category-id')
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('invalid-category-id')
+		expect(categoryRepository.findById).toHaveBeenCalledWith('valid-category-id')
+		expect(categoryRepository.findById).toHaveBeenCalledWith('invalid-category-id')
 		expect(brandRepository.save).not.toHaveBeenCalled()
 	})
 
@@ -130,7 +130,7 @@ describe('BrandCreator', () => {
 		}
 
 		jest.spyOn(BrandName, 'ensureBrandNameDoesNotExist').mockResolvedValue(undefined)
-		categoryRepository.searchById.mockImplementation(async (id: string) => {
+		categoryRepository.findById.mockImplementation(async (id: string) => {
 			if (id === 'category-id-1' || id === 'category-id-2') {
 				return { id, name: `Category ${id}` } as any
 			}
@@ -139,10 +139,10 @@ describe('BrandCreator', () => {
 
 		await brandCreator.run(brandParams)
 
-		// categoryRepository.searchById should still be called for unique categories
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('category-id-1')
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('category-id-2')
-		expect(categoryRepository.searchById).toHaveBeenCalledTimes(2) // Only unique calls
+		// categoryRepository.findById should still be called for unique categories
+		expect(categoryRepository.findById).toHaveBeenCalledWith('category-id-1')
+		expect(categoryRepository.findById).toHaveBeenCalledWith('category-id-2')
+		expect(categoryRepository.findById).toHaveBeenCalledTimes(2) // Only unique calls
 
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
 		const savedBrand = brandRepository.save.mock.calls[0][0]

@@ -33,7 +33,7 @@ export class UserForceChangePassword {
 			throw new InvalidArgumentError('Las contraseñas no coinciden.')
 		}
 
-		const foundUser = await this.userRepository.searchById(user.sub)
+		const foundUser = await this.userRepository.findById(user.sub)
 
 		if (!foundUser) {
 			throw new UserDoesNotExistError()

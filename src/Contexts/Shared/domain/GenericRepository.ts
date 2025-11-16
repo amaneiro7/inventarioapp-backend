@@ -7,9 +7,9 @@ export abstract class GenericRepository<DTO> {
 
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<DTO>>
 
-	abstract searchById(id: string | number): Promise<Nullable<DTO>>
+	abstract findById(id: string | number): Promise<Nullable<DTO>>
 
-	abstract searchByName(id: string | number): Promise<Nullable<DTO>>
+	abstract findByName(id: string | number): Promise<Nullable<DTO>>
 
 	abstract remove(id: string | number): Promise<void>
 }

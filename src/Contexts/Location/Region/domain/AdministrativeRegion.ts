@@ -50,7 +50,7 @@ export class AdmRegionRegion extends AdministrativeRegionId {
 		repository: AdministrativeRegionRepository
 		administrativeRegionId: Primitives<AdministrativeRegionId>
 	}): Promise<void> {
-		const isAdministrativeRegionExist = await params.repository.searchById(params.administrativeRegionId)
+		const isAdministrativeRegionExist = await params.repository.findById(params.administrativeRegionId)
 		if (!isAdministrativeRegionExist) {
 			throw new InvalidArgumentError('La región administrativa no existe')
 		}

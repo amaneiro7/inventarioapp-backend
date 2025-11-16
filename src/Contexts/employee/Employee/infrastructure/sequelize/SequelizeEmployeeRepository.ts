@@ -26,7 +26,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		this.cache = cache
 	}
 
-	async searchByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
+	async findByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:userName:${userName}`,
 			ttl: TimeTolive.SHORT,
@@ -91,13 +91,13 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchByEmail
+	 * @method findByEmail
 	 * @description Retrieves a single Employee entity by its email address.
 	 * Utilizes caching for direct email lookups.
 	 * @param {Primitives<EmployeeEmail>} email - The email address of the Employee to search for.
 	 * @returns {Promise<EmployeeDto | null>} A promise that resolves to the Employee DTO if found, or null otherwise.
 	 */
-	async searchByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
+	async findByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:email:${email}`,
 			ttl: TimeTolive.SHORT,
@@ -113,14 +113,14 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single Employee entity by its unique identifier.
 	 * Includes associated devices, cargo, location, and departamento data.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {string} id - The ID of the Employee to search for.
 	 * @returns {Promise<EmployeeDto | null>} A promise that resolves to the Employee DTO if found, or null otherwise.
 	 */
-	async searchById(id: string): Promise<EmployeeDto | null> {
+	async findById(id: string): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

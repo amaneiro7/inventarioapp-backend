@@ -55,7 +55,7 @@ export class EmployeeDirectiva extends AcceptedNullValueObject<Primitives<Depart
 	}): Promise<void> {
 		if (!directivaId) return
 		if (directivaId) {
-			const exists = await repository.searchById(new DepartmentId(directivaId).value)
+			const exists = await repository.findById(new DepartmentId(directivaId).value)
 			if (!exists) {
 				throw new DepartmentDoesNotExistError('La directiva especificada no existe.')
 			}

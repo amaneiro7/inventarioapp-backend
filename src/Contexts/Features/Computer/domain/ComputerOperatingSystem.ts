@@ -90,7 +90,7 @@ export class ComputerOperatingSystem extends AcceptedNullValueObject<Primitives<
 		if (operatingSystem === null) {
 			return
 		}
-		const existingOS = await repository.searchById(operatingSystem)
+		const existingOS = await repository.findById(operatingSystem)
 		if (!existingOS) {
 			throw new OperatingSystemDoesNotExistError(operatingSystem)
 		}

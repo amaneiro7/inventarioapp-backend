@@ -48,7 +48,7 @@ export class DeviceStatus extends StatusId {
 		repository: StatusRepository
 		status: Primitives<StatusId>
 	}): Promise<void> {
-		const existingStatus = await repository.searchById(new StatusId(status).value)
+		const existingStatus = await repository.findById(new StatusId(status).value)
 		if (!existingStatus) {
 			throw new StatusDoesNotExistError(status)
 		}

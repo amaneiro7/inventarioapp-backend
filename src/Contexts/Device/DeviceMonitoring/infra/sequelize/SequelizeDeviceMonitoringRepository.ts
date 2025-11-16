@@ -81,7 +81,7 @@ export class SequelizeDeviceMonitoringRepository
 		})
 	}
 
-	async searchById(id: string): Promise<DeviceMonitoringDto | null> {
+	async findById(id: string): Promise<DeviceMonitoringDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<DeviceMonitoringDto | null>({
 			cacheKey,

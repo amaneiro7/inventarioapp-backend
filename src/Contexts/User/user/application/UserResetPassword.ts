@@ -37,7 +37,7 @@ export class UserResetPassword {
 		isSuperAdmin({ user })
 
 		const userId = new UserId(id).value
-		const userToResetPassword = await this.userRepository.searchById(userId)
+		const userToResetPassword = await this.userRepository.findById(userId)
 
 		if (!userToResetPassword) {
 			throw new UserDoesNotExistError(id) // Use id for the error

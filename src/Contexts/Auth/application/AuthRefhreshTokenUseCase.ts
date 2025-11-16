@@ -49,7 +49,7 @@ export class AuthRefreshTokenUseCase {
 	async run(jwtToken: JwtPayloadUser): Promise<AuthResponseDto> {
 		const id = new UserId(jwtToken.sub).value
 
-		const user = await this.userRepository.searchById(id)
+		const user = await this.userRepository.findById(id)
 
 		if (
 			!user ||

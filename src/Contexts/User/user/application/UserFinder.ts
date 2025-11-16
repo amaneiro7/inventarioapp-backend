@@ -35,7 +35,7 @@ export class UserFinder {
 		isSuperAdmin({ user })
 
 		// 1. Find the employee by email
-		const foundUser = await this.userRepository.searchById(id)
+		const foundUser = await this.userRepository.findById(id)
 
 		if (!foundUser) {
 			throw new UserDoesNotExistError(`No se encontró un usuario asociado al empleado con ID '${id}'.`)

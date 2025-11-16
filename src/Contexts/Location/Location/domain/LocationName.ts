@@ -119,7 +119,7 @@ export class LocationName extends StringValueObject {
 			return
 		}
 
-		const isExist = await repository.searchByName(name)
+		const isExist = await repository.findByName(name)
 
 		if (isExist !== null) {
 			throw new LocationNameAlreadyExistError(name)

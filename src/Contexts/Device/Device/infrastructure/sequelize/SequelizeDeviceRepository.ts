@@ -60,7 +60,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		})
 	}
 
-	async searchById(id: string): Promise<DeviceDto | null> {
+	async findById(id: string): Promise<DeviceDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,

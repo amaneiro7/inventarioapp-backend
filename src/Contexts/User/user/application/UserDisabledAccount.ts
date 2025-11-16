@@ -49,14 +49,14 @@ export class UserDisabledAccount {
 		isSuperAdmin({ user })
 
 		// 1. Validate User existence
-		const existingUser = await this.userRepository.searchById(id)
+		const existingUser = await this.userRepository.findById(id)
 		if (!existingUser) {
 			throw new UserDoesNotExistError(id)
 		}
 
 		const userEntity = User.fromPrimitives(existingUser)
 
-		const employee = await this.employeeRepository.searchById(userEntity.employeeValue)
+		const employee = await this.employeeRepository.findById(userEntity.employeeValue)
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(userEntity.employeeValue)
 		}

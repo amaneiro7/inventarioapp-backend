@@ -12,19 +12,19 @@ import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 export abstract class DepartmentRepository<T> extends GenericRepository<T> {
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single department entity by its name.
 	 * @param {Primitives<DepartmentName>} name The name of the department to search for.
 	 * @returns {Promise<Nullable<T>>} A promise that resolves to the department DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: Primitives<DepartmentName>): Promise<Nullable<T>>
+	abstract findByName(name: Primitives<DepartmentName>): Promise<Nullable<T>>
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single department entity by its unique identifier.
 	 * @param {Primitives<DepartmentId>} id The ID of the department to search for.
 	 * @returns {Promise<Nullable<T>>} A promise that resolves to the department DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<DepartmentId>): Promise<Nullable<T>>
+	abstract findById(id: Primitives<DepartmentId>): Promise<Nullable<T>>
 }

@@ -40,7 +40,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 		})
 	}
 
-	async searchById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
+	async findById(id: Primitives<CargoId>): Promise<Nullable<CargoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<CargoDto>>({
@@ -62,7 +62,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 		})
 	}
 
-	async searchByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
+	async findByName(name: Primitives<CargoName>): Promise<Nullable<CargoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<CargoDto>>({

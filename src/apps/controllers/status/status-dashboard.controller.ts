@@ -3,7 +3,7 @@ import { type Controller } from '../controller'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { StatusDependencies } from '../../di/status/status.di'
-import { type StatusDashboard } from '../../../Contexts/Device/Inventroy/application/StatusDashboard'
+import { type StatusDashboard } from '../../../Contexts/Device/Inventory/application/StatusDashboard'
 
 /**
  * Controller for retrieving status dashboard data.

@@ -38,7 +38,7 @@ export class SequelizeHardDriveCapacityRepository
 		})
 	}
 
-	async searchById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null> {
+	async findById(id: Primitives<HardDriveCapacityId>): Promise<HardDriveCapacityDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<HardDriveCapacityDto | null>({

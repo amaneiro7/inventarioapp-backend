@@ -39,7 +39,7 @@ export class UserChangePassword {
 		}
 
 		const userId = new UserId(payload.sub).value
-		const user = await this.userRepository.searchById(userId)
+		const user = await this.userRepository.findById(userId)
 
 		if (!user) {
 			throw new UserDoesNotExistError(payload.sub) // Use payload.sub (UserId) for the error

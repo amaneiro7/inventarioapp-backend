@@ -53,13 +53,13 @@ export class SequelizeAdministrativeRegionRepository
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single AdministrativeRegion entity by its unique identifier.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<AdministrativeRegionId>} id - The ID of the AdministrativeRegion to search for.
 	 * @returns {Promise<AdministrativeRegionDto | null>} A promise that resolves to the AdministrativeRegion DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<AdministrativeRegionId>): Promise<AdministrativeRegionDto | null> {
+	async findById(id: Primitives<AdministrativeRegionId>): Promise<AdministrativeRegionDto | null> {
 		return await this.cache.getCachedData<AdministrativeRegionDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

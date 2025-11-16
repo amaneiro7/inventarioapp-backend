@@ -21,7 +21,7 @@ export class DepartamentoFinder {
 	 */
 	async run({ id }: { id: string }): Promise<DepartamentoDto> {
 		const departamentoId = new DepartmentId(id).value
-		const departamento = await this.departamentoRepository.searchById(departamentoId)
+		const departamento = await this.departamentoRepository.findById(departamentoId)
 
 		if (!departamento) {
 			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')

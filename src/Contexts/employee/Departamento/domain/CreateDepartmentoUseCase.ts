@@ -36,13 +36,13 @@ export class CreateDepartamentoUseCase {
 	}
 
 	private async ensureDepartamentoDoesNotExist(name: Primitives<DepartmentName>): Promise<void> {
-		if (await this.departamentoRepository.searchByName(name)) {
+		if (await this.departamentoRepository.findByName(name)) {
 			throw new DepartmentAlreadyExistError('La gerencia, coordinación o departamento')
 		}
 	}
 
 	private async ensureVicepresidenciaExists(vicepresidenciaId: Primitives<DepartmentId>): Promise<void> {
-		if (!(await this.vicepresidenciaRepository.searchById(vicepresidenciaId))) {
+		if (!(await this.vicepresidenciaRepository.findById(vicepresidenciaId))) {
 			throw new DepartmentDoesNotExistError('La vicepresidencia')
 		}
 	}

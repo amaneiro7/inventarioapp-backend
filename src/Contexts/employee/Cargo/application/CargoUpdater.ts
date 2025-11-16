@@ -52,7 +52,7 @@ export class CargoUpdater {
 	async run({ id, params }: { id: string; params: Partial<CargoParams> }): Promise<void> {
 		const cargoId = new CargoId(id)
 
-		const cargo = await this.cargoRepository.searchById(cargoId.value)
+		const cargo = await this.cargoRepository.findById(cargoId.value)
 		if (!cargo) {
 			throw new CargoDoesNotExistError()
 		}

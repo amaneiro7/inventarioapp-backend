@@ -83,7 +83,7 @@ export class UpdateCargoUseCase {
 		entity: Cargo
 	}): Promise<void> {
 		if (!name || entity.nameValue === name) return
-		const existingCargo = await this.repository.cargoRepository.searchByName(name)
+		const existingCargo = await this.repository.cargoRepository.findByName(name)
 		if (existingCargo) {
 			throw new CargoAlreadyExistError(name)
 		}
@@ -112,7 +112,7 @@ export class UpdateCargoUseCase {
 
 		await Promise.all(
 			newDepartmentIds.map(async departmentId => {
-				if (!(await repository.searchById(departmentId))) {
+				if (!(await repository.findById(departmentId))) {
 					throw new DepartmentDoesNotExistError(`La ${departmentType}`)
 				}
 			})

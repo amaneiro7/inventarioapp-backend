@@ -40,13 +40,13 @@ export class CentroTrabajoCreator {
 	}
 
 	private async ensureCentroTrabajoDoesNotExist(id: Primitives<CentroTrabajoId>): Promise<void> {
-		if (await this.centroTrabajoRepository.searchById(id)) {
+		if (await this.centroTrabajoRepository.findById(id)) {
 			throw new CentroTrabajoAlreadyExistError()
 		}
 	}
 
 	private async ensureCentroCostoExists(centroCostoId: Primitives<CodCentroCosto>): Promise<void> {
-		if (!(await this.centroCostoRepository.searchById(centroCostoId))) {
+		if (!(await this.centroCostoRepository.findById(centroCostoId))) {
 			throw new CentroCostoDoesNotExistError()
 		}
 	}

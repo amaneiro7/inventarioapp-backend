@@ -68,7 +68,7 @@ export class ComputerOperatingSystemArq extends AcceptedNullValueObject<Primitiv
 		if (operatingSystemArq === null) {
 			return
 		}
-		const existingArq = await repository.searchById(operatingSystemArq)
+		const existingArq = await repository.findById(operatingSystemArq)
 		if (!existingArq) {
 			throw new OperatingSystemArqDoesNotExistError(operatingSystemArq)
 		}

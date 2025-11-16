@@ -17,15 +17,15 @@ describe('BrandUpdater', () => {
 		brandRepository = {
 			save: jest.fn(),
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn(),
+			findById: jest.fn(),
+			findByName: jest.fn(),
 			remove: jest.fn()
 		}
 		categoryRepository = {
 			save: jest.fn(),
 			searchAll: jest.fn(),
-			searchById: jest.fn(),
-			searchByName: jest.fn(),
+			findById: jest.fn(),
+			findByName: jest.fn(),
 			remove: jest.fn()
 		}
 		brandUpdater = new BrandUpdater({ brandRepository, categoryRepository })
@@ -40,12 +40,12 @@ describe('BrandUpdater', () => {
 		}
 		const newName = 'New Name'
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
+		brandRepository.findById.mockResolvedValue(existingBrand)
 		// No need to mock BrandName.updateNameField, let it execute naturally
 
 		await brandUpdater.run({ id: brandId, params: { name: newName } })
 
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
 		expect(brandRepository.save.mock.calls[0][0].name).toBe(newName)
 	})
@@ -59,15 +59,15 @@ describe('BrandUpdater', () => {
 		}
 		const newCategories = ['cat-id-1', 'cat-id-2']
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
-		categoryRepository.searchById.mockResolvedValue({ id: 'cat-id-1' } as any)
-		categoryRepository.searchById.mockResolvedValueOnce({ id: 'cat-id-2' } as any)
+		brandRepository.findById.mockResolvedValue(existingBrand)
+		categoryRepository.findById.mockResolvedValue({ id: 'cat-id-1' } as any)
+		categoryRepository.findById.mockResolvedValueOnce({ id: 'cat-id-2' } as any)
 
 		await brandUpdater.run({ id: brandId, params: { categories: newCategories } })
 
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('cat-id-1')
-		expect(categoryRepository.searchById).toHaveBeenCalledWith('cat-id-2')
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
+		expect(categoryRepository.findById).toHaveBeenCalledWith('cat-id-1')
+		expect(categoryRepository.findById).toHaveBeenCalledWith('cat-id-2')
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
 		expect(brandRepository.save.mock.calls[0][0].categories).toEqual(expect.arrayContaining(newCategories))
 	})
@@ -82,13 +82,13 @@ describe('BrandUpdater', () => {
 		const newName = 'New Name'
 		const newCategories = ['cat-id-1']
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
+		brandRepository.findById.mockResolvedValue(existingBrand)
 		// No need to mock BrandName.updateNameField, let it execute naturally
-		categoryRepository.searchById.mockResolvedValue({ id: 'cat-id-1' } as any)
+		categoryRepository.findById.mockResolvedValue({ id: 'cat-id-1' } as any)
 
 		await brandUpdater.run({ id: brandId, params: { name: newName, categories: newCategories } })
 
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
 		expect(brandRepository.save).toHaveBeenCalledTimes(1)
 		const savedBrand = brandRepository.save.mock.calls[0][0]
 		expect(savedBrand.name).toBe(newName)
@@ -97,10 +97,10 @@ describe('BrandUpdater', () => {
 
 	it('should throw BrandDoesNotExistError if brand to update does not exist', async () => {
 		const brandId = BrandId.random().value
-		brandRepository.searchById.mockResolvedValue(null)
+		brandRepository.findById.mockResolvedValue(null)
 
 		await expect(brandUpdater.run({ id: brandId, params: { name: 'Any' } })).rejects.toThrow(BrandDoesNotExistError)
-		expect(brandRepository.searchById).toHaveBeenCalledWith(brandId)
+		expect(brandRepository.findById).toHaveBeenCalledWith(brandId)
 		expect(brandRepository.save).not.toHaveBeenCalled()
 	})
 
@@ -113,7 +113,7 @@ describe('BrandUpdater', () => {
 		}
 		const newName = 'Conflicting Name'
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
+		brandRepository.findById.mockResolvedValue(existingBrand)
 		jest.spyOn(BrandName, 'updateNameField').mockRejectedValue(new BrandAlreadyExistError(newName))
 
 		await expect(brandUpdater.run({ id: brandId, params: { name: newName } })).rejects.toThrow(
@@ -131,9 +131,9 @@ describe('BrandUpdater', () => {
 		}
 		const newCategories = ['valid-cat', 'invalid-cat']
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
+		brandRepository.findById.mockResolvedValue(existingBrand)
 		jest.spyOn(BrandName, 'updateNameField').mockResolvedValue(undefined) // Mock to prevent name validation from interfering
-		categoryRepository.searchById.mockImplementation(async (id: string) => {
+		categoryRepository.findById.mockImplementation(async (id: string) => {
 			if (id === 'valid-cat') {
 				return { id: 'valid-cat' } as any
 			}
@@ -154,7 +154,7 @@ describe('BrandUpdater', () => {
 			categories: []
 		}
 
-		brandRepository.searchById.mockResolvedValue(existingBrand)
+		brandRepository.findById.mockResolvedValue(existingBrand)
 
 		await brandUpdater.run({ id: brandId, params: { name: 'Same Name' } })
 

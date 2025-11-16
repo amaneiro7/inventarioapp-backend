@@ -51,13 +51,13 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single brand by its unique identifier.
 	 * Caches the result for faster subsequent lookups.
 	 * @param {string} id The ID of the brand to find.
 	 * @returns {Promise<BrandDto | null>} A promise resolving to the brand DTO if found, otherwise null.
 	 */
-	async searchById(id: string): Promise<BrandDto | null> {
+	async findById(id: string): Promise<BrandDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<BrandDto | null>({
 			cacheKey,
@@ -78,13 +78,13 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 	}
 
 	/**
-	 * @method searchByName
+	 * @method findByName
 	 * @description Retrieves a single brand by its name.
 	 * Caches the result for faster subsequent lookups.
 	 * @param {string} name The name of the brand to find.
 	 * @returns {Promise<BrandDto | null>} A promise resolving to the brand DTO if found, otherwise null.
 	 */
-	async searchByName(name: string): Promise<BrandDto | null> {
+	async findByName(name: string): Promise<BrandDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<BrandDto | null>({
 			cacheKey,

@@ -21,10 +21,10 @@ export abstract class ProcessorSocketRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single processor socket by its ID.
 	 * @param {Primitives<ProcessorSocketId>} id The ID of the socket to search for.
 	 * @returns {Promise<ProcessorSocketDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null>
+	abstract findById(id: Primitives<ProcessorSocketId>): Promise<ProcessorSocketDto | null>
 }

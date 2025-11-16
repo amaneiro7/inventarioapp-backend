@@ -61,7 +61,7 @@ export class ModelSeriesName extends StringValueObject {
 		name: Primitives<ModelSeriesName>
 		brandId: Primitives<BrandId>
 	}): Promise<void> {
-		const modelSeries = await repository.searchByName(name)
+		const modelSeries = await repository.findByName(name)
 		if (!modelSeries) {
 			return
 		}

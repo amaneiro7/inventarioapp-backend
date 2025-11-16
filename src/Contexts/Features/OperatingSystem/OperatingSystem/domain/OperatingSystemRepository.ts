@@ -21,10 +21,10 @@ export abstract class OperatingSystemRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single operating system by its ID.
 	 * @param {Primitives<OperatingSystemId>} id The ID of the OS to search for.
 	 * @returns {Promise<OperatingSystemDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null>
+	abstract findById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null>
 }

@@ -73,9 +73,9 @@ export class EmployeeUpdater {
 	async run({ id, params }: { id: Primitives<EmployeeId>; params: Partial<EmployeeParams> }): Promise<void> {
 		const employeeId = new EmployeeId(id).value
 		// Guardamos el estado previo para la lógica de negocio posterior
-		const wasStillWorking = (await this.employeeRepository.searchById(employeeId))?.isStillWorking ?? true
+		const wasStillWorking = (await this.employeeRepository.findById(employeeId))?.isStillWorking ?? true
 
-		const employee = await this.employeeRepository.searchById(employeeId)
+		const employee = await this.employeeRepository.findById(employeeId)
 
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(id)

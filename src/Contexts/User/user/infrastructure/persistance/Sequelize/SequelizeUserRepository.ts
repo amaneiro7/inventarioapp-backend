@@ -41,8 +41,8 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 		})
 	}
 
-	// Removed searchByEmail as User entity no longer has an email field.
-	// async searchByEmail(userEmail: string): Promise<UserPrimitives | null> { ... }
+	// Removed findByEmail as User entity no longer has an email field.
+	// async findByEmail(userEmail: string): Promise<UserPrimitives | null> { ... }
 
 	async searchByEmployeeId(employeeId: Primitives<EmployeeId>): Promise<User | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:employeeId:${employeeId}`
@@ -57,7 +57,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 		})
 	}
 
-	async searchById(id: Primitives<UserId>): Promise<User | null> {
+	async findById(id: Primitives<UserId>): Promise<User | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<User | null>({
@@ -80,7 +80,7 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 
 		// Paso 3: Volver a buscar el usuario por su ID para cargar las asociaciones ('role' y 'employee').
 		// Esto garantiza que devolvemos el objeto completo y actualizado.
-		return (await this.searchById(userInstance.id)) as User
+		return (await this.findById(userInstance.id)) as User
 	}
 
 	async delete(id: Primitives<UserId>): Promise<void> {

@@ -41,21 +41,21 @@ export abstract class ModelSeriesRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single model series by its ID.
 	 * @param {Primitives<ModelSeriesId>} id The ID of the model series to search for.
 	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<ModelSeriesId>): Promise<ModelSeriesDto | null>
+	abstract findById(id: Primitives<ModelSeriesId>): Promise<ModelSeriesDto | null>
 
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Finds a single model series by its name.
 	 * @param {Primitives<ModelSeriesName>} name The name of the model series to search for.
 	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: Primitives<ModelSeriesName>): Promise<ModelSeriesDto | null>
+	abstract findByName(name: Primitives<ModelSeriesName>): Promise<ModelSeriesDto | null>
 
 	/**
 	 * @abstract

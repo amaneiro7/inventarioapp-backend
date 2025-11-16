@@ -34,7 +34,7 @@ export class CityUpdater {
 	async run({ id, params }: { id: string; params: Partial<CityParams> }): Promise<void> {
 		const city = new CityId(id)
 
-		const brand = await this.cityRepository.searchById(city.value)
+		const brand = await this.cityRepository.findById(city.value)
 		if (!brand) {
 			throw new CityDoesNotExistError(id)
 		}

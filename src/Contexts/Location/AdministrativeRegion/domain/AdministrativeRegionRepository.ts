@@ -21,5 +21,5 @@ export abstract class AdministrativeRegionRepository {
 	 * @param {Primitives<AdministrativeRegionId>} id - The ID of the administrative region to search for.
 	 * @returns {Promise<AdministrativeRegionDto | null>} A promise that resolves to the administrative region DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<AdministrativeRegionId>): Promise<AdministrativeRegionDto | null>
+	abstract findById(id: Primitives<AdministrativeRegionId>): Promise<AdministrativeRegionDto | null>
 }

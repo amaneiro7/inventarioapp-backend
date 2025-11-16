@@ -31,12 +31,12 @@ export abstract class ProcessorRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single processor by its ID.
 	 * @param {Primitives<ProcessorId>} id The ID of the processor to search for.
 	 * @returns {Promise<ProcessorDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<ProcessorId>): Promise<ProcessorDto | null>
+	abstract findById(id: Primitives<ProcessorId>): Promise<ProcessorDto | null>
 
 	/**
 	 * @abstract

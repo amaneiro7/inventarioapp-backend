@@ -37,7 +37,7 @@ export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter
 		})
 	}
 
-	async searchById(id: Primitives<CentroTrabajoId>): Promise<Nullable<CentroTrabajoDto>> {
+	async findById(id: Primitives<CentroTrabajoId>): Promise<Nullable<CentroTrabajoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<CentroTrabajoDto>>({
@@ -50,7 +50,7 @@ export class SequelizeCentroTrabajoRepository extends SequelizeCriteriaConverter
 		})
 	}
 
-	async searchByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>> {
+	async findByName(name: Primitives<CentroTrabajoName>): Promise<Nullable<CentroTrabajoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<CentroTrabajoDto>>({

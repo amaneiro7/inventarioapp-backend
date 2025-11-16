@@ -8,6 +8,6 @@ export abstract class ShipmentRepository {
 	abstract findLast(): Promise<ShipmentDto | null>
 	abstract save(shipment: Shipment): Promise<void>
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<ShipmentDto>>
-	abstract searchById(id: ShipmentDto['id']): Promise<Nullable<ShipmentDto>>
+	abstract findById(id: ShipmentDto['id']): Promise<Nullable<ShipmentDto>>
 	abstract remove(id: ShipmentDto['id']): Promise<void>
 }

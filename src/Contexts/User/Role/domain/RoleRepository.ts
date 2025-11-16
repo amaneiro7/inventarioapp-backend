@@ -21,10 +21,10 @@ export abstract class RoleRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single role by its ID.
 	 * @param {Primitives<RoleId>} id The ID of the role to search for.
 	 * @returns {Promise<RoleDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<RoleId>): Promise<RoleDto | null>
+	abstract findById(id: Primitives<RoleId>): Promise<RoleDto | null>
 }

@@ -50,13 +50,13 @@ export class SequelizeStateRepository extends SequelizeCriteriaConverter impleme
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single State entity by its unique identifier.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {Primitives<StateId>} id - The ID of the State to search for.
 	 * @returns {Promise<StateDto | null>} A promise that resolves to the State DTO if found, or null otherwise.
 	 */
-	async searchById(id: Primitives<StateId>): Promise<StateDto | null> {
+	async findById(id: Primitives<StateId>): Promise<StateDto | null> {
 		return await this.cache.getCachedData<StateDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

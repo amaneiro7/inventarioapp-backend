@@ -21,10 +21,10 @@ export abstract class OperatingSystemArqRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single operating system architecture by its ID.
 	 * @param {Primitives<OperatingSystemArqId>} id The ID of the architecture to search for.
 	 * @returns {Promise<OperatingSystemArqDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<OperatingSystemArqId>): Promise<OperatingSystemArqDto | null>
+	abstract findById(id: Primitives<OperatingSystemArqId>): Promise<OperatingSystemArqDto | null>
 }

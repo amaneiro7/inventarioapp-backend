@@ -21,7 +21,7 @@ export class LocationFinder {
 	async run(params: { id: string }): Promise<LocationDto> {
 		const { id } = params
 		const locationId = new LocationId(id).value
-		const location = await this.locationRepository.searchById(locationId)
+		const location = await this.locationRepository.findById(locationId)
 
 		if (!location) {
 			throw new LocationDoesNotExistError(locationId)

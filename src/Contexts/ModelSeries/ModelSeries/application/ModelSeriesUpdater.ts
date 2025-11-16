@@ -73,7 +73,7 @@ export class ModelSeriesUpdater {
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
 		const modelSeriesId = new ModelSeriesId(id).value
-		const modelSeries = await this.modelSeriesRepository.searchById(modelSeriesId)
+		const modelSeries = await this.modelSeriesRepository.findById(modelSeriesId)
 
 		if (!modelSeries) {
 			throw new ModelSeriesDoesNotExistError(id)
@@ -233,7 +233,7 @@ export class ModelSeriesUpdater {
 
 		if (newProcessors.length > 0) {
 			const processorExistenceChecks = newProcessors.map(async processorId => {
-				const processor = await this.processorRepository.searchById(processorId)
+				const processor = await this.processorRepository.findById(processorId)
 				if (processor === null) {
 					throw new ProcessorDoesNotExistError(processorId)
 				}

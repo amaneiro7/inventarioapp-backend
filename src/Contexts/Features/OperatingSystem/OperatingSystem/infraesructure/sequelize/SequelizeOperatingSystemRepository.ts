@@ -38,7 +38,7 @@ export class SequelizeOperatingSystemRepository
 		})
 	}
 
-	async searchById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null> {
+	async findById(id: Primitives<OperatingSystemId>): Promise<OperatingSystemDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<OperatingSystemDto | null>({

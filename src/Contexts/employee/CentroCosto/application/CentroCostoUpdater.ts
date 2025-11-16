@@ -31,7 +31,7 @@ export class CentroCostoUpdater {
 	}): Promise<void> {
 		const codCentroCosto = new CodCentroCosto(id)
 
-		const centroCosto = await this.centroCostoRepository.searchById(codCentroCosto.value)
+		const centroCosto = await this.centroCostoRepository.findById(codCentroCosto.value)
 		if (!centroCosto) {
 			throw new CentroCostoDoesNotExistError()
 		}

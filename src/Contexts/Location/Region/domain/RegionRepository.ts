@@ -21,7 +21,7 @@ export abstract class RegionRepository {
 	 * @param {Primitives<RegionId>} id - The ID of the region to search for.
 	 * @returns {Promise<RegionDto | null>} A promise that resolves to the region DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: Primitives<RegionId>): Promise<RegionDto | null>
+	abstract findById(id: Primitives<RegionId>): Promise<RegionDto | null>
 
 	/**
 	 * Saves a new region or updates an existing one.

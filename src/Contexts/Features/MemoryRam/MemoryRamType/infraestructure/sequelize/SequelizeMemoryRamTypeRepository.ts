@@ -35,7 +35,7 @@ export class SequelizeMemoryRamTypeRepository extends SequelizeCriteriaConverter
 		})
 	}
 
-	async searchById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null> {
+	async findById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<MemoryRamTypeDto | null>({

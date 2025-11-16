@@ -46,7 +46,7 @@ export class UserFinderByEmail {
 		isSuperAdmin({ user })
 
 		// 1. Find the employee by email
-		const employee = await this.employeeRepository.searchByEmail(email)
+		const employee = await this.employeeRepository.findByEmail(email)
 
 		if (!employee) {
 			throw new UserDoesNotExistError(`No se encontró un empleado con el correo '${email}'.`) // Use a more specific error message

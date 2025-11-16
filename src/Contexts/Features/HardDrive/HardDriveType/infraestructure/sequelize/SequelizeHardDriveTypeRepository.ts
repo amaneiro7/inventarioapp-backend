@@ -35,7 +35,7 @@ export class SequelizeHardDriveTypeRepository extends SequelizeCriteriaConverter
 		})
 	}
 
-	async searchById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null> {
+	async findById(id: Primitives<HardDriveTypeId>): Promise<HardDriveTypeDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<HardDriveTypeDto | null>({

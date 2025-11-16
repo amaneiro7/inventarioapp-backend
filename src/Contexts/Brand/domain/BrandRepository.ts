@@ -33,21 +33,21 @@ export abstract class BrandRepository implements GenericRepository<BrandDto> {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single brand by its unique identifier.
 	 * @param {BrandDto['id']} id The ID of the brand to search for.
 	 * @returns {Promise<Nullable<BrandDto>>} A promise that resolves to the brand DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: BrandDto['id']): Promise<Nullable<BrandDto>>
+	abstract findById(id: BrandDto['id']): Promise<Nullable<BrandDto>>
 
 	/**
 	 * @abstract
-	 * @method searchByName
+	 * @method findByName
 	 * @description Finds a single brand by its name.
 	 * @param {BrandDto['name']} name The name of the brand to search for.
 	 * @returns {Promise<Nullable<BrandDto>>} A promise that resolves to the brand DTO if found, or null otherwise.
 	 */
-	abstract searchByName(name: BrandDto['name']): Promise<Nullable<BrandDto>>
+	abstract findByName(name: BrandDto['name']): Promise<Nullable<BrandDto>>
 
 	/**
 	 * @abstract

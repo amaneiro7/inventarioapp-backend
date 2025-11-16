@@ -3,8 +3,8 @@ import { SequelizeStatusRepository } from '../../../Contexts/Device/Status/infra
 import { StatusFinderAll } from '../../../Contexts/Device/Status/application/StatusFinderAll'
 import { StatusGetAllController } from '../../controllers/status/status.get-all.controller'
 import { StatusDashboardGetController } from '../../controllers/status/status-dashboard.controller'
-import { StatusDashboard } from '../../../Contexts/Device/Inventroy/application/StatusDashboard'
-import { SequelizeStatusDashboardRepository } from '../../../Contexts/Device/Inventroy/infra/sequelize/sequelizeStatusRepository'
+import { StatusDashboard } from '../../../Contexts/Device/Inventory/application/StatusDashboard'
+import { SequelizeStatusDashboardRepository } from '../../../Contexts/Device/Inventory/infra/sequelize/sequelizeStatusRepository'
 
 export enum StatusDependencies {
 	Repository = 'statusRepository',

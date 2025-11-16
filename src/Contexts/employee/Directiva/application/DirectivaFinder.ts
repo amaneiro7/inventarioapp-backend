@@ -21,7 +21,7 @@ export class DirectivaFinder {
 	 */
 	async run({ id }: { id: string }): Promise<DirectivaDto> {
 		const directivaId = new DepartmentId(id).value
-		const directiva = await this.directivaRepository.searchById(directivaId)
+		const directiva = await this.directivaRepository.findById(directivaId)
 
 		if (!directiva) {
 			throw new DepartmentDoesNotExistError('La Directiva')

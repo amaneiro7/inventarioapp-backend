@@ -23,7 +23,7 @@ export class MainCategoriesFinder {
 	 */
 	async run({ id }: { id: string }): Promise<MainCategoryDto> {
 		const mainCategoryId = new MainCategoryId(id)
-		const mainCategory = await this.mainCategoryRepository.searchById(mainCategoryId.value)
+		const mainCategory = await this.mainCategoryRepository.findById(mainCategoryId.value)
 
 		if (!mainCategory) {
 			throw new MainCategoryDoesNotExistError(mainCategoryId.value)

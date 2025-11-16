@@ -35,7 +35,7 @@ export class SequelizeRolesRepository extends SequelizeCriteriaConverter impleme
 		})
 	}
 
-	async searchById(id: Primitives<RoleId>): Promise<RoleDto | null> {
+	async findById(id: Primitives<RoleId>): Promise<RoleDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<RoleDto | null>({

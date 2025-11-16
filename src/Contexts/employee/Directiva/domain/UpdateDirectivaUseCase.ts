@@ -46,7 +46,7 @@ export class UpdateDirectivaUseCase {
 	}): Promise<void> {
 		if (!name || entity.nameValue === name) return
 
-		if (await this.directivaRepository.searchByName(name)) {
+		if (await this.directivaRepository.findByName(name)) {
 			throw new DepartmentAlreadyExistError('La directiva')
 		}
 		entity.updateName(name)

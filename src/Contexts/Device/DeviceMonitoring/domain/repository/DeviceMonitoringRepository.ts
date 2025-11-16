@@ -19,12 +19,12 @@ export abstract class DeviceMonitoringRepository {
 
 	/**
 	 * @abstract
-	 * @method searchById
+	 * @method findById
 	 * @description Finds a single device monitoring record by its unique identifier.
 	 * @param {DeviceMonitoringDto['id']} id The ID of the record to search for.
 	 * @returns {Promise<DeviceMonitoringDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
-	abstract searchById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto | null>
+	abstract findById(id: DeviceMonitoringDto['id']): Promise<DeviceMonitoringDto | null>
 
 	/**
 	 * @abstract

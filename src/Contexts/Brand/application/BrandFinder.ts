@@ -23,7 +23,7 @@ export class BrandFinder {
 	 */
 	async run({ id }: { id: string }): Promise<BrandDto> {
 		const brandId = new BrandId(id)
-		const brand = await this.brandRepository.searchById(brandId.value)
+		const brand = await this.brandRepository.findById(brandId.value)
 
 		if (!brand) {
 			throw new BrandDoesNotExistError(brandId.value)

@@ -96,12 +96,12 @@ export class SequelizeLocationMonitoringRepository
 	}
 
 	/**
-	 * @method searchById
+	 * @method findById
 	 * @description Retrieves a single location monitoring entry by its unique identifier.
 	 * @param {string} id - The ID of the location monitoring entry to search for.
 	 * @returns {Promise<LocationMonitoringDto | null>} A promise that resolves to the LocationMonitoring DTO if found, or null otherwise.
 	 */
-	async searchById(id: string): Promise<LocationMonitoringDto | null> {
+	async findById(id: string): Promise<LocationMonitoringDto | null> {
 		return await this.cache.getCachedData<LocationMonitoringDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
 			ttl: TimeTolive.SHORT,

@@ -44,7 +44,7 @@ export class SequelizeDepartamentoRepository
 		})
 	}
 
-	async searchById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
+	async findById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<DepartamentoDto>>({
@@ -82,7 +82,7 @@ export class SequelizeDepartamentoRepository
 		})
 	}
 
-	async searchByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoDto>> {
+	async findByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<DepartamentoDto>>({

@@ -21,7 +21,7 @@ export class CargoFinder {
 	 */
 	async run({ id }: { id: string }): Promise<CargoDto> {
 		const cargoId = new CargoId(id).value
-		const cargo = await this.cargoRepository.searchById(cargoId)
+		const cargo = await this.cargoRepository.findById(cargoId)
 
 		if (!cargo) {
 			throw new CargoDoesNotExistError()

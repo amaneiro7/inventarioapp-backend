@@ -37,7 +37,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 		})
 	}
 
-	async searchById(id: string): Promise<ProcessorDto | null> {
+	async findById(id: string): Promise<ProcessorDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<ProcessorDto | null>({

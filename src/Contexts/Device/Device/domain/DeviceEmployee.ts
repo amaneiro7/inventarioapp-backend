@@ -121,7 +121,7 @@ export class DeviceEmployee extends AcceptedNullValueObject<Primitives<EmployeeI
 		if (employee === null) {
 			return
 		}
-		const existingEmployee = await repository.searchById(new EmployeeId(employee).value)
+		const existingEmployee = await repository.findById(new EmployeeId(employee).value)
 		if (!existingEmployee) {
 			throw new EmployeeDoesNotExistError(employee)
 		}
