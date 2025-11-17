@@ -4,7 +4,7 @@ import { type AuthResponseDto } from './Auth.dto'
 /**
  * @function buildAuthResponse
  * @description Constructs the authentication response object from user data and tokens.
- * @param {UserDto} user - The user object, including their role and employee details.
+ * @param {User} user - The user object, including their role and employee details.
  * @param {string} accessToken - The generated access token.
  * @param {string} [refreshToken] - The generated refresh token (optional).
  * @returns {AuthResponseDto} The authentication response DTO.

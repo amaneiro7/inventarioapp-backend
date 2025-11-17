@@ -3,9 +3,9 @@ import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-statu
 import { Controller } from '../controller'
 import { authenticaUser } from '../../../Contexts/Auth/application/AuthUseCase'
 import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'
-import { type User } from '../../../Contexts/User/user/domain/entity/User.dto'
+import { type UserDto } from '../../../Contexts/User/user/domain/entity/User.dto'
 
-type ReqUser = User
+type ReqUser = UserDto
 
 /**
  * Controller for user login.

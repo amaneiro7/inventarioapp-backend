@@ -2,7 +2,7 @@ import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
 import { config } from '../../Shared/infrastructure/config'
 
-import { type UserPrimitives } from '../../User/user/domain/entity/User.dto' // Use User.dto
+import { type UserDto } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type RoleId } from '../../User/Role/domain/RoleId'
 import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corrected path for UserId
@@ -16,17 +16,28 @@ export interface Tokens {
 type JwtPayloadPurposes = 'access' | 'refresh' | 'change-password' | undefined
 
 /**
+ * @interface UserTokenAttributes
+ * @description Define los atributos mínimos necesarios del usuario para generar un token,
+ * incluyendo los atributos de negocio requeridos por el middleware hasPermission (ABAC).
+ */
+export interface UserTokenAttributes extends Pick<UserDto, 'id' | 'employeeId' | 'roleId'> {
+	cargoId: string // ATRIBUTO REQUERIDO PARA ABAC
+	departamentoId: string // ATRIBUTO REQUERIDO PARA ABAC
+}
+
+/**
  * @interface JwtPayloadUser
  * @extends JwtPayload
- * @description Defines the structure of the JWT payload for user tokens.
- * It includes standard claims like 'sub', 'iss', 'exp', and custom claims like 'email', 'roleId'.
- * It includes standard claims like 'sub', 'iss', 'exp', and custom claims like 'employeeId', 'roleId'.
- * The 'jti' claim is used for refresh token rotation to ensure a token is used only once.
+ * @description Define la estructura completa del payload del JWT para tokens de usuario.
+ * Incluye los atributos de negocio 'cargoId' y 'departamentoId' para la resolución de políticas de acceso (ABAC).
  */
 export interface JwtPayloadUser extends JwtPayload {
 	sub: Primitives<UserId> // User ID
 	employeeId: Primitives<EmployeeId> // Associated Employee ID
 	roleId: Primitives<RoleId>
+	cargoId: string | null
+	departamentoId: string | null
+	iat: number
 	iss: 'SoporteTecnicoBNC' // Issuer of the token
 	jti?: string // JWT ID for refresh token rotation
 	purpose?: JwtPayloadPurposes // Propósito del token
@@ -40,13 +51,13 @@ const issuer = 'SoporteTecnicoBNC'
  * @function generateToken
  * @description Generates a JWT with the given payload, secret, and expiration.
  * @param {object} params - The parameters for token generation.
- * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} params.payload - User data to include in the token.
+ * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} params.payload - User data to include in the token.
  * @param {string} params.secret - The secret key for signing the token.
  * @param {string} params.expiresIn - The expiration time for the token (e.g., '1h', '7d').
  * @param {string} [params.jti] - Optional JWT ID, typically used for refresh tokens.
  * @returns {string} The generated JWT string.
  */
-function generateToken<T extends Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>>({
+function generateToken<T extends Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>>({
 	payload,
 	secret,
 	expiresIn,
@@ -59,11 +70,15 @@ function generateToken<T extends Pick<UserPrimitives, 'id' | 'employeeId' | 'rol
 	purpose?: JwtPayloadPurposes
 	jti?: string
 }) {
-	const { id, employeeId, roleId } = payload // Updated destructuring
+	const { id, employeeId, roleId, employee } = payload // Updated destructuring
+	const { cargoId, departamentoId } = employee
 	const tokenPayload: JwtPayloadUser = {
 		sub: id,
-		employeeId, // Added employeeId
+		employeeId,
 		roleId,
+		cargoId,
+		departamentoId,
+		iat: Math.floor(Date.now()) / 1000,
 		iss: issuer, // Issuer
 		...(purpose && { purpose }), // Añadir propósito si se proporciona
 		jti
@@ -74,10 +89,10 @@ function generateToken<T extends Pick<UserPrimitives, 'id' | 'employeeId' | 'rol
 /**
  * @function generateAccessToken
  * @description Generates an access token for a user.
- * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
+ * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated access token.
  */
-export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
+export function generateAccessToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${accessTokenExpiresIn}m`
 	return generateToken({
 		payload: user,
@@ -90,10 +105,10 @@ export function generateAccessToken(user: Pick<UserPrimitives, 'id' | 'employeeI
 /**
  * @function generateRefreshToken
  * @description Generates a refresh token for a user, including a unique JTI (JWT ID) to prevent token reuse.
- * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
+ * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated refresh token.
  */
-export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
+export function generateRefreshToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${refreshTokenExpiresIn}d`
 	return generateToken({
 		payload: user,
@@ -107,10 +122,10 @@ export function generateRefreshToken(user: Pick<UserPrimitives, 'id' | 'employee
 /**
  * @function generateChangePasswordToken
  * @description Generates a short-lived, single-purpose token for forcing a password change.
- * @param {Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>} user - The user data.
+ * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data.
  * @returns {string} The generated temporary token.
  */
-export function generateChangePasswordToken(user: Pick<UserPrimitives, 'id' | 'employeeId' | 'roleId'>): string {
+export function generateChangePasswordToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = '10m' // Corta duración, ej. 10 minutos
 	return generateToken({
 		payload: user,
