@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type NextFunction, type Request, type Response } from 'express'
 import { PermissionGroup } from '../../Contexts/AccessControl/PermissionGroup/domain/entity/PermissionGroup'
 import { PermissionId } from '../../Contexts/AccessControl/Permission/domain/valueObject/PermissionId'
 import { container } from '../di/container'
 import { PermissionDependencies } from '../di/access-control/permission.di'
-import { PermissionGroupDependencies } from '../di/access-control/permission-group'
+import { PermissionGroupDependencies } from '../di/access-control/permission-group.di'
 import { AuthenticationRequiredError } from '../../Contexts/AccessControl/Permission/domain/errors/AuthenticationRequiredError'
 import { RoleRequiredError } from '../../Contexts/AccessControl/Permission/domain/errors/RoleRequiredError'
 import { PermissionDoesNotExistError } from '../../Contexts/AccessControl/Permission/domain/errors/PermissionDoesNotExistError'

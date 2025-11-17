@@ -1,17 +1,17 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type PermissionGroupUpdater } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupUpdater'
+import { type AccessPolicyCreator } from '../../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyCreator'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
-import { PermissionGroupDependencies } from '../../di/access-control/permission-group.di'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
+import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 
 /**
- * Controller for creating a new PermissionGroup.
+ * Controller for creating a new AccessPolicy.
  */
-export class PermissionGroupPatchController implements Controller {
+export class AccessPolicyPostController implements Controller {
 	/**
-	 * Handles the request to create a new PermissionGroup.
+	 * Handles the request to create a new AccessPolicy.
 	 * @param {Request} req - The Express request object, containing brand parameters in `req.body`.
 	 * @param {Response} res - The Express response object.
 	 * @param {NextFunction} next - The Express next middleware function.
@@ -20,11 +20,10 @@ export class PermissionGroupPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const { id } = req.params
-			const create: PermissionGroupUpdater = container.resolve(PermissionGroupDependencies.Updater)
-			await create.run({ id, params })
-			res.status(httpStatus[200].statusCode).json({
-				message: SUCCESS_MESSAGES.PERMISSION_GROUP_UPDATED
+			const create: AccessPolicyCreator = container.resolve(AccessPolicyDependencies.Creator)
+			await create.run(params)
+			res.status(httpStatus[201].statusCode).json({
+				message: SUCCESS_MESSAGES.PERMISSION_GROUP_CREATED
 			})
 		} catch (error) {
 			next(error)

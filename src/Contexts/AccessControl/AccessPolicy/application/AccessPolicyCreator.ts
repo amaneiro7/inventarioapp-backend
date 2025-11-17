@@ -4,10 +4,16 @@ import { type AccessPolicyParams } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRepository'
 
 export class AccessPolicyCreator {
-	private readonly repository: AccessPolicyRepository
+	private readonly accessPolicyRepository: AccessPolicyRepository
 	private readonly eventBus: EventBus
-	constructor({ eventBus, repository }: { repository: AccessPolicyRepository; eventBus: EventBus }) {
-		this.repository = repository
+	constructor({
+		eventBus,
+		accessPolicyRepository
+	}: {
+		accessPolicyRepository: AccessPolicyRepository
+		eventBus: EventBus
+	}) {
+		this.accessPolicyRepository = accessPolicyRepository
 		this.eventBus = eventBus
 	}
 
@@ -18,7 +24,7 @@ export class AccessPolicyCreator {
 
 		const policy = AccessPolicy.create(params)
 
-		await this.repository.save(policy)
+		await this.accessPolicyRepository.save(policy.toPrimitives())
 
 		// Publicar los eventos de dominio registrados en la entidad.
 		// Por ejemplo, un AccessPolicyCreatedDomainEvent si fuera necesario.

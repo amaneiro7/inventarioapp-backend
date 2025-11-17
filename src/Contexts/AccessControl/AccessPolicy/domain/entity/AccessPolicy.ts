@@ -6,6 +6,8 @@ import { AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
+import { AccessPolicyRemovedDomainEvent } from './AccessPolicyRemovedDomainEvent'
+import { AccessPolicyCreatedDomainEvent } from './AccessPolicyCreatedDomainEvent'
 
 export class AccessPolicy extends AggregateRoot {
 	constructor(
@@ -19,12 +21,29 @@ export class AccessPolicy extends AggregateRoot {
 	}
 
 	static create(params: AccessPolicyParams): AccessPolicy {
-		return new AccessPolicy(
+		const accessPolicy = new AccessPolicy(
 			AccessPolicyId.random(),
 			params.cargoId ? new CargoId(params.cargoId) : null,
 			params.departamentoId ? new DepartmentId(params.departamentoId) : null,
 			new PermissionGroupId(params.permissionGroupId),
 			new AccessPolicyPriority(params.priority)
+		)
+		accessPolicy.record(
+			new AccessPolicyCreatedDomainEvent({
+				aggregateId: accessPolicy.idValue,
+				accessPolicyId: accessPolicy.idValue
+			})
+		)
+
+		return accessPolicy
+	}
+
+	remove(): void {
+		this.record(
+			new AccessPolicyRemovedDomainEvent({
+				aggregateId: this.idValue,
+				accessPolicyId: this.idValue
+			})
 		)
 	}
 

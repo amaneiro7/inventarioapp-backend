@@ -1,7 +1,7 @@
 import { Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
 import { Order } from '../../../Shared/domain/criteria/Order'
-import { type AccessPolicy } from '../domain/entity/AccessPolicy'
+import { AccessPolicy } from '../domain/entity/AccessPolicy'
 import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRepository'
 
 interface Params {
@@ -10,7 +10,10 @@ interface Params {
 }
 
 export class AccessPolicyResolver {
-	constructor(private readonly repository: AccessPolicyRepository) {}
+	private readonly accessPolicyRepository: AccessPolicyRepository
+	constructor({ accessPolicyRepository }: { accessPolicyRepository: AccessPolicyRepository }) {
+		this.accessPolicyRepository = accessPolicyRepository
+	}
 
 	/**
 	 * Resuelve el ID del grupo de permisos para un empleado basándose en las políticas de acceso.
@@ -20,7 +23,10 @@ export class AccessPolicyResolver {
 	async run(params: Params): Promise<string> {
 		// 1. Obtener TODAS las políticas de la base de datos.
 		// Para optimizar, podríamos cachear este resultado, ya que las políticas no cambian a menudo.
-		const allPolicies = await this.repository.search(new Criteria(new Filters([]), Order.none(), 0, 0))
+		const accessPolicies = await this.accessPolicyRepository.search(
+			new Criteria(new Filters([]), Order.none(), 0, 0)
+		)
+		const allPolicies = accessPolicies.map(policy => AccessPolicy.fromPrimitives(policy))
 
 		// 2. Filtrar en memoria para encontrar todas las reglas que coinciden con el empleado.
 		const matchingPolicies = allPolicies.filter(policy => policy.matches(params))

@@ -1,17 +1,17 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type PermissionGroupRemover } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupRemover'
+import { type AccessPolicyRemover } from '../../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyRemover'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
-import { PermissionGroupDependencies } from '../../di/access-control/permission-group.di'
+import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
 
 /**
- * Controller for deleting an existing PermissionGroup.
+ * Controller for deleting an existing AccessPolicy.
  */
-export class PermissionGroupDeleteController implements Controller {
+export class AccessPolicyDeleteController implements Controller {
 	/**
-	 * Handles the request to update a PermissionGroup.
+	 * Handles the request to update a AccessPolicy.
 	 * @param {Request} req - The Express request object, containing the brand ID in `req.params` and update parameters in `req.body`.
 	 * @param {Response} res - The Express response object.
 	 * @param {NextFunction} next - The Express next middleware function.
@@ -20,10 +20,10 @@ export class PermissionGroupDeleteController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const update: PermissionGroupRemover = container.resolve(PermissionGroupDependencies.Remover)
+			const update: AccessPolicyRemover = container.resolve(AccessPolicyDependencies.Remover)
 			await update.run({ id })
 			res.status(httpStatus[200].statusCode).json({
-				message: SUCCESS_MESSAGES.PERMISSION_GROUP_REMOVED
+				message: SUCCESS_MESSAGES.ACCESS_POLICY_REMOVED
 			})
 		} catch (error) {
 			next(error)

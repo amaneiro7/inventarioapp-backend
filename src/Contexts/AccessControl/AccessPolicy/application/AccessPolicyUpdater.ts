@@ -5,6 +5,7 @@ import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRe
 import { AccessPolicyParams } from '../domain/entity/AccessPolicy.dto'
 import { AccessPolicyDoesNotExistError } from '../domain/errors/AccessPolicyDoesNotExistError'
 import { EventBus } from '../../../Shared/domain/event/EventBus'
+import { AccessPolicy } from '../domain/entity/AccessPolicy'
 
 export class AccessPolicyUpdater {
 	private readonly accessPolicyRepository: AccessPolicyRepository
@@ -21,11 +22,12 @@ export class AccessPolicyUpdater {
 	}
 
 	async run({ id, params }: { id: Primitives<AccessPolicyId>; params: AccessPolicyParams }): Promise<void> {
-		const policy = await this.accessPolicyRepository.findById(id)
+		const accessPolicyPrimitives = await this.accessPolicyRepository.findById(id)
 
-		if (!policy) {
+		if (!accessPolicyPrimitives) {
 			throw new AccessPolicyDoesNotExistError(id)
 		}
+		const policy = AccessPolicy.fromPrimitives(accessPolicyPrimitives)
 
 		// Usamos los métodos de actualización de la entidad de dominio
 		if (params.cargoId !== undefined) policy.updateCargo(params.cargoId)
@@ -33,7 +35,7 @@ export class AccessPolicyUpdater {
 		if (params.permissionGroupId !== undefined) policy.updatePermissionGroup(params.permissionGroupId)
 		if (params.priority !== undefined) policy.updatePriority(params.priority)
 
-		await this.accessPolicyRepository.save(policy)
+		await this.accessPolicyRepository.save(policy.toPrimitives())
 
 		// Publicar eventos si la actualización generó alguno
 		await this.eventBus.publish(policy.pullDomainEvents())

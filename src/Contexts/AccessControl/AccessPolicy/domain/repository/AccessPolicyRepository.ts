@@ -2,15 +2,14 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type AccessPolicy } from '../entity/AccessPolicy'
-import { type AccessPolicyDto } from '../entity/AccessPolicy.dto'
+import { type AccessPolicyPrimitives, type AccessPolicyDto } from '../entity/AccessPolicy.dto'
 import { type AccessPolicyId } from '../valueObject/AccessPolicyId'
 
 export abstract class AccessPolicyRepository {
 	/**
 	 * Guarda (crea o actualiza) una política de acceso.
 	 */
-	abstract save(policy: AccessPolicy): Promise<void>
+	abstract save(payload: AccessPolicyPrimitives): Promise<void>
 
 	/**
 	 * Busca todas las políticas que coinciden con un criterio.
@@ -21,7 +20,7 @@ export abstract class AccessPolicyRepository {
 	/**
 	 * Busca una política de acceso por su ID.
 	 */
-	abstract findById(id: Primitives<AccessPolicyId>): Promise<Nullable<AccessPolicy>>
+	abstract findById(id: Primitives<AccessPolicyId>): Promise<Nullable<AccessPolicyDto>>
 
 	/**
 	 * Elimina una política de acceso por su ID.
@@ -29,5 +28,5 @@ export abstract class AccessPolicyRepository {
 	abstract remove(id: Primitives<AccessPolicyId>): Promise<void>
 
 	// Este es el método más importante para la lógica de login
-	abstract search(criteria: Criteria): Promise<AccessPolicy[]>
+	abstract search(criteria: Criteria): Promise<AccessPolicyDto[]>
 }

@@ -1,14 +1,14 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type PermissionGroupFinderAll } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupFinderAll'
+import { type AccessPolicyFinderAll } from '../../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyFinderAll'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
-import { PermissionGroupDependencies } from '../../di/access-control/permission-group.di'
+import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 
-export class PermissionGroupGetAllController implements Controller {
+export class AccessPolicyGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const getAll: PermissionGroupFinderAll = container.resolve(PermissionGroupDependencies.FinderAll)
+			const getAll: AccessPolicyFinderAll = container.resolve(AccessPolicyDependencies.FinderAll)
 			const data = await getAll.run(req.criteria!)
 			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {

@@ -43,6 +43,7 @@ import { type ShipmentDto } from '../../../../Shipment/Shipment/domain/entity/Sh
 import { type ShipmentDeviceDto } from '../../../../Shipment/ShipmentDevice/domain/entity/ShipmentDevice.dto'
 import { type PermissionDto } from '../../../../AccessControl/Permission/domain/entity/Permission.dto'
 import { type PermissionGroupDto } from '../../../../AccessControl/PermissionGroup/domain/entity/PermissionGroup.dto'
+import { AccessPolicyDto } from '../../../../AccessControl/AccessPolicy/domain/entity/AccessPolicy.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
 	Category: ModelStatic<Model<CategoryDto>>
@@ -76,18 +77,18 @@ export type SequelizeModels = Sequelize['models'] & {
 	Region: ModelStatic<Model<RegionDto>>
 	Site: ModelStatic<Model<SiteDto>>
 	Location: ModelStatic<Model<LocationDto>>
+	Directiva: ModelStatic<Model<DirectivaDto>>
 	VicepresidenciaEjecutiva: ModelStatic<Model<VicepresidenciaEjecutivaDto>>
 	Vicepresidencia: ModelStatic<Model<VicepresidenciaDto>>
-	Gerencia: ModelStatic<Model<DepartamentoDto>>
-	Coordinacion: ModelStatic<Model<DepartamentoDto>>
+	Departamento: ModelStatic<Model<DepartamentoDto>>
 	Cargo: ModelStatic<Model<CargoDto>>
 	Employee: ModelStatic<Model<EmployeeDto>>
 	InputType: ModelStatic<Model<InputTypeDto>>
 	CentroCosto: ModelStatic<Model<CentroCostoDto>>
 	CentroTrabajo: ModelStatic<Model<CentroTrabajoDto>>
-	Directiva: ModelStatic<Model<DirectivaDto>>
 	Shipment: ModelStatic<Model<ShipmentDto>>
 	ShipmentDevice: ModelStatic<Model<ShipmentDeviceDto>>
 	Permission: ModelStatic<Model<PermissionDto>>
 	PermissionGroup: ModelStatic<Model<PermissionGroupDto>>
+	AccessPolicy: ModelStatic<Model<AccessPolicyDto>>
 }

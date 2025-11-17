@@ -40,6 +40,10 @@ export class PermissionGroupModel
 			otherKey: 'permission_id',
 			as: 'permissionsData'
 		})
+		this.hasOne(models.AccessPolicy, {
+			as: 'accessPolicy',
+			foreignKey: 'permission_group_id'
+		})
 	}
 
 	static initialize(sequelize: Sequelize): void {

@@ -14,6 +14,7 @@ import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSc
 import { type DepartamentoDto } from '../../domain/Departamento.dto'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Departamento` entity.
@@ -34,7 +35,7 @@ export class DepartamentoModel
 	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' })
 		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'departamentoId' })
 		this.belongsToMany(models.Cargo, {
@@ -42,6 +43,10 @@ export class DepartamentoModel
 			through: 'cargo_departamento',
 			foreignKey: 'departamentoId',
 			otherKey: 'cargoId'
+		})
+		this.hasOne(models.AccessPolicy, {
+			as: 'accessPolicy',
+			foreignKey: 'departamentoId'
 		})
 	}
 

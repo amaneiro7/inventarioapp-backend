@@ -87,6 +87,10 @@ export class CargoModel
 			otherKey: 'departamentoId'
 		})
 		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'cargoId' })
+		this.hasOne(models.AccessPolicy, {
+			as: 'accessPolicy',
+			foreignKey: 'cargoId'
+		})
 	}
 
 	static initialize(sequelize: Sequelize): void {

@@ -13,16 +13,16 @@ import { PermissionGroupDeleteController } from '../../controllers/access-contro
 
 export enum PermissionGroupDependencies {
 	Repository = 'permissionGroupRepository',
-	Finder = 'permissionFinder',
-	FinderAll = 'permissionFinderAll',
-	Creator = 'permissionCreator',
-	Updater = 'permissionUpdater',
-	Remover = 'permissionRemover',
-	GetController = 'permissionGetController',
-	GetAllController = 'permissionGetAllController',
-	PostController = 'permissionPostController',
-	PatchController = 'permissionPatchController',
-	DeleteController = 'permissionDeleteController'
+	Finder = 'permissionGroupFinder',
+	FinderAll = 'permissionGroupFinderAll',
+	Creator = 'permissionGroupCreator',
+	Updater = 'permissionGroupUpdater',
+	Remover = 'permissionGroupRemover',
+	GetController = 'permissionGroupGetController',
+	GetAllController = 'permissionGroupGetAllController',
+	PostController = 'permissionGroupPostController',
+	PatchController = 'permissionGroupPatchController',
+	DeleteController = 'permissionGroupDeleteController'
 }
 
 export const register = (container: AwilixContainer) => {

@@ -1,13 +1,13 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
+const saltRounds = 10
+const defaultPasswordHash = bcrypt.hashSync('Avion01.', saltRounds)
+console.log(defau)
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		const saltRounds = 10
-		const defaultPasswordHash = bcrypt.hashSync('Avion01.', saltRounds)
-
 		const allowedDomainsJson = JSON.stringify('["bnc.com.ve","banconacionaldecredito.com.ve","bncenlinea.net"]')
 
 		const settingsToSeed = [

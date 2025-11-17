@@ -1,21 +1,20 @@
 import { type CargoId } from '../../../../employee/Cargo/domain/CargoId'
 import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
-import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { type AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { type AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 
-export interface AccessPolicy {
+export type AccessPolicyRaw = {
 	id: Primitives<AccessPolicyId>
-	cargoId: Nullable<Primitives<CargoId>>
-	departamentoId?: Nullable<Primitives<DepartmentId>>
+	cargoId: Primitives<CargoId> | null
+	departamentoId?: Primitives<DepartmentId> | null
 	permissionGroupId: Primitives<PermissionGroupId>
 	priority: Primitives<AccessPolicyPriority>
 }
 
-export type AccessPolicyPrimitives = AccessPolicy
+export type AccessPolicyPrimitives = AccessPolicyRaw
 
-export type AccessPolicyParams = Omit<AccessPolicyPrimitives, 'id'>
+export type AccessPolicyParams = Omit<AccessPolicyRaw, 'id'>
 
-export type AccessPolicyDto = AccessPolicy
+export type AccessPolicyDto = AccessPolicyRaw

@@ -3,7 +3,7 @@ import { type Controller } from '../controller'
 import { type PermissionGroupCreator } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupCreator'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
-import { PermissionGroupDependencies } from '../../di/access-control/permission-group'
+import { PermissionGroupDependencies } from '../../di/access-control/permission-group.di'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
 
 /**
