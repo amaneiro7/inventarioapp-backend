@@ -8,7 +8,7 @@ import { BrandDependencies } from '../../di/brand/brand.di'
 /**
  * Controller for retrieving a single Brand by its ID.
  */
-export class BrandGetFinderController implements Controller {
+export class BrandGetController implements Controller {
 	/**
 	 * Handles the request to get a Brand by ID.
 	 * @param {Request} req - The Express request object, containing the brand ID in `req.params`.

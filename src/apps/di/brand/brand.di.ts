@@ -4,8 +4,8 @@ import { BrandFinderAll } from '../../../Contexts/Brand/application/BrandFinderA
 import { BrandUpdater } from '../../../Contexts/Brand/application/BrandUpdater'
 import { BrandFinder } from '../../../Contexts/Brand/application/BrandFinder'
 import { BrandPatchController } from '../../controllers/brand/brand.patch.controller'
-import { BrandGetFinderAllController } from '../../controllers/brand/brand.get-all.controller'
-import { BrandGetFinderController } from '../../controllers/brand/brand.get.controller'
+import { BrandGetAllController } from '../../controllers/brand/brand.get-all.controller'
+import { BrandGetController } from '../../controllers/brand/brand.get.controller'
 import { BrandPostController } from '../../controllers/brand/brand.post.controller'
 import { SequelizeBrandRepository } from '../../../Contexts/Brand/infrastructure/Sequelize/SequelizeBrandRepository'
 
@@ -28,8 +28,8 @@ export const register = (container: AwilixContainer) => {
 		brandFinder: asClass(BrandFinder),
 		brandFinderAll: asClass(BrandFinderAll),
 		brandUpdater: asClass(BrandUpdater),
-		brandGetController: asClass(BrandGetFinderController),
-		brandGetAllController: asClass(BrandGetFinderAllController),
+		brandGetController: asClass(BrandGetController),
+		brandGetAllController: asClass(BrandGetAllController),
 		brandPostController: asClass(BrandPostController),
 		brandPatchController: asClass(BrandPatchController)
 	})

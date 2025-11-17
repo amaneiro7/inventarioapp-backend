@@ -5,7 +5,7 @@ import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-statu
 import { container } from '../../di/container'
 import { BrandDependencies } from '../../di/brand/brand.di'
 
-export class BrandGetFinderAllController implements Controller {
+export class BrandGetAllController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const getAll: BrandFinderAll = container.resolve(BrandDependencies.FinderAll)

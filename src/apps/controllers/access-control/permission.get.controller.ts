@@ -1,16 +1,16 @@
 import { type Request, type Response, type NextFunction } from 'express'
-import { type ShipmentFinder } from '../../../Contexts/Shipment/Shipment/application/ShipmentFinder'
 import { type Controller } from '../controller'
+import { type PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFInder'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
-import { ShipmentDependencies } from '../../di/shipment/shipment.di'
+import { PermissionDependencies } from '../../di/access-control/permission.di'
 
 /**
- * Controller for retrieving a single Shipment by its ID.
+ * Controller for retrieving a single Permission by its ID.
  */
-export class ShipmentGetController implements Controller {
+export class PermissionGetController implements Controller {
 	/**
-	 * Handles the request to get a Shipment by ID.
+	 * Handles the request to get a Permission by ID.
 	 * @param {Request} req - The Express request object, containing the brand ID in `req.params`.
 	 * @param {Response} res - The Express response object.
 	 * @param {NextFunction} next - The Express next middleware function.
@@ -19,7 +19,7 @@ export class ShipmentGetController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.params
-			const get: ShipmentFinder = container.resolve(ShipmentDependencies.Finder)
+			const get: PermissionFinder = container.resolve(PermissionDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {

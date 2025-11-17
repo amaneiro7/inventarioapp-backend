@@ -5,8 +5,8 @@ import { ShipmentFinder } from '../../../Contexts/Shipment/Shipment/application/
 import { ShipmentFinderAll } from '../../../Contexts/Shipment/Shipment/application/ShipmentFinderAll'
 import { ShipmentUpdater } from '../../../Contexts/Shipment/Shipment/application/ShipmentUpdater'
 import { SequelizeShipmentDeviceRepository } from '../../../Contexts/Shipment/ShipmentDevice/infrastructure/Sequelize/SequelizeShipmentDeviceRepository'
-import { ShipmentGetFinderController } from '../../controllers/shipments/shipment.get.controller'
-import { ShipmentGetFinderAllController } from '../../controllers/shipments/shipment.get-all.controller'
+import { ShipmentGetController } from '../../controllers/shipments/shipment.get.controller'
+import { ShipmentGetAllController } from '../../controllers/shipments/shipment.get-all.controller'
 import { ShipmentPostController } from '../../controllers/shipments/shipment.post.controller'
 import { ShipmentPatchController } from '../../controllers/shipments/shipment.patch.controller'
 
@@ -30,8 +30,8 @@ export const register = (container: AwilixContainer): void => {
 		shipmentFinder: asClass(ShipmentFinder),
 		shipmentFinderAll: asClass(ShipmentFinderAll),
 		shipmentUpdater: asClass(ShipmentUpdater),
-		shipmentGetController: asClass(ShipmentGetFinderController),
-		shipmentGetAllController: asClass(ShipmentGetFinderAllController),
+		shipmentGetController: asClass(ShipmentGetController),
+		shipmentGetAllController: asClass(ShipmentGetAllController),
 		shipmentPostController: asClass(ShipmentPostController),
 		shipmentPatchController: asClass(ShipmentPatchController)
 	})

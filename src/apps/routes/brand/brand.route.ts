@@ -1,16 +1,16 @@
 import { type Router } from 'express'
 import { container } from '../../di/container'
-import { type BrandGetFinderAllController } from '../../controllers/brand/brand.get-all.controller'
+import { type BrandGetAllController } from '../../controllers/brand/brand.get-all.controller'
 import { type BrandPostController } from '../../controllers/brand/brand.post.controller'
 import { type BrandPatchController } from '../../controllers/brand/brand.patch.controller'
-import { type BrandGetFinderController } from '../../controllers/brand/brand.get.controller'
+import { type BrandGetController } from '../../controllers/brand/brand.get.controller'
 import { BrandDependencies } from '../../di/brand/brand.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 
 export const register = async (router: Router) => {
-	const getController: BrandGetFinderController = container.resolve(BrandDependencies.GetController)
-	const getAllController: BrandGetFinderAllController = container.resolve(BrandDependencies.GetAllController)
+	const getController: BrandGetController = container.resolve(BrandDependencies.GetController)
+	const getAllController: BrandGetAllController = container.resolve(BrandDependencies.GetAllController)
 	const postController: BrandPostController = container.resolve(BrandDependencies.PostController)
 	const patchController: BrandPatchController = container.resolve(BrandDependencies.PatchController)
 

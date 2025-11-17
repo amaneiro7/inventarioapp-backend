@@ -5,6 +5,11 @@ import { PermissionGroupCreator } from '../../../Contexts/AccessControl/Permissi
 import { PermissionGroupRemover } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupRemover'
 import { PermissionGroupUpdater } from '../../../Contexts/AccessControl/PermissionGroup/application/PermissionGroupUpdater'
 import { SequelizePermissionGroupRepository } from '../../../Contexts/AccessControl/PermissionGroup/infrastructure/sequelize/SequelizePermissionGroupRepository'
+import { PermissionGroupGetController } from '../../controllers/access-control/permission-group.get.controller'
+import { PermissionGroupGetAllController } from '../../controllers/access-control/permission-group.get-all.controller'
+import { PermissionGroupPostController } from '../../controllers/access-control/permission-group.post.controller'
+import { PermissionGroupPatchController } from '../../controllers/access-control/permission-group.patch.controller'
+import { PermissionGroupDeleteController } from '../../controllers/access-control/permission-group.delete.controller'
 
 export enum PermissionGroupDependencies {
 	Repository = 'permissionGroupRepository',
@@ -27,12 +32,11 @@ export const register = (container: AwilixContainer) => {
 		[PermissionGroupDependencies.FinderAll]: asClass(PermissionGroupFinderAll),
 		[PermissionGroupDependencies.Creator]: asClass(PermissionGroupCreator),
 		[PermissionGroupDependencies.Updater]: asClass(PermissionGroupUpdater),
-		[PermissionGroupDependencies.Remover]: asClass(PermissionGroupRemover)
-		// [PermissionGroupDependencies.GetController]: asClass(PermissionGroupGetController),
-		// [PermissionGroupDependencies.GetAllController]: asClass(PermissionGroupGetAllController),
-		// [PermissionGroupDependencies.PostController]: asClass(PermissionGroupPostController),
-		// [PermissionGroupDependencies.PatchController]: asClass(PermissionGroupPatchController),
-		// [PermissionGroupDependencies.DeleteController]: asClass(PermissionGroupDeleteController),
-		// [PermissionGroupDependencies.GetByCriteriaController]: asClass(PermissionGroupSearchByCriteriaController)
+		[PermissionGroupDependencies.Remover]: asClass(PermissionGroupRemover),
+		[PermissionGroupDependencies.GetController]: asClass(PermissionGroupGetController),
+		[PermissionGroupDependencies.GetAllController]: asClass(PermissionGroupGetAllController),
+		[PermissionGroupDependencies.PostController]: asClass(PermissionGroupPostController),
+		[PermissionGroupDependencies.PatchController]: asClass(PermissionGroupPatchController),
+		[PermissionGroupDependencies.DeleteController]: asClass(PermissionGroupDeleteController)
 	})
 }

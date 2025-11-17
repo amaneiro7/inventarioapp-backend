@@ -3,14 +3,14 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ShipmentDependencies } from '../../di/shipment/shipment.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
-import { type ShipmentGetFinderController } from '../../controllers/shipments/shipment.get.controller'
-import { type ShipmentGetFinderAllController } from '../../controllers/shipments/shipment.get-all.controller'
+import { type ShipmentGetController } from '../../controllers/shipments/shipment.get.controller'
+import { type ShipmentGetAllController } from '../../controllers/shipments/shipment.get-all.controller'
 import { type ShipmentPostController } from '../../controllers/shipments/shipment.post.controller'
 import { type ShipmentPatchController } from '../../controllers/shipments/shipment.patch.controller'
 
 export const register = async (router: Router) => {
-	const getController: ShipmentGetFinderController = container.resolve(ShipmentDependencies.GetController)
-	const getAllController: ShipmentGetFinderAllController = container.resolve(ShipmentDependencies.GetAllController)
+	const getController: ShipmentGetController = container.resolve(ShipmentDependencies.GetController)
+	const getAllController: ShipmentGetAllController = container.resolve(ShipmentDependencies.GetAllController)
 	const postController: ShipmentPostController = container.resolve(ShipmentDependencies.PostController)
 	const patchController: ShipmentPatchController = container.resolve(ShipmentDependencies.PatchController)
 

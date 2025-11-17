@@ -153,6 +153,58 @@ const options = {
 						}
 					}
 				},
+				Permission: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							description: 'Nombre único del permiso (ej. users.create, devices.read).',
+							example: 'users.create'
+						}
+					},
+					required: ['name']
+				},
+				PermissionGroupCreate: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							description: 'Nombre único del grupo de permisos.',
+							example: 'Administradores'
+						},
+						permissions: {
+							type: 'array',
+							items: {
+								type: 'string',
+								format: 'uuid'
+							},
+							description: 'Lista opcional de IDs de permisos para asignar inicialmente al grupo.',
+							example: ['d8b9b9a0-5b9a-4b0f-8b0a-9b0a9b0a9b0a', 'e8b9b9a0-5b9a-4b0f-8b0a-9b0a9b0a9b0b']
+						}
+					},
+					required: ['name']
+				},
+				PermissionGroupUpdate: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							description: 'Nuevo nombre opcional para el grupo de permisos.',
+							example: 'Super Administradores'
+						},
+						permissionsToAdd: {
+							type: 'array',
+							items: { type: 'string', format: 'uuid' },
+							description: 'Lista opcional de IDs de permisos para añadir al grupo.'
+						},
+						permissionsToRevoke: {
+							type: 'array',
+							items: { type: 'string', format: 'uuid' },
+							description: 'Lista opcional de IDs de permisos para revocar del grupo.'
+						}
+					},
+					description: 'Al menos una de las propiedades debe ser proporcionada para la actualización.'
+				},
 				Device: {
 					type: 'object',
 					properties: {
