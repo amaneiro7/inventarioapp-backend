@@ -67,7 +67,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			const requiredPermissionDto = await permissionRepository.findByName(requiredPermissionName)
 			if (!requiredPermissionDto) {
 				// Si el permiso requerido no existe en el sistema, se lanza un error.
-				return next(new PermissionDoesNotExistError(requiredPermissionName))
+				return next(new PermissionDoesNotExistError({ permissionName: requiredPermissionName }))
 			}
 			// Creamos el VO del ID del permiso requerido.
 			const requiredPermissionId = new PermissionId(requiredPermissionDto.id)

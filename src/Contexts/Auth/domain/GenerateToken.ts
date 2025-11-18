@@ -2,7 +2,7 @@ import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
 import { config } from '../../Shared/infrastructure/config'
 
-import { type UserDto } from '../../User/user/domain/entity/User.dto' // Use User.dto
+import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type RoleId } from '../../User/Role/domain/RoleId'
 import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corrected path for UserId
@@ -20,7 +20,7 @@ type JwtPayloadPurposes = 'access' | 'refresh' | 'change-password' | undefined
  * @description Define los atributos mínimos necesarios del usuario para generar un token,
  * incluyendo los atributos de negocio requeridos por el middleware hasPermission (ABAC).
  */
-export interface UserTokenAttributes extends Pick<UserDto, 'id' | 'employeeId' | 'roleId'> {
+export interface UserTokenAttributes extends Pick<User, 'id' | 'employeeId' | 'roleId'> {
 	cargoId: string // ATRIBUTO REQUERIDO PARA ABAC
 	departamentoId: string // ATRIBUTO REQUERIDO PARA ABAC
 }
@@ -51,13 +51,13 @@ const issuer = 'SoporteTecnicoBNC'
  * @function generateToken
  * @description Generates a JWT with the given payload, secret, and expiration.
  * @param {object} params - The parameters for token generation.
- * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} params.payload - User data to include in the token.
+ * @param {Pick<User, 'id' | 'employeeId' | 'roleId'>} params.payload - User data to include in the token.
  * @param {string} params.secret - The secret key for signing the token.
  * @param {string} params.expiresIn - The expiration time for the token (e.g., '1h', '7d').
  * @param {string} [params.jti] - Optional JWT ID, typically used for refresh tokens.
  * @returns {string} The generated JWT string.
  */
-function generateToken<T extends Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>>({
+function generateToken<T extends Pick<User, 'id' | 'employeeId' | 'roleId' | 'employee'>>({
 	payload,
 	secret,
 	expiresIn,
@@ -89,10 +89,10 @@ function generateToken<T extends Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 
 /**
  * @function generateAccessToken
  * @description Generates an access token for a user.
- * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
+ * @param {Pick<User, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated access token.
  */
-export function generateAccessToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
+export function generateAccessToken(user: Pick<User, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${accessTokenExpiresIn}m`
 	return generateToken({
 		payload: user,
@@ -105,10 +105,10 @@ export function generateAccessToken(user: Pick<UserDto, 'id' | 'employeeId' | 'r
 /**
  * @function generateRefreshToken
  * @description Generates a refresh token for a user, including a unique JTI (JWT ID) to prevent token reuse.
- * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
+ * @param {Pick<User, 'id' | 'employeeId' | 'roleId'>} user - The user data to be included in the token payload.
  * @returns {string} The generated refresh token.
  */
-export function generateRefreshToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
+export function generateRefreshToken(user: Pick<User, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = `${refreshTokenExpiresIn}d`
 	return generateToken({
 		payload: user,
@@ -122,10 +122,10 @@ export function generateRefreshToken(user: Pick<UserDto, 'id' | 'employeeId' | '
 /**
  * @function generateChangePasswordToken
  * @description Generates a short-lived, single-purpose token for forcing a password change.
- * @param {Pick<UserDto, 'id' | 'employeeId' | 'roleId'>} user - The user data.
+ * @param {Pick<User, 'id' | 'employeeId' | 'roleId'>} user - The user data.
  * @returns {string} The generated temporary token.
  */
-export function generateChangePasswordToken(user: Pick<UserDto, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
+export function generateChangePasswordToken(user: Pick<User, 'id' | 'employeeId' | 'roleId' | 'employee'>): string {
 	const expiresIn: SignOptions['expiresIn'] = '10m' // Corta duración, ej. 10 minutos
 	return generateToken({
 		payload: user,

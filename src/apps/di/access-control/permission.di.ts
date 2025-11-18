@@ -1,5 +1,5 @@
 import { type AwilixContainer, asClass } from 'awilix'
-import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFInder'
+import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder'
 import { PermissionsFinderAll } from '../../../Contexts/AccessControl/Permission/application/PermissionsFinderAll'
 import { PermissionCreator } from '../../../Contexts/AccessControl/Permission/application/PermissionCreator'
 import { PermissionRemover } from '../../../Contexts/AccessControl/Permission/application/PermissionRemover'

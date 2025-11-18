@@ -33,9 +33,8 @@ export class PermissionRemover {
 		const permission = await this.permissionRepository.findById(permissionId.value)
 
 		if (permission === null) {
-			throw new PermissionDoesNotExistError()
+			throw new PermissionDoesNotExistError({ permissionId: id })
 		}
-
 		const permissionEntity = Permission.fromPrimitives(permission)
 		permissionEntity.remove()
 

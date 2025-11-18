@@ -1,4 +1,4 @@
-import { type UserDto } from '../../User/user/domain/entity/User.dto'
+import { type UserDto } from '../../../User/user/domain/entity/User.dto'
 
 /**
  * @interface AuthResponseDto

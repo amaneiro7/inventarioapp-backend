@@ -14,8 +14,7 @@ import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
 import { SettingsFinder } from '../../AppSettings/application/SettingsFinder'
 import { AppSettingDefaults, AppSettingKeys } from '../../AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../../User/user/domain/Repository/UserRepository'
-import { type AuthResponseDto } from '../domain/Auth.dto'
-import { UserDto } from '../../User/user/domain/entity/User.dto'
+import { type AuthResponseDto } from '../domain/entity/Auth.dto'
 
 /**
  * @class AuthRefreshTokenUseCase

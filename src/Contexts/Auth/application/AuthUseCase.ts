@@ -1,9 +1,9 @@
 import { generateAccessToken, generateRefreshToken } from '../domain/GenerateToken'
 import { buildAuthResponse } from '../domain/buildAuthResponse'
-import { type UserDto } from '../../User/user/domain/entity/User.dto' // Use User.dto
-import { type AuthResponseDto } from '../domain/Auth.dto'
+import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
+import { type AuthResponseDto } from '../domain/entity/Auth.dto'
 
-type ReqUser = UserDto
+type ReqUser = User
 
 /**
  * @description Authenticates a user and generates access and refresh tokens.

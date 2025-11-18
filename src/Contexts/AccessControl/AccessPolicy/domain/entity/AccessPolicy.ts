@@ -59,11 +59,11 @@ export class AccessPolicy extends AggregateRoot {
 
 	toPrimitives(): AccessPolicyPrimitives {
 		return {
-			id: this.id.value,
-			cargoId: this.cargoId?.value,
-			departamentoId: this.departamentoId?.value,
-			permissionGroupId: this.permissionGroupId.value,
-			priority: this.priority.value
+			id: this.idValue,
+			cargoId: this.cargoValue,
+			departamentoId: this.departamentoValue,
+			permissionGroupId: this.permissionGroupValue,
+			priority: this.priorityValue
 		}
 	}
 
@@ -79,12 +79,12 @@ export class AccessPolicy extends AggregateRoot {
 		return this.id.value
 	}
 
-	get cargoValue(): string | undefined {
-		return this.cargoId?.value
+	get cargoValue(): string | null {
+		return this.cargoId?.value ?? null
 	}
 
-	get departamentoValue(): string | undefined {
-		return this.departamentoId?.value
+	get departamentoValue(): string | null {
+		return this.departamentoId?.value ?? null
 	}
 	get permissionGroupValue(): string {
 		return this.permissionGroupId.value

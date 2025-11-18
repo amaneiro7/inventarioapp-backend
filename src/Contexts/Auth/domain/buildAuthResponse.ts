@@ -1,5 +1,5 @@
 import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
-import { type AuthResponseDto } from './Auth.dto'
+import { type AuthResponseDto } from './entity/Auth.dto'
 
 /**
  * @function buildAuthResponse

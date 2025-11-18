@@ -25,7 +25,7 @@ export class PermissionFinder {
 		const permission = await this.permissionRepository.findById(permissionId)
 
 		if (!permission) {
-			throw new PermissionDoesNotExistError()
+			throw new PermissionDoesNotExistError({ permissionId: id })
 		}
 
 		return permission
