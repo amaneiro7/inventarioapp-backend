@@ -34,7 +34,6 @@ export class InventarioBackendApp {
 			this.logger.info('Passport manager inicializado correctamente.')
 
 			await this.configureEventBus()
-			this.logger.info('Event Bus configurado correctamente.')
 
 			// 4. Poner el servidor a escuchar SOLO después de que todo lo demás esté listo.
 			await this.server.listen()
@@ -91,7 +90,7 @@ export class InventarioBackendApp {
 
 	async configureEventBus() {
 		const eventBus: EventBus = container.resolve(SharedDependencies.EventBus)
-
 		await eventBus.addSubscribers(DomainEventSubscribers.from(container))
+		this.logger.info('Event Bus configurado correctamente.')
 	}
 }

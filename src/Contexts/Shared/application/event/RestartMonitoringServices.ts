@@ -12,6 +12,11 @@ export class RestartMonitoringServices implements DomainEventSubscriber<AppSetti
 	private readonly locationMonitoringService: LocationMonitoringService
 	private readonly logger: Logger
 	private readonly settingsFinder: SettingsFinder
+	// Definimos explícitamente las claves que nos interesan
+	private readonly relevantKeys: Set<string> = new Set([
+		AppSettingKeys.LOCATION_MONITORING.ENABLED,
+		AppSettingKeys.DEVICE_MONITORING.ENABLED
+	])
 
 	constructor({
 		deviceMonitoringService,
@@ -41,15 +46,22 @@ export class RestartMonitoringServices implements DomainEventSubscriber<AppSetti
 	// --- Domain Event Handlers ---
 
 	async on(event: AppSettingsUpdaterDomainEvent): Promise<void> {
-		console.log(event)
 		const { key, value } = event
+
+		// Si la clave del evento no es una de las que nos interesan, salimos inmediatamente.
+		if (!this.relevantKeys.has(key)) {
+			return
+		}
+
+		this.logger.info(`[RestartMonitoringServices] Relevant setting changed: ${key}. Processing...`)
+
 		const isEnabled = value.toLowerCase() === 'true'
 
-		if (key === AppSettingKeys.LOCATION_MONITORING.ENABLED) {
-			this.handleLocationMonitoring(key, isEnabled)
-		}
-		if (key === AppSettingKeys.DEVICE_MONITORING.ENABLED) {
-			this.handleDeviceMonitoring(key, isEnabled)
+		switch (key) {
+			case AppSettingKeys.LOCATION_MONITORING.ENABLED:
+				return this.handleLocationMonitoring(key, isEnabled)
+			case AppSettingKeys.DEVICE_MONITORING.ENABLED:
+				return this.handleDeviceMonitoring(key, isEnabled)
 		}
 	}
 
