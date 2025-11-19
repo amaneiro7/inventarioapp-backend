@@ -3,6 +3,7 @@ import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { config } from '../../Contexts/Shared/infrastructure/config'
 import { ApiError } from '../../Contexts/Shared/domain/errors/ApiError'
 import { type Logger } from '../../Contexts/Shared/domain/Logger'
+import { TokenInvalidOrExpiredError } from '../../Contexts/Auth/domain/error/TokenInvalidOrExpiredError'
 
 /**
  * @description Express error handling middleware.
@@ -15,6 +16,15 @@ import { type Logger } from '../../Contexts/Shared/domain/Logger'
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: Response, _next: NextFunction) => {
+	// Lista de errores que no queremos registrar para no generar ruido.
+	const ignoredErrors = [TokenInvalidOrExpiredError]
+	if (ignoredErrors.some(errorType => err instanceof errorType)) {
+		// No registramos el error, pero sí enviamos la respuesta al cliente.
+	} else {
+		// Para todos los demás errores, los registramos.
+		logger.error(err)
+	}
+
 	let statusCode: number = httpStatus[500].statusCode
 	let message: string = httpStatus[500].message
 	let responseBody: Record<string, unknown> = {}
@@ -41,10 +51,6 @@ export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: 
 
 	// Store the error message in res.locals for potential logging by other middlewares
 	res.locals.errorMessage = err.message
-
-	// Log the full error details for debugging purposes, regardless of the environment
-	//logger.error(`${err.name}: ${err.message}`)
-	logger.error(err)
 
 	// Send a standardized JSON error response
 	res.status(statusCode).json({
