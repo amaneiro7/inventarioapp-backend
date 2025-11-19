@@ -18,13 +18,13 @@ export class PermissionCreator {
 		this.eventBus = eventBus
 	}
 
-	async run({ name }: PermissionParams): Promise<void> {
+	async run({ name, description }: PermissionParams): Promise<void> {
 		const existingPermission = await this.permissionRepository.findByName(name)
 		if (existingPermission) {
 			throw new PermissionAlreadyExistsError(name)
 		}
 
-		const permission = Permission.create({ name })
+		const permission = Permission.create({ name, description })
 		await this.permissionRepository.save(permission.toPrimitives())
 		await this.eventBus.publish(permission.pullDomainEvents())
 	}
