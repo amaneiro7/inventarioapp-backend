@@ -22,18 +22,15 @@ export class AccessPolicyAssociation {
 
 		const PermissionGroupInclude: IncludeOptions = {
 			association: 'permissionGroup', // As defined in AccessPolicySchema.ts
-			attributes: [], // We only need it for filtering, not for the result
-			through: {}
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
 		const CargoInclude: IncludeOptions = {
 			association: 'cargo', // As defined in AccessPolicySchema.ts
-			attributes: [], // We only need it for filtering, not for the result
-			through: {}
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
 		const DepartamentoInclude: IncludeOptions = {
 			association: 'departamento', // As defined in AccessPolicySchema.ts
-			attributes: [], // We only need it for filtering, not for the result
-			through: {}
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
 
 		options.include = [PermissionGroupInclude, CargoInclude, DepartamentoInclude]
