@@ -7,13 +7,16 @@ import { type PermissionDto } from '../../../Permission/domain/entity/Permission
 export type PermissionGroup = {
 	id: Primitives<PermissionGroupId>
 	name: Primitives<PermissionGroupName>
+}
+
+export type PermissionGroupParams = Omit<PermissionGroup, 'id'> & {
+	permissions?: Primitives<PermissionId>[]
+}
+
+export type PermissionGroupPrimitives = PermissionGroup & {
 	permissions: Primitives<PermissionId>[]
 }
 
-export type PermissionGroupPrimitives = PermissionGroup
-
-export type PermissionGroupParams = Omit<PermissionGroup, 'id'>
-
-export type PermissionGroupDto = PermissionGroup & {
-	permissionsData?: PermissionDto[]
+export type PermissionGroupDto = Omit<PermissionGroup, 'permissions'> & {
+	permissions: PermissionDto[]
 }

@@ -6,9 +6,12 @@ import { type CargoId } from '../../../../employee/Cargo/domain/CargoId'
 import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
 import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { type AccessPolicyPriority } from '../../domain/valueObject/AccessPolicyPriority'
+import { AccessPolicyDto } from '../../domain/entity/AccessPolicy.dto'
+import { AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
 
-export class AccessPolicyModel extends Model {
+export class AccessPolicyModel extends Model<AccessPolicyDto> implements AccessPolicyDto {
 	declare id: Primitives<AccessPolicyId>
+	declare name: Primitives<AccessPolicyName>
 	declare cargoId: Primitives<CargoId> | null
 	declare departamentoId: Primitives<DepartmentId> | null
 	declare permissionGroupId: Primitives<PermissionGroupId>
@@ -39,6 +42,11 @@ export class AccessPolicyModel extends Model {
 					type: DataTypes.UUID,
 					primaryKey: true,
 					allowNull: false
+				},
+				name: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					unique: true
 				},
 				cargoId: {
 					type: DataTypes.UUID,

@@ -10,6 +10,7 @@ import { type AccessPolicyPostController } from '../../controllers/access-contro
 import { type AccessPolicyDeleteController } from '../../controllers/access-control/access-policy.delete.controller'
 
 export const register = async (router: Router) => {
+	const routerPath = '/access-policies'
 	const getController: AccessPolicyGetController = container.resolve(AccessPolicyDependencies.GetController)
 	const getAllController: AccessPolicyGetAllController = container.resolve(AccessPolicyDependencies.GetAllController)
 	const postController: AccessPolicyPostController = container.resolve(AccessPolicyDependencies.PostController)
@@ -29,12 +30,7 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de políticas de acceso obtenida con éxito.
 	 */
-	router.get(
-		'/access-policies',
-		...protectedRoute,
-		criteriaConverterMiddleware,
-		getAllController.run.bind(getAllController)
-	)
+	router.get(routerPath, ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
 
 	/**
 	 * @swagger
@@ -59,7 +55,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.get('/access-policies/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(`${routerPath}/:id`, ...protectedRoute, getController.run.bind(getController))
 
 	/**
 	 * @swagger
@@ -82,7 +78,7 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/access-policies', ...protectedRoute, postController.run.bind(postController))
+	router.post(routerPath, ...protectedRoute, postController.run.bind(postController))
 
 	/**
 	 * @swagger
@@ -115,7 +111,7 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.patch('/access-policies/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(`${routerPath}/:id`, ...protectedRoute, patchController.run.bind(patchController))
 	/**
 	 * @swagger
 	 * /access-policies/{id}:
@@ -139,5 +135,5 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.delete('/access-policies/:id', ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(`${routerPath}/:id`, ...protectedRoute, deleteController.run.bind(deleteController))
 }

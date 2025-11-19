@@ -9,7 +9,12 @@ import { type AuthResponseDto } from './entity/Auth.dto'
  * @param {string} [refreshToken] - The generated refresh token (optional).
  * @returns {AuthResponseDto} The authentication response DTO.
  */
-export function buildAuthResponse(user: User, accessToken: string, refreshToken?: string): AuthResponseDto {
+export function buildAuthResponse(
+	user: User,
+	accessToken: string,
+	refreshToken?: string,
+	permissions?: string[]
+): AuthResponseDto {
 	const { id, employeeId, role, roleId, status, employee } = user // Updated destructuring
 	const response: AuthResponseDto = {
 		user: {
@@ -49,7 +54,8 @@ export function buildAuthResponse(user: User, accessToken: string, refreshToken?
 				phone: employee.phone
 			}
 		},
-		accessToken
+		accessToken,
+		...(permissions && { permissions }) // Añade los permisos si se proporcionan
 	}
 
 	if (refreshToken) {

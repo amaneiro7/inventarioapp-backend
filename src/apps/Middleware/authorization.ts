@@ -19,10 +19,10 @@ import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPo
  * @description Crea un middleware de Express que verifica si el usuario autenticado
  * tiene un permiso específico requerido para acceder a la ruta.
  *
- * @param {string} requiredPermissionName El nombre del permiso necesario (ej: 'user_create').
+ * @param {string} requiredPermissionName El nombre del permiso necesario (ej: 'user:create').
  * @returns {Function} Un middleware asíncrono (req, res, next).
  */
-export const hasPermission = (requiredPermissionName: string) => {
+export const hasPermission = (requiredPermissionName?: string) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			// 1. EXTRAER Y VALIDAR PAYLOAD DE USUARIO
@@ -35,14 +35,31 @@ export const hasPermission = (requiredPermissionName: string) => {
 				return next(new AuthenticationRequiredError())
 			}
 
+			// --- CASO 1: SOLO AUTENTICACIÓN REQUERIDA (NO SE ESPECIFICA PERMISO) ---
+			if (!requiredPermissionName) {
+				// Si la ruta no requiere un permiso específico, simplemente continuamos si el usuario está autenticado.
+				return next()
+			}
+			// ----------------------------------------------------------------------
+
+			// --- CASO 2: SE REQUIERE UN PERMISO ESPECÍFICO ---
+			// 2. BYPASS PARA ADMIN (Si el roleId está disponible y es 'admin')
+			// Esta es la única evaluación basada en roleId que mantendremos.
+			if (userPayload.roleId === 'admin') {
+				console.log(`Acceso concedido a 'admin' con bypass para permiso: ${requiredPermissionName}`)
+				return next()
+			}
+
+			// 3. VALIDAR ATRIBUTOS PARA LA POLÍTICA DE ACCESO (para usuarios 'standard')
 			// Validar que el payload contenga la información requerida para resolver la política.
 			const { cargoId, departamentoId } = userPayload
 			if (!cargoId || !departamentoId) {
 				// Si falta información clave para la política de acceso, se deniega el acceso.
-				return next(new ForbiddenError('El token de usuario no contiene cargo o departamento.'))
+				// Esto atrapa a usuarios 'guest'/'unverified' o con tokens incompletos.
+				return next(new ForbiddenError('Falta el cargo o departamento para resolver la política de acceso.'))
 			}
 
-			// 2. RESOLVER LA POLÍTICA DE ACCESO DEL USUARIO
+			// 4. RESOLVER LA POLÍTICA DE ACCESO DEL USUARIO
 			// Se obtiene el caso de uso (AccessPolicyResolver) para encontrar el grupo de permisos.
 			const accessPolicyResolver: AccessPolicyResolver = container.resolve(AccessPolicyDependencies.Resolver)
 
@@ -54,14 +71,14 @@ export const hasPermission = (requiredPermissionName: string) => {
 				return next(new ForbiddenError('No se encontró una política de acceso para su cargo y departamento.'))
 			}
 
-			// 3. OBTENER REPOSITORIOS
+			// 5. OBTENER REPOSITORIOS
 			// Se resuelven las dependencias para interactuar con la capa de persistencia.
 			const permissionRepository: PermissionRepository = container.resolve(PermissionDependencies.Repository)
 			const permissionGroupRepository: PermissionGroupRepository = container.resolve(
 				PermissionGroupDependencies.Repository
 			)
 
-			// 4. VERIFICAR PERMISO REQUERIDO
+			// 6. VERIFICAR PERMISO REQUERIDO
 
 			// A. Buscar la entidad de Permiso por su nombre para obtener su ID.
 			const requiredPermissionDto = await permissionRepository.findByName(requiredPermissionName)
@@ -88,7 +105,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 				return next()
 			}
 
-			// 5. DENY BY DEFAULT
+			// 7. DENY BY DEFAULT
 			// Si el permiso no fue encontrado en el grupo del usuario, se deniega el acceso.
 			return next(new ForbiddenError(`Permiso requerido '${requiredPermissionName}' no asignado.`))
 		} catch (error) {

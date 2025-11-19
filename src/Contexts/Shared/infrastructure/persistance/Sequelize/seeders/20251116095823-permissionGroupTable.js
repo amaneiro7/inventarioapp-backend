@@ -1,10 +1,6 @@
 'use strict'
 
-const permissionGroups = [
-	{ id: 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01', name: 'Admin' },
-	{ id: 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02', name: 'IT Support' },
-	{ id: 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03', name: 'Read-Only' }
-]
+const { permissionGroups } = require('./access_control/permissions')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -19,13 +15,13 @@ module.exports = {
 
 	async down(queryInterface, Sequelize) {
 		// Eliminar primero las relaciones en la tabla de unión
-		await queryInterface.bulkDelete(
-			'permission_group_permissions',
-			{
-				permission_group_id: { [Sequelize.Op.in]: permissionGroups.map(g => g.id) }
-			},
-			{}
-		)
+		// await queryInterface.bulkDelete(
+		// 	'permission_groups',
+		// 	{
+		// 		permission_group_id: { [Sequelize.Op.in]: permissionGroups.map(g => g.id) }
+		// 	},
+		// 	{}
+		// )
 		// Luego eliminar los grupos
 		await queryInterface.bulkDelete(
 			'permission_groups',

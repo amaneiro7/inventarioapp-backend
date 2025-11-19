@@ -11,6 +11,7 @@ import { AccessPolicyGetAllController } from '../../controllers/access-control/a
 import { AccessPolicyPostController } from '../../controllers/access-control/access-policy.post.controller'
 import { AccessPolicyPatchController } from '../../controllers/access-control/access-policy.patch.controller'
 import { AccessPolicyDeleteController } from '../../controllers/access-control/access-policy.delete.controller'
+import { GetUserPermissions } from '../../../Contexts/AccessControl/AccessPolicy/application/GetUserPermissions'
 
 export enum AccessPolicyDependencies {
 	Repository = 'accessPolicyRepository',
@@ -20,6 +21,7 @@ export enum AccessPolicyDependencies {
 	Updater = 'accessPolicyUpdater',
 	Resolver = 'accessPolicyResolver',
 	Remover = 'accessPolicyRemover',
+	GetUserPermissions = 'getUserPermissions',
 	GetController = 'accessPolicyGetController',
 	GetAllController = 'accessPolicyGetAllController',
 	PostController = 'accessPolicyPostController',
@@ -36,6 +38,7 @@ export const register = (container: AwilixContainer) => {
 		[AccessPolicyDependencies.Updater]: asClass(AccessPolicyUpdater),
 		[AccessPolicyDependencies.Remover]: asClass(AccessPolicyRemover),
 		[AccessPolicyDependencies.Resolver]: asClass(AccessPolicyResolver),
+		[AccessPolicyDependencies.GetUserPermissions]: asClass(GetUserPermissions),
 		[AccessPolicyDependencies.GetController]: asClass(AccessPolicyGetController),
 		[AccessPolicyDependencies.GetAllController]: asClass(AccessPolicyGetAllController),
 		[AccessPolicyDependencies.PostController]: asClass(AccessPolicyPostController),

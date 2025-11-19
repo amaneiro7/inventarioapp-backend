@@ -4,7 +4,8 @@ import { DomainEvent } from '../../../../Shared/domain/event/DomainEvent'
  * @description Defines the attributes for the AccessPolicyCreatedDomainEvent.
  * This type is used for serializing and deserializing the event data.
  */
-type AccessPolicyCreatedDomainEventAttributes = {
+type AccessPolicyCreatedDomainEventBody = {
+	readonly name: string
 	readonly accessPolicyId: string
 }
 
@@ -14,39 +15,37 @@ type AccessPolicyCreatedDomainEventAttributes = {
 export class AccessPolicyCreatedDomainEvent extends DomainEvent {
 	static readonly EVENT_NAME = 'access_control.access_policy.created'
 
-	readonly accessPolicyId: string
+	readonly body: AccessPolicyCreatedDomainEventBody
 
 	constructor({
 		aggregateId,
-		accessPolicyId,
+		body,
 		eventId,
 		occurredOn
 	}: {
 		aggregateId: string
-		accessPolicyId: string
+		body: AccessPolicyCreatedDomainEventBody
 		eventId?: string
 		occurredOn?: Date
 	}) {
 		super({ eventName: AccessPolicyCreatedDomainEvent.EVENT_NAME, aggregateId, eventId, occurredOn })
-		this.accessPolicyId = accessPolicyId
+		this.body = body
 	}
 
-	toPrimitives(): AccessPolicyCreatedDomainEventAttributes {
-		return {
-			accessPolicyId: this.accessPolicyId
-		}
+	toPrimitives(): AccessPolicyCreatedDomainEventBody {
+		return this.body
 	}
 
 	static fromPrimitives(params: {
 		aggregateId: string
-		attributes: AccessPolicyCreatedDomainEventAttributes
+		attributes: AccessPolicyCreatedDomainEventBody
 		eventId: string
 		occurredOn: Date
 	}): DomainEvent {
 		const { aggregateId, attributes, eventId, occurredOn } = params
 		return new AccessPolicyCreatedDomainEvent({
 			aggregateId,
-			accessPolicyId: attributes.accessPolicyId,
+			body: attributes,
 			eventId,
 			occurredOn
 		})

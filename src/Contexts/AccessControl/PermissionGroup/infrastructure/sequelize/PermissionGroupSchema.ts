@@ -13,19 +13,16 @@ import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObj
 import { type PermissionGroupName } from '../../domain/valueObject/PermissionGroupName'
 import { type PermissionModel } from '../../../Permission/infrastructure/sequelize/PermissionSchema'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
+import { PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
 
 /**
  * @description Sequelize model for the `PermissionGroup` entity.
  */
-export class PermissionGroupModel
-	extends Model<Omit<PermissionGroupDto, 'permissions' | 'permissionsData'>>
-	implements PermissionGroupDto
-{
+export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permissions'>> implements PermissionGroupDto {
 	declare id: Primitives<PermissionGroupId>
 	declare name: Primitives<PermissionGroupName>
 	// Associations
-	declare permissions: Primitives<PermissionId>[]
-	declare readonly permissionsData?: PermissionModel[]
+	declare permissions: PermissionDto[]
 
 	// Association Mixins
 	declare getPermissionData: BelongsToManyGetAssociationsMixin<PermissionModel>
@@ -35,10 +32,10 @@ export class PermissionGroupModel
 
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.Permission, {
-			through: 'permission_group_permission',
+			through: 'asignacion_permiso_grupo',
 			foreignKey: 'permission_group_id',
 			otherKey: 'permission_id',
-			as: 'permissionsData'
+			as: 'permissions'
 		})
 		this.hasOne(models.AccessPolicy, {
 			as: 'accessPolicy',

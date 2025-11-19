@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -50,6 +51,24 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 	}
 
 	/**
+	 * @method search
+	 * @description Retrieves a paginated list of permissions based on specified criteria.
+	 * Caches the results to optimize performance for repeated queries.
+	 * @returns {Promise<PermissionDto[]>} A promise resolving to a paginated response of permission DTOs.
+	 */
+	async search(): Promise<PermissionDto[]> {
+		const cacheKey = `${this.cacheKeyPrefix}:all`
+		return this.cache.getCachedData<PermissionDto[]>({
+			cacheKey,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const permissions = await PermissionModel.findAll()
+				return permissions.map(permission => permission.get({ plain: true }))
+			}
+		})
+	}
+
+	/**
 	 * @method findById
 	 * @description Retrieves a single permission by its unique identifier.
 	 * Caches the result for faster subsequent lookups.
@@ -66,6 +85,26 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 				return permission ? permission.get({ plain: true }) : null
 			}
 		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple permissions by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and currently does not use caching.
+	 * @param {string[]} ids An array of permission IDs to find.
+	 * @returns {Promise<PermissionDto[]>} A promise resolving to an array of found permission DTOs.
+	 * The array will be empty if no permissions match the given IDs.
+	 */
+	async findByIds(ids: string[]): Promise<PermissionDto[]> {
+		const permissions = await PermissionModel.findAll({
+			where: {
+				id: {
+					[Op.in]: ids
+				}
+			},
+			raw: true
+		})
+		return permissions as PermissionDto[]
 	}
 
 	/**

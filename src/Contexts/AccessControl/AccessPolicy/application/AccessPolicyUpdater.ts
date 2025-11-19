@@ -30,6 +30,7 @@ export class AccessPolicyUpdater {
 		const policy = AccessPolicy.fromPrimitives(accessPolicyPrimitives)
 
 		// Usamos los métodos de actualización de la entidad de dominio
+		if (params.name !== undefined) policy.updateName(params.name)
 		if (params.cargoId !== undefined) policy.updateCargo(params.cargoId)
 		if (params.departamentoId !== undefined) policy.updateDepartamento(params.departamentoId)
 		if (params.permissionGroupId !== undefined) policy.updatePermissionGroup(params.permissionGroupId)

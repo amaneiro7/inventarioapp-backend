@@ -8,7 +8,9 @@ import { type PermissionName } from '../valueObject/PermissionName'
 export abstract class PermissionRepository {
 	abstract save: (payload: PermissionPrimitives) => Promise<void>
 	abstract searchAll: (criteria: Criteria) => Promise<ResponseDB<PermissionDto>>
+	abstract search: () => Promise<PermissionDto[]>
 	abstract findById: (id: Primitives<PermissionId>) => Promise<PermissionDto | null>
 	abstract findByName: (name: Primitives<PermissionName>) => Promise<PermissionDto | null>
+	abstract findByIds: (ids: Array<Primitives<PermissionId>>) => Promise<PermissionDto[]>
 	abstract remove: (id: Primitives<PermissionId>) => Promise<void>
 }

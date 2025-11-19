@@ -4,6 +4,7 @@ import { type SequelizeModels } from '../../../../Shared/infrastructure/persista
 import { type PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { type PermissionName } from '../../domain/valueObject/PermissionName'
+import { type PermissionDescription } from '../../domain/valueObject/PermissionDescription'
 
 /**
  * @description Sequelize model for the `Permission` entity.
@@ -11,10 +12,12 @@ import { type PermissionName } from '../../domain/valueObject/PermissionName'
 export class PermissionModel extends Model<PermissionDto> implements PermissionDto {
 	declare id: Primitives<PermissionId>
 	declare name: Primitives<PermissionName>
+	declare description: Primitives<PermissionDescription>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.PermissionGroup, {
-			through: 'permission_group_permission',
+			as: 'permissionGroups',
+			through: 'asignacion_permiso_grupo',
 			foreignKey: 'permission_id',
 			otherKey: 'permission_group_id'
 		})
@@ -32,6 +35,10 @@ export class PermissionModel extends Model<PermissionDto> implements PermissionD
 					type: DataTypes.STRING,
 					allowNull: false,
 					unique: true
+				},
+				description: {
+					type: DataTypes.STRING,
+					allowNull: false
 				}
 			},
 			{

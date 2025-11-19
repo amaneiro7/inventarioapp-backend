@@ -1,7 +1,6 @@
 // import { validateReqSchema } from '../index'
 // import { loginSchema } from './auth.validator'
 import { type Router, type Request, type Response, type NextFunction } from 'express'
-import passport from 'passport'
 import { container } from '../../di/container'
 import { StrategyOptions } from '../../../Contexts/Auth/infrastructure/passport/strategy-options'
 import { AuthDependencies } from '../../di/auth/auth.di'
@@ -11,12 +10,18 @@ import { type UserDto } from '../../../Contexts/User/user/domain/entity/User.dto
 import { type AuthLoginController } from '../../controllers/auth/auth.login.controller'
 import { type AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { type AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'
+import { AuthMePermissionsController } from '../../controllers/auth/auth.me.permissions.controller'
+import { protectedRoute } from '../../Middleware/protectedRoute'
+import passport from 'passport'
 
 export const register = async (router: Router) => {
 	const authLoginController: AuthLoginController = container.resolve(AuthDependencies.LoginController)
 	const authLogoutController: AuthLogoutController = container.resolve(AuthDependencies.LogoutController)
 	const authRefreshTokenController: AuthRefreshTokenController = container.resolve(
 		AuthDependencies.RefreshTokenController
+	)
+	const authMePermissionsController: AuthMePermissionsController = container.resolve(
+		AuthDependencies.AuthMePermissionsController
 	)
 
 	/**
@@ -67,11 +72,65 @@ export const register = async (router: Router) => {
 		authLoginController.run.bind(authLoginController)
 	)
 
+	/**
+	 * @swagger
+	 * /auth/refresh-token:
+	 *   get:
+	 *     tags: [Autenticación]
+	 *     summary: Refrescar token de acceso
+	 *     description: Genera un nuevo token de acceso utilizando un token de refresco válido, generalmente enviado a través de una cookie segura.
+	 *     security:
+	 *       - bearerAuth: [] # O especificar si se usa una cookie
+	 *     responses:
+	 *       '200':
+	 *         description: Token de acceso refrescado con éxito.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 accessToken:
+	 *                   type: string
+	 *       '401':
+	 *         description: No autorizado, token de refresco inválido o expirado.
+	 */
 	router.get(
 		'/auth/refresh-token',
 		authenticateRefreshToken,
 		authRefreshTokenController.run.bind(authRefreshTokenController)
 	)
 
+	/**
+	 * @swagger
+	 * /auth/me/permissions:
+	 *   get:
+	 *     tags: [Autenticación]
+	 *     summary: Obtener permisos del usuario actual
+	 *     description: Devuelve una lista con los nombres de todos los permisos asignados al usuario autenticado.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Lista de permisos obtenida con éxito.
+	 *       '401':
+	 *         description: No autorizado.
+	 */
+	router.get(
+		'/auth/me/permissions',
+		...protectedRoute,
+		authMePermissionsController.run.bind(authMePermissionsController)
+	)
+
+	/**
+	 * @swagger
+	 * /auth/logout:
+	 *   post:
+	 *     tags: [Autenticación]
+	 *     summary: Cerrar sesión de usuario
+	 *     description: Invalida el token de refresco del usuario, cerrando la sesión de forma segura.
+	 *     responses:
+	 *       '200':
+	 *         description: Sesión cerrada con éxito.
+	 */
 	router.post('/auth/logout', authLogoutController.run.bind(authLogoutController))
 }

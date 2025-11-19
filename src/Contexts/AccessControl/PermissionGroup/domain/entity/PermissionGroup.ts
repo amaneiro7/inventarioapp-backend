@@ -2,7 +2,7 @@ import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { PermissionGroupName } from '../valueObject/PermissionGroupName'
 import { PermissionGroupId } from '../valueObject/PermissionGroupId'
-import { PermissionGroupParams, PermissionGroupPrimitives } from './PermissionGroup.dto'
+import { PermissionGroupDto, PermissionGroupParams, PermissionGroupPrimitives } from './PermissionGroup.dto'
 import { PermissionGroupCreatedDomainEvent } from './PermissionGroupCreatedDomainEvent'
 import { PermissionRevokedFromPermissionGroupDomainEvent } from './PermissionRevokedFromPermissionGroupDomainEvent'
 import { PermissionAssignedToPermissionGroupDomainEvent } from './PermissionAssignedToPermissionGroupDomainEvent'
@@ -37,12 +37,12 @@ export class PermissionGroup extends AggregateRoot {
 		return permissionGroup
 	}
 
-	static fromPrimitives(primitives: PermissionGroupPrimitives): PermissionGroup {
-		const permissions = new Set(primitives.permissions.map(p => new PermissionId(p)))
+	static fromPrimitives(primitives: PermissionGroupDto): PermissionGroup {
+		const uniquePermissions = new Set(primitives.permissions.map(p => new PermissionId(p.id)))
 		return new PermissionGroup(
 			new PermissionGroupId(primitives.id),
 			new PermissionGroupName(primitives.name),
-			permissions
+			uniquePermissions
 		)
 	}
 

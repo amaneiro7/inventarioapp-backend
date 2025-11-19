@@ -9,34 +9,42 @@ import { JwtBearerStrategy } from '../../../Contexts/Auth/infrastructure/passpor
 import { AuthLogoutController } from '../../controllers/auth/auth.logout.controller'
 import { AuthRefreshTokenController } from '../../controllers/auth/auth.refreshtoken.controller'
 import { AuthRefreshTokenUseCase } from '../../../Contexts/Auth/application/AuthRefhreshTokenUseCase'
+import { AuthMePermissionsController } from '../../controllers/auth/auth.me.permissions.controller'
 
 export enum AuthDependencies {
 	UserLoginLocal = 'userLoginLocal',
 	RefreshTokenUseCase = 'refreshTokenUseCase',
 	AuthUseCase = 'authUseCase',
 	PassportManager = 'passportManager',
+	TokenDenylistService = 'tokenDenylistService',
+
+	LocalStrategy = 'localStrategy',
+	JwtCookiesStrategy = 'jwtCookiesStrategy',
+	JwtBearerStrategy = 'jwtBearerStrategy',
+
 	LoginController = 'authLoginController',
 	LogoutController = 'authLogoutController',
 	RefreshTokenController = 'authRefreshTokenController',
-	TokenDenylistService = 'tokenDenylistService'
+	AuthMePermissionsController = 'authMePermissionsController'
 }
 
 export const register = (container: AwilixContainer) => {
 	container.register({
 		// Application Use Cases: Transient (default) is correct.
-		userLoginLocal: asClass(UserLoginLocal).singleton(),
-		refreshTokenUseCase: asClass(AuthRefreshTokenUseCase),
+		[AuthDependencies.UserLoginLocal]: asClass(UserLoginLocal).singleton(),
+		[AuthDependencies.RefreshTokenUseCase]: asClass(AuthRefreshTokenUseCase),
 
 		// Infrastructure & Strategies: These are stateless and can be singletons for efficiency.
-		localStrategy: asClass(LocalAuthStrategy).singleton(),
-		jwtCookiesStrategy: asClass(JwtCookiesStrategy).singleton(),
-		jwtBearerStrategy: asClass(JwtBearerStrategy).singleton(),
-		passportManager: asClass(PassportManager).singleton(),
-		tokenDenylistService: asClass(TokenDenylistService).singleton(),
+		[AuthDependencies.LocalStrategy]: asClass(LocalAuthStrategy).singleton(),
+		[AuthDependencies.JwtCookiesStrategy]: asClass(JwtCookiesStrategy).singleton(),
+		[AuthDependencies.JwtBearerStrategy]: asClass(JwtBearerStrategy).singleton(),
+		[AuthDependencies.PassportManager]: asClass(PassportManager).singleton(),
+		[AuthDependencies.TokenDenylistService]: asClass(TokenDenylistService).singleton(),
 
 		// Controllers: Transient (default) is correct.
-		authLoginController: asClass(AuthLoginController),
-		authLogoutController: asClass(AuthLogoutController),
-		authRefreshTokenController: asClass(AuthRefreshTokenController)
+		[AuthDependencies.LoginController]: asClass(AuthLoginController),
+		[AuthDependencies.LogoutController]: asClass(AuthLogoutController),
+		[AuthDependencies.RefreshTokenController]: asClass(AuthRefreshTokenController),
+		[AuthDependencies.AuthMePermissionsController]: asClass(AuthMePermissionsController)
 	})
 }

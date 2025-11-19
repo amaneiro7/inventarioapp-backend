@@ -9,6 +9,11 @@ module.exports = {
 				primaryKey: true,
 				allowNull: false
 			},
+			name: {
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true
+			},
 			cargo_id: {
 				type: Sequelize.UUID,
 				allowNull: true,

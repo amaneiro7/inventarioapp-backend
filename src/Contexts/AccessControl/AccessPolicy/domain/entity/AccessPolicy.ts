@@ -1,17 +1,19 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
+import { AccessPolicyName } from '../valueObject/AccessPolicyName'
 import { CargoId } from '../../../../employee/Cargo/domain/CargoId'
 import { DepartmentId } from '../../../../employee/IDepartment/DepartmentId' // Asumo que este es el path correcto
 import { PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
 import { AccessPolicyRemovedDomainEvent } from './AccessPolicyRemovedDomainEvent'
 import { AccessPolicyCreatedDomainEvent } from './AccessPolicyCreatedDomainEvent'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
 
 export class AccessPolicy extends AggregateRoot {
 	constructor(
 		private readonly id: AccessPolicyId,
+		private name: AccessPolicyName,
 		private cargoId: CargoId | null,
 		private departamentoId: DepartmentId | null,
 		private permissionGroupId: PermissionGroupId,
@@ -21,8 +23,10 @@ export class AccessPolicy extends AggregateRoot {
 	}
 
 	static create(params: AccessPolicyParams): AccessPolicy {
+		const name = new AccessPolicyName(params.name)
 		const accessPolicy = new AccessPolicy(
 			AccessPolicyId.random(),
+			name,
 			params.cargoId ? new CargoId(params.cargoId) : null,
 			params.departamentoId ? new DepartmentId(params.departamentoId) : null,
 			new PermissionGroupId(params.permissionGroupId),
@@ -31,7 +35,10 @@ export class AccessPolicy extends AggregateRoot {
 		accessPolicy.record(
 			new AccessPolicyCreatedDomainEvent({
 				aggregateId: accessPolicy.idValue,
-				accessPolicyId: accessPolicy.idValue
+				body: {
+					accessPolicyId: accessPolicy.idValue,
+					name: accessPolicy.name.value
+				}
 			})
 		)
 
@@ -50,6 +57,7 @@ export class AccessPolicy extends AggregateRoot {
 	static fromPrimitives(primitives: AccessPolicyPrimitives): AccessPolicy {
 		return new AccessPolicy(
 			new AccessPolicyId(primitives.id),
+			new AccessPolicyName(primitives.name),
 			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
 			primitives.departamentoId ? new DepartmentId(primitives.departamentoId) : null,
 			new PermissionGroupId(primitives.permissionGroupId),
@@ -60,6 +68,7 @@ export class AccessPolicy extends AggregateRoot {
 	toPrimitives(): AccessPolicyPrimitives {
 		return {
 			id: this.idValue,
+			name: this.nameValue,
 			cargoId: this.cargoValue,
 			departamentoId: this.departamentoValue,
 			permissionGroupId: this.permissionGroupValue,
@@ -79,6 +88,10 @@ export class AccessPolicy extends AggregateRoot {
 		return this.id.value
 	}
 
+	get nameValue(): Primitives<AccessPolicyName> {
+		return this.name.value
+	}
+
 	get cargoValue(): string | null {
 		return this.cargoId?.value ?? null
 	}
@@ -96,6 +109,10 @@ export class AccessPolicy extends AggregateRoot {
 
 	updateCargo(newCargoId: Primitives<CargoId> | null): void {
 		this.cargoId = newCargoId ? new CargoId(newCargoId) : null
+	}
+
+	updateName(newName: Primitives<AccessPolicyName>): void {
+		this.name = new AccessPolicyName(newName)
 	}
 
 	updateDepartamento(newDepartamentoId: Primitives<DepartmentId> | null): void {

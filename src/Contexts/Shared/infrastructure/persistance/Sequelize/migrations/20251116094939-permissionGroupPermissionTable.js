@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('permission_group_permission', {
+		await queryInterface.createTable('asignacion_permiso_grupo', {
 			permission_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
@@ -34,6 +34,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('permission_group_permission')
+		await queryInterface.dropTable('asignacion_permiso_grupo')
 	}
 }

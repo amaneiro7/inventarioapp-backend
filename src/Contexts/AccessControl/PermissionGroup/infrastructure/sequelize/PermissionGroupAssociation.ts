@@ -21,7 +21,7 @@ export class PermissionGroupAssociation {
 		const whereFilters = { ...options.where }
 
 		const permissionInclude: IncludeOptions = {
-			association: 'permissionsData', // As defined in PermissionGroupSchema.ts
+			association: 'permissions', // As defined in PermissionGroupSchema.ts
 			attributes: [], // We only need it for filtering, not for the result
 			through: {}
 		}

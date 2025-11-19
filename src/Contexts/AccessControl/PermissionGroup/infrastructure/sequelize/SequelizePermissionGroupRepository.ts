@@ -40,14 +40,10 @@ export class SequelizePermissionGroupRepository
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await PermissionGroupModel.findAndCountAll(finalOptions)
-				const data = rows.map(group => {
-					const plainGroup = group.get({ plain: true }) as unknown as PermissionGroupDto
-					return {
-						...plainGroup,
-						permissions: plainGroup.permissionsData?.map(p => p.id) ?? []
-					}
-				})
-				return { total: count, data }
+				return {
+					total: count,
+					data: rows.map(row => row.get({ plain: true }))
+				} as unknown as ResponseDB<PermissionGroupDto>
 			}
 		})
 	}
@@ -58,20 +54,21 @@ export class SequelizePermissionGroupRepository
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const group = await PermissionGroupModel.findByPk(id, {
-					include: [{ association: 'permissionsData', attributes: ['id'] }]
+				const permissionGroup = await PermissionGroupModel.findByPk(id, {
+					include: [
+						{
+							association: 'permissions',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
+						}
+					]
 				})
 
-				if (!group) {
+				if (!permissionGroup) {
 					return null
 				}
 
-				const plainGroup = group.get({ plain: true }) as unknown as PermissionGroupDto
-				return {
-					id: plainGroup.id,
-					name: plainGroup.name,
-					permissions: plainGroup.permissionsData?.map(p => p.id) ?? []
-				}
+				return permissionGroup.get({ plain: true }) as unknown as PermissionGroupDto
 			}
 		})
 	}
@@ -82,21 +79,22 @@ export class SequelizePermissionGroupRepository
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const group = await PermissionGroupModel.findOne({
+				const permissionGroup = await PermissionGroupModel.findOne({
 					where: { name },
-					include: [{ association: 'permissionsData', attributes: ['id'] }]
+					include: [
+						{
+							association: 'permissions',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
+						}
+					]
 				})
 
-				if (!group) {
+				if (!permissionGroup) {
 					return null
 				}
 
-				const plainGroup = group.get({ plain: true }) as unknown as PermissionGroupDto
-				return {
-					id: plainGroup.id,
-					name: plainGroup.name,
-					permissions: plainGroup.permissionsData?.map(p => p.id) ?? []
-				}
+				return permissionGroup.get({ plain: true }) as unknown as PermissionGroupDto
 			}
 		})
 	}
