@@ -8,9 +8,9 @@ import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupRepository } from '../domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Permission/domain/repository/PermissionRepository'
+import { type PermissionParams } from '../../Permission/domain/entity/Permission.dto'
 
-interface PermissionGroupUpdaterParams {
-	name?: string
+type PermissionGroupUpdaterParams = Partial<PermissionParams> & {
 	permissionsToAdd?: Primitives<PermissionId>[]
 	permissionsToRevoke?: Primitives<PermissionId>[]
 }
@@ -68,8 +68,11 @@ export class PermissionGroupUpdater {
 			if (existingGroup) {
 				throw new PermissionGroupAlreadyExistsError(params.name)
 			}
-			// Aquí necesitaríamos un método `updateName` en la entidad PermissionGroup
-			// permissionGroupEntity.updateName(params.name)
+			permissionGroupEntity.updateName(params.name)
+		}
+
+		if (params.description !== undefined && params.description !== permissionGroupEntity.description.value) {
+			permissionGroupEntity.updateDescription(params.description)
 		}
 
 		if (params.permissionsToAdd) {

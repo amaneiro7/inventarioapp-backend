@@ -1,12 +1,14 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { PermissionGroupName } from '../valueObject/PermissionGroupName'
+
 import { PermissionGroupId } from '../valueObject/PermissionGroupId'
 import { PermissionGroupDto, PermissionGroupParams, PermissionGroupPrimitives } from './PermissionGroup.dto'
 import { PermissionGroupCreatedDomainEvent } from './PermissionGroupCreatedDomainEvent'
 import { PermissionRevokedFromPermissionGroupDomainEvent } from './PermissionRevokedFromPermissionGroupDomainEvent'
 import { PermissionAssignedToPermissionGroupDomainEvent } from './PermissionAssignedToPermissionGroupDomainEvent'
 import { PermissionGroupRemovedDomainEvent } from './PermissionGroupRemovedDomainEvent'
+import { PermissionGroupDescription } from './PermissionGroupDescription'
 
 export class PermissionGroup extends AggregateRoot {
 	private _permissions: Set<PermissionId>
@@ -14,6 +16,7 @@ export class PermissionGroup extends AggregateRoot {
 	private constructor(
 		readonly id: PermissionGroupId,
 		public name: PermissionGroupName,
+		public description: PermissionGroupDescription,
 		permissions: Set<PermissionId>
 	) {
 		super()
@@ -23,14 +26,24 @@ export class PermissionGroup extends AggregateRoot {
 	static create(params: PermissionGroupParams): PermissionGroup {
 		const permissionGroupId = PermissionGroupId.random()
 		const permissionGroupName = new PermissionGroupName(params.name)
+		const permissionGroupDescription = new PermissionGroupDescription(params.description ?? '')
 		const permissions = new Set(params.permissions?.map(p => new PermissionId(p)) ?? [])
 
-		const permissionGroup = new PermissionGroup(permissionGroupId, permissionGroupName, permissions)
+		const permissionGroup = new PermissionGroup(
+			permissionGroupId,
+			permissionGroupName,
+			permissionGroupDescription,
+			permissions
+		)
 
 		permissionGroup.record(
 			new PermissionGroupCreatedDomainEvent({
 				aggregateId: permissionGroupId.value,
-				body: { name: permissionGroupName.value, permissions: Array.from(permissions).map(p => p.value) }
+				body: {
+					name: permissionGroupName.value,
+					description: permissionGroupDescription.value,
+					permissions: Array.from(permissions).map(p => p.value)
+				}
 			})
 		)
 
@@ -42,6 +55,7 @@ export class PermissionGroup extends AggregateRoot {
 		return new PermissionGroup(
 			new PermissionGroupId(primitives.id),
 			new PermissionGroupName(primitives.name),
+			new PermissionGroupDescription(primitives.description),
 			uniquePermissions
 		)
 	}
@@ -50,8 +64,17 @@ export class PermissionGroup extends AggregateRoot {
 		return {
 			id: this.id.value,
 			name: this.name.value,
+			description: this.description.value,
 			permissions: Array.from(this._permissions).map(p => p.value)
 		}
+	}
+
+	updateName(newName: string): void {
+		this.name = new PermissionGroupName(newName)
+	}
+
+	updateDescription(newDescription: string): void {
+		this.description = new PermissionGroupDescription(newDescription)
 	}
 
 	get permissions(): ReadonlySet<PermissionId> {

@@ -14,6 +14,7 @@ import { type PermissionGroupName } from '../../domain/valueObject/PermissionGro
 import { type PermissionModel } from '../../../Permission/infrastructure/sequelize/PermissionSchema'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
+import { PermissionGroupDescription } from '../../domain/entity/PermissionGroupDescription'
 
 /**
  * @description Sequelize model for the `PermissionGroup` entity.
@@ -21,6 +22,7 @@ import { PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
 export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permissions'>> implements PermissionGroupDto {
 	declare id: Primitives<PermissionGroupId>
 	declare name: Primitives<PermissionGroupName>
+	declare description: Primitives<PermissionGroupDescription>
 	// Associations
 	declare permissions: PermissionDto[]
 
@@ -47,7 +49,8 @@ export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permis
 		this.init(
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
-				name: { type: DataTypes.STRING, allowNull: false, unique: true }
+				name: { type: DataTypes.STRING, allowNull: false, unique: true },
+				description: { type: DataTypes.STRING(255), allowNull: false }
 			},
 			{
 				modelName: 'PermissionGroup',

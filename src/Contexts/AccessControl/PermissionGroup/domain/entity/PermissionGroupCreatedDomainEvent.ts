@@ -2,6 +2,7 @@ import { DomainEvent } from '../../../../Shared/domain/event/DomainEvent'
 
 type PermissionGroupCreatedDomainEventBody = {
 	readonly name: string
+	readonly description: string
 	readonly permissions: string[]
 }
 

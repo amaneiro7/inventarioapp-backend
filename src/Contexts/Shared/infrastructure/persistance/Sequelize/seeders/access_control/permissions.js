@@ -1,9 +1,26 @@
 // --- Definiciones de Grupos y Permisos ---
 // Usamos los IDs del último request del usuario con nombres traducidos
 const permissionGroups = [
-	{ id: '282cf20a-4380-4dc8-a099-979bf4a77b1f', name: 'Read-Only' },
-	{ id: '9135a46c-c675-47f2-bd86-96b8d343182b', name: 'Especialista de Soporte IT' },
-	{ id: '8fb35246-ab2a-4526-86c3-d4ba3cf90273', name: 'Coordinador de Soporte IT' }
+	{
+		id: '282cf20a-4380-4dc8-a099-979bf4a77b1f',
+		name: 'Viewer',
+		description: 'Permisos de solo lectura para la mayoría de los módulos del sistema.'
+	},
+	{
+		id: '9135a46c-c675-47f2-bd86-96b8d343182b',
+		name: 'Especialista de Soporte IT',
+		description: 'Permite la gestión básica de inventario y empleados (crear/actualizar).'
+	},
+	{
+		id: '8fb35246-ab2a-4526-86c3-d4ba3cf90273',
+		name: 'Coordinador de Soporte IT',
+		description: 'Permisos avanzados, incluyendo eliminación de registros y gestión de cuentas de usuario.'
+	},
+	{
+		id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+		name: 'Administrador',
+		description: 'Acceso total a todas las funciones del sistema.'
+	}
 ]
 
 // Lista completa de todos los permisos (tomada de tu prompt anterior)
@@ -659,7 +676,7 @@ const allReadPermissions = permissions
 // 2. Definir los permisos base sin la herencia (para evitar el error de inicialización).
 const PERMISSION_ASSIGNMENTS = {
 	// 1. Rol de SOLO LECTURA
-	'Read-Only': [
+	Viewer: [
 		// Lectura base y de dashboards/monitoreo
 		...allReadPermissions,
 		'dashboard.read',
@@ -678,7 +695,7 @@ const PERMISSION_ASSIGNMENTS = {
 
 	// 2. Rol de ESPECIALISTA (L1/L2): CRUD básico en dispositivos y empleados.
 	'Especialista de Soporte IT': [
-		// Lectura (se añadirá la herencia de Read-Only más tarde)
+		// Lectura (se añadirá la herencia de Viewer más tarde)
 
 		// Acciones sobre Dispositivos e Inventario (Crear/Actualizar)
 		'devices.create',
@@ -754,12 +771,15 @@ const PERMISSION_ASSIGNMENTS = {
 		// Gestión limitada de Configuración
 		'settings.create',
 		'settings.update'
-	]
+	],
+
+	// 4. Rol de ADMINISTRADOR: Todos los permisos
+	Administrador: permissions.map(p => p.name)
 }
 
 // 3. Aplicar la herencia (el fix al ReferenceError)
 PERMISSION_ASSIGNMENTS['Especialista de Soporte IT'] = [
-	...PERMISSION_ASSIGNMENTS['Read-Only'], // Hereda todos los permisos de lectura
+	...PERMISSION_ASSIGNMENTS.Viewer, // Hereda todos los permisos de lectura
 	...PERMISSION_ASSIGNMENTS['Especialista de Soporte IT'] // Añade sus propios permisos
 ]
 

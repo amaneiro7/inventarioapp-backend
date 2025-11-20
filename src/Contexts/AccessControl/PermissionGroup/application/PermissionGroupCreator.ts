@@ -19,7 +19,7 @@ export class PermissionGroupCreator {
 	}
 
 	async run(params: PermissionGroupParams): Promise<void> {
-		const { name, permissions } = params
+		const { name, permissions, description } = params
 		const existingPermissionGroup = await this.permissionGroupRepository.findByName(name)
 		if (existingPermissionGroup) {
 			throw new PermissionGroupAlreadyExistsError(name)
@@ -29,7 +29,7 @@ export class PermissionGroupCreator {
 		// pero es más común hacerla en un caso de uso `PermissionGroupUpdater`
 		// para mantener la creación lo más simple posible.
 
-		const permissionGroup = PermissionGroup.create({ name, permissions })
+		const permissionGroup = PermissionGroup.create({ name, permissions, description })
 		await this.permissionGroupRepository.save(permissionGroup.toPrimitives())
 		await this.eventBus.publish(permissionGroup.pullDomainEvents())
 	}
