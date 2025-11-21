@@ -8,12 +8,7 @@ import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupRepository } from '../domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Permission/domain/repository/PermissionRepository'
-import { type PermissionParams } from '../../Permission/domain/entity/Permission.dto'
-
-type PermissionGroupUpdaterParams = Partial<PermissionParams> & {
-	permissionsToAdd?: Primitives<PermissionId>[]
-	permissionsToRevoke?: Primitives<PermissionId>[]
-}
+import { type PermissionGroupParams } from '../domain/entity/PermissionGroup.dto'
 
 /**
  * @description Use case for updating an existing PermissionGroup entity.
@@ -52,7 +47,7 @@ export class PermissionGroupUpdater {
 		params
 	}: {
 		id: Primitives<PermissionGroupId>
-		params: PermissionGroupUpdaterParams
+		params: Partial<PermissionGroupParams>
 	}): Promise<void> {
 		const permissionGroupId = new PermissionGroupId(id)
 
@@ -65,7 +60,7 @@ export class PermissionGroupUpdater {
 
 		if (params.name !== undefined && params.name !== permissionGroupEntity.name.value) {
 			const existingGroup = await this.permissionGroupRepository.findByName(params.name)
-			if (existingGroup) {
+			if (existingGroup && existingGroup.id !== permissionGroupEntity.id.value) {
 				throw new PermissionGroupAlreadyExistsError(params.name)
 			}
 			permissionGroupEntity.updateName(params.name)
@@ -75,24 +70,56 @@ export class PermissionGroupUpdater {
 			permissionGroupEntity.updateDescription(params.description)
 		}
 
-		if (params.permissionsToAdd) {
-			for (const permId of params.permissionsToAdd) {
-				const permission = await this.permissionRepository.findById(permId)
-				if (permission === null) {
-					throw new PermissionDoesNotExistError()
-				}
-				permissionGroupEntity.assignPermission(new PermissionId(permId))
-			}
-		}
-
-		if (params.permissionsToRevoke) {
-			for (const permId of params.permissionsToRevoke) {
-				// No es necesario verificar si existe para revocarlo, la entidad ya lo maneja.
-				permissionGroupEntity.revokePermission(new PermissionId(permId))
-			}
+		if (params.permissions !== undefined) {
+			await this.updatePermissionsInGroup(permissionGroupEntity, params?.permissions)
 		}
 
 		await this.permissionGroupRepository.save(permissionGroupEntity.toPrimitives())
 		await this.eventBus.publish(permissionGroupEntity.pullDomainEvents())
+	}
+
+	/**
+	 * @private
+	 * @description Ensures that all provided permission IDs exist and updates the permission group's permissions.
+	 * It calculates the difference between current and new permissions and applies granular changes.
+	 * @param {PermissionGroup} entity The permission group entity being updated.
+	 * @param {Primitives<PermissionId>[]} newPermissionPrimitives The list of new permission IDs (as primitives) to set for the group.
+	 * @returns {Promise<void>} A promise that resolves when the permissions are successfully updated.
+	 * @throws {PermissionDoesNotExistError} If any of the provided permission IDs do not exist.
+	 */
+	private async updatePermissionsInGroup(
+		entity: PermissionGroup,
+		newPermissionPrimitives: Primitives<PermissionId>[]
+	): Promise<void> {
+		const uniqueNewPermissionPrimitives = [...new Set(newPermissionPrimitives)]
+
+		// 1. Validate existence of all incoming permission IDs in a single query
+		if (uniqueNewPermissionPrimitives.length > 0) {
+			const foundPermissions = await this.permissionRepository.findByIds(uniqueNewPermissionPrimitives)
+
+			// If the number of found permissions does not match the number of unique IDs,
+			// it means at least one permission does not exist.
+			if (foundPermissions.length !== uniqueNewPermissionPrimitives.length) {
+				throw new PermissionDoesNotExistError()
+			}
+		}
+
+		// 2. Convert primitives to value objects for comparison and entity methods
+		const newPermissionIds = new Set(uniqueNewPermissionPrimitives.map(p => new PermissionId(p)))
+		const currentPermissionIds = new Set(entity.permissionsValue.map(p => new PermissionId(p)))
+
+		// 3. Determine permissions to add
+		for (const newPermId of newPermissionIds) {
+			if (![...currentPermissionIds].some(currentPerm => currentPerm.equals(newPermId))) {
+				entity.assignPermission(newPermId)
+			}
+		}
+
+		// 4. Determine permissions to remove
+		for (const currentPermId of currentPermissionIds) {
+			if (![...newPermissionIds].some(newPerm => newPerm.equals(currentPermId))) {
+				entity.revokePermission(currentPermId)
+			}
+		}
 	}
 }

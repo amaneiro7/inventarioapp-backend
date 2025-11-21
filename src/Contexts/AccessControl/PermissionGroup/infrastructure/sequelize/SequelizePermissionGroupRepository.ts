@@ -106,7 +106,7 @@ export class SequelizePermissionGroupRepository
 			const [groupInstance] = await PermissionGroupModel.upsert(restPayload, { transaction, returning: true })
 
 			if (groupInstance) {
-				await groupInstance.setPermissionsData(permissions, { transaction })
+				await groupInstance.setPermissions(permissions, { transaction })
 			}
 
 			await transaction.commit()

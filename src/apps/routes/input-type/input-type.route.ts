@@ -28,7 +28,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/inputtypes/',
 		...protectedRoute,
-		hasPermission(PERMISSIONS['INPUT-TYPE'].READ_LIST),
+		hasPermission(PERMISSIONS.INPUT_TYPE.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

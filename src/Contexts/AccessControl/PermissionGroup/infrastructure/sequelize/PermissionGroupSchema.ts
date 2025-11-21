@@ -27,10 +27,10 @@ export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permis
 	declare permissions: PermissionDto[]
 
 	// Association Mixins
-	declare getPermissionData: BelongsToManyGetAssociationsMixin<PermissionModel>
-	declare addPermissionData: BelongsToManyAddAssociationsMixin<PermissionModel, Primitives<PermissionId>>
-	declare setPermissionsData: BelongsToManySetAssociationsMixin<PermissionModel, Primitives<PermissionId>>
-	declare removePermissionData: BelongsToManyAddAssociationsMixin<PermissionModel, Primitives<PermissionId>>
+	declare getPermission: BelongsToManyGetAssociationsMixin<PermissionModel>
+	declare addPermission: BelongsToManyAddAssociationsMixin<PermissionModel, Primitives<PermissionId>>
+	declare setPermissions: BelongsToManySetAssociationsMixin<PermissionModel, Primitives<PermissionId>>
+	declare removePermission: BelongsToManyAddAssociationsMixin<PermissionModel, Primitives<PermissionId>>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.Permission, {

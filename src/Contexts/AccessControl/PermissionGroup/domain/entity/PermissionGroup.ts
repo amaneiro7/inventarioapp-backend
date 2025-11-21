@@ -9,9 +9,10 @@ import { PermissionRevokedFromPermissionGroupDomainEvent } from './PermissionRev
 import { PermissionAssignedToPermissionGroupDomainEvent } from './PermissionAssignedToPermissionGroupDomainEvent'
 import { PermissionGroupRemovedDomainEvent } from './PermissionGroupRemovedDomainEvent'
 import { PermissionGroupDescription } from './PermissionGroupDescription'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 export class PermissionGroup extends AggregateRoot {
-	private _permissions: Set<PermissionId>
+	private permissions: Set<PermissionId>
 
 	private constructor(
 		readonly id: PermissionGroupId,
@@ -20,7 +21,7 @@ export class PermissionGroup extends AggregateRoot {
 		permissions: Set<PermissionId>
 	) {
 		super()
-		this._permissions = permissions
+		this.permissions = permissions
 	}
 
 	static create(params: PermissionGroupParams): PermissionGroup {
@@ -65,7 +66,7 @@ export class PermissionGroup extends AggregateRoot {
 			id: this.id.value,
 			name: this.name.value,
 			description: this.description.value,
-			permissions: Array.from(this._permissions).map(p => p.value)
+			permissions: Array.from(this.permissions).map(p => p.value)
 		}
 	}
 
@@ -77,8 +78,8 @@ export class PermissionGroup extends AggregateRoot {
 		this.description = new PermissionGroupDescription(newDescription)
 	}
 
-	get permissions(): ReadonlySet<PermissionId> {
-		return this._permissions
+	get permissionsValue(): Primitives<PermissionId>[] {
+		return Array.from(this.permissions).map(p => p.value)
 	}
 
 	// Métodos que expresan la intención del negocio
@@ -87,7 +88,7 @@ export class PermissionGroup extends AggregateRoot {
 			// Opcional: lanzar un error si ya lo tiene o simplemente no hacer nada.
 			return
 		}
-		this._permissions.add(permissionId)
+		this.permissions.add(permissionId)
 		this.record(
 			new PermissionAssignedToPermissionGroupDomainEvent({
 				aggregateId: this.id.value,
@@ -97,20 +98,20 @@ export class PermissionGroup extends AggregateRoot {
 	}
 
 	revokePermission(permissionId: PermissionId): void {
-		if (!this.hasPermission(permissionId)) {
-			return
+		const permissionToRemove = [...this.permissions].find(p => p.equals(permissionId))
+		if (permissionToRemove) {
+			this.permissions.delete(permissionToRemove)
+			this.record(
+				new PermissionRevokedFromPermissionGroupDomainEvent({
+					aggregateId: this.id.value,
+					body: { permissionId: permissionId.value }
+				})
+			)
 		}
-		this._permissions.delete(permissionId)
-		this.record(
-			new PermissionRevokedFromPermissionGroupDomainEvent({
-				aggregateId: this.id.value,
-				body: { permissionId: permissionId.value }
-			})
-		)
 	}
 
 	hasPermission(permissionId: PermissionId): boolean {
-		return [...this._permissions].some(p => p.equals(permissionId))
+		return [...this.permissions].some(p => p.equals(permissionId))
 	}
 
 	remove(): void {

@@ -4,7 +4,7 @@ import { type PermissionRepository } from '../../Permission/domain/repository/Pe
 import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyResolver } from './AccessPolicyResolver'
-import { type RoleId } from '../../../User/Role/domain/RoleId'
+import { RoleId } from '../../../User/Role/domain/RoleId'
 
 export interface GetUserPermissionsParams {
 	roleId?: Primitives<RoleId>
@@ -17,11 +17,15 @@ export class GetUserPermissions {
 	private readonly permissionGroupRepository: PermissionGroupRepository
 	private readonly accessPolicyResolver: AccessPolicyResolver
 
-	constructor(
-		permissionRepository: PermissionRepository,
-		permissionGroupRepository: PermissionGroupRepository,
+	constructor({
+		accessPolicyResolver,
+		permissionGroupRepository,
+		permissionRepository
+	}: {
+		permissionRepository: PermissionRepository
+		permissionGroupRepository: PermissionGroupRepository
 		accessPolicyResolver: AccessPolicyResolver
-	) {
+	}) {
 		this.permissionRepository = permissionRepository
 		this.permissionGroupRepository = permissionGroupRepository
 		this.accessPolicyResolver = accessPolicyResolver
@@ -29,7 +33,7 @@ export class GetUserPermissions {
 
 	async run({ roleId, cargoId, departamentoId }: GetUserPermissionsParams): Promise<string[]> {
 		// 1. BYPASS para 'admin'
-		if (roleId === 'admin') {
+		if (roleId === RoleId.Options.ADMIN) {
 			// Si el rol es admin, devolver todos los nombres de permisos existentes
 			const allPermissions = await this.permissionRepository.search()
 			return allPermissions.map(p => p.name)

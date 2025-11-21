@@ -1,5 +1,5 @@
 import { type AwilixContainer, asClass } from 'awilix'
-import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder'
+
 import { PermissionsFinderAll } from '../../../Contexts/AccessControl/Permission/application/PermissionsFinderAll'
 import { PermissionCreator } from '../../../Contexts/AccessControl/Permission/application/PermissionCreator'
 import { PermissionRemover } from '../../../Contexts/AccessControl/Permission/application/PermissionRemover'
@@ -8,6 +8,7 @@ import { PermissionGetController } from '../../controllers/access-control/permis
 import { PermissionGetAllController } from '../../controllers/access-control/permission.get-all.controller'
 import { PermissionPostController } from '../../controllers/access-control/permission.post.controller'
 import { PermissionDeleteController } from '../../controllers/access-control/permission.delete.controller'
+import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder2'
 
 export enum PermissionDependencies {
 	Repository = 'permissionRepository',
