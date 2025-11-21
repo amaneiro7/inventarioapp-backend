@@ -22,7 +22,7 @@ export class PermissionGroupAssociation {
 
 		const permissionInclude: IncludeOptions = {
 			association: 'permissions', // As defined in PermissionGroupSchema.ts
-			attributes: [], // We only need it for filtering, not for the result
+			attributes: ['id', 'name', 'description'], // We only need it for filtering, not for the result
 			through: {}
 		}
 
