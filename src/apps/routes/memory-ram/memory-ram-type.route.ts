@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { MemoryRamTypeDependencies } from '../../di/memory-ram/memory-ram-type.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: MemoryRamTypeGetAllController = container.resolve(
@@ -28,6 +30,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/memoryramtypes/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.MEMORY_RAM_TYPES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

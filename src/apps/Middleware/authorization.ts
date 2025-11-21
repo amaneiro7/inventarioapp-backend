@@ -13,6 +13,7 @@ import { type PermissionGroupRepository } from '../../Contexts/AccessControl/Per
 import { type PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
 import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
 import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyResolver'
+import { RoleId } from '../../Contexts/User/Role/domain/RoleId'
 
 /**
  * @function hasPermission
@@ -45,8 +46,7 @@ export const hasPermission = (requiredPermissionName?: string) => {
 			// --- CASO 2: SE REQUIERE UN PERMISO ESPECÍFICO ---
 			// 2. BYPASS PARA ADMIN (Si el roleId está disponible y es 'admin')
 			// Esta es la única evaluación basada en roleId que mantendremos.
-			if (userPayload.roleId === 'admin') {
-				console.log(`Acceso concedido a 'admin' con bypass para permiso: ${requiredPermissionName}`)
+			if (userPayload.roleId === RoleId.Options.ADMIN) {
 				return next()
 			}
 

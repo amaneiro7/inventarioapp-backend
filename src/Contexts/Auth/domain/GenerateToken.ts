@@ -75,7 +75,7 @@ function generateToken<T extends Pick<User, 'id' | 'employeeId' | 'roleId' | 'em
 	const tokenPayload: JwtPayloadUser = {
 		sub: id,
 		employeeId,
-		roleId,
+		roleId: String(roleId),
 		cargoId,
 		departamentoId,
 		iat: Math.floor(Date.now()) / 1000,

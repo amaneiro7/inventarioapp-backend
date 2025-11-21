@@ -4,6 +4,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { AdministrativeRegionDependencies } from '../../di/location/administrative-region.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: AdministrativeRegionGetAllController = container.resolve(
@@ -27,6 +29,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/administrativeregions/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.ADMINISTRATIVE_REGIONS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

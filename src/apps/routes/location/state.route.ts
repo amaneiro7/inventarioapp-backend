@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { StateDependencies } from '../../di/location/state.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: StateGetAllController = container.resolve(StateDependencies.GetAllController)
@@ -23,5 +25,11 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de estados obtenida con éxito.
 	 */
-	router.get('/states/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/states/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.STATES.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { OperatingSystemArqDependencies } from '../../di/operating-system/operating-system-arq.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: OperatingSystemArqGetAllController = container.resolve(
@@ -28,6 +30,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/operatingsystemarqs/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.OPERATING_SYSTEM_ARQ.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

@@ -7,6 +7,8 @@ import { container } from '../../di/container'
 import { CargoDependencies } from '../../di/employee/cargo.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: CargoGetAllController = container.resolve(CargoDependencies.GetAllController)
@@ -28,7 +30,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de cargos obtenida con éxito.
 	 */
-	router.get('/cargos/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/cargos/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CARGOS.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -53,7 +61,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Cargo no encontrado.
 	 */
-	router.get('/cargos/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/cargos/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CARGOS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -77,7 +90,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cargos/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/cargos/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CARGOS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -108,5 +126,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Cargo no encontrado.
 	 */
-	router.patch('/cargos/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/cargos/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CARGOS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

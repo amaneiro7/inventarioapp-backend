@@ -7,6 +7,8 @@ import { type BrandGetController } from '../../controllers/brand/brand.get.contr
 import { BrandDependencies } from '../../di/brand/brand.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: BrandGetController = container.resolve(BrandDependencies.GetController)
@@ -28,7 +30,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de marcas obtenida con éxito.
 	 */
-	router.get('/brands/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/brands/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.BRANDS.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -53,7 +61,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Marca no encontrada.
 	 */
-	router.get('/brands/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/brands/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.BRANDS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -77,7 +90,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/brands/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/brands/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.BRANDS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -108,5 +126,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Marca no encontrada.
 	 */
-	router.patch('/brands/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/brands/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.BRANDS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

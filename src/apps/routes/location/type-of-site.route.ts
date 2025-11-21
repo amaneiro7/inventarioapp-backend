@@ -4,6 +4,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { TypeOfSiteDependencies } from '../../di/location/type-of-site.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: TypeOfSiteGetAllController = container.resolve(TypeOfSiteDependencies.GetAllController)
@@ -25,6 +27,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/typeofsites/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.TYPE_OF_SITES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

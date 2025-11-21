@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { HistoryDependencies } from '../../di/history/history.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: HistoryGetAllController = container.resolve(HistoryDependencies.GetAllController)
@@ -30,6 +32,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/histories/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.HISTORY.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -48,5 +51,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Datos del dashboard obtenidos con éxito.
 	 */
-	router.get('/histories/dashboard/', ...protectedRoute, historyDashboard.run.bind(historyDashboard))
+	router.get(
+		'/histories/dashboard/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.HISTORY.READ_DASHBOARD),
+		historyDashboard.run.bind(historyDashboard)
+	)
 }

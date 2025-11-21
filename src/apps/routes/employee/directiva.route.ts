@@ -7,6 +7,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { DirectivaDependencies } from '../../di/employee/directiva.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: DirectivaGetAllController = container.resolve(DirectivaDependencies.GetAllController)
@@ -31,6 +33,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/directivas/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.DIRECTIVAS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -58,7 +61,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Directiva no encontrada.
 	 */
-	router.get('/directivas/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/directivas/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DIRECTIVAS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -82,7 +90,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/directivas/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/directivas/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DIRECTIVAS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -113,5 +126,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Directiva no encontrada.
 	 */
-	router.patch('/directivas/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/directivas/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DIRECTIVAS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

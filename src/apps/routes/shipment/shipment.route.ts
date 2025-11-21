@@ -7,6 +7,8 @@ import { type ShipmentGetController } from '../../controllers/shipments/shipment
 import { type ShipmentGetAllController } from '../../controllers/shipments/shipment.get-all.controller'
 import { type ShipmentPostController } from '../../controllers/shipments/shipment.post.controller'
 import { type ShipmentPatchController } from '../../controllers/shipments/shipment.patch.controller'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: ShipmentGetController = container.resolve(ShipmentDependencies.GetController)
@@ -31,6 +33,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/shipments/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.SHIPMENTS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -58,7 +61,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Envío no encontrado.
 	 */
-	router.get('/shipments/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/shipments/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SHIPMENTS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -82,7 +90,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/shipments/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/shipments/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SHIPMENTS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -113,5 +126,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Envío no encontrado.
 	 */
-	router.patch('/shipments/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/shipments/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SHIPMENTS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

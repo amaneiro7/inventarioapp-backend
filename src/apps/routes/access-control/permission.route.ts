@@ -7,6 +7,8 @@ import { type PermissionGetController } from '../../controllers/access-control/p
 import { type PermissionGetAllController } from '../../controllers/access-control/permission.get-all.controller'
 import { type PermissionPostController } from '../../controllers/access-control/permission.post.controller'
 import { type PermissionDeleteController } from '../../controllers/access-control/permission.delete.controller'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: PermissionGetController = container.resolve(PermissionDependencies.GetController)
@@ -30,6 +32,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/permissions/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSIONS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -57,7 +60,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Permiso no encontrado.
 	 */
-	router.get('/permissions/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/permissions/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSIONS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -80,7 +88,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/permissions/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/permissions/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSIONS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -105,5 +118,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Permiso no encontrado.
 	 */
-	router.delete('/permissions/:id', ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(
+		'/permissions/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSIONS.DELETE),
+		deleteController.run.bind(deleteController)
+	)
 }

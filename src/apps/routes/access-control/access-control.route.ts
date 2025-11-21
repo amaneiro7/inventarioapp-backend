@@ -2,6 +2,8 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 import { type AccessPolicyGetController } from '../../controllers/access-control/access-policy.get.controller'
 import { type AccessPolicyGetAllController } from '../../controllers/access-control/access-policy.get-all.controller'
@@ -30,7 +32,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de políticas de acceso obtenida con éxito.
 	 */
-	router.get(routerPath, ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		routerPath,
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ACCESS_POLICIES.READ_LIST), // <-- ¡Ahora es tipado!
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -55,7 +63,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.get(`${routerPath}/:id`, ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		`${routerPath}/:id`,
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ACCESS_POLICIES.READ), // <-- ¡Ahora es tipado!
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -78,7 +91,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post(routerPath, ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		routerPath,
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ACCESS_POLICIES.CREATE), // <-- ¡Ahora es tipado!
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -111,7 +129,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.patch(`${routerPath}/:id`, ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		`${routerPath}/:id`,
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ACCESS_POLICIES.UPDATE), // <-- ¡Ahora es tipado!
+		patchController.run.bind(patchController)
+	)
 	/**
 	 * @swagger
 	 * /access-policies/{id}:
@@ -135,5 +158,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Política de acceso no encontrada.
 	 */
-	router.delete(`${routerPath}/:id`, ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(
+		`${routerPath}/:id`,
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ACCESS_POLICIES.DELETE), // <-- ¡Ahora es tipado!
+		deleteController.run.bind(deleteController)
+	)
 }

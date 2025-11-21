@@ -13,6 +13,8 @@ import { type LocationMonitoringDashboardGetController } from '../../controllers
 import { type LocationMonitoringDashboardByStateGetController } from '../../controllers/location/location-monitoring-dashboard-by-state.controller'
 import { type LocationMonitoringDashboardByLocationGetController } from '../../controllers/location/location-monitoring-dashboard-by-location.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: LocationGetController = container.resolve(LocationDependencies.GetController)
@@ -78,6 +80,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_LIST),
 		criteriaConverterMiddleware,
 		searchByCriteria.run.bind(searchByCriteria)
 	)
@@ -99,6 +102,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/all',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -120,6 +124,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/ping-status',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_PING_STATUS),
 		criteriaConverterMiddleware,
 		locationPingStatusController.run.bind(locationPingStatusController)
 	)
@@ -141,6 +146,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/dashboard/monitoring',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_MONITORING_DASHBOARD),
 		criteriaConverterMiddleware,
 		locationMonitoringDashboardGetController.run.bind(locationMonitoringDashboardGetController)
 	)
@@ -162,6 +168,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/locations/dashboard/monitoringbystate',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_MONITORING_BY_STATE_DASHBOARD),
 		criteriaConverterMiddleware,
 		locationMonitoringDashboardByStateGetController.run.bind(locationMonitoringDashboardByStateGetController)
 	)
@@ -180,6 +187,8 @@ export const register = async (router: Router) => {
 	 */
 	router.get(
 		'/locations/dashboard/monitoringbylocation',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ_MONITORING_BY_LOCATION_DASHBOARD),
 		criteriaConverterMiddleware,
 		locationMonitoringDashboardByLocationGetController.run.bind(locationMonitoringDashboardByLocationGetController)
 	)
@@ -207,7 +216,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ubicación no encontrada.
 	 */
-	router.get('/locations/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/locations/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -231,7 +245,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/locations/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/locations/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -262,5 +281,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ubicación no encontrada.
 	 */
-	router.patch('/locations/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/locations/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATIONS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

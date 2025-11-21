@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { CategoryDependencies } from '../../di/category/category.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: CategoryGetController = container.resolve(CategoryDependencies.GetController)
@@ -27,6 +29,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/categories/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.CATEGORIES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -54,5 +57,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Categoría no encontrada.
 	 */
-	router.get('/categories/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/categories/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CATEGORIES.READ),
+		getController.run.bind(getController)
+	)
 }

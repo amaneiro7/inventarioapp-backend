@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { StatusDependencies } from '../../di/status/status.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: StatusGetAllController = container.resolve(StatusDependencies.GetAllController)
@@ -26,7 +28,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de estados obtenida con éxito.
 	 */
-	router.get('/status/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/status/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.STATUS.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -40,5 +48,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Datos del dashboard obtenidos con éxito.
 	 */
-	router.get('/status/dashboard/', statusDashboard.run.bind(statusDashboard))
+	router.get(
+		'/status/dashboard/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.STATUS.READ_DASHBOARD),
+		statusDashboard.run.bind(statusDashboard)
+	)
 }

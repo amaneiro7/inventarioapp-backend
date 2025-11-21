@@ -8,6 +8,8 @@ import { type ProcessorGetController } from '../../controllers/processor/process
 import { type ProcessorGetAllController } from '../../controllers/processor/processor.get-all.controller'
 import { type ProcessorDeleteController } from '../../controllers/processor/processor.delete.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: ProcessorGetController = container.resolve(ProcessorDependencies.GetController)
@@ -33,6 +35,8 @@ export const register = async (router: Router) => {
 	router.get(
 		'/processors/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.PROCESSORS.READ_LIST),
+
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -60,7 +64,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.get('/processors/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/processors/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PROCESSORS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -84,7 +93,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/processors/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/processors/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PROCESSORS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -115,7 +129,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.patch('/processors/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/processors/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PROCESSORS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 
 	/**
 	 * @swagger
@@ -140,5 +159,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Procesador no encontrado.
 	 */
-	router.delete('/processors/:id', ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(
+		'/processors/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PROCESSORS.DELETE),
+		deleteController.run.bind(deleteController)
+	)
 }

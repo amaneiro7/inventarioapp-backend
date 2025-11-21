@@ -3,6 +3,8 @@ import { type GeneralDashboardGetController } from '../../controllers/dashboard/
 import { container } from '../../di/container'
 import { ComputerDashboardDependencies } from '../../di/device/computerDashboard.di'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const generalDashboard: GeneralDashboardGetController = container.resolve(
@@ -23,5 +25,10 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Datos del dashboard obtenidos con éxito.
 	 */
-	router.get('/dashboard/', ...protectedRoute, generalDashboard.run.bind(generalDashboard))
+	router.get(
+		'/dashboard/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DASHBOARD.READ),
+		generalDashboard.run.bind(generalDashboard)
+	)
 }

@@ -8,6 +8,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { CityDependencies } from '../../di/location/city.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: CityGetController = container.resolve(CityDependencies.GetController)
@@ -29,7 +31,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de ciudades obtenida con éxito.
 	 */
-	router.get('/cities/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/cities/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CITIES.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -54,7 +62,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ciudad no encontrada.
 	 */
-	router.get('/cities/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/cities/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CITIES.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -78,7 +91,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/cities/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/cities/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CITIES.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -109,5 +127,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Ciudad no encontrada.
 	 */
-	router.patch('/cities/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/cities/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.CITIES.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }
