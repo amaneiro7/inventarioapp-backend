@@ -7,6 +7,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { DepartamentoDependencies } from '../../di/employee/departamento.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: DepartamentoGetAllController = container.resolve(DepartamentoDependencies.GetAllController)
@@ -31,6 +33,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/departamentos/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.DEPARTAMENTOS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -58,7 +61,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Departamento no encontrado.
 	 */
-	router.get('/departamentos/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/departamentos/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DEPARTAMENTOS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -82,7 +90,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/departamentos/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/departamentos/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DEPARTAMENTOS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -113,5 +126,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Departamento no encontrado.
 	 */
-	router.patch('/departamentos/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/departamentos/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.DEPARTAMENTOS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

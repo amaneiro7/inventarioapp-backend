@@ -9,6 +9,8 @@ import { type ModelSeriesPatchController } from '../../controllers/model-series/
 import { type ModelSeriesSearchByCriteriaController } from '../../controllers/model-series/model-series.search-by-criteria.controller'
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)
@@ -63,7 +65,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Búsqueda exitosa.
 	 */
-	router.get('/models/', ...protectedRoute, criteriaConverterMiddleware, searchByCriteria.run.bind(searchByCriteria))
+	router.get(
+		'/models/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.READ_LIST),
+		criteriaConverterMiddleware,
+		searchByCriteria.run.bind(searchByCriteria)
+	)
 
 	/**
 	 * @swagger
@@ -82,6 +90,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/models/all',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -105,7 +114,13 @@ export const register = async (router: Router) => {
 	 *               type: string
 	 *               format: binary
 	 */
-	router.get('/models/download', ...protectedRoute, criteriaConverterMiddleware, download.run.bind(download))
+	router.get(
+		'/models/download',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.DOWNLOAD),
+		criteriaConverterMiddleware,
+		download.run.bind(download)
+	)
 
 	/**
 	 * @swagger
@@ -130,7 +145,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Modelo/serie no encontrado.
 	 */
-	router.get('/models/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/models/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -154,7 +174,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/models/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/models/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -185,5 +210,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Modelo/serie no encontrado.
 	 */
-	router.patch('/models/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/models/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MODELS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

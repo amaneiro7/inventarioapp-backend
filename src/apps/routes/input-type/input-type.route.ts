@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { InputTypeDependencies } from '../../di/input-type/input-type.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: InputTypeGetAllController = container.resolve(InputTypeDependencies.GetAllController)
@@ -26,6 +28,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/inputtypes/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS['INPUT-TYPE'].READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

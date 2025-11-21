@@ -2,6 +2,8 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 import { PermissionGroupDependencies } from '../../di/access-control/permission-group.di'
 import { type PermissionGroupGetController } from '../../controllers/access-control/permission-group.get.controller'
 import { type PermissionGroupGetAllController } from '../../controllers/access-control/permission-group.get-all.controller'
@@ -38,6 +40,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/permissiongroups/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSION_GROUPS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -65,7 +68,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Grupo de permisos no encontrado.
 	 */
-	router.get('/permissiongroups/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/permissiongroups/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSION_GROUPS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -88,7 +96,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/permissiongroups/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/permissiongroups/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSION_GROUPS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -121,7 +134,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Grupo de permisos no encontrado.
 	 */
-	router.patch('/permissiongroups/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/permissiongroups/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSION_GROUPS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 	/**
 	 * @swagger
 	 * /permissiongroups/{id}:
@@ -145,5 +163,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Grupo de permisos no encontrado.
 	 */
-	router.delete('/permissiongroups/:id', ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(
+		'/permissiongroups/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.PERMISSION_GROUPS.DELETE),
+		deleteController.run.bind(deleteController)
+	)
 }

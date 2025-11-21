@@ -7,6 +7,8 @@ import { type SettingsGetAllController } from '../../controllers/app-settings/se
 import { type SettingsPatchController } from '../../controllers/app-settings/settings.patch.controller'
 import { type SettingsPatchBulkController } from '../../controllers/app-settings/settings.patch-bulk.controller'
 import { SettingsAllowedDomainsGetController } from '../../controllers/app-settings/settings.get-allowed.controller'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getController: SettingsGetController = container.resolve(AppSettingsDependencies.GetController)
@@ -33,7 +35,12 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de configuraciones obtenida con éxito.
 	 */
-	router.get('/settings/', ...protectedRoute, getAllController.run.bind(getAllController))
+	router.get(
+		'/settings/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SETTINGS.READ_LIST),
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -61,6 +68,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/settings/allowed-domains',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.SETTINGS.READ_ALLOWED_DOMAINS),
 		getAllowedDomainsController.run.bind(getAllowedDomainsController)
 	)
 	/**
@@ -86,7 +94,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Configuración no encontrada.
 	 */
-	router.get('/settings/:key', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/settings/:key',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SETTINGS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -120,7 +133,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Petición mal formada o error de validación.
 	 */
-	router.patch('/settings/bulk-update', ...protectedRoute, patchBulkController.run.bind(patchBulkController))
+	router.patch(
+		'/settings/bulk-update',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SETTINGS.UPDATE),
+		patchBulkController.run.bind(patchBulkController)
+	)
 
 	/**
 	 * @swagger
@@ -155,5 +173,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Configuración no encontrada.
 	 */
-	router.patch('/settings/:key', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/settings/:key',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SETTINGS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

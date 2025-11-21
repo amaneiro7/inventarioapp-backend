@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { LocationStatusDependencies } from '../../di/location/operational-status.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: LocationStatusGetAllController = container.resolve(
@@ -28,6 +30,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/operationalstatus/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.LOCATION_STATUS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)

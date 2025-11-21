@@ -14,6 +14,8 @@ import { type UserUnlockAccountController } from '../../controllers/user/user.un
 import { type UserReactivateAccountController } from '../../controllers/user/user.reactivate.controller'
 import { type UserForceChangePasswordController } from '../../controllers/user/user.force-change-password.controller'
 import { type UserPatchController } from '../../controllers/user/user.patch.controller'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: UserGetController = container.resolve(UserDependencies.GetController)
@@ -52,7 +54,13 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de usuarios obtenida con éxito.
 	 */
-	router.get('/users/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/users/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 	/**
 	 * @swagger
 	 * /users/{id}:
@@ -76,7 +84,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.get('/users/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/users/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -107,7 +120,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos o el usuario ya existe.
 	 */
-	router.post('/users/register', ...protectedRoute, createUserController.run.bind(createUserController))
+	router.post(
+		'/users/register',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.CREATE),
+		createUserController.run.bind(createUserController)
+	)
 	/**
 	 * @swagger
 	 * /users/change-password:
@@ -195,7 +213,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/reset-password', ...protectedRoute, resetPasswordController.run.bind(resetPasswordController))
+	router.patch(
+		'/users/reset-password',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.RESET_PASSWORD),
+		resetPasswordController.run.bind(resetPasswordController)
+	)
 
 	/**
 	 * @swagger
@@ -226,7 +249,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/unlock', ...protectedRoute, unlockAccountController.run.bind(unlockAccountController))
+	router.patch(
+		'/users/unlock',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.UNLOCK),
+		unlockAccountController.run.bind(unlockAccountController)
+	)
 
 	/**
 	 * @swagger
@@ -257,7 +285,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/disable', ...protectedRoute, disabledController.run.bind(disabledController))
+	router.patch(
+		'/users/disable',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.DISABLE),
+		disabledController.run.bind(disabledController)
+	)
 
 	/**
 	 * @swagger
@@ -285,7 +318,12 @@ export const register = async (router: Router) => {
 	 *         description: Usuario reactivado con éxito.
 	 */
 
-	router.patch('/users/reactivate', ...protectedRoute, reactivateController.run.bind(reactivateController))
+	router.patch(
+		'/users/reactivate',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.REACTIVATE),
+		reactivateController.run.bind(reactivateController)
+	)
 
 	/**
 	 * @swagger
@@ -320,5 +358,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Usuario no encontrado.
 	 */
-	router.patch('/users/update', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/users/update',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.USERS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

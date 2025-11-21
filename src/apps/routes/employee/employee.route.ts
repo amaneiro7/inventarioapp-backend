@@ -9,6 +9,8 @@ import { type EmployeePatchController } from '../../controllers/employee/employe
 import { type EmployeeDeleteController } from '../../controllers/employee/employee.delete.controller'
 import { type EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: EmployeeGetController = container.resolve(EmployeeDependencies.GetController)
@@ -63,6 +65,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/employees/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.READ_LIST),
 		criteriaConverterMiddleware,
 		searchByCriteria.run.bind(searchByCriteria)
 	)
@@ -82,6 +85,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/employees/all',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -109,7 +113,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.get('/employees/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/employees/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -133,7 +142,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/employees/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/employees/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -164,7 +178,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.patch('/employees/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/employees/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.UPDATE),
+		patchController.run.bind(patchController)
+	)
 
 	/**
 	 * @swagger
@@ -189,5 +208,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Empleado no encontrado.
 	 */
-	router.delete('employees/:id', ...protectedRoute, deleteController.run.bind(deleteController))
+	router.delete(
+		'employees/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.EMPLOYEES.DELETE),
+		deleteController.run.bind(deleteController)
+	)
 }

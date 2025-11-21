@@ -7,6 +7,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { VicepresidenciaEjecutivaDependencies } from '../../di/employee/vicepresidencia-ejecutiva.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: VicepresidenciaEjecutivaGetAllController = container.resolve(
@@ -39,6 +41,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/vicepresidenciaejecutivas/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIA_EJECUTIVAS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -66,7 +69,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Vicepresidencia ejecutiva no encontrada.
 	 */
-	router.get('/vicepresidenciaejecutivas/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/vicepresidenciaejecutivas/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIA_EJECUTIVAS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -90,7 +98,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/vicepresidenciaejecutivas/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/vicepresidenciaejecutivas/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIA_EJECUTIVAS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -121,5 +134,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: No encontrada.
 	 */
-	router.patch('/vicepresidenciaejecutivas/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/vicepresidenciaejecutivas/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIA_EJECUTIVAS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

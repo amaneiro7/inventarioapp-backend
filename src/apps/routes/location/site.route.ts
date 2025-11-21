@@ -8,6 +8,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { SiteDependencies } from '../../di/location/site.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getAllController: SiteGetAllController = container.resolve(SiteDependencies.GetAllController)
@@ -30,7 +32,13 @@ export const register = async (router: Router) => {
 	 *         description: Lista de sitios obtenida con éxito.
 
 	 */
-	router.get('/sites/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/sites/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SITES.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 
 	/**
 	 * @swagger
@@ -55,7 +63,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Sitio no encontrado.
 	 */
-	router.get('/sites/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/sites/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SITES.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -79,7 +92,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/sites/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/sites/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SITES.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -110,5 +128,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Sitio no encontrado.
 	 */
-	router.patch('/sites/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/sites/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.SITES.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

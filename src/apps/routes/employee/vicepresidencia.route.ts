@@ -7,6 +7,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { VicepresidenciaDependencies } from '../../di/employee/vicepresidencia.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: VicepresidenciaGetAllController = container.resolve(
@@ -35,6 +37,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/vicepresidencias/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIAS.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
@@ -62,7 +65,12 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: Vicepresidencia no encontrada.
 	 */
-	router.get('/vicepresidencias/:id', ...protectedRoute, getController.run.bind(getController))
+	router.get(
+		'/vicepresidencias/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIAS.READ),
+		getController.run.bind(getController)
+	)
 
 	/**
 	 * @swagger
@@ -86,7 +94,12 @@ export const register = async (router: Router) => {
 	 *       '400':
 	 *         description: Datos de entrada no válidos.
 	 */
-	router.post('/vicepresidencias/', ...protectedRoute, postController.run.bind(postController))
+	router.post(
+		'/vicepresidencias/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIAS.CREATE),
+		postController.run.bind(postController)
+	)
 
 	/**
 	 * @swagger
@@ -117,5 +130,10 @@ export const register = async (router: Router) => {
 	 *       '404':
 	 *         description: No encontrada.
 	 */
-	router.patch('/vicepresidencias/:id', ...protectedRoute, patchController.run.bind(patchController))
+	router.patch(
+		'/vicepresidencias/:id',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.VICEPRESIDENCIAS.UPDATE),
+		patchController.run.bind(patchController)
+	)
 }

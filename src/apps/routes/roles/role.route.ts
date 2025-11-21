@@ -4,6 +4,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { RoleDependencies } from '../../di/roles/roles.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: RoleGetAllController = container.resolve(RoleDependencies.GetAllController)
@@ -22,5 +24,11 @@ export const register = async (router: Router) => {
 	 *       '200':
 	 *         description: Lista de roles obtenida con éxito.
 	 */
-	router.get('/roles/', ...protectedRoute, criteriaConverterMiddleware, getAllController.run.bind(getAllController))
+	router.get(
+		'/roles/',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.ROLES.READ_LIST),
+		criteriaConverterMiddleware,
+		getAllController.run.bind(getAllController)
+	)
 }

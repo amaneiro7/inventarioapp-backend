@@ -5,6 +5,8 @@ import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { HardDriveCapacityDependencies } from '../../di/hard-drive/hard-drive-capacity.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getAllController: HardDriveCapacityGetAllController = container.resolve(
@@ -28,6 +30,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/harddrivecapacities/',
 		...protectedRoute,
+		hasPermission(PERMISSIONS.HARDDRIVECAPACITIES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
