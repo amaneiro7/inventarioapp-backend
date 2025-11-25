@@ -146,6 +146,36 @@ const permissions = [
 		name: 'dashboard:read',
 		description: 'Permite acceder al dashboard principal con métricas generales.'
 	},
+	{
+		id: 'df078fe6-14c3-4a16-9145-07e6ec21609a',
+		name: 'dashboard:read-computer-dashboard',
+		description: 'Permite acceder al dashboard principal de computadoras.'
+	},
+	{
+		id: '7618daab-5136-49e0-a195-55a39d52253d',
+		name: 'dashboard:read-monitor-dashboard',
+		description: 'Permite acceder al dashboard principal de monitores.'
+	},
+	{
+		id: '1d09fbc5-e195-424b-bf7f-cc74f21eaa4b',
+		name: 'dashboard:read-printer-dashboard',
+		description: 'Permite acceder al dashboard principal de impresoras.'
+	},
+	{
+		id: 'dc3720e9-d5fb-463e-9441-2d9c0669c0cb',
+		name: 'dashboard:read-parts-dashboard',
+		description: 'Permite acceder al dashboard principal de partes o componentes.'
+	},
+	{
+		id: '26a8735a-796a-46ca-9416-f71a2a4cbe92',
+		name: 'dashboard:read-finantial-printer-dashboard',
+		description: 'Permite acceder al dashboard financiero de impresoras.'
+	},
+	{
+		id: '44bc5d18-6289-4a91-a652-5cd92db93de8',
+		name: 'dashboard:read-employee-dashboard',
+		description: 'Permite acceder al dashboard principal de empleados.'
+	},
 	// Permisos de Dispositivos
 	{
 		id: 'd0bb9685-2939-4485-94cc-56a13ff32ce1',
@@ -679,7 +709,7 @@ const PERMISSION_ASSIGNMENTS = {
 	Viewer: [
 		// Lectura base y de dashboards/monitoreo
 		...allReadPermissions,
-		'dashboard:read',
+		'dashboard:read-computer-dashboard',
 		'history:read-dashboard',
 		'status:read-dashboard',
 		'devices:read-monitoring-dashboard',
@@ -714,7 +744,7 @@ const PERMISSION_ASSIGNMENTS = {
 		'shipments:create',
 		'shipments:update',
 		// Lectura de Dashboards y Monitoreo (completo)
-		'dashboard:read',
+		'dashboard:read-computer-dashboard',
 		'history:read-dashboard',
 		'status:read-dashboard',
 		'devices:read-monitoring-dashboard',

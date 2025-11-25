@@ -59,8 +59,7 @@ export class GetUserPermissions {
 		}
 
 		const permissionGroupEntity = PermissionGroup.fromPrimitives(userPermissionGroupDto)
-		const permissionGroupArray = [...permissionGroupEntity.permissions]
-		const permissionIds = permissionGroupArray.map(p => p.value)
+		const permissionIds = permissionGroupEntity.permissionsValue
 
 		// 4. Mapear IDs a nombres de permisos
 		const permissionsDtos = await this.permissionRepository.findByIds(permissionIds)
