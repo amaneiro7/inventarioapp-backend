@@ -93,7 +93,22 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 						'location',
 						{
 							association: 'history',
-							include: [{ association: 'user', attributes: ['email', 'name', 'lastName'] }, 'employee'],
+							include: [
+								{
+									association: 'user',
+									attributes: [],
+									include: [
+										{
+											association: 'employee',
+											attributes: ['name', 'lastName', 'userName', 'email']
+										}
+									]
+								},
+								{
+									association: 'employee',
+									attributes: ['name', 'lastName', 'userName', 'email']
+								}
+							],
 							order: [['createdAt', 'DESC']]
 						}
 					]

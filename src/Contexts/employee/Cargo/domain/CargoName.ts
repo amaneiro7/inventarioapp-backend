@@ -7,7 +7,7 @@ import { type Cargo } from './Cargo'
  * @description Represents the name of a Cargo.
  */
 export class CargoName extends StringValueObject {
-	private readonly MIN_LENGTH = 15
+	private readonly MIN_LENGTH = 5
 	private readonly MAX_LENGTH = 50
 	private readonly VALID_REGEX = /^[a-zA-Z0-9()\-.,\s]*$/
 
