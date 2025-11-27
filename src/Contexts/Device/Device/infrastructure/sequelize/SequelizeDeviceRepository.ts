@@ -96,7 +96,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 							include: [
 								{
 									association: 'user',
-									attributes: [],
+									attributes: ['employeeId'],
 									include: [
 										{
 											association: 'employee',
