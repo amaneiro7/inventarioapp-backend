@@ -5,6 +5,7 @@ import { type PermissionGroupRepository } from '../../PermissionGroup/domain/rep
 import { type AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyResolver } from './AccessPolicyResolver'
 import { RoleId } from '../../../User/Role/domain/RoleId'
+import { ForbiddenError } from '../../../Shared/domain/errors/ForbiddenError'
 
 export interface GetUserPermissionsParams {
 	roleId?: Primitives<RoleId>
@@ -48,7 +49,10 @@ export class GetUserPermissions {
 		const permissionGroupId = await this.accessPolicyResolver.run({ cargoId, departamentoId })
 
 		if (!permissionGroupId) {
-			return [] // No hay grupo de permisos asignado
+			// Si no se encuentra una política de acceso (y por ende un grupo de permisos) para el usuario.
+			const userFriendlyMessage =
+				'Su cuenta no tiene los permisos necesarios para acceder a esta área. Por favor, contacte al administrador del sistema para que verifique la configuración de su perfil.'
+			throw new ForbiddenError(userFriendlyMessage)
 		}
 
 		// 3. OBTENER EL GRUPO Y SUS PERMISOS
