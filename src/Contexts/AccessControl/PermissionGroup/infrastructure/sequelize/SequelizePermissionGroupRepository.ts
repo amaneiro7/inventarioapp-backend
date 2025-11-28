@@ -11,6 +11,7 @@ import { type PermissionGroupRepository } from '../../domain/repository/Permissi
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupId } from '../../domain/valueObject/PermissionGroupId'
 import { type PermissionGroupName } from '../../domain/valueObject/PermissionGroupName'
+import { Op } from 'sequelize'
 
 /**
  * @class SequelizePermissionGroupRepository
@@ -97,6 +98,26 @@ export class SequelizePermissionGroupRepository
 				return permissionGroup.get({ plain: true }) as unknown as PermissionGroupDto
 			}
 		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple permissions groups by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and currently does not use caching.
+	 * @param {string[]} ids An array of groups of permissions IDs to find.
+	 * @returns {Promise<PermissionGroupDto[]>} A promise resolving to an array of found permission Group DTOs.
+	 * The array will be empty if no permissions groups match the given IDs.
+	 */
+	async findByIds(ids: string[]): Promise<PermissionGroupDto[]> {
+		const permissions = await PermissionGroupModel.findAll({
+			where: {
+				id: {
+					[Op.in]: ids
+				}
+			},
+			raw: true
+		})
+		return permissions as PermissionGroupDto[]
 	}
 
 	async save(payload: PermissionGroupPrimitives): Promise<void> {

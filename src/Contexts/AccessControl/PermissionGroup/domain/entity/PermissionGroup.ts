@@ -63,11 +63,26 @@ export class PermissionGroup extends AggregateRoot {
 
 	toPrimitives(): PermissionGroupPrimitives {
 		return {
-			id: this.id.value,
-			name: this.name.value,
-			description: this.description.value,
-			permissions: Array.from(this.permissions).map(p => p.value)
+			id: this.idValue,
+			name: this.nameValue,
+			description: this.descriptionValue,
+			permissions: this.permissionsValue
 		}
+	}
+	get idValue(): Primitives<PermissionGroupId> {
+		return this.id.value
+	}
+
+	get nameValue(): Primitives<PermissionGroupName> {
+		return this.name.value
+	}
+
+	get descriptionValue(): Primitives<PermissionGroupDescription> {
+		return this.description.value
+	}
+
+	get permissionsValue(): Primitives<PermissionId>[] {
+		return Array.from(this.permissions).map(p => p.value)
 	}
 
 	updateName(newName: string): void {
@@ -76,10 +91,6 @@ export class PermissionGroup extends AggregateRoot {
 
 	updateDescription(newDescription: string): void {
 		this.description = new PermissionGroupDescription(newDescription)
-	}
-
-	get permissionsValue(): Primitives<PermissionId>[] {
-		return Array.from(this.permissions).map(p => p.value)
 	}
 
 	// Métodos que expresan la intención del negocio

@@ -4,6 +4,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyPrimitives, type AccessPolicyDto } from '../entity/AccessPolicy.dto'
 import { type AccessPolicyId } from '../valueObject/AccessPolicyId'
+import { type AccessPolicyName } from '../valueObject/AccessPolicyName'
 
 export abstract class AccessPolicyRepository {
 	/**
@@ -21,6 +22,11 @@ export abstract class AccessPolicyRepository {
 	 * Busca una política de acceso por su ID.
 	 */
 	abstract findById(id: Primitives<AccessPolicyId>): Promise<Nullable<AccessPolicyDto>>
+
+	/**
+	 * Busca una política de acceso por su nombre.
+	 */
+	abstract findByName(name: Primitives<AccessPolicyName>): Promise<AccessPolicyDto | null>
 
 	/**
 	 * Elimina una política de acceso por su ID.

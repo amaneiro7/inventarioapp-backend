@@ -4,7 +4,7 @@ import { type PermissionGroupName } from '../valueObject/PermissionGroupName'
 
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { type PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
-import { PermissionGroupDescription } from './PermissionGroupDescription'
+import { type PermissionGroupDescription } from './PermissionGroupDescription'
 
 export type PermissionGroup = {
 	id: Primitives<PermissionGroupId>

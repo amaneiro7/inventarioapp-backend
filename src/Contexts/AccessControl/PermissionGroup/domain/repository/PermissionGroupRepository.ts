@@ -10,5 +10,6 @@ export abstract class PermissionGroupRepository {
 	abstract searchAll(criteria: Criteria): Promise<ResponseDB<PermissionGroupDto>>
 	abstract findById(id: Primitives<PermissionGroupId>): Promise<PermissionGroupDto | null>
 	abstract findByName(name: Primitives<PermissionGroupName>): Promise<PermissionGroupDto | null>
+	abstract findByIds: (ids: Array<Primitives<PermissionGroupId>>) => Promise<PermissionGroupDto[]>
 	abstract remove(id: Primitives<PermissionGroupId>): Promise<void>
 }

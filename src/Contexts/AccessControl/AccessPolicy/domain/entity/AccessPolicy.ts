@@ -9,27 +9,30 @@ import { AccessPolicyRemovedDomainEvent } from './AccessPolicyRemovedDomainEvent
 import { AccessPolicyCreatedDomainEvent } from './AccessPolicyCreatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
+import { PermissionGroupAssignedToAccessPolicyDomainEvent } from './PermissionGroupAssignedToAccessPolicyDomainEvent'
 
 export class AccessPolicy extends AggregateRoot {
+	private permissionsGroups: Set<PermissionGroupId>
 	constructor(
 		private readonly id: AccessPolicyId,
 		private name: AccessPolicyName,
 		private cargoId: CargoId | null,
 		private departamentoId: DepartmentId | null,
-		private permissionGroupId: PermissionGroupId,
+		permissionsGroups: Set<PermissionGroupId>,
 		private priority: AccessPolicyPriority
 	) {
 		super()
+		this.permissionsGroups = permissionsGroups
 	}
 
 	static create(params: AccessPolicyParams): AccessPolicy {
-		const name = new AccessPolicyName(params.name)
+		const permissionsGroups = new Set(params.permissionGroupIds.map(p => new PermissionGroupId(p)))
 		const accessPolicy = new AccessPolicy(
 			AccessPolicyId.random(),
-			name,
+			new AccessPolicyName(params.name),
 			params.cargoId ? new CargoId(params.cargoId) : null,
 			params.departamentoId ? new DepartmentId(params.departamentoId) : null,
-			new PermissionGroupId(params.permissionGroupId),
+			permissionsGroups,
 			new AccessPolicyPriority(params.priority)
 		)
 		accessPolicy.record(
@@ -37,7 +40,7 @@ export class AccessPolicy extends AggregateRoot {
 				aggregateId: accessPolicy.idValue,
 				body: {
 					accessPolicyId: accessPolicy.idValue,
-					name: accessPolicy.name.value
+					name: accessPolicy.nameValue
 				}
 			})
 		)
@@ -55,12 +58,13 @@ export class AccessPolicy extends AggregateRoot {
 	}
 
 	static fromPrimitives(primitives: AccessPolicyPrimitives): AccessPolicy {
+		const uniquePermissionsGroups = new Set(primitives.permissionsGroups.map(p => new PermissionGroupId(p)))
 		return new AccessPolicy(
 			new AccessPolicyId(primitives.id),
 			new AccessPolicyName(primitives.name),
 			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
 			primitives.departamentoId ? new DepartmentId(primitives.departamentoId) : null,
-			new PermissionGroupId(primitives.permissionGroupId),
+			uniquePermissionsGroups,
 			new AccessPolicyPriority(primitives.priority)
 		)
 	}
@@ -71,7 +75,7 @@ export class AccessPolicy extends AggregateRoot {
 			name: this.nameValue,
 			cargoId: this.cargoValue,
 			departamentoId: this.departamentoValue,
-			permissionGroupId: this.permissionGroupValue,
+			permissionsGroups: this.permissionGroupValue,
 			priority: this.priorityValue
 		}
 	}
@@ -99,8 +103,8 @@ export class AccessPolicy extends AggregateRoot {
 	get departamentoValue(): string | null {
 		return this.departamentoId?.value ?? null
 	}
-	get permissionGroupValue(): string {
-		return this.permissionGroupId.value
+	get permissionGroupValue(): Primitives<PermissionGroupId>[] {
+		return Array.from(this.permissionsGroups).map(p => p.value)
 	}
 
 	get priorityValue(): number {
@@ -119,11 +123,38 @@ export class AccessPolicy extends AggregateRoot {
 		this.departamentoId = newDepartamentoId ? new DepartmentId(newDepartamentoId) : null
 	}
 
-	updatePermissionGroup(newPermissionGroupId: Primitives<PermissionGroupId>): void {
-		this.permissionGroupId = new PermissionGroupId(newPermissionGroupId)
+	assignPermissionGroup(permissionGroupId: PermissionGroupId): void {
+		if (this.hasPermission(permissionGroupId)) {
+			// Opcional: lanzar un error si ya lo tiene o simplemente no hacer nada.
+			return
+		}
+		this.permissionsGroups.add(permissionGroupId)
+		this.record(
+			new PermissionGroupAssignedToAccessPolicyDomainEvent({
+				aggregateId: this.id.value,
+				body: { permissionGroupId: permissionGroupId.value }
+			})
+		)
+	}
+
+	revokePermissionGroup(permissionGroupId: PermissionGroupId): void {
+		const permissionToRemove = [...this.permissionsGroups].find(p => p.equals(permissionGroupId))
+		if (permissionToRemove) {
+			this.permissionsGroups.delete(permissionToRemove)
+			this.record(
+				new PermissionGroupAssignedToAccessPolicyDomainEvent({
+					aggregateId: this.id.value,
+					body: { permissionGroupId: permissionGroupId.value }
+				})
+			)
+		}
 	}
 
 	updatePriority(newPriority: Primitives<AccessPolicyPriority>): void {
 		this.priority = new AccessPolicyPriority(newPriority)
+	}
+
+	hasPermission(permissionGroupId: PermissionGroupId): boolean {
+		return [...this.permissionsGroups].some(p => p.equals(permissionGroupId))
 	}
 }
