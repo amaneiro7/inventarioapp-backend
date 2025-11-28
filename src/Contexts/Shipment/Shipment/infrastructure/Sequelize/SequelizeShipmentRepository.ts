@@ -59,7 +59,13 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 					include: [
 						{
 							association: 'fromUser',
-							attributes: ['name', 'lastName']
+							attributes: ['id', 'employeeId'],
+							include: [
+								{
+									association: 'employee',
+									attributes: ['name', 'lastName', 'userName', 'email']
+								}
+							]
 						},
 						{
 							association: 'toEmployee',
