@@ -20,7 +20,7 @@ export class AccessPolicyResolver {
 	 * @param params - Los atributos del empleado (cargoId, departamentoId).
 	 * @returns El ID del grupo de permisos que corresponde según la regla de mayor prioridad.
 	 */
-	async run(params: Params): Promise<string> {
+	async run(params: Params): Promise<string | null> {
 		// 1. Obtener TODAS las políticas de la base de datos.
 		// Para optimizar, podríamos cachear este resultado, ya que las políticas no cambian a menudo.
 		const accessPolicies = await this.accessPolicyRepository.search(
@@ -31,10 +31,9 @@ export class AccessPolicyResolver {
 		// 2. Filtrar en memoria para encontrar todas las reglas que coinciden con el empleado.
 		const matchingPolicies = allPolicies.filter(policy => policy.matches(params))
 
-		// 3. Si no hay ninguna coincidencia, podría lanzar un error o devolver un grupo por defecto.
+		// 3. Si no hay ninguna coincidencia, se devuelve null.
 		if (matchingPolicies.length === 0) {
-			// Esto no debería pasar si tienes una regla por defecto (con cargoId y departamentoId nulos).
-			throw new Error('No matching access policy found for the user.')
+			return null
 		}
 
 		// 4. Ordenar las reglas coincidentes por prioridad (el número más bajo es más prioritario).

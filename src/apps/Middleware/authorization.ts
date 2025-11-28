@@ -66,9 +66,11 @@ export const hasPermission = (requiredPermissionName?: string) => {
 			// El Resolver utiliza el cargo y el departamento para encontrar el ID del grupo de permisos que aplica.
 			const permissionGroupId = await accessPolicyResolver.run({ cargoId, departamentoId })
 
-			if (!permissionGroupId) {
+			if (permissionGroupId === null) {
 				// Si no se encuentra una política de acceso (y por ende un grupo de permisos) para el usuario.
-				return next(new ForbiddenError('No se encontró una política de acceso para su cargo y departamento.'))
+				const userFriendlyMessage =
+					'Su cuenta no tiene los permisos necesarios para acceder a esta área. Por favor, contacte al administrador del sistema para que verifique la configuración de su perfil.'
+				return next(new ForbiddenError(userFriendlyMessage))
 			}
 
 			// 5. OBTENER REPOSITORIOS
