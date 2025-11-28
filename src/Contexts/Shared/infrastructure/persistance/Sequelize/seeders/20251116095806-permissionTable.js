@@ -1,6 +1,6 @@
 'use strict'
 
-const { permissions } = require('./access_control/permissions')
+const { permissions } = require('./access_control/permissions2')
 
 // const { randomUUID } = require('crypto')
 

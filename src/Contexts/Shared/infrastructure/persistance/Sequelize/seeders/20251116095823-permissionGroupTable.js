@@ -1,6 +1,6 @@
 'use strict'
 
-const { permissionGroups } = require('./access_control/permissions')
+const { permissionGroups } = require('./access_control/permissions2')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
