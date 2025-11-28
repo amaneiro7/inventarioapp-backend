@@ -34,16 +34,6 @@ module.exports = {
 				onUpdate: 'CASCADE',
 				onDelete: 'SET NULL'
 			},
-			permission_group_id: {
-				type: Sequelize.UUID,
-				allowNull: false,
-				references: {
-					model: 'permission_groups',
-					key: 'id'
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE' // Si se borra un grupo, se borran las reglas asociadas
-			},
 			priority: {
 				type: Sequelize.INTEGER,
 				allowNull: false,

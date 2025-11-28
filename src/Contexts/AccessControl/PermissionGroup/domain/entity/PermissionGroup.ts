@@ -15,9 +15,9 @@ export class PermissionGroup extends AggregateRoot {
 	private permissions: Set<PermissionId>
 
 	private constructor(
-		readonly id: PermissionGroupId,
-		public name: PermissionGroupName,
-		public description: PermissionGroupDescription,
+		private readonly id: PermissionGroupId,
+		private name: PermissionGroupName,
+		private description: PermissionGroupDescription,
 		permissions: Set<PermissionId>
 	) {
 		super()

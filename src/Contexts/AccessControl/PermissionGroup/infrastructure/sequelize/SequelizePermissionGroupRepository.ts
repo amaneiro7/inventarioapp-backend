@@ -23,7 +23,7 @@ export class SequelizePermissionGroupRepository
 	extends SequelizeCriteriaConverter
 	implements PermissionGroupRepository
 {
-	private readonly cacheKeyPrefix = 'permission_groups'
+	private readonly cacheKeyPrefix = 'permissionGroups'
 	private readonly cache: CacheService
 
 	constructor({ cache }: { cache: CacheService }) {
@@ -31,6 +31,13 @@ export class SequelizePermissionGroupRepository
 		this.cache = cache
 	}
 
+	/**
+	 * @method searchAll
+	 * @description Retrieves a paginated list of permission groups based on specified criteria.
+	 * Caches the results to optimize performance for repeated queries.
+	 * @param {Criteria} criteria The criteria for filtering, sorting, and pagination.
+	 * @returns {Promise<ResponseDB<PermissionGroupDto>>} A promise resolving to a paginated response of permission group DTOs.
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<PermissionGroupDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = PermissionGroupAssociation.convertFilter(criteria, sequelizeOptions)
@@ -49,6 +56,13 @@ export class SequelizePermissionGroupRepository
 		})
 	}
 
+	/**
+	 * @method findById
+	 * @description Retrieves a single permission group by its unique identifier.
+	 * Caches the result for faster subsequent lookups.
+	 * @param {Primitives<PermissionGroupId>} id The ID of the permission group to find.
+	 * @returns {Promise<PermissionGroupDto | null>} A promise resolving to the permission group DTO if found, otherwise null.
+	 */
 	async findById(id: Primitives<PermissionGroupId>): Promise<PermissionGroupDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<PermissionGroupDto | null>({
@@ -74,6 +88,13 @@ export class SequelizePermissionGroupRepository
 		})
 	}
 
+	/**
+	 * @method findByName
+	 * @description Retrieves a single permission group by its unique name.
+	 * Caches the result for faster subsequent lookups.
+	 * @param {Primitives<PermissionGroupName>} name The name of the permission group to find.
+	 * @returns {Promise<PermissionGroupDto | null>} A promise resolving to the permission group DTO if found, otherwise null.
+	 */
 	async findByName(name: Primitives<PermissionGroupName>): Promise<PermissionGroupDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<PermissionGroupDto | null>({
@@ -103,10 +124,9 @@ export class SequelizePermissionGroupRepository
 	/**
 	 * @method findByIds
 	 * @description Retrieves multiple permissions groups by their unique identifiers in a single query.
-	 * This method is optimized for bulk lookups and currently does not use caching.
-	 * @param {string[]} ids An array of groups of permissions IDs to find.
-	 * @returns {Promise<PermissionGroupDto[]>} A promise resolving to an array of found permission Group DTOs.
-	 * The array will be empty if no permissions groups match the given IDs.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * @param {string[]} ids An array of permission group IDs to find.
+	 * @returns {Promise<PermissionGroupDto[]>} A promise resolving to an array of found permission group DTOs.
 	 */
 	async findByIds(ids: string[]): Promise<PermissionGroupDto[]> {
 		const permissions = await PermissionGroupModel.findAll({
@@ -120,6 +140,14 @@ export class SequelizePermissionGroupRepository
 		return permissions as PermissionGroupDto[]
 	}
 
+	/**
+	 * @method save
+	 * @description Saves a permission group entity (creates or updates) and its associated permissions to the database.
+	 * After saving, it invalidates relevant cache entries to ensure data consistency.
+	 * @param {PermissionGroupPrimitives} payload The primitive permission group data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 * @throws {Error} If the save operation fails.
+	 */
 	async save(payload: PermissionGroupPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
@@ -138,6 +166,12 @@ export class SequelizePermissionGroupRepository
 		}
 	}
 
+	/**
+	 * @method remove
+	 * @description Deletes a permission group from the database by its ID.
+	 * After deletion, it invalidates relevant cache entries.
+	 * @param {Primitives<PermissionGroupId>} id The ID of the permission group to remove.
+	 */
 	async remove(id: Primitives<PermissionGroupId>): Promise<void> {
 		const groupToRemove = await PermissionGroupModel.findByPk(id, { attributes: ['name'] })
 		const groupName = groupToRemove?.name
@@ -149,6 +183,13 @@ export class SequelizePermissionGroupRepository
 		}
 	}
 
+	/**
+	 * @private
+	 * @method invalidateCache
+	 * @description Invalidates all relevant cache entries for a given permission group.
+	 * @param {string} id The ID of the permission group.
+	 * @param {string} name The name of the permission group.
+	 */
 	private async invalidateCache(id: string, name: string): Promise<void> {
 		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}*`, `${this.cacheKeyPrefix}:id:${id}`]
 		if (name) {

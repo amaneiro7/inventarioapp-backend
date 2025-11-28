@@ -58,15 +58,15 @@ export class PermissionGroupUpdater {
 
 		const permissionGroupEntity = PermissionGroup.fromPrimitives(permissionGroup)
 
-		if (params.name !== undefined && params.name !== permissionGroupEntity.name.value) {
+		if (params.name !== undefined && params.name !== permissionGroupEntity.nameValue) {
 			const existingGroup = await this.permissionGroupRepository.findByName(params.name)
-			if (existingGroup && existingGroup.id !== permissionGroupEntity.id.value) {
+			if (existingGroup && existingGroup.id !== permissionGroupEntity.idValue) {
 				throw new PermissionGroupAlreadyExistsError(params.name)
 			}
 			permissionGroupEntity.updateName(params.name)
 		}
 
-		if (params.description !== undefined && params.description !== permissionGroupEntity.description.value) {
+		if (params.description !== undefined && params.description !== permissionGroupEntity.descriptionValue) {
 			permissionGroupEntity.updateDescription(params.description)
 		}
 

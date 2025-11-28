@@ -35,8 +35,11 @@ export class AccessPolicyRemover {
 		if (!accessPolicy) {
 			throw new AccessPolicyDoesNotExistError(accessPolicyId.value)
 		}
-
-		const accessPolicyEntity = AccessPolicy.fromPrimitives(accessPolicy)
+		const { permissionsGroups } = accessPolicy
+		const accessPolicyEntity = AccessPolicy.fromPrimitives({
+			...accessPolicy,
+			permissionsGroups: permissionsGroups.map(group => group.id)
+		})
 		accessPolicyEntity.remove()
 
 		await this.accessPolicyRepository.remove(accessPolicyId.value)

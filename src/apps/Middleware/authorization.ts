@@ -6,14 +6,13 @@ import { PermissionDependencies } from '../di/access-control/permission.di'
 import { PermissionGroupDependencies } from '../di/access-control/permission-group.di'
 import { AccessPolicyDependencies } from '../di/access-control/access-policy.di'
 import { AuthenticationRequiredError } from '../../Contexts/AccessControl/Permission/domain/errors/AuthenticationRequiredError'
-import { PermissionGroupDoesNotExistError } from '../../Contexts/AccessControl/PermissionGroup/domain/errors/PermissionGroupDoesNotExistError'
 import { ForbiddenError } from '../../Contexts/Shared/domain/errors/ForbiddenError'
 import { PermissionDoesNotExistError } from '../../Contexts/AccessControl/Permission/domain/errors/PermissionDoesNotExistError'
+import { RoleId } from '../../Contexts/User/Role/domain/RoleId'
 import { type PermissionGroupRepository } from '../../Contexts/AccessControl/PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
 import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
 import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyResolver'
-import { RoleId } from '../../Contexts/User/Role/domain/RoleId'
 
 /**
  * @function hasPermission
@@ -26,90 +25,77 @@ import { RoleId } from '../../Contexts/User/Role/domain/RoleId'
 export const hasPermission = (requiredPermissionName?: string) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			// 1. EXTRAER Y VALIDAR PAYLOAD DE USUARIO
-			// Se extrae el payload de usuario del objeto de la solicitud (añadido por un middleware anterior de autenticación).
+			// 1. VALIDACIÓN DE AUTENTICACIÓN
 			const userPayload = req.user as JwtPayloadUser
-
-			// Primera validación: se verifica que exista un payload del usuario (indicando autenticación).
 			if (!userPayload) {
-				// Si no hay payload, se lanza un error de autenticación requerida.
 				return next(new AuthenticationRequiredError())
 			}
 
-			// --- CASO 1: SOLO AUTENTICACIÓN REQUERIDA (NO SE ESPECIFICA PERMISO) ---
+			// 2. CASO SIN PERMISO ESPECÍFICO (Solo requiere estar logueado)
 			if (!requiredPermissionName) {
-				// Si la ruta no requiere un permiso específico, simplemente continuamos si el usuario está autenticado.
 				return next()
 			}
 			// ----------------------------------------------------------------------
 
-			// --- CASO 2: SE REQUIERE UN PERMISO ESPECÍFICO ---
-			// 2. BYPASS PARA ADMIN (Si el roleId está disponible y es 'admin')
-			// Esta es la única evaluación basada en roleId que mantendremos.
+			// 3. BYPASS PARA ADMIN
 			if (userPayload.roleId === RoleId.Options.ADMIN) {
 				return next()
 			}
 
-			// 3. VALIDAR ATRIBUTOS PARA LA POLÍTICA DE ACCESO (para usuarios 'standard')
-			// Validar que el payload contenga la información requerida para resolver la política.
+			// 4. VALIDAR DATOS PARA RESOLVER POLÍTICA
 			const { cargoId, departamentoId } = userPayload
 			if (!cargoId || !departamentoId) {
-				// Si falta información clave para la política de acceso, se deniega el acceso.
-				// Esto atrapa a usuarios 'guest'/'unverified' o con tokens incompletos.
 				return next(new ForbiddenError('Falta el cargo o departamento para resolver la política de acceso.'))
 			}
 
-			// 4. RESOLVER LA POLÍTICA DE ACCESO DEL USUARIO
-			// Se obtiene el caso de uso (AccessPolicyResolver) para encontrar el grupo de permisos.
+			// 5. RESOLVER POLÍTICA DE ACCESO
 			const accessPolicyResolver: AccessPolicyResolver = container.resolve(AccessPolicyDependencies.Resolver)
-
-			// El Resolver utiliza el cargo y el departamento para encontrar el ID del grupo de permisos que aplica.
-			const permissionGroupId = await accessPolicyResolver.run({ cargoId, departamentoId })
-
-			if (permissionGroupId === null) {
-				// Si no se encuentra una política de acceso (y por ende un grupo de permisos) para el usuario.
-				const userFriendlyMessage =
-					'Su cuenta no tiene los permisos necesarios para acceder a esta área. Por favor, contacte al administrador del sistema para que verifique la configuración de su perfil.'
+			const permissionGroupIds = await accessPolicyResolver.run({ cargoId, departamentoId })
+			if (!permissionGroupIds || permissionGroupIds.length === 0) {
+				const userFriendlyMessage = 'Su perfil no tiene grupos de permisos asignados.'
 				return next(new ForbiddenError(userFriendlyMessage))
 			}
 
-			// 5. OBTENER REPOSITORIOS
-			// Se resuelven las dependencias para interactuar con la capa de persistencia.
+			/// 6. PREPARAR REPOSITORIOS
 			const permissionRepository: PermissionRepository = container.resolve(PermissionDependencies.Repository)
 			const permissionGroupRepository: PermissionGroupRepository = container.resolve(
 				PermissionGroupDependencies.Repository
 			)
+			// 7. CONSULTAS EN PARALELO (Optimización de rendimiento)
+			// Buscamos el ID del permiso y los Grupos del usuario al mismo tiempo.
+			const [requiredPermissionDto, userPermissionGroupDto] = await Promise.all([
+				permissionRepository.findByName(requiredPermissionName),
+				permissionGroupRepository.findByIds(permissionGroupIds)
+			])
 
-			// 6. VERIFICAR PERMISO REQUERIDO
-
-			// A. Buscar la entidad de Permiso por su nombre para obtener su ID.
-			const requiredPermissionDto = await permissionRepository.findByName(requiredPermissionName)
+			// A. Validar existencia del permiso en el sistema
 			if (!requiredPermissionDto) {
 				// Si el permiso requerido no existe en el sistema, se lanza un error.
 				return next(new PermissionDoesNotExistError({ permissionName: requiredPermissionName }))
 			}
+
+			// B. Si no se encontraron los grupos en BD (aunque el resolver diera IDs)
+			if (!userPermissionGroupDto || userPermissionGroupDto.length === 0) {
+				return next(new ForbiddenError('Error de integridad: Grupos de permisos no encontrados.'))
+			}
+
 			// Creamos el VO del ID del permiso requerido.
 			const requiredPermissionId = new PermissionId(requiredPermissionDto.id)
 
-			// B. Buscar la entidad del Grupo de Permisos del usuario por el ID resuelto.
-			const userPermissionGroupDto = await permissionGroupRepository.findById(permissionGroupId)
-			if (!userPermissionGroupDto) {
-				// Si el grupo de permisos del usuario no existe (error de configuración de DB).
-				return next(new PermissionGroupDoesNotExistError(permissionGroupId))
+			/// 8. VERIFICACIÓN: ¿ALGUNO DE LOS GRUPOS TIENE EL PERMISO?
+			// Iteramos sobre los grupos traídos de BD
+			for (const permissionGroup of userPermissionGroupDto) {
+				// Hidratamos la entidad
+				const permissionGroupEntity = PermissionGroup.fromPrimitives(permissionGroup)
+				// Chequeamos si este grupo tiene el permiso
+				if (permissionGroupEntity.hasPermission(requiredPermissionId)) {
+					// ¡Éxito! El usuario tiene permiso. Se invoca 'next()' para continuar con el controlador de la ruta.
+					return next()
+				}
 			}
 
-			// C. Rehidratar la entidad de dominio PermissionGroup a partir de sus primitivas.
-			const permissionGroupEntity = PermissionGroup.fromPrimitives(userPermissionGroupDto)
-
-			// D. Ejecutar la lógica de dominio: ¿El grupo del usuario tiene el permiso requerido?
-			if (permissionGroupEntity.hasPermission(requiredPermissionId)) {
-				// ¡Éxito! El usuario tiene permiso. Se invoca 'next()' para continuar con el controlador de la ruta.
-				return next()
-			}
-
-			// 7. DENY BY DEFAULT
-			// Si el permiso no fue encontrado en el grupo del usuario, se deniega el acceso.
-			return next(new ForbiddenError(`Permiso requerido '${requiredPermissionName}' no asignado.`))
+			// 9. DENEGAR SI NINGÚN GRUPO COINCIDIÓ
+			return next(new ForbiddenError(`No tienes el permiso '${requiredPermissionName}' requerido.`))
 		} catch (error) {
 			next(error) // Pasar el error al manejador de errores global
 		}

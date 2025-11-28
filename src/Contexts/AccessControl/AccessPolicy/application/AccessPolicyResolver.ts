@@ -20,13 +20,24 @@ export class AccessPolicyResolver {
 	 * @param params - Los atributos del empleado (cargoId, departamentoId).
 	 * @returns El ID del grupo de permisos que corresponde según la regla de mayor prioridad.
 	 */
-	async run(params: Params): Promise<string | null> {
+	async run(params: Params): Promise<string[] | null> {
 		// 1. Obtener TODAS las políticas de la base de datos.
 		// Para optimizar, podríamos cachear este resultado, ya que las políticas no cambian a menudo.
 		const accessPolicies = await this.accessPolicyRepository.search(
 			new Criteria(new Filters([]), Order.none(), 0, 0)
 		)
-		const allPolicies = accessPolicies.map(policy => AccessPolicy.fromPrimitives(policy))
+		const allPolicies = accessPolicies.map(policy => {
+			const { cargoId, id, name, permissionsGroups, priority, departamentoId } = policy
+			const permissionGroups = permissionsGroups.map(group => group.id)
+			return AccessPolicy.fromPrimitives({
+				cargoId,
+				departamentoId,
+				id,
+				name,
+				permissionsGroups: permissionGroups,
+				priority
+			})
+		})
 
 		// 2. Filtrar en memoria para encontrar todas las reglas que coinciden con el empleado.
 		const matchingPolicies = allPolicies.filter(policy => policy.matches(params))
@@ -40,6 +51,15 @@ export class AccessPolicyResolver {
 		matchingPolicies.sort((a, b) => a.priorityValue - b.priorityValue)
 
 		// 5. La regla ganadora es la primera de la lista. Devolver su permissionGroupId.
-		return matchingPolicies[0].permissionGroupValue
+		const winningPolicy = matchingPolicies[0]
+		const permissionGroupIds = winningPolicy.permissionGroupValue
+
+		// Una política de acceso debe resolver a exactamente UN grupo de permisos.
+		// Si tiene 0 o más de 1, es una configuración ambigua y no se debe conceder acceso.
+		if (permissionGroupIds.length !== 1) {
+			return null
+		}
+
+		return permissionGroupIds
 	}
 }

@@ -1,27 +1,44 @@
-import { DataTypes, Model, type Sequelize } from 'sequelize'
+import {
+	type BelongsToManyAddAssociationsMixin,
+	type BelongsToManyGetAssociationsMixin,
+	type BelongsToManySetAssociationsMixin,
+	DataTypes,
+	Model,
+	type Sequelize
+} from 'sequelize'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
+import { type AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../../../../employee/Cargo/domain/CargoId'
 import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
-import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { type AccessPolicyPriority } from '../../domain/valueObject/AccessPolicyPriority'
-import { AccessPolicyDto } from '../../domain/entity/AccessPolicy.dto'
-import { AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
+import { type AccessPolicyDto } from '../../domain/entity/AccessPolicy.dto'
+import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
+import { type PermissionGroupDto } from '../../../PermissionGroup/domain/entity/PermissionGroup.dto'
+import { PermissionGroupModel } from '../../../PermissionGroup/infrastructure/sequelize/PermissionGroupSchema'
+import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 
-export class AccessPolicyModel extends Model<AccessPolicyDto> implements AccessPolicyDto {
+export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsGroups'>> implements AccessPolicyDto {
 	declare id: Primitives<AccessPolicyId>
 	declare name: Primitives<AccessPolicyName>
 	declare cargoId: Primitives<CargoId> | null
 	declare departamentoId: Primitives<DepartmentId> | null
-	declare permissionGroupId: Primitives<PermissionGroupId>
 	declare priority: Primitives<AccessPolicyPriority>
+	declare permissionsGroups: PermissionGroupDto[]
+
+	// Association Mixins
+	declare getPermissionGroup: BelongsToManyGetAssociationsMixin<PermissionGroupModel>
+	declare addPermissionGroup: BelongsToManyAddAssociationsMixin<PermissionGroupModel, Primitives<PermissionId>>
+	declare setPermissionsGroups: BelongsToManySetAssociationsMixin<PermissionGroupModel, Primitives<PermissionId>>
+	declare removePermissionGroup: BelongsToManyAddAssociationsMixin<PermissionGroupModel, Primitives<PermissionId>>
 
 	static associate(models: SequelizeModels): void {
 		// Una política de acceso pertenece a un grupo de permisos (el resultado de la regla)
-		this.belongsTo(models.PermissionGroup, {
-			as: 'permissionGroup',
-			foreignKey: 'permissionGroupId'
+		this.belongsToMany(models.PermissionGroup, {
+			through: 'access_policy_group',
+			foreignKey: 'permissionGroupId',
+			otherKey: 'accessPolicyId',
+			as: 'permissionsGroups'
 		})
 		// Una política puede estar asociada a un cargo (la condición)
 		this.belongsTo(models.Cargo, {
@@ -57,11 +74,6 @@ export class AccessPolicyModel extends Model<AccessPolicyDto> implements AccessP
 					type: DataTypes.UUID,
 					allowNull: true,
 					field: 'departamento_id'
-				},
-				permissionGroupId: {
-					type: DataTypes.UUID,
-					allowNull: false,
-					field: 'permission_group_id'
 				},
 				priority: {
 					type: DataTypes.INTEGER,

@@ -13,8 +13,8 @@ import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObj
 import { type PermissionGroupName } from '../../domain/valueObject/PermissionGroupName'
 import { type PermissionModel } from '../../../Permission/infrastructure/sequelize/PermissionSchema'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
-import { PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
-import { PermissionGroupDescription } from '../../domain/entity/PermissionGroupDescription'
+import { type PermissionDto } from '../../../Permission/domain/entity/Permission.dto'
+import { type PermissionGroupDescription } from '../../domain/entity/PermissionGroupDescription'
 
 /**
  * @description Sequelize model for the `PermissionGroup` entity.
@@ -39,9 +39,11 @@ export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permis
 			otherKey: 'permission_id',
 			as: 'permissions'
 		})
-		this.hasOne(models.AccessPolicy, {
-			as: 'accessPolicy',
-			foreignKey: 'permission_group_id'
+		this.belongsToMany(models.PermissionGroup, {
+			through: 'access_policy_group',
+			otherKey: 'permissionGroupId',
+			foreignKey: 'accessPolicyId',
+			as: 'accessPolicies'
 		})
 	}
 

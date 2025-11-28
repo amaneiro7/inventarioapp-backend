@@ -56,17 +56,19 @@ export class GetUserPermissions {
 		}
 
 		// 3. OBTENER EL GRUPO Y SUS PERMISOS
-		const userPermissionGroupDto = await this.permissionGroupRepository.findById(permissionGroupId)
+		const userPermissionGroupDto = await this.permissionGroupRepository.findByIds(permissionGroupId)
 
 		if (!userPermissionGroupDto) {
 			return [] // Grupo de permisos no encontrado
 		}
 
-		const permissionGroupEntity = PermissionGroup.fromPrimitives(userPermissionGroupDto)
-		const permissionIds = permissionGroupEntity.permissionsValue
+		const permissionGroupEntities = userPermissionGroupDto.map(group => PermissionGroup.fromPrimitives(group))
+		const permissionIds = permissionGroupEntities.flatMap(groupEntity => groupEntity.permissionsValue)
+
+		const uniquePermissionIds = [...new Set(permissionIds)]
 
 		// 4. Mapear IDs a nombres de permisos
-		const permissionsDtos = await this.permissionRepository.findByIds(permissionIds)
+		const permissionsDtos = await this.permissionRepository.findByIds(uniquePermissionIds)
 		return permissionsDtos.map(p => p.name)
 	}
 }
