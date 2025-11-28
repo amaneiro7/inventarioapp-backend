@@ -21,8 +21,9 @@ export class AccessPolicyAssociation {
 		const whereFilters = { ...options.where }
 
 		const PermissionGroupInclude: IncludeOptions = {
-			association: 'permissionGroup', // As defined in AccessPolicySchema.ts
-			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+			association: 'permissionsGroups', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'], // We only need it for filtering, not for the result
+			through: {}
 		}
 		const CargoInclude: IncludeOptions = {
 			association: 'cargo', // As defined in AccessPolicySchema.ts
