@@ -8,7 +8,7 @@ import { AccessPolicyDependencies } from '../di/access-control/access-policy.di'
 import { AuthenticationRequiredError } from '../../Contexts/AccessControl/Permission/domain/errors/AuthenticationRequiredError'
 import { ForbiddenError } from '../../Contexts/Shared/domain/errors/ForbiddenError'
 import { PermissionDoesNotExistError } from '../../Contexts/AccessControl/Permission/domain/errors/PermissionDoesNotExistError'
-import { RoleId } from '../../Contexts/User/Role/domain/RoleId'
+import { ADMIN_ROLE_ID } from '../../Contexts/User/Role/domain/RoleOptions'
 import { type PermissionGroupRepository } from '../../Contexts/AccessControl/PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
 import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
@@ -22,7 +22,7 @@ import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPo
  * @param {string} requiredPermissionName El nombre del permiso necesario (ej: 'user:create').
  * @returns {Function} Un middleware asíncrono (req, res, next).
  */
-export const hasPermission = (requiredPermissionName?: string) => {
+export const hasPermission = (requiredPermissionName: string) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			// 1. VALIDACIÓN DE AUTENTICACIÓN
@@ -38,19 +38,27 @@ export const hasPermission = (requiredPermissionName?: string) => {
 			// ----------------------------------------------------------------------
 
 			// 3. BYPASS PARA ADMIN
-			if (userPayload.roleId === RoleId.Options.ADMIN) {
+			if (userPayload.roleId === String(ADMIN_ROLE_ID)) {
 				return next()
 			}
 
 			// 4. VALIDAR DATOS PARA RESOLVER POLÍTICA
-			const { cargoId, departamentoId } = userPayload
-			if (!cargoId || !departamentoId) {
-				return next(new ForbiddenError('Falta el cargo o departamento para resolver la política de acceso.'))
+			const { roleId, cargoId, departamentoId, directivaId, vicepresidenciaEjecutivaId, vicepresidenciaId } =
+				userPayload
+			if (!roleId) {
+				return next(new ForbiddenError('Falta el rol para resolver la política de acceso.'))
 			}
 
 			// 5. RESOLVER POLÍTICA DE ACCESO
 			const accessPolicyResolver: AccessPolicyResolver = container.resolve(AccessPolicyDependencies.Resolver)
-			const permissionGroupIds = await accessPolicyResolver.run({ cargoId, departamentoId })
+			const permissionGroupIds = await accessPolicyResolver.run({
+				roleId,
+				cargoId,
+				departamentoId,
+				directivaId,
+				vicepresidenciaEjecutivaId,
+				vicepresidenciaId
+			})
 			if (!permissionGroupIds || permissionGroupIds.length === 0) {
 				const userFriendlyMessage = 'Su perfil no tiene grupos de permisos asignados.'
 				return next(new ForbiddenError(userFriendlyMessage))

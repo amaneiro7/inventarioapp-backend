@@ -6,12 +6,17 @@ import { type AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { type AccessPolicyName } from '../valueObject/AccessPolicyName'
 import { type AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 import { type PermissionGroupDto } from '../../../PermissionGroup/domain/entity/PermissionGroup.dto'
+import { type RoleId } from '../../../../User/Role/domain/RoleId'
 
 export type AccessPolicyRaw = {
 	id: Primitives<AccessPolicyId>
 	name: Primitives<AccessPolicyName>
+	roleId: Primitives<RoleId> | null
 	cargoId: Primitives<CargoId> | null
 	departamentoId?: Primitives<DepartmentId> | null
+	vicepresidenciaId: Primitives<DepartmentId> | null
+	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
+	directivaId: Primitives<DepartmentId> | null
 	priority: Primitives<AccessPolicyPriority>
 }
 

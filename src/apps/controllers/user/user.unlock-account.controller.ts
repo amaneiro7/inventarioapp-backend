@@ -1,6 +1,5 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import { type UserUnlockAccount } from '../../../Contexts/User/user/application/UserUnlockAccount'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
@@ -21,11 +20,9 @@ export class UserUnlockAccountController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const user = req.user as JwtPayloadUser
 			const { id } = req.body
 			const reset: UserUnlockAccount = container.resolve(UserDependencies.UnlockAccount)
 			await reset.run({
-				user,
 				id
 			})
 			res.status(httpStatus[201].statusCode).send({

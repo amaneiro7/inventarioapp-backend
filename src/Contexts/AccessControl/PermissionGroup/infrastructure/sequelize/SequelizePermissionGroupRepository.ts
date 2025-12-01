@@ -125,19 +125,31 @@ export class SequelizePermissionGroupRepository
 	 * @method findByIds
 	 * @description Retrieves multiple permissions groups by their unique identifiers in a single query.
 	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
 	 * @param {string[]} ids An array of permission group IDs to find.
 	 * @returns {Promise<PermissionGroupDto[]>} A promise resolving to an array of found permission group DTOs.
 	 */
 	async findByIds(ids: string[]): Promise<PermissionGroupDto[]> {
-		const permissions = await PermissionGroupModel.findAll({
-			where: {
-				id: {
-					[Op.in]: ids
-				}
-			},
-			raw: true
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<PermissionGroupDto[]>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const permissionGroups = await PermissionGroupModel.findAll({
+					where: { id: { [Op.in]: sortedIds } },
+					include: [
+						{
+							association: 'permissions',
+							attributes: ['id'],
+							through: { attributes: [] }
+						}
+					]
+				})
+				return permissionGroups.map(group => group.get({ plain: true })) as PermissionGroupDto[]
+			}
 		})
-		return permissions as PermissionGroupDto[]
 	}
 
 	/**

@@ -1,6 +1,5 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import { type UserReactivateAccount } from '../../../Contexts/User/user/application/UserReactivateAccount'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
@@ -22,9 +21,8 @@ export class UserReactivateAccountController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.body
-			const user = req.user as JwtPayloadUser
 			const remover: UserReactivateAccount = container.resolve(UserDependencies.ReactivateAccount)
-			await remover.run({ id, user })
+			await remover.run({ id })
 			res.status(httpStatus[200].statusCode).send({
 				message: SUCCESS_MESSAGES.USER_REACTIVATED
 			})

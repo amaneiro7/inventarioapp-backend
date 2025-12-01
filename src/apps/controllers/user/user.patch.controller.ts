@@ -1,14 +1,12 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type UserUpdater } from '../../../Contexts/User/user/application/UserUpdater'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import { type UserParams } from '../../../Contexts/User/user/domain/entity/User.dto'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { UserDependencies } from '../../di/user/user.di'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
-import { isSuperAdmin } from '../../../Contexts/User/Role/application/isSuperAdmin'
 
 /**
  * Controller for deleting a user.
@@ -23,7 +21,6 @@ export class UserPatchController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			isSuperAdmin({ user: req.user as JwtPayloadUser })
 			const { id, payload: params } = req.body as {
 				id: string
 				payload: Partial<UserParams>

@@ -1,6 +1,4 @@
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserDto } from '../domain/entity/User.dto'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
@@ -22,9 +20,7 @@ export class UserFinderAll {
 	 * @returns {Promise<ResponseService<UserDto>>} A paginated response of users (excluding admin) with optional fields.
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 */
-	async run({ user, criteria }: { user?: JwtPayloadUser; criteria: Criteria }): Promise<ResponseService<UserDto>> {
-		isSuperAdmin({ user })
-
+	async run({ criteria }: { criteria: Criteria }): Promise<ResponseService<UserDto>> {
 		// Asumiendo que userRepository.searchAll devuelve ResponseDB<UserEntity> que incluye 'role', 'employee' y 'password'
 		const { data, total } = await this.userRepository.searchAll(criteria)
 

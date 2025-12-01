@@ -2,11 +2,16 @@ import { Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { Filters } from '../../../Shared/domain/criteria/Filters'
 import { Order } from '../../../Shared/domain/criteria/Order'
 import { AccessPolicy } from '../domain/entity/AccessPolicy'
+import { AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRepository'
 
 interface Params {
-	cargoId?: string
-	departamentoId?: string
+	roleId?: AccessPolicyDto['roleId']
+	cargoId?: AccessPolicyDto['cargoId']
+	departamentoId?: AccessPolicyDto['departamentoId']
+	vicepresidenciaId?: AccessPolicyDto['vicepresidenciaId']
+	vicepresidenciaEjecutivaId?: AccessPolicyDto['vicepresidenciaEjecutivaId']
+	directivaId?: AccessPolicyDto['directivaId']
 }
 
 export class AccessPolicyResolver {
@@ -16,50 +21,57 @@ export class AccessPolicyResolver {
 	}
 
 	/**
-	 * Resuelve el ID del grupo de permisos para un empleado basándose en las políticas de acceso.
-	 * @param params - Los atributos del empleado (cargoId, departamentoId).
-	 * @returns El ID del grupo de permisos que corresponde según la regla de mayor prioridad.
+	 * Resuelve y acumula los IDs de los grupos de permisos para un usuario basándose en todas las políticas de acceso que coincidan.
+	 * @param params - Los atributos del usuario (roleId, cargoId, departamentoId, etc.).
+	 * @returns Un array con los IDs de todos los grupos de permisos aplicables, sin duplicados.
 	 */
 	async run(params: Params): Promise<string[] | null> {
 		// 1. Obtener TODAS las políticas de la base de datos.
-		// Para optimizar, podríamos cachear este resultado, ya que las políticas no cambian a menudo.
+		// TODO: Para optimizar, cachear este resultado, ya que las políticas no cambian a menudo.
 		const accessPolicies = await this.accessPolicyRepository.search(
 			new Criteria(new Filters([]), Order.none(), 0, 0)
 		)
 		const allPolicies = accessPolicies.map(policy => {
-			const { cargoId, id, name, permissionsGroups, priority, departamentoId } = policy
-			const permissionGroups = permissionsGroups.map(group => group.id)
-			return AccessPolicy.fromPrimitives({
+			const {
 				cargoId,
-				departamentoId,
 				id,
 				name,
+				permissionsGroups,
+				priority,
+				departamentoId,
+				directivaId,
+				roleId,
+				vicepresidenciaEjecutivaId,
+				vicepresidenciaId
+			} = policy
+			const permissionGroups = permissionsGroups.map(group => group.id)
+			return AccessPolicy.fromPrimitives({
+				id,
+				name,
+				roleId,
+				cargoId,
+				departamentoId,
+				vicepresidenciaId,
+				vicepresidenciaEjecutivaId,
+				directivaId,
 				permissionsGroups: permissionGroups,
 				priority
 			})
 		})
 
-		// 2. Filtrar en memoria para encontrar todas las reglas que coinciden con el empleado.
+		// 2. Filtrar en memoria para encontrar todas las políticas que coinciden con los atributos del usuario.
 		const matchingPolicies = allPolicies.filter(policy => policy.matches(params))
 
-		// 3. Si no hay ninguna coincidencia, se devuelve null.
+		// 3. Si no hay ninguna coincidencia, devolver null.
 		if (matchingPolicies.length === 0) {
 			return null
 		}
 
-		// 4. Ordenar las reglas coincidentes por prioridad (el número más bajo es más prioritario).
-		matchingPolicies.sort((a, b) => a.priorityValue - b.priorityValue)
+		// 4. Acumular los grupos de permisos de TODAS las políticas coincidentes.
+		const allPermissionGroupIds = matchingPolicies.flatMap(policy => policy.permissionGroupValue)
 
-		// 5. La regla ganadora es la primera de la lista. Devolver su permissionGroupId.
-		const winningPolicy = matchingPolicies[0]
-		const permissionGroupIds = winningPolicy.permissionGroupValue
-
-		// Una política de acceso debe resolver a exactamente UN grupo de permisos.
-		// Si tiene 0 o más de 1, es una configuración ambigua y no se debe conceder acceso.
-		if (permissionGroupIds.length !== 1) {
-			return null
-		}
-
-		return permissionGroupIds
+		// 5. Eliminar duplicados y devolver el conjunto final de IDs de grupos de permisos.
+		const uniquePermissionGroupIds = [...new Set(allPermissionGroupIds)]
+		return uniquePermissionGroupIds
 	}
 }

@@ -4,13 +4,16 @@ import { type PermissionRepository } from '../../Permission/domain/repository/Pe
 import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyResolver } from './AccessPolicyResolver'
-import { RoleId } from '../../../User/Role/domain/RoleId'
-import { ForbiddenError } from '../../../Shared/domain/errors/ForbiddenError'
+import { type RoleId } from '../../../User/Role/domain/RoleId'
+import { ADMIN_ROLE_ID } from '../../../User/Role/domain/RoleOptions'
 
 export interface GetUserPermissionsParams {
 	roleId?: Primitives<RoleId>
 	cargoId?: AccessPolicyDto['cargoId']
 	departamentoId?: AccessPolicyDto['departamentoId']
+	vicepresidenciaId?: AccessPolicyDto['vicepresidenciaId']
+	vicepresidenciaEjecutivaId?: AccessPolicyDto['vicepresidenciaEjecutivaId']
+	directivaId?: AccessPolicyDto['directivaId']
 }
 
 export class GetUserPermissions {
@@ -32,37 +35,43 @@ export class GetUserPermissions {
 		this.accessPolicyResolver = accessPolicyResolver
 	}
 
-	async run({ roleId, cargoId, departamentoId }: GetUserPermissionsParams): Promise<string[]> {
-		// 1. BYPASS para 'admin'
-		if (roleId === RoleId.Options.ADMIN) {
+	async run({
+		roleId,
+		cargoId,
+		departamentoId,
+		directivaId,
+		vicepresidenciaEjecutivaId,
+		vicepresidenciaId
+	}: GetUserPermissionsParams): Promise<string[]> {
+		// 1. Bypass para el rol de Administrador
+		if (String(roleId) === String(ADMIN_ROLE_ID)) {
 			// Si el rol es admin, devolver todos los nombres de permisos existentes
 			const allPermissions = await this.permissionRepository.search()
 			return allPermissions.map(p => p.name)
 		}
 
-		if (!cargoId || !departamentoId) {
-			// Si no es admin y faltan atributos, no hay permisos.
+		// 2. Resolver las políticas de acceso para obtener los grupos de permisos aplicables
+		const permissionGroupIds = await this.accessPolicyResolver.run({
+			roleId,
+			cargoId,
+			departamentoId,
+			directivaId,
+			vicepresidenciaEjecutivaId,
+			vicepresidenciaId
+		})
+		// Si no hay políticas coincidentes, el usuario simplemente no tiene permisos.
+		if (!permissionGroupIds || permissionGroupIds.length === 0) {
 			return []
 		}
 
-		// 2. RESOLVER EL GRUPO DE PERMISOS
-		const permissionGroupId = await this.accessPolicyResolver.run({ cargoId, departamentoId })
-
-		if (!permissionGroupId) {
-			// Si no se encuentra una política de acceso (y por ende un grupo de permisos) para el usuario.
-			const userFriendlyMessage =
-				'Su cuenta no tiene los permisos necesarios para acceder a esta área. Por favor, contacte al administrador del sistema para que verifique la configuración de su perfil.'
-			throw new ForbiddenError(userFriendlyMessage)
-		}
-
-		// 3. OBTENER EL GRUPO Y SUS PERMISOS
-		const userPermissionGroupDto = await this.permissionGroupRepository.findByIds(permissionGroupId)
-
-		if (!userPermissionGroupDto) {
+		// 3. Obtener los grupos de permisos y sus permisos asociados
+		const userPermissionGroupDtos = await this.permissionGroupRepository.findByIds(permissionGroupIds)
+		if (!userPermissionGroupDtos || userPermissionGroupDtos.length === 0) {
 			return [] // Grupo de permisos no encontrado
 		}
 
-		const permissionGroupEntities = userPermissionGroupDto.map(group => PermissionGroup.fromPrimitives(group))
+		const permissionGroupEntities = userPermissionGroupDtos.map(group => PermissionGroup.fromPrimitives(group))
+
 		const permissionIds = permissionGroupEntities.flatMap(groupEntity => groupEntity.permissionsValue)
 
 		const uniquePermissionIds = [...new Set(permissionIds)]

@@ -1,8 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type UserDisabledAccount } from '../../../Contexts/User/user/application/UserDisabledAccount'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
-
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { UserDependencies } from '../../di/user/user.di'
@@ -22,9 +20,8 @@ export class UserDisabledController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { id } = req.body
-			const user = req.user as JwtPayloadUser
 			const remover: UserDisabledAccount = container.resolve(UserDependencies.Disabled)
-			await remover.run({ id, user })
+			await remover.run({ id })
 			res.status(httpStatus[200].statusCode).send({
 				message: SUCCESS_MESSAGES.USER_DISABLED
 			})

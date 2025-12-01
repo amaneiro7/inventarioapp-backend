@@ -13,6 +13,7 @@ import { type DirectivaDto } from '../../domain/Directiva.dto'
 import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
 import { type CargoId } from '../../../Cargo/domain/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Directiva` entity.
@@ -28,7 +29,7 @@ export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos'>> implemen
 	declare setCargos: BelongsToManySetAssociationsMixin<CargoModel, Primitives<CargoId>>
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.hasMany(models.VicepresidenciaEjecutiva, { as: 'vicepresidenciaEjecutiva', foreignKey: 'directivaId' })
 		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'directivaId' })
 		this.belongsToMany(models.Cargo, {
@@ -37,6 +38,7 @@ export class DirectivaModel extends Model<Omit<DirectivaDto, 'cargos'>> implemen
 			foreignKey: 'directivaId',
 			otherKey: 'cargoId'
 		})
+		this.hasMany(models.AccessPolicy, { as: 'accessPolicy', foreignKey: 'directivaId' })
 	}
 
 	static initialize(sequelize: Sequelize): void {

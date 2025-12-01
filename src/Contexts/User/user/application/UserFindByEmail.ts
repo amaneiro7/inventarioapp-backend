@@ -1,7 +1,5 @@
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
-import { RoleId } from '../../Role/domain/RoleId'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { ADMIN_ROLE_ID } from '../../Role/domain/RoleOptions'
 import { type UserDto } from '../domain/entity/User.dto' // Use User.dto
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -30,20 +28,17 @@ export class UserFinderByEmail {
 
 	/**
 	 * @description Executes the user finding process by email.
-	 * @param {{ user?: JwtPayloadUser; email: Primitives<EmployeeEmail> }} params The parameters for finding the user.
+	 * @param {{ email: Primitives<EmployeeEmail> }} params The parameters for finding the user.
 	 * @returns {Promise<UserDto>} A promise that resolves to the found user's primitive data (excluding password).
 	 * @throws {UserDoesNotExistError} If the user is not found or if the user is an admin (to prevent exposing admin data).
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 */
 	async run({
-		user,
 		email
 	}: {
-		user?: JwtPayloadUser // User performing the action
 		email: Primitives<EmployeeEmail> // Email to search for
 	}): Promise<UserDto> {
 		// Return UserDto
-		isSuperAdmin({ user })
 
 		// 1. Find the employee by email
 		const employee = await this.employeeRepository.findByEmail(email)
@@ -59,7 +54,7 @@ export class UserFinderByEmail {
 			throw new UserDoesNotExistError(`No se encontró un usuario asociado al empleado con ID '${employee.id}'.`)
 		}
 
-		if (foundUser.roleId === RoleId.Options.ADMIN) {
+		if (String(foundUser.roleId) === String(ADMIN_ROLE_ID)) {
 			throw new UserDoesNotExistError('Usuario no encontrado.') // Generic error to hide admin existence
 		}
 

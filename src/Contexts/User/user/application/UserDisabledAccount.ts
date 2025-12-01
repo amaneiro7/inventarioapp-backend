@@ -1,10 +1,8 @@
 import { User } from '../domain/entity/User'
 import { Employee } from '../../../employee/Employee/domain/entity/Employee'
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { type UserId } from '../domain/valueObject/UserId'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
@@ -45,9 +43,7 @@ export class UserDisabledAccount {
 	 * @throws {UserDoesNotExistError} If the user to be removed does not exist.
 	 * @throws {EmployeeDoesNotExistError} If the employee associated with the user does not exist.
 	 */
-	async run({ user, id }: { user?: JwtPayloadUser; id: Primitives<UserId> }): Promise<void> {
-		isSuperAdmin({ user })
-
+	async run({ id }: { id: Primitives<UserId> }): Promise<void> {
 		// 1. Validate User existence
 		const existingUser = await this.userRepository.findById(id)
 		if (!existingUser) {

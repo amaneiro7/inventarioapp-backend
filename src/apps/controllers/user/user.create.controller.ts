@@ -1,8 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type CreateUserFromEmployee } from '../../../Contexts/User/user/application/CreateUserFromEmployee'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
-
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { UserDependencies } from '../../di/user/user.di'
@@ -22,9 +20,8 @@ export class UserCreateController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const payload = req.body
-			const user = req.user as JwtPayloadUser
 			const create: CreateUserFromEmployee = container.resolve(UserDependencies.Register)
-			const data = await create.run({ user, payload })
+			const data = await create.run({ payload })
 			res.status(httpStatus[200].statusCode).send({
 				data,
 				message: SUCCESS_MESSAGES.USER_REGISTERED

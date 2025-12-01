@@ -3,7 +3,6 @@
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const defaultPasswordHash = bcrypt.hashSync('Avion01.', saltRounds)
-console.log(defau)
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

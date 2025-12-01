@@ -1,9 +1,7 @@
 import { NextFunction, type Request, type Response } from 'express'
 import { Controller } from '../controller'
 import { httpStatus } from '../../../Contexts/Shared/infrastructure/utils/http-status'
-import { isSuperAdmin } from '../../../Contexts/User/Role/application/isSuperAdmin'
 import { type SettingsUpdaterBulk } from '../../../Contexts/AppSettings/application/SettingsUpdaterBulk'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
 import { container } from '../../di/container'
 import { AppSettingsDependencies } from '../../di/app-settings/app-settings.di'
@@ -20,9 +18,6 @@ export class SettingsPatchBulkController implements Controller {
 	 */
 	async run(req: Request<object, object, SettingsBulkRequestBody>, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const user = req.user as JwtPayloadUser
-			isSuperAdmin({ user })
-
 			const settingsArray = req.body
 
 			if (!Array.isArray(settingsArray)) {

@@ -27,7 +27,17 @@ export class AccessPolicyCreator {
 	}
 
 	async run(params: AccessPolicyParams): Promise<void> {
-		const { cargoId, name, permissionGroupIds, priority, departamentoId } = params
+		const {
+			cargoId,
+			name,
+			permissionGroupIds,
+			priority,
+			departamentoId,
+			directivaId,
+			roleId,
+			vicepresidenciaEjecutivaId,
+			vicepresidenciaId
+		} = params
 		const existingAccessPolicy = await this.accessPolicyRepository.findByName(name)
 		if (existingAccessPolicy) {
 			throw new AccessPolicyAlreadyExistsError(name)
@@ -35,7 +45,17 @@ export class AccessPolicyCreator {
 
 		await this.ensurePermissionsGroupsExist(permissionGroupIds)
 
-		const policy = AccessPolicy.create({ name, cargoId, departamentoId, permissionGroupIds, priority })
+		const policy = AccessPolicy.create({
+			name,
+			cargoId,
+			departamentoId,
+			permissionGroupIds,
+			priority,
+			directivaId,
+			roleId,
+			vicepresidenciaEjecutivaId,
+			vicepresidenciaId
+		})
 		await this.accessPolicyRepository.save(policy.toPrimitives())
 
 		// Publicar los eventos de dominio registrados en la entidad.

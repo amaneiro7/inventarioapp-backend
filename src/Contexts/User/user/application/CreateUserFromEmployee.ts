@@ -1,12 +1,10 @@
 import { User } from '../domain/entity/User'
 import { Employee } from '../../../employee/Employee/domain/entity/Employee'
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { EmployeeTypesEnum } from '../../../employee/Employee/domain/valueObject/EmployeeType'
 import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserDto } from '../domain/entity/User.dto'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type RoleRepository } from '../../Role/domain/RoleRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
@@ -54,9 +52,7 @@ export class CreateUserFromEmployee {
 	 * @throws {InvalidArgumentError} If the provided role ID does not exist.
 	 * @throws {EmployeeDoesNotExistError} If the provided employee ID does not exist.
 	 */
-	async run({ payload, user }: { payload: CreateUserFromEmployeeParams; user?: JwtPayloadUser }): Promise<UserDto> {
-		isSuperAdmin({ user })
-
+	async run({ payload }: { payload: CreateUserFromEmployeeParams }): Promise<UserDto> {
 		// 1. Validate Employee existence
 		const employee = await this.employeeRepository.findById(payload.employeeId)
 		if (!employee) {

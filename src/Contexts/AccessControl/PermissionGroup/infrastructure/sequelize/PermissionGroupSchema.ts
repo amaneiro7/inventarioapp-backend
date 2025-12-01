@@ -35,14 +35,14 @@ export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permis
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.Permission, {
 			through: 'asignacion_permiso_grupo',
-			foreignKey: 'permission_group_id',
-			otherKey: 'permission_id',
+			foreignKey: 'permissionGroupId',
+			otherKey: 'permissionId',
 			as: 'permissions'
 		})
-		this.belongsToMany(models.PermissionGroup, {
+		this.belongsToMany(models.AccessPolicy, {
 			through: 'access_policy_group',
-			otherKey: 'permissionGroupId',
-			foreignKey: 'accessPolicyId',
+			otherKey: 'accessPolicyId',
+			foreignKey: 'permissionGroupId',
 			as: 'accessPolicies'
 		})
 	}

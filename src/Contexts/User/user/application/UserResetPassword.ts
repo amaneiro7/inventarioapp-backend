@@ -1,10 +1,8 @@
 import { User } from '../domain/entity/User'
 import { UserId } from '../domain/valueObject/UserId'
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../domain/Repository/UserRepository'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
@@ -33,9 +31,7 @@ export class UserResetPassword {
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 * @throws {UserDoesNotExistError} If the user to reset the password for does not exist.
 	 */
-	async run({ id, user }: { id: Primitives<UserId>; user?: JwtPayloadUser }): Promise<void> {
-		isSuperAdmin({ user })
-
+	async run({ id }: { id: Primitives<UserId> }): Promise<void> {
 		const userId = new UserId(id).value
 		const userToResetPassword = await this.userRepository.findById(userId)
 

@@ -51,9 +51,24 @@ export class AccessPolicyUpdater {
 			policy.updateName(params.name)
 		}
 
+		if (params.roleId !== undefined && params.roleId !== policy.roleValue) policy.updateRole(params.roleId)
 		if (params.cargoId !== undefined && params.cargoId !== policy.cargoValue) policy.updateCargo(params.cargoId)
+
 		if (params.departamentoId !== undefined && params.departamentoId !== policy.departamentoValue)
 			policy.updateDepartamento(params.departamentoId)
+
+		if (params.vicepresidenciaId !== undefined && params.vicepresidenciaId !== policy.vicepresidenciaValue)
+			policy.updateVicepresidencia(params.vicepresidenciaId)
+
+		if (
+			params.vicepresidenciaEjecutivaId !== undefined &&
+			params.vicepresidenciaEjecutivaId !== policy.vicepresidenciaEjecutivaValue
+		)
+			policy.updatevicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId)
+
+		if (params.directivaId !== undefined && params.directivaId !== policy.directivaValue)
+			policy.updateDirectiva(params.directivaId)
+
 		if (params.priority !== undefined && params.priority !== policy.priorityValue)
 			policy.updatePriority(params.priority)
 

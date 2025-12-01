@@ -7,17 +7,22 @@ import { AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 import { AccessPolicyRemovedDomainEvent } from './AccessPolicyRemovedDomainEvent'
 import { AccessPolicyCreatedDomainEvent } from './AccessPolicyCreatedDomainEvent'
+import { PermissionGroupAssignedToAccessPolicyDomainEvent } from './PermissionGroupAssignedToAccessPolicyDomainEvent'
+import { RoleId } from '../../../../User/Role/domain/RoleId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
-import { PermissionGroupAssignedToAccessPolicyDomainEvent } from './PermissionGroupAssignedToAccessPolicyDomainEvent'
 
 export class AccessPolicy extends AggregateRoot {
 	private permissionsGroups: Set<PermissionGroupId>
 	constructor(
 		private readonly id: AccessPolicyId,
 		private name: AccessPolicyName,
+		private roleId: RoleId | null,
 		private cargoId: CargoId | null,
 		private departamentoId: DepartmentId | null,
+		private vicepresidenciaId: DepartmentId | null,
+		private vicepresidenciaEjecutivaId: DepartmentId | null,
+		private directivaId: DepartmentId | null,
 		permissionsGroups: Set<PermissionGroupId>,
 		private priority: AccessPolicyPriority
 	) {
@@ -30,8 +35,12 @@ export class AccessPolicy extends AggregateRoot {
 		const accessPolicy = new AccessPolicy(
 			AccessPolicyId.random(),
 			new AccessPolicyName(params.name),
+			params.roleId ? new RoleId(params.roleId) : null,
 			params.cargoId ? new CargoId(params.cargoId) : null,
 			params.departamentoId ? new DepartmentId(params.departamentoId) : null,
+			params.vicepresidenciaId ? new DepartmentId(params.vicepresidenciaId) : null,
+			params.vicepresidenciaEjecutivaId ? new DepartmentId(params.vicepresidenciaEjecutivaId) : null,
+			params.directivaId ? new DepartmentId(params.directivaId) : null,
 			permissionsGroups,
 			new AccessPolicyPriority(params.priority)
 		)
@@ -62,8 +71,12 @@ export class AccessPolicy extends AggregateRoot {
 		return new AccessPolicy(
 			new AccessPolicyId(primitives.id),
 			new AccessPolicyName(primitives.name),
+			primitives.roleId ? new RoleId(primitives.roleId) : null,
 			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
 			primitives.departamentoId ? new DepartmentId(primitives.departamentoId) : null,
+			primitives.vicepresidenciaId ? new DepartmentId(primitives.vicepresidenciaId) : null,
+			primitives.vicepresidenciaEjecutivaId ? new DepartmentId(primitives.vicepresidenciaEjecutivaId) : null,
+			primitives.directivaId ? new DepartmentId(primitives.directivaId) : null,
 			uniquePermissionsGroups,
 			new AccessPolicyPriority(primitives.priority)
 		)
@@ -73,19 +86,43 @@ export class AccessPolicy extends AggregateRoot {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
+			roleId: this.roleValue,
 			cargoId: this.cargoValue,
 			departamentoId: this.departamentoValue,
+			vicepresidenciaId: this.vicepresidenciaValue,
+			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
+			directivaId: this.directivaValue,
 			permissionsGroups: this.permissionGroupValue,
 			priority: this.priorityValue
 		}
 	}
 
 	// Lógica para determinar si una regla aplica a un empleado
-	matches(employee: { cargoId?: string; departamentoId?: string }): boolean {
-		const cargoMatch = !this.cargoId || this.cargoId.value === employee.cargoId
-		const deptoMatch = !this.departamentoId || this.departamentoId.value === employee.departamentoId
+	matches(employee: {
+		roleId?: Primitives<RoleId> | null
+		cargoId?: Primitives<DepartmentId> | null
+		departamentoId?: Primitives<DepartmentId> | null
+		vicepresidenciaId?: Primitives<DepartmentId> | null
+		vicepresidenciaEjecutivaId?: Primitives<DepartmentId> | null
+		directivaId?: Primitives<DepartmentId> | null
+	}): boolean {
+		const roleMatch = !this.roleId || this.roleValue === employee.roleId
+		const cargoMatch = !this.cargoId || this.cargoValue === employee.cargoId
+		const deptoMatch = !this.departamentoId || this.departamentoValue === employee.departamentoId
+		const vicepresidenciaMatch = !this.vicepresidenciaId || this.vicepresidenciaValue === employee.vicepresidenciaId
+		const vicepresidenciaEjecutivaMatch =
+			!this.vicepresidenciaEjecutivaId ||
+			this.vicepresidenciaEjecutivaValue === employee.vicepresidenciaEjecutivaId
+		const directivaMatch = !this.directivaId || this.directivaValue === employee.directivaId
 
-		return cargoMatch && deptoMatch
+		return (
+			cargoMatch &&
+			deptoMatch &&
+			vicepresidenciaMatch &&
+			vicepresidenciaEjecutivaMatch &&
+			directivaMatch &&
+			roleMatch
+		)
 	}
 
 	get idValue(): Primitives<AccessPolicyId> {
@@ -96,21 +133,36 @@ export class AccessPolicy extends AggregateRoot {
 		return this.name.value
 	}
 
-	get cargoValue(): string | null {
+	get roleValue(): Primitives<RoleId> | null {
+		return this.roleId?.value ?? null
+	}
+	get cargoValue(): Primitives<DepartmentId> | null {
 		return this.cargoId?.value ?? null
 	}
 
-	get departamentoValue(): string | null {
+	get departamentoValue(): Primitives<DepartmentId> | null {
 		return this.departamentoId?.value ?? null
+	}
+	get vicepresidenciaValue(): Primitives<DepartmentId> | null {
+		return this.vicepresidenciaId?.value ?? null
+	}
+	get vicepresidenciaEjecutivaValue(): Primitives<DepartmentId> | null {
+		return this.vicepresidenciaEjecutivaId?.value ?? null
+	}
+	get directivaValue(): Primitives<DepartmentId> | null {
+		return this.directivaId?.value ?? null
 	}
 	get permissionGroupValue(): Primitives<PermissionGroupId>[] {
 		return Array.from(this.permissionsGroups).map(p => p.value)
 	}
 
-	get priorityValue(): number {
+	get priorityValue(): Primitives<AccessPolicyPriority> {
 		return this.priority.value
 	}
 
+	updateRole(newRoleId: Primitives<RoleId> | null): void {
+		this.roleId = newRoleId ? new RoleId(newRoleId) : null
+	}
 	updateCargo(newCargoId: Primitives<CargoId> | null): void {
 		this.cargoId = newCargoId ? new CargoId(newCargoId) : null
 	}
@@ -121,6 +173,17 @@ export class AccessPolicy extends AggregateRoot {
 
 	updateDepartamento(newDepartamentoId: Primitives<DepartmentId> | null): void {
 		this.departamentoId = newDepartamentoId ? new DepartmentId(newDepartamentoId) : null
+	}
+	updateVicepresidencia(newVicepresidenciaId: Primitives<DepartmentId> | null): void {
+		this.vicepresidenciaId = newVicepresidenciaId ? new DepartmentId(newVicepresidenciaId) : null
+	}
+	updatevicepresidenciaEjecutiva(newvicepresidenciaEjecutivaId: Primitives<DepartmentId> | null): void {
+		this.vicepresidenciaEjecutivaId = newvicepresidenciaEjecutivaId
+			? new DepartmentId(newvicepresidenciaEjecutivaId)
+			: null
+	}
+	updateDirectiva(newDirectivaId: Primitives<DepartmentId> | null): void {
+		this.directivaId = newDirectivaId ? new DepartmentId(newDirectivaId) : null
 	}
 
 	assignPermissionGroup(permissionGroupId: PermissionGroupId): void {

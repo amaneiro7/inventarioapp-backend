@@ -9,6 +9,7 @@ import { type AccessPolicyDto, type AccessPolicyPrimitives } from '../../domain/
 import { type AccessPolicyRepository } from '../../domain/repository/AccessPolicyRepository'
 import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
  * @class SequelizeAccessPolicyRepository
@@ -120,6 +121,13 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 	 */
 	async search(criteria: Criteria): Promise<AccessPolicyDto[]> {
 		const sequelizeOptions = this.convert(criteria)
+		sequelizeOptions.include = [
+			{
+				association: 'permissionsGroups',
+				attributes: ['id', 'name'],
+				through: { attributes: [] }
+			}
+		]
 		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
 
 		return this.cache.getCachedData<AccessPolicyDto[]>({
@@ -141,8 +149,19 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 	 * @throws {Error} If the save operation fails.
 	 */
 	async save(payload: AccessPolicyPrimitives): Promise<void> {
-		await AccessPolicyModel.upsert(payload)
-		await this.invalidateAccessPolicyCache(payload.id)
+		const transaction = await sequelize.transaction()
+		try {
+			const { permissionsGroups, ...restPayload } = payload
+			const [accessPolicyInstance] = await AccessPolicyModel.upsert(restPayload, { transaction, returning: true })
+			if (accessPolicyInstance) {
+				await accessPolicyInstance.setPermissionsGroups(permissionsGroups, { transaction })
+			}
+			await transaction.commit()
+			await this.invalidateAccessPolicyCache(payload.id)
+		} catch (error) {
+			await transaction.rollback()
+			throw new Error(`Error saving access policy: ${error instanceof Error ? error.message : String(error)}`)
+		}
 	}
 
 	/**

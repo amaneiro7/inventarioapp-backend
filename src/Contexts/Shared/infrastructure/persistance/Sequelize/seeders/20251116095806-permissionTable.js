@@ -1,10 +1,10 @@
 'use strict'
 
-const { permissions } = require('./access_control/permissions2')
+const { permissions } = require('./access_control/permissions')
 
 // const { randomUUID } = require('crypto')
 
-// for (let index = 0; index < 3; index++) {
+// for (let index = 0; index < 6; index++) {
 // 	console.log(randomUUID())
 // }
 

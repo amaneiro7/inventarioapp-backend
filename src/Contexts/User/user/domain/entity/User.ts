@@ -50,6 +50,7 @@ export class User {
 	static createFromEmployee(params: Pick<UserParams, 'employeeId' | 'roleId' | 'password'>): User {
 		const id = UserId.random().value
 		const { employeeId, roleId, password: hashedPassword } = params
+
 		return new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
@@ -66,11 +67,11 @@ export class User {
 		)
 	}
 
-	static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
-		const parseToStringRole = String(roleId)
-		const acceptedAdminRoles = [RoleId.Options.ADMIN, RoleId.Options.COORD]
-		return acceptedAdminRoles.includes(parseToStringRole)
-	}
+	// static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
+	// 	const parseToStringRole = String(roleId)
+	// 	const acceptedAdminRoles = [RoleId.Options.ADMIN, RoleId.Options.COORD]
+	// 	return acceptedAdminRoles.includes(parseToStringRole)
+	// }
 
 	isLocked(): boolean {
 		if (this.status.value === UserStatusEnum.SUSPENDED) {

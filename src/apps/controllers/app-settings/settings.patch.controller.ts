@@ -1,12 +1,10 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type SettingsUpdater } from '../../../Contexts/AppSettings/application/SettingsUpdater'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { SUCCESS_MESSAGES } from '../../constants/messages'
 import { AppSettingsDependencies } from '../../di/app-settings/app-settings.di'
-import { isSuperAdmin } from '../../../Contexts/User/Role/application/isSuperAdmin'
 
 /**
  * Controller for updating an existing Settings.
@@ -21,7 +19,6 @@ export class SettingsPatchController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			isSuperAdmin({ user: req.user as JwtPayloadUser })
 			const { value } = req.body
 			const { key } = req.params
 			const update: SettingsUpdater = container.resolve(AppSettingsDependencies.Updater)

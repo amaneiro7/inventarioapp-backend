@@ -1,8 +1,6 @@
 import { UserId } from '../domain/valueObject/UserId'
-import { isSuperAdmin } from '../../Role/application/isSuperAdmin'
 import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 
@@ -29,9 +27,7 @@ export class UserUnlockAccount {
 	 * @throws {InvalidArgumentError} If the calling user does not have super admin privileges.
 	 * @throws {UserDoesNotExistError} If the user to be unlocked does not exist.
 	 */
-	async run({ user, id }: { user?: JwtPayloadUser; id: Primitives<UserId> }): Promise<void> {
-		isSuperAdmin({ user })
-
+	async run({ id }: { id: Primitives<UserId> }): Promise<void> {
 		// 1. Validate User existence
 		const existingUser = await this.userRepository.findById(id)
 		if (!existingUser) {
