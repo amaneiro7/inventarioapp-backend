@@ -76,7 +76,7 @@ export class AuthRefreshTokenUseCase {
 		// Generate new tokens
 		const newRefreshToken = generateRefreshToken(user)
 		const accessToken = generateAccessToken(user)
-		const authResponse = buildAuthResponse(user, accessToken, newRefreshToken)
+		const authResponse = buildAuthResponse({ user, accessToken, refreshToken: newRefreshToken })
 
 		return authResponse
 	}

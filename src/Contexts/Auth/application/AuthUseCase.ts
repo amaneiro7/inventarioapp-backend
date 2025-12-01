@@ -14,7 +14,7 @@ export const authenticaUser = async (user: ReqUser): Promise<AuthResponseDto> =>
 	const accessToken = generateAccessToken(user)
 	const refreshToken = generateRefreshToken(user)
 
-	const authResponse = buildAuthResponse(user, accessToken, refreshToken)
+	const authResponse = buildAuthResponse({ user, accessToken, refreshToken })
 
 	return authResponse
 }
