@@ -41,8 +41,8 @@ export class PermissionGroupModel extends Model<Omit<PermissionGroupDto, 'permis
 		})
 		this.belongsToMany(models.AccessPolicy, {
 			through: 'access_policy_group',
-			otherKey: 'accessPolicyId',
 			foreignKey: 'permissionGroupId',
+			otherKey: 'accessPolicyId',
 			as: 'accessPolicies'
 		})
 	}

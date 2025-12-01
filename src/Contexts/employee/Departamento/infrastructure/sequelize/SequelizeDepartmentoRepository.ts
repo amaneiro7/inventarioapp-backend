@@ -31,14 +31,14 @@ export class SequelizeDepartamentoRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DepartamentoDto>> {
 		const options = this.convert(criteria)
 		const opt = DepartamentoAssociation.convertFilter(criteria, options)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:matching:`
 
 		return this.cache.getCachedData<ResponseDB<DepartamentoDto>>({
 			cacheKey,
 			criteria,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await DepartamentoModel.findAndCountAll(opt)
+				const { count, rows } = await DepartamentoModel.findAndCountAll({ ...opt, distinct: true })
 				return { data: rows.map(row => row.get({ plain: true })), total: count } as ResponseDB<DepartamentoDto>
 			}
 		})

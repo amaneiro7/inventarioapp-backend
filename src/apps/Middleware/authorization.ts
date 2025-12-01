@@ -45,6 +45,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			// 4. VALIDAR DATOS PARA RESOLVER POLÍTICA
 			const { roleId, cargoId, departamentoId, directivaId, vicepresidenciaEjecutivaId, vicepresidenciaId } =
 				userPayload
+
 			if (!roleId) {
 				return next(new ForbiddenError('Falta el rol para resolver la política de acceso.'))
 			}

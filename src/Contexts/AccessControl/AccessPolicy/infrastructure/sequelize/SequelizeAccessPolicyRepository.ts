@@ -7,8 +7,8 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type AccessPolicyDto, type AccessPolicyPrimitives } from '../../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyRepository } from '../../domain/repository/AccessPolicyRepository'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
@@ -42,7 +42,10 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await AccessPolicyModel.findAndCountAll(finalOptions)
+				// Añadir `distinct: true` es crucial para que `findAndCountAll` devuelva un conteo correcto
+				// cuando se usan `include` que generan JOINs con relaciones de muchos a muchos.
+				// Esto asegura que se cuenten las filas del modelo principal (AccessPolicyModel) de forma única.
+				const { count, rows } = await AccessPolicyModel.findAndCountAll({ ...finalOptions, distinct: true })
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))

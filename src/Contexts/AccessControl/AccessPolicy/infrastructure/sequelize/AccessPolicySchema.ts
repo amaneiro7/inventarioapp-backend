@@ -62,7 +62,7 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 			as: 'vicepresidencia',
 			foreignKey: 'vicepresidenciaId'
 		})
-		this.belongsTo(models.Vicepresidencia, {
+		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
 		})

@@ -30,9 +30,12 @@ export class AuthLoginController implements Controller {
 			const getUserPermission: GetUserPermissions = container.resolve(AccessPolicyDependencies.GetUserPermissions)
 
 			const permissions = await getUserPermission.run({
+				roleId: infoUser.roleId,
 				cargoId: infoUser.employee.cargoId,
-				departamentoId: infoUser.employee.departamentoId,
-				roleId: infoUser.roleId
+				directivaId: infoUser.employee.directivaId,
+				vicepresidenciaEjecutivaId: infoUser.employee.vicepresidenciaEjecutivaId,
+				vicepresidenciaId: infoUser.employee.vicepresidenciaId,
+				departamentoId: infoUser.employee.departamentoId
 			})
 
 			res.status(httpStatus[200].statusCode)

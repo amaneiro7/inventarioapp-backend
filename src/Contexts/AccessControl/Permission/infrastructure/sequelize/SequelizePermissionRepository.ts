@@ -41,7 +41,7 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await PermissionModel.findAndCountAll(finalOptions)
+				const { count, rows } = await PermissionModel.findAndCountAll({ ...finalOptions, distinct: true })
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))

@@ -16,10 +16,10 @@ export class PermissionModel extends Model<PermissionDto> implements PermissionD
 
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.PermissionGroup, {
-			as: 'permissionGroups',
 			through: 'asignacion_permiso_grupo',
-			foreignKey: 'permission_id',
-			otherKey: 'permission_group_id'
+			foreignKey: 'permissionId',
+			otherKey: 'permissionGroupId',
+			as: 'permissionGroups'
 		})
 	}
 

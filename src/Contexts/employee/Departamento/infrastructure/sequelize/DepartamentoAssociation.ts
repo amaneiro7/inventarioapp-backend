@@ -19,51 +19,60 @@ export class DepartamentoAssociation {
 	 * @returns {FindOptions} The enhanced Sequelize FindOptions object with includes and nested filters.
 	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
-		// --- 1. Define Includes with Clear Naming for Readability and Safety ---
+		const whereFilters = options.where ?? {}
+
+		// --- 1. Construir la jerarquía de "adentro hacia afuera" para garantizar la coherencia ---
+
+		// Nivel más profundo: Directiva
 		const directivaInclude: IncludeOptions = {
 			association: 'directiva',
 			attributes: ['id', 'name']
 		}
+		if ('directivaId' in whereFilters) {
+			directivaInclude.where = { id: whereFilters.directivaId }
+			delete whereFilters.directivaId
+			// `required: false` solo es necesario si también estamos filtrando por un nivel superior en la misma jerarquía.
+			// De lo contrario, queremos un INNER JOIN para que el filtro de directivaId funcione correctamente por sí solo.
+			if ('vicepresidenciaEjecutivaId' in whereFilters || 'vicepresidenciaId' in whereFilters) {
+				directivaInclude.required = false
+			}
+		}
+
+		// Nivel intermedio: Vicepresidencia Ejecutiva (incluye Directiva)
 		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
 			association: 'vicepresidenciaEjecutiva',
 			attributes: ['id', 'name', 'directivaId'],
 			include: [directivaInclude]
 		}
+		if ('vicepresidenciaEjecutivaId' in whereFilters) {
+			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjecutivaId }
+			delete whereFilters.vicepresidenciaEjecutivaId
+		}
+
+		// Nivel superior: Vicepresidencia (incluye Vicepresidencia Ejecutiva)
 		const vicepresidenciaInclude: IncludeOptions = {
 			association: 'vicepresidencia',
 			attributes: ['id', 'name', 'vicepresidenciaEjecutivaId'],
 			include: [vicepresidenciaEjecutivaInclude]
 		}
+		if ('vicepresidenciaId' in whereFilters) {
+			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
+			delete whereFilters.vicepresidenciaId
+		}
+
+		// --- 2. Construir los includes no jerárquicos ---
 		const cargoInclude: IncludeOptions = {
 			association: 'cargos',
 			attributes: ['id', 'name'],
 			through: { attributes: [] }
 		}
-
-		options.include = [vicepresidenciaInclude, cargoInclude, 'employee']
-
-		// Cast to our custom type to make TypeScript aware of the filter keys.
-		const whereFilters = options.where ?? {}
-
-		// --- 2. Apply Nested Filters Accumulatively ---
-		// These filters are applied to the correct level of the nested include structure.
 		if ('cargoId' in whereFilters) {
 			cargoInclude.where = { id: whereFilters.cargoId }
 			delete whereFilters.cargoId
 		}
-		if ('vicepresidenciaId' in whereFilters) {
-			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
-			delete whereFilters.vicepresidenciaId
-		}
-		if ('vicepresidenciaEjecutivaId' in whereFilters) {
-			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjecutivaId }
-			delete whereFilters.vicepresidenciaEjecutivaId
-		}
-		if ('directivaId' in whereFilters) {
-			directivaInclude.where = { id: whereFilters.directivaId }
-			delete whereFilters.directivaId
-		}
 
+		// --- 3. Ensamblar la consulta final ---
+		options.include = [vicepresidenciaInclude, cargoInclude, { association: 'employee' }]
 		options.where = whereFilters
 
 		return options

@@ -61,7 +61,6 @@ export class AccessPolicyResolver {
 
 		// 2. Filtrar en memoria para encontrar todas las políticas que coinciden con los atributos del usuario.
 		const matchingPolicies = allPolicies.filter(policy => policy.matches(params))
-
 		// 3. Si no hay ninguna coincidencia, devolver null.
 		if (matchingPolicies.length === 0) {
 			return null

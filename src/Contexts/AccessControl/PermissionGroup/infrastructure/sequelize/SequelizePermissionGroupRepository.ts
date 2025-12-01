@@ -47,7 +47,7 @@ export class SequelizePermissionGroupRepository
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const { count, rows } = await PermissionGroupModel.findAndCountAll(finalOptions)
+				const { count, rows } = await PermissionGroupModel.findAndCountAll({ ...finalOptions, distinct: true })
 				return {
 					total: count,
 					data: rows.map(row => row.get({ plain: true }))

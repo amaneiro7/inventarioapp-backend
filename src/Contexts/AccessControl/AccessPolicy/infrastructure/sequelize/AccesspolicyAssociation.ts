@@ -20,37 +20,85 @@ export class AccessPolicyAssociation {
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where }
 
-		const PermissionGroupInclude: IncludeOptions = {
+		const permissionGroupInclude: IncludeOptions = {
 			association: 'permissionsGroups', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'], // We only need it for filtering, not for the result
 			through: {}
 		}
-		const CargoInclude: IncludeOptions = {
+		const roleInclude: IncludeOptions = {
+			association: 'role', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+		}
+		const cargoInclude: IncludeOptions = {
 			association: 'cargo', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
-		const DepartamentoInclude: IncludeOptions = {
+		const departamentoInclude: IncludeOptions = {
 			association: 'departamento', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
+		const vicepresidenciaInclude: IncludeOptions = {
+			association: 'vicepresidencia', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+		}
+		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
+			association: 'vicepresidenciaEjecutiva', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+		}
+		const directivaInclude: IncludeOptions = {
+			association: 'directiva', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+		}
 
-		options.include = [PermissionGroupInclude, CargoInclude, DepartamentoInclude]
+		options.include = [
+			permissionGroupInclude,
+			cargoInclude,
+			departamentoInclude,
+			roleInclude,
+			vicepresidenciaInclude,
+			vicepresidenciaEjecutivaInclude,
+			directivaInclude
+		]
 
 		// If a AccessPolicyGroupId filter exists, apply it to the association include
 		if ('permissionGroupId' in whereFilters) {
-			PermissionGroupInclude.where = { id: whereFilters.permissionGroupId }
+			permissionGroupInclude.where = { id: whereFilters.permissionGroupId }
 			// Remove the filter from the main where clause to avoid ambiguity
 			delete whereFilters.permissionGroupId
 		}
+		// If a roleId filter exists, apply it to the association include
+		if ('roleId' in whereFilters) {
+			roleInclude.where = { id: whereFilters.roleId }
+			// Remove the filter from the main where clause to avoid ambiguity
+			delete whereFilters.roleId
+		}
 		// If a cargoId filter exists, apply it to the association include
 		if ('cargoId' in whereFilters) {
-			CargoInclude.where = { id: whereFilters.cargoId }
+			cargoInclude.where = { id: whereFilters.cargoId }
 			// Remove the filter from the main where clause to avoid ambiguity
 			delete whereFilters.cargoId
 		}
+		// If a directivaId filter exists, apply it to the association include
+		if ('directivaId' in whereFilters) {
+			directivaInclude.where = { id: whereFilters.directivaId }
+			// Remove the filter from the main where clause to avoid ambiguity
+			delete whereFilters.directivaId
+		}
+		// If a vicepresidenciaEjectivaId filter exists, apply it to the association include
+		if ('vicepresidenciaEjectivaId' in whereFilters) {
+			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjectivaId }
+			// Remove the filter from the main where clause to avoid ambiguity
+			delete whereFilters.vicepresidenciaEjectivaId
+		}
+		// If a vicepresidenciaId filter exists, apply it to the association include
+		if ('vicepresidenciaId' in whereFilters) {
+			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
+			// Remove the filter from the main where clause to avoid ambiguity
+			delete whereFilters.vicepresidenciaId
+		}
 		// If a departamentoId filter exists, apply it to the association include
 		if ('departamentoId' in whereFilters) {
-			DepartamentoInclude.where = { id: whereFilters.departamentoId }
+			departamentoInclude.where = { id: whereFilters.departamentoId }
 			// Remove the filter from the main where clause to avoid ambiguity
 			delete whereFilters.departamentoId
 		}

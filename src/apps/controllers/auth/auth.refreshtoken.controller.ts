@@ -32,9 +32,12 @@ export class AuthRefreshTokenController implements Controller {
 			const { user, accessToken } = await refreshToken.run(jwtToken)
 			const getUserPermission: GetUserPermissions = container.resolve(AccessPolicyDependencies.GetUserPermissions)
 			const permissions = await getUserPermission.run({
-				cargoId: user.employee.cargoId,
-				departamentoId: user.employee.departamentoId,
-				roleId: user.roleId
+				roleId: user?.roleId,
+				cargoId: user?.employee?.cargoId,
+				directivaId: user?.employee?.directivaId,
+				vicepresidenciaEjecutivaId: user?.employee?.vicepresidenciaEjecutivaId,
+				vicepresidenciaId: user?.employee?.vicepresidenciaId,
+				departamentoId: user?.employee?.departamentoId
 			})
 
 			res.status(httpStatus[200].statusCode).send({

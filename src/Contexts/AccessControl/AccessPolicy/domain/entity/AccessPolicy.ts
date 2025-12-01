@@ -106,7 +106,7 @@ export class AccessPolicy extends AggregateRoot {
 		vicepresidenciaEjecutivaId?: Primitives<DepartmentId> | null
 		directivaId?: Primitives<DepartmentId> | null
 	}): boolean {
-		const roleMatch = !this.roleId || this.roleValue === employee.roleId
+		const roleMatch = !this.roleId || String(this.roleValue) === String(employee.roleId)
 		const cargoMatch = !this.cargoId || this.cargoValue === employee.cargoId
 		const deptoMatch = !this.departamentoId || this.departamentoValue === employee.departamentoId
 		const vicepresidenciaMatch = !this.vicepresidenciaId || this.vicepresidenciaValue === employee.vicepresidenciaId
