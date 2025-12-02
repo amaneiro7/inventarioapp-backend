@@ -20,8 +20,6 @@ export class LocalAuthStrategy extends LocalStrategy {
 			try {
 				// Obtener la IP del cliente de forma más robusta
 				const currentIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress
-
-				console.log('currentIp', currentIp)
 				const user = await this.userLoginLocal.run({ userNameOrEmail, password, currentIp })
 				done(null, user)
 			} catch (error) {
