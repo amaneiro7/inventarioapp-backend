@@ -2,18 +2,12 @@ import { exec } from 'node:child_process'
 import { platform } from 'node:os'
 import { promisify } from 'node:util'
 import { type Logger } from '../../Logger'
+import { type IPingService, type PingResult } from '../infra/IPingService'
 
 // Promisify exec for easier async/await usage
 const execPromise = promisify(exec)
 
-export interface PingResult {
-	alive: boolean // Is the host reachable?
-	time?: number // Round-trip time in milliseconds
-	packetLoss?: number // Percentage of packets lost
-	rawOutput: string // Original stdout for debugging if needed
-	hostname?: string // Resolved hostname from ping output
-}
-export class PingService {
+export class PingService implements IPingService {
 	private readonly logger: Logger
 	constructor({ logger }: { logger: Logger }) {
 		this.logger = logger

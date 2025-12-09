@@ -5,7 +5,7 @@ import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/conv
 import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
-import { type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
+
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
@@ -14,6 +14,7 @@ import {
 	MonitoringConfigDefaults,
 	MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
+import { type IPingService } from '../../../Shared/domain/Monitoring/infra/IPingService'
 
 /**
  * Service responsible for monitoring locations. Extends the generic MonitoringService.
@@ -26,7 +27,7 @@ export class LocationMonitoringService extends MonitoringService<
 	LocationMonitoringRepository
 > {
 	protected readonly locationMonitoringRepository: LocationMonitoringRepository
-	protected readonly pingService: PingService
+	protected readonly pingService: IPingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
 
@@ -37,7 +38,7 @@ export class LocationMonitoringService extends MonitoringService<
 		pingService
 	}: {
 		locationMonitoringRepository: LocationMonitoringRepository
-		pingService: PingService
+		pingService: IPingService
 		logger: Logger
 		pingLogger: PingLogger
 	}) {

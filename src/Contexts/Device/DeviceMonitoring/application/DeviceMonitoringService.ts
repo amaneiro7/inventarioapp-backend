@@ -4,7 +4,6 @@ import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/val
 import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
-import { type PingResult, type PingService } from '../../../Shared/domain/Monitoring/application/PingService'
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
@@ -13,6 +12,7 @@ import {
 	type MonitoringConfigDefaults,
 	type MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
+import { type IPingService, type PingResult } from '../../../Shared/domain/Monitoring/infra/IPingService'
 
 /**
  * @description Service responsible for monitoring the status of devices by pinging them.
@@ -25,7 +25,7 @@ export class DeviceMonitoringService extends MonitoringService<
 	DeviceMonitoringRepository
 > {
 	protected readonly deviceMonitoringRepository: DeviceMonitoringRepository
-	protected readonly pingService: PingService
+	protected readonly pingService: IPingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
 
@@ -36,7 +36,7 @@ export class DeviceMonitoringService extends MonitoringService<
 		pingLogger
 	}: {
 		deviceMonitoringRepository: DeviceMonitoringRepository
-		pingService: PingService
+		pingService: IPingService
 		logger: Logger
 		pingLogger: PingLogger
 	}) {

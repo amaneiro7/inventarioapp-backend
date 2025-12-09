@@ -2,8 +2,7 @@ import pLimit from 'p-limit'
 import { AppSettingsDependencies } from '../../../../../apps/di/app-settings/app-settings.di'
 import { container } from '../../../../../apps/di/container'
 import { MonitoringStatuses } from '../domain/value-object/MonitoringStatus'
-import { type Primitives } from '../../value-object/Primitives'
-import { type PingResult, type PingService } from './PingService'
+import { type Primitives } from '../../value-object/Primitives' // prettier-ignore
 import { type Logger } from '../../Logger'
 import { type MonitoringId } from '../domain/value-object/MonitoringId'
 import { type PingLogger } from '../infra/PingLogger'
@@ -13,6 +12,7 @@ import {
 	type MonitoringServiceConfig
 } from '../domain/entity/MonitoringConfig'
 import { type SettingsFinder } from '../../../../AppSettings/application/SettingsFinder'
+import { type IPingService, type PingResult } from '../infra/IPingService'
 
 export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>
@@ -29,7 +29,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 	constructor(
 		protected readonly repository: R,
-		protected readonly pingService: PingService,
+		protected readonly pingService: IPingService,
 		protected readonly logger: Logger,
 		protected readonly pingLogger: PingLogger
 	) {}

@@ -3,9 +3,10 @@ import { WinstonLogger } from '../../Contexts/Shared/infrastructure/WinstonLogge
 import { RedisRepository } from '../../Contexts/Shared/infrastructure/persistance/Redis/RedisRepository'
 import { CacheService } from '../../Contexts/Shared/domain/CacheService'
 import { SequelizeConfig } from '../../Contexts/Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { PingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService'
 import { PingLogger } from '../../Contexts/Shared/domain/Monitoring/infra/PingLogger'
 import { InMemoryEventBus } from '../../Contexts/Shared/infrastructure/event/inMemoryEventBus'
+//import { PingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService'
+import { NativePingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService.native'
 
 export enum SharedDependencies {
 	Logger = 'logger',
@@ -23,7 +24,7 @@ export const register = (container: AwilixContainer) => {
 		[SharedDependencies.Database]: asClass(SequelizeConfig).singleton(),
 		[SharedDependencies.CacheRepository]: asClass(RedisRepository).singleton(),
 		[SharedDependencies.Cache]: asClass(CacheService).singleton(),
-		[SharedDependencies.PingService]: asClass(PingService).singleton(),
+		[SharedDependencies.PingService]: asClass(NativePingService).singleton(),
 		[SharedDependencies.PingLogger]: asClass(PingLogger).singleton(),
 		[SharedDependencies.EventBus]: asClass(InMemoryEventBus).singleton()
 	})
