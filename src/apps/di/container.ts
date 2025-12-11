@@ -1,4 +1,5 @@
-import { sync } from 'fast-glob'
+// import { sync } from 'fast-glob'
+import { globSync } from 'glob'
 import { resolve } from 'node:path'
 import { type AwilixContainer, createContainer } from 'awilix'
 import { config } from '../../Contexts/Shared/infrastructure/config'
@@ -8,7 +9,7 @@ export const container = createContainer({ injectionMode: 'PROXY', strict: true 
 export async function registerDI(container: AwilixContainer) {
 	const routePath = config.isProd ? 'dist/src/**/*.di.*' : 'src/**/*.di.*'
 	// Unimos las rutas de dependencias y las del event bus. El event bus se añade al final.
-	const allRoutes = [...sync(routePath)]
+	const allRoutes = [...globSync(routePath)]
 
 	allRoutes.forEach(async route => {
 		await register({ routePath: route, container })

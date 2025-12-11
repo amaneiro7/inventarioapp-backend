@@ -1,11 +1,11 @@
-import { exec } from 'node:child_process'
+import { execFile } from 'node:child_process'
 import { platform } from 'node:os'
 import { promisify } from 'node:util'
 import { type Logger } from '../../Logger'
 import { type IPingService, type PingResult } from '../infra/IPingService'
 
 // Promisify exec for easier async/await usage
-const execPromise = promisify(exec)
+const execFilePromise = promisify(execFile)
 
 export class PingService implements IPingService {
 	private readonly logger: Logger
@@ -17,6 +17,7 @@ export class PingService implements IPingService {
 		const getHostNameArg = getHostName ? '-a' : ''
 		let pingArgs: string[] = []
 		const osPlatform = platform()
+		const timeoutInSecondos: number = 8
 
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
@@ -29,11 +30,15 @@ export class PingService implements IPingService {
 		}
 
 		try {
-			// Use execPromise with a timeout for the command itself
-			const { stdout, stderr } = await execPromise(`${command} ${pingArgs.join(' ')}`, {
-				timeout: 8000,
+			// Use execFilePromise with a timeout for the command itself
+			const { stdout, stderr } = await execFilePromise(command, pingArgs, {
+				timeout: timeoutInSecondos * 1000,
 				windowsHide: true
 			})
+			// const { stdout, stderr } = await execFilePromise(`${command} ${pingArgs.join(' ')}`, {
+			// 	timeout: 8000,
+			// 	windowsHide: true
+			// })
 
 			if (stderr) {
 				this.logger.info(`Error de stderr del comando ping para ${ipAddress}: ${stderr.trim()}`)
@@ -51,10 +56,10 @@ export class PingService implements IPingService {
 				)
 			}
 		} catch (rawError: unknown) {
-			// Handle errors from execPromise. The caught object is 'unknown' by default in modern TS.
+			// Handle errors from execFilePromise. The caught object is 'unknown' by default in modern TS.
 			// We inspect it to provide a more specific error message.
 			if (rawError instanceof Error) {
-				// The error from execPromise has additional properties. We can cast it to access them safely.
+				// The error from execFilePromise has additional properties. We can cast it to access them safely.
 				const error = rawError as Error & {
 					killed?: boolean
 					signal?: string
@@ -64,7 +69,9 @@ export class PingService implements IPingService {
 				}
 
 				if (error.killed && error.signal === 'SIGTERM') {
-					throw new Error(`Ping a ${ipAddress} agotó el tiempo de espera después de 2 segundos.`)
+					throw new Error(
+						`Ping a ${ipAddress} agotó el tiempo de espera después de ${timeoutInSecondos} segundos.`
+					)
 				} else if (error.code === 'ENOENT') {
 					throw new Error(`Comando ping no encontrado. ¿Está 'ping' instalado y en el PATH de su sistema?`)
 				} else if (
