@@ -1,11 +1,11 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { CargoId } from '../../../Cargo/domain/CargoId'
+import { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { CargoDoesNotExistError } from '../../../Cargo/domain/CargoDoesNotExistError'
+import { CargoDoesNotExistError } from '../../../Cargo/domain/errors/CargoDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
-import { type CargoRepository } from '../../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../../Cargo/domain/repository/CargoRepository'
 
 interface EmployeeCargoProps {
 	value: Primitives<CargoId> | null

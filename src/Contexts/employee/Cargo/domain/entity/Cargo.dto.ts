@@ -1,10 +1,10 @@
-import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import { type DepartmentId } from '../../IDepartment/DepartmentId'
-import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type CargoId } from './CargoId'
-import { type CargoName } from './CargoName'
+import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type DepartmentId } from '../../../IDepartment/DepartmentId'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type CargoId } from '../valueObject/CargoId'
+import { type CargoName } from '../valueObject/CargoName'
 
 /**
  * @interface Cargo

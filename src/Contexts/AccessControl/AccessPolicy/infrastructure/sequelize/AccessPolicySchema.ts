@@ -10,7 +10,7 @@ import { PermissionGroupModel } from '../../../PermissionGroup/infrastructure/se
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoId } from '../../../../employee/Cargo/domain/CargoId'
+import { type CargoId } from '../../../../employee/Cargo/domain/valueObject/CargoId'
 import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
 import { type AccessPolicyPriority } from '../../domain/valueObject/AccessPolicyPriority'
 import { type AccessPolicyDto } from '../../domain/entity/AccessPolicy.dto'

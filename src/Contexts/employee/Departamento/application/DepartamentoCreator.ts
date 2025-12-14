@@ -1,6 +1,6 @@
 import { CreateDepartamentoUseCase } from '../domain/CreateDepartmentoUseCase'
 import { Departamento } from '../domain/Departamento'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type DepartamentoDto, type DepartamentoParams } from '../domain/Departamento.dto'

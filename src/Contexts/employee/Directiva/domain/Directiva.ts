@@ -1,7 +1,7 @@
 import { IDepartment } from '../../IDepartment/IDeparment'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
-import { type CargoId } from '../../Cargo/domain/CargoId'
+import { type CargoId } from '../../Cargo/domain/valueObject/CargoId'
 import { type DirectivaDto } from './Directiva.dto'
 
 /**

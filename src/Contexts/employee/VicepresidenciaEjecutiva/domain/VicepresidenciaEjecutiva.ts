@@ -1,5 +1,5 @@
 import { IDepartment } from '../../IDepartment/IDeparment'
-import { CargoId } from '../../Cargo/domain/CargoId'
+import { CargoId } from '../../Cargo/domain/valueObject/CargoId'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
 import { DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'

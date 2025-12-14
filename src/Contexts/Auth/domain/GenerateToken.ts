@@ -9,7 +9,7 @@ import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corre
 import { type EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
 import { type PasswordChangeAt } from '../../User/user/domain/valueObject/PasswordChangeAt'
 import { type PasswordNeverExpires } from '../../User/user/domain/valueObject/PasswordNeverExpires'
-import { type CargoId } from '../../employee/Cargo/domain/CargoId'
+import { type CargoId } from '../../employee/Cargo/domain/valueObject/CargoId'
 import { type DepartmentId } from '../../employee/IDepartment/DepartmentId'
 
 export interface Tokens {

@@ -1,6 +1,6 @@
 import { Vicepresidencia } from '../domain/Vicepresidencia'
 import { CreateVicepresidenciaUseCase } from '../domain/CreateVicepresidenciaUseCase'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type VicepresidenciaDto, type VicepresidenciaParams } from '../domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'

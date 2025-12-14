@@ -1,7 +1,7 @@
 import { type IDepartment } from './IDeparment'
-import { CargoDoesNotExistError } from '../Cargo/domain/CargoDoesNotExistError'
-import { type CargoRepository } from '../Cargo/domain/CargoRepository'
-import { type CargoId } from '../Cargo/domain/CargoId'
+import { CargoDoesNotExistError } from '../Cargo/domain/errors/CargoDoesNotExistError'
+import { type CargoRepository } from '../Cargo/domain/repository/CargoRepository'
+import { type CargoId } from '../Cargo/domain/valueObject/CargoId'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 
 /**

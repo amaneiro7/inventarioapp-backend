@@ -1,6 +1,6 @@
 import { Directiva } from '../domain/Directiva'
 import { CreateDirectivaUseCase } from '../domain/CreatorDirectivaUseCase'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DirectivaDto, type DirectivaParams } from '../domain/Directiva.dto'
 

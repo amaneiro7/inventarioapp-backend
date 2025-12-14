@@ -1,4 +1,4 @@
-import { type CargoId } from '../../../../employee/Cargo/domain/CargoId'
+import { type CargoId } from '../../../../employee/Cargo/domain/valueObject/CargoId'
 import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'

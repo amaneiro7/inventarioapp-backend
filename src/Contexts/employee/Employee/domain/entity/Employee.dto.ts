@@ -1,6 +1,6 @@
 import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'

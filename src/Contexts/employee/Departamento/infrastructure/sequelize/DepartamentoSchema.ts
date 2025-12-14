@@ -9,10 +9,10 @@ import {
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
-import { type CargoId } from '../../../Cargo/domain/CargoId'
+import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import { type DepartamentoDto } from '../../domain/Departamento.dto'
-import { type CargoDto } from '../../../Cargo/domain/Cargo.dto'
+import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 

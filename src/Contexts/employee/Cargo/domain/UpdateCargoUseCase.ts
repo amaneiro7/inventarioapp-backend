@@ -1,13 +1,13 @@
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { CargoAlreadyExistError } from './CargoAlreadyExistError'
+import { CargoAlreadyExistError } from './errors/CargoAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
-import { type Cargo } from './Cargo'
-import { type CargoName } from './CargoName'
-import { type CargoRepository } from './CargoRepository'
+import { type Cargo } from './entity/Cargo'
+import { type CargoName } from './valueObject/CargoName'
+import { type CargoRepository } from './repository/CargoRepository'
 import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { type CargoPrimitives } from './Cargo.dto'
+import { type CargoPrimitives } from './entity/Cargo.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
@@ -41,41 +41,36 @@ export class UpdateCargoUseCase {
 	public async execute({
 		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas },
 		entity
-	}: UpdateCargoParams): Promise<void> {
+	}: UpdateCargoParams): Promise<boolean> {
+		// 1. Realizar todas las validaciones de negocio primero.
 		await Promise.all([
-			this.ensureCargoDoesNotExist({ name, entity }),
-			this.ensureDepartmentsExist({
-				departmentType: 'directiva',
-				departmentIds: directivas,
-				currentDepartmentIds: entity.directivasValue,
-				repository: this.repository.directivaRepository,
-				entity
-			}),
-			this.ensureDepartmentsExist({
-				departmentType: 'vicepresidencia',
-				departmentIds: vicepresidencias,
-				currentDepartmentIds: entity.vicepresidenciasValue,
-				repository: this.repository.vicepresidenciaRepository,
-				entity
-			}),
-			this.ensureDepartmentsExist({
-				departmentType: 'vicepresidencia ejecutiva',
-				departmentIds: vicepresidenciasEjecutivas,
-				currentDepartmentIds: entity.vicepresidenciasEjecutivasValue,
-				repository: this.repository.vicepresidenciaEjecutivaRepository,
-				entity
-			}),
-			this.ensureDepartmentsExist({
-				departmentType: 'gerencia, coordinación o departamento',
-				departmentIds: departamentos,
-				currentDepartmentIds: entity.departamentosValue,
-				repository: this.repository.departamentoRepository,
-				entity
-			})
+			this.ensureCargoNameIsAvailable({ name, entity }),
+			this.ensureDepartmentsExist('directiva', directivas, this.repository.directivaRepository),
+			this.ensureDepartmentsExist('vicepresidencia', vicepresidencias, this.repository.vicepresidenciaRepository),
+			this.ensureDepartmentsExist(
+				'vicepresidencia ejecutiva',
+				vicepresidenciasEjecutivas,
+				this.repository.vicepresidenciaEjecutivaRepository
+			),
+			this.ensureDepartmentsExist(
+				'gerencia, coordinación o departamento',
+				departamentos,
+				this.repository.departamentoRepository
+			)
 		])
+
+		// 2. Si todas las validaciones pasan, actualizar la entidad.
+		return this.updateEntity({
+			name,
+			departamentos,
+			directivas,
+			vicepresidencias,
+			vicepresidenciasEjecutivas,
+			entity
+		})
 	}
 
-	private async ensureCargoDoesNotExist({
+	private async ensureCargoNameIsAvailable({
 		name,
 		entity
 	}: {
@@ -87,51 +82,58 @@ export class UpdateCargoUseCase {
 		if (existingCargo) {
 			throw new CargoAlreadyExistError(name)
 		}
-		entity.updateName(name)
 	}
 
-	private async ensureDepartmentsExist<T>({
-		departmentType,
-		departmentIds,
-		currentDepartmentIds,
-		repository,
-		entity
-	}: {
-		departmentType: string
-		departmentIds: Primitives<DepartmentId>[] | undefined
-		currentDepartmentIds: string[]
+	private async ensureDepartmentsExist<T>(
+		departmentType: string,
+		departmentIds: Primitives<DepartmentId>[] | undefined,
 		repository: DepartmentRepository<T>
-		entity: Cargo
-	}): Promise<void> {
+	): Promise<void> {
 		if (!departmentIds) return
 
-		const uniqueDepartmentIds = Array.from(new Set(departmentIds))
-		const newDepartmentIds = uniqueDepartmentIds.filter(id => !currentDepartmentIds.includes(id))
-
-		if (newDepartmentIds.length === 0) return
-
 		await Promise.all(
-			newDepartmentIds.map(async departmentId => {
+			Array.from(new Set(departmentIds)).map(async departmentId => {
 				if (!(await repository.findById(departmentId))) {
 					throw new DepartmentDoesNotExistError(`La ${departmentType}`)
 				}
 			})
 		)
+	}
 
-		// Update the entity's department list based on the departmentType
-		switch (departmentType) {
-			case 'gerencia, coordinación o departamento':
-				entity.updateDepartamentos(departmentIds)
-				break
-			case 'directiva':
-				entity.updateDirectivas(departmentIds)
-				break
-			case 'vicepresidencia':
-				entity.updateVicepresidencias(departmentIds)
-				break
-			case 'vicepresidencia ejecutiva':
-				entity.updateVicepresidenciaEjecutivas(departmentIds)
-				break
+	private updateEntity({
+		name,
+		departamentos,
+		directivas,
+		vicepresidencias,
+		vicepresidenciasEjecutivas,
+		entity
+	}: UpdateCargoParams['params'] & { entity: Cargo }): boolean {
+		let hasChanged = false
+
+		if (name !== undefined && entity.nameValue !== name) {
+			entity.updateName(name)
+			hasChanged = true
 		}
+		// Nota: Para las listas, una comparación simple podría no ser suficiente si el orden no importa.
+		// Por ahora, asumimos que si se envía el array, es porque se quiere actualizar.
+		// Una mejora futura podría ser comparar el contenido de los arrays.
+		if (departamentos) {
+			entity.updateDepartamentos(departamentos)
+			hasChanged = true
+		}
+		if (directivas) {
+			entity.updateDirectivas(directivas)
+			hasChanged = true
+		}
+		if (vicepresidencias) {
+			entity.updateVicepresidencias(vicepresidencias)
+			hasChanged = true
+		}
+		if (vicepresidenciasEjecutivas) {
+			entity.updateVicepresidenciaEjecutivas(vicepresidenciasEjecutivas)
+			hasChanged = true
+		}
+
+		return hasChanged
 	}
 }

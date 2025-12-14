@@ -1,6 +1,6 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { AccessPolicyName } from '../valueObject/AccessPolicyName'
-import { CargoId } from '../../../../employee/Cargo/domain/CargoId'
+import { CargoId } from '../../../../employee/Cargo/domain/valueObject/CargoId'
 import { DepartmentId } from '../../../../employee/IDepartment/DepartmentId' // Asumo que este es el path correcto
 import { PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { AccessPolicyId } from '../valueObject/AccessPolicyId'

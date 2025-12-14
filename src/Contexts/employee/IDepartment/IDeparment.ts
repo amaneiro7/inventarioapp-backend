@@ -1,8 +1,8 @@
-import { CargoId } from '../Cargo/domain/CargoId'
+import { CargoId } from '../Cargo/domain/valueObject/CargoId'
 import { DepartmentId } from './DepartmentId'
 import { DepartmentName } from './DepartmentName'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type Cargo } from '../Cargo/domain/Cargo.dto'
+import { type Cargo } from '../Cargo/domain/entity/Cargo.dto'
 
 export interface DepartmentPrimitives {
 	id: Primitives<DepartmentId>

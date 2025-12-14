@@ -4,7 +4,7 @@ import { UpdateDirectivaUseCase } from '../domain/UpdateDirectivaUseCase'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DirectivaParams, type DirectivaDto } from '../domain/Directiva.dto'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**
  * @description Use case for updating an existing Directiva entity.

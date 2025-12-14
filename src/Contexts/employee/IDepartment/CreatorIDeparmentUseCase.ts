@@ -1,7 +1,7 @@
-import { CargoDoesNotExistError } from '../Cargo/domain/CargoDoesNotExistError'
-import { type CargoRepository } from '../Cargo/domain/CargoRepository'
+import { CargoDoesNotExistError } from '../Cargo/domain/errors/CargoDoesNotExistError'
+import { type CargoRepository } from '../Cargo/domain/repository/CargoRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type CargoId } from '../Cargo/domain/CargoId'
+import { type CargoId } from '../Cargo/domain/valueObject/CargoId'
 
 /**
  * @description Use case for creating a new department, including validation of associated cargos.

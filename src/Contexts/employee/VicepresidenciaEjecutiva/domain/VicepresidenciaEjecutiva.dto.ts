@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CargoDto } from '../../Cargo/domain/Cargo.dto'
-import { type CargoId } from '../../Cargo/domain/CargoId'
+import { type CargoDto } from '../../Cargo/domain/entity/Cargo.dto'
+import { type CargoId } from '../../Cargo/domain/valueObject/CargoId'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'

@@ -1,9 +1,9 @@
 import { CreateCargoUseCase } from '../domain/CreateCargoUseCase'
-import { Cargo } from '../domain/Cargo'
+import { Cargo } from '../domain/entity/Cargo'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type CargoRepository } from '../domain/CargoRepository'
+import { type CargoRepository } from '../domain/repository/CargoRepository'
 import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { type CargoParams } from '../domain/Cargo.dto'
+import { type CargoParams } from '../domain/entity/Cargo.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
@@ -72,6 +72,6 @@ export class CargoCreator {
 			vicepresidenciasEjecutivas: uniqueVicepresidenciasEjecutivas
 		})
 
-		await this.cargoRepository.save(cargo.toPrimitive())
+		await this.cargoRepository.save(cargo.toPrimitives())
 	}
 }

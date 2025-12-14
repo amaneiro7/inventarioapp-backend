@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type CargoDto } from '../domain/Cargo.dto'
-import { type CargoRepository } from '../domain/CargoRepository'
+import { type CargoDto } from '../domain/entity/Cargo.dto'
+import { type CargoRepository } from '../domain/repository/CargoRepository'
 
 /**
  * @description Use case for retrieving all Cargo entities.

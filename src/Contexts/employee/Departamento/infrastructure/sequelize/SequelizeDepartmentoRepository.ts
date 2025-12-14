@@ -6,7 +6,7 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoName } from '../../../Cargo/domain/CargoName'
+import { type CargoName } from '../../../Cargo/domain/valueObject/CargoName'
 import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'

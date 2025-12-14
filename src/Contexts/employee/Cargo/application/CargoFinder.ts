@@ -1,7 +1,7 @@
-import { type CargoDto } from '../domain/Cargo.dto'
-import { CargoDoesNotExistError } from '../domain/CargoDoesNotExistError'
-import { CargoId } from '../domain/CargoId'
-import { type CargoRepository } from '../domain/CargoRepository'
+import { CargoDoesNotExistError } from '../domain/errors/CargoDoesNotExistError'
+import { CargoId } from '../domain/valueObject/CargoId'
+import { type CargoDto } from '../domain/entity/Cargo.dto'
+import { type CargoRepository } from '../domain/repository/CargoRepository'
 
 /**
  * @description Use case for finding a Cargo entity by its unique identifier.

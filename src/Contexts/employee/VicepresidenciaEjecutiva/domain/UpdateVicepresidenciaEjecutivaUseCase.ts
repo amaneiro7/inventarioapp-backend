@@ -8,7 +8,7 @@ import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type VicepresidenciaEjecutiva } from './VicepresidenciaEjecutiva'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaParams, type VicepresidenciaEjecutivaDto } from './VicepresidenciaEjecutiva.dto'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**
  * @description Use case for updating an existing VicepresidenciaEjecutiva, including validation of associated entities.

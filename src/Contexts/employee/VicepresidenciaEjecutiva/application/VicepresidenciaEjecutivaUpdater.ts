@@ -8,7 +8,7 @@ import {
 	type VicepresidenciaEjecutivaParams
 } from '../domain/VicepresidenciaEjecutiva.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**
  * @description Use case for updating an existing VicepresidenciaEjecutiva entity.

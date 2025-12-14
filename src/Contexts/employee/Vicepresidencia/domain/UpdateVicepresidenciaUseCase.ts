@@ -7,7 +7,7 @@ import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type Vicepresidencia } from './Vicepresidencia'
 import { type VicepresidenciaParams, type VicepresidenciaDto } from './Vicepresidencia.dto'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 
 /**

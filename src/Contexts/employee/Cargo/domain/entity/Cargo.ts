@@ -1,13 +1,14 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { DepartmentId } from '../../IDepartment/DepartmentId'
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { DepartmentId } from '../../../IDepartment/DepartmentId'
+import { CargoId } from '../valueObject/CargoId'
+import { CargoName } from '../valueObject/CargoName'
 import { type CargoDto, type CargoParams, type CargoPrimitives } from './Cargo.dto'
-import { CargoId } from './CargoId'
-import { CargoName } from './CargoName'
 
 /**
  * @description Represents the Cargo domain entity.
  */
-export class Cargo {
+export class Cargo extends AggregateRoot {
 	constructor(
 		private readonly id: CargoId,
 		private name: CargoName,
@@ -15,7 +16,9 @@ export class Cargo {
 		private vicepresidenciasEjecutivas: DepartmentId[],
 		private vicepresidencias: DepartmentId[],
 		private departamentos: DepartmentId[]
-	) {}
+	) {
+		super()
+	}
 
 	static create(params: CargoParams): Cargo {
 		const id = CargoId.random()
@@ -44,7 +47,7 @@ export class Cargo {
 		)
 	}
 
-	toPrimitive(): CargoPrimitives {
+	toPrimitives(): CargoPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue,

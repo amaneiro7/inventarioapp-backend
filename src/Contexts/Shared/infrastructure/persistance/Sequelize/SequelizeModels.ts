@@ -30,7 +30,7 @@ import { type LocationDto } from '../../../../Location/Location/domain/Location.
 import { type VicepresidenciaEjecutivaDto } from '../../../../employee/VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../../employee/Vicepresidencia/domain/Vicepresidencia.dto'
 import { type DepartamentoDto } from '../../../../employee/Departamento/domain/Departamento.dto'
-import { type CargoDto } from '../../../../employee/Cargo/domain/Cargo.dto'
+import { type CargoDto } from '../../../../employee/Cargo/domain/entity/Cargo.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 import { type InputTypeDto } from '../../../../ModelSeries/InputType/domain/InputType.dto'
 import { type CentroCostoDto } from '../../../../employee/CentroCosto/domain/CentroCosto.dto'

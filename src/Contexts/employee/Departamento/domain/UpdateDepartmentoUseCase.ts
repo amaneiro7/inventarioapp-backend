@@ -3,7 +3,7 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { type Departamento } from './Departamento'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'

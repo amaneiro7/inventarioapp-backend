@@ -5,7 +5,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**
  * @description Use case for updating an existing Directiva, including validation of associated entities.

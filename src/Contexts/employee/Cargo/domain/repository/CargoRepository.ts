@@ -1,10 +1,10 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type Nullable } from '../../../Shared/domain/Nullable'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CargoParams, type CargoDto } from './Cargo.dto'
-import { type CargoId } from './CargoId'
-import { type CargoName } from './CargoName'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CargoParams, type CargoDto } from '../entity/Cargo.dto'
+import { type CargoId } from '../valueObject/CargoId'
+import { type CargoName } from '../valueObject/CargoName'
 
 /**
  * @abstract

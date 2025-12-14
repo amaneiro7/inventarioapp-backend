@@ -1,10 +1,10 @@
-import { Cargo } from '../domain/Cargo'
-import { CargoId } from '../domain/CargoId'
-import { CargoDoesNotExistError } from '../domain/CargoDoesNotExistError'
+import { Cargo } from '../domain/entity/Cargo'
+import { CargoId } from '../domain/valueObject/CargoId'
+import { CargoDoesNotExistError } from '../domain/errors/CargoDoesNotExistError'
 import { UpdateCargoUseCase } from '../domain/UpdateCargoUseCase'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type CargoRepository } from '../domain/CargoRepository'
-import { type CargoParams } from '../domain/Cargo.dto'
+import { type CargoRepository } from '../domain/repository/CargoRepository'
+import { type CargoParams } from '../domain/entity/Cargo.dto'
 import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
 import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
@@ -59,11 +59,14 @@ export class CargoUpdater {
 
 		const cargoEntity = Cargo.fromPrimitives(cargo)
 
-		await this.updateCargoUseCase.execute({
+		const hasChanged = await this.updateCargoUseCase.execute({
 			entity: cargoEntity,
 			params
 		})
 
-		await this.cargoRepository.save(cargoEntity.toPrimitive())
+		// Solo guardar en la base de datos si realmente hubo un cambio
+		if (hasChanged) {
+			await this.cargoRepository.save(cargoEntity.toPrimitives())
+		}
 	}
 }

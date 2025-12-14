@@ -1,7 +1,7 @@
 import { CreateIDepartementUseCase } from '../../IDepartment/CreatorIDeparmentUseCase'
 import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlreadyExistError'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { type CargoRepository } from '../../Cargo/domain/CargoRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'

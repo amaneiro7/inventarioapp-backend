@@ -1,9 +1,20 @@
+/**
+ * @enum TimeTolive
+ * @description Defines standard time-to-live (TTL) durations for cache entries in seconds.
+ * The values are increased to leverage caching more effectively, as the system
+ * has a robust cache invalidation mechanism upon data modification.
+ */
 export enum TimeTolive {
-	TOO_SHORT = 60 * 5, // 5 minutes
-	SHORT = 60 * 15, // 15 minutes
-	MEDIUM = 60 * 60, // 1 hour
-	LONG = 60 * 60 * 24, // 24 hours
-	VERY_LONG = 60 * 60 * 24 * 7 // 7 days
+	/** 10 minutes */
+	TOO_SHORT = 60 * 10,
+	/** 1 hour */
+	SHORT = 60 * 60,
+	/** 12 hours */
+	MEDIUM = 60 * 60 * 12,
+	/** 7 days */
+	LONG = 60 * 60 * 24 * 7,
+	/** 30 days */
+	VERY_LONG = 60 * 60 * 24 * 30
 }
 
 /**
