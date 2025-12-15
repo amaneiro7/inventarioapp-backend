@@ -1,11 +1,11 @@
-import { execFile } from 'node:child_process'
+import { exec } from 'node:child_process'
 import { platform } from 'node:os'
 import { promisify } from 'node:util'
 import { type Logger } from '../../Logger'
 import { type IPingService, type PingResult } from '../infra/IPingService'
 
 // Promisify exec for easier async/await usage
-const execFilePromise = promisify(execFile)
+const execFilePromise = promisify(exec)
 
 export class PingService implements IPingService {
 	private readonly logger: Logger
@@ -31,14 +31,14 @@ export class PingService implements IPingService {
 
 		try {
 			// Use execFilePromise with a timeout for the command itself
-			const { stdout, stderr } = await execFilePromise(command, pingArgs, {
+			// const { stdout, stderr } = await execFilePromise(command, pingArgs, {
+			// 	timeout: timeoutInSecondos * 1000,
+			// 	windowsHide: true
+			// })
+			const { stdout, stderr } = await execFilePromise(`${command} ${pingArgs.join(' ')}`, {
 				timeout: timeoutInSecondos * 1000,
 				windowsHide: true
 			})
-			// const { stdout, stderr } = await execFilePromise(`${command} ${pingArgs.join(' ')}`, {
-			// 	timeout: 8000,
-			// 	windowsHide: true
-			// })
 
 			if (stderr) {
 				this.logger.info(`Error de stderr del comando ping para ${ipAddress}: ${stderr.trim()}`)
