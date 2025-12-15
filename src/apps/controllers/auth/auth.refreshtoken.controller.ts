@@ -2,14 +2,12 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { type Controller } from '../controller'
 import { type AuthRefreshTokenUseCase } from '../../../Contexts/Auth/application/AuthRefhreshTokenUseCase'
 import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
-import { type GetUserPermissions } from '../../../Contexts/AccessControl/AccessPolicy/application/GetUserPermissions'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { AuthDependencies } from '../../di/auth/auth.di'
 import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'
 import { ERROR_MESSAGES } from '../../constants/messages'
-import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 
 /**
  * Controller for refreshing authentication tokens.
@@ -30,19 +28,9 @@ export class AuthRefreshTokenController implements Controller {
 
 			const refreshToken: AuthRefreshTokenUseCase = container.resolve(AuthDependencies.RefreshTokenUseCase)
 			const { user, accessToken } = await refreshToken.run(jwtToken)
-			const getUserPermission: GetUserPermissions = container.resolve(AccessPolicyDependencies.GetUserPermissions)
-			const permissions = await getUserPermission.run({
-				roleId: user?.roleId,
-				cargoId: user?.employee?.cargoId,
-				directivaId: user?.employee?.directivaId,
-				vicepresidenciaEjecutivaId: user?.employee?.vicepresidenciaEjecutivaId,
-				vicepresidenciaId: user?.employee?.vicepresidenciaId,
-				departamentoId: user?.employee?.departamentoId
-			})
 
 			res.status(httpStatus[200].statusCode).send({
 				user,
-				permissions,
 				accessToken
 			})
 		} catch (error) {

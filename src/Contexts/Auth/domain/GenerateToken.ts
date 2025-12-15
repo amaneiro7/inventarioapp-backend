@@ -1,10 +1,8 @@
 import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
 import { config } from '../../Shared/infrastructure/config'
-
 import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type RoleId } from '../../User/Role/domain/RoleId'
 import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corrected path for UserId
 import { type EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
 import { type PasswordChangeAt } from '../../User/user/domain/valueObject/PasswordChangeAt'
@@ -40,7 +38,7 @@ export interface JwtPayloadUser extends JwtPayload {
 	employeeId: Primitives<EmployeeId> // Associated Employee ID
 	passwordChangeAt: Primitives<PasswordChangeAt>
 	passwordNeverExpires: Primitives<PasswordNeverExpires> // <--- CAMBIO: Campo añadido}
-	roleId: Primitives<RoleId>
+	roleId: string
 	cargoId: Primitives<CargoId> | null
 	departamentoId: Primitives<DepartmentId> | null
 	vicepresidenciaId: Primitives<DepartmentId> | null

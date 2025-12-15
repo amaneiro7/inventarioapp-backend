@@ -32,7 +32,8 @@ export function buildAuthResponse({
 			lastLoginIp: user.lastLoginIp,
 			passwordExpired: user.passwordExpired,
 			role: {
-				id: `${role.id}`,
+				// id: `${role.id}`,
+				id: role.id,
 				name: role.name
 			},
 			employee: {

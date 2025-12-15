@@ -38,7 +38,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			// ----------------------------------------------------------------------
 
 			// 3. BYPASS PARA ADMIN
-			if (userPayload.roleId === String(ADMIN_ROLE_ID)) {
+			if (String(userPayload.roleId) === String(ADMIN_ROLE_ID)) {
 				return next()
 			}
 
@@ -53,7 +53,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			// 5. RESOLVER POLÍTICA DE ACCESO
 			const accessPolicyResolver: AccessPolicyResolver = container.resolve(AccessPolicyDependencies.Resolver)
 			const permissionGroupIds = await accessPolicyResolver.run({
-				roleId,
+				roleId: Number(roleId),
 				cargoId,
 				departamentoId,
 				directivaId,

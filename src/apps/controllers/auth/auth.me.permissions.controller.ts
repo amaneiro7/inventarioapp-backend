@@ -29,7 +29,14 @@ export class AuthMePermissionsController implements Controller {
 			const GetUserPermissions: GetUserPermissions = container.resolve(
 				AccessPolicyDependencies.GetUserPermissions
 			)
-			const permissions = await GetUserPermissions.run(jwtToken.id)
+			const permissions = await GetUserPermissions.run({
+				roleId: Number(jwtToken.roleId),
+				cargoId: jwtToken.cargoId,
+				departamentoId: jwtToken.departamentoId,
+				directivaId: jwtToken.directivaId,
+				vicepresidenciaId: jwtToken.vicepresidenciaId,
+				vicepresidenciaEjecutivaId: jwtToken.vicepresidenciaEjecutivaId
+			})
 
 			res.status(httpStatus[200].statusCode).send({
 				permissions

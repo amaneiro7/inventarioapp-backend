@@ -4,9 +4,6 @@ import { Controller } from '../controller'
 import { authenticaUser } from '../../../Contexts/Auth/application/AuthUseCase'
 import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'
 import { type User } from '../../../Contexts/User/user/domain/entity/User.dto'
-import { type GetUserPermissions } from '../../../Contexts/AccessControl/AccessPolicy/application/GetUserPermissions'
-import { container } from '../../di/container'
-import { AccessPolicyDependencies } from '../../di/access-control/access-policy.di'
 
 type ReqUser = User
 
@@ -27,16 +24,6 @@ export class AuthLoginController implements Controller {
 			if (!user) throw new ApiError(httpStatus[404].statusCode, 'User not found')
 
 			const { user: infoUser, refreshToken, accessToken } = await authenticaUser(user)
-			const getUserPermission: GetUserPermissions = container.resolve(AccessPolicyDependencies.GetUserPermissions)
-
-			const permissions = await getUserPermission.run({
-				roleId: infoUser.roleId,
-				cargoId: infoUser.employee.cargoId,
-				directivaId: infoUser.employee.directivaId,
-				vicepresidenciaEjecutivaId: infoUser.employee.vicepresidenciaEjecutivaId,
-				vicepresidenciaId: infoUser.employee.vicepresidenciaId,
-				departamentoId: infoUser.employee.departamentoId
-			})
 
 			res.status(httpStatus[200].statusCode)
 				.cookie('refreshToken', refreshToken, {
@@ -46,7 +33,6 @@ export class AuthLoginController implements Controller {
 				})
 				.json({
 					user: infoUser,
-					permissions,
 					accessToken,
 					message: 'Sesion iniciada exitosamente'
 				})
