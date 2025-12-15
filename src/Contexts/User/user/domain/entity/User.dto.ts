@@ -7,7 +7,6 @@ import { type PasswordChangeAt } from '../valueObject/PasswordChangeAt'
 import { type LastLoginAt } from '../valueObject/LastLoginAt'
 import { type FailedAttemps } from '../valueObject/FailedAttemps'
 import { type LockoutUntil } from '../valueObject/LockoutUntil'
-import { type RoleId } from '../../../Role/domain/RoleId'
 import { type RoleDto } from '../../../Role/domain/Role.dto'
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 import { type LastLoginIp } from '../valueObject/LastLoginIp'
@@ -22,7 +21,7 @@ import { type PasswordHistory } from '../valueObject/PasswordHistory'
 export interface UserAuth {
 	id: Primitives<UserId>
 	employeeId: Primitives<EmployeeId>
-	roleId: Primitives<RoleId> // Temporal
+	roleId: string // por un error al crear la base de datos, se creo como number o no he podido convetirlo a string
 	status: Primitives<UserStatus>
 	password: Primitives<UserPassword>
 	passwordChangeAt: Primitives<PasswordChangeAt>

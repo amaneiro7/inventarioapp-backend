@@ -7,5 +7,6 @@ import httpStatus from '../../Shared/infrastructure/utils/http-status'
 export class DepartmentDoesNotExistError extends ApiError {
 	constructor(readonly value: string) {
 		super(httpStatus[404].statusCode, `El departamento '${value}' no se encuentra registrado.`) // Improved error message
+		this.name = this.constructor.name
 	}
 }

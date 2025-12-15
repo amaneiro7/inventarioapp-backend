@@ -1,13 +1,13 @@
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-object/AcceptedNullStringValueObject'
 import { type Employee } from '../entity/Employee'
 import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { EmployeeNameInvalidError } from '../Errors/EmployeeNameInvalidError'
 
 /**
  * @description Represents the first name of an employee.
  */
-export class EmployeeName extends AcceptedNullValueObject<string> {
+export class EmployeeName extends AcceptedNullStringValueObject {
 	private readonly MIN_LENGTH = 3
 	private readonly MAX_LENGTH = 50
 	private readonly VALID_REGEX = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
@@ -17,27 +17,24 @@ export class EmployeeName extends AcceptedNullValueObject<string> {
 		private readonly type: Primitives<EmployeeType>
 	) {
 		super(value)
-		if (value) {
-			this.value = value?.trim()
-		}
-		this.ensureIsValidName({ value: this.value, type: this.type })
+		this.ensureIsValidName()
 	}
 
-	private ensureIsValidName({ value, type }: { value: string | null; type: Primitives<EmployeeType> }): void {
+	private ensureIsValidName(): void {
 		const errors: string[] = []
 
-		if (type !== EmployeeTypesEnum.GENERIC && !value) {
+		if (this.type !== EmployeeTypesEnum.GENERIC && this.value === null) {
 			errors.push('El nombre es requerido para este tipo de empleado.')
 		}
 
-		if (value) {
-			if (value.length < this.MIN_LENGTH) {
+		if (this.value) {
+			if (this.value.length < this.MIN_LENGTH) {
 				errors.push(`Debe ser mayor a ${this.MIN_LENGTH} caracteres.`)
 			}
-			if (value.length > this.MAX_LENGTH) {
+			if (this.value.length > this.MAX_LENGTH) {
 				errors.push(`Debe ser menor a ${this.MAX_LENGTH} caracteres.`)
 			}
-			if (!this.VALID_REGEX.test(value)) {
+			if (!this.VALID_REGEX.test(this.value)) {
 				errors.push(
 					'La primera letra debe ser en mayúsculas, el resto en minúsculas, y no puede tener espacios al final a menos que sea un nombre compuesto.'
 				)
@@ -45,7 +42,7 @@ export class EmployeeName extends AcceptedNullValueObject<string> {
 		}
 
 		if (errors.length > 0) {
-			throw new InvalidArgumentError(`El nombre del empleado '${value}' no es válido: ${errors.join(', ')}`)
+			throw new EmployeeNameInvalidError(this.value, errors)
 		}
 	}
 

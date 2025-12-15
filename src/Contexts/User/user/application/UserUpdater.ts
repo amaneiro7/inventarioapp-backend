@@ -35,9 +35,9 @@ export class UserUpdater {
 
 		let hasChanges = false
 
-		if (params.roleId !== undefined && userEntity.roleValue !== params.roleId) {
-			await this.ensureRoleExist({ repository: this.roleRepository, roleId: params.roleId })
-			userEntity.updateRole(params.roleId)
+		if (params.roleId !== undefined && String(userEntity.roleValue) !== String(params.roleId)) {
+			await this.ensureRoleExist({ repository: this.roleRepository, roleId: Number(params.roleId) })
+			userEntity.updateRole(Number(params.roleId))
 			hasChanges = true
 		}
 		// Save the updated entity only if it has changed

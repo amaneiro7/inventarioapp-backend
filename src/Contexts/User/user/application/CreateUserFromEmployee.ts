@@ -82,7 +82,7 @@ export class CreateUserFromEmployee {
 		).value
 		const userEntity = User.createFromEmployee({
 			employeeId: payload.employeeId,
-			roleId: payload.roleId,
+			roleId: String(payload.roleId),
 			password: defaultHashedPassword
 		})
 		const savedUser = await this.userRepository.save(userEntity.toPrimitives())

@@ -1,5 +1,5 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-object/AcceptedNullStringValueObject'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 import { type Employee } from '../entity/Employee'
@@ -7,7 +7,7 @@ import { type Employee } from '../entity/Employee'
 /**
  * @description Represents the last name of an employee.
  */
-export class EmployeeLastName extends AcceptedNullValueObject<string> {
+export class EmployeeLastName extends AcceptedNullStringValueObject {
 	private readonly MIN_LENGTH = 3
 	private readonly MAX_LENGTH = 50
 	private readonly VALID_REGEX = /^[A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*(?: [A-ZÑñÁÉÍÓÚ][a-zñáéíóú]*)*$/
@@ -17,7 +17,7 @@ export class EmployeeLastName extends AcceptedNullValueObject<string> {
 		private readonly type: Primitives<EmployeeType>
 	) {
 		super(value)
-		this.ensureIsValidName({ value, type: this.type })
+		this.ensureIsValidName({ value: this.value, type: this.type })
 	}
 
 	private ensureIsValidName({ value, type }: { value: string | null; type: Primitives<EmployeeType> }): void {

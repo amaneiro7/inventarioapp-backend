@@ -20,7 +20,7 @@ export class RolesModel extends Model<RoleDto> implements RoleDto {
 	static initialize(sequelize: Sequelize): void {
 		this.init(
 			{
-				id: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+				id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false },
 				name: { type: DataTypes.STRING, allowNull: false, unique: true }
 			},
 			{ modelName: 'Role', tableName: 'role', timestamps: false, underscored: true, sequelize }

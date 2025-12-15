@@ -1,23 +1,11 @@
 import { CargoAlreadyExistError } from './errors/CargoAlreadyExistError'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CargoRepository } from './repository/CargoRepository'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type CargoName } from './valueObject/CargoName'
-import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
 import { type CargoPrimitives } from './entity/Cargo.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-
-interface DepartmentRepositories {
-	readonly cargoRepository: CargoRepository
-	readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-}
+import { type DepartmentRepositories } from './repository/DepartmentRepositories'
 
 /**
  * @description Use case for creating a new Cargo, including validation of associated departments.

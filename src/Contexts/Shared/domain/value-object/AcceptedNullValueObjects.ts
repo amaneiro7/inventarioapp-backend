@@ -3,11 +3,7 @@ type Primitives = string | number | boolean | Date
 export abstract class AcceptedNullValueObject<T extends Primitives> {
 	value: T | null
 	constructor(value: T | null) {
-		if (!value) {
-			this.value = null
-		} else {
-			this.value = value
-		}
+		this.value = value === undefined ? null : value
 	}
 
 	equals(other: AcceptedNullValueObject<T>): boolean {

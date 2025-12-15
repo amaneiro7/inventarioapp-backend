@@ -5,20 +5,8 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type Cargo } from './entity/Cargo'
 import { type CargoName } from './valueObject/CargoName'
-import { type CargoRepository } from './repository/CargoRepository'
-import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
 import { type CargoPrimitives } from './entity/Cargo.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
-
-interface DepartmentRepositories {
-	readonly cargoRepository: CargoRepository
-	readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-	readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-}
+import { type DepartmentRepositories } from './repository/DepartmentRepositories'
 
 interface UpdateCargoParams {
 	params: Partial<Omit<CargoPrimitives, 'id'>>

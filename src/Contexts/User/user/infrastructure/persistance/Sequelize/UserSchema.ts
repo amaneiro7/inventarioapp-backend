@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { UserStatusEnum } from '../../../domain/valueObject/UserStatus'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
-import { type RoleId } from '../../../../Role/domain/RoleId'
+//import { type RoleId } from '../../../../Role/domain/RoleId'
 import { type UserPassword } from '../../../domain/valueObject/UserPassword'
 import { type UserPrimitives } from '../../../domain/entity/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
-import { UserStatusEnum } from '../../../domain/valueObject/UserStatus'
 import { type PasswordChangeAt } from '../../../domain/valueObject/PasswordChangeAt'
 import { type LastLoginAt } from '../../../domain/valueObject/LastLoginAt'
 import { type FailedAttemps } from '../../../domain/valueObject/FailedAttemps'
@@ -21,7 +21,7 @@ import { type PasswordHistory } from '../../../domain/valueObject/PasswordHistor
 export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 	declare id: Primitives<UserId>
 	declare employeeId: Primitives<EmployeeId>
-	declare roleId: Primitives<RoleId>
+	declare roleId: string
 	declare password: Primitives<UserPassword>
 	declare status: UserStatusEnum // Use enum type directly for Sequelize
 	declare passwordChangeAt: Primitives<PasswordChangeAt>

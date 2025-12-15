@@ -1,3 +1,4 @@
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { UserId } from '../valueObject/UserId'
 import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { RoleId } from '../../../Role/domain/RoleId'
@@ -9,12 +10,12 @@ import { LastLoginIp } from '../valueObject/LastLoginIp'
 import { LastLoginAt } from '../valueObject/LastLoginAt'
 import { FailedAttemps } from '../valueObject/FailedAttemps'
 import { LockoutUntil } from '../valueObject/LockoutUntil'
-import { type UserAuth, type UserParams, type UserPrimitives } from './User.dto'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { PasswordHistory } from '../valueObject/PasswordHistory'
 import { RepeatedPasswordError } from '../Errors/RepeatedPasswordError'
+import { type UserAuth, type UserParams, type UserPrimitives } from './User.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
-export class User {
+export class User extends AggregateRoot {
 	constructor(
 		private readonly id: UserId,
 		private readonly employeeId: EmployeeId,
@@ -28,13 +29,15 @@ export class User {
 		private failedAttemps: FailedAttemps,
 		private lockoutUntil: LockoutUntil,
 		private passwordHistory: PasswordHistory
-	) {}
+	) {
+		super()
+	}
 
 	static fromPrimitives(plainData: UserAuth): User {
 		return new User(
 			new UserId(plainData.id),
 			new EmployeeId(plainData.employeeId),
-			new RoleId(plainData.roleId),
+			new RoleId(Number(plainData.roleId)),
 			UserPassword.fromPrimitives(plainData.password),
 			new UserStatus(plainData.status),
 			new PasswordChangeAt(plainData.passwordChangeAt),
@@ -54,7 +57,7 @@ export class User {
 		return new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
-			new RoleId(roleId),
+			new RoleId(Number(roleId)),
 			UserPassword.fromPrimitives(hashedPassword),
 			new UserStatus(UserStatusEnum.ACTIVE),
 			new PasswordChangeAt(null), // Para que solicite cambio de contraseña
@@ -221,7 +224,7 @@ export class User {
 		return {
 			id: this.idValue,
 			employeeId: this.employeeValue,
-			roleId: this.roleValue,
+			roleId: String(this.roleValue),
 			password: this.passwordValue,
 			status: this.statusValue,
 			passwordChangeAt: this.passwordChangeAtValue,

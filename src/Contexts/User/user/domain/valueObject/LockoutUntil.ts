@@ -1,3 +1,3 @@
-import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { AcceptedNullDateValueObject } from '../../../../Shared/domain/value-object/AcceptedNullDateValueObject'
 
-export class LockoutUntil extends AcceptedNullValueObject<Date> {}
+export class LockoutUntil extends AcceptedNullDateValueObject {}

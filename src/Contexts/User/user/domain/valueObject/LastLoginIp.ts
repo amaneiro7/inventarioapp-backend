@@ -1,7 +1,7 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-object/AcceptedNullStringValueObject'
 
-export class LastLoginIp extends AcceptedNullValueObject<string> {
+export class LastLoginIp extends AcceptedNullStringValueObject {
 	private readonly IP_ADDRESS_REGEX =
 		/^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3}$/
 
