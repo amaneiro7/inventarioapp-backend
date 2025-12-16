@@ -258,7 +258,8 @@ nginx.key
 nginx.keyclear
 
 settings.json
-bun.lockb
+
 *.lockb
+*.lock
 pnpm-lock.yaml
 package-lock.json
