@@ -42,6 +42,8 @@ export class AccessPolicyUpdater {
 			permissionsGroups: permissionsGroups.map(group => group.id)
 		})
 
+		let hasChanges = false
+
 		// Usamos los métodos de actualización de la entidad de dominio
 		if (params.name !== undefined && params.name !== policy.nameValue) {
 			const existingPolicy = await this.accessPolicyRepository.findByName(params.name)
@@ -49,37 +51,61 @@ export class AccessPolicyUpdater {
 				throw new AccessPolicyAlreadyExistsError(params.name)
 			}
 			policy.updateName(params.name)
+			hasChanges = true
 		}
 
-		if (params.roleId !== undefined && params.roleId !== policy.roleValue) policy.updateRole(params.roleId)
-		if (params.cargoId !== undefined && params.cargoId !== policy.cargoValue) policy.updateCargo(params.cargoId)
+		if (params.roleId !== undefined && params.roleId !== policy.roleValue) {
+			policy.updateRole(params.roleId)
+			hasChanges = true
+		}
+		if (params.cargoId !== undefined && params.cargoId !== policy.cargoValue) {
+			policy.updateCargo(params.cargoId)
+			hasChanges = true
+		}
 
-		if (params.departamentoId !== undefined && params.departamentoId !== policy.departamentoValue)
+		if (params.departamentoId !== undefined && params.departamentoId !== policy.departamentoValue) {
 			policy.updateDepartamento(params.departamentoId)
+			hasChanges = true
+		}
 
-		if (params.vicepresidenciaId !== undefined && params.vicepresidenciaId !== policy.vicepresidenciaValue)
+		if (params.vicepresidenciaId !== undefined && params.vicepresidenciaId !== policy.vicepresidenciaValue) {
 			policy.updateVicepresidencia(params.vicepresidenciaId)
+			hasChanges = true
+		}
 
 		if (
 			params.vicepresidenciaEjecutivaId !== undefined &&
 			params.vicepresidenciaEjecutivaId !== policy.vicepresidenciaEjecutivaValue
-		)
+		) {
 			policy.updatevicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId)
-
-		if (params.directivaId !== undefined && params.directivaId !== policy.directivaValue)
-			policy.updateDirectiva(params.directivaId)
-
-		if (params.priority !== undefined && params.priority !== policy.priorityValue)
-			policy.updatePriority(params.priority)
-
-		if (params.permissionGroupIds !== undefined) {
-			await this.updatePermissionsGroupsInAccessPolic(policy, params.permissionGroupIds)
+			hasChanges = true
 		}
 
-		await this.accessPolicyRepository.save(policy.toPrimitives())
+		if (params.directivaId !== undefined && params.directivaId !== policy.directivaValue) {
+			policy.updateDirectiva(params.directivaId)
+			hasChanges = true
+		}
 
-		// Publicar eventos si la actualización generó alguno
-		await this.eventBus.publish(policy.pullDomainEvents())
+		if (params.priority !== undefined && params.priority !== policy.priorityValue) {
+			policy.updatePriority(params.priority)
+			hasChanges = true
+		}
+
+		if (params.permissionGroupIds !== undefined) {
+			const permissionsChanged = await this.updatePermissionsGroupsInAccessPolic({
+				entity: policy,
+				newPermissionGroupIds: params.permissionGroupIds
+			})
+			if (permissionsChanged) {
+				hasChanges = true
+			}
+		}
+
+		if (hasChanges) {
+			await this.accessPolicyRepository.save(policy.toPrimitives())
+			// Publicar eventos si la actualización generó alguno
+			await this.eventBus.publish(policy.pullDomainEvents())
+		}
 	}
 
 	/**
@@ -93,10 +119,14 @@ export class AccessPolicyUpdater {
 	 * @returns {Promise<void>} A promise that resolves when the update is complete.
 	 * @throws {PermissionDoesNotExistError} If one or more permission IDs in `newPermissionGroupIds` do not correspond to an existing permission.
 	 */
-	private async updatePermissionsGroupsInAccessPolic(
-		entity: AccessPolicy,
+	private async updatePermissionsGroupsInAccessPolic({
+		entity,
+		newPermissionGroupIds
+	}: {
+		entity: AccessPolicy
 		newPermissionGroupIds: Primitives<PermissionGroupId>[]
-	): Promise<void> {
+	}): Promise<boolean> {
+		let hasPermissionsChanged = false
 		const uniquenewPermissionGroupIds = [...new Set(newPermissionGroupIds)]
 
 		// 1. Validar la existencia de todos los IDs de permisos entrantes en una sola consulta.
@@ -115,21 +145,14 @@ export class AccessPolicyUpdater {
 			}
 		}
 
-		// 2. Convert primitives to value objects for comparison and entity methods
-		// const newPermissionIds = new Set(uniquenewPermissionGroupIds.map(p => new PermissionGroupId(p)))
-		// const currentPermissionIds = new Set(entity.permissionGroupValue.map(p => new PermissionGroupId(p)))
 		const newIdSet = new Set(uniquenewPermissionGroupIds)
 		const currentIdSet = new Set(entity.permissionGroupValue)
 
 		// 3. Determine permissions to add
-		// for (const newPermId of newPermissionIds) {
-		// 	if (![...currentPermissionIds].some(currentPerm => currentPerm.equals(newPermId))) {
-		// 		entity.assignPermissionGroup(newPermId)
-		// 	}
-		// }
 		for (const id of newIdSet) {
 			if (!currentIdSet.has(id)) {
 				entity.assignPermissionGroup(new PermissionGroupId(id))
+				hasPermissionsChanged = true
 			}
 		}
 
@@ -137,7 +160,10 @@ export class AccessPolicyUpdater {
 		for (const id of currentIdSet) {
 			if (!newIdSet.has(id)) {
 				entity.revokePermissionGroup(new PermissionGroupId(id))
+				hasPermissionsChanged = true
 			}
 		}
+
+		return hasPermissionsChanged
 	}
 }

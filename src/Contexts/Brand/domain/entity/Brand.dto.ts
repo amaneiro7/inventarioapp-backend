@@ -1,8 +1,8 @@
-import { type CategoryDto } from '../../Category/Category/domain/Category.dto'
-import { type CategoryId } from '../../Category/Category/domain/CategoryId'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type BrandId } from './BrandId'
-import { type BrandName } from './BrandName'
+import { type CategoryDto } from '../../../Category/Category/domain/Category.dto'
+import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type BrandId } from '../valueObject/BrandId'
+import { type BrandName } from '../valueObject/BrandName'
 
 /**
  * @interface Brand

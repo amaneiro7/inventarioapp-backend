@@ -1,5 +1,5 @@
-import { ApiError } from '../../Shared/domain/errors/ApiError'
-import httpStatus from '../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 /**
  * @class BrandDoesNotExistError
@@ -12,5 +12,6 @@ export class BrandDoesNotExistError extends ApiError {
 	 */
 	constructor(public readonly id: string) {
 		super(httpStatus[404].statusCode, `La marca con el ID '${id}' no existe.`)
+		this.name = this.constructor.name
 	}
 }

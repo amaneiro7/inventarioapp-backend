@@ -1,7 +1,7 @@
-import { BrandId } from '../domain/BrandId'
-import { BrandDoesNotExistError } from '../domain/BrandDoesNotExistError'
-import { type BrandDto } from '../domain/Brand.dto'
-import { type BrandRepository } from '../domain/BrandRepository'
+import { BrandId } from '../domain/valueObject/BrandId'
+import { BrandDoesNotExistError } from '../domain/errors/BrandDoesNotExistError'
+import { type BrandDto } from '../domain/entity/Brand.dto'
+import { type BrandRepository } from '../domain/repository/BrandRepository'
 
 /**
  * @description Use case for finding a Brand entity by its unique identifier.

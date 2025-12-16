@@ -1,8 +1,8 @@
-import { type Criteria } from '../../Shared/domain/criteria/Criteria'
-import { type Nullable } from '../../Shared/domain/Nullable'
-import { type BrandDto, type BrandPrimitives } from './Brand.dto'
-import { type GenericRepository } from '../../Shared/domain/GenericRepository'
-import { type ResponseDB } from '../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
+import { type Nullable } from '../../../Shared/domain/Nullable'
+import { type BrandDto, type BrandPrimitives } from '../entity/Brand.dto'
+import { type GenericRepository } from '../../../Shared/domain/GenericRepository'
+import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 
 /**
  * @abstract

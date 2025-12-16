@@ -1,4 +1,4 @@
-import { type BrandName } from '../../../../Brand/domain/BrandName'
+import { type BrandName } from '../../../../Brand/domain/valueObject/BrandName'
 import { type DeviceActivo } from '../../../../Device/Device/domain/DeviceActivo'
 import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
 import { type DeviceSerial } from '../../../../Device/Device/domain/DeviceSerial'

@@ -7,7 +7,7 @@ import { type BrandRepository } from '../../domain/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type BrandPrimitives, type BrandDto } from '../../domain/Brand.dto'
+import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
 
 /**
  * @class SequelizeBrandRepository

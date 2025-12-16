@@ -1,5 +1,5 @@
-import { ApiError } from '../../Shared/domain/errors/ApiError'
-import httpStatus from '../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../Shared/infrastructure/utils/http-status'
 
 /**
  * @class BrandCannotDeleteIsNotEmptyError
@@ -16,5 +16,6 @@ export class BrandCannotDeleteIsNotEmptyError extends ApiError {
 			httpStatus[400].statusCode,
 			'No se puede eliminar la marca porque tiene modelos o dispositivos asociados.'
 		)
+		this.name = this.constructor.name
 	}
 }

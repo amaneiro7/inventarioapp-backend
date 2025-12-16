@@ -1,4 +1,4 @@
-import { BrandId } from '../../../Brand/domain/BrandId'
+import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { type BrandRepository } from '../../../Brand/domain/BrandRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeries } from './ModelSeries'

@@ -9,6 +9,7 @@ import { type CategoryDto } from '../../domain/Category.dto'
 import { type CategoryId } from '../../domain/CategoryId'
 import { type CategoryName } from '../../domain/CategoryName'
 import { type CategoryRepository } from '../../domain/CategoryRepository'
+import { Op } from 'sequelize'
 
 /**
  * @class SequelizeCategoryRepository
@@ -66,6 +67,30 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 			fetchFunction: async () => {
 				const category = await CategoryModel.findByPk(id)
 				return category ? (category.get({ plain: true }) as CategoryDto) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple categories by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of category IDs to find.
+	 * @returns {Promise<CategoryDto[]>} A promise resolving to an array of found category DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<CategoryDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<CategoryDto[]>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const categories = await CategoryModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return categories.map(category => category.get({ plain: true })) as CategoryDto[]
 			}
 		})
 	}

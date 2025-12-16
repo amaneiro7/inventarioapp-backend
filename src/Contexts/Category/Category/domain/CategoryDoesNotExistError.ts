@@ -8,9 +8,18 @@ import httpStatus from '../../../Shared/infrastructure/utils/http-status'
  */
 export class CategoryDoesNotExistError extends ApiError {
 	/**
-	 * @param {string} id The ID of the category that was not found.
+	 * @param {string} identifier The ID of the category that was not found.
 	 */
-	constructor(public readonly id: string) {
-		super(httpStatus[404].statusCode, `La subcategoría con el ID '${id}' no existe.`)
+	constructor(identifier?: string) {
+		let message = 'La categoría no existe.'
+		if (identifier) {
+			const isPlural = identifier.includes(',')
+			message = isPlural
+				? `Las categorías con los IDs '${identifier}' no existen.`
+				: `La categoría con el ID '${identifier}' no existe.`
+		}
+
+		super(httpStatus[404].statusCode, message)
+		this.name = this.constructor.name
 	}
 }

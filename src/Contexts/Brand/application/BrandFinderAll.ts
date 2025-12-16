@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../Shared/domain/ResponseType'
-import { type BrandDto } from '../domain/Brand.dto'
-import { type BrandRepository } from '../domain/BrandRepository'
+import { type BrandDto } from '../domain/entity/Brand.dto'
+import { type BrandRepository } from '../domain/repository/BrandRepository'
 
 /**
  * @description Use case for retrieving all Brand entities, with support for criteria-based filtering, sorting, and pagination.

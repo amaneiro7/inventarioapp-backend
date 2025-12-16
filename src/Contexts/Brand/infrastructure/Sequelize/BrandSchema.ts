@@ -7,9 +7,9 @@ import {
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type BrandId } from '../../domain/BrandId'
-import { type BrandName } from '../../domain/BrandName'
-import { type BrandDto } from '../../domain/Brand.dto'
+import { type BrandId } from '../../domain/valueObject/BrandId'
+import { type BrandName } from '../../domain/valueObject/BrandName'
+import { type BrandDto } from '../../domain/entity/Brand.dto'
 import { type SequelizeModels } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type CategoryDto } from '../../../Category/Category/domain/Category.dto'
 import { type CategoryModel } from '../../../Category/Category/infrastructure/Sequelize/CategorySchema'

@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesRepository } from './ModelSeriesRepository'
-import { type BrandId } from '../../../Brand/domain/BrandId'
+import { type BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 import { type ModelSeries } from './ModelSeries'

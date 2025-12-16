@@ -1,4 +1,4 @@
-import { BrandId } from '../../../Brand/domain/BrandId'
+import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
 import { Generic } from './Generic'
 import { ModelSeriesId } from './ModelSeriesId'

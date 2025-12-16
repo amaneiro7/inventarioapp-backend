@@ -1,14 +1,14 @@
-import { Brand } from '../domain/Brand'
-import { BrandId } from '../domain/BrandId'
-import { BrandName } from '../domain/BrandName'
-import { BrandDoesNotExistError } from '../domain/BrandDoesNotExistError'
+import { Brand } from '../domain/entity/Brand'
+import { BrandId } from '../domain/valueObject/BrandId'
+import { CategoryId } from '../../Category/Category/domain/CategoryId'
+import { BrandDoesNotExistError } from '../domain/errors/BrandDoesNotExistError'
 import { CategoryDoesNotExistError } from '../../Category/Category/domain/CategoryDoesNotExistError'
-import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
-import { type BrandRepository } from '../domain/BrandRepository'
-import { type CategoryId } from '../../Category/Category/domain/CategoryId'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type BrandParams } from '../domain/Brand.dto'
+import { BrandAlreadyExistError } from '../domain/errors/BrandAlreadyExistError'
 
+import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
+import { type BrandRepository } from '../domain/repository/BrandRepository'
+import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { type BrandParams } from '../domain/entity/Brand.dto'
 /**
  * @description Use case for updating an existing Brand entity.
  * It ensures the brand exists and that the new name is valid and unique before applying updates.
@@ -52,26 +52,36 @@ export class BrandUpdater {
 
 		let hasChanges = false
 
-		if (params.name !== undefined && brandEntity.nameValue !== params.name) {
-			await BrandName.updateNameField({
-				entity: brandEntity,
-				repository: this.brandRepository,
-				name: params.name
-			})
+		if (params.name !== undefined && brandEntity.nameValue !== params.name.trim()) {
+			await this.ensureBrandNameIsUnique(params.name, brandEntity.idValue)
+			brandEntity.updateName(params.name)
 			hasChanges = true
 		}
 
 		if (params.categories !== undefined) {
-			const uniqueCategories = [...new Set(params.categories)]
-			if (JSON.stringify(brandEntity.categoriesValue.sort()) !== JSON.stringify(uniqueCategories.sort())) {
-				await this.ensureCategoriesExistAndUpdate({ entity: brandEntity, categories: params.categories })
+			const categoriesChanged = await this.updateCategories({
+				entity: brandEntity,
+				newCategoryIds: params.categories
+			})
+			if (categoriesChanged) {
 				hasChanges = true
 			}
 		}
 
 		// Save the updated entity only if it has changed
 		if (hasChanges) {
-			await this.brandRepository.save(brandEntity.toPrimitive())
+			await this.brandRepository.save(brandEntity.toPrimitives()) // Asegúrate de que el repositorio invalide la caché
+		}
+	}
+
+	/**
+	 * @private
+	 * @description Checks if a brand name is already in use.
+	 */
+	private async ensureBrandNameIsUnique(name: string, currentId: Primitives<BrandId>): Promise<void> {
+		const existingBrand = await this.brandRepository.findByName(name)
+		if (existingBrand && existingBrand.id !== currentId) {
+			throw new BrandAlreadyExistError(name)
 		}
 	}
 
@@ -84,30 +94,45 @@ export class BrandUpdater {
 	 * @returns {Promise<void>} A promise that resolves when the check is complete.
 	 * @throws {CategoryDoesNotExistError} If a new category ID does not exist.
 	 */
-	private async ensureCategoriesExistAndUpdate({
+	private async updateCategories({
 		entity,
-		categories
+		newCategoryIds
 	}: {
-		categories?: Primitives<CategoryId>[]
+		newCategoryIds: Primitives<CategoryId>[]
 		entity: Brand
-	}): Promise<void> {
-		if (categories === undefined) {
-			return
+	}): Promise<boolean> {
+		let hasCategoriesChanged = false
+		const uniqueCategoryIds = [...new Set(newCategoryIds)]
+
+		// 1. Validar la existencia de todos los IDs de categorias entrantes en una sola consulta.
+		if (uniqueCategoryIds.length > 0) {
+			const foundCategories = await this.categoryRepository.findByIds(uniqueCategoryIds)
+			if (foundCategories.length !== uniqueCategoryIds.length) {
+				const foundIds = new Set(foundCategories.map(c => c.id))
+				const missingIds = uniqueCategoryIds.filter(id => !foundIds.has(id))
+				throw new CategoryDoesNotExistError(missingIds.join(', '))
+			}
 		}
 
-		const uniqueCategories = [...new Set(categories)]
-		const newCategories = uniqueCategories.filter(categoryId => !entity.categoriesValue.includes(categoryId))
+		const newIdSet = new Set(uniqueCategoryIds)
+		const currentIdSet = new Set(entity.categoriesValue)
 
-		if (newCategories.length > 0) {
-			const categoryExistenceChecks = newCategories.map(async categoryId => {
-				const category = await this.categoryRepository.findById(categoryId)
-				if (category === null) {
-					throw new CategoryDoesNotExistError(categoryId)
-				}
-			})
-			await Promise.all(categoryExistenceChecks)
+		// Añadir categorías nuevas
+		for (const id of newIdSet) {
+			if (!currentIdSet.has(id)) {
+				entity.addCategory(new CategoryId(id))
+				hasCategoriesChanged = true
+			}
 		}
 
-		entity.updateCategories(uniqueCategories)
+		// Eliminar categorías que ya no están
+		for (const id of currentIdSet) {
+			if (!newIdSet.has(id)) {
+				entity.removeCategory(new CategoryId(id))
+				hasCategoriesChanged = true
+			}
+		}
+
+		return hasCategoriesChanged
 	}
 }

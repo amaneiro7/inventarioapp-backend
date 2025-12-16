@@ -1,7 +1,7 @@
 import { type Model, type ModelStatic, type Sequelize } from 'sequelize'
 import { type CategoryDto } from '../../../../Category/Category/domain/Category.dto'
 import { type MainCategoryDto } from '../../../../Category/MainCategory/domain/MainCategory.dto'
-import { type BrandDto } from '../../../../Brand/domain/Brand.dto'
+import { type BrandDto } from '../../../../Brand/domain/entity/Brand.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
 import { type ComputerModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
 import { type LaptopModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'

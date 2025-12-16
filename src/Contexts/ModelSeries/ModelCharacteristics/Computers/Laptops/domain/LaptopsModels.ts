@@ -1,4 +1,4 @@
-import { BrandId } from '../../../../../Brand/domain/BrandId'
+import { BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
 import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'

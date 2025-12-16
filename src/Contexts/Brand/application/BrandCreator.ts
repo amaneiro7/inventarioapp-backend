@@ -1,10 +1,10 @@
-import { Brand } from '../domain/Brand'
-import { BrandName } from '../domain/BrandName'
+import { Brand } from '../domain/entity/Brand'
 import { CategoryDoesNotExistError } from '../../Category/Category/domain/CategoryDoesNotExistError'
+import { BrandAlreadyExistError } from '../domain/errors/BrandAlreadyExistError'
 import { type CategoryId } from '../../Category/Category/domain/CategoryId'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type BrandRepository } from '../domain/BrandRepository'
-import { type BrandParams } from '../domain/Brand.dto'
+import { type BrandRepository } from '../domain/repository/BrandRepository'
+import { type BrandParams } from '../domain/entity/Brand.dto'
 import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
 
 /**
@@ -39,14 +39,21 @@ export class BrandCreator {
 		const { name, categories } = params
 
 		// Perform validation checks in parallel for efficiency
-		await Promise.all([
-			BrandName.ensureBrandNameDoesNotExist({ name, repository: this.brandRepository }),
-			this.ensureCategoriesExist(categories)
-		])
+		await Promise.all([this.ensureBrandNameIsUnique(name), this.ensureCategoriesExist(categories)])
 
 		// Create and save the brand if validations pass
 		const brand = Brand.create(params)
-		await this.brandRepository.save(brand.toPrimitive())
+		await this.brandRepository.save(brand.toPrimitives())
+	}
+
+	/**
+	 * @private
+	 * @description Checks if a brand name is already in use.
+	 */
+	private async ensureBrandNameIsUnique(name: string): Promise<void> {
+		if (await this.brandRepository.findByName(name)) {
+			throw new BrandAlreadyExistError(name)
+		}
 	}
 
 	/**
@@ -57,19 +64,22 @@ export class BrandCreator {
 	 * @returns {Promise<void>} A promise that resolves if all categories exist.
 	 * @throws {CategoryDoesNotExistError} If any category ID is not found.
 	 */
-	private async ensureCategoriesExist(categoryIds: Primitives<CategoryId>[]): Promise<void> {
-		if (categoryIds.length === 0) {
+	private async ensureCategoriesExist(categoryIds?: Primitives<CategoryId>[]): Promise<void> {
+		if (!categoryIds || categoryIds.length === 0) {
 			return
 		}
 		const uniqueCategories = [...new Set(categoryIds)]
-		// Create an array of promises to check for the existence of each category
-		const categoryExistenceChecks = uniqueCategories.map(async categoryId => {
-			const category = await this.categoryRepository.findById(categoryId)
-			if (category === null) {
-				throw new CategoryDoesNotExistError(categoryId)
-			}
-		})
-		// Await all checks to complete
-		await Promise.all(categoryExistenceChecks)
+		// Find all categories in a single database query for efficiency.
+		const foundCategories = await this.categoryRepository.findByIds(uniqueCategories)
+
+		// If the number of found categories does not match the number of unique IDs,
+		// it means at least one category does not exist.
+		if (foundCategories.length !== uniqueCategories.length) {
+			// Identify which categories were not found to provide a more helpful error message.
+			const foundIds = new Set(foundCategories.map(c => c.id))
+			const missingIds = uniqueCategories.filter(id => !foundIds.has(id))
+
+			throw new CategoryDoesNotExistError(missingIds.join(', '))
+		}
 	}
 }
