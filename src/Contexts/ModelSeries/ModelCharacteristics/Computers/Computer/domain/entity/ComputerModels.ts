@@ -1,21 +1,25 @@
-import { BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { Generic } from '../../../../ModelSeries/domain/Generic'
-import { ModelSeries } from '../../../../ModelSeries/domain/entity/ModelSeries'
-import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
-import { ModelSeriesName } from '../../../../ModelSeries/domain/ModelSeriesName'
-import { ComputerMemoryRamType } from './ComputerMemoryRamType'
-import { HasBluetooth } from './HasBluetooth'
-import { HasDVI } from './HasDVI'
-import { HasHDMI } from './HasHDMI'
-import { HasVGA } from './HasVGA'
-import { HasWifiAdapter } from './HasWifiAdapter'
-import { MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
-import { CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type ComputerModelsParams, type ComputerModelsPrimitives } from './ComputerModels.dto'
-import { type ModelSeriesDto } from '../../../../ModelSeries/domain/entity/ModelSeries.dto'
-import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
-import { ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
+import { BrandId } from '../../../../../../Brand/domain/valueObject/BrandId'
+import { type Primitives } from '../../../../../../Shared/domain/value-object/Primitives'
+import { Generic } from '../../../../../ModelSeries/domain/valueObject/Generic'
+import { ModelSeries } from '../../../../../ModelSeries/domain/entity/ModelSeries'
+import { ModelSeriesId } from '../../../../../ModelSeries/domain/valueObject/ModelSeriesId'
+import { ModelSeriesName } from '../../../../../ModelSeries/domain/valueObject/ModelSeriesName'
+import { ComputerMemoryRamType } from '../../../../../ModelSeries/domain/valueObject/ComputerMemoryRamType'
+import { HasBluetooth } from '../../../../../ModelSeries/domain/valueObject/HasBluetooth'
+import { HasDVI } from '../../../../../ModelSeries/domain/valueObject/HasDVI'
+import { HasHDMI } from '../../../../../ModelSeries/domain/valueObject/HasHDMI'
+import { HasVGA } from '../../../../../ModelSeries/domain/valueObject/HasVGA'
+import { HasWifiAdapter } from '../../../../../ModelSeries/domain/valueObject/HasWifiAdapter'
+import { MemoryRamSlotQuantity } from '../../../../../ModelSeries/domain/valueObject/MemoryRamSlotQuantity'
+import { CategoryId } from '../../../../../../Category/Category/domain/CategoryId'
+import { CategoryValues } from '../../../../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../../../Features/Processor/Processor/domain/ProcessorId'
+import {
+	type ComputerModelsParams,
+	type ComputerModelsPrimitives
+} from '../../../../../ModelSeries/domain/entity/ComputerModels.dto'
+import { type ModelSeriesDto } from '../../../../../ModelSeries/domain/entity/ModelSeries.dto'
+import { ModelDependencies } from '../../../../../ModelSeries/domain/entity/ModelSeries'
 
 /**
  * @description Represents a computer model, extending the base ModelSeries class.
@@ -37,6 +41,27 @@ export class ComputerModels extends ModelSeries {
 		private hasVGA: HasVGA
 	) {
 		super(id, name, categoryId, brandId, generic, processors)
+	}
+
+	async update(params: Partial<ComputerModelsParams>, dependencies: ModelDependencies): Promise<void> {
+		await super.update(params, dependencies)
+
+		await Promise.all([
+			HasVGA.updateVGAField({ hasVGA: params.hasVGA, entity: this }),
+			HasDVI.updateDVIField({ hasDVI: params.hasDVI, entity: this }),
+			HasHDMI.updateDVIField({ hasHDMI: params.hasHDMI, entity: this }),
+			HasBluetooth.updateBluetoothField({ hasBluetooth: params.hasBluetooth, entity: this }),
+			HasWifiAdapter.updateWifiAdapterField({ hasWifiAdapter: params.hasWifiAdapter, entity: this }),
+			MemoryRamSlotQuantity.updateMemoryRamSlotQuantityField({
+				memoryRamSlotQuantity: params.memoryRamSlotQuantity,
+				entity: this
+			}),
+			ComputerMemoryRamType.updateInputTypeField({
+				repository: dependencies.memoryRamTypeRepository,
+				memoryRamTypeId: params.memoryRamTypeId,
+				entity: this
+			})
+		])
 	}
 
 	static create(params: ComputerModelsParams): ComputerModels {

@@ -1,8 +1,8 @@
-import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
-import { type MemoryRamTypeRepository } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type LaptopsModels } from '../../Laptops/domain/LaptopsModels'
-import { type ComputerModels } from './ComputerModels'
+import { MemoryRamTypeId } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
+import { type MemoryRamTypeRepository } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type LaptopsModels } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
+import { type ComputerModels } from '../entity/ComputerModels'
 
 /**
  * @description Represents the memory RAM type for a computer model.

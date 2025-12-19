@@ -1,4 +1,4 @@
-import { StringTooLongError } from '../errors/StringTooLongError'
+import { StringTooLongError } from '../errors/NumberTooLongError'
 import { StringTooShortError } from '../errors/StringTooShortError'
 import { ValueObject } from './ValueObject'
 

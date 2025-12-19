@@ -3,7 +3,7 @@ import { type ModelSeriesParams, type ModelSeriesPrimitives } from '../../../Mod
 import { type MonitorHasDVI } from './MonitorHasDVI'
 import { type MonitorHasHDMI } from './MonitorHasHDMI'
 import { type MonitorHasVGA } from './MonitorHasVGA'
-import { type MonitorScreenSize } from './MonitorScreenSize'
+import { type MonitorScreenSize } from '../../../ModelSeries/domain/valueObject/MonitorScreenSize'
 
 /**
  * @interface MonitorModels

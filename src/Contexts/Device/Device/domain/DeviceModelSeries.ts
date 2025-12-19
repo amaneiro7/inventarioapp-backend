@@ -5,7 +5,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
 import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/entity/ModelSeries.dto'
 import { ModelSeriesDoesNotExistError } from '../../../ModelSeries/ModelSeries/domain/errors/ModelSeriesDoesNotExistError'
-import { ModelSeriesId } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
+import { ModelSeriesId } from '../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 
 /**

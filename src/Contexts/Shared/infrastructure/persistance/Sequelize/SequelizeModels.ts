@@ -3,7 +3,7 @@ import { type CategoryDto } from '../../../../Category/Category/domain/Category.
 import { type MainCategoryDto } from '../../../../Category/MainCategory/domain/MainCategory.dto'
 import { type BrandDto } from '../../../../Brand/domain/entity/Brand.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/entity/ModelSeries.dto'
-import { type ComputerModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Computers/Computer/domain/ComputerModels.dto'
+import { type ComputerModelsDto } from '../../../../ModelSeries/ModelSeries/domain/entity/ComputerModels.dto'
 import { type LaptopModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
 import { type MonitorModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Monitors/domain/MonitoModels.dto'
 import { type PrinteModelsDto } from '../../../../ModelSeries/ModelCharacteristics/Printers/domain/ModelPrinters.dto'

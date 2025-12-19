@@ -4,7 +4,7 @@ import {
 	type ComputerModels,
 	type ComputerModelsPrimitives,
 	type ComputerModelsParams
-} from '../../Computer/domain/ComputerModels.dto'
+} from '../../../../ModelSeries/domain/entity/ComputerModels.dto'
 import { type BatteryModelName } from './BatteryModelName'
 
 /**

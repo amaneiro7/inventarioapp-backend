@@ -1,7 +1,7 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
+import { type ModelSeriesId } from '../../../../ModelSeries/domain/valueObject/ModelSeriesId'
 import { type CartridgeModel } from '../../domain/CartridgeModel'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { type PrinteModelsDto } from '../../domain/ModelPrinters.dto'

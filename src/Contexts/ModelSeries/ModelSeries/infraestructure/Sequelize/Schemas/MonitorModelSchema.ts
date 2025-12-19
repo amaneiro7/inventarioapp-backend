@@ -1,6 +1,6 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
+import { type ModelSeriesId } from '../../../../ModelSeries/domain/valueObject/ModelSeriesId'
 import { type MonitorScreenSize } from '../../domain/MonitorScreenSize'
 import { type MonitorHasDVI } from '../../domain/MonitorHasDVI'
 import { type MonitorHasHDMI } from '../../domain/MonitorHasHDMI'

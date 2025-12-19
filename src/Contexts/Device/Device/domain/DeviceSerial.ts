@@ -3,7 +3,7 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
-import { type Generic } from '../../../ModelSeries/ModelSeries/domain/Generic'
+import { type Generic } from '../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
 import { type DeviceRepository } from './DeviceRepository'
 
 /**

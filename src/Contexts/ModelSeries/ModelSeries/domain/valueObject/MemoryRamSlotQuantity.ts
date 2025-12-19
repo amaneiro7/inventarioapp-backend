@@ -1,7 +1,7 @@
-import { InvalidArgumentError } from '../../../../../Shared/domain/errors/ApiError'
-import { NumberValueObject } from '../../../../../Shared/domain/value-object/NumberValueObject'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ComputerModels } from './ComputerModels'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { NumberValueObject } from '../../../../Shared/domain/value-object/NumberValueObject'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ComputerModels } from '../entity/ComputerModels'
 
 /**
  * @description Represents the quantity of memory RAM slots in a computer.

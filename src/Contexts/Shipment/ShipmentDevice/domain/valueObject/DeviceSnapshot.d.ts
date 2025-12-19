@@ -14,7 +14,7 @@ import { type MemoryRamValues } from '../../../../Features/MemoryRam/MemoryRamCa
 import { type OperatingSystemVersion } from '../../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemVersion'
 import { type OperatingSystemArqName } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqName'
 import { type ProcessorName } from '../../../../Features/Processor/Processor/domain/ProcessorName'
-import { type ModelSeriesName } from '../../../../ModelSeries/ModelSeries/domain/ModelSeriesName'
+import { type ModelSeriesName } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 // Propiedades comunes a todos los dispositivos

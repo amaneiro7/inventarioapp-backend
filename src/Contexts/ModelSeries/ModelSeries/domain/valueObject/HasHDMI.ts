@@ -1,6 +1,6 @@
-import { BooleanValueObject } from '../../../../../Shared/domain/value-object/BooleanValueObject'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ComputerModels } from './ComputerModels'
+import { BooleanValueObject } from '../../../../Shared/domain/value-object/BooleanValueObject'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ComputerModels } from '../entity/ComputerModels'
 
 /**
  * @description Represents a boolean value indicating if a device has an HDMI port.

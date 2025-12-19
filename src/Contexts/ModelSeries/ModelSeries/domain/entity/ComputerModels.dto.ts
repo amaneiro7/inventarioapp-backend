@@ -1,16 +1,13 @@
-import { type MemoryRamTypeDto } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import {
-	type ModelSeriesParams,
-	type ModelSeriesPrimitives
-} from '../../../../ModelSeries/domain/entity/ModelSeries.dto'
-import { type ComputerMemoryRamType } from './ComputerMemoryRamType'
-import { type HasBluetooth } from './HasBluetooth'
-import { type HasDVI } from './HasDVI'
-import { type HasHDMI } from './HasHDMI'
-import { type HasVGA } from './HasVGA'
-import { type HasWifiAdapter } from './HasWifiAdapter'
-import { type MemoryRamSlotQuantity } from './MemoryRamSlotQuantity'
+import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
+import { type ComputerMemoryRamType } from '../valueObject/ComputerMemoryRamType'
+import { type HasBluetooth } from '../valueObject/HasBluetooth'
+import { type HasDVI } from '../valueObject/HasDVI'
+import { type HasHDMI } from '../valueObject/HasHDMI'
+import { type HasVGA } from '../valueObject/HasVGA'
+import { type HasWifiAdapter } from '../valueObject/HasWifiAdapter'
+import { type MemoryRamSlotQuantity } from '../valueObject/MemoryRamSlotQuantity'
 
 /**
  * @interface ComputerModels

@@ -1,7 +1,7 @@
-import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ModelSeries } from './entity/ModelSeries'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { type BrandRepository } from '../../../../Brand/domain/repository/BrandRepository'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ModelSeries } from '../entity/ModelSeries'
 
 /**
  * @description Represents the brand of a model series.
