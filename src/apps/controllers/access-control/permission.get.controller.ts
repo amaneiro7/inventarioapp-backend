@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder2'
+import { type PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { PermissionDependencies } from '../../di/access-control/permission.di'

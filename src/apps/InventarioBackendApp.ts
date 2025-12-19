@@ -1,18 +1,18 @@
 import { Server } from './server'
 import { config } from '../Contexts/Shared/infrastructure/config'
 import { container } from './di/container'
+import { DomainEventSubscribers } from '../Contexts/Shared/infrastructure/event/DomainEventSubscribers'
 import { SharedDependencies } from './di/shared.di'
 import { AuthDependencies } from './di/auth/auth.di'
 import { DeviceDependencies } from './di/device/device.di'
+import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
 import { type DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
 import { type LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
 import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import { type Logger } from '../Contexts/Shared/domain/Logger'
 import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 import { type Database } from '../Contexts/Shared/domain/Database'
-import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
-import { EventBus } from '../Contexts/Shared/domain/event/EventBus'
-import { DomainEventSubscribers } from '../Contexts/Shared/infrastructure/event/DomainEventSubscribers'
+import { type EventBus } from '../Contexts/Shared/domain/event/EventBus'
 
 export class InventarioBackendApp {
 	server?: Server

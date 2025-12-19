@@ -1,8 +1,10 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { RestartMonitoringServices } from '../../../Contexts/Shared/application/event/RestartMonitoringServices'
+import { InvalidateBrandCacheOnBrandChanged } from '../../../Contexts/Brand/application/InvalidateBrandCacheOnBrandChanged'
 
 export enum DomainEventDependencies {
-	RestartMonitoringServices = 'restartMonitoringServices'
+	RestartMonitoringServices = 'restartMonitoringServices',
+	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged'
 }
 
 /**
@@ -12,6 +14,9 @@ export enum DomainEventDependencies {
 export const register = (container: AwilixContainer) => {
 	// Registra cada suscriptor como una clase.
 	container.register({
-		[DomainEventDependencies.RestartMonitoringServices]: asClass(RestartMonitoringServices).singleton()
+		[DomainEventDependencies.RestartMonitoringServices]: asClass(RestartMonitoringServices).singleton(),
+		[DomainEventDependencies.InvalidateBrandCacheOnBrandChanged]: asClass(
+			InvalidateBrandCacheOnBrandChanged
+		).singleton()
 	})
 }

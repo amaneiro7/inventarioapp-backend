@@ -8,7 +8,7 @@ import { PermissionGetController } from '../../controllers/access-control/permis
 import { PermissionGetAllController } from '../../controllers/access-control/permission.get-all.controller'
 import { PermissionPostController } from '../../controllers/access-control/permission.post.controller'
 import { PermissionDeleteController } from '../../controllers/access-control/permission.delete.controller'
-import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder2'
+import { PermissionFinder } from '../../../Contexts/AccessControl/Permission/application/PermissionFinder'
 
 export enum PermissionDependencies {
 	Repository = 'permissionRepository',

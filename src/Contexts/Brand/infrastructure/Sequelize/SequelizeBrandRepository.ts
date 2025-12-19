@@ -3,11 +3,12 @@ import { BrandModel } from './BrandSchema'
 import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { BrandAssociation } from './BrandAssociation'
-import { type BrandRepository } from '../../domain/BrandRepository'
+import { type BrandRepository } from '../../domain/repository/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
+import { type BrandCacheInvalidator } from '../../domain/repository/BrandCacheInvalidator'
 
 /**
  * @class SequelizeBrandRepository
@@ -16,7 +17,10 @@ import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.d
  * @description Concrete implementation of the `BrandRepository` using Sequelize for data persistence.
  * It handles all database operations for the Brand entity and includes caching to improve performance.
  */
-export class SequelizeBrandRepository extends SequelizeCriteriaConverter implements BrandRepository {
+export class SequelizeBrandRepository
+	extends SequelizeCriteriaConverter
+	implements BrandRepository, BrandCacheInvalidator
+{
 	private readonly cacheKeyPrefix = 'brands'
 	private readonly cache: CacheService
 
@@ -116,9 +120,6 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 			}
 
 			await transaction.commit()
-
-			// Invalidate cache to reflect changes
-			await this.invalidateBrandCache(payload.id, payload.name)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving brand: ${error instanceof Error ? error.message : String(error)}`)
@@ -133,27 +134,15 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
 	async remove(id: string): Promise<void> {
-		const brandToRemove = await BrandModel.findByPk(id, { attributes: ['name'] })
-		const brandName = brandToRemove?.name
-
 		await BrandModel.destroy({ where: { id } })
-
-		// Invalidate cache to reflect deletion
-		await this.invalidateBrandCache(id, brandName)
 	}
 
 	/**
-	 * @private
 	 * @method invalidateBrandCache
-	 * @description Invalidates all relevant cache entries for a given brand.
-	 * @param {string} id The ID of the brand.
-	 * @param {string} [name] The name of the brand.
+	 * @description Invalidates all brand-related cache entries.
+	 * Implements BrandCacheInvalidator interface.
 	 */
-	private async invalidateBrandCache(id: string, name?: string): Promise<void> {
-		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}*`, `${this.cacheKeyPrefix}:id:${id}`]
-		if (name) {
-			cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-		}
-		await Promise.all(cacheKeysToRemove.map(async key => this.cache.removeCachedData({ cacheKey: key })))
+	async invalidateBrandCache(): Promise<void> {
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
 	}
 }

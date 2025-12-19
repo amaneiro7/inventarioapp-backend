@@ -6,6 +6,7 @@ import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type BrandParams } from '../domain/entity/Brand.dto'
 import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
+import { type EventBus } from '../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for creating a new Brand entity.
@@ -14,16 +15,20 @@ import { type CategoryRepository } from '../../Category/Category/domain/Category
 export class BrandCreator {
 	private readonly brandRepository: BrandRepository
 	private readonly categoryRepository: CategoryRepository
+	private readonly eventBus: EventBus
 
 	constructor({
 		brandRepository,
-		categoryRepository
+		categoryRepository,
+		eventBus
 	}: {
 		brandRepository: BrandRepository
 		categoryRepository: CategoryRepository
+		eventBus: EventBus
 	}) {
 		this.brandRepository = brandRepository
 		this.categoryRepository = categoryRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -42,8 +47,9 @@ export class BrandCreator {
 		await Promise.all([this.ensureBrandNameIsUnique(name), this.ensureCategoriesExist(categories)])
 
 		// Create and save the brand if validations pass
-		const brand = Brand.create(params)
+		const brand = Brand.create({ name, categories })
 		await this.brandRepository.save(brand.toPrimitives())
+		await this.eventBus.publish(brand.pullDomainEvents())
 	}
 
 	/**

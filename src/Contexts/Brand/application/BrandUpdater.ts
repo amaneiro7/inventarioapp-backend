@@ -9,6 +9,7 @@ import { type CategoryRepository } from '../../Category/Category/domain/Category
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type BrandParams } from '../domain/entity/Brand.dto'
+import { type EventBus } from '../../Shared/domain/event/EventBus'
 /**
  * @description Use case for updating an existing Brand entity.
  * It ensures the brand exists and that the new name is valid and unique before applying updates.
@@ -17,16 +18,20 @@ import { type BrandParams } from '../domain/entity/Brand.dto'
 export class BrandUpdater {
 	private readonly brandRepository: BrandRepository
 	private readonly categoryRepository: CategoryRepository
+	private readonly eventBus: EventBus
 
 	constructor({
 		brandRepository,
-		categoryRepository
+		categoryRepository,
+		eventBus
 	}: {
 		brandRepository: BrandRepository
 		categoryRepository: CategoryRepository
+		eventBus: EventBus
 	}) {
 		this.brandRepository = brandRepository
 		this.categoryRepository = categoryRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -70,7 +75,9 @@ export class BrandUpdater {
 
 		// Save the updated entity only if it has changed
 		if (hasChanges) {
-			await this.brandRepository.save(brandEntity.toPrimitives()) // Asegúrate de que el repositorio invalide la caché
+			console.log(`Updating brand with ID: ${brandEntity.idValue}`)
+			await this.brandRepository.save(brandEntity.toPrimitives())
+			await this.eventBus.publish(brandEntity.pullDomainEvents())
 		}
 	}
 

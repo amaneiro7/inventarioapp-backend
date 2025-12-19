@@ -2,6 +2,11 @@ import { AggregateRoot } from '../../../Shared/domain/AggregateRoot'
 import { BrandId } from '../valueObject/BrandId'
 import { BrandName } from '../valueObject/BrandName'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { BrandCreatedDomainEvent } from '../event/BrandCreatedDomainEvent'
+import { BrandRenamedDomainEvent } from '../event/BrandRenamedDomainEvent'
+import { BrandRemovedDomainEvent } from '../event/BrandRemovedDomainEvent'
+import { BrandCategoryAddedDomainEvent } from '../event/BrandCategoryAddedDomainEvent'
+import { BrandCategoryRemovedDomainEvent } from '../event/BrandCategoryRemovedDomainEvent'
 import { type BrandDto, type BrandParams, type BrandPrimitives } from './Brand.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
@@ -33,7 +38,16 @@ export class Brand extends AggregateRoot {
 		const id = BrandId.random()
 		const name = new BrandName(params.name)
 		const categories = new Set(params.categories.map(categoryId => new CategoryId(categoryId)))
-		return new Brand(id, name, categories)
+		const brand = new Brand(id, name, categories)
+
+		brand.record(
+			new BrandCreatedDomainEvent({
+				aggregateId: id.value,
+				name: name.value
+			})
+		)
+
+		return brand
 	}
 
 	/**
@@ -68,6 +82,12 @@ export class Brand extends AggregateRoot {
 	 */
 	updateName(newName: Primitives<BrandName>): void {
 		this.name = new BrandName(newName)
+		this.record(
+			new BrandRenamedDomainEvent({
+				aggregateId: this.id.value,
+				name: this.name.value
+			})
+		)
 	}
 
 	/**
@@ -79,8 +99,12 @@ export class Brand extends AggregateRoot {
 			return // Evita duplicados y eventos innecesarios
 		}
 		this.categories.add(categoryId)
-		// Opcional: Registrar un evento de dominio
-		// this.record(new CategoryAddedToBrandEvent({ brandId: this.id.value, categoryId: categoryId.value }))
+		this.record(
+			new BrandCategoryAddedDomainEvent({
+				aggregateId: this.id.value,
+				categoryId: categoryId.value
+			})
+		)
 	}
 
 	/**
@@ -91,9 +115,25 @@ export class Brand extends AggregateRoot {
 		const categoryToRemove = [...this.categories].find(c => c.equals(categoryId))
 		if (categoryToRemove) {
 			this.categories.delete(categoryToRemove)
-			// Opcional: Registrar un evento de dominio
-			// this.record(new CategoryRemovedFromBrandEvent({ brandId: this.id.value, categoryId: categoryId.value }))
+			this.record(
+				new BrandCategoryRemovedDomainEvent({
+					aggregateId: this.id.value,
+					categoryId: categoryId.value
+				})
+			)
 		}
+	}
+
+	/**
+	 * @description Marks the brand as deleted and records the domain event.
+	 */
+	delete(): void {
+		this.record(
+			new BrandRemovedDomainEvent({
+				aggregateId: this.id.value,
+				name: this.name.value
+			})
+		)
 	}
 
 	private hasCategory(categoryId: CategoryId): boolean {
