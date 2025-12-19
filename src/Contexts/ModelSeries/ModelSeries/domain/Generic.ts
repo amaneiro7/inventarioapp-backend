@@ -1,6 +1,6 @@
 import { BooleanValueObject } from '../../../Shared/domain/value-object/BooleanValueObject'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type ModelSeries } from './ModelSeries'
+import { type ModelSeries } from './entity/ModelSeries'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**

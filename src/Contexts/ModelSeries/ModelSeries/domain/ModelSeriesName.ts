@@ -1,10 +1,10 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesRepository } from './ModelSeriesRepository'
+import { type ModelSeriesRepository } from './repository/ModelSeriesRepository'
 import { type BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
-import { type ModelSeries } from './ModelSeries'
-import { ModelSeriesAlreadyExistError } from './ModelSeriesAlreadyExistError'
+import { type ModelSeries } from './entity/ModelSeries'
+import { ModelSeriesAlreadyExistError } from './errors/ModelSeriesAlreadyExistError'
 
 /**
  * @description Represents the name of a model series.

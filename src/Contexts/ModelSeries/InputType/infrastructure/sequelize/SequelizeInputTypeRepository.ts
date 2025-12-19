@@ -1,9 +1,9 @@
 import { InputTypeModel } from './InputTypeSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { type InputTypeRepository } from '../../domain/InputTypeRepository'
-import { type InputTypeDto } from '../../domain/InputType.dto'
-import { type InputTypeId } from '../../domain/InputTypeId'
+import { type InputTypeRepository } from '../../domain/repository/InputTypeRepository'
+import { type InputTypeDto } from '../../domain/entity/InputType.dto'
+import { type InputTypeId } from '../../domain/valueObject/InputTypeId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -40,7 +40,7 @@ export class SequelizeInputTypeRepository extends SequelizeCriteriaConverter imp
 
 		return this.cache.getCachedData<InputTypeDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const inputType = await InputTypeModel.findByPk(id)
 				return inputType ? inputType.get({ plain: true }) : null

@@ -1,5 +1,5 @@
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
-import { InvalidCharactersError } from '../errors/InvalidCharactersError'
+import { InvalidCharactersError } from '../../../../Shared/domain/errors/InvalidCharactersError'
 
 /**
  * @description Represents the name of a Cargo.

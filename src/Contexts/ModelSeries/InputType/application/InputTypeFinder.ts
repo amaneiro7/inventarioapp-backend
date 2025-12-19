@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type InputTypeDto } from '../domain/InputType.dto'
-import { type InputTypeRepository } from '../domain/InputTypeRepository'
+import { type InputTypeDto } from '../domain/entity/InputType.dto'
+import { type InputTypeRepository } from '../domain/repository/InputTypeRepository'
 
 /**
  * @description Use case for retrieving all InputType entities.

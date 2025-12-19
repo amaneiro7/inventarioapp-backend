@@ -1,5 +1,5 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesParams, type ModelSeriesPrimitives } from '../../../ModelSeries/domain/ModelSeries.dto'
+import { type ModelSeriesParams, type ModelSeriesPrimitives } from '../../../ModelSeries/domain/entity/ModelSeries.dto'
 import { type CartridgeModel } from './CartridgeModel'
 
 /**

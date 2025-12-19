@@ -1,10 +1,10 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesId } from './ModelSeriesId'
-import { type ModelSeriesName } from './ModelSeriesName'
-import { type ModelSeriesDto, type ModelSeriesPrimitives } from './ModelSeries.dto'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ModelSeriesId } from '../ModelSeriesId'
+import { type ModelSeriesName } from '../ModelSeriesName'
+import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../entity/ModelSeries.dto'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 /**
  * @abstract

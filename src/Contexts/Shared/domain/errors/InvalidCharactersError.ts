@@ -1,5 +1,5 @@
-import { ApiError } from '../../../../Shared/domain/errors/ApiError'
-import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
+import { ApiError } from './ApiError'
+import httpStatus from '../../infrastructure/utils/http-status'
 
 /**
  * @description Error thrown when a string value contains invalid characters according to a specific format.

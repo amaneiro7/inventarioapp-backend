@@ -9,7 +9,7 @@ import { type StatusRepository } from '../../Device/Status/domain/StatusReposito
 import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
 import { type BrandRepository } from '../../Brand/domain/repository/BrandRepository'
 import { type EmployeeRepository } from '../../employee/Employee/domain/Repository/EmployeeRepository'
-import { type ModelSeriesRepository } from '../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
+import { type ModelSeriesRepository } from '../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
 import { type HardDriveTypeRepository } from '../../Features/HardDrive/HardDriveType/domain/HardDriveTypeRepository'
 import { type HardDriveCapacityRepository } from '../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type OperatingSystemRepository } from '../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'

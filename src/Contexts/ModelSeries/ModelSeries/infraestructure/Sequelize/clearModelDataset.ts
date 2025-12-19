@@ -1,4 +1,4 @@
-import { type ModelSeriesDto } from '../../domain/ModelSeries.dto'
+import { type ModelSeriesDto } from '../../domain/entity/ModelSeries.dto'
 
 export function clearModelDataset({ models }: { models: ModelSeriesDto[] }) {
 	return models.map(model => ({

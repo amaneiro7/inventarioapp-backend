@@ -17,8 +17,8 @@ import { clearModelDataset } from './clearModelDataset'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesRepository } from '../../domain/ModelSeriesRepository'
-import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/ModelSeries.dto'
+import { type ModelSeriesRepository } from '../../domain/repository/ModelSeriesRepository'
+import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/entity/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 /**

@@ -1,7 +1,7 @@
-import { ModelSeriesDoesNotExistError } from '../domain/ModelSeriesDoesNotExistError'
+import { ModelSeriesDoesNotExistError } from '../domain/errors/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../domain/ModelSeriesId'
-import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
-import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
+import { type ModelSeriesDto } from '../domain/entity/ModelSeries.dto'
+import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 
 /**
  * @description Use case for finding a ModelSeries entity by its unique identifier.

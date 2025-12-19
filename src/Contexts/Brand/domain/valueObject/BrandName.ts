@@ -1,4 +1,4 @@
-import { InvalidCharactersError } from '../../../employee/Cargo/domain/errors/InvalidCharactersError'
+import { InvalidCharactersError } from '../../../Shared/domain/errors/InvalidCharactersError'
 import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
 
 /**
@@ -23,10 +23,14 @@ export class BrandName extends StringValueObject {
 		super(value)
 		this.ensureLengthIsBiggerThan(this.MIN_LENGTH, value)
 		this.ensureLengthIsSmallerThan(this.MAX_LENGTH, value)
-		if (!this.VALID_BRAND_NAME_REGEX.test(value)) {
+		this.ensureIsValidName()
+	}
+
+	private ensureIsValidName(): void {
+		if (!this.VALID_BRAND_NAME_REGEX.test(this.value)) {
 			throw new InvalidCharactersError(
 				this.constructor.name,
-				value,
+				this.value,
 				"letras, números y caracteres comunes como .,'()&-"
 			)
 		}

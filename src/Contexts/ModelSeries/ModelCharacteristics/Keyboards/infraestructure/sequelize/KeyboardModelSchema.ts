@@ -1,11 +1,11 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
-import { type InputTypeId } from '../../../../InputType/domain/InputTypeId'
+import { type InputTypeId } from '../../../../InputType/domain/valueObject/InputTypeId'
 import { type HasFingerPrintReader } from '../../domain/HasFingerPrintReader'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
 import { type KeyboardModelsDto } from '../../domain/KeyboardModels.dto'
-import { type InputTypeDto } from '../../../../InputType/domain/InputType.dto'
+import { type InputTypeDto } from '../../../../InputType/domain/entity/InputType.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface KeyboardModelsCreationAttributes extends Omit<KeyboardModelsDto, 'inputType'> {

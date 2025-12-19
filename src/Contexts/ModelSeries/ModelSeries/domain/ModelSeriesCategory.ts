@@ -1,5 +1,5 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ModelSeries } from './ModelSeries'
+import { type ModelSeries } from './entity/ModelSeries'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { CategoryId } from '../../../Category/Category/domain/CategoryId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'

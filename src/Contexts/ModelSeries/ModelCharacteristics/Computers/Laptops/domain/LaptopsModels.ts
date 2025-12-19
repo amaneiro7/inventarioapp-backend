@@ -5,7 +5,7 @@ import { MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType
 import { ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { Generic } from '../../../../ModelSeries/domain/Generic'
-import { type ModelSeriesDto } from '../../../../ModelSeries/domain/ModelSeries.dto'
+import { type ModelSeriesDto } from '../../../../ModelSeries/domain/entity/ModelSeries.dto'
 import { ModelSeriesId } from '../../../../ModelSeries/domain/ModelSeriesId'
 import { ModelSeriesName } from '../../../../ModelSeries/domain/ModelSeriesName'
 import { ComputerModels } from '../../Computer/domain/ComputerModels'

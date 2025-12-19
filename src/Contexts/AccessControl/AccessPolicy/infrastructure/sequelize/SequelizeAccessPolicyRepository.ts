@@ -40,7 +40,7 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 
 		return this.cache.getCachedData<ResponseDB<AccessPolicyDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				// Añadir `distinct: true` es crucial para que `findAndCountAll` devuelva un conteo correcto
 				// cuando se usan `include` que generan JOINs con relaciones de muchos a muchos.

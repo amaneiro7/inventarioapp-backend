@@ -1,10 +1,10 @@
 import { type BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
-import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
+import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'
-import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/ModelSeries.dto'
-import { ModelSeriesDoesNotExistError } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesDoesNotExistError'
+import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/entity/ModelSeries.dto'
+import { ModelSeriesDoesNotExistError } from '../../../ModelSeries/ModelSeries/domain/errors/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesId'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 

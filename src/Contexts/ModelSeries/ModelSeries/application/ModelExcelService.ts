@@ -6,7 +6,7 @@ import { FilterField } from '../../../Shared/domain/criteria/FilterField'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
+import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 
 /**
  * @description Service for generating an Excel file (Buffer) containing model series data.

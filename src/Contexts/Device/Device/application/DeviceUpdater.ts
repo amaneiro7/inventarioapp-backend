@@ -36,7 +36,7 @@ import { type OperatingSystemArqRepository } from '../../../Features/OperatingSy
 import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
 
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
-import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/ModelSeriesRepository'
+import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'

@@ -1,12 +1,12 @@
-import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { CategoryId } from '../../../Category/Category/domain/CategoryId'
-import { Generic } from './Generic'
-import { ModelSeriesId } from './ModelSeriesId'
-import { ModelSeriesName } from './ModelSeriesName'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { Generic } from '../Generic'
+import { ModelSeriesId } from '../ModelSeriesId'
+import { ModelSeriesName } from '../ModelSeriesName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
-import { ProcessorId } from '../../../Features/Processor/Processor/domain/ProcessorId'
-import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
+import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 
 /**
  * @description Represents the ModelSeries domain entity.

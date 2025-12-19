@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { InputTypeId } from '../../../InputType/domain/InputTypeId'
-import { type InputTypeRepository } from '../../../InputType/domain/InputTypeRepository'
+import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
+import { type InputTypeRepository } from '../../../InputType/domain/repository/InputTypeRepository'
 import { type MouseModels } from './MouseModels'
 
 /**

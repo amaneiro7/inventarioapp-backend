@@ -1,6 +1,6 @@
-import { InputTypeId } from './InputTypeId'
-import { InputTypeName } from './InputTypeName'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { InputTypeId } from '../valueObject/InputTypeId'
+import { InputTypeName } from '../valueObject/InputTypeName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type InputTypeDto, type InputTypePrimitives } from './InputType.dto'
 
 /**

@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type ModelSeriesDto } from '../domain/ModelSeries.dto'
-import { type ModelSeriesRepository } from '../domain/ModelSeriesRepository'
+import { type ModelSeriesDto } from '../domain/entity/ModelSeries.dto'
+import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 
 /**
  * @description Use case for retrieving all ModelSeries entities.
