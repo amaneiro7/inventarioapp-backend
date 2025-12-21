@@ -2,9 +2,9 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/valueObject/ModelSeriesId'
-import { type CartridgeModel } from '../../domain/CartridgeModel'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type PrinteModelsDto } from '../../domain/ModelPrinters.dto'
+import { type PrinteModelsDto } from '../../../domain/dto/ModelPrinters.dto'
+import { type CartridgeModel } from '../../../domain/valueObject/CartridgeModel'
 
 interface ModelPrinterCreationAttributes extends PrinteModelsDto {
 	id: Primitives<ModelSeriesId>

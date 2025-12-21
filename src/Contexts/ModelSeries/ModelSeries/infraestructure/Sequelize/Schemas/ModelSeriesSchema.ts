@@ -7,24 +7,24 @@ import {
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type ProcessorModel } from '../../../../../Features/Processor/Processor/infrastructure/sequelize/ProcessorSchema'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type ModelSeriesName } from '../../../domain/valueObject/ModelSeriesName'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
 import { type BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
 import { type Generic } from '../../../domain/valueObject/Generic'
-import { type ModelSeriesDto } from '../../../domain/entity/ModelSeries.dto'
 import { type BrandDto } from '../../../../../Brand/domain/entity/Brand.dto'
 import { type CategoryDto } from '../../../../../Category/Category/domain/Category.dto'
-import { type ComputerModelsDto } from '../../../domain/entity/ComputerModels.dto'
-import { type LaptopModelsDto } from '../../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
-import { type KeyboardModelsDto } from '../../../../ModelCharacteristics/Keyboards/domain/KeyboardModels.dto'
-import { type MonitorModelsDto } from '../../../../ModelCharacteristics/Monitors/domain/MonitoModels.dto'
-import { type PrinteModelsDto } from '../../../../ModelCharacteristics/Printers/domain/ModelPrinters.dto'
-import { type MouseModelsDto } from '../../../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
-import { ProcessorDto } from '../../../../../Features/Processor/Processor/domain/Processor.dto'
-import { SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
-import { ProcessorModel } from '../../../../../Features/Processor/Processor/infrastructure/sequelize/ProcessorSchema'
+import { type ModelSeriesDto } from '../../../domain/dto/ModelSeries.dto'
+import { type ComputerModelsDto } from '../../../domain/dto/ComputerModels.dto'
+import { type LaptopModelsDto } from '../../../domain/dto/LaptopsModels.dto'
+import { type KeyboardModelsDto } from '../../../domain/dto/KeyboardModels.dto'
+import { type MonitorModelsDto } from '../../../domain/dto/MonitoModels.dto'
+import { type PrinteModelsDto } from '../../../domain/dto/ModelPrinters.dto'
+import { type MouseModelsDto } from '../../../domain/dto/MouseModels.dto'
+import { type ProcessorDto } from '../../../../../Features/Processor/Processor/domain/Processor.dto'
+import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `ModelSeries` entity.
@@ -93,12 +93,19 @@ export class ModelSeriesModel
 		this.init(
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
-				name: { type: DataTypes.STRING, allowNull: false, unique: true },
+				name: { type: DataTypes.STRING, allowNull: false },
 				categoryId: { type: DataTypes.STRING, allowNull: false },
 				brandId: { type: DataTypes.UUID, allowNull: false },
 				generic: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
 			},
-			{ modelName: 'Model', tableName: 'models', timestamps: true, underscored: true, sequelize }
+			{
+				modelName: 'Model',
+				tableName: 'models',
+				timestamps: true,
+				underscored: true,
+				sequelize,
+				indexes: [{ unique: true, fields: ['name', 'brand_id'], name: 'unique_model_name_per_brand' }]
+			}
 		)
 	}
 }

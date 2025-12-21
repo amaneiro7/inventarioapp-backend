@@ -1,6 +1,6 @@
 import { ModelSeriesDoesNotExistError } from '../domain/errors/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../domain/valueObject/ModelSeriesId'
-import { type ModelSeriesDto } from '../domain/entity/ModelSeries.dto'
+import { type ModelSeriesDto } from '../domain/dto/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 
 /**

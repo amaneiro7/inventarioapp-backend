@@ -8,10 +8,17 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
  */
 export class InputTypeDoesNotExistError extends ApiError {
 	/**
-	 * @param {string} id The ID of the input type that was not found.
+	 * @param {string | number} identifier The ID of the input type that was not found.
 	 */
-	constructor(public readonly id: string) {
-		super(httpStatus[404].statusCode, `El tipo de entrada con el ID '${id}' no existe.`)
+	constructor(identifier?: string | number) {
+		let message = 'El tipo de entrada no existe.'
+		if (identifier) {
+			const isPlural = typeof identifier === 'string' && identifier.includes(',')
+			message = isPlural
+				? `Los tipos de entrada con los IDs '${identifier}' no existen.`
+				: `El tipo de entrada con el ID '${identifier}' no existe.`
+		}
+		super(httpStatus[404].statusCode, message)
 		this.name = this.constructor.name
 	}
 }

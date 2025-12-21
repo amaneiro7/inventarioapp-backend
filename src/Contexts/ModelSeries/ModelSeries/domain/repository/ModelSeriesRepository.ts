@@ -3,8 +3,9 @@ import { type CategoryId } from '../../../../Category/Category/domain/CategoryId
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../valueObject/ModelSeriesId'
 import { type ModelSeriesName } from '../valueObject/ModelSeriesName'
-import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../entity/ModelSeries.dto'
+import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../dto/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 
 /**
  * @abstract
@@ -56,6 +57,19 @@ export abstract class ModelSeriesRepository {
 	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
 	abstract findByName(name: Primitives<ModelSeriesName>): Promise<ModelSeriesDto | null>
+
+	/**
+	 * @abstract
+	 * @method findByNameAndBrand
+	 * @description Finds a single model series by its name and brand ID.
+	 * @param {Primitives<ModelSeriesName>} name The name of the model series to search for.
+	 * @param {Primitives<BrandId>} brandId The brand ID associated with the model series.
+	 * @returns {Promise<ModelSeriesDto | null>} A promise that resolves to the DTO if found, or null otherwise.
+	 */
+	abstract findByNameAndBrand(
+		name: Primitives<ModelSeriesName>,
+		brandId: Primitives<BrandId>
+	): Promise<ModelSeriesDto | null>
 
 	/**
 	 * @abstract

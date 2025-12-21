@@ -75,7 +75,6 @@ export class BrandUpdater {
 
 		// Save the updated entity only if it has changed
 		if (hasChanges) {
-			console.log(`Updating brand with ID: ${brandEntity.idValue}`)
 			await this.brandRepository.save(brandEntity.toPrimitives())
 			await this.eventBus.publish(brandEntity.pullDomainEvents())
 		}

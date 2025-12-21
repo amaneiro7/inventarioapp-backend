@@ -1,31 +1,16 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
-import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
-import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
-import { Generic } from '../valueObject/Generic'
 import { ModelSeriesId } from '../valueObject/ModelSeriesId'
 import { ModelSeriesName } from '../valueObject/ModelSeriesName'
-import { ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
-import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
-import { BrandRepository } from '../../../../Brand/domain/repository/BrandRepository'
-import { ModelSeriesBrand } from '../valueObject/ModelSeriesBrand'
-import { ProcessorDoesNotExistError } from '../../../../Features/Processor/Processor/domain/ProcessorDoesNotExistError'
-import { ModelSeriesCategory } from '../valueObject/ModelSeriesCategory'
-import { type ModelSeriesRepository } from '../repository/ModelSeriesRepository'
-import { type CategoryRepository } from '../../../../Category/Category/domain/CategoryRepository'
-import { type ProcessorRepository } from '../../../../Features/Processor/Processor/domain/ProcessorRepository'
-import { type MemoryRamTypeRepository } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
+import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { Generic } from '../valueObject/Generic'
+import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
+import { ModelSeriesRenamedDomainEvent } from '../event/ModelSeriesRenamedDomainEvent'
+import { ModelSeriesUpdatedDomainEvent } from '../event/ModelSeriesUpdatedDomainEvent'
+import { ModelSeriesNameUniquenessChecker } from '../ModelSeriesNameUniquenessChecker'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from './ModelSeries.dto'
-import { type InputTypeRepository } from '../../../InputType/domain/repository/InputTypeRepository'
-
-export interface ModelDependencies {
-	modelSeriesRepository: ModelSeriesRepository
-	inputTypeRepository: InputTypeRepository
-	memoryRamTypeRepository: MemoryRamTypeRepository
-	categoryRepository: CategoryRepository
-	brandRepository: BrandRepository
-	processorRepository: ProcessorRepository
-}
+import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from '../dto/ModelSeries.dto'
+import { type ModelDependencies } from './ModelDependencies'
 
 /**
  * @description Represents the ModelSeries domain entity.
@@ -34,78 +19,30 @@ export class ModelSeries extends AggregateRoot {
 	constructor(
 		private readonly id: ModelSeriesId,
 		private name: ModelSeriesName,
-		private categoryId: CategoryId,
-		private brandId: BrandId,
-		private generic: Generic,
-		private processors: ProcessorId[]
+		private readonly categoryId: CategoryId,
+		private readonly brandId: BrandId,
+		private generic: Generic
 	) {
 		super()
 	}
 
-	/**
-	 * @description Updates the model series fields. Subclasses should override this method
-	 * to update their specific fields, calling super.update() first.
-	 */
-	async update(params: Partial<ModelSeriesParams>, dependencies: ModelDependencies): Promise<void> {
-		await Promise.all([
-			ModelSeriesCategory.updateCategoryField({
-				repository: dependencies.categoryRepository,
-				categoryId: params.categoryId,
-				entity: this
-			}),
-			ModelSeriesBrand.updateBrandField({
-				repository: dependencies.brandRepository,
-				brandId: params.brandId,
-				entity: this
-			}),
-			ModelSeriesName.updateNameField({
-				repository: dependencies.modelSeriesRepository,
-				name: params.name,
-				entity: this
-			}),
-			Generic.updateGenericField({ generic: params.generic, entity: this }),
-			this.ensureProcessorsExistAndUpdate({
-				entity: this,
-				processors: params.processors,
-				repository: dependencies.processorRepository
-			})
-		])
-	}
-
-	private async ensureProcessorsExistAndUpdate({
-		entity,
-		processors,
-		repository
-	}: {
-		processors?: Primitives<ProcessorId>[]
-		entity: ModelSeries
-		repository: ProcessorRepository
-	}): Promise<void> {
-		if (processors === undefined) return
-
-		const uniqueProcessors = [...new Set(processors)]
-		const newProcessors = uniqueProcessors.filter(processorId => !entity.pocessorsValue.includes(processorId))
-
-		if (newProcessors.length > 0) {
-			await Promise.all(
-				newProcessors.map(async processorId => {
-					const processor = await repository.findById(processorId)
-					if (processor === null) throw new ProcessorDoesNotExistError(processorId)
-				})
-			)
-		}
-		entity.updateProcessors({ processorIds: uniqueProcessors, categoryId: entity.categoryValue })
-	}
-
 	static create(params: ModelSeriesParams): ModelSeries {
-		return new ModelSeries(
-			ModelSeriesId.random(),
-			new ModelSeriesName(params.name),
-			new CategoryId(params.categoryId),
-			new BrandId(params.brandId),
-			new Generic(params.generic),
-			this.addProcessorIds({ categoryId: params.categoryId, processorIds: params.processors })
+		const id = ModelSeriesId.random()
+		const name = new ModelSeriesName(params.name)
+		const categoryId = new CategoryId(params.categoryId)
+		const brandId = new BrandId(params.brandId)
+		const generic = new Generic(params.generic)
+		const model = new ModelSeries(id, name, categoryId, brandId, generic)
+
+		model.record(
+			new ModelSeriesCreatedDomainEvent({
+				aggregateId: id.value,
+				name: name.value,
+				categoryId: categoryId.value,
+				brandId: brandId.value
+			})
 		)
+		return model
 	}
 
 	static fromPrimitives(primitives: ModelSeriesDto): ModelSeries {
@@ -114,8 +51,7 @@ export class ModelSeries extends AggregateRoot {
 			new ModelSeriesName(primitives.name),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
-			new Generic(primitives.generic),
-			primitives.processors.map(processor => new ProcessorId(processor.id))
+			new Generic(primitives.generic)
 		)
 	}
 
@@ -124,53 +60,65 @@ export class ModelSeries extends AggregateRoot {
 			id: this.idValue,
 			name: this.nameValue,
 			categoryId: this.categoryValue,
-			brandId: this.brandIdValue,
+			brandId: this.brandValue,
 			generic: this.genericValue,
-			processors: this.pocessorsValue
+			processors: [] // Base models do not have processors
 		}
 	}
 
+	async update(
+		params: Partial<ModelSeriesParams>,
+		dependencies: ModelDependencies
+	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+
+		if (params.name !== undefined && this.nameValue !== params.name) {
+			const uniquenessChecker = new ModelSeriesNameUniquenessChecker({
+				modelSeriesRepository: dependencies.modelSeriesRepository
+			})
+			await uniquenessChecker.ensureIsUnique(params.name, this.brandValue, this.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: this.nameValue,
+				newValue: params.name
+			})
+			this.updateName(params.name)
+		}
+		if (params.generic !== undefined && this.genericValue !== params.generic) {
+			changes.push({
+				field: 'generic',
+				oldValue: this.genericValue,
+				newValue: params.generic
+			})
+			this.updateGeneric(params.generic)
+		}
+
+		return changes
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new ModelSeriesUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
+	}
+
 	updateName(newName: Primitives<ModelSeriesName>): void {
+		const oldName = this.name.value
 		this.name = new ModelSeriesName(newName)
-	}
-
-	updateCategoryId(newCategoryId: Primitives<CategoryId>): void {
-		this.categoryId = new CategoryId(newCategoryId)
-	}
-
-	updateBrandId(newBrandId: Primitives<BrandId>): void {
-		this.brandId = new BrandId(newBrandId)
+		this.record(
+			new ModelSeriesRenamedDomainEvent({
+				aggregateId: this.idValue,
+				oldName,
+				newName: this.name.value
+			})
+		)
 	}
 
 	updateGeneric(generic: Primitives<Generic>): void {
 		this.generic = new Generic(generic)
-	}
-
-	updateProcessors({
-		processorIds,
-		categoryId
-	}: {
-		processorIds: Primitives<ProcessorId>[]
-		categoryId: Primitives<CategoryId>
-	}): void {
-		this.processors = ModelSeries.addProcessorIds({ processorIds, categoryId })
-	}
-	static addProcessorIds({
-		processorIds,
-		categoryId
-	}: {
-		processorIds: Primitives<ProcessorId>[]
-		categoryId: Primitives<CategoryId>
-	}): ProcessorId[] {
-		const acceptedCategories =
-			categoryId === CategoryValues.ALLINONE ||
-			categoryId === CategoryValues.COMPUTADORAS ||
-			categoryId === CategoryValues.LAPTOPS ||
-			categoryId === CategoryValues.SERVIDORES
-		if (acceptedCategories) {
-			return processorIds.map(processorId => new ProcessorId(processorId))
-		}
-		return []
 	}
 
 	get idValue(): Primitives<ModelSeriesId> {
@@ -185,15 +133,11 @@ export class ModelSeries extends AggregateRoot {
 		return this.categoryId.value
 	}
 
-	get brandIdValue(): Primitives<BrandId> {
+	get brandValue(): Primitives<BrandId> {
 		return this.brandId.value
 	}
 
 	get genericValue(): Primitives<Generic> {
 		return this.generic.value
-	}
-
-	get pocessorsValue(): Primitives<ProcessorId>[] {
-		return this.processors.map(processorId => processorId.value)
 	}
 }

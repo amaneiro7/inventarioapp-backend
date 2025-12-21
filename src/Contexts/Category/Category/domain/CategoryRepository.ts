@@ -28,6 +28,14 @@ export abstract class CategoryRepository {
 	 * @returns {Promise<CategoryDto | null>} A promise that resolves to the category DTO if found, or null otherwise.
 	 */
 	abstract findById(id: CategoryId['value']): Promise<CategoryDto | null>
+
+	/**
+	 * @abstract
+	 * @method findByIds
+	 * @description Finds multiple categories by their IDs.
+	 * @param {Array<CategoryId['value']>} ids The array of category IDs to search for.
+	 * @returns {Promise<CategoryDto[]>} A promise that resolves to an array of DTOs.
+	 */
 	abstract findByIds: (ids: Array<CategoryId['value']>) => Promise<CategoryDto[]>
 
 	/**

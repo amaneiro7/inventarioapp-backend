@@ -1,7 +1,7 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type ModelSeriesDto } from '../domain/entity/ModelSeries.dto'
+import { type ModelSeriesDto } from '../domain/dto/ModelSeries.dto'
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 
 /**

@@ -4,7 +4,7 @@ import { type Primitives } from '../../../../../Shared/domain/value-object/Primi
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type InputTypeId } from '../../../../InputType/domain/valueObject/InputTypeId'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type MouseModelsDto } from '../../../../ModelCharacteristics/Mouses/domain/MouseModels.dto'
+import { type MouseModelsDto } from '../../../domain/dto/MouseModels.dto'
 import { type InputTypeDto } from '../../../../InputType/domain/entity/InputType.dto'
 
 interface MouseModelsCreationAttributes extends Omit<MouseModelsDto, 'inputType'> {

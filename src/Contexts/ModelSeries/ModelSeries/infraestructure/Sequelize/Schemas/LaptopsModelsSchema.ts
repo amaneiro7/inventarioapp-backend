@@ -1,4 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
@@ -8,11 +9,10 @@ import { type HasWifiAdapter } from '../../../domain/valueObject/HasWifiAdapter'
 import { type HasDVI } from '../../../domain/valueObject/HasDVI'
 import { type HasHDMI } from '../../../domain/valueObject/HasHDMI'
 import { type HasVGA } from '../../../domain/valueObject/HasVGA'
-import { type BatteryModelName } from '../../../../ModelCharacteristics/Computers/Laptops/domain/BatteryModelName'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type LaptopModelsDto } from '../../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels.dto'
+import { type LaptopModelsDto } from '../../../domain/dto/LaptopsModels.dto'
+import { type BatteryModelName } from '../../../domain/valueObject/BatteryModelName'
 import { type MemoryRamTypeDto } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
-import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface LaptopModelsCreationAttributes extends Omit<LaptopModelsDto, 'memoryRamType'> {
 	id: Primitives<ModelSeriesId>

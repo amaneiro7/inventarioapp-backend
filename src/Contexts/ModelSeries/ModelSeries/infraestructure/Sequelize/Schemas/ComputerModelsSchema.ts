@@ -9,7 +9,7 @@ import { type HasHDMI } from '../../../domain/valueObject/HasHDMI'
 import { type HasVGA } from '../../../domain/valueObject/HasVGA'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type ComputerModelsDto } from '../../../domain/entity/ComputerModels.dto'
+import { type ComputerModelsDto } from '../../../domain/dto/ComputerModels.dto'
 import { type MemoryRamType } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 

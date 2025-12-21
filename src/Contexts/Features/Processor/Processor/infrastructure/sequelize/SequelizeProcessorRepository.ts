@@ -9,6 +9,7 @@ import { type ProcessorDto, type ProcessorPrimitives } from '../../domain/Proces
 import { type ProcessorNumberModel } from '../../domain/ProcessorNumberModel'
 import { type ProcessorRepository } from '../../domain/ProcessorRepository'
 import { ProcessorAssociation } from './ProcessorAssociation'
+import { Op } from 'sequelize'
 
 /**
  * @description Sequelize implementation of the ProcessorRepository.
@@ -46,6 +47,30 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 			fetchFunction: async () => {
 				const processor = await ProcessorModel.findByPk(id)
 				return processor ? processor.get({ plain: true }) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple categories by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of processor IDs to find.
+	 * @returns {Promise<ProcessorDto[]>} A promise resolving to an array of found processor DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<ProcessorDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<ProcessorDto[]>({
+			cacheKey,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const categories = await ProcessorModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return categories.map(processor => processor.get({ plain: true })) as ProcessorDto[]
 			}
 		})
 	}

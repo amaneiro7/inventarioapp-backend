@@ -3,13 +3,13 @@ import { set_fs, utils, write } from 'xlsx'
 import fs from 'node:fs'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { ComputerModels } from '../../domain/entity/ComputerModels'
-import { LaptopsModels } from '../../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
-import { MonitorModels } from '../../../ModelCharacteristics/Monitors/domain/MonitorModels'
-import { ModelPrinters } from '../../../ModelCharacteristics/Printers/domain/ModelPrinters'
+import { LaptopsModels } from '../../domain/entity/LaptopsModels'
+import { MonitorModels } from '../../domain/entity/MonitorModels'
+import { ModelPrinters } from '../../domain/entity/ModelPrinters'
 import { ModelAssociation } from './ModelAssociation'
 import { ModelSeriesModel } from './Schemas/ModelSeriesSchema'
-import { KeyboardModels } from '../../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
-import { MouseModels } from '../../../ModelCharacteristics/Mouses/domain/MouseModels'
+import { KeyboardModels } from '../../domain/entity/KeyboardModels'
+import { MouseModels } from '../../domain/entity/MouseModels'
 import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -18,7 +18,8 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesRepository } from '../../domain/repository/ModelSeriesRepository'
-import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/entity/ModelSeries.dto'
+import { type ModelSeriesCacheInvalidator } from '../../domain/repository/ModelSeriesCacheInvalidator'
+import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/dto/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 
 /**
@@ -28,7 +29,10 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
  * @description Concrete implementation of the ModelSeriesRepository using Sequelize.
  * Handles data persistence for ModelSeries entities, including caching mechanisms and related model types.
  */
-export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter implements ModelSeriesRepository {
+export class SequelizeModelSeriesRepository
+	extends SequelizeCriteriaConverter
+	implements ModelSeriesRepository, ModelSeriesCacheInvalidator
+{
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix: string = 'modelSeries'
 	private readonly cache: CacheService
@@ -51,7 +55,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKeyPrefix}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.MEDIUM,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
@@ -77,7 +81,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKeyPrefix}:matching:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.MEDIUM,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
@@ -99,7 +103,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	async findById(id: string): Promise<ModelSeriesDto | null> {
 		return await this.cache.getCachedData<ModelSeriesDto | null>({
 			cacheKey: `${this.cacheKeyPrefix}:id:${id}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const modelSeries = await ModelSeriesModel.findByPk(id, {
 					include: [
@@ -165,6 +169,24 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	}
 
 	/**
+	 * @method findByNameAndBrand
+	 * @description Retrieves a single ModelSeries entity by its name and brand ID.
+	 * @param {string} name - The name of the ModelSeries.
+	 * @param {string} brandId - The ID of the Brand.
+	 * @returns {Promise<ModelSeriesDto | null>}
+	 */
+	async findByNameAndBrand(name: string, brandId: string): Promise<ModelSeriesDto | null> {
+		return await this.cache.getCachedData<ModelSeriesDto | null>({
+			cacheKey: `${this.cacheKeyPrefix}:name:${name}:brand:${brandId}`,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const modelSeries = await ModelSeriesModel.findOne({ where: { name, brandId } })
+				return modelSeries ? (modelSeries.get({ plain: true }) as ModelSeriesDto) : null
+			}
+		})
+	}
+
+	/**
 	 * @method save
 	 * @description Saves a ModelSeries entity to the data store. Uses `upsert` for atomic creation or update.
 	 * It also handles the creation/update of associated specific model types (e.g., Computer, Laptop) based on category.
@@ -207,11 +229,6 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 			}
 
 			await t.commit()
-			// Invalidate all cache entries related to model series.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
-			// Also invalidate specific entries if they were cached by ID or name.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${payload.id}` })
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:${payload.name}` })
 		} catch (error: unknown) {
 			await t.rollback()
 			let errorMessage = 'An unknown error occurred while saving the model series.'
@@ -251,18 +268,7 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
 	async remove(id: string): Promise<void> {
-		// Retrieve the model series to get its name for cache invalidation
-		const modelSeriesToRemove = await ModelSeriesModel.findByPk(id)
-
 		await ModelSeriesModel.destroy({ where: { id } })
-
-		// Invalidate all cache entries related to model series.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
-		// Also invalidate specific entries if they were cached by ID or name.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${id}` })
-		if (modelSeriesToRemove) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:${modelSeriesToRemove.name}` })
-		}
 	}
 
 	/**
@@ -290,5 +296,14 @@ export class SequelizeModelSeriesRepository extends SequelizeCriteriaConverter i
 			compression: true
 		})
 		return buf
+	}
+
+	/**
+	 * @method invalidateModelSeriesCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements ModelSeriesCacheInvalidator interface.
+	 */
+	async invalidateModelSeriesCache(): Promise<void> {
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
 	}
 }

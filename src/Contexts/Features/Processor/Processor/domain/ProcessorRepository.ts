@@ -40,6 +40,15 @@ export abstract class ProcessorRepository {
 
 	/**
 	 * @abstract
+	 * @method findByIds
+	 * @description Finds multiple processors by their IDs.
+	 * @param {Array<ProcessorId['value']>} ids The array of processor IDs to search for.
+	 * @returns {Promise<ProcessorDto[]>} A promise that resolves to an array of DTOs.
+	 */
+	abstract findByIds: (ids: Array<ProcessorId['value']>) => Promise<ProcessorDto[]>
+
+	/**
+	 * @abstract
 	 * @method searchByNumberModel
 	 * @description Finds a single processor by its model number.
 	 * @param {Primitives<ProcessorNumberModel>} numberModel The model number to search for.

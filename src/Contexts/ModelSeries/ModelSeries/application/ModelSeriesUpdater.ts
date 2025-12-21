@@ -1,20 +1,15 @@
-import { ModelDependencies } from '../domain/entity/ModelSeries'
-import { KeyboardModels } from '../../ModelCharacteristics/Keyboards/domain/KeyboadModels'
-import { ModelPrinters } from '../../ModelCharacteristics/Printers/domain/ModelPrinters'
-import { MonitorModels } from '../../ModelCharacteristics/Monitors/domain/MonitorModels'
-import { LaptopsModels } from '../../ModelCharacteristics/Computers/Laptops/domain/LaptopsModels'
-import { MouseModels } from '../../ModelCharacteristics/Mouses/domain/MouseModels'
 import { ModelSeriesDoesNotExistError } from '../domain/errors/ModelSeriesDoesNotExistError'
 import { ModelSeriesId } from '../domain/valueObject/ModelSeriesId'
-import { ModelSeriesName } from '../domain/valueObject/ModelSeriesName'
-import { ModelSeries } from '../domain/entity/ModelSeries'
+
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 import { type InputTypeRepository } from '../../InputType/domain/repository/InputTypeRepository'
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
-import { type ModelSeriesDto, type ModelSeriesParams } from '../domain/entity/ModelSeries.dto'
+import { type ModelSeriesDto, type ModelSeriesParams } from '../domain/dto/ModelSeries.dto'
 import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { ModelFactory } from '../domain/entity/ModelFactory'
 
 /**
  * @description Use case for updating an existing ModelSeries entity.
@@ -26,7 +21,7 @@ export class ModelSeriesUpdater {
 	private readonly categoryRepository: CategoryRepository
 	private readonly brandRepository: BrandRepository
 	private readonly processorRepository: ProcessorRepository
-	private readonly dependencies: ModelDependencies
+	private readonly eventBus: EventBus
 
 	constructor(dependencies: {
 		modelSeriesRepository: ModelSeriesRepository
@@ -35,6 +30,7 @@ export class ModelSeriesUpdater {
 		categoryRepository: CategoryRepository
 		brandRepository: BrandRepository
 		processorRepository: ProcessorRepository
+		eventBus: EventBus
 	}) {
 		this.modelSeriesRepository = dependencies.modelSeriesRepository
 		this.inputTypeRepository = dependencies.inputTypeRepository
@@ -42,7 +38,7 @@ export class ModelSeriesUpdater {
 		this.categoryRepository = dependencies.categoryRepository
 		this.brandRepository = dependencies.brandRepository
 		this.processorRepository = dependencies.processorRepository
-		this.dependencies = dependencies
+		this.eventBus = dependencies.eventBus
 	}
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
@@ -53,33 +49,20 @@ export class ModelSeriesUpdater {
 			throw new ModelSeriesDoesNotExistError(id)
 		}
 
-		const modelEntity = this.createModelEntity(modelSeries)
+		const modelEntity = await ModelFactory.fromPrimitives(modelSeries as ModelSeriesDto)
 
-		await modelEntity.update(params, this.dependencies)
-
-		await this.modelSeriesRepository.save(modelEntity.toPrimitives())
-	}
-
-	private createModelEntity(modelSeries: ModelSeriesDto): ModelSeries {
-		const { categoryId } = modelSeries
-		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-			return KeyboardModels.fromPrimitives(modelSeries)
+		const changes = await modelEntity.update(params, {
+			modelSeriesRepository: this.modelSeriesRepository,
+			inputTypeRepository: this.inputTypeRepository,
+			memoryRamTypeRepository: this.memoryRamTypeRepository,
+			categoryRepository: this.categoryRepository,
+			brandRepository: this.brandRepository,
+			processorRepository: this.processorRepository
+		})
+		if (changes.length > 0) {
+			modelEntity.registerUpdateEvent(changes)
+			await this.modelSeriesRepository.save(modelEntity.toPrimitives())
+			await this.eventBus.publish(modelEntity.pullDomainEvents())
 		}
-		if (MouseModels.isMouseCategory({ categoryId })) {
-			return MouseModels.fromPrimitives(modelSeries)
-		}
-		if (ModelPrinters.isPrinterCategory({ categoryId })) {
-			return ModelPrinters.fromPrimitives(modelSeries)
-		}
-		if (MonitorModels.isMonitorCategory({ categoryId })) {
-			return MonitorModels.fromPrimitives(modelSeries)
-		}
-		if (LaptopsModels.isLaptopCategory({ categoryId })) {
-			return LaptopsModels.fromPrimitives(modelSeries)
-		}
-		if (ComputerModels.isComputerCategory({ categoryId })) {
-			return ComputerModels.fromPrimitives(modelSeries)
-		}
-		return ModelSeries.fromPrimitives(modelSeries)
 	}
 }

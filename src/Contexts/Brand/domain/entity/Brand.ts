@@ -16,14 +16,12 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
  * and ensures the integrity of a brand's data through the use of Value Objects.
  */
 export class Brand extends AggregateRoot {
-	private categories = new Set<CategoryId>()
 	constructor(
 		private readonly id: BrandId,
 		private name: BrandName,
-		categories: Set<CategoryId>
+		private categories = new Set<CategoryId>()
 	) {
 		super()
-		this.categories = categories
 	}
 
 	/**

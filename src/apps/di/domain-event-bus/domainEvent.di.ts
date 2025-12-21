@@ -1,10 +1,12 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { RestartMonitoringServices } from '../../../Contexts/Shared/application/event/RestartMonitoringServices'
 import { InvalidateBrandCacheOnBrandChanged } from '../../../Contexts/Brand/application/InvalidateBrandCacheOnBrandChanged'
+import { InvalidateModelSeriesCacheOnModelSeriesChanged } from '../../../Contexts/ModelSeries/ModelSeries/application/InvalidateBrandCacheOnModelSeriesChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
-	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged'
+	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged',
+	InvalidateModelSeriesCacheOnModelSeriesChanged = 'invalidateModelSeriesCacheOnModelSeriesChanged'
 }
 
 /**
@@ -17,6 +19,9 @@ export const register = (container: AwilixContainer) => {
 		[DomainEventDependencies.RestartMonitoringServices]: asClass(RestartMonitoringServices).singleton(),
 		[DomainEventDependencies.InvalidateBrandCacheOnBrandChanged]: asClass(
 			InvalidateBrandCacheOnBrandChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateModelSeriesCacheOnModelSeriesChanged]: asClass(
+			InvalidateModelSeriesCacheOnModelSeriesChanged
 		).singleton()
 	})
 }

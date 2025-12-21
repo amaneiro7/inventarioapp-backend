@@ -6,7 +6,7 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
  */
 export class ModelSeriesAlreadyExistError extends ApiError {
 	constructor(readonly name: string) {
-		super(httpStatus[400].statusCode, `El modelo '${name}' ya existe.`)
+		super(httpStatus[400].statusCode, `El modelo '${name}' ya existe para esta marca.`)
 		this.name = this.constructor.name
 	}
 }

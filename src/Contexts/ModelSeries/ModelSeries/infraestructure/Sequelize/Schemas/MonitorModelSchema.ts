@@ -1,13 +1,13 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/valueObject/ModelSeriesId'
-import { type MonitorScreenSize } from '../../domain/MonitorScreenSize'
-import { type MonitorHasDVI } from '../../domain/MonitorHasDVI'
-import { type MonitorHasHDMI } from '../../domain/MonitorHasHDMI'
-import { type MonitorHasVGA } from '../../domain/MonitorHasVGA'
+import { type MonitorScreenSize } from '../../../domain/valueObject/MonitorScreenSize'
+import { type HasDVI } from '../../../domain/valueObject/HasDVI'
+import { type HasHDMI } from '../../../domain/valueObject/HasHDMI'
+import { type HasVGA } from '../../../domain/valueObject/HasVGA'
+import { type MonitorModelsDto } from '../../../domain/dto/MonitoModels.dto'
 import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
-import { type MonitorModelsDto } from '../../domain/MonitoModels.dto'
-import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface MonitorModelsCreationAttributes extends MonitorModelsDto {
 	id: Primitives<ModelSeriesId>
@@ -23,9 +23,9 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
 	declare modelSeriesId: Primitives<ModelSeriesId>
 	declare categoryId: Primitives<CategoryId>
 	declare screenSize: Primitives<MonitorScreenSize>
-	declare hasDVI: Primitives<MonitorHasDVI>
-	declare hasHDMI: Primitives<MonitorHasHDMI>
-	declare hasVGA: Primitives<MonitorHasVGA>
+	declare hasDVI: Primitives<HasDVI>
+	declare hasHDMI: Primitives<HasHDMI>
+	declare hasVGA: Primitives<HasVGA>
 
 	static associate(models: Sequelize['models']): void {
 		this.belongsTo(models.Model, { as: 'model', foreignKey: 'modelSeriesId' })

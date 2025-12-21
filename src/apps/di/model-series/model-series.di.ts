@@ -25,25 +25,24 @@ export enum ModelSeriesDependencies {
 	GetAllController = 'modelSeriesGetAllController',
 	PostController = 'modelSeriesPostController',
 	PatchController = 'modelSeriesPatchController',
-
 	GetByCriteriaController = 'modelSeriesGetByCriteria',
 	ExcelDownloadController = 'modelSeriesExcelDownload'
 }
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		modelSeriesRepository: asClass(SequelizeModelSeriesRepository).singleton(),
-		modelSeriesFinder: asClass(ModelSeriesFinder),
-		modelSeriesFinderAll: asClass(ModelSeriesFinderAll),
-		modelSeriesCreator: asClass(ModelSeriesCreator),
-		modelSeriesUpdater: asClass(ModelSeriesUpdater),
-		modelSeriesExcelService: asClass(ModelSeriesExcelService),
-		modelSeriesSearchByCriteria: asClass(ModelSeriesSearchByCriteria),
-		modelSeriesGetController: asClass(ModelSeriesGetController),
-		modelSeriesGetAllController: asClass(ModelSeriesGetAllController),
-		modelSeriesPostController: asClass(ModelSeriesPostController),
-		modelSeriesPatchController: asClass(ModelSeriesPatchController),
-		modelSeriesGetByCriteria: asClass(ModelSeriesSearchByCriteriaController),
-		modelSeriesExcelDownload: asClass(ModelSeriesDownloadExcelServiceController)
+		[ModelSeriesDependencies.Repository]: asClass(SequelizeModelSeriesRepository).singleton(),
+		[ModelSeriesDependencies.Finder]: asClass(ModelSeriesFinder),
+		[ModelSeriesDependencies.FinderAll]: asClass(ModelSeriesFinderAll),
+		[ModelSeriesDependencies.Creator]: asClass(ModelSeriesCreator),
+		[ModelSeriesDependencies.Updater]: asClass(ModelSeriesUpdater),
+		[ModelSeriesDependencies.ExcelService]: asClass(ModelSeriesExcelService),
+		[ModelSeriesDependencies.SearchByCriteria]: asClass(ModelSeriesSearchByCriteria),
+		[ModelSeriesDependencies.GetController]: asClass(ModelSeriesGetController),
+		[ModelSeriesDependencies.GetAllController]: asClass(ModelSeriesGetAllController),
+		[ModelSeriesDependencies.PostController]: asClass(ModelSeriesPostController),
+		[ModelSeriesDependencies.PatchController]: asClass(ModelSeriesPatchController),
+		[ModelSeriesDependencies.GetByCriteriaController]: asClass(ModelSeriesSearchByCriteriaController),
+		[ModelSeriesDependencies.ExcelDownloadController]: asClass(ModelSeriesDownloadExcelServiceController)
 	})
 }

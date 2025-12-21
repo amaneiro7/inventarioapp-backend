@@ -2,15 +2,15 @@ import { type Router } from 'express'
 import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { ModelSeriesDependencies } from '../../di/model-series/model-series.di'
+import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
+import { hasPermission } from '../../Middleware/authorization'
 import { type ModelSeriesGetAllController } from '../../controllers/model-series/model-series.get-all.controller'
 import { type ModelSeriesGetController } from '../../controllers/model-series/model-series.get.controller'
 import { type ModelSeriesPostController } from '../../controllers/model-series/model-series.post.controller'
 import { type ModelSeriesPatchController } from '../../controllers/model-series/model-series.patch.controller'
 import { type ModelSeriesSearchByCriteriaController } from '../../controllers/model-series/model-series.search-by-criteria.controller'
 import { type ModelSeriesDownloadExcelServiceController } from '../../controllers/model-series/model-series.download-excel-service.controller'
-import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
-import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
-import { hasPermission } from '../../Middleware/authorization'
 
 export const register = async (router: Router) => {
 	const getController: ModelSeriesGetController = container.resolve(ModelSeriesDependencies.GetController)

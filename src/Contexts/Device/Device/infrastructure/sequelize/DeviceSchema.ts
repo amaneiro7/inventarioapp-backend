@@ -21,7 +21,7 @@ import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDriv
 import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
 import { type HistoryDto } from '../../../../History/domain/History.dto'
 import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
-import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/entity/ModelSeries.dto'
+import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
 import { type StatusDto } from '../../../Status/domain/Status.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
