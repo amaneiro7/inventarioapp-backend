@@ -1,5 +1,10 @@
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { ShipmentId } from '../valueObject/ShipmentId'
 import { DeliveryDate } from '../valueObject/DeliveryDate'
+import { ShipmentCancelledDomainEvent } from '../event/ShipmentCancelledDomainEvent'
+import { ShipmentCreatedDomainEvent } from '../event/ShipmentCreatedDomainEvent'
+import { ShipmentDeliveredDomainEvent } from '../event/ShipmentDeliveredDomainEvent'
+import { ShipmentStatusChangedDomainEvent } from '../event/ShipmentStatusChangedDomainEvent'
 import { ShipmentCode } from '../valueObject/ShipmentCode'
 import { TrackingNumber } from '../valueObject/Trackingnumber'
 import { StatusEnum, ShipmentStatus } from '../valueObject/ShipmentStatus'
@@ -18,7 +23,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type ShipmentDevicePrimitives } from '../../../ShipmentDevice/domain/entity/ShipmentDevice.dto'
 import { type ShipmentCreatorParams, type ShipmentDto, type ShipmentPrimitives } from './Shipment.dto'
 
-export class Shipment {
+export class Shipment extends AggregateRoot {
 	constructor(
 		private readonly id: ShipmentId,
 		private readonly shipmentCode: ShipmentCode,
@@ -33,7 +38,9 @@ export class Shipment {
 		private status: ShipmentStatus,
 		private readonly reason: ShipmentReason,
 		private shipmentDevices: ShipmentDevice[]
-	) {}
+	) {
+		super()
+	}
 
 	static create(params: ShipmentCreatorParams): Shipment {
 		// --- Business Rules for Creation ---
@@ -84,6 +91,17 @@ export class Shipment {
 
 		shipment.shipmentDevices = shipmentDevices
 
+		shipment.record(
+			new ShipmentCreatedDomainEvent({
+				aggregateId: shipment.idValue,
+				shipmentCode: shipment.shipmentCodeValue,
+				origin: shipment.originValue,
+				destination: shipment.destinationValue,
+				status: shipment.statusValue,
+				sentBy: shipment.sentByValue
+			})
+		)
+
 		return shipment
 	}
 
@@ -108,7 +126,7 @@ export class Shipment {
 		)
 	}
 
-	toPrimitive(): ShipmentPrimitives {
+	toPrimitives(): ShipmentPrimitives {
 		return {
 			id: this.idValue,
 			shipmentCode: this.shipmentCodeValue,
@@ -191,7 +209,7 @@ export class Shipment {
 	// --- Public Methods with Business Logic ---
 	public changeDestination(newdestination: Destination['value']): void {
 		this.ensureIsNotFinalized()
-		if (this.status.value === StatusEnum.PENDING) {
+		if (this.status.value === StatusEnum.IN_TRANSIT) {
 			throw new ShipmentModificationError('No se puede cambiar el destino de un envío que ya está en tránsito.')
 		}
 		this.destination = new Destination(newdestination)
@@ -199,6 +217,7 @@ export class Shipment {
 
 	public changeStatus(newStatus: StatusEnum): void {
 		this.ensureIsNotFinalized()
+		const oldStatus = this.statusValue
 		switch (newStatus) {
 			case StatusEnum.IN_TRANSIT:
 				if (this.statusValue !== StatusEnum.PENDING) {
@@ -207,9 +226,16 @@ export class Shipment {
 					)
 				}
 				this.status = new ShipmentStatus(StatusEnum.IN_TRANSIT)
+				this.record(
+					new ShipmentStatusChangedDomainEvent({
+						aggregateId: this.idValue,
+						oldStatus,
+						newStatus: this.statusValue
+					})
+				)
 				break
 			case StatusEnum.CANCELLED:
-				this.status = new ShipmentStatus(StatusEnum.CANCELLED)
+				this.cancel()
 				break
 			case StatusEnum.DELIVERED:
 				throw new InvalidShipmentStatusTransitionError('Para entregar un envio, use el método "deliver"')
@@ -235,9 +261,9 @@ export class Shipment {
 		deliveryDate: Primitives<DeliveryDate>
 		receivedById: Primitives<ReceivedBy>
 	}): void {
-		if (this.status.value !== StatusEnum.IN_TRANSIT) {
+		if (this.status.value !== StatusEnum.IN_TRANSIT && this.status.value !== StatusEnum.PENDING) {
 			throw new InvalidShipmentStatusTransitionError(
-				'Solo se puede dar como entregado un envío que está "en tránsito" o "pendiente".'
+				'Solo se puede entregar un envío que está "en tránsito" o "pendiente".'
 			)
 		}
 		const deliverDate = deliveryDate ? new Date(deliveryDate) : new Date()
@@ -252,12 +278,24 @@ export class Shipment {
 		this.status = new ShipmentStatus(StatusEnum.DELIVERED)
 		this.deliveryDate = new DeliveryDate(deliverDate)
 		this.receivedBy = new ReceivedBy(receivedById)
+
+		this.record(
+			new ShipmentDeliveredDomainEvent({
+				aggregateId: this.idValue,
+				receivedBy: this.receivedByValue,
+				deliveryDate: this.deliveryDateValue
+			})
+		)
 	}
 
 	public cancel(): void {
 		if (this.status.value === StatusEnum.DELIVERED) {
 			throw new InvalidShipmentStatusTransitionError('No se puede cancelar un envío que ya fue entregado.')
 		}
+		if (this.status.value === StatusEnum.CANCELLED) {
+			return // Already cancelled, do nothing
+		}
 		this.status = new ShipmentStatus(StatusEnum.CANCELLED)
+		this.record(new ShipmentCancelledDomainEvent({ aggregateId: this.idValue, reason: this.reasonValue }))
 	}
 }

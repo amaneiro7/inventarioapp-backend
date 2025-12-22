@@ -9,6 +9,8 @@ import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
 import { type BrandCacheInvalidator } from '../../domain/repository/BrandCacheInvalidator'
+import { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { BrandId } from '../../domain/valueObject/BrandId'
 
 /**
  * @class SequelizeBrandRepository
@@ -142,7 +144,10 @@ export class SequelizeBrandRepository
 	 * @description Invalidates all brand-related cache entries.
 	 * Implements BrandCacheInvalidator interface.
 	 */
-	async invalidateBrandCache(): Promise<void> {
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
+	async invalidateBrandCache(id: Primitives<BrandId>): Promise<void> {
+		const promises: Array<Promise<void>> = []
+		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${id}` }))
+		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:*` }))
+		await Promise.all(promises)
 	}
 }

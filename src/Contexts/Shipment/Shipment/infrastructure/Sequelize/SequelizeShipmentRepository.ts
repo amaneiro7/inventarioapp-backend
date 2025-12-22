@@ -2,15 +2,21 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { ShipmentDeviceModel } from '../../../ShipmentDevice/infrastructure/Sequelize/ShipmentDeviceSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { ShipmentModel } from './ShipmentSchema'
+import { ShipmentAssociation } from './ShipmentAssociation'
 import { type Shipment } from '../../domain/entity/Shipment'
 import { type ShipmentRepository } from '../../domain/repository/ShipmentRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ShipmentDto } from '../../domain/entity/Shipment.dto'
-import { ShipmentAssociation } from './ShipmentAssociation'
+import { type ShipmentCacheInvalidator } from '../../domain/repository/ShipmentCacheInvalidator'
+import { type ShipmentId } from '../../domain/valueObject/ShipmentId'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
-export class SequelizeShipmentRepository extends SequelizeCriteriaConverter implements ShipmentRepository {
+export class SequelizeShipmentRepository
+	extends SequelizeCriteriaConverter
+	implements ShipmentRepository, ShipmentCacheInvalidator
+{
 	private readonly cacheKeyPrefix = 'shipments'
 	private readonly cache: CacheService
 
@@ -89,7 +95,7 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 	}
 
 	async save(shipment: Shipment): Promise<void> {
-		const shipmentPrimitives = shipment.toPrimitive()
+		const shipmentPrimitives = shipment.toPrimitives()
 		const devicePrimitives = shipment.shipmentDevicePrimitives
 
 		const t = await ShipmentModel.sequelize?.transaction()
@@ -112,16 +118,18 @@ export class SequelizeShipmentRepository extends SequelizeCriteriaConverter impl
 			await t?.rollback()
 			throw error
 		}
-		await this.invalidateShipmentCache(shipment.idValue)
 	}
 
 	async remove(id: string): Promise<void> {
 		await ShipmentModel.destroy({ where: { id } })
-		await this.invalidateShipmentCache(id)
 	}
 
-	private async invalidateShipmentCache(id: string): Promise<void> {
-		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}*`, `${this.cacheKeyPrefix}:id:${id}`]
-		await Promise.all(cacheKeysToRemove.map(async key => this.cache.removeCachedData({ cacheKey: key })))
+	async invalidateShipmentCache(id: Primitives<ShipmentId>): Promise<void> {
+		const promises: Array<Promise<void>> = []
+		// Invalida todos los resultados de listas/búsquedas.
+		// Esto es necesario porque un cambio en un item puede afectar a cualquier lista paginada o filtrada.
+		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` }))
+		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${id}` }))
+		await Promise.all(promises)
 	}
 }

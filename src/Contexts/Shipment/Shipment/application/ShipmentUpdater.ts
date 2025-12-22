@@ -10,25 +10,30 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ShipmentParams } from '../domain/entity/Shipment.dto'
 import { type SiteRepository } from '../../../Location/Site/domain/SiteRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { SiteDoesNotExistError } from '../../../Location/Site/domain/SiteDoesNotExistError'
 
 export class ShipmentUpdater {
 	private readonly shipmentRepository: ShipmentRepository
 	private readonly siteRepository: SiteRepository
 	private readonly employeeRepository: EmployeeRepository
+	private readonly eventBus: EventBus
 
 	constructor({
 		shipmentRepository,
 		siteRepository,
-		employeeRepository
+		employeeRepository,
+		eventBus
 	}: {
 		shipmentRepository: ShipmentRepository
 		siteRepository: SiteRepository
 		employeeRepository: EmployeeRepository
+		eventBus: EventBus
 	}) {
 		this.shipmentRepository = shipmentRepository
 		this.siteRepository = siteRepository
 		this.employeeRepository = employeeRepository
+		this.eventBus = eventBus
 	}
 
 	async run({ id, params }: { id: Primitives<ShipmentId>; params: Partial<ShipmentParams> }): Promise<void> {
@@ -80,6 +85,7 @@ export class ShipmentUpdater {
 
 		if (hasChanges) {
 			await this.shipmentRepository.save(shipmentEntity)
+			await this.eventBus.publish(shipmentEntity.pullDomainEvents())
 		}
 	}
 }

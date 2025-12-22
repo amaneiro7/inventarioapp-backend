@@ -3,7 +3,7 @@ import { SiteDoesNotExistError } from '../../../Location/Site/domain/SiteDoesNot
 import { DeviceDoesNotExistError } from '../../../Device/Device/domain/DeviceDoesNotExistError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { UserDoesNotExistError } from '../../../User/user/domain/Errors/UserDoesNotExistError'
-
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type ShipmentRepository } from '../domain/repository/ShipmentRepository'
 import { ShipmentDto, type ShipmentParams } from '../domain/entity/Shipment.dto'
 import { type SiteRepository } from '../../../Location/Site/domain/SiteRepository'
@@ -17,7 +17,7 @@ import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type DeviceDto } from '../../../Device/Device/domain/Device.dto'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 export class ShipmentCreator {
 	private readonly shipmentRepository: ShipmentRepository
@@ -25,25 +25,29 @@ export class ShipmentCreator {
 	private readonly employeeRepository: EmployeeRepository
 	private readonly userRepository: UserRepository
 	private readonly deviceRepository: DeviceRepository
+	private readonly eventBus: EventBus
 
 	constructor({
 		shipmentRepository,
 		siteRepository,
 		employeeRepository,
 		userRepository,
-		deviceRepository
+		deviceRepository,
+		eventBus
 	}: {
 		shipmentRepository: ShipmentRepository
 		siteRepository: SiteRepository
 		employeeRepository: EmployeeRepository
 		userRepository: UserRepository
 		deviceRepository: DeviceRepository
+		eventBus: EventBus
 	}) {
 		this.shipmentRepository = shipmentRepository
 		this.siteRepository = siteRepository
 		this.employeeRepository = employeeRepository
 		this.userRepository = userRepository
 		this.deviceRepository = deviceRepository
+		this.eventBus = eventBus
 	}
 
 	async run({ params, user }: { params: ShipmentParams; user?: JwtPayloadUser }): Promise<void> {
@@ -72,6 +76,7 @@ export class ShipmentCreator {
 		// La implmentacion de 'save' ahora debe manejar los hijos
 
 		await this.shipmentRepository.save(shipment)
+		await this.eventBus.publish(shipment.pullDomainEvents())
 	}
 
 	private async createShipmentDevices(deviceIds: Primitives<DeviceId>[]): Promise<DeviceDto[]> {

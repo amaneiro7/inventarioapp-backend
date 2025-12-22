@@ -20,8 +20,15 @@ export class InvalidateBrandCacheOnBrandChanged implements DomainEventSubscriber
 		this.invalidator = brandRepository
 	}
 
-	async on(): Promise<void> {
-		await this.invalidator.invalidateBrandCache()
+	async on(
+		event:
+			| BrandCreatedDomainEvent
+			| BrandRenamedDomainEvent
+			| BrandRemovedDomainEvent
+			| BrandCategoryAddedDomainEvent
+			| BrandCategoryRemovedDomainEvent
+	): Promise<void> {
+		await this.invalidator.invalidateBrandCache(event.aggregateId)
 	}
 
 	subscribedTo(): DomainEventClass[] {
