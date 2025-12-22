@@ -1,5 +1,5 @@
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
 // Define a class for representing a Venezuela States as a value object
 export class TypeOfSiteName extends StringValueObject {

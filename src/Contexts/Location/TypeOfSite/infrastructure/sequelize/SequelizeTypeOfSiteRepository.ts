@@ -5,9 +5,9 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type TypeOfSiteDto } from '../../domain/TypeOfSite.dto'
-import { type TypeOfSiteId } from '../../domain/TypeOfSiteId'
-import { type TypeOfSiteRepository } from '../../domain/TypeOfSiteRepository'
+import { type TypeOfSiteDto } from '../../domain/entity/TypeOfSite.dto'
+import { type TypeOfSiteId } from '../../domain/valueObject/TypeOfSiteId'
+import { type TypeOfSiteRepository } from '../../domain/repository/TypeOfSiteRepository'
 
 /**
  * @class SequelizeTypeOfSiteRepository
@@ -37,7 +37,7 @@ export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter im
 		return await this.cache.getCachedData<ResponseDB<TypeOfSiteDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await TypeOfSiteModel.findAndCountAll(options)
 				return {
@@ -58,7 +58,7 @@ export class SequelizeTypeOfSiteRepository extends SequelizeCriteriaConverter im
 	async findById(id: Primitives<TypeOfSiteId>): Promise<TypeOfSiteDto | null> {
 		return await this.cache.getCachedData<TypeOfSiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const typeOfSite = await TypeOfSiteModel.findByPk(id)
 				return typeOfSite ? typeOfSite.get({ plain: true }) : null

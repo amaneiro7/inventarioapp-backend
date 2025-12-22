@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CityId } from '../../domain/CityId'
-import { type StateId } from '../../../State/domain/StateId'
+import { type StateId } from '../../../State/domain/valueObject/StateId'
 import { type CityName } from '../../domain/CityName'
 import { type CityDto } from '../../domain/City.dto'
-import { type StateDto } from '../../../State/domain/State.dto'
+import { type StateDto } from '../../../State/domain/entity/State.dto'
 
 /**
  * Represents the City model in the database.

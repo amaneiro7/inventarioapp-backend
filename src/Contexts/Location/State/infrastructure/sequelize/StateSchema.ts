@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type StateDto } from '../../domain/State.dto'
+import { type StateDto } from '../../domain/entity/State.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type StateId } from '../../domain/StateId'
-import { type StateName } from '../../domain/StateName'
+import { type StateId } from '../../domain/valueObject/StateId'
+import { type StateName } from '../../domain/valueObject/StateName'
 import { type RegionId } from '../../../Region/domain/RegionId'
 import { type RegionDto } from '../../../Region/domain/Region.dto'
 

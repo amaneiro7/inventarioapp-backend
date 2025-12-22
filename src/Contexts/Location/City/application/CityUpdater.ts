@@ -4,7 +4,7 @@ import { CityId } from '../domain/CityId'
 import { CityName } from '../domain/CityName'
 import { CityState } from '../domain/CityState'
 import { type CityParams } from '../domain/City.dto'
-import { type StateRepository } from '../../State/domain/StateRepository'
+import { type StateRepository } from '../../State/domain/repository/StateRepository'
 import { type CityRepository } from '../domain/CityRepository'
 
 /**

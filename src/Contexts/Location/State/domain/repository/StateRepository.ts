@@ -1,8 +1,8 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type StateDto } from './State.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type StateId } from './StateId'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type StateDto } from '../entity/State.dto'
+import { type StateId } from '../valueObject/StateId'
 
 /**
  * Abstract class defining the contract for State data access.

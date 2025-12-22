@@ -1,13 +1,14 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { LocationId } from '../../../Location/Location/domain/LocationId'
 import { DeviceStatus } from './DeviceStatus'
-import { TypeOfSiteId } from '../../../Location/TypeOfSite/domain/TypeOfSiteId'
+import { TypeOfSiteId } from '../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
 import { LocationDoesNotExistError } from '../../../Location/Location/domain/LocationDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Device } from './Device'
 import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { StatusOptions } from '../../Status/domain/StatusOptions'
+import { TypeOfSiteList } from '../../../Location/TypeOfSite/domain/TypeOfSiteList'
 
 /**
  * @class DeviceLocation
@@ -48,10 +49,10 @@ export class DeviceLocation extends AcceptedNullValueObject<Primitives<LocationI
 			status === StatusOptions.JORNADA
 		const isStorage = status === StatusOptions.INALMACEN || status === StatusOptions.PORDESINCORPORAR
 
-		if (isInUse && typeOfSite === TypeOfSiteId.TypeOfSiteOptions.ALMACEN) {
+		if (isInUse && typeOfSite === TypeOfSiteList.ALMACEN) {
 			throw new InvalidArgumentError('Un dispositivo en uso no puede estar ubicado en un almacén.')
 		}
-		if (isStorage && typeOfSite !== TypeOfSiteId.TypeOfSiteOptions.ALMACEN) {
+		if (isStorage && typeOfSite !== TypeOfSiteList.ALMACEN) {
 			throw new InvalidArgumentError('Un dispositivo en almacén solo puede estar ubicado en un almacén.')
 		}
 		if (status === StatusOptions.DESINCORPORADO && typeOfSite !== null) {

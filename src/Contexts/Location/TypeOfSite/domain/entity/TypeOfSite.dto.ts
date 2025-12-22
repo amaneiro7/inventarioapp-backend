@@ -1,6 +1,6 @@
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { TypeOfSiteId } from './TypeOfSiteId'
-import { TypeOfSiteName } from './TypeOfSiteName'
+import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { TypeOfSiteId } from '../valueObject/TypeOfSiteId'
+import { TypeOfSiteName } from '../valueObject/TypeOfSiteName'
 
 /**
  * Represents the core properties of a TypeOfSite.

@@ -1,7 +1,7 @@
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { StateId } from '../../State/domain/StateId'
+import { StateId } from '../../State/domain/valueObject/StateId'
 import { type City } from './City'
-import { type StateRepository } from '../../State/domain/StateRepository'
+import { type StateRepository } from '../../State/domain/repository/StateRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**

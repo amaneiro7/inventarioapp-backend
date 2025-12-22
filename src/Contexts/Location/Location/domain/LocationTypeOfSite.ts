@@ -1,7 +1,7 @@
 import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { TypeOfSiteDoesNotExistError } from '../../TypeOfSite/domain/TypeOfSiteDoesNotExistError'
-import { TypeOfSiteId } from '../../TypeOfSite/domain/TypeOfSiteId'
-import { TypeOfSiteRepository } from '../../TypeOfSite/domain/TypeOfSiteRepository'
+import { TypeOfSiteDoesNotExistError } from '../../TypeOfSite/domain/errors/TypeOfSiteDoesNotExistError'
+import { TypeOfSiteId } from '../../TypeOfSite/domain/valueObject/TypeOfSiteId'
+import { TypeOfSiteRepository } from '../../TypeOfSite/domain/repository/TypeOfSiteRepository'
 import { Location } from './Location'
 
 /**

@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type StateDto } from '../domain/State.dto'
-import { type StateRepository } from '../domain/StateRepository'
+import { type StateDto } from '../domain/entity/State.dto'
+import { type StateRepository } from '../domain/repository/StateRepository'
 
 /**
  * Service to find all States based on provided criteria.

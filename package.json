@@ -128,5 +128,8 @@
 		"*.{json,md}": [
 			"prettier --write"
 		]
-	}
+	},
+	"trustedDependencies": [
+		"unrs-resolver"
+	]
 }

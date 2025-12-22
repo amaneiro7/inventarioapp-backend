@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type TypeOfSiteDto } from '../domain/TypeOfSite.dto'
-import { type TypeOfSiteRepository } from '../domain/TypeOfSiteRepository'
+import { type TypeOfSiteDto } from '../domain/entity/TypeOfSite.dto'
+import { type TypeOfSiteRepository } from '../domain/repository/TypeOfSiteRepository'
 
 /**
  * Service to find all TypeOfSites based on provided criteria.

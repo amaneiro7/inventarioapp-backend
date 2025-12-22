@@ -11,7 +11,8 @@ export class StateAssociation {
 	 * @param {Criteria} criteria - The criteria to convert.
 	 * @param {FindOptions} options - The initial find options.
 	 * @returns {FindOptions} The updated find options with associations.
-	 */ static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
+	 */
+	static converFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const whereFilters = { ...options.where }
 		const administrativeRegionInclude: IncludeOptions = {
 			association: 'administrativeRegion',

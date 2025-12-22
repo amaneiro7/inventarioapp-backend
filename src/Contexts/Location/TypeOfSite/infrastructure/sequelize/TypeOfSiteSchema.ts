@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type TypeOfSiteDto } from '../../domain/TypeOfSite.dto'
+import { type TypeOfSiteDto } from '../../domain/entity/TypeOfSite.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type TypeOfSiteId } from '../../domain/TypeOfSiteId'
-import { type TypeOfSiteName } from '../../domain/TypeOfSiteName'
+import { type TypeOfSiteId } from '../../domain/valueObject/TypeOfSiteId'
+import { type TypeOfSiteName } from '../../domain/valueObject/TypeOfSiteName'
 
 export class TypeOfSiteModel extends Model<TypeOfSiteDto> implements TypeOfSiteDto {
 	declare id: Primitives<TypeOfSiteId>

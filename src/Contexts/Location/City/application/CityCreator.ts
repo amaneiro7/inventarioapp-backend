@@ -4,7 +4,7 @@ import { CityState } from '../domain/CityState'
 
 import { type CityRepository } from '../domain/CityRepository'
 import { type CityParams } from '../domain/City.dto'
-import { type StateRepository } from '../../State/domain/StateRepository'
+import { type StateRepository } from '../../State/domain/repository/StateRepository'
 
 /**
  * Service to create a new City.
