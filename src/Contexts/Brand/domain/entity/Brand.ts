@@ -1,7 +1,7 @@
 import { AggregateRoot } from '../../../Shared/domain/AggregateRoot'
 import { BrandId } from '../valueObject/BrandId'
 import { BrandName } from '../valueObject/BrandName'
-import { CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
 import { BrandCreatedDomainEvent } from '../event/BrandCreatedDomainEvent'
 import { BrandRenamedDomainEvent } from '../event/BrandRenamedDomainEvent'
 import { BrandRemovedDomainEvent } from '../event/BrandRemovedDomainEvent'

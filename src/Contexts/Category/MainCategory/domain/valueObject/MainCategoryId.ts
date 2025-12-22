@@ -1,4 +1,4 @@
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
 /**
  * @class MainCategoryId

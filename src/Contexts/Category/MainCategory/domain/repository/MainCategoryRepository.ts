@@ -1,8 +1,8 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type Nullable } from '../../../Shared/domain/Nullable'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type MainCategoryDto } from './MainCategory.dto'
-import { type MainCategoryId } from './MainCategoryId'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type MainCategoryDto } from '../entity/MainCategory.dto'
+import { type MainCategoryId } from '../valueObject/MainCategoryId'
 
 /**
  * @abstract

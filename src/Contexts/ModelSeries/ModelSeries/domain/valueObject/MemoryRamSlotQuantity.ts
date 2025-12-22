@@ -10,6 +10,6 @@ export class MemoryRamSlotQuantity extends NumberValueObject {
 	constructor(readonly value: number) {
 		super(value)
 		this.ensureLengthIsBiggerThan(this.MIN_SLOTS, this.value)
-		this.ensureLengthIsLowerThan(this.MAX_SLOTS, this.value)
+		this.ensureLengthIsSmallerThan(this.MAX_SLOTS, this.value)
 	}
 }

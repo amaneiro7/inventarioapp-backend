@@ -3,7 +3,7 @@ import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type MFPIPAddress } from '../domain/MFPIPAddress'
 import { type DeviceMFPPrimitives } from '../domain/MFP.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
 import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
 interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {

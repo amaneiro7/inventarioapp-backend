@@ -5,9 +5,9 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type MainCategoryDto } from '../../domain/MainCategory.dto'
-import { type MainCategoryId } from '../../domain/MainCategoryId'
-import { type MainCategoryRepository } from '../../domain/MainCategoryRepository'
+import { type MainCategoryDto } from '../../domain/entity/MainCategory.dto'
+import { type MainCategoryId } from '../../domain/valueObject/MainCategoryId'
+import { type MainCategoryRepository } from '../../domain/repository/MainCategoryRepository'
 
 /**
  * @class SequelizeMainCategoryRepository
@@ -39,7 +39,7 @@ export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter 
 
 		return this.cache.getCachedData<ResponseDB<MainCategoryDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await MainCategoryModel.findAndCountAll(sequelizeOptions)
 				return {
@@ -61,7 +61,7 @@ export class SequelizeMainCategoryRepository extends SequelizeCriteriaConverter 
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<MainCategoryDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const mainCategory = await MainCategoryModel.findByPk(id)
 				return mainCategory ? mainCategory.get({ plain: true }) : null

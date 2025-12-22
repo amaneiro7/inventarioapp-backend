@@ -1,5 +1,5 @@
 import { type BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device } from './Device'

@@ -7,7 +7,7 @@ import { type HasDVI } from '../../../domain/valueObject/HasDVI'
 import { type HasHDMI } from '../../../domain/valueObject/HasHDMI'
 import { type HasVGA } from '../../../domain/valueObject/HasVGA'
 import { type MonitorModelsDto } from '../../../domain/dto/MonitoModels.dto'
-import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 
 interface MonitorModelsCreationAttributes extends MonitorModelsDto {
 	id: Primitives<ModelSeriesId>

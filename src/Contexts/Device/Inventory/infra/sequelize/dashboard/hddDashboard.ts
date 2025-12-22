@@ -1,6 +1,6 @@
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceModel } from '../../../../Device/infrastructure/sequelize/DeviceSchema'
-import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { type RawHDDData, type AggregatedHDDData } from './types'
 
 /**

@@ -13,7 +13,7 @@ export abstract class NumberValueObject extends ValueObject<number> {
 		return this.value === other.value
 	}
 
-	protected ensureLengthIsLowerThan(maxLength: number, value: number): void {
+	protected ensureLengthIsSmallerThan(maxLength: number, value: number): void {
 		if (value > maxLength) {
 			throw new NumberTooLongError(this.constructor.name, maxLength)
 		}

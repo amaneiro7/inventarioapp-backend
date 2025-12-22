@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CategoryModel } from './CategorySchema'
@@ -5,11 +6,10 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CategoryDto } from '../../domain/Category.dto'
-import { type CategoryId } from '../../domain/CategoryId'
-import { type CategoryName } from '../../domain/CategoryName'
-import { type CategoryRepository } from '../../domain/CategoryRepository'
-import { Op } from 'sequelize'
+import { type CategoryDto } from '../../domain/entity/Category.dto'
+import { type CategoryId } from '../../domain/valueObject/CategoryId'
+import { type CategoryName } from '../../domain/valueObject/CategoryName'
+import { type CategoryRepository } from '../../domain/repository/CategoryRepository'
 
 /**
  * @class SequelizeCategoryRepository
@@ -63,7 +63,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<CategoryDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findByPk(id)
 				return category ? (category.get({ plain: true }) as CategoryDto) : null
@@ -85,7 +85,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 
 		return this.cache.getCachedData<CategoryDto[]>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const categories = await CategoryModel.findAll({
 					where: { id: { [Op.in]: sortedIds } }
@@ -106,7 +106,7 @@ export class SequelizeCategoryRepository extends SequelizeCriteriaConverter impl
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<CategoryDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const category = await CategoryModel.findOne({ where: { name } })
 				return category ? (category.get({ plain: true }) as CategoryDto) : null

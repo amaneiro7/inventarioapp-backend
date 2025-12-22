@@ -1,8 +1,8 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type MainCategoryId } from '../../MainCategory/domain/MainCategoryId'
-import { type MainCategoryDto } from '../../MainCategory/domain/MainCategory.dto'
-import { type CategoryId } from './CategoryId'
-import { type CategoryName } from './CategoryName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type MainCategoryId } from '../../../MainCategory/domain/valueObject/MainCategoryId'
+import { type MainCategoryDto } from '../../../MainCategory/domain/entity/MainCategory.dto'
+import { type CategoryId } from '../valueObject/CategoryId'
+import { type CategoryName } from '../valueObject/CategoryName'
 
 /**
  * @interface Category

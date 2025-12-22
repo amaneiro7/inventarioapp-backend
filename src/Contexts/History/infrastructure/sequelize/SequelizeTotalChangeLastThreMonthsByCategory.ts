@@ -3,7 +3,7 @@ import { sequelize } from '../../../Shared/infrastructure/persistance/Sequelize/
 import { HistoryModel } from './HistorySchema'
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../Shared/domain/CacheService'
-import { MainCategoryList } from '../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { type TotalChangeLastThreMonthsByCategoryRepository } from '../../domain/TotalChangeLastThreMonthsByCategoryRepository'
 
 // Interface for the raw data returned from the Sequelize query
@@ -24,9 +24,7 @@ interface GroupedResult {
  * @description Repository for retrieving aggregated history data showing changes by category
  * over the last few months. Utilizes caching for performance.
  */
-export class SequelizeTotalChangeLastThreMonthsByCategoryRepository
-	implements TotalChangeLastThreMonthsByCategoryRepository
-{
+export class SequelizeTotalChangeLastThreMonthsByCategoryRepository implements TotalChangeLastThreMonthsByCategoryRepository {
 	private readonly cacheKey: string = 'totalChangeLastThreMonthsByCategory'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {

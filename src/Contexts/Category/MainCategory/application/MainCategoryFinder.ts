@@ -1,7 +1,7 @@
-import { MainCategoryId } from '../domain/MainCategoryId'
-import { MainCategoryDoesNotExistError } from '../domain/MainCategoryDoesNotExistError'
-import { type MainCategoryDto } from '../domain/MainCategory.dto'
-import { type MainCategoryRepository } from '../domain/MainCategoryRepository'
+import { MainCategoryId } from '../domain/valueObject/MainCategoryId'
+import { MainCategoryDoesNotExistError } from '../domain/errors/MainCategoryDoesNotExistError'
+import { type MainCategoryDto } from '../domain/entity/MainCategory.dto'
+import { type MainCategoryRepository } from '../domain/repository/MainCategoryRepository'
 
 /**
  * @description Use case for finding a Main Category entity by its unique identifier.

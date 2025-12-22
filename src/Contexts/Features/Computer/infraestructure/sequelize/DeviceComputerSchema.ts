@@ -6,7 +6,7 @@ import { type ProcessorId } from '../../../Processor/Processor/domain/ProcessorI
 import { type MACAddress } from '../../domain/MACAddress'
 import { type IPAddress } from '../../domain/IPAddress'
 import { type ComputerName } from '../../domain/ComputerName'
-import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { type ComputerMemoryRamCapacity } from '../../domain/ComputerMemoryRamCapacity'
 import { type ComputerHardDriveCapacity } from '../../domain/ComputerHardDriveCapacity'
 import { type ComputerHardDriveType } from '../../domain/ComputerHardDriveType'
@@ -15,22 +15,21 @@ import { type ComputerOperatingSystemArq } from '../../domain/ComputerOperatingS
 import { type MemoryRamValues } from '../../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { type DeviceComputerPrimitives } from '../../domain/Computer.dto'
 
-export interface DeviceComputerCreationAttributes
-	extends Pick<
-		DeviceComputerPrimitives,
-		| 'id'
-		| 'categoryId'
-		| 'computerName'
-		| 'processorId'
-		| 'memoryRam'
-		| 'memoryRamCapacity'
-		| 'hardDriveCapacityId'
-		| 'hardDriveTypeId'
-		| 'operatingSystemId'
-		| 'operatingSystemArqId'
-		| 'macAddress'
-		| 'ipAddress'
-	> {
+export interface DeviceComputerCreationAttributes extends Pick<
+	DeviceComputerPrimitives,
+	| 'id'
+	| 'categoryId'
+	| 'computerName'
+	| 'processorId'
+	| 'memoryRam'
+	| 'memoryRamCapacity'
+	| 'hardDriveCapacityId'
+	| 'hardDriveTypeId'
+	| 'operatingSystemId'
+	| 'operatingSystemArqId'
+	| 'macAddress'
+	| 'ipAddress'
+> {
 	deviceId: Primitives<DeviceId>
 }
 

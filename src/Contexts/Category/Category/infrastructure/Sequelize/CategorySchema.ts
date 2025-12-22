@@ -1,11 +1,11 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type MainCategoryDto } from '../../../MainCategory/domain/MainCategory.dto'
-import { type MainCategoryId } from '../../../MainCategory/domain/MainCategoryId'
-import { type CategoryDto } from '../../domain/Category.dto'
-import { type CategoryId } from '../../domain/CategoryId'
-import { type CategoryName } from '../../domain/CategoryName'
+import { type MainCategoryDto } from '../../../MainCategory/domain/entity/MainCategory.dto'
+import { type MainCategoryId } from '../../../MainCategory/domain/valueObject/MainCategoryId'
+import { type CategoryDto } from '../../domain/entity/Category.dto'
+import { type CategoryId } from '../../domain/valueObject/CategoryId'
+import { type CategoryName } from '../../domain/valueObject/CategoryName'
 
 /**
  * @class CategoryModel
@@ -15,21 +15,9 @@ import { type CategoryName } from '../../domain/CategoryName'
  * columns, and associations for categories in the database.
  */
 export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> implements CategoryDto {
-	/**
-	 * @property {Primitives<CategoryId>} id The primary key, a string representing the category's unique identifier.
-	 */
 	declare id: Primitives<CategoryId>
-	/**
-	 * @property {Primitives<CategoryName>} name The name of the category. Must be unique.
-	 */
 	declare name: Primitives<CategoryName>
-	/**
-	 * @property {Primitives<MainCategoryId>} mainCategoryId The foreign key referencing the main category.
-	 */
 	declare mainCategoryId: Primitives<MainCategoryId>
-	/**
-	 * @property {MainCategoryDto} mainCategory The main category associated with this category. This is a virtual property populated via associations.
-	 */
 	declare mainCategory: MainCategoryDto
 
 	/**

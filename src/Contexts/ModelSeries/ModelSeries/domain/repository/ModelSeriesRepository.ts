@@ -1,5 +1,5 @@
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../valueObject/ModelSeriesId'
 import { type ModelSeriesName } from '../valueObject/ModelSeriesName'

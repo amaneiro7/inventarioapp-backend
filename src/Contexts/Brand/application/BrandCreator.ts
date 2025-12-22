@@ -1,11 +1,11 @@
 import { Brand } from '../domain/entity/Brand'
-import { CategoryDoesNotExistError } from '../../Category/Category/domain/CategoryDoesNotExistError'
+import { CategoryDoesNotExistError } from '../../Category/Category/domain/errors/CategoryDoesNotExistError'
 import { BrandAlreadyExistError } from '../domain/errors/BrandAlreadyExistError'
-import { type CategoryId } from '../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../Category/Category/domain/valueObject/CategoryId'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type BrandParams } from '../domain/entity/Brand.dto'
-import { type CategoryRepository } from '../../Category/Category/domain/CategoryRepository'
+import { type CategoryRepository } from '../../Category/Category/domain/repository/CategoryRepository'
 import { type EventBus } from '../../Shared/domain/event/EventBus'
 
 /**

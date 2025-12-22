@@ -1,4 +1,4 @@
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { lastHistoryUpdated } from '../../../../Shared/domain/LastHistoryUpdated'
 import { type DeviceDto } from '../../domain/Device.dto'
 import { type ClearDefaultDataset, type ClearComputerDataset } from './DeviceResponse'

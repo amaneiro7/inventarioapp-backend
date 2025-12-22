@@ -1,8 +1,8 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type CategoryDto } from './Category.dto'
-import { type CategoryId } from './CategoryId'
-import { type CategoryName } from './CategoryName'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type CategoryDto } from '../entity/Category.dto'
+import { type CategoryId } from '../valueObject/CategoryId'
+import { type CategoryName } from '../valueObject/CategoryName'
 
 /**
  * @abstract

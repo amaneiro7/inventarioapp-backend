@@ -1,7 +1,7 @@
 import { ModelSeries } from '../../../ModelSeries/domain/entity/ModelSeries'
 import { ModelSeriesId } from '../../../ModelSeries/domain/valueObject/ModelSeriesId'
 import { ModelSeriesName } from '../../../ModelSeries/domain/valueObject/ModelSeriesName'
-import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { Generic } from '../../../ModelSeries/domain/valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'

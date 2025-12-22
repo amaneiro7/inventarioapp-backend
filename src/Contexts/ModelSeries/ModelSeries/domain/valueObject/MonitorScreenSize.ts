@@ -10,6 +10,6 @@ export class MonitorScreenSize extends NumberValueObject {
 	constructor(readonly value: number) {
 		super(value)
 		this.ensureLengthIsBiggerThan(this.MIN_SIZE, this.value)
-		this.ensureLengthIsLowerThan(this.MAX_SIZE, this.value)
+		this.ensureLengthIsSmallerThan(this.MAX_SIZE, this.value)
 	}
 }

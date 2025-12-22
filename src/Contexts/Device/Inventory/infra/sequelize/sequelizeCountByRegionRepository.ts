@@ -1,7 +1,7 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { CountByRegionRepository } from '../../domain/CountByRegionRepository'
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { TypeOfSiteList } from '../../../../Location/TypeOfSite/domain/TypeOfSiteList'
 import { type CacheService } from '../../../../Shared/domain/CacheService'

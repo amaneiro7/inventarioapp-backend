@@ -3,6 +3,6 @@ import { StringValueObject } from '../../../../Shared/domain/value-object/String
 export class PermissionGroupDescription extends StringValueObject {
 	constructor(value: string) {
 		super(value)
-		this.ensureLengthIsLowerThan(255, value)
+		this.ensureLengthIsSmallerThan(255, value)
 	}
 }

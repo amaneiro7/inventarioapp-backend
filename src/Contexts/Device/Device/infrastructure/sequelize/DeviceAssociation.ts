@@ -1,6 +1,6 @@
 import { type IncludeOptions, type Order, type FindOptions } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**

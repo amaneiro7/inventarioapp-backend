@@ -8,7 +8,7 @@ export abstract class StringValueObject extends ValueObject<string> {
 		super(value.trim())
 	}
 
-	protected ensureLengthIsLowerThan(maxLength: number, value: string): void {
+	protected ensureLengthIsSmallerThan(maxLength: number, value: string): void {
 		if (value.length > maxLength) {
 			throw new StringTooLongError(this.constructor.name, maxLength)
 		}

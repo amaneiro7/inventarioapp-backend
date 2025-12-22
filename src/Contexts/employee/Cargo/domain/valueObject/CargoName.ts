@@ -11,7 +11,7 @@ export class CargoName extends StringValueObject {
 
 	constructor(readonly value: string) {
 		super(value)
-		this.ensureLengthIsLowerThan(this.MAX_LENGTH, value)
+		this.ensureLengthIsSmallerThan(this.MAX_LENGTH, value)
 		this.ensureLengthIsBiggerThan(this.MIN_LENGTH, value)
 		this.ensureHasValidCharacters(value)
 	}

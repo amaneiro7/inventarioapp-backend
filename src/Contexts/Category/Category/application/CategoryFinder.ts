@@ -1,7 +1,7 @@
-import { CategoryId } from '../domain/CategoryId'
-import { CategoryDoesNotExistError } from '../domain/CategoryDoesNotExistError'
-import { type CategoryDto } from '../domain/Category.dto'
-import { type CategoryRepository } from '../domain/CategoryRepository'
+import { CategoryId } from '../domain/valueObject/CategoryId'
+import { CategoryDoesNotExistError } from '../domain/errors/CategoryDoesNotExistError'
+import { type CategoryDto } from '../domain/entity/Category.dto'
+import { type CategoryRepository } from '../domain/repository/CategoryRepository'
 
 /**
  * @description Use case for finding a Category entity by its unique identifier.

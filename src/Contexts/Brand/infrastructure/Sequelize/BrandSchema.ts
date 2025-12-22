@@ -11,9 +11,9 @@ import { type BrandId } from '../../domain/valueObject/BrandId'
 import { type BrandName } from '../../domain/valueObject/BrandName'
 import { type BrandDto } from '../../domain/entity/Brand.dto'
 import { type SequelizeModels } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type CategoryDto } from '../../../Category/Category/domain/Category.dto'
+import { type CategoryDto } from '../../../Category/Category/domain/entity/Category.dto'
 import { type CategoryModel } from '../../../Category/Category/infrastructure/Sequelize/CategorySchema'
-import { type CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
 
 export class BrandModel extends Model<Omit<BrandDto, 'categories'>> implements BrandDto {
 	declare id: Primitives<BrandId>

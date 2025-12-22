@@ -1,8 +1,8 @@
 import { BrandCreator } from '../../../../src/Contexts/Brand/application/BrandCreator'
 import { BrandRepository } from '../../../../src/Contexts/Brand/domain/BrandRepository'
-import { CategoryRepository } from '../../../../src/Contexts/Category/Category/domain/CategoryRepository'
+import { CategoryRepository } from '../../../../src/Contexts/Category/Category/domain/repository/CategoryRepository'
 import { BrandAlreadyExistError } from '../../../../src/Contexts/Brand/domain/BrandAlreadyExistError'
-import { CategoryDoesNotExistError } from '../../../../src/Contexts/Category/Category/domain/CategoryDoesNotExistError'
+import { CategoryDoesNotExistError } from '../../../../src/Contexts/Category/Category/domain/errors/CategoryDoesNotExistError'
 import { BrandName } from '../../../../src/Contexts/Brand/domain/BrandName'
 
 describe('BrandCreator', () => {

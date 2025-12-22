@@ -1,9 +1,9 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type MainCategoryDto } from '../../domain/MainCategory.dto'
-import { type MainCategoryId } from '../../domain/MainCategoryId'
-import { type MainCategoryName } from '../../domain/MainCategoryName'
+import { type MainCategoryDto } from '../../domain/entity/MainCategory.dto'
+import { type MainCategoryId } from '../../domain/valueObject/MainCategoryId'
+import { type MainCategoryName } from '../../domain/valueObject/MainCategoryName'
 
 /**
  * @class MainCategoryModel

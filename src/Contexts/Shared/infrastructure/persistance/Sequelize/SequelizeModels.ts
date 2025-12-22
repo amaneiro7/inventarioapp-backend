@@ -1,9 +1,8 @@
 import { type Model, type ModelStatic, type Sequelize } from 'sequelize'
-import { type CategoryDto } from '../../../../Category/Category/domain/Category.dto'
-import { type MainCategoryDto } from '../../../../Category/MainCategory/domain/MainCategory.dto'
+import { type CategoryDto } from '../../../../Category/Category/domain/entity/Category.dto'
+import { type MainCategoryDto } from '../../../../Category/MainCategory/domain/entity/MainCategory.dto'
 import { type BrandDto } from '../../../../Brand/domain/entity/Brand.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
-
 import { type StatusDto } from '../../../../Device/Status/domain/Status.dto'
 import { type DeviceDto } from '../../../../Device/Device/domain/Device.dto'
 import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'

@@ -5,7 +5,7 @@ import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSche
 import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { type TotalCountByCategoryRepository } from '../../domain/TotalCountByCategoryRepository'
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 
 // Interface for the raw data returned from the Sequelize query
 interface RawCategoryCountData {

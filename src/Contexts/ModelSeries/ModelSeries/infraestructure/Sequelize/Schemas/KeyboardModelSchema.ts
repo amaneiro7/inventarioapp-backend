@@ -3,7 +3,7 @@ import { CategoryValues } from '../../../../../Category/Category/domain/Category
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../../ModelSeries/domain/valueObject/ModelSeriesId'
 import { type InputTypeId } from '../../../../InputType/domain/valueObject/InputTypeId'
-import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { type InputTypeDto } from '../../../../InputType/domain/entity/InputType.dto'
 import { type HasFingerPrintReader } from '../../../domain/valueObject/HasFingerPrintReader'
 import { type KeyboardModelsDto } from '../../../domain/dto/KeyboardModels.dto'

@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
 import { CacheService } from '../../../../Shared/domain/CacheService'
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { StatusOptions } from '../../../Status/domain/StatusOptions'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type TotalScreensRepository } from '../../domain/TotalScreensRepository'

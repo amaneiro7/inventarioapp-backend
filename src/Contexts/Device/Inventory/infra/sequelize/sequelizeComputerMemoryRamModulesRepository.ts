@@ -1,6 +1,6 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
-import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategory'
+import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type ComputerMemoryRamModulesRepository } from '../../domain/ComputerMemoryRamModulesRepository'

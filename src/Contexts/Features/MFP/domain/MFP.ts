@@ -1,7 +1,7 @@
 import { Device } from '../../../Device/Device/domain/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { CategoryId } from '../../../Category/Category/domain/CategoryId'
+import { CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
 import { DeviceActivo } from '../../../Device/Device/domain/DeviceActivo'
 import { DeviceEmployee } from '../../../Device/Device/domain/DeviceEmployee'
 import { DeviceId } from '../../../Device/Device/domain/DeviceId'

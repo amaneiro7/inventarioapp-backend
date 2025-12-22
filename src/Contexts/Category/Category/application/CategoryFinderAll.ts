@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type CategoryDto } from '../domain/Category.dto'
-import { type CategoryRepository } from '../domain/CategoryRepository'
+import { type CategoryDto } from '../domain/entity/Category.dto'
+import { type CategoryRepository } from '../domain/repository/CategoryRepository'
 
 /**
  * @description Use case for retrieving all Category entities, with support for criteria-based filtering, sorting, and pagination.

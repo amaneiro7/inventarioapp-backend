@@ -1,6 +1,6 @@
-import { MainCategoryId } from '../../MainCategory/domain/MainCategoryId'
-import { CategoryId } from './CategoryId'
-import { CategoryName } from './CategoryName'
+import { MainCategoryId } from '../../../MainCategory/domain/valueObject/MainCategoryId'
+import { CategoryId } from '../valueObject/CategoryId'
+import { CategoryName } from '../valueObject/CategoryName'
 import { type CategoryPrimitives } from './Category.dto'
 
 /**

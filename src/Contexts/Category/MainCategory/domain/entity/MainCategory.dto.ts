@@ -1,6 +1,6 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type MainCategoryId } from './MainCategoryId'
-import { type MainCategoryName } from './MainCategoryName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type MainCategoryId } from '../valueObject/MainCategoryId'
+import { type MainCategoryName } from '../valueObject/MainCategoryName'
 
 /**
  * @interface MainCategory

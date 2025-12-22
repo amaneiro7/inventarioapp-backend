@@ -3,7 +3,7 @@ import { CategoryValues } from '../../../../../Category/Category/domain/Category
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type InputTypeId } from '../../../../InputType/domain/valueObject/InputTypeId'
-import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { type MouseModelsDto } from '../../../domain/dto/MouseModels.dto'
 import { type InputTypeDto } from '../../../../InputType/domain/entity/InputType.dto'
 

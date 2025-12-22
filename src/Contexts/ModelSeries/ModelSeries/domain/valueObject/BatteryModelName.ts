@@ -11,7 +11,7 @@ export class BatteryModelName extends StringValueObject {
 	constructor(readonly value: string) {
 		super(value)
 		this.ensureLengthIsBiggerThan(this.MIN_LENGTH, this.value)
-		this.ensureLengthIsLowerThan(this.MAX_LENGTH, this.value)
+		this.ensureLengthIsSmallerThan(this.MAX_LENGTH, this.value)
 		this.ensureMatchesPattern(this.VALID_FORMAT, this.value)
 	}
 }

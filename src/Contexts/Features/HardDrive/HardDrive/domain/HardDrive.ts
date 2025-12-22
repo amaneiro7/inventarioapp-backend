@@ -14,7 +14,7 @@ import { HDDType } from './HDDType'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { DeviceStocknumber } from '../../../../Device/Device/domain/DeviceStock'
 import { DeviceLocation } from '../../../../Device/Device/domain/DeviceLocation'
-import { CategoryId } from '../../../../Category/Category/domain/CategoryId'
+import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { type DeviceHardDriveParams, type DeviceHardDrivePrimitives } from './HardDrive.dto'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 

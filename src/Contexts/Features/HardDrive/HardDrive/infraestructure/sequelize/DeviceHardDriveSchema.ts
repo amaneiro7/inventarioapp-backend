@@ -5,14 +5,13 @@ import { type DeviceHardDrivePrimitives } from '../../domain/HardDrive.dto'
 import { type HardDriveHealth } from '../../domain/HardDriveHealth'
 import { type HDDCapacity } from '../../domain/HDDCapacity'
 import { type HDDType } from '../../domain/HDDType'
-import { type CategoryId } from '../../../../../Category/Category/domain/CategoryId'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
-interface DeviceHardDriveCreationAttributes
-	extends Pick<
-		DeviceHardDrivePrimitives,
-		'id' | 'categoryId' | 'health' | 'hardDriveCapacityId' | 'hardDriveTypeId'
-	> {
+interface DeviceHardDriveCreationAttributes extends Pick<
+	DeviceHardDrivePrimitives,
+	'id' | 'categoryId' | 'health' | 'hardDriveCapacityId' | 'hardDriveTypeId'
+> {
 	deviceId: Primitives<DeviceId>
 }
 
