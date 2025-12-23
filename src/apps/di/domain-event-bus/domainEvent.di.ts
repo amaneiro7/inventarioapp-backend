@@ -1,14 +1,16 @@
 import { asClass, type AwilixContainer } from 'awilix'
 import { RestartMonitoringServices } from '../../../Contexts/Shared/application/event/RestartMonitoringServices'
 import { InvalidateBrandCacheOnBrandChanged } from '../../../Contexts/Brand/application/InvalidateBrandCacheOnBrandChanged'
-import { InvalidateModelSeriesCacheOnModelSeriesChanged } from '../../../Contexts/ModelSeries/ModelSeries/application/InvalidateBrandCacheOnModelSeriesChanged'
+import { InvalidateModelSeriesCacheOnModelSeriesChanged } from '../../../Contexts/ModelSeries/ModelSeries/application/InvalidateModelSeriesCacheOnModelSeriesChanged'
 import { InvalidateShipmentCacheOnShipmentChanged } from '../../../Contexts/Shipment/Shipment/application/InvalidateBrandCacheOnBrandChanged'
+import { InvalidateCityCacheOnCityChanged } from '../../../Contexts/Location/City/application/InvalidateCityCacheOnCityChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
 	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged',
 	InvalidateModelSeriesCacheOnModelSeriesChanged = 'invalidateModelSeriesCacheOnModelSeriesChanged',
-	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged'
+	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged',
+	InvalidateCityCacheOnCityChanged = 'invalidateCityCacheOnCityChanged'
 }
 
 /**
@@ -27,6 +29,9 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateShipmentCacheOnShipmentChanged]: asClass(
 			InvalidateShipmentCacheOnShipmentChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateCityCacheOnCityChanged]: asClass(
+			InvalidateCityCacheOnCityChanged
 		).singleton()
 	})
 }

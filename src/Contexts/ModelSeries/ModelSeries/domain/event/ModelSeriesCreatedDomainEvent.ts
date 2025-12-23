@@ -51,9 +51,7 @@ export class ModelSeriesCreatedDomainEvent extends DomainEvent {
 		const { aggregateId, attributes, eventId, occurredOn } = params
 		return new ModelSeriesCreatedDomainEvent({
 			aggregateId,
-			name: attributes.name,
-			categoryId: attributes.categoryId,
-			brandId: attributes.brandId,
+			...attributes,
 			eventId,
 			occurredOn
 		})

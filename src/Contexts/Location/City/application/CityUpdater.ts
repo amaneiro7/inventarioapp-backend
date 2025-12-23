@@ -48,20 +48,29 @@ export class CityUpdater {
 
 		const { name, stateId } = params
 		const cityEntity = City.fromPrimitives(city)
-		let hasChanges = false
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
 		if (name && cityEntity.nameValue !== name.trim()) {
 			await this.cityNameUniquenessChecker.ensureUnique(name, cityEntity.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: cityEntity.nameValue,
+				newValue: name
+			})
 			cityEntity.updateName(name)
-			hasChanges = true
 		}
 
 		if (stateId && cityEntity.stateValue !== stateId) {
 			await this.stateExitanceChecker.ensureExist(stateId)
+			changes.push({
+				field: 'stateId',
+				oldValue: cityEntity.stateValue,
+				newValue: stateId
+			})
 			cityEntity.updateState(stateId)
-			hasChanges = true
 		}
 
-		if (hasChanges) {
+		if (changes.length > 0) {
+			cityEntity.registerUpdateEvent(changes)
 			await this.cityRepository.save(cityEntity.toPrimitives())
 			await this.eventBus.publish(cityEntity.pullDomainEvents())
 		}

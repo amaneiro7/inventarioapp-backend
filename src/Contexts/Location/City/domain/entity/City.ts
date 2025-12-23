@@ -4,6 +4,9 @@ import { CityName } from '../valueObject/CityName'
 import { StateId } from '../../../State/domain/valueObject/StateId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CityParams, type CityDto, type CityPrimitives } from './City.dto'
+import { CityUpdatedDomainEvent } from '../event/CityUpdatedDomainEvent'
+import { CityRenamedDomainEvent } from '../event/CityRenamedDomainEvent'
+import { CityCreatedDomainEvent } from '../event/CityCreatedDomainEvent'
 
 /**
  * Represents a City domain entity.
@@ -29,8 +32,28 @@ export class City extends AggregateRoot {
 	 * @returns {City} A new City instance.
 	 */
 	static create(params: CityParams): City {
-		const id = CityId.random().value
-		return new City(new CityId(id), new StateId(params.stateId), new CityName(params.name))
+		const id = CityId.random()
+		const stateId = new StateId(params.stateId)
+		const name = new CityName(params.name)
+		const city = new City(id, stateId, name)
+		city.record(
+			new CityCreatedDomainEvent({
+				aggregateId: id.value,
+				name: name.value,
+				stateId: stateId.value
+			})
+		)
+
+		return city
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new CityUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
 	}
 
 	/**
@@ -38,7 +61,15 @@ export class City extends AggregateRoot {
 	 * @param {CityName['value']} name - The new name for the city.
 	 */
 	updateName(name: CityName['value']): void {
+		const oldName = this.name.value
 		this.name = new CityName(name)
+		this.record(
+			new CityRenamedDomainEvent({
+				aggregateId: this.idValue,
+				oldName,
+				newName: this.name.value
+			})
+		)
 	}
 
 	/**

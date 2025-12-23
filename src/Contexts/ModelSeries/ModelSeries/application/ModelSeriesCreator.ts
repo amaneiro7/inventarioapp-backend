@@ -1,7 +1,7 @@
 import { ModelFactory } from '../domain/entity/ModelFactory'
 import { BrandDoesNotExistError } from '../../../Brand/domain/errors/BrandDoesNotExistError'
 import { CategoryDoesNotExistError } from '../../../Category/Category/domain/errors/CategoryDoesNotExistError'
-import { ModelSeriesNameUniquenessChecker } from '../domain/ModelSeriesNameUniquenessChecker'
+import { ModelSeriesNameUniquenessChecker } from '../domain/service/ModelSeriesNameUniquenessChecker'
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
@@ -31,6 +31,7 @@ export class ModelSeriesCreator {
 	private readonly categoryRepository: CategoryRepository
 	private readonly brandRepository: BrandRepository
 	private readonly processorRepository: ProcessorRepository
+	private readonly uniquenessChecker: ModelSeriesNameUniquenessChecker
 	private readonly eventBus: EventBus
 
 	constructor(repositories: Repository) {
@@ -41,6 +42,9 @@ export class ModelSeriesCreator {
 		this.brandRepository = repositories.brandRepository
 		this.processorRepository = repositories.processorRepository
 		this.eventBus = repositories.eventBus
+		this.uniquenessChecker = new ModelSeriesNameUniquenessChecker({
+			modelSeriesRepository: this.modelSeriesRepository
+		})
 	}
 
 	async run(params: ModelSeriesParams): Promise<void> {
@@ -72,13 +76,10 @@ export class ModelSeriesCreator {
 		brandId: string
 		name: string
 	}): Promise<void> {
-		const uniquenessChecker = new ModelSeriesNameUniquenessChecker({
-			modelSeriesRepository: this.modelSeriesRepository
-		})
 		await Promise.all([
 			this.ensureCategoryExists(categoryId),
 			this.ensureBrandExists(brandId),
-			await uniquenessChecker.ensureIsUnique(name, brandId, undefined)
+			this.uniquenessChecker.ensureIsUnique(name, brandId)
 		])
 	}
 

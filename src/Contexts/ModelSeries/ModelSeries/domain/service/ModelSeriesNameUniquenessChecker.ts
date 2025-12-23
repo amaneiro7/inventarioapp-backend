@@ -1,5 +1,5 @@
-import { type ModelSeriesRepository } from './repository/ModelSeriesRepository'
-import { ModelSeriesAlreadyExistError } from './errors/ModelSeriesAlreadyExistError'
+import { type ModelSeriesRepository } from '../repository/ModelSeriesRepository'
+import { ModelSeriesAlreadyExistError } from '../errors/ModelSeriesAlreadyExistError'
 
 /**
  * @class ModelSeriesNameUniquenessChecker

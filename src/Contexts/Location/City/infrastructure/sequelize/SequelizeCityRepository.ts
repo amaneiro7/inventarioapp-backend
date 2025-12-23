@@ -10,6 +10,7 @@ import { type CityRepository } from '../../domain/repository/CityRepository'
 import { type CityName } from '../../domain/valueObject/CityName'
 import { type CityDto, type CityPrimitives } from '../../domain/entity/City.dto'
 import { type CityId } from '../../domain/valueObject/CityId'
+import { CityCacheInvalidator } from '../../domain/repository/CityCacheInvalidator'
 
 /**
  * @class SequelizeCityRepository
@@ -18,7 +19,10 @@ import { type CityId } from '../../domain/valueObject/CityId'
  * @description Concrete implementation of the CityRepository using Sequelize.
  * Handles data persistence for City entities, including caching mechanisms.
  */
-export class SequelizeCityRepository extends SequelizeCriteriaConverter implements CityRepository {
+export class SequelizeCityRepository
+	extends SequelizeCriteriaConverter
+	implements CityRepository, CityCacheInvalidator
+{
 	private readonly cacheKey: string = 'cities'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
@@ -108,17 +112,7 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
 	async remove(id: string): Promise<void> {
-		// Retrieve the city to get its name for cache invalidation
-		const cityToRemove = await CityModel.findByPk(id)
-
 		await CityModel.destroy({ where: { id } })
-
-		// Invalidate relevant cache entries
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
-		if (cityToRemove) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${cityToRemove.name}` })
-		}
 	}
 
 	/**
@@ -131,9 +125,17 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 	async save(payload: CityPrimitives): Promise<void> {
 		// Use upsert for atomic create or update operation
 		await CityModel.upsert(payload)
+	}
 
-		// Invalidate relevant cache entries
+	/**
+	 * @method invalidateCityCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements CityCacheInvalidator interface.
+	 */
+	async invalidateCityCache(id: Primitives<CityId>): Promise<void> {
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+		if (id) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		}
 	}
 }
