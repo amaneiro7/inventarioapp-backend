@@ -1,3 +1,3 @@
-import { SiteId } from '../../../../Location/Site/domain/SiteId'
+import { SiteId } from '../../../../Location/Site/domain/valueObject/SiteId'
 
 export class Origin extends SiteId {}

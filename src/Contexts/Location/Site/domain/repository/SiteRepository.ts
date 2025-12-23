@@ -1,8 +1,8 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type SitePrimitives, type SiteDto } from './Site.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type SiteId } from './SiteId'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type SiteDto, type SitePrimitives } from '../entity/Site.dto'
+import { type SiteId } from '../valueObject/SiteId'
 
 /**
  * Abstract class defining the contract for Site data access.

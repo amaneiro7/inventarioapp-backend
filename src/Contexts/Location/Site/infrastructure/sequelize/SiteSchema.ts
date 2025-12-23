@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type SiteDto } from '../../domain/Site.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type SiteId } from '../../domain/SiteId'
 import { type CityId } from '../../../City/domain/valueObject/CityId'
-import { type SiteName } from '../../domain/SiteName'
-import { type SiteAddress } from '../../domain/SiteAddress'
+import { type SiteName } from '../../domain/valueObject/SiteName'
+import { type SiteAddress } from '../../domain/valueObject/SiteAddress'
 import { type CityDto } from '../../../City/domain/entity/City.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type SiteId } from '../../domain/valueObject/SiteId'
+import { type SiteDto } from '../../domain/entity/Site.dto'
 
 /**
  * Represents the Site model in the database.
@@ -21,7 +21,8 @@ export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto 
 	/**
 	 * Associates the Site model with other models.
 	 * @param {SequelizeModels} models - The models object containing all initialized models.
-	 */ static async associate(models: SequelizeModels): Promise<void> {
+	 */
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.belongsTo(models.City, { as: 'city', foreignKey: 'cityId' }) // A Site belongs to Many City
 		this.hasMany(models.Location, { as: 'location', foreignKey: 'siteId' }) // A Site has Many Locations
 		this.hasMany(models.Shipment, { as: 'shipmentOrigin', foreignKey: 'origin' }) // A Site has Many shipmentsOrigin
@@ -31,7 +32,8 @@ export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto 
 	/**
 	 * Initializes the Site model.
 	 * @param {Sequelize} sequelize - The Sequelize instance.
-	 */ static async initialize(sequelize: Sequelize): Promise<void> {
+	 */
+	static async initialize(sequelize: Sequelize): Promise<void> {
 		SiteModels.init(
 			{
 				id: {
@@ -55,6 +57,7 @@ export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto 
 			},
 			{
 				modelName: 'Site',
+				tableName: 'sites',
 				timestamps: false,
 				underscored: true,
 				sequelize

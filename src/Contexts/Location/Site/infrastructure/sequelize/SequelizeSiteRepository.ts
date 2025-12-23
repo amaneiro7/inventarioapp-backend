@@ -1,14 +1,14 @@
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type SitePrimitives, type SiteDto } from '../../domain/Site.dto'
-import { type SiteId } from '../../domain/SiteId'
-import { type SiteRepository } from '../../domain/SiteRepository'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { SiteModels } from './SiteSchema'
 import { SiteAssociation } from './SiteAssociation'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type SiteRepository } from '../../domain/repository/SiteRepository'
+import { type SiteDto, type SitePrimitives } from '../../domain/entity/Site.dto'
+import { type SiteId } from '../../domain/valueObject/SiteId'
 
 /**
  * @class SequelizeSiteRepository

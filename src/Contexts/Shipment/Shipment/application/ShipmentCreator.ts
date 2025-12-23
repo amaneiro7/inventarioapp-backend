@@ -11,7 +11,7 @@ import { type UserRepository } from '../../../User/user/domain/Repository/UserRe
 import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ReceivedBy } from '../domain/valueObject/ReceivedBy'
-import { type SiteId } from '../../../Location/Site/domain/SiteId'
+import { type SiteId } from '../../../Location/Site/domain/valueObject/SiteId'
 import { type UserId } from '../../../User/user/domain/valueObject/UserId'
 import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'

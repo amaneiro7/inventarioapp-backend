@@ -1,7 +1,7 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type SiteId } from './SiteId'
-import { ApiError } from '../../../Shared/domain/errors/ApiError'
-import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status2'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type SiteId } from '../valueObject/SiteId'
 
 /**
  * Custom error class for when a Site does not exist.
