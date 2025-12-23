@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type LocationStatusDto } from '../domain/LocationStatus.dto'
-import { type LocationStatusRepository } from '../domain/LocationStatusRepository'
+import { type LocationStatusDto } from '../domain/entity/LocationStatus.dto'
+import { type LocationStatusRepository } from '../domain/repository/LocationStatusRepository'
 
 /**
  * Service to find all location statuses based on provided criteria.

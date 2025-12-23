@@ -1,8 +1,8 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type StateDto } from '../../State/domain/entity/State.dto'
-import { type StateId } from '../../State/domain/valueObject/StateId'
-import { type CityId } from './CityId'
-import { type CityName } from './CityName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type StateDto } from '../../../State/domain/entity/State.dto'
+import { type StateId } from '../../../State/domain/valueObject/StateId'
+import { type CityId } from '../valueObject/CityId'
+import { type CityName } from '../valueObject/CityName'
 
 /**
  * Represents the core properties of a City.

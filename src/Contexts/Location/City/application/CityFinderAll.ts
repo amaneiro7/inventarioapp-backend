@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type CityDto } from '../domain/City.dto'
-import { type CityRepository } from '../domain/CityRepository'
+import { type CityDto } from '../domain/entity/City.dto'
+import { type CityRepository } from '../domain/repository/CityRepository'
 
 /**
  * Service to find all cities based on provided criteria.

@@ -10,7 +10,7 @@ import { type LocationDto } from '../../domain/Location.dto'
 import { type SiteDto } from '../../../Site/domain/Site.dto'
 import { type TypeOfSiteDto } from '../../../TypeOfSite/domain/entity/TypeOfSite.dto'
 import { type LocationOperationalStatus } from '../../domain/LocationOperationalStatus'
-import { type LocationStatusDto } from '../../../LocationStatus/domain/LocationStatus.dto'
+import { type LocationStatusDto } from '../../../LocationStatus/domain/entity/LocationStatus.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**

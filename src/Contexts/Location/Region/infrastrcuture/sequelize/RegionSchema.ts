@@ -3,8 +3,8 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type RegionDto } from '../../domain/Region.dto'
 import { type RegionId } from '../../domain/RegionId'
 import { type RegionName } from '../../domain/RegionName'
-import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/AdministrativeRegionId'
-import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/AdministrativeRegion.dto'
+import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
+import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/entity/AdministrativeRegion.dto'
 
 /**
  * Represents the Region model in the database.

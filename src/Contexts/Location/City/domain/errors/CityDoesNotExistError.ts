@@ -1,5 +1,5 @@
-import { ApiError } from '../../../Shared/domain/errors/ApiError'
-import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 /**
  * Custom error class for when a City does not exist.
@@ -12,5 +12,6 @@ export class CityDoesNotExistError extends ApiError {
 	 */
 	constructor(public readonly value: string) {
 		super(httpStatus[404].statusCode, `La ciudad ${value} no existe`)
+		this.name = this.constructor.name
 	}
 }

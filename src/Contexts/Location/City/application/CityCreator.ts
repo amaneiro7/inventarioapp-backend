@@ -1,26 +1,32 @@
-import { City } from '../domain/City'
-import { CityName } from '../domain/CityName'
-import { CityState } from '../domain/CityState'
-
-import { type CityRepository } from '../domain/CityRepository'
-import { type CityParams } from '../domain/City.dto'
+import { City } from '../domain/entity/City'
+import { CityNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
+import { StateExitanceChecker } from '../domain/service/StateExistanceChecker'
+import { type CityRepository } from '../domain/repository/CityRepository'
+import { type CityParams } from '../domain/entity/City.dto'
 import { type StateRepository } from '../../State/domain/repository/StateRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * Service to create a new City.
  */
 export class CityCreator {
 	private readonly cityRepository: CityRepository
-	private readonly stateRepository: StateRepository
+	private readonly cityNameUniquenessChecker: CityNameUniquenessChecker
+	private readonly stateExitanceChecker: StateExitanceChecker
+	private readonly eventBus: EventBus
 	constructor({
 		cityRepository,
-		stateRepository
+		stateRepository,
+		eventBus
 	}: {
 		cityRepository: CityRepository
 		stateRepository: StateRepository
+		eventBus: EventBus
 	}) {
 		this.cityRepository = cityRepository
-		this.stateRepository = stateRepository
+		this.eventBus = eventBus
+		this.cityNameUniquenessChecker = new CityNameUniquenessChecker(cityRepository)
+		this.stateExitanceChecker = new StateExitanceChecker(stateRepository)
 	}
 
 	/**
@@ -31,11 +37,14 @@ export class CityCreator {
 	 */
 	async run(params: CityParams): Promise<void> {
 		const { name, stateId } = params
-		await CityState.ensureStateExist({ repository: this.stateRepository, stateId })
-		await CityName.ensureCityNameDoesNotExist({ name, stateId, repository: this.cityRepository })
+		await Promise.all([
+			this.cityNameUniquenessChecker.ensureUnique(name),
+			this.stateExitanceChecker.ensureExist(stateId)
+		])
 
-		const brand = City.create(params)
+		const city = City.create(params)
 
-		await this.cityRepository.save(brand.toPrimitive())
+		await this.cityRepository.save(city.toPrimitives())
+		await this.eventBus.publish(city.pullDomainEvents())
 	}
 }

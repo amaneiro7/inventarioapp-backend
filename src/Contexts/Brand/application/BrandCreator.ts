@@ -1,8 +1,6 @@
 import { Brand } from '../domain/entity/Brand'
-import { CategoryDoesNotExistError } from '../../Category/Category/domain/errors/CategoryDoesNotExistError'
-import { BrandAlreadyExistError } from '../domain/errors/BrandAlreadyExistError'
-import { type CategoryId } from '../../Category/Category/domain/valueObject/CategoryId'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
+import { CategoryExistenceChecker } from '../domain/service/CategoryExistenceChecker'
+import { BrandNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type BrandParams } from '../domain/entity/Brand.dto'
 import { type CategoryRepository } from '../../Category/Category/domain/repository/CategoryRepository'
@@ -14,7 +12,8 @@ import { type EventBus } from '../../Shared/domain/event/EventBus'
  */
 export class BrandCreator {
 	private readonly brandRepository: BrandRepository
-	private readonly categoryRepository: CategoryRepository
+	private readonly brandNameUniquenessChecker: BrandNameUniquenessChecker
+	private readonly categoryExistenceChecker: CategoryExistenceChecker
 	private readonly eventBus: EventBus
 
 	constructor({
@@ -27,7 +26,8 @@ export class BrandCreator {
 		eventBus: EventBus
 	}) {
 		this.brandRepository = brandRepository
-		this.categoryRepository = categoryRepository
+		this.brandNameUniquenessChecker = new BrandNameUniquenessChecker(brandRepository)
+		this.categoryExistenceChecker = new CategoryExistenceChecker(categoryRepository)
 		this.eventBus = eventBus
 	}
 
@@ -44,48 +44,14 @@ export class BrandCreator {
 		const { name, categories } = params
 
 		// Perform validation checks in parallel for efficiency
-		await Promise.all([this.ensureBrandNameIsUnique(name), this.ensureCategoriesExist(categories)])
+		await Promise.all([
+			this.brandNameUniquenessChecker.ensureUnique(name),
+			this.categoryExistenceChecker.ensureExist(categories)
+		])
 
 		// Create and save the brand if validations pass
 		const brand = Brand.create({ name, categories })
 		await this.brandRepository.save(brand.toPrimitives())
 		await this.eventBus.publish(brand.pullDomainEvents())
-	}
-
-	/**
-	 * @private
-	 * @description Checks if a brand name is already in use.
-	 */
-	private async ensureBrandNameIsUnique(name: string): Promise<void> {
-		if (await this.brandRepository.findByName(name)) {
-			throw new BrandAlreadyExistError(name)
-		}
-	}
-
-	/**
-	 * @private
-	 * @description Ensures that all provided category IDs exist in the database.
-	 * It performs the checks in parallel to optimize performance.
-	 * @param {Primitives<CategoryId>[]} categoryIds An array of category IDs to validate.
-	 * @returns {Promise<void>} A promise that resolves if all categories exist.
-	 * @throws {CategoryDoesNotExistError} If any category ID is not found.
-	 */
-	private async ensureCategoriesExist(categoryIds?: Primitives<CategoryId>[]): Promise<void> {
-		if (!categoryIds || categoryIds.length === 0) {
-			return
-		}
-		const uniqueCategories = [...new Set(categoryIds)]
-		// Find all categories in a single database query for efficiency.
-		const foundCategories = await this.categoryRepository.findByIds(uniqueCategories)
-
-		// If the number of found categories does not match the number of unique IDs,
-		// it means at least one category does not exist.
-		if (foundCategories.length !== uniqueCategories.length) {
-			// Identify which categories were not found to provide a more helpful error message.
-			const foundIds = new Set(foundCategories.map(c => c.id))
-			const missingIds = uniqueCategories.filter(id => !foundIds.has(id))
-
-			throw new CategoryDoesNotExistError(missingIds.join(', '))
-		}
 	}
 }

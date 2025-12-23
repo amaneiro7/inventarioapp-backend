@@ -1,24 +1,27 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { CityParams, type CityDto, type CityPrimitives } from './City.dto'
-import { CityId } from './CityId'
-import { CityName } from './CityName'
-import { CityState } from './CityState'
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
+import { CityId } from '../valueObject/CityId'
+import { CityName } from '../valueObject/CityName'
+import { StateId } from '../../../State/domain/valueObject/StateId'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CityParams, type CityDto, type CityPrimitives } from './City.dto'
 
 /**
  * Represents a City domain entity.
  */
-export class City {
+export class City extends AggregateRoot {
 	/**
 	 * Constructs a City instance.
 	 * @param {CityId} id - The unique identifier of the city.
-	 * @param {CityState} stateId - The state ID to which the city belongs.
+	 * @param {StateId} stateId - The state ID to which the city belongs.
 	 * @param {CityName} name - The name of the city.
 	 */
 	constructor(
 		private readonly id: CityId,
-		private stateId: CityState,
+		private stateId: StateId,
 		private name: CityName
-	) {}
+	) {
+		super()
+	}
 
 	/**
 	 * Creates a new City instance with a randomly generated ID.
@@ -27,7 +30,7 @@ export class City {
 	 */
 	static create(params: CityParams): City {
 		const id = CityId.random().value
-		return new City(new CityId(id), new CityState(params.stateId), new CityName(params.name))
+		return new City(new CityId(id), new StateId(params.stateId), new CityName(params.name))
 	}
 
 	/**
@@ -40,10 +43,10 @@ export class City {
 
 	/**
 	 * Updates the state of the city.
-	 * @param {CityState['value']} newState - The new state ID for the city.
+	 * @param {StateId['value']} newState - The new state ID for the city.
 	 */
-	updateState(newState: CityState['value']): void {
-		this.stateId = new CityState(newState)
+	updateState(newState: StateId['value']): void {
+		this.stateId = new StateId(newState)
 	}
 
 	/**
@@ -52,14 +55,14 @@ export class City {
 	 * @returns {City} A new City instance.
 	 */
 	static fromPrimitives(primitives: CityDto): City {
-		return new City(new CityId(primitives.id), new CityState(primitives.stateId), new CityName(primitives.name))
+		return new City(new CityId(primitives.id), new StateId(primitives.stateId), new CityName(primitives.name))
 	}
 
 	/**
 	 * Converts the City instance to its primitive representation.
 	 * @returns {CityPrimitives} The primitive representation of the city.
 	 */
-	toPrimitive(): CityPrimitives {
+	toPrimitives(): CityPrimitives {
 		return {
 			id: this.idValue,
 			stateId: this.stateValue,
@@ -85,9 +88,9 @@ export class City {
 
 	/**
 	 * Gets the primitive value of the city's state ID.
-	 * @returns {Primitives<CityState>} The state ID value.
+	 * @returns {Primitives<StateId>} The state ID value.
 	 */
-	get stateValue(): Primitives<CityState> {
+	get stateValue(): Primitives<StateId> {
 		return this.stateId.value
 	}
 }

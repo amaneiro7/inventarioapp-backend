@@ -1,4 +1,4 @@
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
 /**
  * Represents the unique identifier for an Administrative Region.

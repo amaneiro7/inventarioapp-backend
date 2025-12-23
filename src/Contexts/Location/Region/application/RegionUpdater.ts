@@ -2,7 +2,7 @@ import { AdmRegionRegion } from '../domain/AdministrativeRegion'
 import { Region } from '../domain/Region'
 import { RegionDoesNotExistError } from '../domain/RegionDoesNotExistError'
 import { RegionId } from '../domain/RegionId'
-import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/AdministrativeRegionRepository'
+import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/repository/AdministrativeRegionRepository'
 import { type RegionParams } from '../domain/Region.dto'
 import { type RegionRepository } from '../domain/RegionRepository'
 

@@ -1,7 +1,7 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AdministrativeRegionDto, type AdministrativeRegionPrimitives } from './AdministrativeRegion.dto'
-import { AdministrativeRegionId } from './AdministrativeRegionId'
-import { AdministrativeRegionName } from './AdministrativeRegionName'
+import { AdministrativeRegionId } from '../valueObject/AdministrativeRegionId'
+import { AdministrativeRegionName } from '../valueObject/AdministrativeRegionName'
 
 /**
  * Represents an Administrative Region domain entity.

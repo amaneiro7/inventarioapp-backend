@@ -1,10 +1,11 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type LocationStatusId } from './LocationStatusId'
-import { type LocationStatusName } from './LocationStatusName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type LocationStatusId } from '../valueObject/LocationStatusId'
+import { type LocationStatusName } from '../valueObject/LocationStatusName'
 
 /**
  * Represents the core properties of a Location Status.
  */
+
 export interface LocationStatus {
 	id: Primitives<LocationStatusId>
 	name: Primitives<LocationStatusName>

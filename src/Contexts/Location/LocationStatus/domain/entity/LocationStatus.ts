@@ -1,6 +1,6 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { LocationStatusId } from './LocationStatusId'
-import { LocationStatusName } from './LocationStatusName'
+import { LocationStatusId } from '../valueObject/LocationStatusId'
+import { LocationStatusName } from '../valueObject/LocationStatusName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationStatusDto, type LocationStatusPrimitives } from './LocationStatus.dto'
 
 /**

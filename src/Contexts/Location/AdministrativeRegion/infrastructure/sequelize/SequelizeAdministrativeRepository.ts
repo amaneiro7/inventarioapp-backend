@@ -1,13 +1,13 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { AdministrativeRegionModel } from './AdministrativeRegionSchema'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { type AdministrativeRegionDto } from '../../domain/AdministrativeRegion.dto'
-import { type AdministrativeRegionId } from '../../domain/AdministrativeRegionId'
-import { type AdministrativeRegionRepository } from '../../domain/AdministrativeRegionRepository'
-import { AdministrativeRegionModel } from './AdministrativeRegionSchema'
+import { type AdministrativeRegionDto } from '../../domain/entity/AdministrativeRegion.dto'
+import { type AdministrativeRegionId } from '../../domain/valueObject/AdministrativeRegionId'
+import { type AdministrativeRegionRepository } from '../../domain/repository/AdministrativeRegionRepository'
 
 /**
  * @class SequelizeAdministrativeRegionRepository

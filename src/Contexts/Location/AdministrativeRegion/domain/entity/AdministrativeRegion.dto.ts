@@ -1,6 +1,6 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type AdministrativeRegionId } from './AdministrativeRegionId'
-import { type AdministrativeRegionName } from './AdministrativeRegionName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type AdministrativeRegionId } from '../valueObject/AdministrativeRegionId'
+import { type AdministrativeRegionName } from '../valueObject/AdministrativeRegionName'
 
 /**
  * Represents the core properties of an Administrative Region.

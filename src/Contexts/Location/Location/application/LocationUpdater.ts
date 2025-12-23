@@ -11,7 +11,7 @@ import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/repository/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
-import { type LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
+import { type LocationStatusRepository } from '../../LocationStatus/domain/repository/LocationStatusRepository'
 
 /**
  * Service to update an existing Location.

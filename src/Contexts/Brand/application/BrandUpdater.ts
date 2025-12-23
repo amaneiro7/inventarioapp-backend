@@ -1,10 +1,9 @@
 import { Brand } from '../domain/entity/Brand'
 import { BrandId } from '../domain/valueObject/BrandId'
 import { CategoryId } from '../../Category/Category/domain/valueObject/CategoryId'
+import { BrandNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
+import { CategoryExistenceChecker } from '../domain/service/CategoryExistenceChecker'
 import { BrandDoesNotExistError } from '../domain/errors/BrandDoesNotExistError'
-import { CategoryDoesNotExistError } from '../../Category/Category/domain/errors/CategoryDoesNotExistError'
-import { BrandAlreadyExistError } from '../domain/errors/BrandAlreadyExistError'
-
 import { type CategoryRepository } from '../../Category/Category/domain/repository/CategoryRepository'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
@@ -17,8 +16,9 @@ import { type EventBus } from '../../Shared/domain/event/EventBus'
  */
 export class BrandUpdater {
 	private readonly brandRepository: BrandRepository
-	private readonly categoryRepository: CategoryRepository
 	private readonly eventBus: EventBus
+	private readonly brandNameUniquenessChecker: BrandNameUniquenessChecker
+	private readonly categoryExistenceChecker: CategoryExistenceChecker
 
 	constructor({
 		brandRepository,
@@ -30,8 +30,9 @@ export class BrandUpdater {
 		eventBus: EventBus
 	}) {
 		this.brandRepository = brandRepository
-		this.categoryRepository = categoryRepository
 		this.eventBus = eventBus
+		this.brandNameUniquenessChecker = new BrandNameUniquenessChecker(brandRepository)
+		this.categoryExistenceChecker = new CategoryExistenceChecker(categoryRepository)
 	}
 
 	/**
@@ -58,13 +59,14 @@ export class BrandUpdater {
 		let hasChanges = false
 
 		if (params.name !== undefined && brandEntity.nameValue !== params.name.trim()) {
-			await this.ensureBrandNameIsUnique(params.name, brandEntity.idValue)
+			await this.brandNameUniquenessChecker.ensureUnique(params.name, brandEntity.idValue)
 			brandEntity.updateName(params.name)
 			hasChanges = true
 		}
 
 		if (params.categories !== undefined) {
-			const categoriesChanged = await this.updateCategories({
+			await this.categoryExistenceChecker.ensureExist(params.categories)
+			const categoriesChanged = this.updateCategories({
 				entity: brandEntity,
 				newCategoryIds: params.categories
 			})
@@ -82,43 +84,21 @@ export class BrandUpdater {
 
 	/**
 	 * @private
-	 * @description Checks if a brand name is already in use.
-	 */
-	private async ensureBrandNameIsUnique(name: string, currentId: Primitives<BrandId>): Promise<void> {
-		const existingBrand = await this.brandRepository.findByName(name)
-		if (existingBrand && existingBrand.id !== currentId) {
-			throw new BrandAlreadyExistError(name)
-		}
-	}
-
-	/**
-	 * @private
 	 * @description Ensures that new categories exist before associating them with the brand.
 	 * @param {{ entity: Brand; categories?: Primitives<CategoryId>[] }} params The parameters for the check.
 	 * @param {Brand} params.entity The brand entity being updated.
 	 * @param {Primitives<CategoryId>[]} [params.categories] The list of new category IDs.
-	 * @returns {Promise<void>} A promise that resolves when the check is complete.
-	 * @throws {CategoryDoesNotExistError} If a new category ID does not exist.
+	 * @returns {boolean} True if categories were changed.
 	 */
-	private async updateCategories({
+	private updateCategories({
 		entity,
 		newCategoryIds
 	}: {
 		newCategoryIds: Primitives<CategoryId>[]
 		entity: Brand
-	}): Promise<boolean> {
+	}): boolean {
 		let hasCategoriesChanged = false
 		const uniqueCategoryIds = [...new Set(newCategoryIds)]
-
-		// 1. Validar la existencia de todos los IDs de categorias entrantes en una sola consulta.
-		if (uniqueCategoryIds.length > 0) {
-			const foundCategories = await this.categoryRepository.findByIds(uniqueCategoryIds)
-			if (foundCategories.length !== uniqueCategoryIds.length) {
-				const foundIds = new Set(foundCategories.map(c => c.id))
-				const missingIds = uniqueCategoryIds.filter(id => !foundIds.has(id))
-				throw new CategoryDoesNotExistError(missingIds.join(', '))
-			}
-		}
 
 		const newIdSet = new Set(uniqueCategoryIds)
 		const currentIdSet = new Set(entity.categoriesValue)

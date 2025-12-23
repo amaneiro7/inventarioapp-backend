@@ -15,7 +15,8 @@ export class SiteAddress extends StringValueObject {
 	 * Creates an instance of SiteAddress.
 	 * @param {string} value - The address of the site.
 	 * @throws {InvalidArgumentError} If the provided value is not a valid site address.
-	 */ constructor(readonly value: string) {
+	 */
+	constructor(readonly value: string) {
 		super(value)
 
 		this.ensureIsValidSerial(value)
@@ -24,7 +25,8 @@ export class SiteAddress extends StringValueObject {
 	/**
 	 * Converts the SiteAddress value object to its primitive string representation.
 	 * @returns {string} The string value of the site address.
-	 */ toPrimitives(): string {
+	 */
+	toPrimitives(): string {
 		return this.value
 	}
 
@@ -32,7 +34,8 @@ export class SiteAddress extends StringValueObject {
 	 * Ensures that the provided value is a valid site address based on length constraints.
 	 * @param {string} value - The address to validate.
 	 * @throws {InvalidArgumentError} If the value does not meet the length requirements.
-	 */ private ensureIsValidSerial(value: string): void {
+	 */
+	private ensureIsValidSerial(value: string): void {
 		if (!this.isValid(value)) {
 			throw new InvalidArgumentError(`<${value}> is not a valid site address`)
 		}
@@ -42,7 +45,8 @@ export class SiteAddress extends StringValueObject {
 	 * Checks if the provided address meets the length requirements.
 	 * @param {string} name - The address to check.
 	 * @returns {boolean} True if the length is valid, false otherwise.
-	 */ private isValid(name: string): boolean {
+	 */
+	private isValid(name: string): boolean {
 		return name.length >= this.NAME_MIN_LENGTH && name.length <= this.NAME_MAX_LENGTH
 	}
 
@@ -52,7 +56,8 @@ export class SiteAddress extends StringValueObject {
 	 * @param {Primitives<SiteAddress>} [params.address] - The new address for the site (optional).
 	 * @param {Site} params.entity - The Site entity to update.
 	 * @returns {Promise<void>} A promise that resolves when the address is updated or no action is needed.
-	 */ static async updateAddressField({
+	 */
+	static async updateAddressField({
 		address,
 		entity
 	}: {

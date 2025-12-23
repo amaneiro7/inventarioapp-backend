@@ -1,7 +1,7 @@
 import { Region } from './Region'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { AdministrativeRegionId } from '../../AdministrativeRegion/domain/AdministrativeRegionId'
-import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/AdministrativeRegionRepository'
+import { AdministrativeRegionId } from '../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
+import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/repository/AdministrativeRegionRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 /**

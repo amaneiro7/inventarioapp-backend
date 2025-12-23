@@ -1,15 +1,15 @@
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CityPrimitives, type CityDto } from '../../domain/City.dto'
-import { type CityId } from '../../domain/CityId'
-import { type CityRepository } from '../../domain/CityRepository'
-import { type CityName } from '../../domain/CityName'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CityModel } from './CitySchema'
 import { CityAssociation } from './CityAssociation'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CityRepository } from '../../domain/repository/CityRepository'
+import { type CityName } from '../../domain/valueObject/CityName'
+import { type CityDto, type CityPrimitives } from '../../domain/entity/City.dto'
+import { type CityId } from '../../domain/valueObject/CityId'
 
 /**
  * @class SequelizeCityRepository
@@ -38,7 +38,7 @@ export class SequelizeCityRepository extends SequelizeCriteriaConverter implemen
 		return await this.cache.getCachedData<ResponseDB<CityDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await CityModel.findAndCountAll(options)
 				return {

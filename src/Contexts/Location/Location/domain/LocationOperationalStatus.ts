@@ -1,8 +1,8 @@
 import { Location } from './Location'
-import { LocationStatusId } from '../../LocationStatus/domain/LocationStatusId'
-import { LocationStatusIdDoesNotExistError } from '../../LocationStatus/domain/LocationStatusDoesNotExistError'
-import { type LocationStatusRepository } from '../../LocationStatus/domain/LocationStatusRepository'
+import { type LocationStatusRepository } from '../../LocationStatus/domain/repository/LocationStatusRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { LocationStatusId } from '../../LocationStatus/domain/valueObject/LocationStatusId'
+import { LocationStatusIdDoesNotExistError } from '../../LocationStatus/domain/errors/LocationStatusDoesNotExistError'
 
 /**
  * Represents the operational status ID of a Location.

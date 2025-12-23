@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CityDto } from '../../City/domain/City.dto'
-import { type CityId } from '../../City/domain/CityId'
+import { type CityDto } from '../../City/domain/entity/City.dto'
+import { type CityId } from '../../City/domain/valueObject/CityId'
 import { type SiteAddress } from './SiteAddress'
 import { type SiteId } from './SiteId'
 import { type SiteName } from './SiteName'

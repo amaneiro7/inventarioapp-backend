@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type LocationStatusDto } from '../../LocationStatus/domain/LocationStatus.dto'
-import { type LocationStatusId } from '../../LocationStatus/domain/LocationStatusId'
+import { type LocationStatusDto } from '../../LocationStatus/domain/entity/LocationStatus.dto'
+import { type LocationStatusId } from '../../LocationStatus/domain/valueObject/LocationStatusId'
 import { type SiteDto } from '../../Site/domain/Site.dto'
 import { type TypeOfSiteDto } from '../../TypeOfSite/domain/entity/TypeOfSite.dto'
 import { type LocationId } from './LocationId'

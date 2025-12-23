@@ -1,10 +1,10 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type CityParams, type CityDto } from './City.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CityId } from './CityId'
-import { GenericRepository } from '../../../Shared/domain/GenericRepository'
-import { type Nullable } from '../../../Shared/domain/Nullable'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type GenericRepository } from '../../../../Shared/domain/GenericRepository'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
+import { type CityId } from '../valueObject/CityId'
+import { type CityDto, type CityParams } from '../entity/City.dto'
 
 /**
  * Abstract class defining the contract for City data access.

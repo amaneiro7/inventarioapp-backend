@@ -1,5 +1,5 @@
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { StringValueObject } from '../../../Shared/domain/value-object/StringValueObject'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 
 /**
  * Represents the name of an Administrative Region as a value object.

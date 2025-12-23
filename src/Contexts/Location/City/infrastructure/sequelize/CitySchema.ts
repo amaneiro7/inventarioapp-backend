@@ -1,10 +1,11 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CityId } from '../../domain/CityId'
 import { type StateId } from '../../../State/domain/valueObject/StateId'
-import { type CityName } from '../../domain/CityName'
-import { type CityDto } from '../../domain/City.dto'
+import { type CityName } from '../../domain/valueObject/CityName'
 import { type StateDto } from '../../../State/domain/entity/State.dto'
+import { type CityId } from '../../domain/valueObject/CityId'
+import { type CityDto } from '../../domain/entity/City.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * Represents the City model in the database.
@@ -17,9 +18,9 @@ export class CityModel extends Model<Omit<CityDto, 'state'>> implements CityDto 
 
 	/**
 	 * Associates the City model with other models.
-	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 * @param {SequelizeModels} models - The models object containing all initialized models.
 	 */
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.belongsTo(models.State, { as: 'state', foreignKey: 'stateId' }) // A City can belong to a state
 		this.hasMany(models.Site, { as: 'sites', foreignKey: 'cityId' }) //  A city has many Sites
 	}

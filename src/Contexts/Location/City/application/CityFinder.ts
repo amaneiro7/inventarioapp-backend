@@ -1,7 +1,7 @@
-import { CityDoesNotExistError } from '../domain/CityDoesNotExistError'
-import { CityId } from '../domain/CityId'
-import { type CityDto } from '../domain/City.dto'
-import { type CityRepository } from '../domain/CityRepository'
+import { CityId } from '../domain/valueObject/CityId'
+import { CityDoesNotExistError } from '../domain/errors/CityDoesNotExistError'
+import { type CityDto } from '../domain/entity/City.dto'
+import { type CityRepository } from '../domain/repository/CityRepository'
 
 /**
  * Service to find a City by its ID.

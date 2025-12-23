@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type AdministrativeRegionDto } from '../domain/AdministrativeRegion.dto'
-import { type AdministrativeRegionRepository } from '../domain/AdministrativeRegionRepository'
+import { type AdministrativeRegionDto } from '../domain//entity/AdministrativeRegion.dto'
+import { type AdministrativeRegionRepository } from '../domain/repository/AdministrativeRegionRepository'
 
 /**
  * Service to find all administrative regions based on provided criteria.

@@ -5,9 +5,9 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationStatusDto } from '../../domain/LocationStatus.dto'
-import { type LocationStatusId } from '../../domain/LocationStatusId'
-import { type LocationStatusRepository } from '../../domain/LocationStatusRepository'
+import { type LocationStatusDto } from '../../domain/entity/LocationStatus.dto'
+import { type LocationStatusId } from '../../domain/valueObject/LocationStatusId'
+import { type LocationStatusRepository } from '../../domain/repository/LocationStatusRepository'
 
 /**
  * @class SequelizeLocationStatusRepository

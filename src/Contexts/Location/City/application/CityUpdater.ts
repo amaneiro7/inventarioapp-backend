@@ -1,27 +1,34 @@
-import { City } from '../domain/City'
-import { CityDoesNotExistError } from '../domain/CityDoesNotExistError'
-import { CityId } from '../domain/CityId'
-import { CityName } from '../domain/CityName'
-import { CityState } from '../domain/CityState'
-import { type CityParams } from '../domain/City.dto'
+import { City } from '../domain/entity/City'
+import { CityId } from '../domain/valueObject/CityId'
+import { CityNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
+import { StateExitanceChecker } from '../domain/service/StateExistanceChecker'
+import { CityDoesNotExistError } from '../domain/errors/CityDoesNotExistError'
 import { type StateRepository } from '../../State/domain/repository/StateRepository'
-import { type CityRepository } from '../domain/CityRepository'
+import { type CityRepository } from '../domain/repository/CityRepository'
+import { type CityParams } from '../domain/entity/City.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * Service to update an existing City.
  */
 export class CityUpdater {
 	private readonly cityRepository: CityRepository
-	private readonly stateRepository: StateRepository
+	private readonly cityNameUniquenessChecker: CityNameUniquenessChecker
+	private readonly stateExitanceChecker: StateExitanceChecker
+	private readonly eventBus: EventBus
 	constructor({
 		cityRepository,
-		stateRepository
+		stateRepository,
+		eventBus
 	}: {
 		cityRepository: CityRepository
 		stateRepository: StateRepository
+		eventBus: EventBus
 	}) {
 		this.cityRepository = cityRepository
-		this.stateRepository = stateRepository
+		this.cityNameUniquenessChecker = new CityNameUniquenessChecker(cityRepository)
+		this.stateExitanceChecker = new StateExitanceChecker(stateRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -32,18 +39,31 @@ export class CityUpdater {
 	 * @throws {CityDoesNotExistError} If the city with the given ID does not exist.
 	 */
 	async run({ id, params }: { id: string; params: Partial<CityParams> }): Promise<void> {
-		const city = new CityId(id)
+		const cityId = new CityId(id)
 
-		const brand = await this.cityRepository.findById(city.value)
-		if (!brand) {
+		const city = await this.cityRepository.findById(cityId.value)
+		if (!city) {
 			throw new CityDoesNotExistError(id)
 		}
 
 		const { name, stateId } = params
-		const cityEntity = City.fromPrimitives(brand)
-		await CityState.updateStateField({ entity: cityEntity, repository: this.stateRepository, stateId })
-		await CityName.updateNameField({ entity: cityEntity, repository: this.cityRepository, name })
+		const cityEntity = City.fromPrimitives(city)
+		let hasChanges = false
+		if (name && cityEntity.nameValue !== name.trim()) {
+			await this.cityNameUniquenessChecker.ensureUnique(name, cityEntity.idValue)
+			cityEntity.updateName(name)
+			hasChanges = true
+		}
 
-		await this.cityRepository.save(cityEntity.toPrimitive())
+		if (stateId && cityEntity.stateValue !== stateId) {
+			await this.stateExitanceChecker.ensureExist(stateId)
+			cityEntity.updateState(stateId)
+			hasChanges = true
+		}
+
+		if (hasChanges) {
+			await this.cityRepository.save(cityEntity.toPrimitives())
+			await this.eventBus.publish(cityEntity.pullDomainEvents())
+		}
 	}
 }

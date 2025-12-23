@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type AdministrativeRegionDto } from '../../domain/AdministrativeRegion.dto'
-import { type AdministrativeRegionId } from '../../domain/AdministrativeRegionId'
-import { type AdministrativeRegionName } from '../../domain/AdministrativeRegionName'
+import { type AdministrativeRegionDto } from '../../domain/entity/AdministrativeRegion.dto'
+import { type AdministrativeRegionId } from '../../domain/valueObject/AdministrativeRegionId'
+import { type AdministrativeRegionName } from '../../domain/valueObject/AdministrativeRegionName'
 
 /**
  * Represents the AdministrativeRegion model in the database.

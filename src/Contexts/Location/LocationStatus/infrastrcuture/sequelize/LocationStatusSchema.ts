@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationStatusDto } from '../../domain/LocationStatus.dto'
-import { type LocationStatusId } from '../../domain/LocationStatusId'
-import { type LocationStatusName } from '../../domain/LocationStatusName'
+import { type LocationStatusDto } from '../../domain/entity/LocationStatus.dto'
+import { type LocationStatusId } from '../../domain/valueObject/LocationStatusId'
+import { type LocationStatusName } from '../../domain/valueObject/LocationStatusName'
 
 /**
  * Represents the LocationStatus model in the database.

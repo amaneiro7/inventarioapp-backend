@@ -1,4 +1,4 @@
-import { Uuid } from '../../../Shared/domain/value-object/Uuid'
+import { Uuid } from '../../../../Shared/domain/value-object/Uuid'
 
 /**
  * Represents the unique identifier for a City.
