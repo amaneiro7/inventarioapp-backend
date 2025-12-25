@@ -1,17 +1,17 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationId } from '../../domain/LocationId'
+import { type LocationId } from '../../domain/valueObject/LocationId'
 import { type TypeOfSiteId } from '../../../TypeOfSite/domain/valueObject/TypeOfSiteId'
-import { type LocationName } from '../../domain/LocationName'
-import { type LocationSubnet } from '../../domain/LocationSubnet'
+import { type LocationName } from '../../domain/valueObject/LocationName'
 import { type SiteId } from '../../../Site/domain/valueObject/SiteId'
-import { type LocationDto } from '../../domain/Location.dto'
+import { type LocationDto } from '../../domain/entity/Location.dto'
 import { type SiteDto } from '../../../Site/domain/entity/Site.dto'
 import { type TypeOfSiteDto } from '../../../TypeOfSite/domain/entity/TypeOfSite.dto'
-import { type LocationOperationalStatus } from '../../domain/LocationOperationalStatus'
 import { type LocationStatusDto } from '../../../LocationStatus/domain/entity/LocationStatus.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type LocationStatusId } from '../../../LocationStatus/domain/valueObject/LocationStatusId'
+import { type LocationSubnet } from '../../domain/valueObject/LocationSubnet'
 
 /**
  * Represents the Location model in the database.
@@ -23,10 +23,9 @@ export class LocationModel
 	declare id: Primitives<LocationId>
 	declare typeOfSiteId: Primitives<TypeOfSiteId>
 	declare siteId: Primitives<SiteId>
-	declare locationStatusId: Primitives<LocationOperationalStatus>
+	declare locationStatusId: Primitives<LocationStatusId>
 	declare name: Primitives<LocationName>
 	declare subnet: Primitives<LocationSubnet>
-
 	declare typeOfSite: TypeOfSiteDto
 	declare site: SiteDto
 	declare operationalStatus: LocationStatusDto

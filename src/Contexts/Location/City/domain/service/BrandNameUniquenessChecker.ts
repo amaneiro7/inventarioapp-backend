@@ -1,4 +1,4 @@
-import { CityAlreadyExistError } from '../errors/CItyAlreadyExistError'
+import { CityAlreadyExistError } from '../errors/CityIsAlreadyExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CityRepository } from '../repository/CityRepository'
 import { type CityId } from '../valueObject/CityId'

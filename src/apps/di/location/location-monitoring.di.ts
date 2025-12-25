@@ -16,12 +16,19 @@ import { LocationMonitoringDashboardByLocationGetController } from '../../contro
 import { SequelizeLocationMonitoringDashboardByLocationRepository } from '../../../Contexts/Location/LocationMonitoring/infra/sequelize/SequelizeLocationMonitoringDashboardByLocationRepository'
 
 export enum LocationMonitoringDependencies {
+	// application
 	MonitoringFinder = 'locationMonitoringFinder',
 	MonitoringFinderAll = 'locationMonitoringFinderAll',
 	MonitoringCreator = 'locationMonitoringCreator',
 	LocationMonitoringService = 'locationMonitoringService',
 	LocationMonitoringDashboard = 'locationMonitoringDashboard',
 	LocationMonitoringDashboardByState = 'locationMonitoringDashboardByState',
+	// repository
+	LocationMonitoringDashboardRepository = 'locationMonitoringDashboardRepository',
+	LocationMonitoringDashboardByStateRepository = 'locationMonitoringDashboardByStateRepository',
+	LocationMonitoringDashboardByLocationRepository = 'locationMonitoringDashboardByLocationRepository',
+	LocationMonitoringRepository = 'locationMonitoringRepository',
+	// controller
 	LocationPingStatusController = 'locationPingStatusController',
 	LocationMonitoringDashboardGetController = 'locationMonitoringDashboardGetController',
 	LocationMonitoringDashboardByStateGetController = 'locationMonitoringDashboardByStateGetController',
@@ -32,27 +39,40 @@ export enum LocationMonitoringDependencies {
 export const register = (container: AwilixContainer) => {
 	container.register({
 		//app
-		locationMonitoringFinder: asClass(LocationMonitoringFinder),
-		locationMonitoringFinderAll: asClass(LocationMonitoringFinderAll),
-		locationMonitoringDashboard: asClass(LocationMonitoringDashboard),
-		locationMonitoringDashboardByState: asClass(LocationMonitoringDashboardByState),
-		locationMonitoringDashboardByLocation: asClass(LocationMonitoringDashboardByLocation),
-		locationMonitoringCreator: asClass(LocationMonitoringCreator),
-		// This service is a stateless orchestrator, transient (default) is appropriate.
-		locationMonitoringService: asClass(LocationMonitoringService).singleton(),
+		[LocationMonitoringDependencies.MonitoringFinder]: asClass(LocationMonitoringFinder),
+		[LocationMonitoringDependencies.MonitoringFinderAll]: asClass(LocationMonitoringFinderAll),
+		[LocationMonitoringDependencies.MonitoringCreator]: asClass(LocationMonitoringCreator).singleton(),
+		[LocationMonitoringDependencies.LocationMonitoringDashboard]: asClass(LocationMonitoringDashboard),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByState]: asClass(
+			LocationMonitoringDashboardByState
+		),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByLocation]: asClass(
+			LocationMonitoringDashboardByLocation
+		),
+		[LocationMonitoringDependencies.LocationMonitoringService]: asClass(LocationMonitoringService).singleton(),
 		//repo
-		locationMonitoringDashboardRepository: asClass(SequelizeLocationMonitoringDashboardRepository).singleton(),
-		locationMonitoringDashboardByStateRepository: asClass(
+		[LocationMonitoringDependencies.LocationMonitoringDashboardRepository]: asClass(
+			SequelizeLocationMonitoringDashboardRepository
+		).singleton(),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByStateRepository]: asClass(
 			SequelizeLocationMonitoringDashboardByStateRepository
 		).singleton(),
-		locationMonitoringDashboardByLocationRepository: asClass(
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByLocationRepository]: asClass(
 			SequelizeLocationMonitoringDashboardByLocationRepository
 		).singleton(),
-		locationMonitoringRepository: asClass(SequelizeLocationMonitoringRepository).singleton(),
+		[LocationMonitoringDependencies.LocationMonitoringRepository]: asClass(
+			SequelizeLocationMonitoringRepository
+		).singleton(),
 		//controller
-		locationPingStatusController: asClass(LocationPingStatusController),
-		locationMonitoringDashboardGetController: asClass(LocationMonitoringDashboardGetController),
-		locationMonitoringDashboardByStateGetController: asClass(LocationMonitoringDashboardByStateGetController),
-		locationMonitoringDashboardByLocationGetController: asClass(LocationMonitoringDashboardByLocationGetController)
+		[LocationMonitoringDependencies.LocationPingStatusController]: asClass(LocationPingStatusController),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardGetController]: asClass(
+			LocationMonitoringDashboardGetController
+		),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByStateGetController]: asClass(
+			LocationMonitoringDashboardByStateGetController
+		),
+		[LocationMonitoringDependencies.LocationMonitoringDashboardByLocationGetController]: asClass(
+			LocationMonitoringDashboardByLocationGetController
+		)
 	})
 }

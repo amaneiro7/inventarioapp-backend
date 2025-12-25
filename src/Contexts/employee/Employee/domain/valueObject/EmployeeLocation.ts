@@ -1,8 +1,8 @@
-import { LocationDoesNotExistError } from '../../../../Location/Location/domain/LocationDoesNotExistError'
-import { LocationId } from '../../../../Location/Location/domain/LocationId'
+import { LocationDoesNotExistError } from '../../../../Location/Location/domain/errors/LocationDoesNotExistError'
+import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { type LocationRepository } from '../../../../Location/Location/domain/LocationRepository'
+import { type LocationRepository } from '../../../../Location/Location/domain/repository/LocationRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Employee } from '../entity/Employee'
 

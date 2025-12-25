@@ -39,7 +39,7 @@ import { type HistoryRepository } from '../../../History/domain/HistoryRepositor
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type StatusRepository } from '../../Status/domain/StatusRepository'
-import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
+import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
 import { DeviceDto, type DeviceParams } from '../domain/Device.dto'
 import { type DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'

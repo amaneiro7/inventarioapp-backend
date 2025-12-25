@@ -1,6 +1,6 @@
 import { EnsureEmployeeCanBeCreated } from '../domain/domainService/EnsureEmployeeCanBeCreated'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
-import { type LocationRepository } from '../../../Location/Location/domain/LocationRepository'
+import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type EmployeeParams } from '../domain/entity/Employee.dto'

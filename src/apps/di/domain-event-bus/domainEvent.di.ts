@@ -6,6 +6,8 @@ import { InvalidateShipmentCacheOnShipmentChanged } from '../../../Contexts/Ship
 import { InvalidateCityCacheOnCityChanged } from '../../../Contexts/Location/City/application/InvalidateCityCacheOnCityChanged'
 import { InvalidateSiteCacheOnSiteChanged } from '../../../Contexts/Location/Site/application/InvalidateSiteCacheOnSiteChanged'
 import { InvalidateRegionCacheOnRegionChanged } from '../../../Contexts/Location/Region/application/InvalidateRegionCacheOnRegionChanged'
+import { InvalidateLocationCacheOnLocationChanged } from '../../../Contexts/Location/Location/application/InvalidateLocationCacheOnLocationChanged'
+import { CreateLocationMonitoringOnLocationCreated } from '../../../Contexts/Location/LocationMonitoring/application/CreateLocationMonitoringOnLocationCreated'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -14,7 +16,9 @@ export enum DomainEventDependencies {
 	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged',
 	InvalidateCityCacheOnCityChanged = 'invalidateCityCacheOnCityChanged',
 	InvalidateSiteCacheOnSiteChanged = 'invalidateSiteCacheOnSiteChanged',
-	InvalidateRegionCacheOnRegionChanged = 'invalidateRegionCacheOnRegionChanged'
+	InvalidateRegionCacheOnRegionChanged = 'invalidateRegionCacheOnRegionChanged',
+	InvalidateLocationCacheOnLocationChanged = 'invalidateLocationCacheOnLocationChanged',
+	CreateLocationMonitoringOnLocationCreated = 'createLocationMonitoringOnLocationCreated'
 }
 
 /**
@@ -42,6 +46,12 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateRegionCacheOnRegionChanged]: asClass(
 			InvalidateRegionCacheOnRegionChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateLocationCacheOnLocationChanged]: asClass(
+			InvalidateLocationCacheOnLocationChanged
+		).singleton(),
+		[DomainEventDependencies.CreateLocationMonitoringOnLocationCreated]: asClass(
+			CreateLocationMonitoringOnLocationCreated
 		).singleton()
 	})
 }

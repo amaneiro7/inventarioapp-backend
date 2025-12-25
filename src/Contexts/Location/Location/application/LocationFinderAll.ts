@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type LocationDto } from '../domain/Location.dto'
-import { type LocationRepository } from '../domain/LocationRepository'
+import { type LocationDto } from '../domain/entity/Location.dto'
+import { type LocationRepository } from '../domain/repository/LocationRepository'
 
 /**
  * Service to find all Locations based on provided criteria.

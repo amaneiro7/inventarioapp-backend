@@ -1,15 +1,16 @@
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationId } from '../../domain/LocationId'
-import { type LocationRepository } from '../../domain/LocationRepository'
-import { type LocationName } from '../../domain/LocationName'
 import { LocationAssociation } from './LocationAssociation'
 import { LocationModel } from './LocationSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type LocationId } from '../../domain/valueObject/LocationId'
+import { type LocationRepository } from '../../domain/repository/LocationRepository'
+import { type LocationName } from '../../domain/valueObject/LocationName'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type LocationDto, type LocationPrimitives } from '../../domain/Location.dto'
+import { type LocationDto, type LocationPrimitives } from '../../domain/entity/Location.dto'
+import { type LocationCacheInvalidator } from '../../domain/repository/LocationCacheInvalidator'
 
 /**
  * @class SequelizeLocationRepository
@@ -18,7 +19,10 @@ import { type LocationDto, type LocationPrimitives } from '../../domain/Location
  * @description Concrete implementation of the LocationRepository using Sequelize.
  * Handles data persistence for Location entities, including caching mechanisms.
  */
-export class SequelizeLocationRepository extends SequelizeCriteriaConverter implements LocationRepository {
+export class SequelizeLocationRepository
+	extends SequelizeCriteriaConverter
+	implements LocationRepository, LocationCacheInvalidator
+{
 	private readonly cacheKey: string = 'locations'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
@@ -141,9 +145,17 @@ export class SequelizeLocationRepository extends SequelizeCriteriaConverter impl
 	async save(payload: LocationPrimitives): Promise<void> {
 		// Use upsert for atomic create or update operation
 		await LocationModel.upsert(payload)
+	}
 
-		// Invalidate relevant cache entries
+	/**
+	 * @method invalidateLocationCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements LocationCacheInvalidator interface.
+	 */
+	async invalidateLocationCache(id: Primitives<LocationId>): Promise<void> {
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+		if (id) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		}
 	}
 }

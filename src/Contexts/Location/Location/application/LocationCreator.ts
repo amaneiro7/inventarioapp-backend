@@ -1,43 +1,44 @@
-import { Location } from '../domain/Location'
-import { LocationName } from '../domain/LocationName'
-import { LocationSite } from '../domain/LocationSite'
-import { LocationTypeOfSite } from '../domain/LocationTypeOfSite'
-import { LocationOperationalStatus } from '../domain/LocationOperationalStatus'
-import { LocationMonitoringCreator } from '../../LocationMonitoring/application/LocationMonitoringCreator'
+import { Location } from '../domain/entity/Location'
+import { LocationStatusExistenceChecker } from '../domain/service/LocationStatusExistanceChecker'
+import { TypeOfSiteExistenceChecker } from '../domain/service/TypeOfSiteExistanceChecker'
+import { SiteExistenceChecker } from '../domain/service/SiteExistanceChecker'
+import { LocationNameUniquenessChecker } from '../domain/service/LocationNameUniquenessChecker'
 import { type LocationStatusRepository } from '../../LocationStatus/domain/repository/LocationStatusRepository'
-import { type LocationRepository } from '../domain/LocationRepository'
+import { type LocationRepository } from '../domain/repository/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/repository/TypeOfSiteRepository'
 import { type SiteRepository } from '../../Site/domain/repository/SiteRepository'
-import { type LocationParams } from '../domain/Location.dto'
-import { type LocationMonitoringRepository } from '../../LocationMonitoring/domain/repository/LocationMonitoringRepository'
+import { type LocationParams } from '../domain/entity/Location.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * Service to create a new Location.
  */
 export class LocationCreator {
 	private readonly locationRepository: LocationRepository
-	private readonly typeOfSiteRepository: TypeOfSiteRepository
-	private readonly siteRepository: SiteRepository
-	private readonly locationStatusRepository: LocationStatusRepository
-	private readonly locationMonitoringRepository: LocationMonitoringRepository
+	private readonly locationNameUniquenessChecker: LocationNameUniquenessChecker
+	private readonly locationStatusExistenceChecker: LocationStatusExistenceChecker
+	private readonly siteExistenceChecker: SiteExistenceChecker
+	private readonly typeOfSiteExistenceChecker: TypeOfSiteExistenceChecker
+	private readonly eventBus: EventBus
 	constructor({
 		locationRepository,
 		typeOfSiteRepository,
 		siteRepository,
 		locationStatusRepository,
-		locationMonitoringRepository
+		eventBus
 	}: {
 		locationRepository: LocationRepository
 		typeOfSiteRepository: TypeOfSiteRepository
 		siteRepository: SiteRepository
 		locationStatusRepository: LocationStatusRepository
-		locationMonitoringRepository: LocationMonitoringRepository
+		eventBus: EventBus
 	}) {
 		this.locationRepository = locationRepository
-		this.typeOfSiteRepository = typeOfSiteRepository
-		this.siteRepository = siteRepository
-		this.locationStatusRepository = locationStatusRepository
-		this.locationMonitoringRepository = locationMonitoringRepository
+		this.locationNameUniquenessChecker = new LocationNameUniquenessChecker(locationRepository)
+		this.locationStatusExistenceChecker = new LocationStatusExistenceChecker(locationStatusRepository)
+		this.siteExistenceChecker = new SiteExistenceChecker(siteRepository)
+		this.typeOfSiteExistenceChecker = new TypeOfSiteExistenceChecker(typeOfSiteRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -47,28 +48,19 @@ export class LocationCreator {
 	 * @returns {Promise<void>} A promise that resolves when the location and its monitoring are successfully created.
 	 */
 	async run(params: LocationParams): Promise<void> {
+		await Promise.all([
+			this.locationNameUniquenessChecker.ensureUnique(params.name),
+			this.locationStatusExistenceChecker.ensureExist(params.locationStatusId),
+			this.siteExistenceChecker.ensureExist(params.siteId),
+			this.typeOfSiteExistenceChecker.ensureExist(params.typeOfSiteId)
+		])
 		const location = Location.create(params)
 
-		await LocationName.ensureNameDoesNotExit({
-			repository: this.locationRepository,
-			name: params.name
-		})
-		await LocationTypeOfSite.ensureTypeOfSiteExit({
-			repository: this.typeOfSiteRepository,
-			typeOfSite: params.typeOfSiteId
-		})
-		await LocationSite.ensureSiteExit({
-			repository: this.siteRepository,
-			site: params.siteId
-		})
-		await LocationOperationalStatus.ensureOperationalStatusExit({
-			repository: this.locationStatusRepository,
-			operationalStatus: params.locationStatusId
-		})
-		const LocationPrimitives = location.toPrimitive()
-		await this.locationRepository.save(LocationPrimitives)
-		await new LocationMonitoringCreator({ locationMonitoringRepository: this.locationMonitoringRepository }).run({
-			locationId: LocationPrimitives.id
-		})
+		// 1. Persistencia: El 'await' garantiza que el dato esté en la DB antes de continuar.
+		await this.locationRepository.save(location.toPrimitives())
+
+		// 2. Publicación: El evento se dispara solo si el guardado fue exitoso.
+		// Los suscriptores pueden buscar la entidad en la DB con seguridad.
+		await this.eventBus.publish(location.pullDomainEvents())
 	}
 }

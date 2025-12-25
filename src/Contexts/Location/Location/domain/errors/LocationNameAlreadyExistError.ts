@@ -1,5 +1,5 @@
-import { ApiError } from '../../../Shared/domain/errors/ApiError'
-import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 /**
  * Custom error class for when a Location name already exists.
@@ -12,5 +12,6 @@ export class LocationNameAlreadyExistError extends ApiError {
 	 */
 	constructor(readonly name: string) {
 		super(httpStatus[400].statusCode, `El nombre de ubicación ${name} ya existe`)
+		this.name = 'LocationNameAlreadyExistError'
 	}
 }

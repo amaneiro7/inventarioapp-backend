@@ -33,7 +33,7 @@ export const register = (container: AwilixContainer) => {
 		locationFinder: asClass(LocationFinder),
 		locationFinderAll: asClass(LocationFinderAll),
 		locationSearchByCriteria: asClass(LocationSearchByCriteria),
-		locationCreator: asClass(LocationCreator),
+		locationCreator: asClass(LocationCreator).singleton(),
 		locationUpdater: asClass(LocationUpdater),
 		locationGetController: asClass(LocationGetController),
 		locationGetAllController: asClass(LocationGetAllController),

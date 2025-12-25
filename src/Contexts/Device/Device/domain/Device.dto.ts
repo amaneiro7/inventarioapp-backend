@@ -15,7 +15,7 @@ import { type CategoryDto } from '../../../Category/Category/domain/entity/Categ
 import { type BrandDto } from '../../../Brand/domain/entity/Brand.dto'
 import { type ModelSeriesDto } from '../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
-import { type LocationDto } from '../../../Location/Location/domain/Location.dto'
+import { type LocationDto } from '../../../Location/Location/domain/entity/Location.dto'
 import { type DeviceComputerDto } from '../../../Features/Computer/domain/Computer.dto'
 import { type DeviceMFPDto } from '../../../Features/MFP/domain/MFP.dto'
 import { type DeviceHardDriveDto } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'

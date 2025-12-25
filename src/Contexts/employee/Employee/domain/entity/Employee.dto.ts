@@ -1,4 +1,4 @@
-import { type LocationDto } from '../../../../Location/Location/domain/Location.dto'
+import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'

@@ -14,7 +14,7 @@ import { type HardDriveTypeRepository } from '../../Features/HardDrive/HardDrive
 import { type HardDriveCapacityRepository } from '../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type OperatingSystemRepository } from '../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type OperatingSystemArqRepository } from '../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
-import { type LocationRepository } from '../../Location/Location/domain/LocationRepository'
+import { type LocationRepository } from '../../Location/Location/domain/repository/LocationRepository'
 import { type ProcessorRepository } from '../../Features/Processor/Processor/domain/ProcessorRepository'
 
 /**

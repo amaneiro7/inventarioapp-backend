@@ -1,7 +1,7 @@
-import { LocationDoesNotExistError } from '../domain/LocationDoesNotExistError'
-import { LocationId } from '../domain/LocationId'
-import { type LocationRepository } from '../domain/LocationRepository'
-import { type LocationDto } from '../domain/Location.dto'
+import { LocationDoesNotExistError } from '../domain/errors/LocationDoesNotExistError'
+import { LocationId } from '../domain/valueObject/LocationId'
+import { type LocationRepository } from '../domain/repository/LocationRepository'
+import { type LocationDto } from '../domain/entity/Location.dto'
 
 /**
  * Service to find a Location by its ID.
