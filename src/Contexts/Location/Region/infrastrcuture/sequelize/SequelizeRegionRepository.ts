@@ -5,9 +5,10 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type RegionPrimitives, type RegionDto } from '../../domain/Region.dto'
-import { type RegionId } from '../../domain/RegionId'
-import { type RegionRepository } from '../../domain/RegionRepository'
+import { type RegionPrimitives, type RegionDto } from '../../domain/entity/Region.dto'
+import { type RegionId } from '../../domain/valueObject/RegionId'
+import { type RegionRepository } from '../../domain/repository/RegionRepository'
+import { type RegionCacheInvalidator } from '../../domain/repository/RegionCacheInvalidator'
 
 /**
  * @class SequelizeRegionRepository
@@ -16,7 +17,10 @@ import { type RegionRepository } from '../../domain/RegionRepository'
  * @description Concrete implementation of the RegionRepository using Sequelize.
  * Handles data persistence for Region entities, including caching mechanisms.
  */
-export class SequelizeRegionRepository extends SequelizeCriteriaConverter implements RegionRepository {
+export class SequelizeRegionRepository
+	extends SequelizeCriteriaConverter
+	implements RegionRepository, RegionCacheInvalidator
+{
 	private readonly cacheKey: string = 'regions'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
@@ -77,9 +81,17 @@ export class SequelizeRegionRepository extends SequelizeCriteriaConverter implem
 	async save(payload: RegionPrimitives): Promise<void> {
 		// Use upsert for atomic create or update operation
 		await RegionModel.upsert(payload)
+	}
 
-		// Invalidate relevant cache entries
+	/**
+	 * @method invalidateRegionCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements RegionCacheInvalidator interface.
+	 */
+	async invalidateRegionCache(id: Primitives<RegionId>): Promise<void> {
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+		if (id) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		}
 	}
 }

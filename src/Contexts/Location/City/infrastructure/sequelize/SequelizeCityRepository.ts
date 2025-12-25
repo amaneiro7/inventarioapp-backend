@@ -2,6 +2,7 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { CityModel } from './CitySchema'
 import { CityAssociation } from './CityAssociation'
+import { CityCacheInvalidator } from '../../domain/repository/CityCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -10,7 +11,6 @@ import { type CityRepository } from '../../domain/repository/CityRepository'
 import { type CityName } from '../../domain/valueObject/CityName'
 import { type CityDto, type CityPrimitives } from '../../domain/entity/City.dto'
 import { type CityId } from '../../domain/valueObject/CityId'
-import { CityCacheInvalidator } from '../../domain/repository/CityCacheInvalidator'
 
 /**
  * @class SequelizeCityRepository

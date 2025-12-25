@@ -1,26 +1,33 @@
-import { AdmRegionRegion } from '../domain/AdministrativeRegion'
-import { Region } from '../domain/Region'
-import { RegionDoesNotExistError } from '../domain/RegionDoesNotExistError'
-import { RegionId } from '../domain/RegionId'
+import { Region } from '../domain/entity/Region'
+import { RegionId } from '../domain/valueObject/RegionId'
+import { AdministrativeRegionExistenceChecker } from '../domain/service/AdministrativeRegionExistanceChecker'
+import { RegionDoesNotExistError } from '../domain/errors/RegionDoesNotExistError'
 import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/repository/AdministrativeRegionRepository'
-import { type RegionParams } from '../domain/Region.dto'
-import { type RegionRepository } from '../domain/RegionRepository'
+import { type RegionParams } from '../domain/entity/Region.dto'
+import { type RegionRepository } from '../domain/repository/RegionRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * Service to update an existing Region.
  */
 export class RegionUpdater {
 	private readonly regionRepository: RegionRepository
-	private readonly administrativeRegionRepository: AdministrativeRegionRepository
+	private readonly administrativeRegionExistenceChecker: AdministrativeRegionExistenceChecker
+	private readonly eventBus: EventBus
 	constructor({
 		regionRepository,
-		administrativeRegionRepository
+		administrativeRegionRepository,
+		eventBus
 	}: {
 		regionRepository: RegionRepository
 		administrativeRegionRepository: AdministrativeRegionRepository
+		eventBus: EventBus
 	}) {
 		this.regionRepository = regionRepository
-		this.administrativeRegionRepository = administrativeRegionRepository
+		this.administrativeRegionExistenceChecker = new AdministrativeRegionExistenceChecker(
+			administrativeRegionRepository
+		)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -40,12 +47,21 @@ export class RegionUpdater {
 
 		const { administrativeRegionId } = params
 		const regionEntity = Region.fromPrimitives(region)
-		await AdmRegionRegion.updateAdmRegionField({
-			entity: regionEntity,
-			repository: this.administrativeRegionRepository,
-			administrativeRegionId
-		})
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		if (administrativeRegionId && regionEntity.administrativeRegionValue !== administrativeRegionId) {
+			await this.administrativeRegionExistenceChecker.ensureExist(administrativeRegionId)
+			changes.push({
+				field: 'administrativeRegionId',
+				oldValue: regionEntity.administrativeRegionValue,
+				newValue: administrativeRegionId
+			})
+			regionEntity.updateAdmRegion(administrativeRegionId)
+		}
 
-		await this.regionRepository.save(regionEntity.toPrimitive())
+		if (changes.length > 0) {
+			regionEntity.registerUpdateEvent(changes)
+			await this.regionRepository.save(regionEntity.toPrimitives())
+			await this.eventBus.publish(regionEntity.pullDomainEvents())
+		}
 	}
 }

@@ -2,11 +2,11 @@ import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { CityId } from '../valueObject/CityId'
 import { CityName } from '../valueObject/CityName'
 import { StateId } from '../../../State/domain/valueObject/StateId'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CityParams, type CityDto, type CityPrimitives } from './City.dto'
 import { CityUpdatedDomainEvent } from '../event/CityUpdatedDomainEvent'
 import { CityRenamedDomainEvent } from '../event/CityRenamedDomainEvent'
 import { CityCreatedDomainEvent } from '../event/CityCreatedDomainEvent'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CityParams, type CityDto, type CityPrimitives } from './City.dto'
 
 /**
  * Represents a City domain entity.

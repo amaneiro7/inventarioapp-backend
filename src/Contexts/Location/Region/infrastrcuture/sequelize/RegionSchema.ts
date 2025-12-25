@@ -1,10 +1,11 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type RegionDto } from '../../domain/Region.dto'
-import { type RegionId } from '../../domain/RegionId'
-import { type RegionName } from '../../domain/RegionName'
+import { type RegionDto } from '../../domain/entity/Region.dto'
+import { type RegionId } from '../../domain/valueObject/RegionId'
+import { type RegionName } from '../../domain/valueObject/RegionName'
 import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
 import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/entity/AdministrativeRegion.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * Represents the Region model in the database.
@@ -17,9 +18,9 @@ export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> 
 
 	/**
 	 * Associates the Region model with other models.
-	 * @param {Sequelize['models']} models - The models object containing all initialized models.
+	 * @param {SequelizeModels} models - The models object containing all initialized models.
 	 */
-	static async associate(models: Sequelize['models']): Promise<void> {
+	static async associate(models: SequelizeModels): Promise<void> {
 		this.belongsTo(models.AdministrativeRegion, {
 			as: 'administrativeRegion',
 			foreignKey: 'administrativeRegionId'
@@ -51,6 +52,7 @@ export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> 
 			},
 			{
 				modelName: 'Region',
+				tableName: 'regions',
 				timestamps: false,
 				underscored: true,
 				sequelize

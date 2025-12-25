@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type StateDto, type StatePrimitives } from '../entity/State.dto'
-import { RegionId } from '../../../Region/domain/RegionId'
+import { RegionId } from '../../../Region/domain/valueObject/RegionId'
 import { StateId } from '../valueObject/StateId'
 import { StateName } from '../valueObject/StateName'
 

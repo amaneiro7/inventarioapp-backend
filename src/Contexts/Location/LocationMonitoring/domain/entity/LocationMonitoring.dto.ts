@@ -4,7 +4,7 @@ import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/Location.dto'
 import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
 import { type LocationName } from '../../../Location/domain/LocationName'
-import { type SiteDto } from '../../../Site/domain/Site.dto'
+import { type SiteDto } from '../../../Site/domain/entity/Site.dto'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 
 /**

@@ -1,7 +1,7 @@
 import { City } from '../domain/entity/City'
 import { CityId } from '../domain/valueObject/CityId'
 import { CityNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
-import { StateExitanceChecker } from '../domain/service/StateExistanceChecker'
+import { StateExistenceChecker } from '../domain/service/StateExistanceChecker'
 import { CityDoesNotExistError } from '../domain/errors/CityDoesNotExistError'
 import { type StateRepository } from '../../State/domain/repository/StateRepository'
 import { type CityRepository } from '../domain/repository/CityRepository'
@@ -14,7 +14,7 @@ import { type EventBus } from '../../../Shared/domain/event/EventBus'
 export class CityUpdater {
 	private readonly cityRepository: CityRepository
 	private readonly cityNameUniquenessChecker: CityNameUniquenessChecker
-	private readonly stateExitanceChecker: StateExitanceChecker
+	private readonly stateExistenceChecker: StateExistenceChecker
 	private readonly eventBus: EventBus
 	constructor({
 		cityRepository,
@@ -27,7 +27,7 @@ export class CityUpdater {
 	}) {
 		this.cityRepository = cityRepository
 		this.cityNameUniquenessChecker = new CityNameUniquenessChecker(cityRepository)
-		this.stateExitanceChecker = new StateExitanceChecker(stateRepository)
+		this.stateExistenceChecker = new StateExistenceChecker(stateRepository)
 		this.eventBus = eventBus
 	}
 
@@ -60,7 +60,7 @@ export class CityUpdater {
 		}
 
 		if (stateId && cityEntity.stateValue !== stateId) {
-			await this.stateExitanceChecker.ensureExist(stateId)
+			await this.stateExistenceChecker.ensureExist(stateId)
 			changes.push({
 				field: 'stateId',
 				oldValue: cityEntity.stateValue,

@@ -1,7 +1,7 @@
-import { RegionDoesNotExistError } from '../domain/RegionDoesNotExistError'
-import { RegionId } from '../domain/RegionId'
-import { type RegionDto } from '../domain/Region.dto'
-import { type RegionRepository } from '../domain/RegionRepository'
+import { RegionDoesNotExistError } from '../domain/errors/RegionDoesNotExistError'
+import { RegionId } from '../domain/valueObject/RegionId'
+import { type RegionDto } from '../domain/entity/Region.dto'
+import { type RegionRepository } from '../domain/repository/RegionRepository'
 
 /**
  * Service to find a Region by its ID.

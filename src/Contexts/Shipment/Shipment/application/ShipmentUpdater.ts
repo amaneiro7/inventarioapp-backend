@@ -8,10 +8,10 @@ import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type ShipmentRepository } from '../domain/repository/ShipmentRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ShipmentParams } from '../domain/entity/Shipment.dto'
-import { type SiteRepository } from '../../../Location/Site/domain/SiteRepository'
+import { type SiteRepository } from '../../../Location/Site/domain/repository/SiteRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
-import { SiteDoesNotExistError } from '../../../Location/Site/domain/SiteDoesNotExistError'
+import { SiteDoesNotExistError } from '../../../Location/Site/domain/errors/SiteDoesNotExistError'
 
 export class ShipmentUpdater {
 	private readonly shipmentRepository: ShipmentRepository

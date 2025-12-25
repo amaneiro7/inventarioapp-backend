@@ -1,8 +1,8 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type AdministrativeRegionDto } from '../../AdministrativeRegion/domain//entity/AdministrativeRegion.dto'
-import { type AdministrativeRegionId } from '../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
-import { type RegionId } from './RegionId'
-import { type RegionName } from './RegionName'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type AdministrativeRegionDto } from '../../../AdministrativeRegion/domain/entity/AdministrativeRegion.dto'
+import { type AdministrativeRegionId } from '../../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
+import { type RegionId } from '../valueObject/RegionId'
+import { type RegionName } from '../valueObject/RegionName'
 
 /**
  * Represents the core properties of a Region.

@@ -1,7 +1,7 @@
-import { SiteId } from '../domain/SiteId'
-import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
-import { type SitePrimitives } from '../domain/Site.dto'
-import { type SiteRepository } from '../domain/SiteRepository'
+import { SiteDoesNotExistError } from '../domain/errors/SiteDoesNotExistError'
+import { SiteId } from '../domain/valueObject/SiteId'
+import { type SiteRepository } from '../domain/repository/SiteRepository'
+import { type SitePrimitives } from '../domain/entity/Site.dto'
 
 /**
  * Service to find a Site by its ID.

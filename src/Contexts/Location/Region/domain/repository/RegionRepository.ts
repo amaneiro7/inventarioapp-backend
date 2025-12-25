@@ -1,8 +1,8 @@
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type RegionParams, type RegionDto } from './Region.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type RegionId } from './RegionId'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type RegionParams, type RegionDto } from '../entity/Region.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type RegionId } from '../valueObject/RegionId'
 
 /**
  * Abstract class defining the contract for Region data access.

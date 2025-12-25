@@ -2,6 +2,7 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { SiteModels } from './SiteSchema'
 import { SiteAssociation } from './SiteAssociation'
+import { SiteCacheInvalidator } from '../../domain/repository/SiteCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -9,6 +10,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type SiteRepository } from '../../domain/repository/SiteRepository'
 import { type SiteDto, type SitePrimitives } from '../../domain/entity/Site.dto'
 import { type SiteId } from '../../domain/valueObject/SiteId'
+import { type SiteName } from '../../domain/valueObject/SiteName'
 
 /**
  * @class SequelizeSiteRepository
@@ -17,7 +19,10 @@ import { type SiteId } from '../../domain/valueObject/SiteId'
  * @description Concrete implementation of the SiteRepository using Sequelize.
  * Handles data persistence for Site entities, including caching mechanisms.
  */
-export class SequelizeSiteRepository extends SequelizeCriteriaConverter implements SiteRepository {
+export class SequelizeSiteRepository
+	extends SequelizeCriteriaConverter
+	implements SiteRepository, SiteCacheInvalidator
+{
 	private readonly cacheKey: string = 'sites'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
@@ -37,7 +42,7 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 		return await this.cache.getCachedData<ResponseDB<SiteDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.MEDIUM,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await SiteModels.findAndCountAll(options)
 				return {
@@ -59,7 +64,7 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 	async findById(id: Primitives<SiteId>): Promise<SiteDto | null> {
 		return await this.cache.getCachedData<SiteDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const site = await SiteModels.findByPk(id, {
 					include: [
@@ -80,6 +85,26 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 	}
 
 	/**
+	 * @method findByName
+	 * @description Retrieves a single Site entity by its name.
+	 * Utilizes caching for direct name lookups.
+	 * @param {Primitives<SiteName>} name - The name of the Site to search for.
+	 * @returns {Promise<SiteDto | null>} A promise that resolves to the Site DTO if found, or null otherwise.
+	 */
+	async findByName(name: Primitives<SiteName>): Promise<SiteDto | null> {
+		return await this.cache.getCachedData<SiteDto | null>({
+			cacheKey: `${this.cacheKey}:name:${name}`,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const city = await SiteModels.findOne({
+					where: { name }
+				})
+				return city ? (city.get({ plain: true }) as SiteDto) : null
+			}
+		})
+	}
+
+	/**
 	 * @method save
 	 * @description Saves a Site entity to the data store. Uses `upsert` for atomic creation or update.
 	 * Invalidates relevant cache entries after a successful operation.
@@ -89,9 +114,17 @@ export class SequelizeSiteRepository extends SequelizeCriteriaConverter implemen
 	async save(payload: SitePrimitives): Promise<void> {
 		// Use upsert for atomic create or update operation
 		await SiteModels.upsert(payload)
+	}
 
-		// Invalidate relevant cache entries
+	/**
+	 * @method invalidateSiteCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements SiteCacheInvalidator interface.
+	 */
+	async invalidateSiteCache(id: Primitives<SiteId>): Promise<void> {
 		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+		if (id) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+		}
 	}
 }

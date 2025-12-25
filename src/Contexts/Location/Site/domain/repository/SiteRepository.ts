@@ -3,6 +3,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type SiteDto, type SitePrimitives } from '../entity/Site.dto'
 import { type SiteId } from '../valueObject/SiteId'
+import { type Nullable } from '../../../../Shared/domain/Nullable'
 
 /**
  * Abstract class defining the contract for Site data access.
@@ -29,4 +30,11 @@ export abstract class SiteRepository {
 	 * @returns {Promise<SiteDto | null>} A promise that resolves to the site DTO if found, or null otherwise.
 	 */
 	abstract findById(id: Primitives<SiteId>): Promise<SiteDto | null>
+
+	/**
+	 * Searches for a single site by its name.
+	 * @param {SiteDto['name']} name - The name of the site to search for.
+	 * @returns {Promise<Nullable<SiteDto>>} A promise that resolves to the site DTO if found, or null otherwise.
+	 */
+	abstract findByName(name: SiteDto['name']): Promise<Nullable<SiteDto>>
 }

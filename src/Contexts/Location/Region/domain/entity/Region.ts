@@ -1,24 +1,28 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
+import { RegionId } from '../valueObject/RegionId'
+import { RegionName } from '../valueObject/RegionName'
+import { AdministrativeRegionId } from '../../../AdministrativeRegion/domain/valueObject/AdministrativeRegionId'
+import { RegionUpdatedDomainEvent } from '../events/RegionUpdatedDomainEvent'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type RegionDto, type RegionPrimitives } from './Region.dto'
-import { RegionId } from './RegionId'
-import { RegionName } from './RegionName'
-import { AdmRegionRegion } from './AdministrativeRegion'
 
 /**
  * Represents a Region domain entity.
  */
-export class Region {
+export class Region extends AggregateRoot {
 	/**
 	 * Constructs a Region instance.
 	 * @param {RegionId} id - The unique identifier of the region.
 	 * @param {RegionName} name - The name of the region.
-	 * @param {AdmRegionRegion} administrativeRegionId - The administrative region ID to which the region belongs.
+	 * @param {AdministrativeRegionId} administrativeRegionId - The administrative region ID to which the region belongs.
 	 */
 	constructor(
 		private readonly id: RegionId,
 		private readonly name: RegionName,
-		private administrativeRegionId: AdmRegionRegion
-	) {}
+		private administrativeRegionId: AdministrativeRegionId
+	) {
+		super()
+	}
 
 	/**
 	 * Creates a Region instance from primitive data.
@@ -29,7 +33,7 @@ export class Region {
 		return new Region(
 			new RegionId(primitives.id),
 			new RegionName(primitives.name),
-			new AdmRegionRegion(primitives.administrativeRegionId)
+			new AdministrativeRegionId(primitives.administrativeRegionId)
 		)
 	}
 
@@ -37,7 +41,7 @@ export class Region {
 	 * Converts the Region instance to its primitive representation.
 	 * @returns {RegionPrimitives} The primitive representation of the region.
 	 */
-	toPrimitive(): RegionPrimitives {
+	toPrimitives(): RegionPrimitives {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
@@ -45,12 +49,21 @@ export class Region {
 		}
 	}
 
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new RegionUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
+	}
+
 	/**
 	 * Updates the administrative region of the region.
-	 * @param {Primitives<AdmRegionRegion>} newAdmRegion - The new administrative region ID for the region.
+	 * @param {Primitives<AdministrativeRegionId>} newAdmRegion - The new administrative region ID for the region.
 	 */
-	updateAdmRegion(newAdmRegion: Primitives<AdmRegionRegion>): void {
-		this.administrativeRegionId = new AdmRegionRegion(newAdmRegion)
+	updateAdmRegion(newAdmRegion: Primitives<AdministrativeRegionId>): void {
+		this.administrativeRegionId = new AdministrativeRegionId(newAdmRegion)
 	}
 
 	/**

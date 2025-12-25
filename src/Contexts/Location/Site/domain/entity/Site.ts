@@ -1,8 +1,11 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { CityId } from '../../../City/domain/valueObject/CityId'
-import { SiteName } from '../SiteName'
+import { SiteName } from '../valueObject/SiteName'
 import { SiteAddress } from '../valueObject/SiteAddress'
 import { SiteId } from '../valueObject/SiteId'
+import { SiteUpdatedDomainEvent } from '../event/SiteUpdatedDomainEvent'
+import { SiteRenamedDomainEvent } from '../event/SiteRenamedDomainEvent'
+import { SiteCreatedDomainEvent } from '../event/SiteCreatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SiteDto, type SiteParams, type SitePrimitives } from './Site.dto'
 
@@ -27,6 +30,37 @@ export class Site extends AggregateRoot {
 	}
 
 	/**
+	 * Creates a new Site instance with a randomly generated ID.
+	 * @param {SiteParams} params - The parameters for creating the site.
+	 * @returns {Site} A new Site instance.
+	 */
+	static create(params: SiteParams): Site {
+		const id = SiteId.random()
+		const cityId = new CityId(params.cityId)
+		const address = new SiteAddress(params.address)
+		const name = new SiteName(params.name)
+		const site = new Site(id, cityId, address, name)
+		site.record(
+			new SiteCreatedDomainEvent({
+				aggregateId: id.value,
+				cityId: cityId.value,
+				address: address.value,
+				name: name.value
+			})
+		)
+		return site
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new SiteUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
+	}
+
+	/**
 	 * Creates a Site instance from primitive data.
 	 * @param {SiteDto} primitives - The primitive data for the site.
 	 * @returns {Site} A new Site instance.
@@ -37,21 +71,6 @@ export class Site extends AggregateRoot {
 			new CityId(primitives.cityId),
 			new SiteAddress(primitives.address),
 			new SiteName(primitives.name)
-		)
-	}
-
-	/**
-	 * Creates a new Site instance with a randomly generated ID.
-	 * @param {SiteParams} params - The parameters for creating the site.
-	 * @returns {Site} A new Site instance.
-	 */
-	static create(params: SiteParams): Site {
-		const id = SiteId.random().value
-		return new Site(
-			new SiteId(id),
-			new CityId(params.cityId),
-			new SiteAddress(params.address),
-			new SiteName(params.name)
 		)
 	}
 
@@ -81,7 +100,15 @@ export class Site extends AggregateRoot {
 	 * @param {Primitives<SiteName>} name - The new name for the site.
 	 */
 	updateName(name: Primitives<SiteName>): void {
+		const oldName = this.name.value
 		this.name = new SiteName(name)
+		this.record(
+			new SiteRenamedDomainEvent({
+				aggregateId: this.idValue,
+				oldName,
+				newName: this.name.value
+			})
+		)
 	}
 
 	/**

@@ -9,7 +9,7 @@ import { LocationOperationalStatus } from '../domain/LocationOperationalStatus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationRepository } from '../domain/LocationRepository'
 import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/repository/TypeOfSiteRepository'
-import { type SiteRepository } from '../../Site/domain/SiteRepository'
+import { type SiteRepository } from '../../Site/domain/repository/SiteRepository'
 import { type LocationParams } from '../domain/Location.dto'
 import { type LocationStatusRepository } from '../../LocationStatus/domain/repository/LocationStatusRepository'
 

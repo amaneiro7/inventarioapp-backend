@@ -1,7 +1,7 @@
 import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { SiteDoesNotExistError } from '../../Site/domain/SiteDoesNotExistError'
-import { SiteId } from '../../Site/domain/SiteId'
-import { SiteRepository } from '../../Site/domain/SiteRepository'
+import { SiteDoesNotExistError } from '../../Site/domain/errors/SiteDoesNotExistError'
+import { SiteId } from '../../Site/domain/valueObject/SiteId'
+import { SiteRepository } from '../../Site/domain/repository/SiteRepository'
 import { Location } from './Location'
 
 /**

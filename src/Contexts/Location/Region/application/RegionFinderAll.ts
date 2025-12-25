@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type RegionDto } from '../domain/Region.dto'
-import { type RegionRepository } from '../domain/RegionRepository'
+import { type RegionDto } from '../domain/entity/Region.dto'
+import { type RegionRepository } from '../domain/repository/RegionRepository'
 
 /**
  * Service to find all Regions based on provided criteria.

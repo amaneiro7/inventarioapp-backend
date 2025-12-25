@@ -5,9 +5,9 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
  * Custom error class for when a Administrative does not exist.
  * Extends ApiError to provide a standardized error response.
  */
-export class AdministrativeDoesNotExistError extends ApiError {
+export class AdministrativeRegionDoesNotExistError extends ApiError {
 	/**
-	 * Creates an instance of AdministrativeDoesNotExistError.
+	 * Creates an instance of AdministrativeRegionDoesNotExistError.
 	 * @param {string} value - The ID or identifier of the city that does not exist.
 	 */
 	constructor(public readonly value: string) {

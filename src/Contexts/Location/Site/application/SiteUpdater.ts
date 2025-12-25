@@ -1,18 +1,31 @@
-import { Site } from '../domain/Site'
-import { SiteId } from '../domain/SiteId'
-import { SiteName } from '../domain/SiteName'
-import { SiteAddress } from '../domain/SiteAddress'
-import { SiteDoesNotExistError } from '../domain/SiteDoesNotExistError'
-import { type SitePrimitives } from '../domain/Site.dto'
-import { type SiteRepository } from '../domain/SiteRepository'
+import { Site } from '../domain/entity/Site'
+import { SiteId } from '../domain/valueObject/SiteId'
+import { SiteDoesNotExistError } from '../domain/errors/SiteDoesNotExistError'
+import { SiteNameUniquenessChecker } from '../domain/service/SiteNameUniquenessChecker'
+import { type SitePrimitives } from '../domain/entity/Site.dto'
+import { type SiteRepository } from '../domain/repository/SiteRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * Service to update an existing Site.
  */
 export class SiteUpdater {
 	private readonly siteRepository: SiteRepository
-	constructor({ siteRepository }: { siteRepository: SiteRepository }) {
+	private readonly siteNameUniquenessChecker: SiteNameUniquenessChecker
+
+	private readonly eventBus: EventBus
+	constructor({
+		siteRepository,
+
+		eventBus
+	}: {
+		siteRepository: SiteRepository
+
+		eventBus: EventBus
+	}) {
 		this.siteRepository = siteRepository
+		this.eventBus = eventBus
+		this.siteNameUniquenessChecker = new SiteNameUniquenessChecker(siteRepository)
 	}
 
 	/**
@@ -23,24 +36,38 @@ export class SiteUpdater {
 	 * @throws {SiteDoesNotExistError} If the site with the given ID does not exist.
 	 */
 	async run({ id, params }: { id: string; params: Partial<Omit<SitePrimitives, 'id'>> }): Promise<void> {
-		const siteId = new SiteId(id).value
-		const site = await this.siteRepository.findById(siteId)
+		const siteId = new SiteId(id)
+		const site = await this.siteRepository.findById(siteId.value)
 
 		if (!site) {
 			throw new SiteDoesNotExistError(id)
 		}
 
 		const siteEntity = Site.fromPrimitives(site)
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
 
-		await SiteName.updateNameField({
-			name: params.name,
-			entity: siteEntity
-		})
-		await SiteAddress.updateAddressField({
-			address: params.address,
-			entity: siteEntity
-		})
+		if (params.name && siteEntity.nameValue !== params.name.trim()) {
+			await this.siteNameUniquenessChecker.ensureUnique(params.name, siteEntity.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: siteEntity.nameValue,
+				newValue: params.name
+			})
+			siteEntity.updateName(params.name)
+		}
 
-		await this.siteRepository.save(siteEntity.toPrimitive())
+		if (params.address && siteEntity.addressValue !== params.address.trim()) {
+			changes.push({
+				field: 'address',
+				oldValue: siteEntity.addressValue,
+				newValue: params.address
+			})
+			siteEntity.updateAddress(params.address)
+		}
+		if (changes.length > 0) {
+			siteEntity.registerUpdateEvent(changes)
+			await this.eventBus.publish(siteEntity.pullDomainEvents())
+			await this.siteRepository.save(siteEntity.toPrimitives())
+		}
 	}
 }

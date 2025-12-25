@@ -1,6 +1,6 @@
 import { City } from '../domain/entity/City'
 import { CityNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
-import { StateExitanceChecker } from '../domain/service/StateExistanceChecker'
+import { StateExistenceChecker } from '../domain/service/StateExistanceChecker'
 import { type CityRepository } from '../domain/repository/CityRepository'
 import { type CityParams } from '../domain/entity/City.dto'
 import { type StateRepository } from '../../State/domain/repository/StateRepository'
@@ -12,7 +12,7 @@ import { type EventBus } from '../../../Shared/domain/event/EventBus'
 export class CityCreator {
 	private readonly cityRepository: CityRepository
 	private readonly cityNameUniquenessChecker: CityNameUniquenessChecker
-	private readonly stateExitanceChecker: StateExitanceChecker
+	private readonly stateExistenceChecker: StateExistenceChecker
 	private readonly eventBus: EventBus
 	constructor({
 		cityRepository,
@@ -26,7 +26,7 @@ export class CityCreator {
 		this.cityRepository = cityRepository
 		this.eventBus = eventBus
 		this.cityNameUniquenessChecker = new CityNameUniquenessChecker(cityRepository)
-		this.stateExitanceChecker = new StateExitanceChecker(stateRepository)
+		this.stateExistenceChecker = new StateExistenceChecker(stateRepository)
 	}
 
 	/**
@@ -39,7 +39,7 @@ export class CityCreator {
 		const { name, stateId } = params
 		await Promise.all([
 			this.cityNameUniquenessChecker.ensureUnique(name),
-			this.stateExitanceChecker.ensureExist(stateId)
+			this.stateExistenceChecker.ensureExist(stateId)
 		])
 
 		const city = City.create(params)

@@ -3,7 +3,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type StateRepository } from '../../../State/domain/repository/StateRepository'
 import { type StateId } from '../../../State/domain/valueObject/StateId'
 
-export class StateExitanceChecker {
+export class StateExistenceChecker {
 	constructor(private readonly repository: StateRepository) {}
 
 	/**

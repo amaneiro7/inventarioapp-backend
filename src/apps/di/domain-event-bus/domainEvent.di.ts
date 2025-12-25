@@ -4,13 +4,17 @@ import { InvalidateBrandCacheOnBrandChanged } from '../../../Contexts/Brand/appl
 import { InvalidateModelSeriesCacheOnModelSeriesChanged } from '../../../Contexts/ModelSeries/ModelSeries/application/InvalidateModelSeriesCacheOnModelSeriesChanged'
 import { InvalidateShipmentCacheOnShipmentChanged } from '../../../Contexts/Shipment/Shipment/application/InvalidateBrandCacheOnBrandChanged'
 import { InvalidateCityCacheOnCityChanged } from '../../../Contexts/Location/City/application/InvalidateCityCacheOnCityChanged'
+import { InvalidateSiteCacheOnSiteChanged } from '../../../Contexts/Location/Site/application/InvalidateSiteCacheOnSiteChanged'
+import { InvalidateRegionCacheOnRegionChanged } from '../../../Contexts/Location/Region/application/InvalidateRegionCacheOnRegionChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
 	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged',
 	InvalidateModelSeriesCacheOnModelSeriesChanged = 'invalidateModelSeriesCacheOnModelSeriesChanged',
 	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged',
-	InvalidateCityCacheOnCityChanged = 'invalidateCityCacheOnCityChanged'
+	InvalidateCityCacheOnCityChanged = 'invalidateCityCacheOnCityChanged',
+	InvalidateSiteCacheOnSiteChanged = 'invalidateSiteCacheOnSiteChanged',
+	InvalidateRegionCacheOnRegionChanged = 'invalidateRegionCacheOnRegionChanged'
 }
 
 /**
@@ -32,6 +36,12 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateCityCacheOnCityChanged]: asClass(
 			InvalidateCityCacheOnCityChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateSiteCacheOnSiteChanged]: asClass(
+			InvalidateSiteCacheOnSiteChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateRegionCacheOnRegionChanged]: asClass(
+			InvalidateRegionCacheOnRegionChanged
 		).singleton()
 	})
 }
