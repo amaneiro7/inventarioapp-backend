@@ -1,5 +1,4 @@
 import { Op } from 'sequelize'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -13,6 +12,9 @@ import { type LocationMonitoringRepository } from '../../domain/repository/Locat
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
+import { type LocationMonitoringCacheInvalidator } from '../../domain/repository/LocationMonitoringCacheInvalidator'
+import { type LocationId } from '../../../Location/domain/valueObject/LocationId'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @class SequelizeLocationMonitoringRepository
@@ -23,7 +25,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
  */
 export class SequelizeLocationMonitoringRepository
 	extends SequelizeCriteriaConverter
-	implements LocationMonitoringRepository
+	implements LocationMonitoringRepository, LocationMonitoringCacheInvalidator
 {
 	private readonly cacheKey: string = 'locationMonitoring'
 	private readonly cache: CacheService
@@ -75,7 +77,7 @@ export class SequelizeLocationMonitoringRepository
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData<LocationMonitoringDto[]>({
 			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const rows = await LocationMonitoringModel.findAll({
 					offset,
@@ -124,25 +126,19 @@ export class SequelizeLocationMonitoringRepository
 	 * @throws {Error} If the save operation fails, it throws a detailed error.
 	 */
 	async save(payload: LocationMonitoringPrimitives): Promise<void> {
-		const t = await sequelize.transaction() // Start a new transaction
-		try {
-			// Use upsert for atomic create or update operation
-			await LocationMonitoringModel.upsert(payload, { transaction: t })
+		await LocationMonitoringModel.upsert(payload)
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+	}
 
-			await t.commit() // Commit the transaction
-			// Invalidate all cache entries related to location monitoring.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-			// Also invalidate the specific ID entry.
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
-		} catch (error: unknown) {
-			await t.rollback() // Rollback the transaction on error
-
-			// Improved error handling to provide more context
-			let errorMessage = 'An unknown error occurred while saving the location monitoring data.'
-			if (error instanceof Error) {
-				errorMessage = `Error saving location monitoring data: ${error.message}`
-			}
-			throw new Error(errorMessage)
+	/**
+	 * @method invalidateLocationCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements LocationMonitoringCacheInvalidator interface.
+	 */
+	async invalidateLocationMonitoringCache(id: Primitives<LocationId>): Promise<void> {
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+		if (id) {
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
 		}
 	}
 }

@@ -10,6 +10,8 @@ import { LocationUpdatedDomainEvent } from '../event/LocationUpdatedDomainEvent'
 import { LocationRenamedDomainEvent } from '../event/LocationRenamedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationDto, type LocationParams, type LocationPrimitives } from '../entity/Location.dto'
+import { LocationSubnetChangedDomainEvent } from '../event/LocationSubnetChangedDomainEvent'
+import { LocationStatusChangedDomainEvent } from '../event/LocationStatusChangedDomainEvent'
 
 /**
  * Represents a Location domain entity.
@@ -151,6 +153,14 @@ export class Location extends AggregateRoot {
 	 * @param {Primitives<LocationSubnet>} subnet - The new subnet for the location.
 	 */
 	updateSubnet(subnet: Primitives<LocationSubnet>): void {
+		const oldSubnet = this.subnet.value
+		this.record(
+			new LocationSubnetChangedDomainEvent({
+				aggregateId: this.idValue,
+				oldSubnet,
+				newSubnet: subnet
+			})
+		)
 		this.subnet = new LocationSubnet(subnet)
 	}
 
@@ -191,6 +201,14 @@ export class Location extends AggregateRoot {
 	 * @param {Primitives<LocationStatusId>} status - The new operational status for the location.
 	 */
 	updateLocationStatus(status: Primitives<LocationStatusId>): void {
+		const oldStatus = this.locationStatusId.value
+		this.record(
+			new LocationStatusChangedDomainEvent({
+				aggregateId: this.idValue,
+				oldStatusId: oldStatus,
+				newStatusId: status
+			})
+		)
 		this.locationStatusId = new LocationStatusId(status)
 	}
 }

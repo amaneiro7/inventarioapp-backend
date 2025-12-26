@@ -76,7 +76,8 @@ export class LocationMonitoringService extends MonitoringService<
 	/**
 	 * Returns the name of the monitoring service.
 	 * @returns {string} The monitoring name, which is 'Location'.
-	 */ protected getMonitoringName(): string {
+	 */
+	protected getMonitoringName(): string {
 		return 'Location'
 	}
 
@@ -85,7 +86,8 @@ export class LocationMonitoringService extends MonitoringService<
 	 * Converts the subnet to a host IP if available.
 	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
 	 * @returns {Promise<string | null | undefined>} The IP address or null/undefined if not available.
-	 */ protected async getIpAddress(item: LocationMonitoringDto): Promise<string | null | undefined> {
+	 */
+	protected async getIpAddress(item: LocationMonitoringDto): Promise<string | null | undefined> {
 		const subnet = item?.location?.subnet
 		return await convertSubnetToHostIp(subnet)
 	}
@@ -93,7 +95,8 @@ export class LocationMonitoringService extends MonitoringService<
 	/**
 	 * Retrieves the expected hostname. Not applicable for locations.
 	 * @returns {Promise<string | null | undefined>} Always returns undefined.
-	 */ protected async getExpectedHostname(): Promise<string | null | undefined> {
+	 */
+	protected async getExpectedHostname(): Promise<string | null | undefined> {
 		// Hostname is not applicable for locations
 		return undefined
 	}
@@ -102,7 +105,8 @@ export class LocationMonitoringService extends MonitoringService<
 	 * Retrieves the monitoring ID from a LocationMonitoringDto.
 	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
 	 * @returns {Primitives<MonitoringId>} The monitoring ID.
-	 */ protected getMonitoringId(item: LocationMonitoringDto): Primitives<MonitoringId> {
+	 */
+	protected getMonitoringId(item: LocationMonitoringDto): Primitives<MonitoringId> {
 		return item.id
 	}
 
@@ -110,7 +114,8 @@ export class LocationMonitoringService extends MonitoringService<
 	 * Creates a LocationMonitoring entity from a DTO.
 	 * @param {LocationMonitoringDto} item - The location monitoring DTO.
 	 * @returns {LocationMonitoring} A new LocationMonitoring entity.
-	 */ protected createMonitoringEntity(item: LocationMonitoringDto): LocationMonitoring {
+	 */
+	protected createMonitoringEntity(item: LocationMonitoringDto): LocationMonitoring {
 		return LocationMonitoring.fromPrimitives(item)
 	}
 
@@ -118,14 +123,16 @@ export class LocationMonitoringService extends MonitoringService<
 	 * Converts a LocationMonitoring entity to its primitive payload representation.
 	 * @param {LocationMonitoring} item - The location monitoring entity.
 	 * @returns {LocationMonitoringPrimitives} The primitive payload.
-	 */ protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
+	 */
+	protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
 		return item.toPrimitive()
 	}
 
 	/**
 	 * Validates the ping result. No hostname validation for locations.
 	 * @returns {boolean} Always returns true.
-	 */ protected validatePingResult(): boolean {
+	 */
+	protected validatePingResult(): boolean {
 		// No hostname validation for locations, always return true
 
 		return true
@@ -138,7 +145,8 @@ export class LocationMonitoringService extends MonitoringService<
 	 * @param {Date | null} lastSuccess - The timestamp of the last successful scan.
 	 * @param {Date | null} lastFailed - The timestamp of the last failed scan.
 	 * @param {Date | null} lastScan - The timestamp of the last scan.
-	 */ protected updateMonitoringEntityStatus(
+	 */
+	protected updateMonitoringEntityStatus(
 		entity: LocationMonitoring,
 		status: MonitoringStatuses,
 		lastSuccess: Date | null,

@@ -1,3 +1,4 @@
+import { AggregateRoot } from '../../../AggregateRoot'
 import { type MonitoringId } from '../value-object/MonitoringId'
 import { type MonitoringStatus } from '../value-object//MonitoringStatus'
 import { type MonitoringLastScan } from '../value-object/MonitoringLastScan'
@@ -6,16 +7,18 @@ import { type MonitoringLastFailed } from '../value-object/MonitoringLastFailed'
 import { type Primitives } from '../../../value-object/Primitives'
 import { type MonitoringPrimitives } from './Monitoring.dto'
 
-export abstract class Monitoring {
+export abstract class Monitoring extends AggregateRoot {
 	constructor(
 		protected readonly id: MonitoringId,
 		protected status: MonitoringStatus,
 		protected lastScan: MonitoringLastScan,
 		protected lastSuccess: MonitoringLastSuccess,
 		protected lastFailed: MonitoringLastFailed
-	) {}
+	) {
+		super()
+	}
 
-	toPrimitive(): MonitoringPrimitives {
+	toPrimitives(): MonitoringPrimitives {
 		return {
 			id: this.idValue,
 			status: this.statusValue,
