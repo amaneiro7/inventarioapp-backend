@@ -1,7 +1,7 @@
-import { StateDoesNotExistError } from '../../../State/domain/errors/StateDoesNotExistError'
+import { StateDoesNotExistError } from '../errors/StateDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type StateRepository } from '../../../State/domain/repository/StateRepository'
-import { type StateId } from '../../../State/domain/valueObject/StateId'
+import { type StateRepository } from '../repository/StateRepository'
+import { type StateId } from '../valueObject/StateId'
 
 export class StateExistenceChecker {
 	constructor(private readonly repository: StateRepository) {}

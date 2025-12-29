@@ -1,6 +1,6 @@
 import { Region } from '../domain/entity/Region'
 import { RegionId } from '../domain/valueObject/RegionId'
-import { AdministrativeRegionExistenceChecker } from '../domain/service/AdministrativeRegionExistanceChecker'
+import { AdministrativeRegionExistenceChecker } from '../../AdministrativeRegion/domain/service/AdministrativeRegionExistanceChecker'
 import { RegionDoesNotExistError } from '../domain/errors/RegionDoesNotExistError'
 import { type AdministrativeRegionRepository } from '../../AdministrativeRegion/domain/repository/AdministrativeRegionRepository'
 import { type RegionParams } from '../domain/entity/Region.dto'

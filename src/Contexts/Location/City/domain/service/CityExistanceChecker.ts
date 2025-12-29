@@ -1,7 +1,7 @@
-import { CityDoesNotExistError } from '../../../City/domain/errors/CityDoesNotExistError'
+import { CityDoesNotExistError } from '../errors/CityDoesNotExistError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CityRepository } from '../../../City/domain/repository/CityRepository'
-import { type CityId } from '../../../City/domain/valueObject/CityId'
+import { type CityRepository } from '../repository/CityRepository'
+import { type CityId } from '../valueObject/CityId'
 
 export class CityExistenceChecker {
 	constructor(private readonly repository: CityRepository) {}

@@ -1,5 +1,5 @@
 import { Site } from '../domain/entity/Site'
-import { CityExistenceChecker } from '../domain/service/CityExistanceChecker'
+import { CityExistenceChecker } from '../../City/domain/service/CityExistanceChecker'
 import { SiteNameUniquenessChecker } from '../domain/service/SiteNameUniquenessChecker'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type CityRepository } from '../../City/domain/repository/CityRepository'

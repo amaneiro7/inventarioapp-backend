@@ -1,6 +1,6 @@
 import { City } from '../domain/entity/City'
-import { CityNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
-import { StateExistenceChecker } from '../domain/service/StateExistanceChecker'
+import { CityNameUniquenessChecker } from '../domain/service/CityNameUniquenessChecker'
+import { StateExistenceChecker } from '../../State/domain/service/StateExistanceChecker'
 import { type CityRepository } from '../domain/repository/CityRepository'
 import { type CityParams } from '../domain/entity/City.dto'
 import { type StateRepository } from '../../State/domain/repository/StateRepository'
