@@ -21,9 +21,6 @@ export class LocationMonitoringDashboardByState {
 	 * @returns {Promise<DashboardByStateData>} A promise that resolves to the aggregated dashboard data by state.
 	 */
 	async run(criteria: Criteria): Promise<DashboardByStateData> {
-		const [summary] = await Promise.all([this.locationMonitoringDashboardByStateRepository.run(criteria)])
-		return {
-			...summary
-		}
+		return await this.locationMonitoringDashboardByStateRepository.search(criteria)
 	}
 }

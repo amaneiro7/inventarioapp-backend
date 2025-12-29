@@ -11,7 +11,7 @@ export class InvalidateRegionCacheOnRegionChanged implements DomainEventSubscrib
 	}
 
 	async on(event: RegionUpdatedDomainEvent): Promise<void> {
-		await this.invalidator.invalidateRegionCache(event.aggregateId)
+		await this.invalidator.invalidate(event.aggregateId)
 	}
 
 	subscribedTo(): DomainEventClass[] {

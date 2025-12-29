@@ -38,7 +38,7 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardByStateRepository
 {
-	private readonly cacheKey: string = 'locationMonitoringDashboardByState' // Corrected cache key
+	private readonly cacheKey: string = 'locationMonitoring' // Corrected cache key
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		super()
@@ -49,12 +49,13 @@ export class SequelizeLocationMonitoringDashboardByStateRepository
 	 * Retrieves aggregated location monitoring dashboard data by state.
 	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
 	 * @returns {Promise<DashboardByStateData>} A promise that resolves to the aggregated dashboard data by state.
-	 */ async run(criteria: Criteria): Promise<DashboardByStateData> {
+	 */
+	async search(criteria: Criteria): Promise<DashboardByStateData> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 
 		return await this.cache.getCachedData({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:dashboardByState;${criteria.hash()}`,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const locations = (await LocationMonitoringModel.findAll(opt)) as unknown as LocationCountByState[]

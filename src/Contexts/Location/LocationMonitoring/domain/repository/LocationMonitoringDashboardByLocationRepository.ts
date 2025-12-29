@@ -10,5 +10,5 @@ export abstract class LocationMonitoringDashboardByLocationRepository {
 	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
 	 * @returns {Promise<DashboardByLocationData>} A promise that resolves to the aggregated dashboard data by location.
 	 */
-	abstract run(criteria: Criteria): Promise<DashboardByLocationData>
+	abstract search(criteria: Criteria): Promise<DashboardByLocationData>
 }

@@ -2,6 +2,7 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { LocationAssociation } from './LocationAssociation'
 import { LocationModel } from './LocationSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -25,9 +26,11 @@ export class SequelizeLocationRepository
 {
 	private readonly cacheKey: string = 'locations'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	/**
@@ -42,9 +45,9 @@ export class SequelizeLocationRepository
 		const opt = LocationAssociation.convertFilter(criteria, options)
 
 		return await this.cache.getCachedData<ResponseDB<LocationDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:all:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await LocationModel.findAndCountAll(opt)
 				return {
@@ -67,7 +70,7 @@ export class SequelizeLocationRepository
 		const options = this.convert(criteria)
 		const opt = LocationAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<LocationDto>>({
-			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:matching:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
@@ -152,10 +155,7 @@ export class SequelizeLocationRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements LocationCacheInvalidator interface.
 	 */
-	async invalidateLocationCache(id: Primitives<LocationId>): Promise<void> {
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		if (id) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
-		}
+	async invalidate(id?: Primitives<LocationId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

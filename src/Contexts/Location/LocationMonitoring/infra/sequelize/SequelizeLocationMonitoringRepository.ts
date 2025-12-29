@@ -4,6 +4,7 @@ import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { LocationMonitoringAssociation } from './LocationMonitoringAssociation'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import {
 	type LocationMonitoringDto,
 	type LocationMonitoringPrimitives
@@ -29,9 +30,11 @@ export class SequelizeLocationMonitoringRepository
 {
 	private readonly cacheKey: string = 'locationMonitoring'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	/**
@@ -45,7 +48,7 @@ export class SequelizeLocationMonitoringRepository
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<LocationMonitoringDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:all:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.TOO_SHORT,
 			fetchFunction: async () => {
@@ -76,7 +79,7 @@ export class SequelizeLocationMonitoringRepository
 	}): Promise<LocationMonitoringDto[]> {
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData<LocationMonitoringDto[]>({
-			cacheKey: `${this.cacheKey}-not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
+			cacheKey: `${this.cacheKey}:lists:not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const rows = await LocationMonitoringModel.findAll({
@@ -115,6 +118,26 @@ export class SequelizeLocationMonitoringRepository
 	}
 
 	/**
+	 * @method findByLocationId
+	 * @description Retrieves a single location monitoring entry by its location identifier.
+	 * @param {string} locationId - The ID of the location.
+	 * @returns {Promise<LocationMonitoringDto | null>} A promise that resolves to the LocationMonitoring DTO if found.
+	 */
+	async findByLocationId(locationId: string): Promise<LocationMonitoringDto | null> {
+		return await this.cache.getCachedData<LocationMonitoringDto | null>({
+			cacheKey: `${this.cacheKey}:locationId:${locationId}`,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				const locationMonitoring = await LocationMonitoringModel.findOne({
+					where: { locationId },
+					include: ['location']
+				})
+				return locationMonitoring ? (locationMonitoring.get({ plain: true }) as LocationMonitoringDto) : null
+			}
+		})
+	}
+
+	/**
 	 * @method save
 	 * @description Saves a location monitoring entry to the database.
 	 * It updates the entry if it already exists or creates a new one if it does not.
@@ -127,7 +150,28 @@ export class SequelizeLocationMonitoringRepository
 	 */
 	async save(payload: LocationMonitoringPrimitives): Promise<void> {
 		await LocationMonitoringModel.upsert(payload)
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
+		await this.invalidate(payload.id)
+	}
+
+	/**
+	 * @method saveAll
+	 * @description Saves an array of location monitoring entries to the database.
+	 * It updates the entries if they already exist or creates new ones if they do not.
+	 * This operation is wrapped in a transaction to ensure atomicity.
+	 * Invalidates relevant cache entries after a successful operation.
+	 *
+	 * @param {LocationMonitoringPrimitives[]} payloads - The array of location monitoring data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 * @throws {Error} If the save operation fails, it throws a detailed error.
+	 */
+	async saveAll(payloads: LocationMonitoringPrimitives[]): Promise<void> {
+		await LocationMonitoringModel.bulkCreate(payloads, {
+			updateOnDuplicate: ['status', 'lastScan', 'lastSuccess', 'lastFailed', 'locationId']
+		})
+
+		// Optimizamos la invalidación ejecutándola en paralelo
+		const invalidationPromises = payloads.map(payload => this.invalidate(payload.id))
+		await Promise.all(invalidationPromises)
 	}
 
 	/**
@@ -135,10 +179,7 @@ export class SequelizeLocationMonitoringRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements LocationMonitoringCacheInvalidator interface.
 	 */
-	async invalidateLocationMonitoringCache(id: Primitives<LocationId>): Promise<void> {
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		if (id) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
-		}
+	async invalidate(id?: Primitives<LocationId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

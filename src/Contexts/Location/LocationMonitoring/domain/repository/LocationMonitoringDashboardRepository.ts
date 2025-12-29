@@ -6,9 +6,9 @@ import { type DashboardData } from '../entity/LocationMonitoring.dto'
  */
 export abstract class LocationMonitoringDashboardRepository {
 	/**
-	 * Runs the query to get aggregated overall location monitoring dashboard data.
+	 * Searches and retrieves aggregated overall location monitoring dashboard data.
 	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
 	 * @returns {Promise<DashboardData>} A promise that resolves to the aggregated overall dashboard data.
 	 */
-	abstract run(criteria: Criteria): Promise<DashboardData>
+	abstract search(criteria: Criteria): Promise<DashboardData>
 }

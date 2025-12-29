@@ -1,6 +1,3 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CityId } from '../valueObject/CityId'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
-export interface CityCacheInvalidator {
-	invalidateCityCache(id?: Primitives<CityId>): Promise<void>
-}
+export type CityCacheInvalidator = CacheInvalidator

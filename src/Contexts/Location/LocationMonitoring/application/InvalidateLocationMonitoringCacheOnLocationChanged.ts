@@ -1,27 +1,26 @@
 import { LocationSubnetChangedDomainEvent } from '../../Location/domain/event/LocationSubnetChangedDomainEvent'
 import { LocationStatusChangedDomainEvent } from '../../Location/domain/event/LocationStatusChangedDomainEvent'
+import { LocationUpdatedDomainEvent } from '../../Location/domain/event/LocationUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type LocationMonitoringCacheInvalidator } from '../domain/repository/LocationMonitoringCacheInvalidator'
+import { type LocationMonitoringService } from './LocationMonitoringService'
 
 export class InvalidateLocationMonitoringCacheOnLocationChanged implements DomainEventSubscriber<
-	LocationStatusChangedDomainEvent | LocationSubnetChangedDomainEvent
+	LocationStatusChangedDomainEvent | LocationSubnetChangedDomainEvent | LocationUpdatedDomainEvent
 > {
-	private readonly invalidator: LocationMonitoringCacheInvalidator
+	private readonly service: LocationMonitoringService
 
-	constructor({
-		locationMonitoringRepository
-	}: {
-		locationMonitoringRepository: LocationMonitoringCacheInvalidator
-	}) {
-		this.invalidator = locationMonitoringRepository
+	constructor({ locationMonitoringService }: { locationMonitoringService: LocationMonitoringService }) {
+		this.service = locationMonitoringService
 	}
 
-	async on(event: LocationStatusChangedDomainEvent | LocationSubnetChangedDomainEvent): Promise<void> {
-		await this.invalidator.invalidateLocationMonitoringCache(event.aggregateId)
+	async on(
+		event: LocationStatusChangedDomainEvent | LocationSubnetChangedDomainEvent | LocationUpdatedDomainEvent
+	): Promise<void> {
+		await this.service.syncFromLocationChange(event.aggregateId)
 	}
 
 	subscribedTo(): DomainEventClass[] {
-		return [LocationStatusChangedDomainEvent, LocationSubnetChangedDomainEvent]
+		return [LocationStatusChangedDomainEvent, LocationSubnetChangedDomainEvent, LocationUpdatedDomainEvent]
 	}
 }

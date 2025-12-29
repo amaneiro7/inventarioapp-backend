@@ -25,7 +25,8 @@ export class SequelizeLocationMonitoringDashboardRepository
 	extends SequelizeCriteriaConverter
 	implements LocationMonitoringDashboardRepository
 {
-	private readonly cacheKey: string = 'locationMonitoringDashboard'
+	// Usamos la misma base key que el repositorio principal para aprovechar su invalidación
+	private readonly cacheKey: string = 'locationMonitoring'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		super()
@@ -33,15 +34,18 @@ export class SequelizeLocationMonitoringDashboardRepository
 	}
 
 	/**
-	 * Retrieves aggregated overall location monitoring dashboard data.
+	 * Searches and retrieves aggregated overall location monitoring dashboard data.
 	 * @param {Criteria} criteria - The criteria for filtering the dashboard data.
 	 * @returns {Promise<DashboardData>} A promise that resolves to the aggregated overall dashboard data.
-	 */ async run(criteria: Criteria): Promise<DashboardData> {
+	 */
+	async search(criteria: Criteria): Promise<DashboardData> {
 		const options = this.convert(criteria)
 		const opt = LocationMonitoringDashboardAssociation.buildDashboardFindOptions(criteria, options)
 
 		return await this.cache.getCachedData({
-			cacheKey: this.cacheKey,
+			// IMPORTANTE: Usamos el namespace ':lists:' y luego ':dashboard'.
+			// Cuando SequelizeLocationMonitoringRepository invalide 'locationMonitoring:lists:*', esto también se borrará.
+			cacheKey: `${this.cacheKey}:lists:dashboard:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {

@@ -21,7 +21,6 @@ export class LocationMonitoringDashboardByLocation {
 	 * @returns {Promise<DashboardByLocationData>} A promise that resolves to the aggregated dashboard data by location.
 	 */
 	async run(criteria: Criteria): Promise<DashboardByLocationData> {
-		const [summary] = await Promise.all([this.locationMonitoringDashboardByLocationRepository.run(criteria)])
-		return summary
+		return await this.locationMonitoringDashboardByLocationRepository.search(criteria)
 	}
 }

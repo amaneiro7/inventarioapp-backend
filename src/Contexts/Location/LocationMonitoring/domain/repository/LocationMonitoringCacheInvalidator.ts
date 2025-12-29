@@ -1,6 +1,3 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationId } from '../../../Location/domain/valueObject/LocationId'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
-export interface LocationMonitoringCacheInvalidator {
-	invalidateLocationMonitoringCache(id?: Primitives<LocationId>): Promise<void>
-}
+export type LocationMonitoringCacheInvalidator = CacheInvalidator

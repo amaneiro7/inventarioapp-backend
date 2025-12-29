@@ -22,6 +22,13 @@ export abstract class LocationMonitoringRepository {
 	abstract findById(id: LocationMonitoringDto['id']): Promise<LocationMonitoringDto | null>
 
 	/**
+	 * Searches for a single location monitoring entry by its location identifier.
+	 * @param {string} locationId - The ID of the location.
+	 * @returns {Promise<LocationMonitoringDto | null>} A promise that resolves to the LocationMonitoring DTO if found.
+	 */
+	abstract findByLocationId(locationId: string): Promise<LocationMonitoringDto | null>
+
+	/**
 	 * Searches for location monitoring entries that have a non-null IP address.
 	 * @param {{ page?: number; pageSize?: number }} params - Parameters for pagination.
 	 * @param {number} [params.page] - Optional page number for pagination.
@@ -42,4 +49,17 @@ export abstract class LocationMonitoringRepository {
 	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 */
 	abstract save(payload: LocationMonitoringPrimitives): Promise<void>
+
+	/**
+	 * Saves an array of location monitoring entries.
+	 * @param {LocationMonitoringPrimitives[]} payload - The array of location monitoring data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 */
+	abstract saveAll(payload: LocationMonitoringPrimitives[]): Promise<void>
+
+	/**
+	 * Invalidates the cache for a specific location monitoring entry.
+	 * @param {string} [id] - The ID of the location monitoring entry.
+	 */
+	abstract invalidate(id?: string): Promise<void>
 }

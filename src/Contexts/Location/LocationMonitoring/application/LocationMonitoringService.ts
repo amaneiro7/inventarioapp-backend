@@ -1,4 +1,4 @@
-import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
+import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService2'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'
@@ -15,6 +15,7 @@ import {
 	MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 import { type IPingService } from '../../../Shared/domain/Monitoring/infra/IPingService'
+import { LocationStatusOptions } from '../../LocationStatus/domain/LocationStatusOptions'
 
 /**
  * Service responsible for monitoring locations. Extends the generic MonitoringService.
@@ -157,5 +158,28 @@ export class LocationMonitoringService extends MonitoringService<
 		entity.updateLastSuccess(lastSuccess)
 		entity.updateLastFailed(lastFailed)
 		entity.updateLastScan(lastScan)
+	}
+
+	/**
+	 * @description Synchronizes the local monitoring state when a Location is updated.
+	 * Fetches the latest data, invalidates cache, and updates the in-memory list based on status.
+	 * @param {string} locationId - The ID of the location that changed.
+	 */
+	async syncFromLocationChange(locationId: string): Promise<void> {
+		const item = await this.locationMonitoringRepository.findByLocationId(locationId)
+		if (!item) return
+
+		// Invalidate cache for this item because Location details (subnet/status) changed
+		await this.locationMonitoringRepository.invalidate(item.id)
+
+		// Check if it should be monitored (Operational AND has Subnet)
+		const isOperational = item.location.locationStatusId === LocationStatusOptions.OPERATIONAL
+		const hasSubnet = !!item.location.subnet
+
+		if (isOperational && hasSubnet) {
+			this.monitoredItems.set(item.id, item)
+		} else {
+			this.monitoredItems.delete(item.id)
+		}
 	}
 }

@@ -2,7 +2,8 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { SiteModels } from './SiteSchema'
 import { SiteAssociation } from './SiteAssociation'
-import { SiteCacheInvalidator } from '../../domain/repository/SiteCacheInvalidator'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { type SiteCacheInvalidator } from '../../domain/repository/SiteCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -25,9 +26,11 @@ export class SequelizeSiteRepository
 {
 	private readonly cacheKey: string = 'sites'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	/**
@@ -121,10 +124,7 @@ export class SequelizeSiteRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements SiteCacheInvalidator interface.
 	 */
-	async invalidateSiteCache(id: Primitives<SiteId>): Promise<void> {
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		if (id) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
-		}
+	async invalidate(id?: Primitives<SiteId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

@@ -5,6 +5,7 @@ import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/domain/va
 import { MonitoringLastScan } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastScan'
 import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
 import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'
+import { LocationMonitoringCreatedDomainEvent } from '../event/LocationMonitoringCreatedDomainEvent'
 import {
 	type LocationMonitoringDto,
 	type LocationMonitoringParams,
@@ -43,15 +44,25 @@ export class LocationMonitoring extends Monitoring {
 	 * @returns {LocationMonitoring} A new LocationMonitoring instance.
 	 */
 	static create(params: LocationMonitoringParams): LocationMonitoring {
-		const id = MonitoringId.random().value
-		return new LocationMonitoring(
-			new MonitoringId(id),
+		const id = MonitoringId.random()
+		const locationMonitoring = new LocationMonitoring(
+			id,
 			new LocationId(params.locationId),
 			new MonitoringStatus(params.status),
 			new MonitoringLastScan(params.lastScan),
 			new MonitoringLastSuccess(params.lastSuccess),
 			new MonitoringLastFailed(params.lastFailed)
 		)
+
+		locationMonitoring.record(
+			new LocationMonitoringCreatedDomainEvent({
+				aggregateId: id.value,
+				locationId: params.locationId,
+				status: params.status
+			})
+		)
+
+		return locationMonitoring
 	}
 
 	/**
