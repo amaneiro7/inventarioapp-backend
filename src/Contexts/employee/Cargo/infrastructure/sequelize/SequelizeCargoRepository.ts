@@ -12,6 +12,7 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { CargoAssociation } from './CargoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { Op } from 'sequelize'
 
 /**
  * @description Concrete implementation of the CargoRepository using Sequelize.
@@ -58,6 +59,30 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 					]
 				})
 				return cargo ? (cargo.get({ plain: true }) as CargoDto) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple cargos by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of cargo IDs to find.
+	 * @returns {Promise<CargoDto[]>} A promise resolving to an array of found cargo DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<CargoDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<CargoDto[]>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const cargos = await CargoModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return cargos.map(cargo => cargo.get({ plain: true })) as CargoDto[]
 			}
 		})
 	}
