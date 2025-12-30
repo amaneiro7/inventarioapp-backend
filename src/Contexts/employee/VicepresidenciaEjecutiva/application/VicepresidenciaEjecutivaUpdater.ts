@@ -7,7 +7,7 @@ import {
 	type VicepresidenciaEjecutivaDto,
 	type VicepresidenciaEjecutivaParams
 } from '../domain/VicepresidenciaEjecutiva.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/entity/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**

@@ -14,7 +14,7 @@ import { type DepartmentRepository } from '../../../IDepartment/DepartmentReposi
 import { type CargoRepository } from '../../../Cargo/domain/repository/CargoRepository'
 import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
 import { type EmployeeParams } from '../entity/Employee.dto'
-import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 

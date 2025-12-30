@@ -1,5 +1,5 @@
 import { Brand } from '../domain/entity/Brand'
-import { CategoryExistenceChecker } from '../domain/service/CategoryExistenceChecker'
+import { CategoryExistenceChecker } from '../../Category/Category/domain/service/CategoryExistenceChecker'
 import { BrandNameUniquenessChecker } from '../domain/service/BrandNameUniquenessChecker'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type BrandParams } from '../domain/entity/Brand.dto'

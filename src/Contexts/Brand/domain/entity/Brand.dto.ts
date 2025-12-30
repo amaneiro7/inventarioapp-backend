@@ -9,13 +9,7 @@ import { type BrandName } from '../valueObject/BrandName'
  * @description Defines the core properties of a Brand entity.
  */
 export interface Brand {
-	/**
-	 * @property {Primitives<BrandId>} id The unique identifier of the brand.
-	 */
 	id: Primitives<BrandId>
-	/**
-	 * @property {Primitives<BrandName>} name The name of the brand.
-	 */
 	name: Primitives<BrandName>
 }
 
@@ -26,9 +20,6 @@ export interface Brand {
  */
 export type BrandParams = Omit<
 	Brand & {
-		/**
-		 * @property {Primitives<CategoryId>[]} categories An array of category IDs to associate with the brand.
-		 */
 		categories: Primitives<CategoryId>[]
 	},
 	'id'
@@ -40,9 +31,6 @@ export type BrandParams = Omit<
  * This type is ideal for data transfer, persistence, or logging.
  */
 export type BrandPrimitives = Brand & {
-	/**
-	 * @property {Primitives<CategoryId>[]} categories An array of category IDs associated with the brand.
-	 */
 	categories: Primitives<CategoryId>[]
 }
 
@@ -52,8 +40,5 @@ export type BrandPrimitives = Brand & {
  * It typically includes related data, such as the full category objects, for client-side display.
  */
 export type BrandDto = Brand & {
-	/**
-	 * @property {CategoryDto[]} categories An array of category DTOs associated with the brand.
-	 */
 	categories: CategoryDto[]
 }

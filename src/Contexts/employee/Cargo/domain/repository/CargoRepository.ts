@@ -32,6 +32,15 @@ export abstract class CargoRepository {
 
 	/**
 	 * @abstract
+	 * @method findByIds
+	 * @description Finds multiple cargos by their IDs.
+	 * @param {Array<CargoId['value']>} ids The array of cargo IDs to search for.
+	 * @returns {Promise<CargoDto[]>} A promise that resolves to an array of DTOs.
+	 */
+	abstract findByIds: (ids: Array<CargoId['value']>) => Promise<CargoDto[]>
+
+	/**
+	 * @abstract
 	 * @method findByName
 	 * @description Retrieves a single Cargo entity by its name.
 	 * @param {Primitives<CargoName>} name The name of the Cargo to search for.

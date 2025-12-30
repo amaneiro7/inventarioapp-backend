@@ -22,7 +22,7 @@ import { type EmployeeDirectiva } from '../../domain/valueObject/EmployeeDirecti
 import { type EmployeeVicepresidenciaEjecutiva } from '../../domain/valueObject/EmployeeVicepresidenciaEjecutiva'
 import { type EmployeeVicepresidencia } from '../../domain/valueObject/EmployeeVicepresidencia'
 import { type EmployeeDepartamento } from '../../domain/valueObject/EmployeeDepartamento'
-import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
 import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'

@@ -1,24 +1,33 @@
-import { Directiva } from '../domain/Directiva'
-import { CreateDirectivaUseCase } from '../domain/CreatorDirectivaUseCase'
+import { Directiva } from '../domain/entity/Directiva'
+import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
+import { DirectivaNameUniquenessChecker } from '../domain/service/DirectivaNameuniquenessChecker'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type DirectivaDto, type DirectivaParams } from '../domain/Directiva.dto'
+import { type DirectivaParams } from '../domain/entity/Directiva.dto'
+import { type DirectivaRepository } from '../domain/repository/DirectivaRepository'
 
 /**
  * @description Use case for creating a new Directiva entity.
  */
 export class DirectivaCreator {
-	private readonly createDirectivaUseCase: CreateDirectivaUseCase
-	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	private readonly cargoRepository: CargoRepository
+	private readonly directivaRepository: DirectivaRepository
+	private readonly directivaNameUniquenessChecker: DirectivaNameUniquenessChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
+	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
-		directivaRepository: DepartmentRepository<DirectivaDto>
+	constructor({
+		cargoRepository,
+		directivaRepository,
+		eventBus
+	}: {
+		directivaRepository: DirectivaRepository
 		cargoRepository: CargoRepository
+		eventBus: EventBus
 	}) {
-		this.cargoRepository = dependencies.cargoRepository
-		this.directivaRepository = dependencies.directivaRepository
-		this.createDirectivaUseCase = new CreateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
+		this.directivaRepository = directivaRepository
+		this.directivaNameUniquenessChecker = new DirectivaNameUniquenessChecker(directivaRepository)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -30,10 +39,13 @@ export class DirectivaCreator {
 		const { name, cargos } = params
 		const uniqueCargos = Array.from(new Set(cargos))
 
-		await this.createDirectivaUseCase.execute({ name, cargos: uniqueCargos })
+		await Promise.all([
+			this.directivaNameUniquenessChecker.ensureUnique(name),
+			this.cargoExistenceChecker.ensureExist(uniqueCargos)
+		])
 
 		const directiva = Directiva.create({ name, cargos: uniqueCargos })
-
-		await this.directivaRepository.save(directiva.toPrimitive())
+		await this.directivaRepository.save(directiva.toPrimitives())
+		await this.eventBus.publish(directiva.pullDomainEvents())
 	}
 }

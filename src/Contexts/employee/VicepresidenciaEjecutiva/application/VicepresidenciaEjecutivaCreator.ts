@@ -1,7 +1,7 @@
 import { CreateVicepresidenciaEjecutivaUseCase } from '../domain/CreateVicepresidenciaEjecutivaUseCase'
 import { VicepresidenciaEjecutiva } from '../domain/VicepresidenciaEjecutiva'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/entity/Directiva.dto'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import {
 	type VicepresidenciaEjecutivaDto,

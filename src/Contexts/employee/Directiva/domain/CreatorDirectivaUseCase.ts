@@ -3,7 +3,7 @@ import { DepartmentAlreadyExistError } from '../../IDepartment/DepartmentAlready
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
-import { type DirectivaDto, type DirectivaParams } from './Directiva.dto'
+import { type DirectivaDto, type DirectivaParams } from './entity/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 
 /**

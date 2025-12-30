@@ -7,7 +7,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DepartmentName } from '../../IDepartment/DepartmentName'
 import { type DepartmentId } from '../../IDepartment/DepartmentId'
 import { type VicepresidenciaEjecutivaParams, type VicepresidenciaEjecutivaDto } from './VicepresidenciaEjecutiva.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/entity/Directiva.dto'
 
 /**
  * @description Use case for creating a new VicepresidenciaEjecutiva, including validation of associated entities.

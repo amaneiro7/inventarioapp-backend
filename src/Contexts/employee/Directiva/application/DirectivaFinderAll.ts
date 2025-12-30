@@ -2,7 +2,7 @@ import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type DirectivaDto } from '../domain/Directiva.dto'
+import { type DirectivaDto } from '../domain/entity/Directiva.dto'
 
 /**
  * @description Use case for retrieving all Directiva entities.

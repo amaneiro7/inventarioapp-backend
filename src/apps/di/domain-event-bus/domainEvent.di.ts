@@ -10,6 +10,7 @@ import { InvalidateLocationCacheOnLocationChanged } from '../../../Contexts/Loca
 import { CreateLocationMonitoringOnLocationCreated } from '../../../Contexts/Location/LocationMonitoring/application/CreateLocationMonitoringOnLocationCreated'
 import { InvalidateLocationMonitoringCacheOnLocationChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnLocationChanged'
 import { SyncLocationMonitoringStateOnEvents } from '../../../Contexts/Location/LocationMonitoring/application/SyncLocationMonitoringStateOnEvents'
+import { InvalidateDirectivaCacheOnDirectivaChanged } from '../../../Contexts/employee/Directiva/application/InvalidateDirectivaCacheOnDirectivaChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -22,7 +23,8 @@ export enum DomainEventDependencies {
 	InvalidateLocationCacheOnLocationChanged = 'invalidateLocationCacheOnLocationChanged',
 	CreateLocationMonitoringOnLocationCreated = 'createLocationMonitoringOnLocationCreated',
 	InvalidateLocationMonitoringCacheOnLocationChanged = 'invalidateLocationMonitoringCacheOnLocationChanged',
-	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents'
+	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents',
+	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged'
 }
 
 /**
@@ -62,6 +64,9 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.SyncLocationMonitoringStateOnEvents]: asClass(
 			SyncLocationMonitoringStateOnEvents
+		).singleton(),
+		[DomainEventDependencies.InvalidateDirectivaCacheOnDirectivaChanged]: asClass(
+			InvalidateDirectivaCacheOnDirectivaChanged
 		).singleton()
 	})
 }

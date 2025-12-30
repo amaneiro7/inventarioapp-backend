@@ -29,7 +29,7 @@ import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Em
 import { type InputTypeDto } from '../../../../ModelSeries/InputType/domain/entity/InputType.dto'
 import { type CentroCostoDto } from '../../../../employee/CentroCosto/domain/CentroCosto.dto'
 import { type CentroTrabajoDto } from '../../../../employee/CentroTrabajo/domain/CentroTrabajo.dto'
-import { type DirectivaDto } from '../../../../employee/Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../../../employee/Directiva/domain/entity/Directiva.dto'
 import { type DeviceComputerDto } from '../../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'

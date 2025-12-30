@@ -10,7 +10,7 @@ import {
 import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type VicepresidenciaEjecutivaDto } from '../../domain/VicepresidenciaEjecutiva.dto'
-import { type DirectivaDto } from '../../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'

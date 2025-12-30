@@ -1,26 +1,36 @@
-import { Directiva } from '../domain/Directiva'
+import { Directiva } from '../domain/entity/Directiva'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { UpdateDirectivaUseCase } from '../domain/UpdateDirectivaUseCase'
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type DirectivaParams, type DirectivaDto } from '../domain/Directiva.dto'
+import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
+import { DirectivaNameUniquenessChecker } from '../domain/service/DirectivaNameuniquenessChecker'
+import { DirectivaDoesNotExistError } from '../domain/errors/DirectivaDoesNotExistError'
+import { CargoId } from '../../Cargo/domain/valueObject/CargoId'
+import { type DirectivaParams } from '../domain/entity/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
+import { type DirectivaRepository } from '../domain/repository/DirectivaRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for updating an existing Directiva entity.
  */
 export class DirectivaUpdater {
-	private readonly updateDirectivaUseCase: UpdateDirectivaUseCase
-	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	private readonly cargoRepository: CargoRepository
+	private readonly directivaRepository: DirectivaRepository
+	private readonly directivaNameUniquenessChecker: DirectivaNameUniquenessChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
+	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
-		directivaRepository: DepartmentRepository<DirectivaDto>
+	constructor({
+		cargoRepository,
+		directivaRepository,
+		eventBus
+	}: {
+		directivaRepository: DirectivaRepository
 		cargoRepository: CargoRepository
+		eventBus: EventBus
 	}) {
-		this.cargoRepository = dependencies.cargoRepository
-		this.directivaRepository = dependencies.directivaRepository
-		this.updateDirectivaUseCase = new UpdateDirectivaUseCase(this.directivaRepository, this.cargoRepository)
+		this.directivaRepository = directivaRepository
+		this.directivaNameUniquenessChecker = new DirectivaNameUniquenessChecker(directivaRepository)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -34,15 +44,52 @@ export class DirectivaUpdater {
 
 		const directiva = await this.directivaRepository.findById(directivaId.value)
 		if (!directiva) {
-			throw new DepartmentDoesNotExistError('La Directiva')
+			throw new DirectivaDoesNotExistError(directivaId.value)
 		}
 
 		const directivaEntity = Directiva.fromPrimitives(directiva)
-		await this.updateDirectivaUseCase.execute({
-			entity: directivaEntity,
-			params
-		})
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
 
-		await this.directivaRepository.save(directivaEntity.toPrimitive())
+		if (params.name && directivaEntity.nameValue !== params.name.trim()) {
+			await this.directivaNameUniquenessChecker.ensureUnique(params.name, directivaEntity.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: directivaEntity.nameValue,
+				newValue: params.name
+			})
+			directivaEntity.updateName(params.name)
+		}
+
+		if (params.cargos) {
+			await this.cargoExistenceChecker.ensureExist(params.cargos)
+			changes.push({
+				field: 'cargos',
+				oldValue: directivaEntity.cargosValue,
+				newValue: params.cargos
+			})
+			const uniqueCargos = Array.from(new Set(params.cargos))
+			const newIdSet = new Set(uniqueCargos)
+			const currentIdSet = new Set(directivaEntity.cargosValue)
+
+			// Añadir categorías nuevas
+			for (const id of newIdSet) {
+				if (!currentIdSet.has(id)) {
+					directivaEntity.addCargo(new CargoId(id))
+				}
+			}
+
+			// Eliminar categorías que ya no están
+			for (const id of currentIdSet) {
+				if (!newIdSet.has(id)) {
+					directivaEntity.removeCargo(new CargoId(id))
+				}
+			}
+		}
+
+		if (changes.length > 0) {
+			directivaEntity.registerUpdateEvent(changes)
+			await this.directivaRepository.save(directivaEntity.toPrimitives())
+			await this.eventBus.publish(directivaEntity.pullDomainEvents())
+		}
 	}
 }

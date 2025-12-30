@@ -6,7 +6,7 @@ import { type DepartmentRepository } from '../../IDepartment/DepartmentRepositor
 import { type CargoRepository } from '../domain/repository/CargoRepository'
 import { type CargoParams } from '../domain/entity/Cargo.dto'
 import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { type DirectivaDto } from '../../Directiva/domain/Directiva.dto'
+import { type DirectivaDto } from '../../Directiva/domain/entity/Directiva.dto'
 import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
 import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 

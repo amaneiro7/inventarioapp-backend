@@ -1,7 +1,7 @@
-import { CategoryDoesNotExistError } from '../../../Category/Category/domain/errors/CategoryDoesNotExistError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
-import { type CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
+import { CategoryDoesNotExistError } from '../errors/CategoryDoesNotExistError'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CategoryRepository } from '../repository/CategoryRepository'
+import { type CategoryId } from '../valueObject/CategoryId'
 
 export class CategoryExistenceChecker {
 	constructor(private readonly repository: CategoryRepository) {}

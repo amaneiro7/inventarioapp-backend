@@ -1,7 +1,7 @@
 import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
 import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
 import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { type DirectivaDto } from '../domain/Directiva.dto'
+import { type DirectivaDto } from '../domain/entity/Directiva.dto'
 
 /**
  * @description Use case for finding a Directiva entity by its unique identifier.

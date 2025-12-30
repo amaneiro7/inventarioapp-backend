@@ -2,29 +2,33 @@ import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequeli
 import { DirectivaModel } from './DirectivaSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { type DirectivaCacheInvalidator } from '../../domain/repository/DirectivaCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type DirectivaDto, type DirectivaPrimitives } from '../../domain/Directiva.dto'
+import { type DirectivaDto, type DirectivaPrimitives } from '../../domain/entity/Directiva.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type DirectivaRepository } from '../../domain/repository/DirectivaRepository'
+import { type DirectivaId } from '../../domain/valueObject/DirectivaId'
 
 /**
  * @description Concrete implementation of the DirectivaRepository using Sequelize.
  */
 export class SequelizeDirectivaRepository
 	extends SequelizeCriteriaConverter
-	implements DepartmentRepository<DirectivaDto>
+	implements DirectivaRepository, DirectivaCacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'directiva'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DirectivaDto>> {
@@ -43,7 +47,7 @@ export class SequelizeDirectivaRepository
 		})
 	}
 
-	async findById(id: Primitives<DepartmentId>): Promise<Nullable<DirectivaDto>> {
+	async findById(id: Primitives<DirectivaId>): Promise<Nullable<DirectivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<DirectivaDto>>({
@@ -91,29 +95,22 @@ export class SequelizeDirectivaRepository
 			}
 
 			await transaction.commit()
-			await this.invalidateCache(restPayload)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving Directiva: ${error instanceof Error ? error.message : String(error)}`)
 		}
 	}
 
-	async remove(id: Primitives<DepartmentId>): Promise<void> {
-		const directivaToRemove = await DirectivaModel.findByPk(id)
-
+	async remove(id: Primitives<DirectivaId>): Promise<void> {
 		await DirectivaModel.destroy({ where: { id } })
-
-		if (directivaToRemove) {
-			await this.invalidateCache(directivaToRemove.get({ plain: true }))
-		}
 	}
 
-	private async invalidateCache(directivaData: Partial<DirectivaPrimitives>): Promise<void> {
-		const { id, name } = directivaData
-		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
-		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (name) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-
-		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
+	/**
+	 * @method invalidateLocationCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements LocationCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<DirectivaId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

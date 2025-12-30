@@ -67,8 +67,8 @@ export class Brand extends AggregateRoot {
 	 */
 	toPrimitives(): BrandPrimitives {
 		return {
-			id: this.id.value,
-			name: this.name.value,
+			id: this.idValue,
+			name: this.nameValue,
 			categories: this.categoriesValue
 		}
 	}

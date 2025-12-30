@@ -1,29 +1,31 @@
-import { type CargoDto } from '../../Cargo/domain/entity/Cargo.dto'
-import { type CargoId } from '../../Cargo/domain/valueObject/CargoId'
-import { type DepartmentId } from '../../IDepartment/DepartmentId'
-import { type DepartmentName } from '../../IDepartment/DepartmentName'
+import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
+import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import { type DirectivaId } from '../valueObject/DirectivaId'
+import { type DirectivaName } from '../valueObject/DirectivaName'
 
 /**
  * @interface Directiva
  * @description Defines the core properties of a Directiva entity.
  */
 export interface Directiva {
-	id: DepartmentId['value']
-	name: DepartmentName['value']
-	cargos: CargoId['value'][]
+	id: Primitives<DirectivaId>
+	name: Primitives<DirectivaName>
 }
 
 /**
  * @type DirectivaPrimitives
  * @description Represents the primitive, serializable state of a Directiva entity.
  */
-export type DirectivaPrimitives = Directiva
+export type DirectivaPrimitives = Directiva & {
+	cargos: Primitives<CargoId>[]
+}
 
 /**
  * @type DirectivaParams
  * @description Represents the parameters required to create a new Directiva.
  */
-export type DirectivaParams = Omit<Directiva, 'id'>
+export type DirectivaParams = Omit<Directiva & { cargos: Primitives<CargoId>[] }, 'id'>
 
 /**
  * @type DirectivaDto
