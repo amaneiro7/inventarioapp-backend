@@ -72,9 +72,7 @@ export class UserDisabledAccount {
 			this.userRepository.save(userEntity.toPrimitives())
 		])
 
-		await Promise.all([
-			this.eventBus.publish(employeeEntity.pullDomainEvents()),
-			this.eventBus.publish(userEntity.pullDomainEvents())
-		])
+		await this.eventBus.publish(employeeEntity.pullDomainEvents())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

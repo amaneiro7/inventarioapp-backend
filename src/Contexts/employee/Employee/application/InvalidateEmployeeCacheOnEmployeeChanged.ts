@@ -52,7 +52,6 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			event instanceof EmployeeRemovedDomainEvent ||
 			event instanceof EmployeeReactivatedDomainEvent ||
 			event instanceof EmployeeTypeChangedDomainEvent
-		console.log(event)
 		await this.invalidator.invalidate(isEmployeeEvent ? event.aggregateId : undefined)
 	}
 
@@ -62,6 +61,7 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			EmployeeUpdatedDomainEvent,
 			EmployeeRemovedDomainEvent,
 			EmployeeReactivatedDomainEvent,
+			EmployeeTypeChangedDomainEvent,
 			CargoUpdatedDomainEvent,
 			DepartamentoUpdatedDomainEvent,
 			LocationUpdatedDomainEvent,

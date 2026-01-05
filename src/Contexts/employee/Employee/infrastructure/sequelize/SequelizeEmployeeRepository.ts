@@ -233,7 +233,6 @@ export class SequelizeEmployeeRepository
 	 * Implements EmployeeCacheInvalidator interface.
 	 */
 	async invalidate(id?: Primitives<EmployeeId>): Promise<void> {
-		console.log('id', id)
 		await this.cacheInvalidator.invalidate(id)
 	}
 }

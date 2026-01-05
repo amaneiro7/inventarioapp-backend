@@ -8,7 +8,6 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 	) {}
 
 	async invalidate(id?: string): Promise<void> {
-		console.log(this.cacheKey)
 		if (id) {
 			// Estrategia Específica:
 			// 1. Invalidamos todas las listas

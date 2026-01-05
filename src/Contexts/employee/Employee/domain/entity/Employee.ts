@@ -438,7 +438,6 @@ export class Employee extends AggregateRoot {
 
 	unmarkAsServiceUser(): void {
 		// Regla de Negocio 1: Solo puedes revertir el tipo si actualmente es SERVICE.
-		console.log(this.typeValue)
 		if (this.typeValue !== EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
 				`El empleado con ID ${this.idValue} no es un usuario de servicio, es de tipo '${this.typeValue}'. Solo se puede revertir el estatus SERVICE.`
