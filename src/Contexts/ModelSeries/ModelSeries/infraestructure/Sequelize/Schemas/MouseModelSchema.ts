@@ -37,7 +37,13 @@ export class MouseModelsModel extends Model<MouseModelsCreationAttributes> imple
 				categoryId: { type: DataTypes.STRING, allowNull: false, validate: { isIn: [[CategoryValues.MOUSE]] } },
 				inputTypeId: { type: DataTypes.STRING, allowNull: false }
 			},
-			{ modelName: 'ModelMouse', tableName: 'model_mouses', underscored: true, sequelize }
+			{
+				modelName: 'ModelMouse',
+				tableName: 'model_mouses',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['input_type_id'] }]
+			}
 		)
 	}
 }

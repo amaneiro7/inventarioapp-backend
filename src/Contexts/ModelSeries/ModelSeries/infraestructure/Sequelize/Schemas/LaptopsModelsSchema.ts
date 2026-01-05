@@ -62,7 +62,13 @@ export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> imp
 				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' },
 				batteryModel: { type: DataTypes.STRING, allowNull: false }
 			},
-			{ modelName: 'ModelLaptop', tableName: 'model_laptops', underscored: true, sequelize }
+			{
+				modelName: 'ModelLaptop',
+				tableName: 'model_laptops',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['memory_ram_type_id'] }]
+			}
 		)
 	}
 }

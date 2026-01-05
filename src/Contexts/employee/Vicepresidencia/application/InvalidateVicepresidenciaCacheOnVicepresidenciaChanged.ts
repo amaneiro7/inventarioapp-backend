@@ -1,9 +1,8 @@
 import { VicepresidenciaCreatedDomainEvent } from '../domain/event/VicepresidenciaCreatedDomainEvent'
 import { VicepresidenciaUpdatedDomainEvent } from '../domain/event/VicepresidenciaUpdatedDomainEvent'
-import { DirectivaCreatedDomainEvent } from '../../Directiva/domain/event/DirectivaCreatedDomainEvent'
+import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDomainEvent'
 import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/DirectivaUpdatedDomainEvent'
 import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
-import { VicepresidenciaEjecutivaCreatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaCreatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type VicepresidenciaCacheInvalidator } from '../domain/repository/VicepresidenciaCacheInvalidator'
@@ -12,9 +11,8 @@ export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements D
 	| VicepresidenciaCreatedDomainEvent
 	| VicepresidenciaUpdatedDomainEvent
 	| DirectivaUpdatedDomainEvent
-	| DirectivaCreatedDomainEvent
-	| VicepresidenciaEjecutivaCreatedDomainEvent
 	| VicepresidenciaEjecutivaUpdatedDomainEvent
+	| CargoUpdatedDomainEvent
 > {
 	private readonly invalidator: VicepresidenciaCacheInvalidator
 
@@ -26,10 +24,9 @@ export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements D
 		event:
 			| VicepresidenciaCreatedDomainEvent
 			| VicepresidenciaUpdatedDomainEvent
-			| DirectivaCreatedDomainEvent
 			| DirectivaUpdatedDomainEvent
-			| VicepresidenciaEjecutivaCreatedDomainEvent
 			| VicepresidenciaEjecutivaUpdatedDomainEvent
+			| CargoUpdatedDomainEvent
 	): Promise<void> {
 		const isVicepresidenciaEvent =
 			event instanceof VicepresidenciaCreatedDomainEvent || event instanceof VicepresidenciaUpdatedDomainEvent
@@ -40,10 +37,9 @@ export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements D
 		return [
 			VicepresidenciaCreatedDomainEvent,
 			VicepresidenciaUpdatedDomainEvent,
-			DirectivaCreatedDomainEvent,
 			DirectivaUpdatedDomainEvent,
-			VicepresidenciaEjecutivaCreatedDomainEvent,
-			VicepresidenciaEjecutivaUpdatedDomainEvent
+			VicepresidenciaEjecutivaUpdatedDomainEvent,
+			CargoUpdatedDomainEvent
 		]
 	}
 }

@@ -1,11 +1,9 @@
 import { DepartamentoCreatedDomainEvent } from '../domain/event/DepartamentoCreatedDomainEvent'
 import { DepartamentoUpdatedDomainEvent } from '../domain/event/DepartamentoUpdatedDomainEvent'
-import { DirectivaCreatedDomainEvent } from '../../Directiva/domain/event/DirectivaCreatedDomainEvent'
 import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/DirectivaUpdatedDomainEvent'
-import { VicepresidenciaCreatedDomainEvent } from '../../Vicepresidencia/domain/event/VicepresidenciaCreatedDomainEvent'
 import { VicepresidenciaUpdatedDomainEvent } from '../../Vicepresidencia/domain/event/VicepresidenciaUpdatedDomainEvent'
-import { VicepresidenciaEjecutivaCreatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaCreatedDomainEvent'
 import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
+import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDomainEvent'
 import { type DepartamentoCacheInvalidator } from '../domain/repository/DepartamentoCacheInvalidator'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
@@ -14,11 +12,9 @@ export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainE
 	| DepartamentoCreatedDomainEvent
 	| DepartamentoUpdatedDomainEvent
 	| DirectivaUpdatedDomainEvent
-	| DirectivaCreatedDomainEvent
-	| VicepresidenciaCreatedDomainEvent
-	| VicepresidenciaUpdatedDomainEvent
-	| VicepresidenciaEjecutivaCreatedDomainEvent
 	| VicepresidenciaEjecutivaUpdatedDomainEvent
+	| VicepresidenciaUpdatedDomainEvent
+	| CargoUpdatedDomainEvent
 > {
 	private readonly invalidator: DepartamentoCacheInvalidator
 
@@ -30,12 +26,10 @@ export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainE
 		event:
 			| DepartamentoCreatedDomainEvent
 			| DepartamentoUpdatedDomainEvent
-			| DirectivaCreatedDomainEvent
 			| DirectivaUpdatedDomainEvent
-			| VicepresidenciaCreatedDomainEvent
-			| VicepresidenciaUpdatedDomainEvent
-			| VicepresidenciaEjecutivaCreatedDomainEvent
 			| VicepresidenciaEjecutivaUpdatedDomainEvent
+			| VicepresidenciaUpdatedDomainEvent
+			| CargoUpdatedDomainEvent
 	): Promise<void> {
 		const isDepartamentoEvent =
 			event instanceof DepartamentoCreatedDomainEvent || event instanceof DepartamentoUpdatedDomainEvent
@@ -46,12 +40,10 @@ export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainE
 		return [
 			DepartamentoCreatedDomainEvent,
 			DepartamentoUpdatedDomainEvent,
-			DirectivaCreatedDomainEvent,
 			DirectivaUpdatedDomainEvent,
-			VicepresidenciaCreatedDomainEvent,
+			VicepresidenciaEjecutivaUpdatedDomainEvent,
 			VicepresidenciaUpdatedDomainEvent,
-			VicepresidenciaEjecutivaCreatedDomainEvent,
-			VicepresidenciaEjecutivaUpdatedDomainEvent
+			CargoUpdatedDomainEvent
 		]
 	}
 }

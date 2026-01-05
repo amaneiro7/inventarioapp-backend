@@ -104,7 +104,11 @@ export class ModelSeriesModel
 				timestamps: true,
 				underscored: true,
 				sequelize,
-				indexes: [{ unique: true, fields: ['name', 'brand_id'], name: 'unique_model_name_per_brand' }]
+				indexes: [
+					{ unique: true, fields: ['name', 'brand_id'], name: 'unique_model_name_per_brand' },
+					{ fields: ['category_id'] }, // Optimiza filtros por categoría
+					{ fields: ['brand_id'] } // Optimiza JOINs con la tabla Brand
+				]
 			}
 		)
 	}

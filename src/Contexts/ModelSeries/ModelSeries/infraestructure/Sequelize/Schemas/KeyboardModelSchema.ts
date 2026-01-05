@@ -44,7 +44,13 @@ export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes>
 				inputTypeId: { type: DataTypes.STRING, allowNull: false },
 				hasFingerPrintReader: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'has_fingerprint_reader' }
 			},
-			{ modelName: 'ModelKeyboard', tableName: 'model_keyboards', underscored: true, sequelize }
+			{
+				modelName: 'ModelKeyboard',
+				tableName: 'model_keyboards',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['input_type_id'] }]
+			}
 		)
 	}
 }

@@ -95,7 +95,7 @@ export class EmployeeModel
 				isStillWorking: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
 				employeeCode: { type: DataTypes.INTEGER, allowNull: true, unique: true },
 				nationality: { type: DataTypes.ENUM(...Object.values(Nationalities)), allowNull: true },
-				cedula: { type: DataTypes.INTEGER, allowNull: true, unique: true },
+				cedula: { type: DataTypes.INTEGER, allowNull: true },
 				locationId: { type: DataTypes.UUID, allowNull: true },
 				directivaId: { type: DataTypes.UUID, allowNull: true },
 				vicepresidenciaEjecutivaId: { type: DataTypes.UUID, allowNull: true },
@@ -105,7 +105,41 @@ export class EmployeeModel
 				extension: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
 				phone: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] }
 			},
-			{ modelName: 'Employee', tableName: 'employees', timestamps: true, underscored: true, sequelize }
+			{
+				modelName: 'Employee',
+				tableName: 'employees',
+				timestamps: true,
+				underscored: true,
+				sequelize,
+				indexes: [
+					// Índices únicos parciales: Solo aplican si el empleado está activo
+					{
+						unique: true,
+						fields: ['user_name'],
+						where: { is_still_working: true },
+						name: 'unique_username_active_employee'
+					},
+					{
+						unique: true,
+						fields: ['email'],
+						where: { is_still_working: true },
+						name: 'unique_email_active_employee'
+					},
+					{
+						unique: true,
+						fields: ['cedula'],
+						where: { is_still_working: true },
+						name: 'unique_cedula_active_employee'
+					},
+					// Índices de rendimiento para claves foráneas (Mejora drástica en JOINs)
+					{ fields: ['location_id'] },
+					{ fields: ['cargo_id'] },
+					{ fields: ['departamento_id'] },
+					{ fields: ['directiva_id'] },
+					{ fields: ['vicepresidencia_id'] },
+					{ fields: ['vicepresidencia_ejecutiva_id'] }
+				]
+			}
 		)
 	}
 }

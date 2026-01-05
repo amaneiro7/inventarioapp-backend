@@ -61,7 +61,13 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
 				hasHDMI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_hdmi' },
 				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' }
 			},
-			{ modelName: 'ModelComputer', tableName: 'model_computers', underscored: true, sequelize }
+			{
+				modelName: 'ModelComputer',
+				tableName: 'model_computers',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['memory_ram_type_id'] }]
+			}
 		)
 	}
 }

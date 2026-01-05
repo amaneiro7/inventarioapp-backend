@@ -1,6 +1,6 @@
 import { VicepresidenciaEjecutivaCreatedDomainEvent } from '../domain/event/VicepresidenciaEjecutivaCreatedDomainEvent'
 import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
-import { DirectivaCreatedDomainEvent } from '../../Directiva/domain/event/DirectivaCreatedDomainEvent'
+import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDomainEvent'
 import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/DirectivaUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
@@ -10,7 +10,7 @@ export class InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaCh
 	| VicepresidenciaEjecutivaCreatedDomainEvent
 	| VicepresidenciaEjecutivaUpdatedDomainEvent
 	| DirectivaUpdatedDomainEvent
-	| DirectivaCreatedDomainEvent
+	| CargoUpdatedDomainEvent
 > {
 	private readonly invalidator: VicepresidenciaEjecutivaCacheInvalidator
 
@@ -26,8 +26,8 @@ export class InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaCh
 		event:
 			| VicepresidenciaEjecutivaCreatedDomainEvent
 			| VicepresidenciaEjecutivaUpdatedDomainEvent
-			| DirectivaCreatedDomainEvent
 			| DirectivaUpdatedDomainEvent
+			| CargoUpdatedDomainEvent
 	): Promise<void> {
 		const isVicepresidenciaEjecutivaEvent =
 			event instanceof VicepresidenciaEjecutivaCreatedDomainEvent ||
@@ -39,8 +39,8 @@ export class InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaCh
 		return [
 			VicepresidenciaEjecutivaCreatedDomainEvent,
 			VicepresidenciaEjecutivaUpdatedDomainEvent,
-			DirectivaCreatedDomainEvent,
-			DirectivaUpdatedDomainEvent
+			DirectivaUpdatedDomainEvent,
+			CargoUpdatedDomainEvent
 		]
 	}
 }
