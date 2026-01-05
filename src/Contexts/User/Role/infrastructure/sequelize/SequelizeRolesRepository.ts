@@ -3,11 +3,11 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type RoleRepository } from '../../domain/RoleRepository'
-import { type RoleId } from '../../domain/RoleId'
+import { type RoleRepository } from '../../domain/repository/RoleRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type RoleDto } from '../../domain/Role.dto'
+import { type RoleDto } from '../../domain/entity/Role.dto'
+import { type RoleId } from '../../domain/valueObject/RoleId'
 
 /**
  * @description Sequelize implementation of the RoleRepository.

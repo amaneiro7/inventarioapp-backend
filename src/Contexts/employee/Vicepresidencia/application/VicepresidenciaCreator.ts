@@ -1,33 +1,38 @@
-import { Vicepresidencia } from '../domain/Vicepresidencia'
-import { CreateVicepresidenciaUseCase } from '../domain/CreateVicepresidenciaUseCase'
+import { Vicepresidencia } from '../domain/entity/Vicepresidencia'
+import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
+import { VicepresidenciaNameUniquenessChecker } from '../domain/service/VicepresidenciaNameuniquenessChecker'
+import { VicepresidenciaEjecutivaExistenceChecker } from '../../VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type VicepresidenciaDto, type VicepresidenciaParams } from '../domain/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaParams } from '../domain/entity/Vicepresidencia.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { type VicepresidenciaRepository } from '../domain/repository/VicepresidenciaRepository'
+import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
 
-/**
- * @description Use case for creating a new Vicepresidencia entity.
- */
 export class VicepresidenciaCreator {
-	private readonly createVicepresidenciaUseCase: CreateVicepresidenciaUseCase
-	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-	private readonly cargoRepository: CargoRepository
+	private readonly vicepresidenciaRepository: VicepresidenciaRepository
+	private readonly vicepresidenciaNameUniquenessChecker: VicepresidenciaNameUniquenessChecker
+	private readonly vicepresidenciaEjectivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
+	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
-		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	constructor({
+		cargoRepository,
+		vicepresidenciaEjectivaRepository,
+		vicepresidenciaRepository,
+		eventBus
+	}: {
+		vicepresidenciaRepository: VicepresidenciaRepository
+		vicepresidenciaEjectivaRepository: VicepresidenciaEjecutivaRepository
 		cargoRepository: CargoRepository
+		eventBus: EventBus
 	}) {
-		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
-		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
-		this.cargoRepository = dependencies.cargoRepository
-
-		this.createVicepresidenciaUseCase = new CreateVicepresidenciaUseCase(
-			this.vicepresidenciaRepository,
-			this.vicepresidenciaEjecutivaRepository,
-			this.cargoRepository
+		this.vicepresidenciaRepository = vicepresidenciaRepository
+		this.vicepresidenciaNameUniquenessChecker = new VicepresidenciaNameUniquenessChecker(vicepresidenciaRepository)
+		this.vicepresidenciaEjectivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
+			vicepresidenciaEjectivaRepository
 		)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -35,17 +40,15 @@ export class VicepresidenciaCreator {
 	 * @param {{ params: VicepresidenciaParams }} data The parameters for creating the Vicepresidencia.
 	 * @returns {Promise<void>} A promise that resolves when the Vicepresidencia is successfully created.
 	 */
-	async run({
-		params: { name, vicepresidenciaEjecutivaId, cargos }
-	}: {
-		params: VicepresidenciaParams
-	}): Promise<void> {
+	async run({ params }: { params: VicepresidenciaParams }): Promise<void> {
+		const { name, vicepresidenciaEjecutivaId, cargos } = params
 		const uniqueCargos = Array.from(new Set(cargos))
-		await this.createVicepresidenciaUseCase.execute({
-			name,
-			vicepresidenciaEjecutivaId,
-			cargos: uniqueCargos
-		})
+
+		await Promise.all([
+			this.vicepresidenciaNameUniquenessChecker.ensureUnique(name),
+			this.vicepresidenciaEjectivaExistenceChecker.ensureExist(vicepresidenciaEjecutivaId),
+			this.cargoExistenceChecker.ensureExist(uniqueCargos)
+		])
 
 		const vicepresidencia = Vicepresidencia.create({
 			name,
@@ -53,6 +56,7 @@ export class VicepresidenciaCreator {
 			cargos: uniqueCargos
 		})
 
-		await this.vicepresidenciaRepository.save(vicepresidencia.toPrimitive())
+		await this.vicepresidenciaRepository.save(vicepresidencia.toPrimitives())
+		await this.eventBus.publish(vicepresidencia.pullDomainEvents())
 	}
 }

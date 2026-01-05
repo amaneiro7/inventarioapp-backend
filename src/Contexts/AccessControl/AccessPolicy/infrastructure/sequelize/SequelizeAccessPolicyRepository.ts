@@ -1,3 +1,4 @@
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { AccessPolicyAssociation } from './AccesspolicyAssociation'
@@ -9,7 +10,6 @@ import { type AccessPolicyDto, type AccessPolicyPrimitives } from '../../domain/
 import { type AccessPolicyRepository } from '../../domain/repository/AccessPolicyRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
  * @class SequelizeAccessPolicyRepository

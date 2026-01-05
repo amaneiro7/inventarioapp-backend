@@ -1,26 +1,29 @@
 import { User } from '../domain/entity/User'
 import { UserId } from '../domain/valueObject/UserId'
-import { RoleId } from '../../Role/domain/RoleId'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
-import { RoleDoesNotExistError } from '../../Role/domain/RoleDoesNotExistError'
+import { RoleExistenceChecker } from '../../Role/domain/service/RoleExistanceChecker'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type RoleRepository } from '../../Role/domain/RoleRepository'
+import { type RoleRepository } from '../../Role/domain/repository/RoleRepository'
 import { type UserParams } from '../domain/entity/User.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 export class UserUpdater {
 	private readonly userRepository: UserRepository
-	private readonly roleRepository: RoleRepository
-
+	private readonly roleExistenceChecker: RoleExistenceChecker
+	private readonly eventBus: EventBus
 	constructor({
 		userRepository,
-		roleRepository
+		roleRepository,
+		eventBus
 	}: {
 		userRepository: UserRepository
 		roleRepository: RoleRepository
+		eventBus: EventBus
 	}) {
 		this.userRepository = userRepository
-		this.roleRepository = roleRepository
+		this.roleExistenceChecker = new RoleExistenceChecker(roleRepository)
+		this.eventBus = eventBus
 	}
 
 	async run({ id, params }: { id: Primitives<UserId>; params: Partial<UserParams> }): Promise<void> {
@@ -36,26 +39,14 @@ export class UserUpdater {
 		let hasChanges = false
 
 		if (params.roleId !== undefined && String(userEntity.roleValue) !== String(params.roleId)) {
-			await this.ensureRoleExist({ repository: this.roleRepository, roleId: Number(params.roleId) })
+			await this.roleExistenceChecker.ensureExist(Number(params.roleId))
 			userEntity.updateRole(Number(params.roleId))
 			hasChanges = true
 		}
 		// Save the updated entity only if it has changed
 		if (hasChanges) {
 			await this.userRepository.save(userEntity.toPrimitives())
-		}
-	}
-
-	private async ensureRoleExist({
-		repository,
-		roleId
-	}: {
-		repository: RoleRepository
-		roleId: Primitives<RoleId>
-	}): Promise<void> {
-		const existingRole = await repository.findById(new RoleId(roleId).value)
-		if (!existingRole) {
-			throw new RoleDoesNotExistError()
+			await this.eventBus.publish(userEntity.pullDomainEvents())
 		}
 	}
 }

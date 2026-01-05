@@ -1,7 +1,7 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { UserId } from '../valueObject/UserId'
 import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
-import { RoleId } from '../../../Role/domain/RoleId'
+import { RoleId } from '../../../Role/domain/valueObject/RoleId'
 import { UserPassword } from '../valueObject/UserPassword'
 import { UserStatus, UserStatusEnum } from '../valueObject/UserStatus'
 import { PasswordChangeAt } from '../valueObject/PasswordChangeAt'

@@ -2,27 +2,28 @@ import { type LocationDto } from '../../../../Location/Location/domain/entity/Lo
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
+import { type DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
 import { type EmployeeCode } from '../valueObject/EmployeCode'
 import { type EmployeeCedula } from '../valueObject/EmployeeCedula'
 import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
 import { type EmployeeId } from '../valueObject/EmployeeId'
 import { type EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { type EmployeeLastName } from '../valueObject/EmployeeLastName'
-import { type EmployeeLocationId } from '../valueObject/EmployeeLocation'
+
 import { type EmployeeName } from '../valueObject/EmployeeName'
 import { type EmployeeNationality } from '../valueObject/EmployeeNationality'
 import { type EmployeeType } from '../valueObject/EmployeeType'
 import { type EmployeeUserName } from '../valueObject/EmployeeUsername'
 import { type Extension } from '../valueObject/Extension'
 import { type PhoneNumber } from '../valueObject/PhoneNumber'
-import { type EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
-import { type EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
-import { type EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
-import { type EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
-import { type EmployeeCargo } from '../valueObject/EmployeeCargo'
+import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 
 /**
  * @interface Employee
@@ -39,12 +40,12 @@ export type Employee = {
 	employeeCode: Primitives<EmployeeCode>
 	nationality: Primitives<EmployeeNationality>
 	cedula: Primitives<EmployeeCedula>
-	locationId: Primitives<EmployeeLocationId>
-	directivaId: Primitives<EmployeeDirectiva>
-	vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
-	vicepresidenciaId: Primitives<EmployeeVicepresidencia>
-	departamentoId: Primitives<EmployeeDepartamento>
-	cargoId: Primitives<EmployeeCargo>
+	locationId: Primitives<LocationId> | null
+	directivaId: Primitives<DirectivaId> | null
+	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+	vicepresidenciaId: Primitives<VicepresidenciaId> | null
+	departamentoId: Primitives<DepartamentoId> | null
+	cargoId: Primitives<CargoId> | null
 	extension: Primitives<Extension>[]
 	phone: Primitives<PhoneNumber>[]
 }

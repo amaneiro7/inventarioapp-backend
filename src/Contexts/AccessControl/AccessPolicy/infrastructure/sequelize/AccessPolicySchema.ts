@@ -11,23 +11,26 @@ import { type SequelizeModels } from '../../../../Shared/infrastructure/persista
 import { type AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../../../../employee/Cargo/domain/valueObject/CargoId'
-import { type DepartmentId } from '../../../../employee/IDepartment/DepartmentId'
 import { type AccessPolicyPriority } from '../../domain/valueObject/AccessPolicyPriority'
 import { type AccessPolicyDto } from '../../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
 import { type PermissionGroupDto } from '../../../PermissionGroup/domain/entity/PermissionGroup.dto'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
-import { type RoleId } from '../../../../User/Role/domain/RoleId'
+import { type RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
+import { type VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
+import { type DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
 
 export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsGroups'>> implements AccessPolicyDto {
 	declare id: Primitives<AccessPolicyId>
 	declare name: Primitives<AccessPolicyName>
 	declare roleId: Primitives<RoleId> | null
 	declare cargoId: Primitives<CargoId> | null
-	declare departamentoId: Primitives<DepartmentId> | null
-	declare vicepresidenciaId: Primitives<DepartmentId> | null
-	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
-	declare directivaId: Primitives<DepartmentId> | null
+	declare departamentoId: Primitives<DepartamentoId> | null
+	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
+	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+	declare directivaId: Primitives<DirectivaId> | null
 	declare priority: Primitives<AccessPolicyPriority>
 	declare permissionsGroups: PermissionGroupDto[]
 	// Association Mixins

@@ -8,7 +8,10 @@ import { type EmployeeId } from '../../employee/Employee/domain/valueObject/Empl
 import { type PasswordChangeAt } from '../../User/user/domain/valueObject/PasswordChangeAt'
 import { type PasswordNeverExpires } from '../../User/user/domain/valueObject/PasswordNeverExpires'
 import { type CargoId } from '../../employee/Cargo/domain/valueObject/CargoId'
-import { type DepartmentId } from '../../employee/IDepartment/DepartmentId'
+import { type DepartamentoId } from '../../employee/Departamento/domain/valueObject/DepartamentoId'
+import { type VicepresidenciaId } from '../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type VicepresidenciaEjecutivaId } from '../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type DirectivaId } from '../../employee/Directiva/domain/valueObject/DirectivaId'
 
 export interface Tokens {
 	accessToken: string
@@ -40,10 +43,10 @@ export interface JwtPayloadUser extends JwtPayload {
 	passwordNeverExpires: Primitives<PasswordNeverExpires> // <--- CAMBIO: Campo añadido}
 	roleId: string
 	cargoId: Primitives<CargoId> | null
-	departamentoId: Primitives<DepartmentId> | null
-	vicepresidenciaId: Primitives<DepartmentId> | null
-	vicepresidenciaEjecutivaId: Primitives<DepartmentId> | null
-	directivaId: Primitives<DepartmentId> | null
+	departamentoId: Primitives<DepartamentoId> | null
+	vicepresidenciaId: Primitives<VicepresidenciaId> | null
+	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+	directivaId: Primitives<DirectivaId> | null
 	iat: number
 	iss: 'SoporteTecnicoBNC' // Issuer of the token
 	jti?: string // JWT ID for refresh token rotation

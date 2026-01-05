@@ -1,19 +1,15 @@
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { type VicepresidenciaDto } from '../domain/Vicepresidencia.dto'
+import { VicepresidenciaEjecutivaDoesNotExistError } from '../../VicepresidenciaEjecutiva/domain/errors/VicepresidenciaEjecutivaDoesNotExistError'
+import { VicepresidenciaEjecutivaId } from '../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaDto } from '../domain/entity/Vicepresidencia.dto'
+import { type VicepresidenciaRepository } from '../domain/repository/VicepresidenciaRepository'
 
 /**
  * @description Use case for finding a Vicepresidencia entity by its unique identifier.
  */
 export class VicepresidenciaFinder {
-	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	private readonly vicepresidenciaRepository: VicepresidenciaRepository
 
-	constructor({
-		vicepresidenciaRepository
-	}: {
-		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	}) {
+	constructor({ vicepresidenciaRepository }: { vicepresidenciaRepository: VicepresidenciaRepository }) {
 		this.vicepresidenciaRepository = vicepresidenciaRepository
 	}
 
@@ -24,11 +20,11 @@ export class VicepresidenciaFinder {
 	 * @throws {DepartmentDoesNotExistError} If no Vicepresidencia with the provided ID is found.
 	 */
 	async run({ id }: { id: string }): Promise<VicepresidenciaDto> {
-		const vicepresidenciaId = new DepartmentId(id).value
+		const vicepresidenciaId = new VicepresidenciaEjecutivaId(id).value
 		const vicepresidencia = await this.vicepresidenciaRepository.findById(vicepresidenciaId)
 
 		if (!vicepresidencia) {
-			throw new DepartmentDoesNotExistError('La vicepresidencia')
+			throw new VicepresidenciaEjecutivaDoesNotExistError(vicepresidenciaId)
 		}
 
 		return vicepresidencia

@@ -4,7 +4,7 @@ import { type PermissionRepository } from '../../Permission/domain/repository/Pe
 import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
 import { type AccessPolicyResolver } from './AccessPolicyResolver'
-import { type RoleId } from '../../../User/Role/domain/RoleId'
+import { type RoleId } from '../../../User/Role/domain/valueObject/RoleId'
 import { ADMIN_ROLE_ID } from '../../../User/Role/domain/RoleOptions'
 
 export interface GetUserPermissionsParams {

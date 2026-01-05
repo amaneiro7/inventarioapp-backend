@@ -1,19 +1,19 @@
+import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type VicepresidenciaEjecutivaDto } from '../domain/VicepresidenciaEjecutiva.dto'
-import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { type VicepresidenciaEjecutivaDto } from '../domain/entity/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaEjecutivaRepository } from '../domain/repository/VicepresidenciaEjecutivaRepository'
 
 /**
  * @description Use case for retrieving all VicepresidenciaEjecutiva entities.
  */
 export class VicepresidenciaEjecutivaFinderAll extends GetAllBaseService<VicepresidenciaEjecutivaDto> {
-	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 
 	constructor({
 		vicepresidenciaEjecutivaRepository
 	}: {
-		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 	}) {
 		super()
 		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository

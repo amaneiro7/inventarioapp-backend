@@ -9,16 +9,19 @@ import {
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type CargoId } from '../../domain/valueObject/CargoId'
 import { type CargoName } from '../../domain/valueObject/CargoName'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
 import { type DepartamentoModel } from '../../../Departamento/infrastructure/sequelize/DepartamentoSchema'
 import { type CargoDto } from '../../domain/entity/Cargo.dto'
-import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
 import { type DirectivaModel } from '../../../Directiva/infrastructure/sequelize/DirectivaSchema'
 import { type VicepresidenciaEjecutivaModel } from '../../../VicepresidenciaEjecutiva/infrastructure/sequelize/VicepresidenciaEjecutivaSchema'
 import { type VicepresidenciaModel } from '../../../Vicepresidencia/infrastructure/sequelize/VicepresidenciaSchema'
+import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
 
 /**
  * @description Sequelize model for the `Cargo` entity.
@@ -36,30 +39,33 @@ export class CargoModel
 
 	// Association Mixins
 	declare getDirectiva: BelongsToManyGetAssociationsMixin<DirectivaModel>
-	declare addDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
-	declare setDirectivas: BelongsToManySetAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
-	declare removeDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DepartmentId>>
+	declare addDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DirectivaId>>
+	declare setDirectivas: BelongsToManySetAssociationsMixin<DirectivaModel, Primitives<DirectivaId>>
+	declare removeDirectiva: BelongsToManyAddAssociationsMixin<DirectivaModel, Primitives<DirectivaId>>
 	declare getVicepresidenciaEjecutiva: BelongsToManyGetAssociationsMixin<VicepresidenciaEjecutivaModel>
 	declare addVicepresidenciaEjecutiva: BelongsToManyAddAssociationsMixin<
 		VicepresidenciaEjecutivaModel,
-		Primitives<DepartmentId>
+		Primitives<VicepresidenciaEjecutivaId>
 	>
 	declare setVicepresidenciaEjecutivas: BelongsToManySetAssociationsMixin<
 		VicepresidenciaEjecutivaModel,
-		Primitives<DepartmentId>
+		Primitives<VicepresidenciaEjecutivaId>
 	>
 	declare removeVicepresidenciaEjecutiva: BelongsToManyAddAssociationsMixin<
 		VicepresidenciaEjecutivaModel,
-		Primitives<DepartmentId>
+		Primitives<VicepresidenciaEjecutivaId>
 	>
 	declare getVicepresidencia: BelongsToManyGetAssociationsMixin<VicepresidenciaModel>
-	declare addVicepresidencia: BelongsToManyAddAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
-	declare setVicepresidencias: BelongsToManySetAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
-	declare removeVicepresidencia: BelongsToManyAddAssociationsMixin<VicepresidenciaModel, Primitives<DepartmentId>>
+	declare addVicepresidencia: BelongsToManyAddAssociationsMixin<VicepresidenciaModel, Primitives<VicepresidenciaId>>
+	declare setVicepresidencias: BelongsToManySetAssociationsMixin<VicepresidenciaModel, Primitives<VicepresidenciaId>>
+	declare removeVicepresidencia: BelongsToManyAddAssociationsMixin<
+		VicepresidenciaModel,
+		Primitives<VicepresidenciaId>
+	>
 	declare getDepartamento: BelongsToManyGetAssociationsMixin<DepartamentoModel>
-	declare addDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
-	declare setDepartamentos: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
-	declare removeDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartmentId>>
+	declare addDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartamentoId>>
+	declare setDepartamentos: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartamentoId>>
+	declare removeDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartamentoId>>
 
 	static associate(models: Sequelize['models']): void {
 		this.belongsToMany(models.Directiva, {

@@ -6,6 +6,7 @@ import { type UserId } from '../domain/valueObject/UserId'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
+import { EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for deactivating a user and reverting the associated employee's type.
@@ -16,17 +17,20 @@ import { type EmployeeRepository } from '../../../employee/Employee/domain/Repos
  */
 export class UserDisabledAccount {
 	private readonly userRepository: UserRepository
-	private readonly employeeRepository: EmployeeRepository // Add EmployeeRepository
-
+	private readonly employeeRepository: EmployeeRepository
+	private readonly eventBus: EventBus
 	constructor({
 		userRepository,
-		employeeRepository
+		employeeRepository,
+		eventBus
 	}: {
 		userRepository: UserRepository
 		employeeRepository: EmployeeRepository
+		eventBus: EventBus
 	}) {
 		this.userRepository = userRepository
 		this.employeeRepository = employeeRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -64,8 +68,13 @@ export class UserDisabledAccount {
 		// Deactivate the user account
 		userEntity.desactivateAccount()
 		await Promise.all([
-			this.employeeRepository.save(employeeEntity.toPrimitive()),
+			this.employeeRepository.save(employeeEntity.toPrimitives()),
 			this.userRepository.save(userEntity.toPrimitives())
+		])
+
+		await Promise.all([
+			this.eventBus.publish(employeeEntity.pullDomainEvents()),
+			this.eventBus.publish(userEntity.pullDomainEvents())
 		])
 	}
 }

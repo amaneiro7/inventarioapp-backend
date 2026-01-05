@@ -1,31 +1,36 @@
+import { Op } from 'sequelize'
 import { DepartamentoModel } from './DepartamentoSchema'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { DepartamentoAssociation } from './DepartamentoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoName } from '../../../Cargo/domain/valueObject/CargoName'
-import { type DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
+import { type DepartamentoName } from '../../domain/valueObject/DepartamentoName'
+import { type DepartamentoId } from '../../domain/valueObject/DepartamentoId'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/Departamento.dto'
+import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/entity/Departamento.dto'
+import { type DepartamentoRepository } from '../../domain/repository/DepartamentoRepository'
+import { type DepartamentoCacheInvalidator } from '../../domain/repository/DepartamentoCacheInvalidator'
 
 /**
  * @description Concrete implementation of the DepartamentoRepository using Sequelize.
  */
 export class SequelizeDepartamentoRepository
 	extends SequelizeCriteriaConverter
-	implements DepartmentRepository<DepartamentoDto>
+	implements DepartamentoRepository, DepartamentoCacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'departamento'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DepartamentoDto>> {
@@ -44,7 +49,7 @@ export class SequelizeDepartamentoRepository
 		})
 	}
 
-	async findById(id: Primitives<DepartmentId>): Promise<Nullable<DepartamentoDto>> {
+	async findById(id: Primitives<DepartamentoId>): Promise<Nullable<DepartamentoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<DepartamentoDto>>({
@@ -82,7 +87,31 @@ export class SequelizeDepartamentoRepository
 		})
 	}
 
-	async findByName(name: Primitives<CargoName>): Promise<Nullable<DepartamentoDto>> {
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple departamentos by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of cargo IDs to find.
+	 * @returns {Promise<DepartamentoDto[]>} A promise resolving to an array of found cargo DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<DepartamentoDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<DepartamentoDto[]>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const departamentos = await DepartamentoModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return departamentos.map(cargo => cargo.get({ plain: true })) as DepartamentoDto[]
+			}
+		})
+	}
+
+	async findByName(name: Primitives<DepartamentoName>): Promise<Nullable<DepartamentoDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<DepartamentoDto>>({
@@ -109,29 +138,22 @@ export class SequelizeDepartamentoRepository
 			}
 
 			await transaction.commit()
-			await this.invalidateCache(restPayload)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving Departamento: ${error instanceof Error ? error.message : String(error)}`)
 		}
 	}
 
-	async remove(id: Primitives<DepartmentId>): Promise<void> {
-		const departamentoToRemove = await DepartamentoModel.findByPk(id)
-
+	async remove(id: Primitives<DepartamentoId>): Promise<void> {
 		await DepartamentoModel.destroy({ where: { id } })
-
-		if (departamentoToRemove) {
-			await this.invalidateCache(departamentoToRemove.get({ plain: true }))
-		}
 	}
 
-	private async invalidateCache(departamentoData: Partial<DepartamentoPrimitives>): Promise<void> {
-		const { id, name } = departamentoData
-		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
-		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (name) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-
-		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
+	/**
+	 * @method invalidateDepartamentoCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements DepartamentoCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<DepartamentoId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

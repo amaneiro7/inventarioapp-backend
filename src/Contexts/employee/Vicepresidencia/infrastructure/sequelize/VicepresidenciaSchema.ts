@@ -7,14 +7,16 @@ import {
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { type DepartmentName } from '../../../IDepartment/DepartmentName'
-import { type VicepresidenciaDto } from '../../domain/Vicepresidencia.dto'
+
+import { type VicepresidenciaDto } from '../../domain/entity/Vicepresidencia.dto'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaName } from '../../domain/valueObject/VicepresidenciaName'
+import { type VicepresidenciaId } from '../../domain/valueObject/VicepresidenciaId'
 
 /**
  * @description Sequelize model for the `Vicepresidencia` entity.
@@ -23,9 +25,9 @@ export class VicepresidenciaModel
 	extends Model<Omit<VicepresidenciaDto, 'vicepresidenciaEjecutiva' | 'cargos'>>
 	implements VicepresidenciaDto
 {
-	declare id: Primitives<DepartmentId>
-	declare name: Primitives<DepartmentName>
-	declare vicepresidenciaEjecutivaId: Primitives<DepartmentId>
+	declare id: Primitives<VicepresidenciaId>
+	declare name: Primitives<VicepresidenciaName>
+	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId>
 	declare vicepresidenciaEjecutiva: VicepresidenciaEjecutivaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 

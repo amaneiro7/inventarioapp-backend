@@ -11,6 +11,12 @@ import { CreateLocationMonitoringOnLocationCreated } from '../../../Contexts/Loc
 import { InvalidateLocationMonitoringCacheOnLocationChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnLocationChanged'
 import { SyncLocationMonitoringStateOnEvents } from '../../../Contexts/Location/LocationMonitoring/application/SyncLocationMonitoringStateOnEvents'
 import { InvalidateDirectivaCacheOnDirectivaChanged } from '../../../Contexts/employee/Directiva/application/InvalidateDirectivaCacheOnDirectivaChanged'
+import { InvalidateCargoCacheOnCargoChanged } from '../../../Contexts/employee/Cargo/application/InvalidateCargoCacheOnCargoChanged'
+import { InvalidateDepartamentoCacheOnDepartamentoChanged } from '../../../Contexts/employee/Departamento/application/InvalidateDepartamentoCacheOnDepartamentoChanged'
+import { InvalidateVicepresidenciaCacheOnVicepresidenciaChanged } from '../../../Contexts/employee/Vicepresidencia/application/InvalidateVicepresidenciaCacheOnVicepresidenciaChanged'
+import { InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged } from '../../../Contexts/employee/VicepresidenciaEjecutiva/application/InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged'
+import { DeactivateUserOnEmployeeTerminated } from '../../../Contexts/User/user/application/DeactivateUserOnEmployeeTerminated'
+import { InvalidateEmployeeCacheOnEmployeeChanged } from '../../../Contexts/employee/Employee/application/InvalidateEmployeeCacheOnEmployeeChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -24,7 +30,13 @@ export enum DomainEventDependencies {
 	CreateLocationMonitoringOnLocationCreated = 'createLocationMonitoringOnLocationCreated',
 	InvalidateLocationMonitoringCacheOnLocationChanged = 'invalidateLocationMonitoringCacheOnLocationChanged',
 	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents',
-	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged'
+	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged',
+	InvalidateCargoCacheOnCargoChanged = 'invalidateCargoCacheOnCargoChanged',
+	InvalidateDepartamentoCacheOnDepartamentoChanged = 'invalidateDepartamentoCacheOnDepartamentoChanged',
+	InvalidateVicepresidenciaCacheOnVicepresidenciaChanged = 'invalidateVicepresidenciaCacheOnVicepresidenciaChanged',
+	InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged = 'invalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged',
+	InvalidateEmployeeCacheOnEmployeeChanged = 'invalidateEmployeeCacheOnEmployeeChanged',
+	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated'
 }
 
 /**
@@ -67,6 +79,24 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateDirectivaCacheOnDirectivaChanged]: asClass(
 			InvalidateDirectivaCacheOnDirectivaChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateCargoCacheOnCargoChanged]: asClass(
+			InvalidateCargoCacheOnCargoChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateDepartamentoCacheOnDepartamentoChanged]: asClass(
+			InvalidateDepartamentoCacheOnDepartamentoChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateVicepresidenciaCacheOnVicepresidenciaChanged]: asClass(
+			InvalidateVicepresidenciaCacheOnVicepresidenciaChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged]: asClass(
+			InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged
+		).singleton(),
+		[DomainEventDependencies.DeactivateUserOnEmployeeTerminated]: asClass(
+			DeactivateUserOnEmployeeTerminated
+		).singleton(),
+		[DomainEventDependencies.InvalidateEmployeeCacheOnEmployeeChanged]: asClass(
+			InvalidateEmployeeCacheOnEmployeeChanged
 		).singleton()
 	})
 }

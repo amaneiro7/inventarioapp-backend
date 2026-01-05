@@ -1,8 +1,11 @@
-import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
+import { type DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
+import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
 import { type CargoId } from '../valueObject/CargoId'
 import { type CargoName } from '../valueObject/CargoName'
 
@@ -21,10 +24,10 @@ export interface Cargo {
  * including associated department IDs.
  */
 export type CargoPrimitives = Cargo & {
-	directivas: DepartmentId['value'][]
-	vicepresidenciasEjecutivas: DepartmentId['value'][]
-	vicepresidencias: DepartmentId['value'][]
-	departamentos: DepartmentId['value'][]
+	directivas: DirectivaId['value'][]
+	vicepresidenciasEjecutivas: VicepresidenciaEjecutivaId['value'][]
+	vicepresidencias: VicepresidenciaId['value'][]
+	departamentos: DepartamentoId['value'][]
 }
 
 /**
@@ -34,10 +37,10 @@ export type CargoPrimitives = Cargo & {
  */
 export type CargoParams = Omit<
 	Cargo & {
-		directivas: DepartmentId['value'][]
-		vicepresidenciasEjecutivas: DepartmentId['value'][]
-		vicepresidencias: DepartmentId['value'][]
-		departamentos: DepartmentId['value'][]
+		directivas: DirectivaId['value'][]
+		vicepresidenciasEjecutivas: VicepresidenciaEjecutivaId['value'][]
+		vicepresidencias: VicepresidenciaId['value'][]
+		departamentos: DepartamentoId['value'][]
 	},
 	'id'
 >

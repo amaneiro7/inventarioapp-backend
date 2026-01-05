@@ -1,59 +1,80 @@
-import { EnsureEmployeeCanBeCreated } from '../domain/domainService/EnsureEmployeeCanBeCreated'
-import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
-import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
-import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type EmployeeParams } from '../domain/entity/Employee.dto'
-import { type DepartamentoDto } from '../../Departamento/domain/Departamento.dto'
-import { type DirectivaDto } from '../../Directiva/domain/entity/Directiva.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
-import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
 import { Employee } from '../domain/entity/Employee'
 import { SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
+import { EmployeeUserNameUniquenessChecker } from '../domain/service/EmployeeUserNameUniquenessChecker'
+import { EmployeeEmailUniquenessChecker } from '../domain/service/EmployeeEmailUniquenessChecker'
+import { EmployeeCodeUniquenessChecker } from '../domain/service/EmployeeCodeUniquenessChecker'
+import { EmployeeCedulaUniquenessChecker } from '../domain/service/EmployeeCedulaUniquenessChecker'
+import { VicepresidenciaExistenceChecker } from '../../Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
+import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
+import { VicepresidenciaEjecutivaExistenceChecker } from '../../VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
+import { DepartamentoExistenceChecker } from '../../Departamento/domain/service/DepartamentoExistanceChecker'
+import { DirectivaExistenceChecker } from '../../Directiva/domain/service/DirectivaExistanceChecker'
+import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
+import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
+import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
+import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
+import { type EmployeeParams } from '../domain/entity/Employee.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { type DirectivaRepository } from '../../Directiva/domain/repository/DirectivaRepository'
+import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
+import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
+import { type DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
 
 /**
  * @description Use case for creating a new Employee entity.
  */
 export class EmployeeCreator {
-	private readonly ensureEmployeeCanBeCreated: EnsureEmployeeCanBeCreated
 	private readonly employeeRepository: EmployeeRepository
-	private readonly locationRepository: LocationRepository
-	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
-	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-	private readonly cargoRepository: CargoRepository
+	private readonly employeeUserNameUniquenessChecker: EmployeeUserNameUniquenessChecker
+	private readonly employeeCodeUniquenessChecker: EmployeeCodeUniquenessChecker
+	private readonly employeeEmailUniquenessChecker: EmployeeEmailUniquenessChecker
+	private readonly employeeCedulaUniquenessChecker: EmployeeCedulaUniquenessChecker
+	private readonly locationExistenceChecker: LocationExistenceChecker
+	private readonly directivaExistenceChecker: DirectivaExistenceChecker
+	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
+	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
+	private readonly departamentoExistenceChecker: DepartamentoExistenceChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
 	private readonly settingsFinder: SettingsFinder
+	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
+	constructor({
+		cargoRepository,
+		departamentoRepository,
+		directivaRepository,
+		employeeRepository,
+		locationRepository,
+		settingsFinder,
+		vicepresidenciaEjecutivaRepository,
+		vicepresidenciaRepository,
+		eventBus
+	}: {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
-		directivaRepository: DepartmentRepository<DirectivaDto>
-		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
-		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-		departamentoRepository: DepartmentRepository<DepartamentoDto>
+		directivaRepository: DirectivaRepository
+		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
+		vicepresidenciaRepository: VicepresidenciaRepository
+		departamentoRepository: DepartamentoRepository
 		cargoRepository: CargoRepository
 		settingsFinder: SettingsFinder
+		eventBus: EventBus
 	}) {
-		this.employeeRepository = dependencies.employeeRepository
-		this.locationRepository = dependencies.locationRepository
-		this.directivaRepository = dependencies.directivaRepository
-		this.vicepresidenciaEjecutivaRepository = dependencies.vicepresidenciaEjecutivaRepository
-		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
-		this.departamentoRepository = dependencies.departamentoRepository
-		this.cargoRepository = dependencies.cargoRepository
-		this.settingsFinder = dependencies.settingsFinder
-
-		this.ensureEmployeeCanBeCreated = new EnsureEmployeeCanBeCreated({
-			employeeRepository: this.employeeRepository,
-			locationRepository: this.locationRepository,
-			directivaRepository: this.directivaRepository,
-			vicepresidenciaEjecutivaRepository: this.vicepresidenciaEjecutivaRepository,
-			vicepresidenciaRepository: this.vicepresidenciaRepository,
-			cargoRepository: this.cargoRepository,
-			departamentoRepository: this.departamentoRepository
-		})
+		this.employeeRepository = employeeRepository
+		this.employeeUserNameUniquenessChecker = new EmployeeUserNameUniquenessChecker(employeeRepository)
+		this.employeeCodeUniquenessChecker = new EmployeeCodeUniquenessChecker(employeeRepository)
+		this.employeeEmailUniquenessChecker = new EmployeeEmailUniquenessChecker(employeeRepository)
+		this.employeeCedulaUniquenessChecker = new EmployeeCedulaUniquenessChecker(employeeRepository)
+		this.locationExistenceChecker = new LocationExistenceChecker(locationRepository)
+		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
+		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
+			vicepresidenciaEjecutivaRepository
+		)
+		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
+		this.departamentoExistenceChecker = new DepartamentoExistenceChecker(departamentoRepository)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
+		this.settingsFinder = settingsFinder
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -62,14 +83,27 @@ export class EmployeeCreator {
 	 * @returns {Promise<void>} A promise that resolves when the employee is successfully created.
 	 */
 	async run({ params }: { params: EmployeeParams }): Promise<void> {
-		await this.ensureEmployeeCanBeCreated.execute(params)
 		const allowedDomains = await this.settingsFinder.findAsJson<string[]>({
 			key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
 			fallback: []
 		})
 
+		await Promise.all([
+			this.employeeUserNameUniquenessChecker.ensureUnique(params.userName),
+			this.employeeCodeUniquenessChecker.ensureUnique(params.employeeCode),
+			this.employeeEmailUniquenessChecker.ensureUnique(params.email),
+			this.employeeCedulaUniquenessChecker.ensureUnique(params.cedula),
+			this.locationExistenceChecker.ensureExist(params?.locationId),
+			this.directivaExistenceChecker.ensureExist(params?.directivaId),
+			this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(params?.vicepresidenciaEjecutivaId),
+			this.vicepresidenciaExistenceChecker.ensureExist(params?.vicepresidenciaId),
+			this.departamentoExistenceChecker.ensureExist(params?.departamentoId),
+			this.cargoExistenceChecker.ensureExist(params?.cargoId)
+		])
+
 		const employee = Employee.create(params, allowedDomains)
 
-		await this.employeeRepository.save(employee.toPrimitive())
+		await this.employeeRepository.save(employee.toPrimitives())
+		await this.eventBus.publish(employee.pullDomainEvents())
 	}
 }

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DirectivaModel } from './DirectivaSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -7,12 +8,12 @@ import { type DirectivaCacheInvalidator } from '../../domain/repository/Directiv
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DepartmentName } from '../../../IDepartment/DepartmentName'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DirectivaDto, type DirectivaPrimitives } from '../../domain/entity/Directiva.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type DirectivaRepository } from '../../domain/repository/DirectivaRepository'
 import { type DirectivaId } from '../../domain/valueObject/DirectivaId'
+import { type DirectivaName } from '../../domain/valueObject/DirectivaName'
 
 /**
  * @description Concrete implementation of the DirectivaRepository using Sequelize.
@@ -68,7 +69,31 @@ export class SequelizeDirectivaRepository
 		})
 	}
 
-	async findByName(name: Primitives<DepartmentName>): Promise<Nullable<DirectivaDto>> {
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple directivas by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of cargo IDs to find.
+	 * @returns {Promise<DirectivaDto[]>} A promise resolving to an array of found cargo DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<DirectivaDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<DirectivaDto[]>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const directivas = await DirectivaModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return directivas.map(cargo => cargo.get({ plain: true })) as DirectivaDto[]
+			}
+		})
+	}
+
+	async findByName(name: Primitives<DirectivaName>): Promise<Nullable<DirectivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<DirectivaDto>>({
@@ -106,9 +131,9 @@ export class SequelizeDirectivaRepository
 	}
 
 	/**
-	 * @method invalidateLocationCache
+	 * @method invalidateDirectivaCache
 	 * @description Invalidates all model series-related cache entries.
-	 * Implements LocationCacheInvalidator interface.
+	 * Implements DirectivaCacheInvalidator interface.
 	 */
 	async invalidate(id?: Primitives<DirectivaId>): Promise<void> {
 		await this.cacheInvalidator.invalidate(id)

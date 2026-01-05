@@ -2,7 +2,7 @@ import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { UserStatusEnum } from '../../../domain/valueObject/UserStatus'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type UserId } from '../../../domain/valueObject/UserId' // Corrected path for UserId
-//import { type RoleId } from '../../../../Role/domain/RoleId'
+//import { type RoleId } from '../../../../Role/domain/valueObject/RoleId'
 import { type UserPassword } from '../../../domain/valueObject/UserPassword'
 import { type UserPrimitives } from '../../../domain/entity/User.dto' // Use User.dto for UserPrimitives
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'

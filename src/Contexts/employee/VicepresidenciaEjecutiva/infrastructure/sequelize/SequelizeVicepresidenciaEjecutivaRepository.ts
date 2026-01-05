@@ -1,33 +1,39 @@
+import { Op } from 'sequelize'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { VicepresidenciaEjecutivaModel } from './VicepresidenciaEjecutivaSchema'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { DepartmentRepository } from '../../../IDepartment/DepartmentRepository'
-import { DepartmentId } from '../../../IDepartment/DepartmentId'
-import { DepartmentName } from '../../../IDepartment/DepartmentName'
-import { VicepresidenciaEjecutivaModel } from './VicepresidenciaEjecutivaSchema'
+
 import {
 	type VicepresidenciaEjecutivaDto,
 	type VicepresidenciaEjecutivaPrimitives
-} from '../../domain/VicepresidenciaEjecutiva.dto'
-import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+} from '../../domain/entity/VicepresidenciaEjecutiva.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { type VicepresidenciaEjecutivaRepository } from '../../domain/repository/VicepresidenciaEjecutivaRepository'
+import { type VicepresidenciaEjecutivaCacheInvalidator } from '../../domain/repository/VicepresidenciaEjecutivaCacheInvalidator'
+import { type VicepresidenciaEjecutivaId } from '../../domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaEjecutivaName } from '../../domain/valueObject/VicepresidenciaEjecutivaName'
 
 /**
  * @description Concrete implementation of the VicepresidenciaEjecutivaRepository using Sequelize.
  */
 export class SequelizeVicepresidenciaEjecutivaRepository
 	extends SequelizeCriteriaConverter
-	implements DepartmentRepository<VicepresidenciaEjecutivaDto>
+	implements VicepresidenciaEjecutivaRepository, VicepresidenciaEjecutivaCacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'vicepresidenciaEjecutiva'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<VicepresidenciaEjecutivaDto>> {
@@ -38,7 +44,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		return this.cache.getCachedData<ResponseDB<VicepresidenciaEjecutivaDto>>({
 			cacheKey,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await VicepresidenciaEjecutivaModel.findAndCountAll(options)
 
@@ -50,7 +56,33 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		})
 	}
 
-	async findById(id: Primitives<DepartmentId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple vicepresidenciasEjecutivas by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of cargo IDs to find.
+	 * @returns {Promise<VicepresidenciaEjecutivaDto[]>} A promise resolving to an array of found cargo DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<VicepresidenciaEjecutivaDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<VicepresidenciaEjecutivaDto[]>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const vicepresidenciasEjecutivas = await VicepresidenciaEjecutivaModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return vicepresidenciasEjecutivas.map(cargo =>
+					cargo.get({ plain: true })
+				) as VicepresidenciaEjecutivaDto[]
+			}
+		})
+	}
+
+	async findById(id: Primitives<VicepresidenciaEjecutivaId>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 
 		return this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({
@@ -74,7 +106,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		})
 	}
 
-	async findByName(name: Primitives<DepartmentName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
+	async findByName(name: Primitives<VicepresidenciaEjecutivaName>): Promise<Nullable<VicepresidenciaEjecutivaDto>> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 
 		return this.cache.getCachedData<Nullable<VicepresidenciaEjecutivaDto>>({
@@ -106,7 +138,6 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 			}
 
 			await transaction.commit()
-			await this.invalidateCache(restPayload)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(
@@ -115,24 +146,16 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 		}
 	}
 
-	async remove(id: Primitives<DepartmentId>): Promise<void> {
-		const vicepresidenciaEjecutivaToRemove = await VicepresidenciaEjecutivaModel.findByPk(id)
-
+	async remove(id: Primitives<VicepresidenciaEjecutivaId>): Promise<void> {
 		await VicepresidenciaEjecutivaModel.destroy({ where: { id } })
-
-		if (vicepresidenciaEjecutivaToRemove) {
-			await this.invalidateCache(vicepresidenciaEjecutivaToRemove.get({ plain: true }))
-		}
 	}
 
-	private async invalidateCache(
-		vicepresidenciaEjecutivaData: Partial<VicepresidenciaEjecutivaPrimitives>
-	): Promise<void> {
-		const { id, name } = vicepresidenciaEjecutivaData
-		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
-		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (name) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-
-		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
+	/**
+	 * @method invalidateVicepresidenciaEjecutivaCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements VicepresidenciaEjecutivaCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<VicepresidenciaEjecutivaId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

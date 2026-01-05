@@ -1,9 +1,9 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type RoleDto } from '../../domain/Role.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type RoleId } from '../../domain/RoleId'
-import { type RoleName } from '../../domain/RoleName'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type RoleDto } from '../../domain/entity/Role.dto'
+import { type RoleId } from '../../domain/valueObject/RoleId'
+import { type RoleName } from '../../domain/valueObject/RoleName'
 
 /**
  * @description Sequelize model for the `Role` entity.

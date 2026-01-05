@@ -2,7 +2,6 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { codigosAreaVenezuela } from './codigosAreaVenezuela'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type Employee } from '../entity/Employee'
 
 /**
  * @description Represents an employee's phone extension.
@@ -43,16 +42,6 @@ export class Extension extends StringValueObject {
 
 		if (errors.length > 0) {
 			throw new InvalidArgumentError(`Extensión '${value}' inválida: ${errors.join(', ')}`)
-		}
-	}
-
-	/**
-	 * @description Handles the logic for updating the extension field of an employee.
-	 * @param {{ extension?: Primitives<Extension>[]; entity: Employee }} params The parameters for updating.
-	 */
-	static updateExtension({ extension, entity }: { extension?: Primitives<Extension>[]; entity: Employee }): void {
-		if (extension !== undefined) {
-			entity.updateExtension(extension)
 		}
 	}
 }

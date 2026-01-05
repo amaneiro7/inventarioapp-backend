@@ -1,7 +1,5 @@
 import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeType, EmployeeTypesEnum } from './EmployeeType'
 
 /**
  * @enum Nationalities
@@ -12,36 +10,24 @@ export enum Nationalities {
 	E = 'E'
 }
 
-interface EmployeeNationalityProps {
-	value: Nationalities | null
-	type: Primitives<EmployeeType>
-}
-
 /**
  * @description Represents the nationality of an employee.
  */
 export class EmployeeNationality extends AcceptedNullValueObject<Nationalities> {
-	constructor(
-		value: Nationalities | null,
-		private readonly type: Primitives<EmployeeType>
-	) {
+	constructor(value: Nationalities | null) {
 		super(value)
-		this.ensureIsValidNationality({ value, type: this.type })
+		this.ensureIsValidNationality()
 	}
 
-	private ensureIsValidNationality({ value, type }: EmployeeNationalityProps): void {
-		if (type !== EmployeeTypesEnum.GENERIC && value === null) {
-			throw new InvalidArgumentError('La nacionalidad del empleado es requerida para este tipo de empleado.')
-		}
-
-		if (value !== null && !Object.values(Nationalities).includes(value)) {
+	private ensureIsValidNationality(): void {
+		if (this.value !== null && !Object.values(Nationalities).includes(this.value)) {
 			throw new InvalidArgumentError(
-				`Nacionalidad inválida: '${value}'. Las opciones válidas son: ${Object.values(Nationalities).join(', ')}.`
+				`Nacionalidad inválida: '${this.value}'. Las opciones válidas son: ${Object.values(Nationalities).join(', ')}.`
 			) // Improved error message
 		}
 	}
 
-	protected throwErrorForInvalidValue(value: Nationalities): void {
-		throw new InvalidArgumentError(`Nacionalidad inválida (uso interno): ${value}`)
+	protected throwErrorForInvalidValue(): void {
+		throw new InvalidArgumentError(`Nacionalidad inválida (uso interno): ${this.value}`)
 	}
 }

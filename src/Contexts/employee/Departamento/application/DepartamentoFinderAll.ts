@@ -1,16 +1,16 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type DepartamentoDto } from '../domain/Departamento.dto'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { type DepartamentoDto } from '../domain/entity/Departamento.dto'
+import { type DepartamentoRepository } from '../domain/repository/DepartamentoRepository'
 
 /**
  * @description Use case for retrieving all Departamento entities.
  */
 export class DepartamentoFinderAll extends GetAllBaseService<DepartamentoDto> {
-	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	private readonly departamentoRepository: DepartamentoRepository
 
-	constructor({ departamentoRepository }: { departamentoRepository: DepartmentRepository<DepartamentoDto> }) {
+	constructor({ departamentoRepository }: { departamentoRepository: DepartamentoRepository }) {
 		super()
 		this.departamentoRepository = departamentoRepository
 	}

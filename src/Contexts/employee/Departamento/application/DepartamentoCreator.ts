@@ -1,32 +1,36 @@
-import { CreateDepartamentoUseCase } from '../domain/CreateDepartmentoUseCase'
-import { Departamento } from '../domain/Departamento'
+import { Departamento } from '../domain/entity/Departamento'
+import { DepartamentoNameUniquenessChecker } from '../domain/service/DepartamentoNameuniquenessChecker'
+import { VicepresidenciaExistenceChecker } from '../../Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
+import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
+import { type DepartamentoParams } from '../domain/entity/Departamento.dto'
+import { type DepartamentoRepository } from '../domain/repository/DepartamentoRepository'
+import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type VicepresidenciaDto } from '../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type DepartamentoDto, type DepartamentoParams } from '../domain/Departamento.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
-/**
- * @description Use case for creating a new Departamento entity.
- */
 export class DepartamentoCreator {
-	private readonly createDepartamentoUseCase: CreateDepartamentoUseCase
-	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
-	private readonly vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
-	private readonly cargoRepository: CargoRepository
+	private readonly departamentoRepository: DepartamentoRepository
+	private readonly departamentoNameUniquenessChecker: DepartamentoNameUniquenessChecker
+	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
+	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
-		departamentoRepository: DepartmentRepository<DepartamentoDto>
-		vicepresidenciaRepository: DepartmentRepository<VicepresidenciaDto>
+	constructor({
+		cargoRepository,
+		directivaRepository,
+		departamentoRepository,
+		eventBus
+	}: {
+		departamentoRepository: DepartamentoRepository
+		directivaRepository: VicepresidenciaRepository
 		cargoRepository: CargoRepository
+		eventBus: EventBus
 	}) {
-		this.cargoRepository = dependencies.cargoRepository
-		this.departamentoRepository = dependencies.departamentoRepository
-		this.vicepresidenciaRepository = dependencies.vicepresidenciaRepository
-		this.createDepartamentoUseCase = new CreateDepartamentoUseCase(
-			this.departamentoRepository,
-			this.vicepresidenciaRepository,
-			this.cargoRepository
-		)
+		this.departamentoRepository = departamentoRepository
+		this.departamentoNameUniquenessChecker = new DepartamentoNameUniquenessChecker(departamentoRepository)
+		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(directivaRepository)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -34,21 +38,23 @@ export class DepartamentoCreator {
 	 * @param {{ params: DepartamentoParams }} data The parameters for creating the Departamento.
 	 * @returns {Promise<void>} A promise that resolves when the Departamento is successfully created.
 	 */
-	async run({ params: { name, vicepresidenciaId, cargos } }: { params: DepartamentoParams }): Promise<void> {
+	async run({ params }: { params: DepartamentoParams }): Promise<void> {
+		const { name, vicepresidenciaId, cargos } = params
 		const uniqueCargos = Array.from(new Set(cargos))
 
-		await this.createDepartamentoUseCase.execute({
+		await Promise.all([
+			this.departamentoNameUniquenessChecker.ensureUnique(name),
+			this.vicepresidenciaExistenceChecker.ensureExist(vicepresidenciaId),
+			this.cargoExistenceChecker.ensureExist(uniqueCargos)
+		])
+
+		const vicepresidenciaEjecutiva = Departamento.create({
 			name,
 			vicepresidenciaId,
 			cargos: uniqueCargos
 		})
 
-		const departamento = Departamento.create({
-			name,
-			vicepresidenciaId,
-			cargos: uniqueCargos
-		})
-
-		await this.departamentoRepository.save(departamento.toPrimitive())
+		await this.departamentoRepository.save(vicepresidenciaEjecutiva.toPrimitives())
+		await this.eventBus.publish(vicepresidenciaEjecutiva.pullDomainEvents())
 	}
 }

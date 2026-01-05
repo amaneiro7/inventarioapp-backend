@@ -54,30 +54,30 @@ export enum UserDependencies {
 }
 export const register = (container: AwilixContainer) => {
 	container.register({
-		userRepository: asClass(SequelizeUserRepository).singleton(),
+		[UserDependencies.Repository]: asClass(SequelizeUserRepository).singleton(),
 
-		userDesactivateAccount: asClass(UserDesactivateAccount),
-		userUpdater: asClass(UserUpdater),
-		userFinderAll: asClass(UserFinderAll),
-		userFinder: asClass(UserFinder),
-		userFinderByEmail: asClass(UserFinderByEmail),
-		createUserFromEmployee: asClass(CreateUserFromEmployee),
-		userResetPassword: asClass(UserResetPassword),
-		userChangePassword: asClass(UserChangePassword),
-		userDisabledAccount: asClass(UserDisabledAccount),
-		userReactivateAccount: asClass(UserReactivateAccount),
-		userUnlockAccount: asClass(UserUnlockAccount),
-		userForceChangePassword: asClass(UserForceChangePassword),
+		[UserDependencies.DesactivateUser]: asClass(UserDesactivateAccount).singleton(),
+		[UserDependencies.Updater]: asClass(UserUpdater),
+		[UserDependencies.FinderAll]: asClass(UserFinderAll),
+		[UserDependencies.Finder]: asClass(UserFinder),
+		[UserDependencies.FinderByEmail]: asClass(UserFinderByEmail),
+		[UserDependencies.Register]: asClass(CreateUserFromEmployee),
+		[UserDependencies.ResetPassword]: asClass(UserResetPassword),
+		[UserDependencies.ChangePassword]: asClass(UserChangePassword),
+		[UserDependencies.Disabled]: asClass(UserDisabledAccount),
+		[UserDependencies.ReactivateAccount]: asClass(UserReactivateAccount),
+		[UserDependencies.UnlockAccount]: asClass(UserUnlockAccount),
+		[UserDependencies.ForceChangePassword]: asClass(UserForceChangePassword),
 
-		userCreateController: asClass(UserCreateController),
-		userPatchController: asClass(UserPatchController),
-		userGetController: asClass(UserGetController),
-		userGetAllController: asClass(UserGetAllController),
-		userDisabledController: asClass(UserDisabledController),
-		userReactivateAccountController: asClass(UserReactivateAccountController),
-		userChangePasswordController: asClass(UserChangePasswordController),
-		userResetPasswordController: asClass(UserResetPasswordController),
-		userForceChangePasswordController: asClass(UserForceChangePasswordController),
-		userUnlockAccountController: asClass(UserUnlockAccountController)
+		[UserDependencies.CreateController]: asClass(UserCreateController),
+		[UserDependencies.PatchController]: asClass(UserPatchController),
+		[UserDependencies.GetController]: asClass(UserGetController),
+		[UserDependencies.GetAllController]: asClass(UserGetAllController),
+		[UserDependencies.DisabledController]: asClass(UserDisabledController),
+		[UserDependencies.ReactivateAccountController]: asClass(UserReactivateAccountController),
+		[UserDependencies.ChangePasswordController]: asClass(UserChangePasswordController),
+		[UserDependencies.ResetPasswordController]: asClass(UserResetPasswordController),
+		[UserDependencies.ForceChangePasswordController]: asClass(UserForceChangePasswordController),
+		[UserDependencies.UnlockAccountController]: asClass(UserUnlockAccountController)
 	})
 }

@@ -8,11 +8,16 @@ export class LocationExistenceChecker {
 
 	/**
 	 * Ensures that a location exists in the repository.
+	 * Ignores null or undefined values.
 	 * @param {Primitives<LocationId>} locationId - The location ID to check for existence.
 	 * @returns {Promise<void>} A promise that resolves if the location exists.
 	 * @throws {LocationDoesNotExistError} If the location does not exist.
 	 */
-	async ensureExist(locationId: Primitives<LocationId>): Promise<void> {
+	async ensureExist(locationId: Primitives<LocationId> | null | undefined): Promise<void> {
+		if (locationId === null || locationId === undefined) {
+			return
+		}
+
 		const isLocationExist = await this.repository.findById(locationId)
 		if (!isLocationExist) {
 			throw new LocationDoesNotExistError(locationId)

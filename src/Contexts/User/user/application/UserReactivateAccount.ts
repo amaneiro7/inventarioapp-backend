@@ -10,6 +10,7 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
+import { EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for reactivating a suspended user account.
@@ -18,20 +19,24 @@ import { type SettingsFinder } from '../../../AppSettings/application/SettingsFi
  */
 export class UserReactivateAccount {
 	private readonly userRepository: UserRepository
-	private readonly employeeRepository: EmployeeRepository // Add EmployeeRepository
+	private readonly employeeRepository: EmployeeRepository
 	private readonly settingsFinder: SettingsFinder
+	private readonly eventBus: EventBus
 	constructor({
 		userRepository,
 		employeeRepository,
+		eventBus,
 		settingsFinder
 	}: {
 		userRepository: UserRepository
 		employeeRepository: EmployeeRepository
 		settingsFinder: SettingsFinder
+		eventBus: EventBus
 	}) {
 		this.userRepository = userRepository
 		this.employeeRepository = employeeRepository
 		this.settingsFinder = settingsFinder
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -80,8 +85,13 @@ export class UserReactivateAccount {
 		userEntity.reactivateAccount()
 		userEntity.resetPasswordFromHash(settings.value as string)
 		await Promise.all([
-			this.employeeRepository.save(employeeEntity.toPrimitive()),
+			this.employeeRepository.save(employeeEntity.toPrimitives()),
 			this.userRepository.save(userEntity.toPrimitives())
+		])
+
+		await Promise.all([
+			this.eventBus.publish(employeeEntity.pullDomainEvents()),
+			this.eventBus.publish(userEntity.pullDomainEvents())
 		])
 	}
 }

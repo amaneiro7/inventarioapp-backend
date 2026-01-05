@@ -1,3 +1,4 @@
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { EmployeeId } from '../valueObject/EmployeeId'
 import { EmployeeUserName } from '../valueObject/EmployeeUsername'
 import { EmployeeType, EmployeeTypesEnum } from '../valueObject/EmployeeType'
@@ -8,22 +9,28 @@ import { EmployeeIsStillWorking } from '../valueObject/EmployeeIsStillWorking'
 import { EmployeeCode } from '../valueObject/EmployeCode'
 import { EmployeeNationality } from '../valueObject/EmployeeNationality'
 import { EmployeeCedula } from '../valueObject/EmployeeCedula'
-import { EmployeeLocationId } from '../valueObject/EmployeeLocation'
-import { EmployeeDirectiva } from '../valueObject/EmployeeDirectiva'
-import { EmployeeVicepresidenciaEjecutiva } from '../valueObject/EmployeeVicepresidenciaEjecutiva'
-import { EmployeeVicepresidencia } from '../valueObject/EmployeeVicepresidencia'
-import { EmployeeDepartamento } from '../valueObject/EmployeeDepartamento'
-import { EmployeeCargo } from '../valueObject/EmployeeCargo'
+import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
+import { DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import { EmployeeCreatedDomainEvent } from '../event/EmployeeCreatedDomainEvent'
+import { EmployeeTerminatedDomainEvent } from '../event/EmployeeTerminatedDomainEvent'
+import { EmployeeReactivatedDomainEvent } from '../event/EmployeeReactivatedDomainEvent'
+import { EmployeeTypeChangedDomainEvent } from '../event/EmployeeTypeChangedDomainEvent'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
+import { EmployeeUpdatedDomainEvent } from '../event/EmployeeUpdatedDomainEvent'
+import { EmployeeRemovedDomainEvent } from '../event/EmployeeRemovedDomainEvent'
 
 /**
  * @description Represents the Employee domain entity.
  */
-export class Employee {
+export class Employee extends AggregateRoot {
 	constructor(
 		private readonly id: EmployeeId,
 		private userName: EmployeeUserName,
@@ -35,49 +42,90 @@ export class Employee {
 		private readonly employeeCode: EmployeeCode,
 		private readonly nationality: EmployeeNationality,
 		private readonly cedula: EmployeeCedula,
-		private locationId: EmployeeLocationId,
-		private directivaId: EmployeeDirectiva,
-		private vicepresidenciaEjecutivaId: EmployeeVicepresidenciaEjecutiva,
-		private vicepresidenciaId: EmployeeVicepresidencia,
-		private departamentoId: EmployeeDepartamento,
-		private cargoId: EmployeeCargo,
+		private locationId: LocationId | null,
+		private directivaId: DirectivaId | null,
+		private vicepresidenciaEjecutivaId: VicepresidenciaEjecutivaId | null,
+		private vicepresidenciaId: VicepresidenciaId | null,
+		private departamentoId: DepartamentoId | null,
+		private cargoId: CargoId | null,
 		private extension: Extension[],
 		private phone: PhoneNumber[]
-	) {}
+	) {
+		super()
+	}
 
+	/**
+	 * @description Factory method to create a new Employee entity.
+	 * Enforces domain business rules for employee creation.
+	 *
+	 * **Business Rules:**
+	 * 1. **Service Employees**: Cannot be created directly. Must be created as 'REGULAR' first.
+	 * 2. **Initial Status**: Must be 'Active' (isStillWorking = true).
+	 * 3. **Required Fields by Type**:
+	 *    - `GENERIC`: Must NOT have `cedula`. Can omit personal details (name, lastName, nationality).
+	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE`: Require name, lastName, nationality, and cedula.
+	 *    - `REGULAR`: Specifically requires `employeeCode`.
+	 * 4. **Hierarchy Validation**:
+	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE` must have at least a `Directiva`.
+	 *    - Hierarchy consistency is enforced (e.g., cannot have Department without Vicepresidencia).
+	 * 5. **Cargo Validation**:
+	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE` must have a `Cargo`.
+	 *
+	 * @param {EmployeeParams} params - The parameters to create the employee.
+	 * @param {string[]} [allowedDomains] - Optional list of allowed email domains for validation.
+	 * @returns {Employee} A new instance of the Employee aggregate.
+	 * @throws {InvalidArgumentError} If any business rule is violated.
+	 */
 	static create(params: EmployeeParams, allowedDomains?: string[]): Employee {
-		if (params.type === EmployeeTypesEnum.SERVICE) {
-			throw new InvalidArgumentError(
-				'Un empleado de tipo "servicio" no se puede crear directamente. Primero debe crearse como tipo "regular" y luego marcarse como servicio.'
-			)
-		}
+		this.ensureCreationRules(params)
 
-		if (params.isStillWorking === false) {
-			throw new InvalidArgumentError(
-				'La creación de un empleado requiere que el estado laboral inicial sea "Activo". No se puede crear un empleado desvinculado.'
-			)
-		}
+		this.ensureMandatoryHierarchyByType(params.type, params?.directivaId)
+		this.ensureMandatoryCargoByType(params.type, params?.cargoId)
+		this.ensureHierarchyConsistency({
+			departamentoId: params.departamentoId,
+			vicepresidenciaId: params.vicepresidenciaId,
+			vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
+			directivaId: params.directivaId
+		})
+
 		const id = EmployeeId.random()
-		return new Employee(
+		const employee = new Employee(
 			id,
 			new EmployeeUserName(params.userName),
 			new EmployeeType(params.type),
-			new EmployeeName(params.name, params.type),
-			new EmployeeLastName(params.lastName, params.type),
+			new EmployeeName(params.name),
+			new EmployeeLastName(params.lastName),
 			new EmployeeEmail(params.email, allowedDomains),
 			new EmployeeIsStillWorking(params.isStillWorking),
-			new EmployeeCode(params.employeeCode, params.type),
-			new EmployeeNationality(params.nationality, params.type),
-			new EmployeeCedula(params.cedula, params.type),
-			new EmployeeLocationId(params.locationId),
-			new EmployeeDirectiva(params.directivaId, params.type),
-			new EmployeeVicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId, params.directivaId),
-			new EmployeeVicepresidencia(params.vicepresidenciaId, params.vicepresidenciaEjecutivaId),
-			new EmployeeDepartamento(params.departamentoId, params.vicepresidenciaId),
-			new EmployeeCargo(params.cargoId, params.type),
+			new EmployeeCode(params.employeeCode),
+			new EmployeeNationality(params.nationality),
+			new EmployeeCedula(params.cedula),
+			params.locationId ? new LocationId(params.locationId) : null,
+			params.directivaId ? new DirectivaId(params.directivaId) : null,
+			params.vicepresidenciaEjecutivaId
+				? new VicepresidenciaEjecutivaId(params.vicepresidenciaEjecutivaId)
+				: null,
+			params.vicepresidenciaId ? new VicepresidenciaId(params.vicepresidenciaId) : null,
+			params.departamentoId ? new DepartamentoId(params.departamentoId) : null,
+			params.cargoId ? new CargoId(params.cargoId) : null,
 			Extension.fromValues(params.extension),
 			PhoneNumber.fromValues(params.phone)
 		)
+
+		employee.record(
+			new EmployeeCreatedDomainEvent({
+				aggregateId: employee.idValue,
+				name: employee.nameValue,
+				lastName: employee.lastNameValue,
+				userName: employee.userNameValue,
+				email: employee.emailValue,
+				type: employee.typeValue,
+				cedula: employee.cedulaValue,
+				employeeCode: employee.employeeCodeValue
+			})
+		)
+
+		return employee
 	}
 
 	static fromPrimitives(primitives: EmployeeDto): Employee {
@@ -85,25 +133,27 @@ export class Employee {
 			new EmployeeId(primitives.id),
 			new EmployeeUserName(primitives.userName),
 			new EmployeeType(primitives.type),
-			new EmployeeName(primitives.name, primitives.type),
-			new EmployeeLastName(primitives.lastName, primitives.type),
+			new EmployeeName(primitives.name),
+			new EmployeeLastName(primitives.lastName),
 			new EmployeeEmail(primitives.email),
 			new EmployeeIsStillWorking(primitives.isStillWorking),
-			new EmployeeCode(primitives.employeeCode, primitives.type),
-			new EmployeeNationality(primitives.nationality, primitives.type),
-			new EmployeeCedula(primitives.cedula, primitives.type),
-			new EmployeeLocationId(primitives.locationId),
-			new EmployeeDirectiva(primitives.directivaId, primitives.type),
-			new EmployeeVicepresidenciaEjecutiva(primitives.vicepresidenciaEjecutivaId, primitives.directivaId),
-			new EmployeeVicepresidencia(primitives.vicepresidenciaId, primitives.vicepresidenciaEjecutivaId),
-			new EmployeeDepartamento(primitives.departamentoId, primitives.vicepresidenciaId),
-			new EmployeeCargo(primitives.cargoId, primitives.type),
+			new EmployeeCode(primitives.employeeCode),
+			new EmployeeNationality(primitives.nationality),
+			new EmployeeCedula(primitives.cedula),
+			primitives.locationId ? new LocationId(primitives.locationId) : null,
+			primitives.directivaId ? new DirectivaId(primitives.directivaId) : null,
+			primitives.vicepresidenciaEjecutivaId
+				? new VicepresidenciaEjecutivaId(primitives.vicepresidenciaEjecutivaId)
+				: null,
+			primitives.vicepresidenciaId ? new VicepresidenciaId(primitives.vicepresidenciaId) : null,
+			primitives.departamentoId ? new DepartamentoId(primitives.departamentoId) : null,
+			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
 			Extension.fromValues(primitives.extension),
 			PhoneNumber.fromValues(primitives.phone)
 		)
 	}
 
-	toPrimitive(): EmployeePrimitives {
+	toPrimitives(): EmployeePrimitives {
 		return {
 			id: this.idValue,
 			userName: this.userNameValue,
@@ -166,28 +216,28 @@ export class Employee {
 		return this.cedula?.value
 	}
 
-	get locationValue(): Primitives<EmployeeLocationId> {
-		return this.locationId?.value
+	get locationValue(): Primitives<LocationId> | null {
+		return this.locationId?.value ?? null
 	}
 
-	get directivaValue(): Primitives<EmployeeDirectiva> {
-		return this.directivaId?.value
+	get directivaValue(): Primitives<DirectivaId> | null {
+		return this.directivaId?.value ?? null
 	}
 
-	get vicepresidenciaEjecutivaValue(): Primitives<EmployeeVicepresidenciaEjecutiva> {
-		return this.vicepresidenciaEjecutivaId?.value
+	get vicepresidenciaEjecutivaValue(): Primitives<VicepresidenciaEjecutivaId> | null {
+		return this.vicepresidenciaEjecutivaId?.value ?? null
 	}
 
-	get vicepresidenciaValue(): Primitives<EmployeeVicepresidencia> {
-		return this.vicepresidenciaId?.value
+	get vicepresidenciaValue(): Primitives<VicepresidenciaId> | null {
+		return this.vicepresidenciaId?.value ?? null
 	}
 
-	get departamentoValue(): Primitives<EmployeeDepartamento> {
-		return this.departamentoId.value
+	get departamentoValue(): Primitives<DepartamentoId> | null {
+		return this.departamentoId?.value ?? null
 	}
 
-	get cargoValue(): Primitives<EmployeeCargo> {
-		return this.cargoId.value
+	get cargoValue(): Primitives<CargoId> | null {
+		return this.cargoId?.value ?? null
 	}
 
 	get extensionValue(): Primitives<Extension>[] {
@@ -198,26 +248,164 @@ export class Employee {
 		return this.phone.map(phone => phone.value)
 	}
 
-	updateName(newName: Primitives<EmployeeName>, type: Primitives<EmployeeType>): void {
-		this.name = new EmployeeName(newName, type)
+	private static ensureCreationRules(params: EmployeeParams): void {
+		if (params.type === EmployeeTypesEnum.SERVICE) {
+			throw new InvalidArgumentError(
+				'Un empleado de tipo "servicio" no se puede crear directamente. Primero debe crearse como tipo "regular" y luego marcarse como servicio.'
+			)
+		}
+
+		if (params.isStillWorking === false) {
+			throw new InvalidArgumentError(
+				'La creación de un empleado requiere que el estado laboral inicial sea "Activo". No se puede crear un empleado desvinculado.'
+			)
+		}
+		// Regla de negocio para Nombre y Apellido
+		if (params.type !== EmployeeTypesEnum.GENERIC && !params.name) {
+			throw new InvalidArgumentError('El nombre es requerido para este tipo de empleado.')
+		}
+		if (params.type !== EmployeeTypesEnum.GENERIC && !params.lastName) {
+			throw new InvalidArgumentError('El apellido es requerido para este tipo de empleado.')
+		}
+		// El codigo de empleado es requerido solo para los empleados con contrato fijo
+		if (params.type === EmployeeTypesEnum.REGULAR && !params.employeeCode) {
+			throw new InvalidArgumentError('El código de empleado es requerido para este tipo de empleado.')
+		}
+
+		if (params.type !== EmployeeTypesEnum.REGULAR && params.employeeCode) {
+			throw new InvalidArgumentError('El código de empleado no es requerido para este tipo de empleado.')
+		}
+		if (params.type !== EmployeeTypesEnum.GENERIC && !params.nationality) {
+			throw new InvalidArgumentError('La nacionalidad es requerida para este tipo de empleado.')
+		}
+		if (params.type === EmployeeTypesEnum.GENERIC && params.nationality) {
+			throw new InvalidArgumentError('La nacionalidad no es requerida para este tipo de empleado.')
+		}
+
+		if (params.type === EmployeeTypesEnum.GENERIC && params.cedula) {
+			throw new InvalidArgumentError('La cédula del empleado no es requerida para este tipo de empleado.')
+		}
+		if (params.type !== EmployeeTypesEnum.GENERIC && !params.cedula) {
+			throw new InvalidArgumentError('La cédula del empleado es requerida para este tipo de empleado.')
+		}
 	}
 
-	updateLastName(newLastName: Primitives<EmployeeLastName>, type: Primitives<EmployeeType>): void {
-		this.lastName = new EmployeeLastName(newLastName, type)
+	private static ensureMandatoryHierarchyByType(
+		type: EmployeeTypesEnum,
+		directivaId: Primitives<DirectivaId> | null
+	): void {
+		const typesRequiringHierarchy = [
+			EmployeeTypesEnum.REGULAR,
+			EmployeeTypesEnum.CONTRACTOR,
+			EmployeeTypesEnum.APPRENTICE
+		]
+
+		if (typesRequiringHierarchy.includes(type) && !directivaId) {
+			throw new InvalidArgumentError(`El campo Directiva es obligatorio para empleados de tipo ${type}.`)
+		}
+	}
+
+	private static ensureMandatoryCargoByType(type: EmployeeTypesEnum, cargoId: Primitives<CargoId> | null): void {
+		const typesRequiringCargo = [
+			EmployeeTypesEnum.REGULAR,
+			EmployeeTypesEnum.CONTRACTOR,
+			EmployeeTypesEnum.APPRENTICE
+		]
+
+		if (typesRequiringCargo.includes(type) && !cargoId) {
+			throw new InvalidArgumentError(`El cargo es obligatorio para empleados de tipo ${type}.`)
+		}
+	}
+
+	private static ensureHierarchyConsistency(params: {
+		directivaId: Primitives<DirectivaId> | null
+		vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+		vicepresidenciaId: Primitives<VicepresidenciaId> | null
+		departamentoId: Primitives<DepartamentoId> | null
+	}): void {
+		// Validar de abajo hacia arriba es más fácil
+
+		// 1. Si hay Departamento, debe haber Vicepresidencia
+		if (params.departamentoId && !params.vicepresidenciaId) {
+			throw new InvalidArgumentError('No se puede asignar un Departamento sin una Vicepresidencia asociada.')
+		}
+
+		// 2. Si hay Vicepresidencia, debe haber Vicepresidencia Ejecutiva
+		if (params.vicepresidenciaId && !params.vicepresidenciaEjecutivaId) {
+			throw new InvalidArgumentError(
+				'No se puede asignar una Vicepresidencia sin una Vicepresidencia Ejecutiva asociada.'
+			)
+		}
+
+		// 3. Si hay Vicepresidencia Ejecutiva, debe haber Directiva
+		if (params.vicepresidenciaEjecutivaId && !params.directivaId) {
+			throw new InvalidArgumentError(
+				'No se puede asignar una Vicepresidencia Ejecutiva sin una Directiva asociada.'
+			)
+		}
+	}
+
+	ensureEmployeeCanBeUpdated(): void {
+		if (this.typeValue === EmployeeTypesEnum.GENERIC) {
+			throw new Error('Los usuarios genéricos no pueden ser actualizados.')
+		}
+		if (this.isStillWorkingValue === false) {
+			throw new Error('Los usuarios desvinculados no pueden ser actualizados.')
+		}
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new EmployeeUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
+	}
+
+	updateUserName(newUserName: Primitives<EmployeeUserName>): void {
+		this.userName = new EmployeeUserName(newUserName)
+	}
+
+	updateName(newName: Primitives<EmployeeName>): void {
+		if (this.typeValue !== EmployeeTypesEnum.GENERIC && !newName) {
+			throw new InvalidArgumentError('El nombre es requerido para este tipo de empleado.')
+		}
+		this.name = new EmployeeName(newName)
+	}
+
+	updateLastName(newLastName: Primitives<EmployeeLastName>): void {
+		if (this.typeValue !== EmployeeTypesEnum.GENERIC && !newLastName) {
+			throw new InvalidArgumentError('El apellido es requerido para este tipo de empleado.')
+		}
+		this.lastName = new EmployeeLastName(newLastName)
 	}
 
 	updateType(newType: EmployeeTypesEnum): void {
-		if (this.typeValue === EmployeeTypesEnum.GENERIC && newType !== EmployeeTypesEnum.GENERIC) {
+		if (this.typeValue === newType) {
+			return
+		}
+
+		if (this.typeValue === EmployeeTypesEnum.GENERIC || newType === EmployeeTypesEnum.GENERIC) {
 			throw new InvalidArgumentError(
-				`No se permite cambiar el tipo de empleado 'GENERIC' a '${newType}'. La modificación del tipo GENERIC está restringida.`
+				'No se permite modificar el tipo de un empleado GENERIC ni convertir un empleado a GENERIC.'
 			)
 		}
-		if (this.typeValue !== EmployeeTypesEnum.GENERIC && newType === EmployeeTypesEnum.GENERIC) {
+		if (this.typeValue === EmployeeTypesEnum.SERVICE || newType === EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
-				`No se permite cambiar el tipo de empleado no GENERIC a 'GENERIC'. El cambio a GENERIC está restringido.`
+				'Para cambiar el tipo a/de SERVICE, utilice los métodos específicos markAsServiceUser() o unmarkAsServiceUser().'
 			)
 		}
+
+		const oldType = this.typeValue
 		this.type = new EmployeeType(newType)
+		this.record(
+			new EmployeeTypeChangedDomainEvent({
+				aggregateId: this.idValue,
+				oldType,
+				newType
+			})
+		)
 	}
 
 	// Nuevo método para vincular a un usuario de servicio existente
@@ -225,29 +413,38 @@ export class Employee {
 		// Regla de Negocio 1: El empleado ya debe ser un usuario regular o genérico
 		if (this.typeValue === EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
-				`El empleado con ID ${this.idValue} ya está marcado como usuario de servicio.`
+				`El empleado con userName ${this.userNameValue} ya está marcado como usuario de servicio.`
 			)
 		}
 
 		// Regla de Negocio 2: Solo se puede marcar si está activamente trabajando (isStillWorking=true)
 		if (this.isStillWorkingValue === false) {
 			throw new InvalidArgumentError(
-				`No se puede marcar como usuario de servicio a un empleado desvinculado (ID: ${this.idValue}). Debe estar activo.`
+				`No se puede marcar como usuario de servicio a un empleado desvinculado (userName: ${this.userNameValue}). Debe estar activo.`
 			)
 		}
 
 		// Cambio de estado de la entidad
+		const oldType = this.typeValue
 		this.type = new EmployeeType(EmployeeTypesEnum.SERVICE)
+		this.record(
+			new EmployeeTypeChangedDomainEvent({
+				aggregateId: this.idValue,
+				oldType,
+				newType: EmployeeTypesEnum.SERVICE
+			})
+		)
 	}
 
 	unmarkAsServiceUser(): void {
 		// Regla de Negocio 1: Solo puedes revertir el tipo si actualmente es SERVICE.
+		console.log(this.typeValue)
 		if (this.typeValue !== EmployeeTypesEnum.SERVICE) {
 			throw new InvalidArgumentError(
 				`El empleado con ID ${this.idValue} no es un usuario de servicio, es de tipo '${this.typeValue}'. Solo se puede revertir el estatus SERVICE.`
 			)
 		}
-
+		const oldType = this.typeValue
 		// Regla de Negocio 2: Determinar el tipo a revertir.
 		// Asumimos que si no es SERVICE, el tipo se revierte a 'REGULAR' por defecto,
 		// a menos que alguna regla de RRHH lo dicte (p.ej., basado en cargo/código).
@@ -255,9 +452,13 @@ export class Employee {
 		const defaultType = EmployeeTypesEnum.REGULAR
 
 		this.type = new EmployeeType(defaultType)
-
-		// NOTA DDD: Aquí se dispararía un Evento de Dominio:
-		// this.record(new EmployeeTypeChangedDomainEvent(this.idValue, defaultType));
+		this.record(
+			new EmployeeTypeChangedDomainEvent({
+				aggregateId: this.idValue,
+				oldType,
+				newType: defaultType
+			})
+		)
 	}
 
 	// El método más importante: expresa la intención de cambio de estado
@@ -268,9 +469,13 @@ export class Employee {
 		}
 		this.isStillWorking = new EmployeeIsStillWorking(false)
 
-		// NOTA DDD: Aquí se dispararía un Evento de Dominio:
-		// this.record(new EmployeeStatusChangedDomainEvent(this.idValue, 'inactive'));
-		// El caso de uso UserDeactivator escucharía este evento.
+		this.record(
+			new EmployeeTerminatedDomainEvent({
+				aggregateId: this.idValue,
+				isStillWorking: false,
+				type: this.typeValue
+			})
+		)
 	}
 
 	// Nuevo método para manejar la re-contratación o activación
@@ -280,50 +485,52 @@ export class Employee {
 			throw new InvalidArgumentError('El empleado ya se encuentra en estado "Activo".')
 		}
 		this.isStillWorking = new EmployeeIsStillWorking(true)
+		this.record(
+			new EmployeeReactivatedDomainEvent({
+				aggregateId: this.idValue,
+				isStillWorking: true
+			})
+		)
 	}
 
 	updateEmail(newEmail: Primitives<EmployeeEmail>, allowedDomains?: string[]): void {
 		this.email = new EmployeeEmail(newEmail, allowedDomains)
 	}
 
-	updateIsStillWorking(newIsStillWorking: Primitives<EmployeeIsStillWorking>): void {
-		this.isStillWorking = new EmployeeIsStillWorking(newIsStillWorking)
+	updateLocation(newLocationId: Primitives<LocationId> | null): void {
+		this.locationId = newLocationId ? new LocationId(newLocationId) : null
 	}
 
-	updateLocation(newLocationId: Primitives<EmployeeLocationId>): void {
-		this.locationId = new EmployeeLocationId(newLocationId)
-	}
-
-	updateDirectiva(newDirectivaId: Primitives<EmployeeDirectiva>, type: Primitives<EmployeeType>): void {
-		this.directivaId = new EmployeeDirectiva(newDirectivaId, type)
-	}
-
-	updateVicepresidenciaEjecutiva(
-		newVicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>,
-		directivaId: Primitives<EmployeeDirectiva>
+	// En Employee.ts
+	updateHierarchy(
+		directivaId: Primitives<DirectivaId> | null,
+		vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null,
+		vicepresidenciaId: Primitives<VicepresidenciaId> | null,
+		departamentoId: Primitives<DepartamentoId> | null
 	): void {
-		this.vicepresidenciaEjecutivaId = new EmployeeVicepresidenciaEjecutiva(
-			newVicepresidenciaEjecutivaId,
-			directivaId
-		)
+		// 1. Validar que la nueva combinación sea consistente jerárquicamente
+		Employee.ensureHierarchyConsistency({
+			directivaId,
+			vicepresidenciaEjecutivaId,
+			vicepresidenciaId,
+			departamentoId
+		})
+
+		// 2. Validar que cumpla con el tipo de empleado actual
+		Employee.ensureMandatoryHierarchyByType(this.type.value, directivaId)
+
+		// 3. Aplicar cambios
+		this.directivaId = directivaId ? new DirectivaId(directivaId) : null
+		this.vicepresidenciaEjecutivaId = vicepresidenciaEjecutivaId
+			? new VicepresidenciaEjecutivaId(vicepresidenciaEjecutivaId)
+			: null
+		this.vicepresidenciaId = vicepresidenciaId ? new VicepresidenciaId(vicepresidenciaId) : null
+		this.departamentoId = departamentoId ? new DepartamentoId(departamentoId) : null
 	}
 
-	updateVicepresidencia(
-		newVicepresidenciaId: Primitives<EmployeeVicepresidencia>,
-		vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
-	): void {
-		this.vicepresidenciaId = new EmployeeVicepresidencia(newVicepresidenciaId, vicepresidenciaEjecutivaId)
-	}
-
-	updateDepartamento(
-		newDepartamentoId: Primitives<EmployeeDepartamento>,
-		vicepresidenciaId: Primitives<EmployeeVicepresidencia>
-	): void {
-		this.departamentoId = new EmployeeDepartamento(newDepartamentoId, vicepresidenciaId)
-	}
-
-	updateCargo(newCargoId: Primitives<EmployeeCargo>, type: Primitives<EmployeeType>): void {
-		this.cargoId = new EmployeeCargo(newCargoId, type)
+	updateCargo(newCargoId: Primitives<CargoId> | null): void {
+		Employee.ensureMandatoryCargoByType(this.typeValue, newCargoId)
+		this.cargoId = newCargoId ? new CargoId(newCargoId) : null
 	}
 
 	updateExtension(extensionIds: Primitives<Extension>[]): void {
@@ -334,7 +541,15 @@ export class Employee {
 		this.phone = PhoneNumber.fromValues(phoneIds)
 	}
 
-	updateUserName(newUserName: Primitives<EmployeeUserName>): void {
-		this.userName = new EmployeeUserName(newUserName)
+	/**
+	 * @description Marks the Directiva as deleted and records the domain event.
+	 */
+	delete(): void {
+		this.record(
+			new EmployeeRemovedDomainEvent({
+				aggregateId: this.idValue,
+				userName: this.userNameValue
+			})
+		)
 	}
 }

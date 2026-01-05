@@ -1,9 +1,9 @@
 import { Directiva } from '../domain/entity/Directiva'
-import { DepartmentId } from '../../IDepartment/DepartmentId'
+import { DirectivaId } from '../domain/valueObject/DirectivaId'
+import { CargoId } from '../../Cargo/domain/valueObject/CargoId'
 import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
 import { DirectivaNameUniquenessChecker } from '../domain/service/DirectivaNameuniquenessChecker'
 import { DirectivaDoesNotExistError } from '../domain/errors/DirectivaDoesNotExistError'
-import { CargoId } from '../../Cargo/domain/valueObject/CargoId'
 import { type DirectivaParams } from '../domain/entity/Directiva.dto'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type DirectivaRepository } from '../domain/repository/DirectivaRepository'
@@ -37,10 +37,10 @@ export class DirectivaUpdater {
 	 * @description Executes the Directiva update process.
 	 * @param {{ id: string; params: Partial<DirectivaParams> }} data The parameters for updating the Directiva.
 	 * @returns {Promise<void>} A promise that resolves when the Directiva is successfully updated.
-	 * @throws {DepartmentDoesNotExistError} If the Directiva with the provided ID does not exist.
+	 * @throws {DirectivaDoesNotExistError} If the Directiva with the provided ID does not exist.
 	 */
 	async run({ id, params }: { id: string; params: Partial<DirectivaParams> }): Promise<void> {
-		const directivaId = new DepartmentId(id)
+		const directivaId = new DirectivaId(id)
 
 		const directiva = await this.directivaRepository.findById(directivaId.value)
 		if (!directiva) {
@@ -71,14 +71,14 @@ export class DirectivaUpdater {
 			const newIdSet = new Set(uniqueCargos)
 			const currentIdSet = new Set(directivaEntity.cargosValue)
 
-			// Añadir categorías nuevas
+			// Añadir cargos nuevos
 			for (const id of newIdSet) {
 				if (!currentIdSet.has(id)) {
 					directivaEntity.addCargo(new CargoId(id))
 				}
 			}
 
-			// Eliminar categorías que ya no están
+			// Eliminar cargos que ya no están
 			for (const id of currentIdSet) {
 				if (!newIdSet.has(id)) {
 					directivaEntity.removeCargo(new CargoId(id))

@@ -2,19 +2,19 @@ import { User } from '../domain/entity/User'
 import { Employee } from '../../../employee/Employee/domain/entity/Employee'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
-import { EmployeeTypesEnum } from '../../../employee/Employee/domain/valueObject/EmployeeType'
 import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserDto } from '../domain/entity/User.dto'
 import { type UserRepository } from '../domain/Repository/UserRepository'
-import { type RoleRepository } from '../../Role/domain/RoleRepository'
+import { type RoleRepository } from '../../Role/domain/repository/RoleRepository'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
-import { type RoleId } from '../../Role/domain/RoleId'
+import { type RoleId } from '../../Role/domain/valueObject/RoleId'
 import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 
 interface CreateUserFromEmployeeParams {
-	employeeId: EmployeeId['value']
-	roleId: RoleId['value']
+	employeeId: Primitives<EmployeeId>
+	roleId: Primitives<RoleId>
 }
 
 /**
@@ -73,8 +73,8 @@ export class CreateUserFromEmployee {
 
 		// 4. Update employee type to 'service'
 		const employeeEntity = Employee.fromPrimitives(employee)
-		employeeEntity.updateType(EmployeeTypesEnum.SERVICE)
-		await this.employeeRepository.save(employeeEntity.toPrimitive())
+		employeeEntity.markAsServiceUser()
+		await this.employeeRepository.save(employeeEntity.toPrimitives())
 
 		// 5. Create the user entity with a generated password
 		const defaultHashedPassword = (

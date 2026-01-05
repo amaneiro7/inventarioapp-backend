@@ -1,16 +1,16 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
+import { type DirectivaRepository } from '../domain/repository/DirectivaRepository'
 import { type DirectivaDto } from '../domain/entity/Directiva.dto'
 
 /**
  * @description Use case for retrieving all Directiva entities.
  */
 export class DirectivaFinderAll extends GetAllBaseService<DirectivaDto> {
-	private readonly directivaRepository: DepartmentRepository<DirectivaDto>
+	private readonly directivaRepository: DirectivaRepository
 
-	constructor({ directivaRepository }: { directivaRepository: DepartmentRepository<DirectivaDto> }) {
+	constructor({ directivaRepository }: { directivaRepository: DirectivaRepository }) {
 		super()
 		this.directivaRepository = directivaRepository
 	}

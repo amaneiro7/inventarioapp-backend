@@ -1,9 +1,9 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
-import { type RoleRepository } from '../domain/RoleRepository'
-import { type RoleDto } from '../domain/Role.dto'
+import { ADMIN_ROLE_ID } from '../domain/RoleOptions'
+import { type RoleRepository } from '../domain/repository/RoleRepository'
+import { type RoleDto } from '../domain/entity/Role.dto'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { ADMIN_ROLE_ID } from '../domain/RoleOptions'
 
 /**
  * @description Use case for retrieving all Role entities, excluding the 'Admin' role.

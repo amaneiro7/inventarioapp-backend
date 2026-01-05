@@ -1,7 +1,9 @@
+import { Op } from 'sequelize'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
@@ -10,6 +12,8 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
 import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
+import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
+import { type EmployeeCacheInvalidator } from '../../domain/Repository/EmployeeCacheInvalidator'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -18,18 +22,23 @@ import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername
  * @description Concrete implementation of the EmployeeRepository using Sequelize.
  * Handles data persistence for Employee entities, including caching mechanisms.
  */
-export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter implements EmployeeRepository {
+export class SequelizeEmployeeRepository
+	extends SequelizeCriteriaConverter
+	implements EmployeeRepository, EmployeeCacheInvalidator
+{
 	private readonly cacheKey: string = 'employees'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	async findByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:userName:${userName}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne({
 					where: {
@@ -54,7 +63,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<EmployeeDto>>({
 			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
@@ -79,7 +88,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 		return await this.cache.getCachedData<ResponseDB<EmployeeDto>>({
 			cacheKey: `${this.cacheKey}:matching:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
 				return {
@@ -100,7 +109,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	async findByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:email:${email}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne({
 					where: {
@@ -123,7 +132,7 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	async findById(id: string): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:id:${id}`,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findByPk(id, {
 					include: [
@@ -149,6 +158,30 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 					]
 				})
 				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple employees by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {Primitives<EmployeeId>[]} ids An array of cargo IDs to find.
+	 * @returns {Promise<EmployeeDto[]>} A promise resolving to an array of found cargo DTOs.
+	 */
+	async findByIds(ids: Primitives<EmployeeId>[]): Promise<EmployeeDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKey}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<EmployeeDto[]>({
+			cacheKey,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const employees = await EmployeeModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return employees.map(cargo => cargo.get({ plain: true })) as EmployeeDto[]
 			}
 		})
 	}
@@ -180,35 +213,27 @@ export class SequelizeEmployeeRepository extends SequelizeCriteriaConverter impl
 	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 */
 	async save(payload: EmployeePrimitives): Promise<void> {
-		// Use upsert for atomic create or update operation
 		await EmployeeModel.upsert(payload)
-
-		// Invalidate relevant cache entries
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${payload.id}` })
-		if (payload.email) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:email:${payload.email}` })
-		}
 	}
 
 	/**
 	 * @method remove
 	 * @description Deletes an Employee entity from the data store by its unique identifier.
 	 * Invalidates relevant cache entries after a successful deletion.
-	 * @param {string} id - The ID of the Employee to remove.
+	 * @param {Primitives<EmployeeId>} id - The ID of the Employee to remove.
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
-	async remove(id: string): Promise<void> {
-		// Retrieve the employee to get its email for cache invalidation
-		const employeeToRemove = await EmployeeModel.findByPk(id)
-
+	async remove(id: Primitives<EmployeeId>): Promise<void> {
 		await EmployeeModel.destroy({ where: { id } })
+	}
 
-		// Invalidate relevant cache entries
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
-		if (employeeToRemove && employeeToRemove.email) {
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:email:${employeeToRemove.email}` })
-		}
+	/**
+	 * @method invalidateEmployeeCache
+	 * @description Invalidates all employees-related cache entries.
+	 * Implements EmployeeCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<EmployeeId>): Promise<void> {
+		console.log('id', id)
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

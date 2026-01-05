@@ -1,15 +1,15 @@
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type DepartamentoDto } from '../domain/Departamento.dto'
+import { DepartamentoDoesNotExistError } from '../domain/errors/DepartamentoDoesNotExistError'
+import { DepartamentoId } from '../domain/valueObject/DepartamentoId'
+import { type DepartamentoRepository } from '../domain/repository/DepartamentoRepository'
+import { type DepartamentoDto } from '../domain/entity/Departamento.dto'
 
 /**
  * @description Use case for finding a Departamento entity by its unique identifier.
  */
 export class DepartamentoFinder {
-	private readonly departamentoRepository: DepartmentRepository<DepartamentoDto>
+	private readonly departamentoRepository: DepartamentoRepository
 
-	constructor({ departamentoRepository }: { departamentoRepository: DepartmentRepository<DepartamentoDto> }) {
+	constructor({ departamentoRepository }: { departamentoRepository: DepartamentoRepository }) {
 		this.departamentoRepository = departamentoRepository
 	}
 
@@ -20,11 +20,11 @@ export class DepartamentoFinder {
 	 * @throws {DepartmentDoesNotExistError} If no Departamento with the provided ID is found.
 	 */
 	async run({ id }: { id: string }): Promise<DepartamentoDto> {
-		const departamentoId = new DepartmentId(id).value
+		const departamentoId = new DepartamentoId(id).value
 		const departamento = await this.departamentoRepository.findById(departamentoId)
 
 		if (!departamento) {
-			throw new DepartmentDoesNotExistError('La gerencia, coordinación o departamento')
+			throw new DepartamentoDoesNotExistError(departamentoId)
 		}
 
 		return departamento

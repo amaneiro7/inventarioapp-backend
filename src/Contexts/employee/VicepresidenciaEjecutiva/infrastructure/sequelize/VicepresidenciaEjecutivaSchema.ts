@@ -6,16 +6,16 @@ import {
 	type BelongsToManyGetAssociationsMixin,
 	type Sequelize
 } from 'sequelize'
-
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { type DepartmentName } from '../../../IDepartment/DepartmentName'
-import { type VicepresidenciaEjecutivaDto } from '../../domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../domain/entity/VicepresidenciaEjecutiva.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { type VicepresidenciaEjecutivaName } from '../../domain/valueObject/VicepresidenciaEjecutivaName'
+import { type VicepresidenciaEjecutivaId } from '../../domain/valueObject/VicepresidenciaEjecutivaId'
 
 /**
  * @description Sequelize model for the `VicepresidenciaEjecutiva` entity.
@@ -24,9 +24,9 @@ export class VicepresidenciaEjecutivaModel
 	extends Model<Omit<VicepresidenciaEjecutivaDto, 'directiva' | 'cargos'>>
 	implements VicepresidenciaEjecutivaDto
 {
-	declare id: Primitives<DepartmentId>
-	declare name: Primitives<DepartmentName>
-	declare directivaId: Primitives<DepartmentId>
+	declare id: Primitives<VicepresidenciaEjecutivaId>
+	declare name: Primitives<VicepresidenciaEjecutivaName>
+	declare directivaId: Primitives<DirectivaId>
 	declare directiva: DirectivaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 

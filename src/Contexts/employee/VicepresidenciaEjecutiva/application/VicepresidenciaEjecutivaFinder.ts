@@ -1,18 +1,18 @@
-import { DepartmentDoesNotExistError } from '../../IDepartment/DepartmentDoesNotExistError'
-import { DepartmentId } from '../../IDepartment/DepartmentId'
-import { type DepartmentRepository } from '../../IDepartment/DepartmentRepository'
-import { type VicepresidenciaEjecutivaDto } from '../domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaEjecutivaDto } from '../domain/entity/VicepresidenciaEjecutiva.dto'
+import { VicepresidenciaEjecutivaDoesNotExistError } from '../domain/errors/VicepresidenciaEjecutivaDoesNotExistError'
+import { type VicepresidenciaEjecutivaRepository } from '../domain/repository/VicepresidenciaEjecutivaRepository'
+import { VicepresidenciaEjecutivaId } from '../domain/valueObject/VicepresidenciaEjecutivaId'
 
 /**
  * @description Use case for finding a VicepresidenciaEjecutiva entity by its unique identifier.
  */
 export class VicepresidenciaEjecutivaFinder {
-	private readonly vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+	private readonly vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 
 	constructor({
 		vicepresidenciaEjecutivaRepository
 	}: {
-		vicepresidenciaEjecutivaRepository: DepartmentRepository<VicepresidenciaEjecutivaDto>
+		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 	}) {
 		this.vicepresidenciaEjecutivaRepository = vicepresidenciaEjecutivaRepository
 	}
@@ -24,12 +24,12 @@ export class VicepresidenciaEjecutivaFinder {
 	 * @throws {DepartmentDoesNotExistError} If no VicepresidenciaEjecutiva with the provided ID is found.
 	 */
 	async run({ id }: { id: string }): Promise<VicepresidenciaEjecutivaDto> {
-		const vicepresidenciaEjecutivaId = new DepartmentId(id).value
+		const vicepresidenciaEjecutivaId = new VicepresidenciaEjecutivaId(id).value
 		const vicepresidenciaEjecutiva =
 			await this.vicepresidenciaEjecutivaRepository.findById(vicepresidenciaEjecutivaId)
 
 		if (!vicepresidenciaEjecutiva) {
-			throw new DepartmentDoesNotExistError('La vicepresidencia ejecutiva')
+			throw new VicepresidenciaEjecutivaDoesNotExistError(vicepresidenciaEjecutivaId)
 		}
 
 		return vicepresidenciaEjecutiva

@@ -6,9 +6,11 @@ import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
  * @description Defines the possible types of employees.
  */
 export enum EmployeeTypesEnum {
-	GENERIC = 'generic',
-	REGULAR = 'regular',
-	SERVICE = 'service'
+	GENERIC = 'generic', // Cuentas compartidas (ej. Recepción)
+	SERVICE = 'service', // Empleado con acceso a la app
+	REGULAR = 'regular', // Empleado fijo/permanente sin acceso
+	CONTRACTOR = 'contractor', // Contratado (por proyecto/tiempo determinado)
+	APPRENTICE = 'apprentice' // Aprendiz / Pasante / SENA
 }
 
 /**

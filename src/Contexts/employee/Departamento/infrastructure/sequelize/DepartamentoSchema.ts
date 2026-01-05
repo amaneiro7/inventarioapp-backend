@@ -7,26 +7,28 @@ import {
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DepartmentId } from '../../../IDepartment/DepartmentId'
-import { type DepartmentName } from '../../../IDepartment/DepartmentName'
+
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
-import { type DepartamentoDto } from '../../domain/Departamento.dto'
+import { type DepartamentoDto } from '../../domain/entity/Departamento.dto'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type DepartamentoId } from '../../domain/valueObject/DepartamentoId'
+import { type DepartamentoName } from '../../domain/valueObject/DepartamentoName'
+import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
 
 /**
  * @description Sequelize model for the `Departamento` entity.
  */
 export class DepartamentoModel
-	extends Model<Omit<DepartamentoDto, 'cargos' | 'vicepresiedncia'>>
+	extends Model<Omit<DepartamentoDto, 'vicepresidencia' | 'cargos'>>
 	implements DepartamentoDto
 {
-	declare id: Primitives<DepartmentId>
-	declare name: Primitives<DepartmentName>
-	declare vicepresidenciaId: Primitives<DepartmentId>
-	declare vicepresiedncia: VicepresidenciaDto
+	declare id: Primitives<DepartamentoId>
+	declare name: Primitives<DepartamentoName>
+	declare vicepresidenciaId: Primitives<VicepresidenciaId>
+	declare vicepresidencia: VicepresidenciaDto
 	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
 
 	// Association Mixins

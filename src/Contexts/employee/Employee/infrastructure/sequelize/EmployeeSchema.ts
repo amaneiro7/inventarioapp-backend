@@ -10,22 +10,22 @@ import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
 import { type EmployeeIsStillWorking } from '../../domain/valueObject/EmployeeIsStillWorking'
 import { type EmployeeCedula } from '../../domain/valueObject/EmployeeCedula'
 import { type EmployeeLastName } from '../../domain/valueObject/EmployeeLastName'
-import { type EmployeeLocationId } from '../../domain/valueObject/EmployeeLocation'
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type Extension } from '../../domain/valueObject/Extension'
 import { type PhoneNumber } from '../../domain/valueObject/PhoneNumber'
 import { type EmployeeDto } from '../../domain/entity/Employee.dto'
 import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import { type DepartamentoDto } from '../../../Departamento/domain/Departamento.dto'
-import { type EmployeeDirectiva } from '../../domain/valueObject/EmployeeDirectiva'
-import { type EmployeeVicepresidenciaEjecutiva } from '../../domain/valueObject/EmployeeVicepresidenciaEjecutiva'
-import { type EmployeeVicepresidencia } from '../../domain/valueObject/EmployeeVicepresidencia'
-import { type EmployeeDepartamento } from '../../domain/valueObject/EmployeeDepartamento'
+import { type DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
 import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/VicepresidenciaEjecutiva.dto'
+import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
+import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
+import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 
 /**
  * @description Sequelize model for the `Employee` entity.
@@ -49,12 +49,12 @@ export class EmployeeModel
 	declare employeeCode: Primitives<EmployeeCode>
 	declare nationality: Primitives<EmployeeNationality>
 	declare cedula: Primitives<EmployeeCedula>
-	declare locationId: Primitives<EmployeeLocationId>
-	declare directivaId: Primitives<EmployeeDirectiva>
-	declare vicepresidenciaEjecutivaId: Primitives<EmployeeVicepresidenciaEjecutiva>
-	declare vicepresidenciaId: Primitives<EmployeeVicepresidencia>
-	declare departamentoId: Primitives<EmployeeDepartamento>
-	declare cargoId: Primitives<CargoId>
+	declare locationId: Primitives<LocationId> | null
+	declare directivaId: Primitives<DirectivaId> | null
+	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
+	declare departamentoId: Primitives<DepartamentoId> | null
+	declare cargoId: Primitives<CargoId> | null
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
 	declare location: LocationDto
