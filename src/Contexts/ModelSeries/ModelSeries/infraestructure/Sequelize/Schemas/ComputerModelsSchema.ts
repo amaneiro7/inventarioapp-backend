@@ -1,6 +1,6 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
+import { type MemoryRamTypeId } from '../../../../../Features/MemoryRam/MemoryRamType/domain/valueObject/MemoryRamTypeId'
 import { type MemoryRamSlotQuantity } from '../../../domain/valueObject/MemoryRamSlotQuantity'
 import { type HasBluetooth } from '../../../domain/valueObject/HasBluetooth'
 import { type HasWifiAdapter } from '../../../domain/valueObject/HasWifiAdapter'
@@ -10,7 +10,7 @@ import { type HasVGA } from '../../../domain/valueObject/HasVGA'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { type ComputerModelsDto } from '../../../domain/dto/ComputerModels.dto'
-import { type MemoryRamType } from '../../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { type MemoryRamType } from '../../../../../Features/MemoryRam/MemoryRamType/domain/entity/MemoryRam.dto'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
 
 interface ComputerModelsCreationAttributes extends Omit<ComputerModelsDto, 'memoryRamType'> {

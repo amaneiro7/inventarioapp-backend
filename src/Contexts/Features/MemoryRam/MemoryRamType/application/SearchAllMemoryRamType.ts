@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../../Shared/domain/ResponseType'
-import { type MemoryRamTypeDto } from '../domain/MemoryRam.dto'
-import { type MemoryRamTypeRepository } from '../domain/MemoryRamTypeRepository'
+import { type MemoryRamTypeDto } from '../domain/entity/MemoryRam.dto'
+import { type MemoryRamTypeRepository } from '../domain/repository/MemoryRamTypeRepository'
 
 /**
  * @description Use case for retrieving all MemoryRamType entities.

@@ -5,6 +5,7 @@ import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for resetting a user's password to a default value.
@@ -12,16 +13,20 @@ import { type SettingsFinder } from '../../../AppSettings/application/SettingsFi
 export class UserResetPassword {
 	private readonly userRepository: UserRepository
 	private readonly settingsFinder: SettingsFinder
+	private readonly eventBus: EventBus
 
 	constructor({
 		userRepository,
-		settingsFinder
+		settingsFinder,
+		eventBus
 	}: {
 		userRepository: UserRepository
 		settingsFinder: SettingsFinder
+		eventBus: EventBus
 	}) {
 		this.userRepository = userRepository
 		this.settingsFinder = settingsFinder
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -45,5 +50,6 @@ export class UserResetPassword {
 		userEntity.resetPasswordFromHash(settings.value as string)
 
 		await this.userRepository.save(userEntity.toPrimitives())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

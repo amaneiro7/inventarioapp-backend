@@ -15,7 +15,7 @@ import { type HardDriveCapacityRepository } from '../../Features/HardDrive/HardD
 import { type OperatingSystemRepository } from '../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type OperatingSystemArqRepository } from '../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
 import { type LocationRepository } from '../../Location/Location/domain/repository/LocationRepository'
-import { type ProcessorRepository } from '../../Features/Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorRepository } from '../../Features/Processor/domain/repository/ProcessorRepository'
 
 /**
  * @description Service to find all history records, enriching them with related entity names.

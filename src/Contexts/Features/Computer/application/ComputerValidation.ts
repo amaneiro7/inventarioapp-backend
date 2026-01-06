@@ -10,7 +10,7 @@ import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepos
 import { type OperatingSystemRepository } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
 import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
-import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorRepository } from '../../Processor/domain/repository/ProcessorRepository'
 import { type DeviceComputerParams } from '../domain/Computer.dto'
 
 /**

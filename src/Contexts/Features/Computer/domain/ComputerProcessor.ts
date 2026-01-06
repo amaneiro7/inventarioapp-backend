@@ -1,8 +1,8 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { ProcessorId } from '../../Processor/Processor/domain/ProcessorId'
-import { ProcessorDoesNotExistError } from '../../Processor/Processor/domain/ProcessorDoesNotExistError'
+import { ProcessorId } from '../../Processor/domain/valueObject/ProcessorId'
+import { ProcessorDoesNotExistError } from '../../Processor/domain/errors/ProcessorDoesNotExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ProcessorRepository } from '../../Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorRepository } from '../../Processor/domain/repository/ProcessorRepository'
 import { type DeviceComputer } from './Computer'
 
 /**

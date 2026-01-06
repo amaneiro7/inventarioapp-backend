@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type Device, type DevicePrimitives } from '../../../Device/Device/domain/Device.dto'
-import { type ProcessorDto } from '../../Processor/Processor/domain/Processor.dto'
+import { type ProcessorDto } from '../../Processor/domain/entity/Processor.dto'
 import { type HardDriveCapacityDto } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacity.dto'
 import { type HardDriveTypeDto } from '../../HardDrive/HardDriveType/domain/HardDriveType.dto'
 import { type OperatingSystemDto } from '../../OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'

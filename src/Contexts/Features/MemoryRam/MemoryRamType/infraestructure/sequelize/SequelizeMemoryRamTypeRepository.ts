@@ -1,12 +1,12 @@
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
-import { type MemoryRamTypeRepository } from '../../domain/MemoryRamTypeRepository'
+import { type MemoryRamTypeId } from '../../domain/valueObject/MemoryRamTypeId'
+import { type MemoryRamTypeRepository } from '../../domain/repository/MemoryRamTypeRepository'
 import { MemoryRamTypeModel } from './MemoryRamTypeSchema'
 import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
-import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
+import { type MemoryRamTypeDto } from '../../domain/entity/MemoryRam.dto'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**

@@ -5,15 +5,18 @@ import { UserId } from '../domain/valueObject/UserId'
 import { PasswordService } from '../domain/domainService/PasswordService'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for changing a user's password.
  */
 export class UserChangePassword {
 	private readonly userRepository: UserRepository
+	private readonly eventBus: EventBus
 
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	constructor({ userRepository, eventBus }: { userRepository: UserRepository; eventBus: EventBus }) {
 		this.userRepository = userRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -54,5 +57,6 @@ export class UserChangePassword {
 		const userEntity = User.fromPrimitives(user)
 		await userEntity.updatePassword(newPassword)
 		await this.userRepository.save(userEntity.toPrimitives())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

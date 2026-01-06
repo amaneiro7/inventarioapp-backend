@@ -3,11 +3,11 @@ import { ModelSeriesId } from '../domain/valueObject/ModelSeriesId'
 import { ModelFactory } from '../domain/entity/ModelFactory'
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 import { type InputTypeRepository } from '../../InputType/domain/repository/InputTypeRepository'
-import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
+import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/repository/MemoryRamTypeRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
 import { type ModelSeriesDto, type ModelSeriesParams } from '../domain/dto/ModelSeries.dto'
-import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorRepository } from '../../../Features/Processor/domain/repository/ProcessorRepository'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**

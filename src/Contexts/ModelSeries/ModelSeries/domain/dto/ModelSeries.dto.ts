@@ -12,8 +12,8 @@ import { type PrinteModelsDto } from './ModelPrinters.dto'
 import { type KeyboardModelsDto } from './KeyboardModels.dto'
 import { type MonitorModelsDto } from './MonitoModels.dto'
 import { type MouseModelsDto } from './MouseModels.dto'
-import { type ProcessorDto } from '../../../../Features/Processor/Processor/domain/Processor.dto'
-import { type ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
+import { type ProcessorDto } from '../../../../Features/Processor/domain/entity/Processor.dto'
+import { type ProcessorId } from '../../../../Features/Processor/domain/valueObject/ProcessorId'
 
 /**
  * @interface ModelSeries

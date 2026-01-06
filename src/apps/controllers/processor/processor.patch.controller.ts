@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type ProcessorUpdater } from '../../../Contexts/Features/Processor/Processor/application/ProcessorUpdater'
+import { type ProcessorUpdater } from '../../../Contexts/Features/Processor/application/ProcessorUpdater'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'

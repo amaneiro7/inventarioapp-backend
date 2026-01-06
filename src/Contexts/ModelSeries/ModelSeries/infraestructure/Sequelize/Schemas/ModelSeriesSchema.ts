@@ -7,11 +7,11 @@ import {
 	type Sequelize
 } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ProcessorModel } from '../../../../../Features/Processor/Processor/infrastructure/sequelize/ProcessorSchema'
+import { type ProcessorModel } from '../../../../../Features/Processor/infrastructure/sequelize/ProcessorSchema'
 import { type ModelSeriesId } from '../../../domain/valueObject/ModelSeriesId'
 import { type ModelSeriesName } from '../../../domain/valueObject/ModelSeriesName'
 import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
-import { type ProcessorId } from '../../../../../Features/Processor/Processor/domain/ProcessorId'
+import { type ProcessorId } from '../../../../../Features/Processor/domain/valueObject/ProcessorId'
 import { type BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
 import { type Generic } from '../../../domain/valueObject/Generic'
 import { type BrandDto } from '../../../../../Brand/domain/entity/Brand.dto'
@@ -23,7 +23,7 @@ import { type KeyboardModelsDto } from '../../../domain/dto/KeyboardModels.dto'
 import { type MonitorModelsDto } from '../../../domain/dto/MonitoModels.dto'
 import { type PrinteModelsDto } from '../../../domain/dto/ModelPrinters.dto'
 import { type MouseModelsDto } from '../../../domain/dto/MouseModels.dto'
-import { type ProcessorDto } from '../../../../../Features/Processor/Processor/domain/Processor.dto'
+import { type ProcessorDto } from '../../../../../Features/Processor/domain/entity/Processor.dto'
 import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**

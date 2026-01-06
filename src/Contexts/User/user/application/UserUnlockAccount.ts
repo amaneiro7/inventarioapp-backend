@@ -3,6 +3,7 @@ import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type UserRepository } from '../domain/Repository/UserRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for manually unlocking a user's account.
@@ -11,9 +12,11 @@ import { type UserRepository } from '../domain/Repository/UserRepository'
  */
 export class UserUnlockAccount {
 	private readonly userRepository: UserRepository
+	private readonly eventBus: EventBus
 
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	constructor({ userRepository, eventBus }: { userRepository: UserRepository; eventBus: EventBus }) {
 		this.userRepository = userRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -39,5 +42,6 @@ export class UserUnlockAccount {
 		// Unlock the user account
 		userEntity.unlockAccount()
 		await this.userRepository.save(userEntity.toPrimitives())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

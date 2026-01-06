@@ -8,10 +8,10 @@ import { MouseModels } from './MouseModels'
 
 import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemorryRamTypeDoesNotExistError'
 import { InputTypeDoesNotExistError } from '../../../InputType/domain/errors/InputTypeDoesNotExistError'
-import { ProcessorDoesNotExistError } from '../../../../Features/Processor/Processor/domain/ProcessorDoesNotExistError'
+import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
 
-import { type MemoryRamTypeId } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeId'
-import { type ProcessorId } from '../../../../Features/Processor/Processor/domain/ProcessorId'
+import { type MemoryRamTypeId } from '../../../../Features/MemoryRam/MemoryRamType/domain/valueObject/MemoryRamTypeId'
+import { type ProcessorId } from '../../../../Features/Processor/domain/valueObject/ProcessorId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { type ComputerModelsParams } from '../dto/ComputerModels.dto'

@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type ProcessorsFinder } from '../../../Contexts/Features/Processor/Processor/application/ProcessorFinder'
+import { type ProcessorsFinder } from '../../../Contexts/Features/Processor/application/ProcessorFinder'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { ProcessorDependencies } from '../../di/processor/processor.di'

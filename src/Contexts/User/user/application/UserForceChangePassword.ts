@@ -1,8 +1,9 @@
-import { type UserRepository } from '../domain/Repository/UserRepository'
 import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
+import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 interface ForceChangePasswordParams {
 	newPassword: string
@@ -16,9 +17,11 @@ interface ForceChangePasswordParams {
  */
 export class UserForceChangePassword {
 	private readonly userRepository: UserRepository
+	private readonly eventBus: EventBus
 
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	constructor({ userRepository, eventBus }: { userRepository: UserRepository; eventBus: EventBus }) {
 		this.userRepository = userRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -44,5 +47,6 @@ export class UserForceChangePassword {
 		await userEntity.updatePassword(newPassword)
 
 		await this.userRepository.save(userEntity.toPrimitives())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

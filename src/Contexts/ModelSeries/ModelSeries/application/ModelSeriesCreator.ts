@@ -5,11 +5,11 @@ import { ModelSeriesNameUniquenessChecker } from '../domain/service/ModelSeriesN
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
-import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/MemoryRamTypeRepository'
 import { type InputTypeRepository } from '../../InputType/domain/repository/InputTypeRepository'
 import { type ModelSeriesParams } from '../domain/dto/ModelSeries.dto'
-import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
-import { EventBus } from '../../../Shared/domain/event/EventBus'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { type ProcessorRepository } from '../../../Features/Processor/domain/repository/ProcessorRepository'
+import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/repository/MemoryRamTypeRepository'
 
 interface Repository {
 	modelSeriesRepository: ModelSeriesRepository

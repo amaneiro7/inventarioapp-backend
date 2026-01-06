@@ -6,8 +6,7 @@ import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/
 import { type StatusDto } from '../../../../Device/Status/domain/Status.dto'
 import { type DeviceDto } from '../../../../Device/Device/domain/Device.dto'
 import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
-import { type ProcessorDto } from '../../../../Features/Processor/Processor/domain/Processor.dto'
-import { type ProcessorSocketDto } from '../../../../Features/Processor/ProcessorSocket/domain/ProcessorSocket.dto'
+import { type ProcessorDto } from '../../../../Features/Processor/domain/entity/Processor.dto'
 import { type HardDriveCapacityDto } from '../../../../Features/HardDrive/HardDriveCapacity/domain/HardDriveCapacity.dto'
 import { type HardDriveTypeDto } from '../../../../Features/HardDrive/HardDriveType/domain/HardDriveType.dto'
 import { type OperatingSystemDto } from '../../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystem.dto'
@@ -32,7 +31,7 @@ import { type CentroTrabajoDto } from '../../../../employee/CentroTrabajo/domain
 import { type DirectivaDto } from '../../../../employee/Directiva/domain/entity/Directiva.dto'
 import { type DeviceComputerDto } from '../../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
-import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/MemoryRam.dto'
+import { type MemoryRamTypeDto } from '../../../../Features/MemoryRam/MemoryRamType/domain/entity/MemoryRam.dto'
 import { type ShipmentDto } from '../../../../Shipment/Shipment/domain/entity/Shipment.dto'
 import { type ShipmentDeviceDto } from '../../../../Shipment/ShipmentDevice/domain/entity/ShipmentDevice.dto'
 import { type PermissionDto } from '../../../../AccessControl/Permission/domain/entity/Permission.dto'
@@ -62,7 +61,6 @@ export type SequelizeModels = Sequelize['models'] & {
 	DeviceHardDrive: ModelStatic<Model<DeviceHardDriveDto>>
 	DeviceMFP: ModelStatic<Model<DeviceMFPDto>>
 	Processor: ModelStatic<Model<ProcessorDto>>
-	ProcessorSocket: ModelStatic<Model<ProcessorSocketDto>>
 	MemoryRamType: ModelStatic<Model<MemoryRamTypeDto>>
 	HardDriveCapacity: ModelStatic<Model<HardDriveCapacityDto>>
 	HardDriveType: ModelStatic<Model<HardDriveTypeDto>>

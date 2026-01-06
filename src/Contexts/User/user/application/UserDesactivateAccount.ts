@@ -2,15 +2,18 @@ import { User } from '../domain/entity/User'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type UserRepository } from '../domain/Repository/UserRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for deactivating a user account.
  */
 export class UserDesactivateAccount {
 	private readonly userRepository: UserRepository
+	private readonly eventBus: EventBus
 
-	constructor({ userRepository }: { userRepository: UserRepository }) {
+	constructor({ userRepository, eventBus }: { userRepository: UserRepository; eventBus: EventBus }) {
 		this.userRepository = userRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -30,5 +33,6 @@ export class UserDesactivateAccount {
 		const userEntity = User.fromPrimitives(user)
 		userEntity.desactivateAccount()
 		await this.userRepository.save(userEntity.toPrimitives())
+		await this.eventBus.publish(userEntity.pullDomainEvents())
 	}
 }

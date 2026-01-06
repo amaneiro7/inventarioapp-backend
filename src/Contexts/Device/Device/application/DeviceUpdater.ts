@@ -33,7 +33,7 @@ import { type HardDriveCapacityRepository } from '../../../Features/HardDrive/Ha
 import { type HardDriveTypeRepository } from '../../../Features/HardDrive/HardDriveType/domain/HardDriveTypeRepository'
 import { type OperatingSystemRepository } from '../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemRepository'
 import { type OperatingSystemArqRepository } from '../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
-import { type ProcessorRepository } from '../../../Features/Processor/Processor/domain/ProcessorRepository'
+import { type ProcessorRepository } from '../../../Features/Processor/domain/repository/ProcessorRepository'
 
 import { type HistoryRepository } from '../../../History/domain/HistoryRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'

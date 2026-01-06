@@ -13,7 +13,7 @@ import { type HardDriveTypeName } from '../../../../Features/HardDrive/HardDrive
 import { type MemoryRamValues } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { type OperatingSystemVersion } from '../../../../Features/OperatingSystem/OperatingSystem/domain/OperatingSystemVersion'
 import { type OperatingSystemArqName } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqName'
-import { type ProcessorName } from '../../../../Features/Processor/Processor/domain/ProcessorName'
+import { type ProcessorName } from '../../../../Features/Processor/domain/valueObject/ProcessorName'
 import { type ModelSeriesName } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 

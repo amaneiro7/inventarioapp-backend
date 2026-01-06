@@ -12,6 +12,15 @@ import { FailedAttemps } from '../valueObject/FailedAttemps'
 import { LockoutUntil } from '../valueObject/LockoutUntil'
 import { PasswordHistory } from '../valueObject/PasswordHistory'
 import { RepeatedPasswordError } from '../Errors/RepeatedPasswordError'
+import { UserCreatedDomainEvent } from '../event/UserCreatedDomainEvent'
+import { UserPasswordChangedDomainEvent } from '../event/UserPasswordChangedDomainEvent'
+import { UserAccountLockedDomainEvent } from '../event/UserAccountLockedDomainEvent'
+import { UserAccountReactivatedDomainEvent } from '../event/UserAccountReactivatedDomainEvent'
+import { UserLoggedInDomainEvent } from '../event/UserLoggedInDomainEvent'
+import { UserRoleUpdatedDomainEvent } from '../event/UserRoleUpdatedDomainEvent'
+import { UserAccountSuspendedDomainEvent } from '../event/UserAccountSuspendedDomainEvent'
+import { UserAccountUnlockedDomainEvent } from '../event/UserAccountUnlockedDomainEvent'
+import { UserLoginFailedDomainEvent } from '../event/UserLoginFailedDomainEvent'
 import { type UserAuth, type UserParams, type UserPrimitives } from './User.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
@@ -54,7 +63,7 @@ export class User extends AggregateRoot {
 		const id = UserId.random().value
 		const { employeeId, roleId, password: hashedPassword } = params
 
-		return new User(
+		const user = new User(
 			new UserId(id),
 			new EmployeeId(employeeId),
 			new RoleId(Number(roleId)),
@@ -68,6 +77,17 @@ export class User extends AggregateRoot {
 			new LockoutUntil(null),
 			new PasswordHistory([hashedPassword])
 		)
+
+		user.record(
+			new UserCreatedDomainEvent({
+				aggregateId: user.idValue,
+				employeeId: user.employeeValue,
+				roleId: user.roleValue,
+				status: user.statusValue
+			})
+		)
+
+		return user
 	}
 
 	// static isSuperAdmin({ roleId }: { roleId: Primitives<RoleId> }): boolean {
@@ -77,11 +97,11 @@ export class User extends AggregateRoot {
 	// }
 
 	isLocked(): boolean {
-		if (this.status.value === UserStatusEnum.SUSPENDED) {
+		if (this.statusValue === UserStatusEnum.SUSPENDED) {
 			return true
 		}
-		if (this.status.value === UserStatusEnum.LOCKED) {
-			return this.lockoutUntil.value !== null && this.lockoutUntil.value > new Date()
+		if (this.statusValue === UserStatusEnum.LOCKED) {
+			return this.lockoutUntilValue !== null && this.lockoutUntilValue > new Date()
 		}
 		return false
 	}
@@ -92,6 +112,14 @@ export class User extends AggregateRoot {
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
 		this.lastLoginAt = new LastLoginAt(new Date())
 		this.lastLoginIp = new LastLoginIp(ipAddress ?? null)
+
+		this.record(
+			new UserLoggedInDomainEvent({
+				aggregateId: this.idValue,
+				ipAddress: this.lastLoginIpValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	increaseFailedAttepns({
@@ -102,6 +130,13 @@ export class User extends AggregateRoot {
 		maxAttempts: number
 	}): void {
 		this.failedAttemps = new FailedAttemps(this.failedAttemps.value + 1)
+		this.record(
+			new UserLoginFailedDomainEvent({
+				aggregateId: this.idValue,
+				failedAttempts: this.failedAttemps.value,
+				occurredOn: new Date()
+			})
+		)
 		if (this.failedAttemps.value >= maxAttempts) {
 			this.lockAccount({ lockoutTimeInMinutes })
 		}
@@ -127,6 +162,13 @@ export class User extends AggregateRoot {
 
 		// 3. Actualizar Historial con el nuevo hash
 		this.passwordHistory = this.passwordHistory.add(newHashedPassword)
+
+		this.record(
+			new UserPasswordChangedDomainEvent({
+				aggregateId: this.idValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	/**
@@ -137,17 +179,42 @@ export class User extends AggregateRoot {
 	resetPasswordFromHash(hashedPassword: string): void {
 		this.password = UserPassword.fromPrimitives(hashedPassword)
 		this.passwordChangeAt = new PasswordChangeAt(null)
+		this.record(
+			new UserPasswordChangedDomainEvent({
+				aggregateId: this.idValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 	desactivateAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.SUSPENDED)
+		this.record(
+			new UserAccountSuspendedDomainEvent({
+				aggregateId: this.idValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 	reactivateAccount(): void {
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
+		this.record(
+			new UserAccountReactivatedDomainEvent({
+				aggregateId: this.idValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	private lockAccount({ lockoutTimeInMinutes }: { lockoutTimeInMinutes: number }): void {
 		this.status = new UserStatus(UserStatusEnum.LOCKED)
 		this.lockoutUntil = new LockoutUntil(new Date(Date.now() + lockoutTimeInMinutes * 60 * 1000))
+		this.record(
+			new UserAccountLockedDomainEvent({
+				aggregateId: this.idValue,
+				lockoutUntil: this.lockoutUntilValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	// Nuevo método para manejar el desbloqueo automático
@@ -166,6 +233,12 @@ export class User extends AggregateRoot {
 		this.status = new UserStatus(UserStatusEnum.ACTIVE)
 		this.failedAttemps = new FailedAttemps(0)
 		this.lockoutUntil = new LockoutUntil(null)
+		this.record(
+			new UserAccountUnlockedDomainEvent({
+				aggregateId: this.idValue,
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	/**
@@ -218,6 +291,13 @@ export class User extends AggregateRoot {
 
 	updateRole(roleId: Primitives<RoleId>): void {
 		this.roleId = new RoleId(roleId)
+		this.record(
+			new UserRoleUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				roleId: Number(roleId),
+				occurredOn: new Date()
+			})
+		)
 	}
 
 	toPrimitives(): UserPrimitives {

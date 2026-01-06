@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type ProcessorRemover } from '../../../Contexts/Features/Processor/Processor/application/ProcessorRemover'
+import { type ProcessorRemover } from '../../../Contexts/Features/Processor/application/ProcessorRemover'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { ProcessorDependencies } from '../../di/processor/processor.di'

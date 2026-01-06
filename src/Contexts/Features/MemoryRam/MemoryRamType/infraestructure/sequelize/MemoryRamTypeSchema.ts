@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type MemoryRamTypeId } from '../../domain/MemoryRamTypeId'
-import { type MemoryRamTypeName } from '../../domain/MemoryRamTypeName'
-import { type MemoryRamTypeDto } from '../../domain/MemoryRam.dto'
+import { type MemoryRamTypeId } from '../../domain/valueObject/MemoryRamTypeId'
+import { type MemoryRamTypeName } from '../../domain/valueObject/MemoryRamTypeName'
+import { type MemoryRamTypeDto } from '../../domain/entity/MemoryRam.dto'
 
 /**
  * @description Sequelize model for the `MemoryRamType` entity.
