@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../../Shared/domain/ResponseType'
-import { type OperatingSystemArqDto } from '../domain/OperatingSystemArq.dto'
-import { type OperatingSystemArqRepository } from '../domain/OperatingSystemArqRepository'
+import { type OperatingSystemArqDto } from '../domain/entity/OperatingSystemArq.dto'
+import { type OperatingSystemArqRepository } from '../domain/repository/OperatingSystemArqRepository'
 
 /**
  * @description Use case for retrieving all OperatingSystemArq entities.

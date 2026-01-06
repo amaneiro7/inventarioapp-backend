@@ -1,17 +1,21 @@
 import { Processor } from '../domain/entity/Processor'
-import { ProcessorNumberModel } from '../domain/valueObject/ProcessorNumberModel'
-import { ProcessorAlreadyExistError } from '../domain/errors/ProcessorAlreadyExistError'
+import { ProcessorNumberModelUniquenessChecker } from '../domain/service/ProcessorNumberModelUniquenessChecker'
 import { type ProcessorParams } from '../domain/entity/Processor.dto'
 import { type ProcessorRepository } from '../domain/repository/ProcessorRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for creating a new Processor entity.
  */
 export class ProcessorCreator {
 	private readonly processorRepository: ProcessorRepository
+	private readonly processorNumberModelUniquenessChecker: ProcessorNumberModelUniquenessChecker
+	private readonly eventBus: EventBus
 
-	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+	constructor({ processorRepository, eventBus }: { processorRepository: ProcessorRepository; eventBus: EventBus }) {
 		this.processorRepository = processorRepository
+		this.processorNumberModelUniquenessChecker = new ProcessorNumberModelUniquenessChecker(processorRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -22,18 +26,11 @@ export class ProcessorCreator {
 	 */
 	async run(params: ProcessorParams): Promise<void> {
 		const { numberModel } = params
-		await this.ensureProcessorNameDoesNotExist(numberModel)
+
+		await this.processorNumberModelUniquenessChecker.ensureUnique(numberModel)
 
 		const processor = Processor.create(params)
-		await this.processorRepository.save(processor.toPrimitive())
-	}
-
-	private async ensureProcessorNameDoesNotExist(numberModel: string): Promise<void> {
-		const existingProcessor = await this.processorRepository.searchByNumberModel(
-			new ProcessorNumberModel(numberModel).value
-		)
-		if (existingProcessor) {
-			throw new ProcessorAlreadyExistError(numberModel)
-		}
+		await this.processorRepository.save(processor.toPrimitives())
+		await this.eventBus.publish(processor.pullDomainEvents())
 	}
 }

@@ -1,6 +1,6 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
-import { PasswordService } from '../domainService/PasswordService'
+import { PasswordService } from '../service/PasswordService'
 
 /**
  * @description Represents a user's password.

@@ -7,7 +7,7 @@ import { type ProcessorNumberModel } from '../../domain/valueObject/ProcessorNum
 import { type ProcessorCores } from '../../domain/valueObject/ProcessorCores'
 import { type ProcessorHasThreads } from '../../domain/valueObject/ProcessorIsThreads'
 import { type ProcessorFrequency } from '../../domain/valueObject/ProcessorFrequency'
-import { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Processor` entity.

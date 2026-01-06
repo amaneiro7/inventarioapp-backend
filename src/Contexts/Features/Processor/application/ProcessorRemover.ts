@@ -1,5 +1,7 @@
+import { Processor } from '../domain/entity/Processor'
 import { ProcessorId } from '../domain/valueObject/ProcessorId'
 import { ProcessorDoesNotExistError } from '../domain/errors/ProcessorDoesNotExistError'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type ProcessorRepository } from '../domain/repository/ProcessorRepository'
 
 /**
@@ -7,9 +9,11 @@ import { type ProcessorRepository } from '../domain/repository/ProcessorReposito
  */
 export class ProcessorRemover {
 	private readonly processorRepository: ProcessorRepository
+	private readonly eventBus: EventBus
 
-	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+	constructor({ processorRepository, eventBus }: { processorRepository: ProcessorRepository; eventBus: EventBus }) {
 		this.processorRepository = processorRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -25,7 +29,9 @@ export class ProcessorRemover {
 		if (!processor) {
 			throw new ProcessorDoesNotExistError(id)
 		}
-
+		const processorEntity = Processor.fromPrimitives(processor)
+		processorEntity.delete()
 		await this.processorRepository.remove(processorId.value)
+		await this.eventBus.publish(processorEntity.pullDomainEvents())
 	}
 }

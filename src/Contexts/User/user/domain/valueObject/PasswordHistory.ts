@@ -1,5 +1,5 @@
 import { ValueObject } from '../../../../Shared/domain/value-object/ValueObject'
-import { PasswordService } from '../domainService/PasswordService'
+import { PasswordService } from '../service/PasswordService'
 
 type PasswordHistoryPrimitives = string[]
 

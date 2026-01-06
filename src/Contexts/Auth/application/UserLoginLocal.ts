@@ -1,5 +1,5 @@
 import { User } from '../../User/user/domain/entity/User'
-import { PasswordService } from '../../User/user/domain/domainService/PasswordService'
+import { PasswordService } from '../../User/user/domain/service/PasswordService'
 import { InvalidCredentialsError } from '../domain/error/InvalidCredentialsError'
 import { EmployeeUserName } from '../../employee/Employee/domain/valueObject/EmployeeUsername'
 import { EmployeeEmail } from '../../employee/Employee/domain/valueObject/EmployeeEmail'

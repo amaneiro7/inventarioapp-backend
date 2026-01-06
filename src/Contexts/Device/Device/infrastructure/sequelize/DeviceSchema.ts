@@ -22,7 +22,7 @@ import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
 import { type HistoryDto } from '../../../../History/domain/History.dto'
 import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
-import { type StatusDto } from '../../../Status/domain/Status.dto'
+import { type StatusDto } from '../../../Status/domain/entity/Status.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**

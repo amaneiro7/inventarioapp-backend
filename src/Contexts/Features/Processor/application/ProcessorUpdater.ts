@@ -1,18 +1,23 @@
-import { ProcessorAlreadyExistError } from '../domain/errors/ProcessorAlreadyExistError'
-import { ProcessorDoesNotExistError } from '../domain/errors/ProcessorDoesNotExistError'
 import { Processor } from '../domain/entity/Processor'
 import { ProcessorId } from '../domain/valueObject/ProcessorId'
-import { type ProcessorParams } from '../domain/entity/Processor.dto'
+import { ProcessorNumberModelUniquenessChecker } from '../domain/service/ProcessorNumberModelUniquenessChecker'
+import { ProcessorDoesNotExistError } from '../domain/errors/ProcessorDoesNotExistError'
+import { type ProcessorField, type ProcessorParams } from '../domain/entity/Processor.dto'
 import { type ProcessorRepository } from '../domain/repository/ProcessorRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for updating an existing Processor entity.
  */
 export class ProcessorUpdater {
 	private readonly processorRepository: ProcessorRepository
+	private readonly processorNumberModelUniquenessChecker: ProcessorNumberModelUniquenessChecker
+	private readonly eventBus: EventBus
 
-	constructor({ processorRepository }: { processorRepository: ProcessorRepository }) {
+	constructor({ processorRepository, eventBus }: { processorRepository: ProcessorRepository; eventBus: EventBus }) {
 		this.processorRepository = processorRepository
+		this.processorNumberModelUniquenessChecker = new ProcessorNumberModelUniquenessChecker(processorRepository)
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -30,40 +35,61 @@ export class ProcessorUpdater {
 		}
 
 		const processorEntity = Processor.fromPrimitives(processor)
+		const changes: Array<{ field: ProcessorField; oldValue: unknown; newValue: unknown }> = []
 
-		await this.updateFields(processorEntity, params)
+		if (
+			params.productCollection !== undefined &&
+			processorEntity.productCollectionValue !== params.productCollection
+		) {
+			changes.push({
+				field: 'productCollection',
+				oldValue: processorEntity.productCollectionValue,
+				newValue: params.productCollection
+			})
+			processorEntity.updateProductCollection(params.productCollection)
+		}
 
-		await this.processorRepository.save(processorEntity.toPrimitive())
-	}
+		if (params.numberModel !== undefined && processorEntity.numberModelValue !== params.numberModel) {
+			changes.push({
+				field: 'numberModel',
+				oldValue: processorEntity.numberModelValue,
+				newValue: params.numberModel
+			})
+			await this.processorNumberModelUniquenessChecker.ensureUnique(params.numberModel, processorId)
+			processorEntity.updateNumberModel(params.numberModel)
+		}
 
-	private async updateFields(entity: Processor, params: Partial<ProcessorParams>): Promise<void> {
-		const { productCollection, numberModel, cores, frequency, threads } = params
+		if (params.cores !== undefined && processorEntity.coresValue !== params.cores) {
+			changes.push({
+				field: 'cores',
+				oldValue: processorEntity.coresValue,
+				newValue: params.cores
+			})
+			processorEntity.updateCores(params.cores)
+		}
 
-		if (productCollection !== undefined) {
-			entity.updateProductCollection(productCollection)
+		if (params.frequency !== undefined && processorEntity.frequencyValue !== params.frequency) {
+			changes.push({
+				field: 'frequency',
+				oldValue: processorEntity.frequencyValue,
+				newValue: params.frequency
+			})
+			processorEntity.updateFrequency(params.frequency)
 		}
-		if (cores !== undefined) {
-			entity.updateCores(cores)
-		}
-		if (frequency !== undefined) {
-			entity.updateFrequency(frequency)
-		}
-		if (threads !== undefined) {
-			entity.updateThreads(threads)
-		}
-		if (numberModel !== undefined) {
-			await this.ensureProcessorNumberValueDoesNotExist(numberModel, entity)
-			entity.updateNumberModel(numberModel)
-		}
-	}
 
-	private async ensureProcessorNumberValueDoesNotExist(numberModel: string, entity: Processor): Promise<void> {
-		if (entity.numberModelValue === numberModel) {
-			return
+		if (params.threads !== undefined && processorEntity.threadsValue !== params.threads) {
+			changes.push({
+				field: 'threads',
+				oldValue: processorEntity.threadsValue,
+				newValue: params.threads
+			})
+			processorEntity.updateThreads(params.threads)
 		}
-		const existingProcessor = await this.processorRepository.searchByNumberModel(numberModel)
-		if (existingProcessor) {
-			throw new ProcessorAlreadyExistError(numberModel)
+
+		if (changes.length > 0) {
+			processorEntity.registerUpdateEvent(changes)
+			await this.processorRepository.save(processorEntity.toPrimitives())
+			await this.eventBus.publish(processorEntity.pullDomainEvents())
 		}
 	}
 }

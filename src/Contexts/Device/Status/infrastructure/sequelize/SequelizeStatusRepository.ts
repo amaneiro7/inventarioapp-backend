@@ -3,10 +3,10 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type StatusId } from '../../domain/StatusId'
-import { type StatusRepository } from '../../domain/StatusRepository'
+import { type StatusId } from '../../domain/valueObject/StatusId'
+import { type StatusRepository } from '../../domain/repository/StatusRepository'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type StatusDto } from '../../domain/Status.dto'
+import { type StatusDto } from '../../domain/entity/Status.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**

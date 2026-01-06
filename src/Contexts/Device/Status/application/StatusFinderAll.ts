@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../Shared/domain/ResponseType'
-import { type StatusDto } from '../domain/Status.dto'
-import { type StatusRepository } from '../domain/StatusRepository'
+import { type StatusDto } from '../domain/entity/Status.dto'
+import { type StatusRepository } from '../domain/repository/StatusRepository'
 
 /**
  * @description Use case for retrieving all Status entities, with support for criteria-based filtering, sorting, and pagination.

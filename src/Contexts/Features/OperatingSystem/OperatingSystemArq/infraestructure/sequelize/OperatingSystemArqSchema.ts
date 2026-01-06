@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type OperatingSystemArqDto } from '../../domain/OperatingSystemArq.dto'
+import { type OperatingSystemArqDto } from '../../domain/entity/OperatingSystemArq.dto'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemArqId } from '../../domain/OperatingSystemArqID'
-import { type OperatingSystemArqName } from '../../domain/OperatingSystemArqName'
+import { type OperatingSystemArqId } from '../../domain/valueObject/OperatingSystemArqID'
+import { type OperatingSystemArqName } from '../../domain/valueObject/OperatingSystemArqName'
 
 /**
  * @description Sequelize model for the `OperatingSystemArq` entity.

@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type OperatingSystemDto } from '../../domain/OperatingSystem.dto'
+import { type OperatingSystemDto } from '../../domain/entity/OperatingSystem.dto'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemId } from '../../domain/OperatingSystemId'
-import { type OperatingSystemVersion } from '../../domain/OperatingSystemVersion'
-import { type OperatingSystemName } from '../../domain/OperatingSystemName'
-import { type OperatingSystemBuildNumber } from '../../domain/OperatingSystemBuildNumber'
+import { type OperatingSystemId } from '../../domain/valueObject/OperatingSystemId'
+import { type OperatingSystemVersion } from '../../domain/valueObject/OperatingSystemVersion'
+import { type OperatingSystemName } from '../../domain/valueObject/OperatingSystemName'
+import { type OperatingSystemBuildNumber } from '../../domain/valueObject/OperatingSystemBuildNumber'
 
 /**
  * @description Sequelize model for the `OperatingSystem` entity.

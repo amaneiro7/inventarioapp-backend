@@ -1,6 +1,9 @@
-import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { Op } from 'sequelize'
 import { ProcessorModel } from './ProcessorSchema'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { ProcessorAssociation } from './ProcessorAssociation'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -8,19 +11,24 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type ProcessorDto, type ProcessorPrimitives } from '../../domain/entity/Processor.dto'
 import { type ProcessorNumberModel } from '../../domain/valueObject/ProcessorNumberModel'
 import { type ProcessorRepository } from '../../domain/repository/ProcessorRepository'
-import { ProcessorAssociation } from './ProcessorAssociation'
-import { Op } from 'sequelize'
+import { type ProcessorCacheInvalidator } from '../../domain/repository/ProcessorCacheInvalidator'
+import { type ProcessorId } from '../../domain/valueObject/ProcessorId'
 
 /**
  * @description Sequelize implementation of the ProcessorRepository.
  */
-export class SequelizeProcessorRepository extends SequelizeCriteriaConverter implements ProcessorRepository {
+export class SequelizeProcessorRepository
+	extends SequelizeCriteriaConverter
+	implements ProcessorRepository, ProcessorCacheInvalidator
+{
 	private readonly cacheKeyPrefix = 'processors'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorDto>> {
@@ -30,7 +38,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 
 		return this.cache.getCachedData<ResponseDB<ProcessorDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await ProcessorModel.findAndCountAll(finalOptions)
 				return { total: count, data: rows.map(row => row.get({ plain: true })) }
@@ -65,7 +73,7 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 
 		return this.cache.getCachedData<ProcessorDto[]>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const categories = await ProcessorModel.findAll({
 					where: { id: { [Op.in]: sortedIds } }
@@ -90,23 +98,18 @@ export class SequelizeProcessorRepository extends SequelizeCriteriaConverter imp
 
 	async save(payload: ProcessorPrimitives): Promise<void> {
 		await ProcessorModel.upsert(payload)
-		await this.invalidateCache(payload)
 	}
 
 	async remove(id: string): Promise<void> {
-		const processorToRemove = await ProcessorModel.findByPk(id)
 		await ProcessorModel.destroy({ where: { id } })
-		if (processorToRemove) {
-			await this.invalidateCache(processorToRemove.get({ plain: true }))
-		}
 	}
 
-	private async invalidateCache(processorData: Partial<ProcessorDto>): Promise<void> {
-		const { id, numberModel } = processorData
-		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
-		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (numberModel) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:numberModel:${numberModel}`)
-
-		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
+	/**
+	 * @method invalidateProcessorCache
+	 * @description Invalidates all processors-related cache entries.
+	 * Implements ProcessorCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<ProcessorId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

@@ -17,6 +17,7 @@ import { InvalidateVicepresidenciaCacheOnVicepresidenciaChanged } from '../../..
 import { InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged } from '../../../Contexts/employee/VicepresidenciaEjecutiva/application/InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged'
 import { DeactivateUserOnEmployeeTerminated } from '../../../Contexts/User/user/application/DeactivateUserOnEmployeeTerminated'
 import { InvalidateEmployeeCacheOnEmployeeChanged } from '../../../Contexts/employee/Employee/application/InvalidateEmployeeCacheOnEmployeeChanged'
+import { InvalidateProcessorCacheOnProcessorChanged } from '../../../Contexts/Features/Processor/application/InvalidateProcessorCacheOnProcessorChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -36,7 +37,8 @@ export enum DomainEventDependencies {
 	InvalidateVicepresidenciaCacheOnVicepresidenciaChanged = 'invalidateVicepresidenciaCacheOnVicepresidenciaChanged',
 	InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged = 'invalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged',
 	InvalidateEmployeeCacheOnEmployeeChanged = 'invalidateEmployeeCacheOnEmployeeChanged',
-	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated'
+	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated',
+	InvalidateProcessorCacheOnProcessorChanged = 'invalidateProcessorCacheOnProcessorChanged'
 }
 
 /**
@@ -97,6 +99,9 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateEmployeeCacheOnEmployeeChanged]: asClass(
 			InvalidateEmployeeCacheOnEmployeeChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateProcessorCacheOnProcessorChanged]: asClass(
+			InvalidateProcessorCacheOnProcessorChanged
 		).singleton()
 	})
 }

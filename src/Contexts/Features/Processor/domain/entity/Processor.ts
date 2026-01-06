@@ -1,5 +1,4 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ProcessorDto, type ProcessorParams, type ProcessorPrimitives } from './Processor.dto'
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { ProcessorCores } from '../valueObject/ProcessorCores'
 import { ProcessorFrequency } from '../valueObject/ProcessorFrequency'
 import { ProcessorId } from '../valueObject/ProcessorId'
@@ -7,11 +6,16 @@ import { ProcessorHasThreads } from '../valueObject/ProcessorIsThreads'
 import { ProcessorName } from '../valueObject/ProcessorName'
 import { ProcessorNumberModel } from '../valueObject/ProcessorNumberModel'
 import { ProcessorProductCollection } from '../valueObject/ProcessorProductCollection'
+import { ProcessorUpdatedDomainEvent } from '../event/ProcessorUpdatedDomainEvent'
+import { ProcessorCreatedDomainEvent } from '../event/ProcessorCreatedDomainEvent'
+import { ProcessorRemovedDomainEvent } from '../event/ProcessorRemovedDomainEvent'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ProcessorDto, type ProcessorParams, type ProcessorPrimitives } from './Processor.dto'
 
 /**
  * @description Represents the Processor domain entity.
  */
-export class Processor {
+export class Processor extends AggregateRoot {
 	constructor(
 		private readonly id: ProcessorId,
 		private productCollection: ProcessorProductCollection,
@@ -19,17 +23,38 @@ export class Processor {
 		private cores: ProcessorCores,
 		private threads: ProcessorHasThreads,
 		private frequency: ProcessorFrequency
-	) {}
+	) {
+		super()
+	}
 
 	static create({ productCollection, numberModel, cores, threads, frequency }: ProcessorParams): Processor {
 		const id = ProcessorId.random().value
-		return new Processor(
+		const processor = new Processor(
 			new ProcessorId(id),
 			new ProcessorProductCollection(productCollection),
 			new ProcessorNumberModel(numberModel),
 			new ProcessorCores(cores),
 			new ProcessorHasThreads(threads),
 			new ProcessorFrequency(frequency)
+		)
+
+		processor.record(
+			new ProcessorCreatedDomainEvent({
+				aggregateId: id,
+				numberModel,
+				occurredOn: new Date()
+			})
+		)
+
+		return processor
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new ProcessorUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
 		)
 	}
 
@@ -53,6 +78,18 @@ export class Processor {
 		this.frequency = new ProcessorFrequency(frequency)
 	}
 
+	/**
+	 * @description Marks the Directiva as deleted and records the domain event.
+	 */
+	delete(): void {
+		this.record(
+			new ProcessorRemovedDomainEvent({
+				aggregateId: this.idValue,
+				numberModel: this.numberModelValue
+			})
+		)
+	}
+
 	static fromPrimitives(primitives: ProcessorDto): Processor {
 		return new Processor(
 			new ProcessorId(primitives.id),
@@ -64,7 +101,7 @@ export class Processor {
 		)
 	}
 
-	toPrimitive(): ProcessorPrimitives {
+	toPrimitives(): ProcessorPrimitives {
 		return {
 			id: this.id.value,
 			productCollection: this.productCollectionValue,

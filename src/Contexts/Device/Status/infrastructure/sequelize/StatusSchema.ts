@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type StatusId } from '../../domain/StatusId'
-import { type StatusName } from '../../domain/StatusName'
-import { type StatusDto } from '../../domain/Status.dto'
+import { type StatusId } from '../../domain/valueObject/StatusId'
+import { type StatusName } from '../../domain/valueObject/StatusName'
+import { type StatusDto } from '../../domain/entity/Status.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**

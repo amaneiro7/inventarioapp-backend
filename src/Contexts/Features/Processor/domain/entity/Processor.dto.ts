@@ -32,6 +32,7 @@ export type ProcessorPrimitives = Processor
  * @description Represents the set of parameters required to create a new Processor.
  */
 export type ProcessorParams = Omit<Processor, 'id' | 'name'>
+export type ProcessorField = keyof Omit<ProcessorPrimitives, 'id'>
 
 /**
  * @type ProcessorDto

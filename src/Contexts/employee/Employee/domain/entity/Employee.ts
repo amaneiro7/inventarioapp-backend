@@ -21,11 +21,11 @@ import { EmployeeCreatedDomainEvent } from '../event/EmployeeCreatedDomainEvent'
 import { EmployeeTerminatedDomainEvent } from '../event/EmployeeTerminatedDomainEvent'
 import { EmployeeReactivatedDomainEvent } from '../event/EmployeeReactivatedDomainEvent'
 import { EmployeeTypeChangedDomainEvent } from '../event/EmployeeTypeChangedDomainEvent'
+import { EmployeeUpdatedDomainEvent } from '../event/EmployeeUpdatedDomainEvent'
+import { EmployeeRemovedDomainEvent } from '../event/EmployeeRemovedDomainEvent'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
-import { EmployeeUpdatedDomainEvent } from '../event/EmployeeUpdatedDomainEvent'
-import { EmployeeRemovedDomainEvent } from '../event/EmployeeRemovedDomainEvent'
 
 /**
  * @description Represents the Employee domain entity.

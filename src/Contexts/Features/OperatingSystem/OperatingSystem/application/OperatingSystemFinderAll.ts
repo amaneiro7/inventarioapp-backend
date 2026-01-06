@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../../Shared/domain/ResponseType'
-import { type OperatingSystemDto } from '../domain/OperatingSystem.dto'
-import { type OperatingSystemRepository } from '../domain/OperatingSystemRepository'
+import { type OperatingSystemDto } from '../domain/entity/OperatingSystem.dto'
+import { type OperatingSystemRepository } from '../domain/repository/OperatingSystemRepository'
 
 /**
  * @description Use case for retrieving all OperatingSystem entities.

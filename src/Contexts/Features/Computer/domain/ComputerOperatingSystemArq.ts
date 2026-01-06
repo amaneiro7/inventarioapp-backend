@@ -1,10 +1,10 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { OperatingSystemArqId } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqID'
+import { OperatingSystemArqId } from '../../OperatingSystem/OperatingSystemArq/domain/valueObject/OperatingSystemArqID'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqDoesNotExist'
+import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/errors/OperatingSystemArqDoesNotExist'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type ComputerOperatingSystem } from './ComputerOperatingSystem'
-import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/OperatingSystemArqRepository'
+import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
 import { type DeviceComputer } from './Computer'
 
 /**

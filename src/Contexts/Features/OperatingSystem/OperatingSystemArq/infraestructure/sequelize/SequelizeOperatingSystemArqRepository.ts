@@ -1,13 +1,14 @@
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type OperatingSystemArqDto } from '../../domain/OperatingSystemArq.dto'
-import { type OperatingSystemArqId } from '../../domain/OperatingSystemArqID'
-import { type OperatingSystemArqRepository } from '../../domain/OperatingSystemArqRepository'
+import { Op } from 'sequelize'
+import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { OperatingSystemArqModel } from './OperatingSystemArqSchema'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type OperatingSystemArqDto } from '../../domain/entity/OperatingSystemArq.dto'
+import { type OperatingSystemArqId } from '../../domain/valueObject/OperatingSystemArqID'
+import { type OperatingSystemArqRepository } from '../../domain/repository/OperatingSystemArqRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
 
 /**
  * @description Sequelize implementation of the OperatingSystemArqRepository.
@@ -47,6 +48,32 @@ export class SequelizeOperatingSystemArqRepository
 			fetchFunction: async () => {
 				const operatingSystemArq = await OperatingSystemArqModel.findByPk(id)
 				return operatingSystemArq ? operatingSystemArq.get({ plain: true }) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple operatingSystemArqs by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of operatingSystemArq IDs to find.
+	 * @returns {Promise<OperatingSystemArqDto[]>} A promise resolving to an array of found OperatingSystemArq DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<OperatingSystemArqDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<OperatingSystemArqDto[]>({
+			cacheKey,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const operatingSystemArqs = await OperatingSystemArqModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return operatingSystemArqs.map(operatingSystemArq =>
+					operatingSystemArq.get({ plain: true })
+				) as OperatingSystemArqDto[]
 			}
 		})
 	}
