@@ -6,7 +6,7 @@ import { ModelSeries } from './ModelSeries'
 import { MonitorModels } from './MonitorModels'
 import { MouseModels } from './MouseModels'
 
-import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
+import { MemoryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
 import { InputTypeDoesNotExistError } from '../../../InputType/domain/errors/InputTypeDoesNotExistError'
 import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
 
@@ -18,7 +18,7 @@ import { type ComputerModelsParams } from '../dto/ComputerModels.dto'
 import { type KeyboardModelsParams } from '../dto/KeyboardModels.dto'
 import { type LaptopModelsParams } from '../dto/LaptopsModels.dto'
 import { type PrinteModelsParams } from '../dto/ModelPrinters.dto'
-import { ModelSeriesDto, type ModelSeriesParams } from '../dto/ModelSeries.dto'
+import { type ModelSeriesDto, type ModelSeriesParams } from '../dto/ModelSeries.dto'
 import { type MonitorModelsParams } from '../dto/MonitoModels.dto'
 import { type MouseModelsParams } from '../dto/MouseModels.dto'
 import { type ModelDependencies } from './ModelDependencies'
@@ -103,7 +103,7 @@ export class ModelFactory {
 	private async ensureMemoryRamTypeExist(memoryRamTypeId: Primitives<MemoryRamTypeId>): Promise<void> {
 		const isMemoryRamTypeExist = await this.dependencies.memoryRamTypeRepository.findById(memoryRamTypeId)
 		if (!isMemoryRamTypeExist) {
-			throw new MemorryRamTypeDoesNotExistError(memoryRamTypeId)
+			throw new MemoryRamTypeDoesNotExistError(memoryRamTypeId)
 		}
 	}
 	private async ensureInputTypeExist(inputTypeId: Primitives<InputTypeId>): Promise<void> {
