@@ -1,4 +1,4 @@
-import { Device } from '../../../Device/Device/domain/Device'
+import { Device } from '../../../Device/Device/domain/entity/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
 import { CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'

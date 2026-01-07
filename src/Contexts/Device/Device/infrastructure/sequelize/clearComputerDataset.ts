@@ -1,6 +1,6 @@
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { lastHistoryUpdated } from '../../../../Shared/domain/LastHistoryUpdated'
-import { type DeviceDto } from '../../domain/Device.dto'
+import { type DeviceDto } from '../../domain/dto/Device.dto'
 import { type ClearDefaultDataset, type ClearComputerDataset } from './DeviceResponse'
 
 const SIN_ASIGNAR = 'Sin Asignar'

@@ -1,6 +1,6 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { HardDriveCapacityId } from '../../HardDriveCapacity/domain/HardDriveCapacityId'
-import { type HardDriveCapacityRepository } from '../../HardDriveCapacity/domain/HardDriveCapacityRepository'
+import { HardDriveCapacityId } from '../../HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
+import { type HardDriveCapacityRepository } from '../../HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
 import { type DeviceHardDrive } from './HardDrive'
 
 /**

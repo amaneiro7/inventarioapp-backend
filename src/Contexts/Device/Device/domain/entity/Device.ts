@@ -1,23 +1,25 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { DeviceId } from './DeviceId'
-import { DeviceActivo } from './DeviceActivo'
-import { DeviceSerial } from './DeviceSerial'
-import { CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
-import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { DeviceEmployee } from './DeviceEmployee'
-import { DeviceObservation } from './DeviceObservation'
-import { DeviceLocation } from './DeviceLocation'
-import { DeviceModelSeries } from './DeviceModelSeries'
-import { DeviceStatus } from './DeviceStatus'
-import { DeviceStocknumber } from './DeviceStock'
-import { type DevicePrimitives, type DeviceParams } from './Device.dto'
+import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
+import { DeviceId } from '../DeviceId'
+import { DeviceActivo } from '../DeviceActivo'
+import { DeviceSerial } from '../DeviceSerial'
+import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { DeviceEmployee } from '../DeviceEmployee'
+import { DeviceObservation } from '../DeviceObservation'
+import { DeviceLocation } from '../DeviceLocation'
+import { DeviceModelSeries } from '../DeviceModelSeries'
+import { DeviceStatus } from '../DeviceStatus'
+import { DeviceStocknumber } from '../DeviceStock'
+import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DevicePrimitives, type DeviceParams } from '../dto/Device.dto'
 
 /**
  * @class Device
  * @description Represents the core Device domain entity. This class encapsulates the business logic
  * and ensures data integrity through the use of Value Objects.
  */
-export class Device {
+export class Device extends AggregateRoot {
 	constructor(
 		private readonly id: DeviceId,
 		private serial: DeviceSerial,
@@ -30,7 +32,9 @@ export class Device {
 		private locationId: DeviceLocation,
 		private observation: DeviceObservation,
 		private stockNumber: DeviceStocknumber
-	) {}
+	) {
+		super()
+	}
 
 	/**
 	 * @static
@@ -40,9 +44,9 @@ export class Device {
 	 * @returns {Device} A new `Device` instance.
 	 */
 	static create(params: DeviceParams): Device {
-		const id = DeviceId.random().value
-		return new Device(
-			new DeviceId(id),
+		const id = DeviceId.random()
+		const device = new Device(
+			id,
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
 			new DeviceStatus(params.statusId),
@@ -54,6 +58,15 @@ export class Device {
 			new DeviceObservation(params.observation),
 			new DeviceStocknumber(params.stockNumber, params.statusId)
 		)
+
+		device.record(
+			new DeviceCreatedDomainEvent({
+				aggregateId: device.idValue,
+				device: device.toPrimitives()
+			})
+		)
+
+		return device
 	}
 
 	/**

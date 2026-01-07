@@ -4,7 +4,7 @@ import { EmployeeId } from '../../../employee/Employee/domain/valueObject/Employ
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { EmployeeDoesNotExistError } from '../../../employee/Employee/domain/Errors/EmployeeDoesNotExistError'
 import { type StatusOptionKey, StatusOptions, statusOptionsName } from '../../Status/domain/StatusOptions'
-import { type Device } from './Device'
+import { type Device } from './entity/Device'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 

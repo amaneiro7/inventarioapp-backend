@@ -1,10 +1,10 @@
-import { type ComputerName } from '../../../Features/Computer/domain/ComputerName'
-import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type DevicePrimitives, type DeviceDto } from './Device.dto'
-import { type DeviceId } from './DeviceId'
-import { type DeviceSerial } from './DeviceSerial'
+import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
+import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DevicePrimitives, type DeviceDto } from '../dto/Device.dto'
+import { type DeviceId } from '../DeviceId'
+import { type DeviceSerial } from '../DeviceSerial'
 
 /**
  * @abstract
@@ -29,6 +29,8 @@ export abstract class DeviceRepository {
 	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the device DTO if found, or null otherwise.
 	 */
 	abstract findById(deviceId: Primitives<DeviceId>): Promise<DeviceDto | null>
+
+	abstract findByIds: (ids: Array<Primitives<DeviceId>>) => Promise<DeviceDto[]>
 
 	/**
 	 * @abstract

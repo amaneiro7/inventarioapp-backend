@@ -1,6 +1,6 @@
 import { HardDriveHealth } from './HardDriveHealth'
 import { DeviceId } from '../../../../Device/Device/domain/DeviceId'
-import { Device } from '../../../../Device/Device/domain/Device'
+import { Device } from '../../../../Device/Device/domain/entity/Device'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
 import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'

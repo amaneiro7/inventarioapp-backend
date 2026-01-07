@@ -1,4 +1,4 @@
-import { type DeviceDto } from '../../../../src/Contexts/Device/Device/domain/Device.dto'
+import { type DeviceDto } from '../../../../src/Contexts/Device/Device/domain/dto/Device.dto'
 import { CategoryDefault } from '../../../../src/Contexts/Category/Category/domain/CategoryDefaultValues'
 import { StatusOptions } from '../../../../src/Contexts/Device/Status/domain/StatusOptions'
 

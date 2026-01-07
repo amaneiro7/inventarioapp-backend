@@ -1,4 +1,4 @@
-import { type Transaction, type Model, type ModelStatic } from 'sequelize'
+import { type Transaction, type Model, type ModelStatic, Op } from 'sequelize'
 import fs from 'node:fs'
 import { set_fs, utils, type WorkSheet, write } from 'xlsx'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
@@ -10,10 +10,10 @@ import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain
 import { MFP } from '../../../../Features/MFP/domain/MFP'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
-import { type DeviceRepository } from '../../domain/DeviceRepository'
+import { type DeviceRepository } from '../../domain/repository/DeviceRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type DevicePrimitives, type DeviceDto } from '../../domain/Device.dto'
+import { type DevicePrimitives, type DeviceDto } from '../../domain/dto/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ClearDefaultDataset } from './DeviceResponse'
 
@@ -114,6 +114,30 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 					]
 				})
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
+			}
+		})
+	}
+
+	/**
+	 * @method findByIds
+	 * @description Retrieves multiple devices by their unique identifiers in a single query.
+	 * This method is optimized for bulk lookups and does not use caching.
+	 * This method is optimized for bulk lookups and includes caching.
+	 * @param {string[]} ids An array of Device IDs to find.
+	 * @returns {Promise<DeviceDto[]>} A promise resolving to an array of found Device DTOs.
+	 */
+	async findByIds(ids: string[]): Promise<DeviceDto[]> {
+		const sortedIds = [...new Set(ids)].sort() // Deduplicate and sort for a consistent cache key
+		const cacheKey = `${this.cacheKeyPrefix}:ids:${sortedIds.join(',')}`
+
+		return this.cache.getCachedData<DeviceDto[]>({
+			cacheKey,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const devices = await DeviceModel.findAll({
+					where: { id: { [Op.in]: sortedIds } }
+				})
+				return devices.map(device => device.get({ plain: true })) as DeviceDto[]
 			}
 		})
 	}

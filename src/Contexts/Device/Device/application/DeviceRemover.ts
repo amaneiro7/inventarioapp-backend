@@ -1,6 +1,6 @@
-import { DeviceDoesNotExistError } from '../domain/DeviceDoesNotExistError'
+import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistError'
 import { DeviceId } from '../domain/DeviceId'
-import { type DeviceRepository } from '../domain/DeviceRepository'
+import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 
 /**
  * @description Use case for removing a Device entity from the system.

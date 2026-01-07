@@ -1,13 +1,13 @@
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
-import { type HardDriveTypeRepository } from '../../domain/HardDriveTypeRepository'
-import { type CacheService } from '../../../../../Shared/domain/CacheService'
 import { HardDriveTypeModel } from './HardDriveTypeSchema'
-import { type HardDriveTypeDto } from '../../domain/HardDriveType.dto'
-import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
-import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type HardDriveTypeId } from '../../domain/valueObject/HardDriveTypeId'
+import { type HardDriveTypeRepository } from '../../domain/repository/HardDriveTypeRepository'
+import { type CacheService } from '../../../../../Shared/domain/CacheService'
+import { type HardDriveTypeDto } from '../../domain/entity/HardDriveType.dto'
+import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @description Sequelize implementation of the HardDriveTypeRepository.

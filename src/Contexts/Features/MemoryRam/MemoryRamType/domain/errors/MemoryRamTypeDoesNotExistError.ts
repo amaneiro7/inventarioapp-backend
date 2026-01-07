@@ -6,7 +6,7 @@ import httpStatus from '../../../../../Shared/infrastructure/utils/http-status'
  * @extends ApiError
  * @description Error thrown when an operation is attempted on a memory RAM type that is not found in the database.
  */
-export class MemorryRamTypeDoesNotExistError extends ApiError {
+export class MemoryRamTypeDoesNotExistError extends ApiError {
 	/**
 	 * @param {string} identifier The ID of the memory RAM type that was not found.
 	 */

@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../../Shared/domain/ResponseType'
-import { type HardDriveTypeDto } from '../domain/HardDriveType.dto'
-import { type HardDriveTypeRepository } from '../domain/HardDriveTypeRepository'
+import { type HardDriveTypeDto } from '../domain/entity/HardDriveType.dto'
+import { type HardDriveTypeRepository } from '../domain/repository/HardDriveTypeRepository'
 
 /**
  * @description Use case for retrieving all HardDriveType entities.

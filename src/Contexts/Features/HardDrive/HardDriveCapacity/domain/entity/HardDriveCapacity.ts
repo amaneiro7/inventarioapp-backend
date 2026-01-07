@@ -1,16 +1,19 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { AggregateRoot } from '../../../../../Shared/domain/AggregateRoot'
+import { HardDriveCapacityId } from '../valueObject/HardDriveCapacityId'
+import { HardDriveCapacityValue } from '../valueObject/HardDriveCapacityValue'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityDto, type HardDriveCapacityPrimitives } from './HardDriveCapacity.dto'
-import { HardDriveCapacityId } from './HardDriveCapacityId'
-import { HardDriveCapacityValue } from './HardDriveCapacityValue'
 
 /**
  * @description Represents the HardDriveCapacity domain entity.
  */
-export class HardDriveCapacity {
+export class HardDriveCapacity extends AggregateRoot {
 	constructor(
 		private readonly id: HardDriveCapacityId,
 		private readonly name: HardDriveCapacityValue
-	) {}
+	) {
+		super()
+	}
 
 	static fromPrimitives(primitives: HardDriveCapacityDto): HardDriveCapacity {
 		return new HardDriveCapacity(
@@ -19,10 +22,10 @@ export class HardDriveCapacity {
 		)
 	}
 
-	toPrimitive(): HardDriveCapacityPrimitives {
+	toPrimitives(): HardDriveCapacityPrimitives {
 		return {
-			id: this.id.value,
-			name: this.name.value
+			id: this.idValue,
+			name: this.nameValue
 		}
 	}
 
@@ -30,7 +33,7 @@ export class HardDriveCapacity {
 		return this.id.value
 	}
 
-	get valueValue(): Primitives<HardDriveCapacityValue> {
+	get nameValue(): Primitives<HardDriveCapacityValue> {
 		return this.name.value
 	}
 }

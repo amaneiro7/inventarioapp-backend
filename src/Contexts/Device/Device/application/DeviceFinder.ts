@@ -1,8 +1,8 @@
-import { DeviceDoesNotExistError } from '../domain/DeviceDoesNotExistError'
+import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistError'
 import { DeviceId } from '../domain/DeviceId'
-import { type DeviceRepository } from '../domain/DeviceRepository'
+import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 import { type Nullable } from '../../../Shared/domain/Nullable'
-import { type DeviceDto } from '../domain/Device.dto'
+import { type DeviceDto } from '../domain/dto/Device.dto'
 
 /**
  * @description Use case for finding a Device entity by its unique identifier.

@@ -10,7 +10,7 @@ import { type ShipmentDate } from '../valueObject/ShipmentDate'
 import { type SentBy } from '../valueObject/SentBy'
 import { type ReceivedBy } from '../valueObject/ReceivedBy'
 import { type Observation } from '../valueObject/Observation'
-import { type DeviceDto } from '../../../../Device/Device/domain/Device.dto'
+import { type DeviceDto } from '../../../../Device/Device/domain/dto/Device.dto'
 import {
 	type ShipmentDevicePrimitives,
 	type ShipmentDeviceDto

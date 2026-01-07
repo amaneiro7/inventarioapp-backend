@@ -1,5 +1,5 @@
 import { CategoryDefault } from '../../../../Category/Category/domain/CategoryDefaultValues'
-import { type DeviceDto } from '../../../../Device/Device/domain/Device.dto'
+import { type DeviceDto } from '../../../../Device/Device/domain/dto/Device.dto'
 import { type DeviceSnapshotData } from './DeviceSnapshot'
 
 export class DeviceSnapshot {

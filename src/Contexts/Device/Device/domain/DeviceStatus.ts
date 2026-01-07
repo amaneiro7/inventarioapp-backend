@@ -2,7 +2,7 @@ import { StatusId } from '../../Status/domain/valueObject/StatusId'
 import { StatusDoesNotExistError } from '../../Status/domain/errors/StatusDoesNotExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type StatusRepository } from '../../Status/domain/repository/StatusRepository'
-import { type Device } from './Device'
+import { type Device } from './entity/Device'
 
 /**
  * @class DeviceStatus

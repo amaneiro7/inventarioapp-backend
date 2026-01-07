@@ -1,8 +1,8 @@
 import { DeviceHardDrive } from '../domain/HardDrive'
 import { HDDCapacity } from '../domain/HDDCapacity'
 import { HDDType } from '../domain/HDDType'
-import { type HardDriveCapacityRepository } from '../../HardDriveCapacity/domain/HardDriveCapacityRepository'
-import { type HardDriveTypeRepository } from '../../HardDriveType/domain/HardDriveTypeRepository'
+import { type HardDriveCapacityRepository } from '../../HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
+import { type HardDriveTypeRepository } from '../../HardDriveType/domain/repository/HardDriveTypeRepository'
 import { type DeviceHardDriveParams } from '../domain/HardDrive.dto'
 
 /**

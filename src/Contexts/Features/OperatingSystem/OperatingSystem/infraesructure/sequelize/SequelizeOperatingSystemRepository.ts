@@ -68,11 +68,11 @@ export class SequelizeOperatingSystemRepository
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
-				const operatingSystem = await OperatingSystemModel.findAll({
+				const operatingSystems = await OperatingSystemModel.findAll({
 					where: { id: { [Op.in]: sortedIds } }
 				})
-				return operatingSystem.map(OperatingSystem =>
-					OperatingSystem.get({ plain: true })
+				return operatingSystems.map(operatingSystem =>
+					operatingSystem.get({ plain: true })
 				) as OperatingSystemDto[]
 			}
 		})

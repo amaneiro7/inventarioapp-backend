@@ -4,9 +4,9 @@ import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { type HardDriveCapacityDto } from '../../domain/HardDriveCapacity.dto'
-import { type HardDriveCapacityId } from '../../domain/HardDriveCapacityId'
-import { type HardDriveCapacityRepository } from '../../domain/HardDriveCapacityRepository'
+import { type HardDriveCapacityDto } from '../../domain/entity/HardDriveCapacity.dto'
+import { type HardDriveCapacityId } from '../../domain/valueObject/HardDriveCapacityId'
+import { type HardDriveCapacityRepository } from '../../domain/repository/HardDriveCapacityRepository'
 import { HardDriveCapacityModel } from './HardDriveCapacitySchema'
 
 /**

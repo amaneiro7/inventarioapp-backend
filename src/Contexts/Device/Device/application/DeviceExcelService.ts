@@ -6,7 +6,7 @@ import { FilterField } from '../../../Shared/domain/criteria/FilterField'
 import { FilterValue } from '../../../Shared/domain/criteria/FilterValue'
 import { FilterOperator } from '../../../Shared/domain/criteria/FilterOperator'
 import { type SearchByCriteriaQuery } from '../../../Shared/domain/SearchByCriteriaQuery'
-import { type DeviceRepository } from '../domain/DeviceRepository'
+import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 
 /**
  * @description Service for generating an Excel file (Buffer) containing device data based on specified criteria.

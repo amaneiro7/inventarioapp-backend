@@ -27,4 +27,5 @@ export abstract class MemoryRamTypeRepository {
 	 * @returns {Promise<MemoryRamTypeDto | null>} A promise that resolves to the DTO if found, or null otherwise.
 	 */
 	abstract findById(id: Primitives<MemoryRamTypeId>): Promise<MemoryRamTypeDto | null>
+	abstract findByIds: (ids: Primitives<MemoryRamTypeId>[]) => Promise<MemoryRamTypeDto[]>
 }

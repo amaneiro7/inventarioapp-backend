@@ -16,7 +16,7 @@ import { CategoryValues } from '../../../../Category/Category/domain/CategoryOpt
 import { ModelSeriesProcessorRemovedDomainEvent } from '../event/ModelSeriesProcessorRemovedDomainEvent'
 import { ModelSeriesProcessorAddedDomainEvent } from '../event/ModelSeriesProcessorAddedDomainEvent'
 import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
-import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemorryRamTypeDoesNotExistError'
+import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
 import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
 
 import { ModelDependencies } from './ModelDependencies'

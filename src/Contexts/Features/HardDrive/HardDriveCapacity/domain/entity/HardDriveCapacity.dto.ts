@@ -1,6 +1,6 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type HardDriveCapacityId } from './HardDriveCapacityId'
-import { type HardDriveCapacityValue } from './HardDriveCapacityValue'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type HardDriveCapacityId } from '../valueObject/HardDriveCapacityId'
+import { type HardDriveCapacityValue } from '../valueObject/HardDriveCapacityValue'
 
 /**
  * @interface HardDriveCapacity

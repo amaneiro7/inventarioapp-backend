@@ -1,10 +1,10 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityId'
+import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
 import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/HardDriveCapacityRepository'
+import { type HardDriveCapacityRepository } from '../../HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
 import { type DeviceComputer } from './Computer'
 
 /**

@@ -1,7 +1,7 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
 import { type HardDriveTypeDto, type HardDriveTypePrimitives } from './HardDriveType.dto'
-import { HardDriveTypeId } from './HardDriveTypeId'
-import { HardDriveTypeName } from './HardDriveTypeName'
+import { HardDriveTypeId } from '../valueObject/HardDriveTypeId'
+import { HardDriveTypeName } from '../valueObject/HardDriveTypeName'
 
 /**
  * @description Represents the HardDriveType domain entity.

@@ -1,8 +1,8 @@
 import { GetAllBaseService } from '../../../../Shared/methods/getAll.abstract'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseService } from '../../../../Shared/domain/ResponseType'
-import { type HardDriveCapacityDto } from '../domain/HardDriveCapacity.dto'
-import { type HardDriveCapacityRepository } from '../domain/HardDriveCapacityRepository'
+import { type HardDriveCapacityDto } from '../domain/entity/HardDriveCapacity.dto'
+import { type HardDriveCapacityRepository } from '../domain/repository/HardDriveCapacityRepository'
 
 /**
  * @description Use case for retrieving all HardDriveCapacity entities.

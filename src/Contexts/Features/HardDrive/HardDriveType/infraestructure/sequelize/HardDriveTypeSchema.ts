@@ -1,8 +1,8 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type HardDriveTypeName } from '../../domain/HardDriveTypeName'
-import { type HardDriveTypeId } from '../../domain/HardDriveTypeId'
-import { type HardDriveTypeDto } from '../../domain/HardDriveType.dto'
+import { type HardDriveTypeName } from '../../domain/valueObject/HardDriveTypeName'
+import { type HardDriveTypeId } from '../../domain/valueObject/HardDriveTypeId'
+import { type HardDriveTypeDto } from '../../domain/entity/HardDriveType.dto'
 
 /**
  * @description Sequelize model for the `HardDriveType` entity.

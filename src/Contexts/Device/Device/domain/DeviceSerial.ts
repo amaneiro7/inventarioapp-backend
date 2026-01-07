@@ -1,10 +1,10 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { DeviceAlreadyExistError } from './DeviceAlreadyExistError'
+import { DeviceAlreadyExistError } from './errors/DeviceAlreadyExistError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type Device } from './Device'
+import { type Device } from './entity/Device'
 import { type Generic } from '../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
-import { type DeviceRepository } from './DeviceRepository'
+import { type DeviceRepository } from './repository/DeviceRepository'
 
 /**
  * @class DeviceSerial

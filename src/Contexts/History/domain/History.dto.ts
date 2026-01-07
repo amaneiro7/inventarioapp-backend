@@ -1,4 +1,4 @@
-import { type DeviceDto } from '../../Device/Device/domain/Device.dto'
+import { type DeviceDto } from '../../Device/Device/domain/dto/Device.dto'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
 import { type UserDto } from '../../User/user/domain/entity/User.dto'
 import { type ActionType } from './HistoryAction'

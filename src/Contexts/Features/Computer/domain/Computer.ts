@@ -1,4 +1,4 @@
-import { Device } from '../../../Device/Device/domain/Device'
+import { Device } from '../../../Device/Device/domain/entity/Device'
 import { DeviceId } from '../../../Device/Device/domain/DeviceId'
 import { DeviceSerial } from '../../../Device/Device/domain/DeviceSerial'
 import { DeviceActivo } from '../../../Device/Device/domain/DeviceActivo'

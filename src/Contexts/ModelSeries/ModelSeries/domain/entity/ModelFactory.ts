@@ -6,7 +6,7 @@ import { ModelSeries } from './ModelSeries'
 import { MonitorModels } from './MonitorModels'
 import { MouseModels } from './MouseModels'
 
-import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemorryRamTypeDoesNotExistError'
+import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
 import { InputTypeDoesNotExistError } from '../../../InputType/domain/errors/InputTypeDoesNotExistError'
 import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
 

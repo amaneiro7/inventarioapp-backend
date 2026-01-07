@@ -1,7 +1,7 @@
 import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type Device } from './Device'
+import { type Device } from './entity/Device'
 
 /**
  * @class DeviceObservation

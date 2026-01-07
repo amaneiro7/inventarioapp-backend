@@ -2,7 +2,7 @@ import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/Acc
 import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { type DeviceRepository } from '../../../Device/Device/domain/DeviceRepository'
+import { type DeviceRepository } from '../../../Device/Device/domain/repository/DeviceRepository'
 import { type DeviceComputer } from './Computer'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 

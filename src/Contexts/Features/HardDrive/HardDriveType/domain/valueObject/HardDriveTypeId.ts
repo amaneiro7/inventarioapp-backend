@@ -1,8 +1,8 @@
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { StringValueObject } from '../../../../Shared/domain/value-object/StringValueObject'
-import { type ComputerHardDriveType } from '../../../Computer/domain/ComputerHardDriveType'
-import { HardDriveTypeDoesNotExistError } from './HardDriveTypeDoesNotExist'
-import { type HardDriveTypeRepository } from './HardDriveTypeRepository'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { StringValueObject } from '../../../../../Shared/domain/value-object/StringValueObject'
+import { type ComputerHardDriveType } from '../../../../Computer/domain/ComputerHardDriveType'
+import { HardDriveTypeDoesNotExistError } from '../HardDriveTypeDoesNotExist'
+import { type HardDriveTypeRepository } from '../repository/HardDriveTypeRepository'
 
 /**
  * @description Represents the Value Object for a HardDriveType's unique identifier.

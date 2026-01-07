@@ -1,5 +1,5 @@
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { NumberValueObject } from '../../../../Shared/domain/value-object/NumberValueObject'
+import { InvalidArgumentError } from '../../../../../Shared/domain/errors/ApiError'
+import { NumberValueObject } from '../../../../../Shared/domain/value-object/NumberValueObject'
 
 /**
  * @description Represents the value of a hard drive capacity.

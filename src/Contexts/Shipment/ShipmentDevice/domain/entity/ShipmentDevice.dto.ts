@@ -2,7 +2,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
 import { type ShipmentDeviceId } from '../valueObject/ShipmentDeviceId'
 import { type DeviceSnapshotData } from '../valueObject/DeviceSnapshot'
-import { type DeviceDto } from '../../../../Device/Device/domain/Device.dto'
+import { type DeviceDto } from '../../../../Device/Device/domain/dto/Device.dto'
 import { type ShipmentId } from '../../../Shipment/domain/valueObject/ShipmentId'
 
 export interface ShipmentDevice {
