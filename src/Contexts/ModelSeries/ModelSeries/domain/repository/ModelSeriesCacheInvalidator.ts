@@ -1,3 +1,3 @@
-export interface ModelSeriesCacheInvalidator {
-	invalidateModelSeriesCache(): Promise<void>
-}
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+
+export type ModelSeriesCacheInvalidator = CacheInvalidator

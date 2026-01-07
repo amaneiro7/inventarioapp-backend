@@ -13,6 +13,7 @@ import { MouseModels } from '../../domain/entity/MouseModels'
 import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { clearModelDataset } from './clearModelDataset'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
@@ -21,6 +22,7 @@ import { type ModelSeriesRepository } from '../../domain/repository/ModelSeriesR
 import { type ModelSeriesCacheInvalidator } from '../../domain/repository/ModelSeriesCacheInvalidator'
 import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/dto/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type ModelSeriesId } from '../../domain/valueObject/ModelSeriesId'
 
 /**
  * @class SequelizeModelSeriesRepository
@@ -36,9 +38,11 @@ export class SequelizeModelSeriesRepository
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix: string = 'modelSeries'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	/**
@@ -55,7 +59,7 @@ export class SequelizeModelSeriesRepository
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKeyPrefix}:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
@@ -81,7 +85,7 @@ export class SequelizeModelSeriesRepository
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
 			cacheKey: `${this.cacheKeyPrefix}:matching:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await ModelSeriesModel.findAndCountAll(modelOption)
 				return {
@@ -303,7 +307,7 @@ export class SequelizeModelSeriesRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements ModelSeriesCacheInvalidator interface.
 	 */
-	async invalidateModelSeriesCache(): Promise<void> {
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}*` })
+	async invalidate(id?: Primitives<ModelSeriesId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

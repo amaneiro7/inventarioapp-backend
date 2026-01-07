@@ -7,7 +7,7 @@ import { Generic } from '../valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { HasFingerPrintReader } from '../valueObject/HasFingerPrintReader'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
-import { InputTypeDoesNotExistError } from '../../../InputType/domain/errors/InputTypeDoesNotExistError'
+import { InputTypeExistenceChecker } from '../../../InputType/domain/service/InputTypeExistanceChecker'
 import { type ModelDependencies } from './ModelDependencies'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -75,10 +75,8 @@ export class KeyboardModels extends ModelSeries {
 		const changes = await super.update(params, dependencies)
 
 		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
-			const existingInputType = await dependencies.inputTypeRepository.findById(params.inputTypeId)
-			if (!existingInputType) {
-				throw new InputTypeDoesNotExistError(params.inputTypeId)
-			}
+			const inputTypeExistenceChecker = new InputTypeExistenceChecker(dependencies.inputTypeRepository)
+			await inputTypeExistenceChecker.ensureExist(params.inputTypeId)
 			changes.push({
 				field: 'inputTypeId',
 				oldValue: this.inputTypeValue,

@@ -16,10 +16,9 @@ import { CategoryValues } from '../../../../Category/Category/domain/CategoryOpt
 import { ModelSeriesProcessorRemovedDomainEvent } from '../event/ModelSeriesProcessorRemovedDomainEvent'
 import { ModelSeriesProcessorAddedDomainEvent } from '../event/ModelSeriesProcessorAddedDomainEvent'
 import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
-import { MemorryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
-import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
-
-import { ModelDependencies } from './ModelDependencies'
+import { MemoryRamTypeExistenceChecker } from '../../../../Features/MemoryRam/MemoryRamType/domain/service/MemoryRamTypeExistanceChecker'
+import { ProcessorExistenceChecker } from '../../../../Features/Processor/domain/service/ProcessorExistanceChecker'
+import { type ModelDependencies } from './ModelDependencies'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ComputerModelsParams, type ComputerModelsPrimitives } from '../dto/ComputerModels.dto'
@@ -135,12 +134,10 @@ export class ComputerModels extends ModelSeries {
 		const changes = await super.update(params, dependencies)
 
 		if (params.memoryRamTypeId && params.memoryRamTypeId !== this.memoryRamTypeValue) {
-			const existingMemoryRamType = await dependencies.memoryRamTypeRepository.findById(
-				new MemoryRamTypeId(params.memoryRamTypeId).value
+			const memoryRamTypeExistenceChecker = new MemoryRamTypeExistenceChecker(
+				dependencies.memoryRamTypeRepository
 			)
-			if (!existingMemoryRamType) {
-				throw new MemorryRamTypeDoesNotExistError(params.memoryRamTypeId)
-			}
+			await memoryRamTypeExistenceChecker.ensureExist(params.memoryRamTypeId)
 			changes.push({
 				field: 'memoryRamTypeId',
 				oldValue: this.memoryRamTypeValue,
@@ -206,12 +203,8 @@ export class ComputerModels extends ModelSeries {
 
 			// 1 Validar existencia de todos los procesadores entrantes
 			if (uniqueProcessorsIds.length > 0) {
-				const foundProcessors = await dependencies.processorRepository.findByIds(uniqueProcessorsIds)
-				if (foundProcessors.length !== uniqueProcessorsIds.length) {
-					const foundIds = new Set(foundProcessors.map(c => c.id))
-					const missingIds = uniqueProcessorsIds.filter(id => !foundIds.has(id))
-					throw new ProcessorDoesNotExistError(missingIds.join(', '))
-				}
+				const processorExistenceChecker = new ProcessorExistenceChecker(dependencies.processorRepository)
+				await processorExistenceChecker.ensureExist(uniqueProcessorsIds)
 			}
 
 			const newIdSet = new Set(uniqueProcessorsIds)

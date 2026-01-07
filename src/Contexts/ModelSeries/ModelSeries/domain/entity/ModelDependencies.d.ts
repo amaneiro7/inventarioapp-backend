@@ -1,5 +1,3 @@
-import { type BrandRepository } from '../../../../Brand/domain/repository/BrandRepository'
-import { type CategoryRepository } from '../../../../Category/Category/domain/repository/CategoryRepository'
 import { type MemoryRamTypeRepository } from '../../../../Features/MemoryRam/MemoryRamType/domain/repository/MemoryRamTypeRepository'
 import { type ProcessorRepository } from '../../../../Features/Processor/domain/repository/ProcessorRepository'
 import { type InputTypeRepository } from '../../../InputType/domain/repository/InputTypeRepository'
@@ -9,7 +7,5 @@ export interface ModelDependencies {
 	modelSeriesRepository: ModelSeriesRepository
 	inputTypeRepository: InputTypeRepository
 	memoryRamTypeRepository: MemoryRamTypeRepository
-	categoryRepository: CategoryRepository
-	brandRepository: BrandRepository
 	processorRepository: ProcessorRepository
 }

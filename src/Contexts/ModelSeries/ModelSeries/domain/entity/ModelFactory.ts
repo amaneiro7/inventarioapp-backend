@@ -5,15 +5,9 @@ import { ModelPrinters } from './ModelPrinters'
 import { ModelSeries } from './ModelSeries'
 import { MonitorModels } from './MonitorModels'
 import { MouseModels } from './MouseModels'
-
-import { MemoryRamTypeDoesNotExistError } from '../../../../Features/MemoryRam/MemoryRamType/domain/errors/MemoryRamTypeDoesNotExistError'
-import { InputTypeDoesNotExistError } from '../../../InputType/domain/errors/InputTypeDoesNotExistError'
-import { ProcessorDoesNotExistError } from '../../../../Features/Processor/domain/errors/ProcessorDoesNotExistError'
-
-import { type MemoryRamTypeId } from '../../../../Features/MemoryRam/MemoryRamType/domain/valueObject/MemoryRamTypeId'
-import { type ProcessorId } from '../../../../Features/Processor/domain/valueObject/ProcessorId'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
+import { MemoryRamTypeExistenceChecker } from '../../../../Features/MemoryRam/MemoryRamType/domain/service/MemoryRamTypeExistanceChecker'
+import { InputTypeExistenceChecker } from '../../../InputType/domain/service/InputTypeExistanceChecker'
+import { ProcessorExistenceChecker } from '../../../../Features/Processor/domain/service/ProcessorExistanceChecker'
 import { type ComputerModelsParams } from '../dto/ComputerModels.dto'
 import { type KeyboardModelsParams } from '../dto/KeyboardModels.dto'
 import { type LaptopModelsParams } from '../dto/LaptopsModels.dto'
@@ -24,7 +18,14 @@ import { type MouseModelsParams } from '../dto/MouseModels.dto'
 import { type ModelDependencies } from './ModelDependencies'
 
 export class ModelFactory {
-	constructor(private readonly dependencies: ModelDependencies) {}
+	private readonly memoryRamTypeExistenceChecker: MemoryRamTypeExistenceChecker
+	private readonly processorExistenceChecker: ProcessorExistenceChecker
+	private readonly inputTypeExistenceChecker: InputTypeExistenceChecker
+	constructor(dependencies: ModelDependencies) {
+		this.memoryRamTypeExistenceChecker = new MemoryRamTypeExistenceChecker(dependencies.memoryRamTypeRepository)
+		this.processorExistenceChecker = new ProcessorExistenceChecker(dependencies.processorRepository)
+		this.inputTypeExistenceChecker = new InputTypeExistenceChecker(dependencies.inputTypeRepository)
+	}
 
 	static async fromPrimitives(primitives: ModelSeriesDto): Promise<ModelSeries> {
 		if (primitives.modelComputer) {
@@ -76,55 +77,27 @@ export class ModelFactory {
 
 	private async createComputer(params: ComputerModelsParams): Promise<ComputerModels> {
 		await Promise.all([
-			this.ensureMemoryRamTypeExist(params.memoryRamTypeId),
-			this.ensureProcessorsExist(params.processors)
+			this.memoryRamTypeExistenceChecker.ensureExist(params.memoryRamTypeId),
+			this.processorExistenceChecker.ensureExist(params.processors)
 		])
 		return ComputerModels.create(params)
 	}
 
 	private async createLaptop(params: LaptopModelsParams): Promise<LaptopsModels> {
 		await Promise.all([
-			this.ensureMemoryRamTypeExist(params.memoryRamTypeId),
-			this.ensureProcessorsExist(params.processors)
+			this.memoryRamTypeExistenceChecker.ensureExist(params.memoryRamTypeId),
+			this.processorExistenceChecker.ensureExist(params.processors)
 		])
 		return LaptopsModels.create(params)
 	}
 
 	private async createKeyboard(params: KeyboardModelsParams): Promise<KeyboardModels> {
-		await this.ensureInputTypeExist(params.inputTypeId)
+		await this.inputTypeExistenceChecker.ensureExist(params.inputTypeId)
 		return KeyboardModels.create(params)
 	}
 
 	private async createMouse(params: MouseModelsParams): Promise<MouseModels> {
-		await this.ensureInputTypeExist(params.inputTypeId)
+		await this.inputTypeExistenceChecker.ensureExist(params.inputTypeId)
 		return MouseModels.create(params)
-	}
-
-	private async ensureMemoryRamTypeExist(memoryRamTypeId: Primitives<MemoryRamTypeId>): Promise<void> {
-		const isMemoryRamTypeExist = await this.dependencies.memoryRamTypeRepository.findById(memoryRamTypeId)
-		if (!isMemoryRamTypeExist) {
-			throw new MemoryRamTypeDoesNotExistError(memoryRamTypeId)
-		}
-	}
-	private async ensureInputTypeExist(inputTypeId: Primitives<InputTypeId>): Promise<void> {
-		const isInputTypeExist = await this.dependencies.inputTypeRepository.findById(inputTypeId)
-		if (!isInputTypeExist) {
-			throw new InputTypeDoesNotExistError()
-		}
-	}
-
-	private async ensureProcessorsExist(processorIds: Primitives<ProcessorId>[]): Promise<void> {
-		if (!processorIds || processorIds.length === 0) {
-			return
-		}
-		const uniqueProcessors = [...new Set(processorIds)]
-		const foundProcessors = await this.dependencies.processorRepository.findByIds(uniqueProcessors)
-
-		if (foundProcessors.length !== uniqueProcessors.length) {
-			// Identify which categories were not found to provide a more helpful error message.
-			const foundIds = new Set(foundProcessors.map(c => c.id))
-			const missingIds = uniqueProcessors.filter(id => !foundIds.has(id))
-			throw new ProcessorDoesNotExistError(missingIds.join(', '))
-		}
 	}
 }

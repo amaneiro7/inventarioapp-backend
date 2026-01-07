@@ -6,8 +6,20 @@ import { type CategoryId } from '../valueObject/CategoryId'
 export class CategoryExistenceChecker {
 	constructor(private readonly repository: CategoryRepository) {}
 
-	async ensureExist(categoryIds: Primitives<CategoryId>[]): Promise<void> {
-		const uniqueCategoryIds = [...new Set(categoryIds)]
+	/**
+	 * Ensures that one or more Category exist in the repository.
+	 * Ignores null or undefined values.
+	 * @param {Primitives<CategoryId> | null | undefined | (Primitives<CategoryId> | null | undefined)[]} categoryIds - The Category ID or IDs to check for existence.
+	 * @returns {Promise<void>} A promise that resolves if all provided non-null Category exist.
+	 * @throws {CategoryDoesNotExistError} If any of the Category do not exist.
+	 */
+	async ensureExist(
+		categoryIds: Primitives<CategoryId> | null | undefined | (Primitives<CategoryId> | null | undefined)[]
+	): Promise<void> {
+		const ids = Array.isArray(categoryIds) ? categoryIds : [categoryIds]
+		const uniqueCategoryIds = [
+			...new Set(ids.filter(id => id !== null && id !== undefined))
+		] as Primitives<CategoryId>[]
 		if (uniqueCategoryIds.length === 0) {
 			return
 		}

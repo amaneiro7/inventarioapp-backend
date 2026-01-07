@@ -17,12 +17,16 @@ export class ModelSeriesUpdater {
 	private readonly modelSeriesRepository: ModelSeriesRepository
 	private readonly inputTypeRepository: InputTypeRepository
 	private readonly memoryRamTypeRepository: MemoryRamTypeRepository
-	private readonly categoryRepository: CategoryRepository
-	private readonly brandRepository: BrandRepository
 	private readonly processorRepository: ProcessorRepository
 	private readonly eventBus: EventBus
 
-	constructor(dependencies: {
+	constructor({
+		modelSeriesRepository,
+		inputTypeRepository,
+		memoryRamTypeRepository,
+		processorRepository,
+		eventBus
+	}: {
 		modelSeriesRepository: ModelSeriesRepository
 		inputTypeRepository: InputTypeRepository
 		memoryRamTypeRepository: MemoryRamTypeRepository
@@ -31,13 +35,11 @@ export class ModelSeriesUpdater {
 		processorRepository: ProcessorRepository
 		eventBus: EventBus
 	}) {
-		this.modelSeriesRepository = dependencies.modelSeriesRepository
-		this.inputTypeRepository = dependencies.inputTypeRepository
-		this.memoryRamTypeRepository = dependencies.memoryRamTypeRepository
-		this.categoryRepository = dependencies.categoryRepository
-		this.brandRepository = dependencies.brandRepository
-		this.processorRepository = dependencies.processorRepository
-		this.eventBus = dependencies.eventBus
+		this.modelSeriesRepository = modelSeriesRepository
+		this.inputTypeRepository = inputTypeRepository
+		this.memoryRamTypeRepository = memoryRamTypeRepository
+		this.processorRepository = processorRepository
+		this.eventBus = eventBus
 	}
 
 	async run({ id, params }: { id: string; params: Partial<ModelSeriesParams> }): Promise<void> {
@@ -54,8 +56,6 @@ export class ModelSeriesUpdater {
 			modelSeriesRepository: this.modelSeriesRepository,
 			inputTypeRepository: this.inputTypeRepository,
 			memoryRamTypeRepository: this.memoryRamTypeRepository,
-			categoryRepository: this.categoryRepository,
-			brandRepository: this.brandRepository,
 			processorRepository: this.processorRepository
 		})
 		if (changes.length > 0) {
