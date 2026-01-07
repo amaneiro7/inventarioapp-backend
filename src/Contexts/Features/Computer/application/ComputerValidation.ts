@@ -1,4 +1,4 @@
-import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
+// import { HardDriveCapacityId } from '../../HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
 import { DeviceComputer } from '../domain/Computer'
 import { ComputerName } from '../domain/ComputerName'
 import { ComputerOperatingSystem } from '../domain/ComputerOperatingSystem'
@@ -66,10 +66,10 @@ export class ComputerValidation {
 				repository: this.processorRepository,
 				processor: params.processorId
 			}),
-			HardDriveCapacityId.ensureHardDriveCapacityExit({
-				repository: this.hardDriveCapacityRepository,
-				hardDriveCapacity: params.hardDriveCapacityId
-			}),
+			// HardDriveCapacityId.ensureHardDriveCapacityExit({
+			// 	repository: this.hardDriveCapacityRepository,
+			// 	hardDriveCapacity: params.hardDriveCapacityId
+			// }),
 			HardDriveTypeId.ensureHardDriveTypeExit({
 				repository: this.hardDriveTypeRepository,
 				hardDriveType: params.hardDriveTypeId
