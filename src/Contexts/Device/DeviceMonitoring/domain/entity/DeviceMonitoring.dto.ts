@@ -1,8 +1,8 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoring } from './DeviceMonitoring'
 import { type DeviceDto } from '../../../Device/domain/dto/Device.dto'
-import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
-import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
+import { type IPAddress } from '../../../Device/domain/valueObject/IPAddress'
+import { type ComputerName } from '../../../Device/domain/valueObject/ComputerName'
 import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring.dto'
 import { type MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 

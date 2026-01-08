@@ -1,6 +1,6 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type DeviceId } from '../../../../../Device/Device/domain/DeviceId'
+import { type DeviceId } from '../../../../../Device/Device/domain/valueObject/DeviceId'
 import { type DeviceHardDrivePrimitives } from '../../domain/HardDrive.dto'
 import { type HardDriveHealth } from '../../domain/HardDriveHealth'
 import { type HDDCapacity } from '../../domain/HDDCapacity'

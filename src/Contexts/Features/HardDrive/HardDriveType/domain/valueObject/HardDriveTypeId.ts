@@ -1,7 +1,7 @@
 import { HardDriveTypeDoesNotExistError } from '../errors/HardDriveTypeDoesNotExist'
 import { StringValueObject } from '../../../../../Shared/domain/value-object/StringValueObject'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type ComputerHardDriveType } from '../../../../Computer/domain/ComputerHardDriveType'
+import { type ComputerHardDriveType } from '../../../../../Device/Device/domain/valueObject/ComputerHardDriveType'
 import { type HardDriveTypeRepository } from '../repository/HardDriveTypeRepository'
 
 /**

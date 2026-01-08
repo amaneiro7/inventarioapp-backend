@@ -3,7 +3,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type ShipmentDeviceId } from '../../domain/valueObject/ShipmentDeviceId'
 import { type ShipmentDeviceDto } from '../../domain/entity/ShipmentDevice.dto'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
+import { type DeviceId } from '../../../../Device/Device/domain/valueObject/DeviceId'
 import { type DeviceSnapshotData } from '../../domain/valueObject/DeviceSnapshot'
 import { type ShipmentId } from '../../../Shipment/domain/valueObject/ShipmentId'
 

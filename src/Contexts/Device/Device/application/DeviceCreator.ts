@@ -8,11 +8,11 @@ import { HistoryCreator } from '../../../History/application/HistoryCreator'
 import { DeviceMonitoringCreator } from '../../DeviceMonitoring/application/DeviceMonitoringCreator'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { Device } from '../domain/entity/Device'
-import { DeviceActivo } from '../domain/DeviceActivo'
+import { DeviceActivo } from '../domain/valueObject/DeviceActivo'
 import { DeviceEmployee } from '../domain/DeviceEmployee'
 import { DeviceLocation } from '../domain/DeviceLocation'
 import { DeviceModelSeries } from '../domain/DeviceModelSeries'
-import { DeviceSerial } from '../domain/DeviceSerial'
+import { DeviceSerial } from '../domain/valueObject/DeviceSerial'
 import { DeviceStatus } from '../domain/DeviceStatus'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
@@ -25,6 +25,7 @@ import { type DeviceComputerParams } from '../../../Features/Computer/domain/Com
 import { type DeviceHardDriveParams } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type DeviceMFPParams } from '../../../Features/MFP/domain/MFP.dto'
 import { type DeviceMonitoringRepository } from '../../DeviceMonitoring/domain/repository/DeviceMonitoringRepository'
+import { DeviceConsistencyValidator } from '../domain/service/DeviceConsistencyValidator'
 
 /**
  * @description Use case for creating a new Device entity. It handles the creation of different device types
@@ -40,6 +41,7 @@ export class DeviceCreator {
 	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
 	private readonly computerValidation: ComputerValidation
 	private readonly hardDriveValidation: HardDriveValidation
+	private readonly deviceConsistencyValidator = new DeviceConsistencyValidator()
 
 	constructor(dependencies: {
 		deviceRepository: DeviceRepository
@@ -76,9 +78,9 @@ export class DeviceCreator {
 		}
 
 		const device = await this.createDeviceEntity(params)
-		const { generic } = await this.validateDeviceRelations(params)
+		const { generic, typeOfSite } = await this.validateDeviceRelations(params)
 
-		DeviceSerial.isSerialCanBeNull({ generic, serial: params.serial })
+		this.deviceConsistencyValidator.validate({ device, generic, typeOfSite })
 
 		const devicePrimitives = device.toPrimitives()
 
@@ -124,6 +126,14 @@ export class DeviceCreator {
 			category: categoryId
 		})
 
+		let typeOfSite: string | null = null
+		if (locationId) {
+			const location = await this.locationRepository.findById(locationId)
+			if (location) {
+				typeOfSite = location.typeOfSiteId
+			}
+		}
+
 		await Promise.all([
 			DeviceActivo.ensureActivoDoesNotExit({ repository: this.deviceRepository, activo }),
 			DeviceStatus.ensureStatusExit({ repository: this.statusRepository, status: statusId }),
@@ -136,7 +146,7 @@ export class DeviceCreator {
 			DeviceSerial.ensureSerialDoesNotExit({ repository: this.deviceRepository, serial })
 		])
 
-		return { generic: modelSeries.generic }
+		return { generic: modelSeries.generic, typeOfSite }
 	}
 
 	private async createInitialHistory(
@@ -147,7 +157,7 @@ export class DeviceCreator {
 		await new HistoryCreator({ historyRepository: this.historyRepository }).run({
 			deviceId: device.idValue,
 			userId,
-			employeeId: device.employeeeValue,
+			employeeId: device.employeeValue,
 			action: 'CREATE',
 			newData: devicePrimitives as unknown as Record<string, unknown>,
 			oldData: {},

@@ -28,18 +28,20 @@ export class ModelSeries extends AggregateRoot {
 
 	static create(params: ModelSeriesParams): ModelSeries {
 		const id = ModelSeriesId.random()
-		const name = new ModelSeriesName(params.name)
-		const categoryId = new CategoryId(params.categoryId)
-		const brandId = new BrandId(params.brandId)
-		const generic = new Generic(params.generic)
-		const model = new ModelSeries(id, name, categoryId, brandId, generic)
+		const model = new ModelSeries(
+			id,
+			new ModelSeriesName(params.name),
+			new CategoryId(params.categoryId),
+			new BrandId(params.brandId),
+			new Generic(params.generic)
+		)
 
 		model.record(
 			new ModelSeriesCreatedDomainEvent({
-				aggregateId: id.value,
-				name: name.value,
-				categoryId: categoryId.value,
-				brandId: brandId.value
+				aggregateId: model.idValue,
+				name: model.nameValue,
+				categoryId: model.categoryValue,
+				brandId: model.brandValue
 			})
 		)
 		return model

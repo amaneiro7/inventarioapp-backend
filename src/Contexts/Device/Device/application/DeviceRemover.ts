@@ -1,5 +1,5 @@
 import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistError'
-import { DeviceId } from '../domain/DeviceId'
+import { DeviceId } from '../domain/valueObject/DeviceId'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 
 /**

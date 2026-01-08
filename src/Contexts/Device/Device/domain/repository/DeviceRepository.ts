@@ -1,10 +1,10 @@
-import { type ComputerName } from '../../../../Features/Computer/domain/ComputerName'
+import { type ComputerName } from '../valueObject/ComputerName'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DevicePrimitives, type DeviceDto } from '../dto/Device.dto'
-import { type DeviceId } from '../DeviceId'
-import { type DeviceSerial } from '../DeviceSerial'
+import { type DeviceId } from '../valueObject/DeviceId'
+import { type DeviceSerial } from '../valueObject/DeviceSerial'
 
 /**
  * @abstract

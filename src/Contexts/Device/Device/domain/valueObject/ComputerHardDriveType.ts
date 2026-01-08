@@ -1,9 +1,9 @@
-import { HardDriveTypeId } from '../../HardDrive/HardDriveType/domain/valueObject/HardDriveTypeId'
-import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ComputerHardDriveCapacity } from '../../../Device/Device/domain/valueObject/ComputerHardDriveCapacity'
-import { type HardDriveTypeRepository } from '../../HardDrive/HardDriveType/domain/repository/HardDriveTypeRepository'
+import { HardDriveTypeId } from '../../../../Features/HardDrive/HardDriveType/domain/valueObject/HardDriveTypeId'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ComputerHardDriveCapacity } from './ComputerHardDriveCapacity'
+import { type HardDriveTypeRepository } from '../../../../Features/HardDrive/HardDriveType/domain/repository/HardDriveTypeRepository'
 import { type DeviceComputer } from './Computer'
 
 /**

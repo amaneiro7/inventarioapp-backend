@@ -1,7 +1,7 @@
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type DeviceId } from '../../Device/domain/DeviceId'
+import { type DeviceId } from '../../Device/domain/valueObject/DeviceId'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
 
 /**

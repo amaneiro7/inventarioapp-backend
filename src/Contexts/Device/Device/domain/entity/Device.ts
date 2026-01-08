@@ -1,16 +1,17 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
-import { DeviceId } from '../DeviceId'
-import { DeviceActivo } from '../DeviceActivo'
-import { DeviceSerial } from '../DeviceSerial'
+import { DeviceId } from '../valueObject/DeviceId'
+import { DeviceSerial } from '../valueObject/DeviceSerial'
+import { DeviceActivo } from '../valueObject/DeviceActivo'
+import { StatusId } from '../../../Status/domain/valueObject/StatusId'
 import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
-import { DeviceEmployee } from '../DeviceEmployee'
-import { DeviceObservation } from '../DeviceObservation'
-import { DeviceLocation } from '../DeviceLocation'
-import { DeviceModelSeries } from '../DeviceModelSeries'
-import { DeviceStatus } from '../DeviceStatus'
-import { DeviceStocknumber } from '../DeviceStock'
+import { ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
+import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
+import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import { DeviceObservation } from '../valueObject/DeviceObservation'
+import { DeviceStocknumber } from '../valueObject/DeviceStock'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
+import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DevicePrimitives, type DeviceParams } from '../dto/Device.dto'
 
@@ -22,14 +23,14 @@ import { type DevicePrimitives, type DeviceParams } from '../dto/Device.dto'
 export class Device extends AggregateRoot {
 	constructor(
 		private readonly id: DeviceId,
-		private serial: DeviceSerial,
+		private readonly serial: DeviceSerial, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
 		private activo: DeviceActivo,
-		private statusId: DeviceStatus,
-		private categoryId: CategoryId,
-		private brandId: BrandId,
-		private modelId: DeviceModelSeries,
-		private employeeId: DeviceEmployee,
-		private locationId: DeviceLocation,
+		private statusId: StatusId,
+		private readonly categoryId: CategoryId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
+		private readonly brandId: BrandId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
+		private readonly modelId: ModelSeriesId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
+		private employeeId: EmployeeId | null,
+		private locationId: LocationId | null,
 		private observation: DeviceObservation,
 		private stockNumber: DeviceStocknumber
 	) {
@@ -49,14 +50,14 @@ export class Device extends AggregateRoot {
 			id,
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
-			new DeviceStatus(params.statusId),
+			new StatusId(params.statusId),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
-			new DeviceModelSeries(params.modelId),
-			new DeviceEmployee(params.employeeId, params.statusId),
-			new DeviceLocation(params.locationId),
+			new ModelSeriesId(params.modelId),
+			params?.employeeId ? new EmployeeId(params.employeeId) : null,
+			params?.locationId ? new LocationId(params.locationId) : null,
 			new DeviceObservation(params.observation),
-			new DeviceStocknumber(params.stockNumber, params.statusId)
+			new DeviceStocknumber(params.stockNumber)
 		)
 
 		device.record(
@@ -81,12 +82,12 @@ export class Device extends AggregateRoot {
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),
 			new DeviceActivo(primitives.activo),
-			new DeviceStatus(primitives.statusId),
+			new StatusId(primitives.statusId),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
-			new DeviceModelSeries(primitives.modelId),
-			new DeviceEmployee(primitives.employeeId, primitives.statusId),
-			new DeviceLocation(primitives.locationId),
+			new ModelSeriesId(primitives.modelId),
+			new EmployeeId(primitives.employeeId, primitives.statusId),
+			new LocationId(primitives.locationId),
 			new DeviceObservation(primitives.observation),
 			new DeviceStocknumber(primitives.stockNumber, primitives.statusId)
 		)
@@ -106,52 +107,44 @@ export class Device extends AggregateRoot {
 			categoryId: this.categoryValue,
 			brandId: this.brandValue,
 			modelId: this.modelSeriesValue,
-			employeeId: this.employeeeValue,
+			employeeId: this.employeeValue,
 			locationId: this.locationValue,
 			observation: this.observationValue,
 			stockNumber: this.stockNumberValue
 		}
 	}
 
-	// --- Update Methods ---
-	updateSerial(newSerial: Primitives<DeviceSerial>): void {
-		this.serial = new DeviceSerial(newSerial)
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new DeviceUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
 	}
 
 	updateActivo(newActivo: Primitives<DeviceActivo>): void {
 		this.activo = new DeviceActivo(newActivo)
 	}
 
-	updateStatus(newStatusId: Primitives<DeviceStatus>): void {
-		this.statusId = new DeviceStatus(newStatusId)
+	updateStatus(newStatusId: Primitives<StatusId>): void {
+		this.statusId = new StatusId(newStatusId)
 	}
 
-	updateModelId(newDeviceModelSeries: Primitives<DeviceModelSeries>): void {
-		this.modelId = new DeviceModelSeries(newDeviceModelSeries)
+	updateEmployee(newEmployee: Primitives<EmployeeId>): void {
+		this.employeeId = new EmployeeId(newEmployee)
 	}
 
-	updateCategoryId(newCategoryId: Primitives<CategoryId>): void {
-		this.categoryId = new CategoryId(newCategoryId)
-	}
-
-	updateBrandId(newBrandId: Primitives<BrandId>): void {
-		this.brandId = new BrandId(newBrandId)
-	}
-
-	updateEmployee(newEmployee: Primitives<DeviceEmployee>, status: Primitives<DeviceStatus>): void {
-		this.employeeId = new DeviceEmployee(newEmployee, status)
-	}
-
-	updateLocation(newLocation: Primitives<DeviceLocation>): void {
-		this.locationId = new DeviceLocation(newLocation)
+	updateLocation(newLocation: Primitives<LocationId>): void {
+		this.locationId = new LocationId(newLocation)
 	}
 
 	updateObservation(observation: Primitives<DeviceObservation>): void {
 		this.observation = new DeviceObservation(observation)
 	}
 
-	updateStockNumber(stockNumber: Primitives<DeviceStocknumber>, status: Primitives<DeviceStatus>): void {
-		this.stockNumber = new DeviceStocknumber(stockNumber, status)
+	updateStockNumber(stockNumber: Primitives<DeviceStocknumber>): void {
+		this.stockNumber = new DeviceStocknumber(stockNumber)
 	}
 
 	// --- Getters for primitive values ---
@@ -167,7 +160,7 @@ export class Device extends AggregateRoot {
 		return this.activo.value
 	}
 
-	get statusValue(): Primitives<DeviceStatus> {
+	get statusValue(): Primitives<StatusId> {
 		return this.statusId.value
 	}
 
@@ -179,15 +172,15 @@ export class Device extends AggregateRoot {
 		return this.brandId.value
 	}
 
-	get modelSeriesValue(): Primitives<DeviceModelSeries> {
+	get modelSeriesValue(): Primitives<ModelSeriesId> {
 		return this.modelId.value
 	}
 
-	get employeeeValue(): Primitives<DeviceEmployee> {
+	get employeeValue(): Primitives<EmployeeId> {
 		return this.employeeId.value
 	}
 
-	get locationValue(): Primitives<DeviceLocation> {
+	get locationValue(): Primitives<LocationId> {
 		return this.locationId.value
 	}
 

@@ -2,7 +2,7 @@ import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/entity/Location.dto'
-import { type IPAddress } from '../../../../Features/Computer/domain/IPAddress'
+import { type IPAddress } from '../../../../Device/Device/domain/valueObject/IPAddress'
 import { type LocationName } from '../../../Location/domain/valueObject/LocationName'
 import { type SiteDto } from '../../../Site/domain/entity/Site.dto'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'

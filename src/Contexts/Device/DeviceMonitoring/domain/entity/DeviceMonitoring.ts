@@ -1,6 +1,6 @@
 import { Monitoring } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring'
 import { MonitoringId } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
-import { DeviceId } from '../../../Device/domain/DeviceId'
+import { DeviceId } from '../../../Device/domain/valueObject/DeviceId'
 import { MonitoringStatus } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { MonitoringLastSuccess } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastSuccess'
 import { MonitoringLastFailed } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringLastFailed'

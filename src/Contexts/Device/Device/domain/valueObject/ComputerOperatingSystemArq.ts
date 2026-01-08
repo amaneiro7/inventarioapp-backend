@@ -1,10 +1,10 @@
-import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { OperatingSystemArqId } from '../../OperatingSystem/OperatingSystemArq/domain/valueObject/OperatingSystemArqID'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { OperatingSystemArqDoesNotExistError } from '../../OperatingSystem/OperatingSystemArq/domain/errors/OperatingSystemArqDoesNotExist'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type ComputerOperatingSystem } from '../../../Device/Device/domain/valueObject/ComputerOperatingSystem'
-import { type OperatingSystemArqRepository } from '../../OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { OperatingSystemArqId } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/valueObject/OperatingSystemArqID'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { OperatingSystemArqDoesNotExistError } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/errors/OperatingSystemArqDoesNotExist'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type ComputerOperatingSystem } from '../../../../Features/Computer/domain/ComputerOperatingSystem'
+import { type OperatingSystemArqRepository } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
 import { type DeviceComputer } from './Computer'
 
 /**

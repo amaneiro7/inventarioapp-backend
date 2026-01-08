@@ -1,5 +1,5 @@
-import { ApiError } from '../../../Shared/domain/errors/ApiError'
-import httpStatus from '../../../Shared/infrastructure/utils/http-status'
+import { ApiError } from '../../../../Shared/domain/errors/ApiError'
+import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
 
 /**
  * @description Error thrown when a computer with the specified features is not found.

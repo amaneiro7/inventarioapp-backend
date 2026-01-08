@@ -1,5 +1,5 @@
 import { HistoryId } from './HistoryId'
-import { DeviceId } from '../../Device/Device/domain/DeviceId'
+import { DeviceId } from '../../Device/Device/domain/valueObject/DeviceId'
 import { UserId } from '../../User/user/domain/valueObject/UserId'
 import { Action, type ActionType } from './HistoryAction'
 import { CreatedAt } from './CreatedAt'

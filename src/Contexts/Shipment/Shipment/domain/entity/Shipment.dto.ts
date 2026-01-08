@@ -15,7 +15,7 @@ import {
 	type ShipmentDevicePrimitives,
 	type ShipmentDeviceDto
 } from '../../../ShipmentDevice/domain/entity/ShipmentDevice.dto'
-import { type DeviceId } from '../../../../Device/Device/domain/DeviceId'
+import { type DeviceId } from '../../../../Device/Device/domain/valueObject/DeviceId'
 import { type ShipmentCode } from '../valueObject/ShipmentCode'
 
 export interface Shipment {

@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type DeviceId } from '../../../Device/Device/domain/DeviceId'
+import { type DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
 import { type MFPIPAddress } from '../domain/MFPIPAddress'
 import { type DeviceMFPPrimitives } from '../domain/MFP.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'

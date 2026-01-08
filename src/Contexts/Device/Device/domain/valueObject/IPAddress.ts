@@ -1,9 +1,9 @@
-import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { type DeviceStatus } from '../DeviceStatus'
 import { type DeviceComputer } from './Computer'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @description Represents an IP address, which can be null.

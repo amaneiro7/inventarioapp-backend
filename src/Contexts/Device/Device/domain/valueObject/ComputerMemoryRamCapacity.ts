@@ -1,8 +1,8 @@
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { MemoryRamCapacity } from '../../MemoryRam/MemoryRamCapacity/MemoryRamCapacity'
-import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { MemoryRamCapacity } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamCapacity'
+import { type DeviceStatus } from '../DeviceStatus'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @description Represents the memory RAM capacity of a computer.

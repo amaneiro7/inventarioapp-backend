@@ -1,5 +1,5 @@
-import { MemoryRamValues } from '../../MemoryRam/MemoryRamCapacity/MemoryRamValues'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { MemoryRamValues } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamValues'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceComputer } from './Computer'
 
 /**

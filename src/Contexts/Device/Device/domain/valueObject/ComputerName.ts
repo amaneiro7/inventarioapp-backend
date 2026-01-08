@@ -1,10 +1,10 @@
-import { AcceptedNullValueObject } from '../../../Shared/domain/value-object/AcceptedNullValueObjects'
-import { StatusOptions } from '../../../Device/Status/domain/StatusOptions'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { type DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { type DeviceRepository } from '../../../Device/Device/domain/repository/DeviceRepository'
+import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { StatusOptions } from '../../../Status/domain/StatusOptions'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { type DeviceStatus } from '../DeviceStatus'
+import { type DeviceRepository } from '../repository/DeviceRepository'
 import { type DeviceComputer } from './Computer'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @description Represents the name of a computer, which can be null.

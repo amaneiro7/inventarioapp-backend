@@ -1,5 +1,5 @@
 import { ShipmentDeviceId } from '../valueObject/ShipmentDeviceId'
-import { DeviceId } from '../../../../Device/Device/domain/DeviceId'
+import { DeviceId } from '../../../../Device/Device/domain/valueObject/DeviceId'
 import { DeviceSnapshot } from '../valueObject/ShipmentDeviceSnapshot'
 import { ShipmentId } from '../../../Shipment/domain/valueObject/ShipmentId'
 import { ShipmentDeviceDto, type ShipmentDeviceParams, type ShipmentDevicePrimitives } from './ShipmentDevice.dto'
