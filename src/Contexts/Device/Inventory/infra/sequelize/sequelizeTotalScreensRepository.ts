@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
+import { DeviceModel } from '../../../Device/infrastructure/sequelize/schema/DeviceSchema'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { StatusOptions } from '../../../Status/domain/StatusOptions'

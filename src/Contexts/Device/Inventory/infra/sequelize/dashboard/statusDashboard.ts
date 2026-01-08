@@ -1,5 +1,5 @@
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { DeviceModel } from '../../../../Device/infrastructure/sequelize/DeviceSchema'
+import { DeviceModel } from '../../../../Device/infrastructure/sequelize/schema/DeviceSchema'
 import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { type RawStatusCountData, type StatusCountData } from './types'
 

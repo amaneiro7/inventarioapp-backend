@@ -1,10 +1,10 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
-import { type MFPIPAddress } from '../domain/MFPIPAddress'
-import { type DeviceMFPPrimitives } from '../domain/MFP.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
-import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
+import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
+import { type DeviceIPAddress } from '../../../domain/valueObject/DeviceIPAddress'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
+import { type DeviceId } from '../../../domain/valueObject/DeviceId'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type DeviceMFPPrimitives } from '../../../domain/dto/MFP.dto'
 
 interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
 	deviceId: Primitives<DeviceId>
@@ -17,7 +17,7 @@ export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPC
 	declare deviceId: Primitives<DeviceId>
 	declare id: Primitives<DeviceId>
 	declare categoryId: Primitives<CategoryId>
-	declare ipAddress: Primitives<MFPIPAddress>
+	declare ipAddress: Primitives<DeviceIPAddress>
 
 	static associate(models: Sequelize['models']): void {
 		this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' })

@@ -13,13 +13,13 @@ import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/
 import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
 import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import { type DeviceComputerDto } from './Computer.dto'
-import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
-import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
 import { type HistoryDto } from '../../../../History/domain/History.dto'
 import { type StatusId } from '../../../Status/domain/valueObject/StatusId'
 import { type ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
 import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import { type DeviceHardDriveDto } from './HardDrive.dto'
+import { type DeviceMFPDto } from './MFP.dto'
 
 /**
  * @interface Device

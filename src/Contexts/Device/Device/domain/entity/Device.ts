@@ -13,7 +13,10 @@ import { DeviceStocknumber } from '../valueObject/DeviceStock'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DevicePrimitives, type DeviceParams } from '../dto/Device.dto'
+import { type DevicePrimitives, type DeviceParams, type DeviceDto } from '../dto/Device.dto'
+import { DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
+import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
+import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
 
 /**
  * @class Device
@@ -23,12 +26,12 @@ import { type DevicePrimitives, type DeviceParams } from '../dto/Device.dto'
 export class Device extends AggregateRoot {
 	constructor(
 		private readonly id: DeviceId,
-		private readonly serial: DeviceSerial, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
+		private serial: DeviceSerial,
 		private activo: DeviceActivo,
 		private statusId: StatusId,
-		private readonly categoryId: CategoryId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
-		private readonly brandId: BrandId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
-		private readonly modelId: ModelSeriesId, // quizas modificar que no se pueda modificar, o que se pueda modificar si tienes permiso
+		private categoryId: CategoryId,
+		private brandId: BrandId,
+		private modelId: ModelSeriesId,
 		private employeeId: EmployeeId | null,
 		private locationId: LocationId | null,
 		private observation: DeviceObservation,
@@ -45,9 +48,8 @@ export class Device extends AggregateRoot {
 	 * @returns {Device} A new `Device` instance.
 	 */
 	static create(params: DeviceParams): Device {
-		const id = DeviceId.random()
 		const device = new Device(
-			id,
+			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
 			new StatusId(params.statusId),
@@ -74,10 +76,10 @@ export class Device extends AggregateRoot {
 	 * @static
 	 * @method fromPrimitives
 	 * @description Reconstructs a `Device` instance from its primitive representation.
-	 * @param {DevicePrimitives} primitives The primitive data of the device.
+	 * @param {DeviceDto} primitives The primitive data of the device.
 	 * @returns {Device} A `Device` instance.
 	 */
-	static fromPrimitives(primitives: DevicePrimitives): Device {
+	static fromPrimitives(primitives: DeviceDto): Device {
 		return new Device(
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),
@@ -86,10 +88,10 @@ export class Device extends AggregateRoot {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new ModelSeriesId(primitives.modelId),
-			new EmployeeId(primitives.employeeId, primitives.statusId),
-			new LocationId(primitives.locationId),
+			primitives.employeeId ? new EmployeeId(primitives.employeeId) : null,
+			primitives.locationId ? new LocationId(primitives.locationId) : null,
 			new DeviceObservation(primitives.observation),
-			new DeviceStocknumber(primitives.stockNumber, primitives.statusId)
+			new DeviceStocknumber(primitives.stockNumber)
 		)
 	}
 
@@ -114,6 +116,106 @@ export class Device extends AggregateRoot {
 		}
 	}
 
+	update(
+		params: Partial<DeviceParams>,
+		context: {
+			typeOfSite: Primitives<TypeOfSiteId> | null
+			generic: Primitives<Generic>
+		},
+		validator: DeviceConsistencyValidator
+	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+
+		if (params.activo !== undefined && this.activoValue !== params.activo) {
+			changes.push({
+				field: 'activo',
+				oldValue: this.activoValue,
+				newValue: params.activo
+			})
+			this.updateActivo(params.activo)
+		}
+
+		if (params.statusId !== undefined && this.statusValue !== params.statusId) {
+			changes.push({
+				field: 'statusId',
+				oldValue: this.statusValue,
+				newValue: params.statusId
+			})
+			this.updateStatus(params.statusId)
+		}
+
+		if (params.employeeId !== undefined && this.employeeValue !== params.employeeId) {
+			changes.push({
+				field: 'employeeId',
+				oldValue: this.employeeValue,
+				newValue: params.employeeId
+			})
+			this.updateEmployee(params.employeeId)
+		}
+
+		if (params.locationId !== undefined && this.locationValue !== params.locationId) {
+			changes.push({
+				field: 'locationId',
+				oldValue: this.locationValue,
+				newValue: params.locationId
+			})
+			this.updateLocation(params.locationId)
+		}
+
+		if (params.observation !== undefined && this.observationValue !== params.observation) {
+			changes.push({
+				field: 'observation',
+				oldValue: this.observationValue,
+				newValue: params.observation
+			})
+			this.updateObservation(params.observation)
+		}
+
+		if (params.stockNumber !== undefined && this.stockNumberValue !== params.stockNumber) {
+			changes.push({
+				field: 'stockNumber',
+				oldValue: this.stockNumberValue,
+				newValue: params.stockNumber
+			})
+			this.updateStockNumber(params.stockNumber)
+		}
+
+		if (params.serial !== undefined && this.serialValue !== params.serial) {
+			changes.push({
+				field: 'serial',
+				oldValue: this.serialValue,
+				newValue: params.serial
+			})
+			this.updateSerial(params.serial)
+		}
+
+		if (params.modelId !== undefined && this.modelSeriesValue !== params.modelId) {
+			changes.push({ field: 'modelId', oldValue: this.modelSeriesValue, newValue: params.modelId })
+			this.updateModelId(params.modelId)
+		}
+		if (params.brandId !== undefined && this.brandValue !== params.brandId) {
+			changes.push({ field: 'brandId', oldValue: this.brandValue, newValue: params.brandId })
+			this.updateBrandId(params.brandId)
+		}
+		if (params.categoryId !== undefined && this.categoryValue !== params.categoryId) {
+			changes.push({ field: 'categoryId', oldValue: this.categoryValue, newValue: params.categoryId })
+			this.updateCategoryId(params.categoryId)
+		}
+
+		// Validar consistencia con el estado final de la entidad
+		validator.validate({
+			device: this,
+			typeOfSite: context.typeOfSite,
+			generic: context.generic
+		})
+
+		if (changes.length > 0) {
+			this.registerUpdateEvent(changes)
+		}
+
+		return changes
+	}
+
 	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
 		this.record(
 			new DeviceUpdatedDomainEvent({
@@ -121,6 +223,22 @@ export class Device extends AggregateRoot {
 				changes
 			})
 		)
+	}
+
+	updateSerial(newSerial: Primitives<DeviceSerial>): void {
+		this.serial = new DeviceSerial(newSerial)
+	}
+
+	updateModelId(newModelId: Primitives<ModelSeriesId>): void {
+		this.modelId = new ModelSeriesId(newModelId)
+	}
+
+	updateBrandId(newBrandId: Primitives<BrandId>): void {
+		this.brandId = new BrandId(newBrandId)
+	}
+
+	updateCategoryId(newCategoryId: Primitives<CategoryId>): void {
+		this.categoryId = new CategoryId(newCategoryId)
 	}
 
 	updateActivo(newActivo: Primitives<DeviceActivo>): void {
@@ -131,12 +249,12 @@ export class Device extends AggregateRoot {
 		this.statusId = new StatusId(newStatusId)
 	}
 
-	updateEmployee(newEmployee: Primitives<EmployeeId>): void {
-		this.employeeId = new EmployeeId(newEmployee)
+	updateEmployee(newEmployee: Primitives<EmployeeId> | null): void {
+		this.employeeId = newEmployee ? new EmployeeId(newEmployee) : null
 	}
 
-	updateLocation(newLocation: Primitives<LocationId>): void {
-		this.locationId = new LocationId(newLocation)
+	updateLocation(newLocation: Primitives<LocationId> | null): void {
+		this.locationId = newLocation ? new LocationId(newLocation) : null
 	}
 
 	updateObservation(observation: Primitives<DeviceObservation>): void {
@@ -176,12 +294,12 @@ export class Device extends AggregateRoot {
 		return this.modelId.value
 	}
 
-	get employeeValue(): Primitives<EmployeeId> {
-		return this.employeeId.value
+	get employeeValue(): Primitives<EmployeeId> | null {
+		return this.employeeId?.value ?? null
 	}
 
-	get locationValue(): Primitives<LocationId> {
-		return this.locationId.value
+	get locationValue(): Primitives<LocationId> | null {
+		return this.locationId?.value ?? null
 	}
 
 	get observationValue(): Primitives<DeviceObservation> {

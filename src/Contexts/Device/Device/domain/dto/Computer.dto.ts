@@ -12,7 +12,7 @@ import { type ProcessorDto } from '../../../../Features/Processor/domain/entity/
 import { type ProcessorId } from '../../../../Features/Processor/domain/valueObject/ProcessorId'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ComputerName } from '../valueObject/ComputerName'
-import { type IPAddress } from '../valueObject/IPAddress'
+import { type DeviceIPAddress } from '../valueObject/DeviceIPAddress'
 import { type MACAddress } from '../valueObject/MACAddress'
 import { type Device, type DevicePrimitives } from './Device.dto'
 
@@ -24,13 +24,13 @@ export interface DeviceComputer extends Device {
 	computerName: Primitives<ComputerName>
 	processorId: Primitives<ProcessorId> | null
 	memoryRam: Primitives<MemoryRamValues>[]
-	memoryRamCapacity: Primitives<MemoryRamCapacity> | null
+	memoryRamCapacity: Primitives<MemoryRamCapacity>
 	hardDriveCapacityId: Primitives<HardDriveCapacityId> | null
 	hardDriveTypeId: Primitives<HardDriveTypeId> | null
 	operatingSystemId: Primitives<OperatingSystemId> | null
 	operatingSystemArqId: Primitives<OperatingSystemArqId> | null
 	macAddress: Primitives<MACAddress>
-	ipAddress: Primitives<IPAddress>
+	ipAddress: Primitives<DeviceIPAddress>
 }
 
 /**
@@ -52,7 +52,7 @@ export type DeviceComputerParams = Device & {
 	operatingSystemId: Primitives<OperatingSystemId> | null
 	operatingSystemArqId: Primitives<OperatingSystemArqId> | null
 	macAddress: Primitives<MACAddress>
-	ipAddress: Primitives<IPAddress>
+	ipAddress: Primitives<DeviceIPAddress>
 }
 
 /**

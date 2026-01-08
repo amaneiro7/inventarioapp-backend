@@ -1,13 +1,13 @@
-import { type Device } from '../../../Device/Device/domain/dto/Device.dto'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type MFPIPAddress } from './MFPIPAddress'
+import { type Device } from './Device.dto'
+import { type DeviceIPAddress } from '../valueObject/DeviceIPAddress'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @interface DeviceMFP
  * @description Extends the base Device interface with MFP-specific properties.
  */
 export interface DeviceMFP extends Device {
-	ipAddress: Primitives<MFPIPAddress>
+	ipAddress: Primitives<DeviceIPAddress>
 }
 
 /**

@@ -13,7 +13,7 @@ import { MFPIPAddress } from './MFPIPAddress'
 import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { DeviceStocknumber } from '../../../Device/Device/domain/valueObject/DeviceStock'
-import { type DeviceMFPParams, type DeviceMFPPrimitives } from './MFP.dto'
+import { type DeviceMFPParams, type DeviceMFPPrimitives } from '../dto/MFP.dto'
 import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
 /**

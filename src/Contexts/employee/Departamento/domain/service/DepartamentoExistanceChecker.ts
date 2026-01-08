@@ -9,7 +9,7 @@ export class DepartamentoExistenceChecker {
 	/**
 	 * Ensures that one or more Departamentos exist in the repository.
 	 * Ignores null or undefined values.
-	 * @param {Primitives<DepartamentoId> | null | undefined |  (Primitives<DepartamentoId>| null | undefined )[]} departamentoIds - The Departamento ID or IDs to check for existence.
+	 * @param {Primitives<DepartamentoId> | null | undefined |  (Primitives<DepartamentoId> | null | undefined)[]} departamentoIds - The Departamento ID or IDs to check for existence.
 	 * @returns {Promise<void>} A promise that resolves if all Departamentos exist.
 	 * @throws {DepartamentoDoesNotExistError} If any of the Departamentos do not exist.
 	 */

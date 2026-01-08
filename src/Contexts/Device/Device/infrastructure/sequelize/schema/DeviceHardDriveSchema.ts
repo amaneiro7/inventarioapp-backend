@@ -1,12 +1,12 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type DeviceId } from '../../../../../Device/Device/domain/valueObject/DeviceId'
-import { type DeviceHardDrivePrimitives } from '../../domain/HardDrive.dto'
-import { type HardDriveHealth } from '../../domain/HardDriveHealth'
-import { type HDDCapacity } from '../../domain/HDDCapacity'
-import { type HDDType } from '../../domain/HDDType'
-import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { CategoryValues } from '../../../../../Category/Category/domain/CategoryOptions'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type DeviceId } from '../../../domain/valueObject/DeviceId'
+import { type HardDriveCapacityId } from '../../../../../Features/HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
+import { type HardDriveTypeId } from '../../../../../Features/HardDrive/HardDriveType/domain/valueObject/HardDriveTypeId'
+import { type DeviceHardDrivePrimitives } from '../../../domain/dto/HardDrive.dto'
+import { type HardDriveHealth } from '../../../domain/valueObject/HardDriveHealth'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 
 interface DeviceHardDriveCreationAttributes extends Pick<
 	DeviceHardDrivePrimitives,
@@ -26,8 +26,8 @@ export class DeviceHardDriveModel
 	declare id: Primitives<DeviceId>
 	declare categoryId: Primitives<CategoryId>
 	declare health: Primitives<HardDriveHealth>
-	declare hardDriveCapacityId: Primitives<HDDCapacity>
-	declare hardDriveTypeId: Primitives<HDDType>
+	declare hardDriveCapacityId: Primitives<HardDriveCapacityId>
+	declare hardDriveTypeId: Primitives<HardDriveTypeId>
 
 	static associate(models: Sequelize['models']): void {
 		this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' })

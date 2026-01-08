@@ -1,6 +1,6 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { CountTotalOperatingSystemRepository } from '../../domain/CountTotalOperatingSystemRepository'
-import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
+import { DeviceModel } from '../../../Device/infrastructure/sequelize/schema/DeviceSchema'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'

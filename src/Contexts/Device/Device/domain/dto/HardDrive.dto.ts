@@ -1,10 +1,10 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type Device } from '../../../../Device/Device/domain/dto/Device.dto'
-import { type HardDriveCapacityDto } from '../../HardDriveCapacity/domain/entity/HardDriveCapacity.dto'
-import { type HardDriveTypeDto } from '../../HardDriveType/domain/entity/HardDriveType.dto'
-import { type HardDriveHealth } from './HardDriveHealth'
-import { type HDDCapacity } from './HDDCapacity'
-import { type HDDType } from './HDDType'
+import { type HardDriveHealth } from '../valueObject/HardDriveHealth'
+import { type HardDriveCapacityId } from '../../../../Features/HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
+import { type HardDriveTypeId } from '../../../../Features/HardDrive/HardDriveType/domain/valueObject/HardDriveTypeId'
+import { type HardDriveCapacityDto } from '../../../../Features/HardDrive/HardDriveCapacity/domain/entity/HardDriveCapacity.dto'
+import { type HardDriveTypeDto } from '../../../../Features/HardDrive/HardDriveType/domain/entity/HardDriveType.dto'
 
 /**
  * @interface DeviceHardDrive
@@ -12,8 +12,8 @@ import { type HDDType } from './HDDType'
  */
 export interface DeviceHardDrive extends Device {
 	health: Primitives<HardDriveHealth>
-	hardDriveCapacityId: Primitives<HDDCapacity>
-	hardDriveTypeId: Primitives<HDDType>
+	hardDriveCapacityId: Primitives<HardDriveCapacityId>
+	hardDriveTypeId: Primitives<HardDriveTypeId>
 }
 
 /**

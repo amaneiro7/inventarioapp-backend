@@ -10,6 +10,7 @@ export class MemoryRamCapacity extends NumberValueObject {
 
 	constructor(readonly value: number) {
 		super(value)
+		this.ensureLengthIsSmallerThan(this.MAX_CAPACITY, this.value)
 		this.ensureIsValid(value)
 	}
 

@@ -3,11 +3,11 @@ import { type DeviceActivo } from '../../../../Device/Device/domain/valueObject/
 import { type DeviceId } from '../../../../Device/Device/domain/valueObject/DeviceId'
 import { type DeviceSerial } from '../../../../Device/Device/domain/valueObject/DeviceSerial'
 import { type StatusName } from '../../../../Device/Status/domain/valueObject/StatusName'
-import { type ComputerMemoryRamCapacity } from '../../../../Device/Device/domain/valueObject/ComputerMemoryRamCapacity'
+
 import { type ComputerName } from '../../../../Device/Device/domain/valueObject/ComputerName'
-import { type IPAddress } from '../../../../Device/Device/domain/valueObject/IPAddress'
+import { type DeviceIPAddress } from '../../../../Device/Device/domain/valueObject/DeviceIPAddress'
 import { type MACAddress } from '../../../../Device/Device/domain/valueObject/MACAddress'
-import { type HardDriveHealth } from '../../../../Features/HardDrive/HardDrive/domain/HardDriveHealth'
+import { type HardDriveHealth } from '../../../../Device/Device/domain/valueObject/HardDriveHealth'
 import { type HardDriveCapacityValue } from '../../../../Features/HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityValue'
 import { type HardDriveTypeName } from '../../../../Features/HardDrive/HardDriveType/domain/valueObject/HardDriveTypeName'
 import { type MemoryRamValues } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamValues'
@@ -16,6 +16,7 @@ import { type OperatingSystemArqName } from '../../../../Features/OperatingSyste
 import { type ProcessorName } from '../../../../Features/Processor/domain/valueObject/ProcessorName'
 import { type ModelSeriesName } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesName'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type MemoryRamCapacity } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamCapacity'
 
 // Propiedades comunes a todos los dispositivos
 interface BaseDeviceSnapshot {
@@ -33,13 +34,13 @@ interface ComputerSnapshot extends BaseDeviceSnapshot {
 	computerName: Primitives<ComputerName>
 	processorName: Primitives<ProcessorName>
 	memoryRam: Primitives<MemoryRamValues>[]
-	memoryRamCapacity: Primitives<ComputerMemoryRamCapacity>
+	memoryRamCapacity: Primitives<MemoryRamCapacity>
 	hardDriveCapacity: Primitives<HardDriveCapacityValue>
 	hardDriveType: Primitives<HardDriveTypeName>
 	operatingSystem: Primitives<OperatingSystemVersion>
 	operatingSystemArq: Primitives<OperatingSystemArqName>
 	macAddress: Primitives<MACAddress>
-	ipAddress: Primitives<IPAddress>
+	ipAddress: Primitives<DeviceIPAddress>
 }
 
 interface HardDriveSnapshot extends BaseDeviceSnapshot {

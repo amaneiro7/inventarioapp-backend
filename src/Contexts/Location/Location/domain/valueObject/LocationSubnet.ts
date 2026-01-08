@@ -1,14 +1,14 @@
-import { AcceptedNullValueObject } from '../../../../Shared/domain/value-object/AcceptedNullValueObjects'
+import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-object/AcceptedNullStringValueObject'
 import { IPAddress } from '../../../../Shared/domain/value-object/IPAddress'
 import { InvalidLocationSubnetError } from '../errors/InvalidLocationSubnetError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * Represents the subnet IP address of a Location as a value object.
- * It extends AcceptedNullValueObject<string>, meaning its value can be a string or null.
+ * It extends AcceptedNullStringValueObject, meaning its value can be a string or null.
  * Encapsulates validation logic for IP addresses.
  */
-export class LocationSubnet extends AcceptedNullValueObject<string> {
+export class LocationSubnet extends AcceptedNullStringValueObject {
 	/**
 	 * Creates an instance of LocationSubnet.
 	 * @param {string | null} value - The subnet IP address or null.

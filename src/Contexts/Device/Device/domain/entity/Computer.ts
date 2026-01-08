@@ -1,3 +1,5 @@
+import { Device } from './Device'
+import { DeviceId } from '../valueObject/DeviceId'
 import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
@@ -11,19 +13,26 @@ import { OperatingSystemArqId } from '../../../../Features/OperatingSystem/Opera
 import { ProcessorId } from '../../../../Features/Processor/domain/valueObject/ProcessorId'
 import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { StatusId } from '../../../Status/domain/valueObject/StatusId'
 import { DeviceActivo } from '../valueObject/DeviceActivo'
-import { DeviceId } from '../valueObject/DeviceId'
 import { DeviceObservation } from '../valueObject/DeviceObservation'
 import { DeviceSerial } from '../valueObject/DeviceSerial'
 import { DeviceStocknumber } from '../valueObject/DeviceStock'
-import { DeviceComputerParams, DeviceComputerPrimitives } from '../dto/Computer.dto'
 import { ComputerMemoryRam } from '../valueObject/ComputerMemoryRam'
 import { ComputerName } from '../valueObject/ComputerName'
-import { IPAddress } from '../valueObject/IPAddress'
+import { DeviceIPAddress } from '../valueObject/DeviceIPAddress'
 import { MACAddress } from '../valueObject/MACAddress'
-import { Device } from './Device'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
+import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
+import { ComputerConsistencyValidator } from '../service/ComputerConsistencyValidator'
+import { DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
+import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
+import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DeviceComputerParams, type DeviceComputerPrimitives } from '../dto/Computer.dto'
+import { type DeviceDto } from '../dto/Device.dto'
+import { ComputerDoesNotExistError } from '../errors/ComputerDoesNotExistError'
 
 /**
  * @description Represents a computer device, extending the base Device class with specific properties.
@@ -50,7 +59,7 @@ export class DeviceComputer extends Device {
 		private operatingSystemId: OperatingSystemId | null,
 		private operatingSystemArqId: OperatingSystemArqId | null,
 		private macAddress: MACAddress,
-		private ipAddress: IPAddress
+		private ipAddress: DeviceIPAddress
 	) {
 		super(
 			id,
@@ -66,12 +75,12 @@ export class DeviceComputer extends Device {
 			stockNumber
 		)
 		if (!DeviceComputer.isComputerCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('This device does not belong to the computer category')
+			throw new InvalidArgumentError('Este dispositivo no es de tipo computadora.')
 		}
 	}
 
 	static create(params: DeviceComputerParams): DeviceComputer {
-		return new DeviceComputer(
+		const deviceComputer = new DeviceComputer(
 			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
@@ -79,21 +88,30 @@ export class DeviceComputer extends Device {
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
 			new ModelSeriesId(params.modelId),
-			new EmployeeId(params.employeeId, params.statusId),
-			new LocationId(params.locationId),
+			params.employeeId ? new EmployeeId(params.employeeId) : null,
+			params.locationId ? new LocationId(params.locationId) : null,
 			new DeviceObservation(params.observation),
-			new DeviceStocknumber(params.stockNumber, params.statusId),
-			new ComputerName(params.computerName, params.statusId),
-			new ProcessorId(params.processorId),
+			new DeviceStocknumber(params.stockNumber),
+			new ComputerName(params.computerName),
+			params.processorId ? new ProcessorId(params.processorId) : null,
 			ComputerMemoryRam.fromPrimitives(params.memoryRam),
-			new MemoryRamCapacity(ComputerMemoryRam.totalAmount(params.memoryRam), params.statusId),
-			new HardDriveCapacityId(params.hardDriveCapacityId, params.statusId),
-			new HardDriveTypeId(params.hardDriveTypeId, params.hardDriveCapacityId),
-			new OperatingSystemId(params.operatingSystemId, params.hardDriveCapacityId, params.statusId),
-			new OperatingSystemArqId(params.operatingSystemArqId, params.operatingSystemId),
+			new MemoryRamCapacity(ComputerMemoryRam.totalAmount(params.memoryRam)),
+			params.hardDriveCapacityId ? new HardDriveCapacityId(params.hardDriveCapacityId) : null,
+			params.hardDriveTypeId ? new HardDriveTypeId(params.hardDriveTypeId) : null,
+			params.operatingSystemId ? new OperatingSystemId(params.operatingSystemId) : null,
+			params.operatingSystemArqId ? new OperatingSystemArqId(params.operatingSystemArqId) : null,
 			new MACAddress(params.macAddress),
-			new IPAddress(params.ipAddress, params.statusId)
+			new DeviceIPAddress(params.ipAddress)
 		)
+
+		deviceComputer.record(
+			new DeviceCreatedDomainEvent({
+				aggregateId: deviceComputer.idValue,
+				device: deviceComputer.toPrimitives()
+			})
+		)
+
+		return deviceComputer
 	}
 
 	static isComputerCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -122,7 +140,12 @@ export class DeviceComputer extends Device {
 		}
 	}
 
-	static fromPrimitives(primitives: DeviceComputerPrimitives): DeviceComputer {
+	static fromPrimitives(primitives: DeviceDto): DeviceComputer {
+		const { computer } = primitives
+		if (!computer) {
+			throw new ComputerDoesNotExistError(primitives?.serial ?? primitives.id)
+		}
+
 		return new DeviceComputer(
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),
@@ -131,68 +154,153 @@ export class DeviceComputer extends Device {
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
 			new ModelSeriesId(primitives.modelId),
-			new EmployeeId(primitives.employeeId, primitives.statusId),
-			new LocationId(primitives.locationId),
+			primitives.employeeId ? new EmployeeId(primitives.employeeId) : null,
+			primitives.locationId ? new LocationId(primitives.locationId) : null,
 			new DeviceObservation(primitives.observation),
-			new DeviceStocknumber(primitives.stockNumber, primitives.statusId),
-			new ComputerName(primitives.computerName, primitives.statusId),
-			new ProcessorId(primitives.processorId),
-			ComputerMemoryRam.fromPrimitives(primitives.memoryRam),
-			new MemoryRamCapacity(primitives.memoryRamCapacity, primitives.statusId),
-			new HardDriveCapacityId(primitives.hardDriveCapacityId, primitives.statusId),
-			new HardDriveTypeId(primitives.hardDriveTypeId, primitives.hardDriveCapacityId),
-			new OperatingSystemId(primitives.operatingSystemId, primitives.hardDriveCapacityId, primitives.statusId),
-			new OperatingSystemArqId(primitives.operatingSystemArqId, primitives.operatingSystemId),
-			new MACAddress(primitives.macAddress),
-			new IPAddress(primitives.ipAddress, primitives.statusId)
+			new DeviceStocknumber(primitives.stockNumber),
+			new ComputerName(computer.computerName),
+			computer.processorId ? new ProcessorId(computer.processorId) : null,
+			ComputerMemoryRam.fromPrimitives(computer.memoryRam),
+			new MemoryRamCapacity(computer.memoryRamCapacity),
+			computer.hardDriveCapacityId ? new HardDriveCapacityId(computer.hardDriveCapacityId) : null,
+			computer.hardDriveTypeId ? new HardDriveTypeId(computer.hardDriveTypeId) : null,
+			computer.operatingSystemId ? new OperatingSystemId(computer.operatingSystemId) : null,
+			computer.operatingSystemArqId ? new OperatingSystemArqId(computer.operatingSystemArqId) : null,
+			new MACAddress(computer.macAddress),
+			new DeviceIPAddress(computer.ipAddress)
 		)
 	}
 
-	// Update methods
-	updateComputerName(newComputerName: Primitives<ComputerName>, statusId: Primitives<StatusId>): void {
-		this.computerName = new ComputerName(newComputerName, statusId)
+	update(
+		params: Partial<DeviceComputerParams>,
+		context: {
+			typeOfSite: Primitives<TypeOfSiteId> | null
+			generic: Primitives<Generic>
+		},
+		validator: DeviceConsistencyValidator
+	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		const computerConsistencyValidator = new ComputerConsistencyValidator()
+
+		if (params.computerName !== undefined && this.computerNameValue !== params.computerName) {
+			changes.push({ field: 'computerName', oldValue: this.computerNameValue, newValue: params.computerName })
+			this.updateComputerName(params.computerName)
+		}
+
+		if (params.processorId !== undefined && this.processorValue !== params.processorId) {
+			changes.push({ field: 'processorId', oldValue: this.processorValue, newValue: params.processorId })
+			this.updateProcessor(params.processorId)
+		}
+
+		if (params.memoryRam !== undefined) {
+			if (JSON.stringify(this.memoryRamValue) !== JSON.stringify(params.memoryRam)) {
+				changes.push({ field: 'memoryRam', oldValue: this.memoryRamValue, newValue: params.memoryRam })
+				changes.push({
+					field: 'memoryRamCapacity',
+					oldValue: this.memoryRamCapacityValue,
+					newValue: ComputerMemoryRam.totalAmount(params.memoryRam)
+				})
+				this.updateMemoryRam(params.memoryRam)
+			}
+		}
+
+		if (params.hardDriveCapacityId !== undefined && this.hardDriveCapacityValue !== params.hardDriveCapacityId) {
+			changes.push({
+				field: 'hardDriveCapacityId',
+				oldValue: this.hardDriveCapacityValue,
+				newValue: params.hardDriveCapacityId
+			})
+			this.updateHardDriveCapacity(params.hardDriveCapacityId)
+		}
+
+		if (params.hardDriveTypeId !== undefined && this.hardDriveTypeValue !== params.hardDriveTypeId) {
+			changes.push({
+				field: 'hardDriveTypeId',
+				oldValue: this.hardDriveTypeValue,
+				newValue: params.hardDriveTypeId
+			})
+			this.updateHardDriveType(params.hardDriveTypeId)
+		}
+
+		if (params.operatingSystemId !== undefined && this.operatingSystemValue !== params.operatingSystemId) {
+			changes.push({
+				field: 'operatingSystemId',
+				oldValue: this.operatingSystemValue,
+				newValue: params.operatingSystemId
+			})
+			this.updateOperatingSystem(params.operatingSystemId)
+		}
+
+		if (params.operatingSystemArqId !== undefined && this.operatingSystemArqValue !== params.operatingSystemArqId) {
+			changes.push({
+				field: 'operatingSystemArqId',
+				oldValue: this.operatingSystemArqValue,
+				newValue: params.operatingSystemArqId
+			})
+			this.updateOperatingSystemArq(params.operatingSystemArqId)
+		}
+
+		if (params.macAddress !== undefined && this.macAddressValue !== params.macAddress) {
+			changes.push({ field: 'macAddress', oldValue: this.macAddressValue, newValue: params.macAddress })
+			this.updateMACAddress(params.macAddress)
+		}
+
+		if (params.ipAddress !== undefined && this.ipAddressValue !== params.ipAddress) {
+			changes.push({ field: 'ipAddress', oldValue: this.ipAddressValue, newValue: params.ipAddress })
+			this.updateIPAddress(params.ipAddress)
+		}
+
+		// Actualizar campos base y validar consistencia general
+		const baseChanges = super.update(params, context, validator)
+
+		// Validar consistencia específica de computadoras
+		computerConsistencyValidator.validate(this)
+
+		if (changes.length > 0) {
+			this.record(
+				new DeviceUpdatedDomainEvent({
+					aggregateId: this.idValue,
+					changes
+				})
+			)
+		}
+
+		return [...changes, ...baseChanges]
 	}
 
-	updateProcessor(newProcessorId: Primitives<ProcessorId>): void {
-		this.processorId = new ProcessorId(newProcessorId)
+	// Update methods
+	updateComputerName(newComputerName: Primitives<ComputerName>): void {
+		this.computerName = new ComputerName(newComputerName)
+	}
+
+	updateProcessor(newProcessorId: Primitives<ProcessorId> | null): void {
+		this.processorId = newProcessorId ? new ProcessorId(newProcessorId) : null
 	}
 
 	updateMemoryRam(newMemoryRam: Primitives<MemoryRamValues>[]): void {
 		this.memoryRam = ComputerMemoryRam.fromPrimitives(newMemoryRam)
+		const newMemoryRamCapacity = ComputerMemoryRam.totalAmount(newMemoryRam)
+		this.memoryRamCapacity = new MemoryRamCapacity(newMemoryRamCapacity)
 	}
 
-	updateMemoryRamCapacity(newMemoryRamCapacity: Primitives<MemoryRamCapacity>, status: Primitives<StatusId>): void {
-		this.memoryRamCapacity = new MemoryRamCapacity(newMemoryRamCapacity, status)
+	updateOperatingSystem(newOperatingSystem: Primitives<OperatingSystemId> | null): void {
+		this.operatingSystemId = newOperatingSystem ? new OperatingSystemId(newOperatingSystem) : null
 	}
 
-	updateOperatingSystem(
-		newOperatingSystem: Primitives<OperatingSystemId>,
-		hardDriveCapacity: Primitives<HardDriveCapacityId>,
-		status: Primitives<StatusId>
-	): void {
-		this.operatingSystemId = new OperatingSystemId(newOperatingSystem, hardDriveCapacity, status)
+	updateOperatingSystemArq(newOperatingSystemArq: Primitives<OperatingSystemArqId> | null): void {
+		this.operatingSystemArqId = newOperatingSystemArq ? new OperatingSystemArqId(newOperatingSystemArq) : null
 	}
 
-	updateOperatingSystemArq(
-		newOperatingSystemArq: Primitives<OperatingSystemArqId>,
-		opertaingSystem: Primitives<OperatingSystemId>
-	): void {
-		this.operatingSystemArqId = new OperatingSystemArqId(newOperatingSystemArq, opertaingSystem)
+	updateHardDriveCapacity(newHDDCapacity: Primitives<HardDriveCapacityId> | null): void {
+		this.hardDriveCapacityId = newHDDCapacity ? new HardDriveCapacityId(newHDDCapacity) : null
 	}
 
-	updateHardDriveCapacity(newHDDCapacity: Primitives<HardDriveCapacityId>, status: Primitives<StatusId>): void {
-		this.hardDriveCapacityId = new HardDriveCapacityId(newHDDCapacity, status)
+	updateHardDriveType(newHDDType: Primitives<HardDriveTypeId> | null): void {
+		this.hardDriveTypeId = newHDDType ? new HardDriveTypeId(newHDDType) : null
 	}
 
-	updateHardDriveType(
-		newHDDType: Primitives<HardDriveTypeId>,
-		hardDriveCapacity: Primitives<HardDriveCapacityId>
-	): void {
-		this.hardDriveTypeId = new HardDriveTypeId(newHDDType, hardDriveCapacity)
-	}
-
-	updateIPAddress(newIPAddress: Primitives<IPAddress>, status: Primitives<StatusId>): void {
-		this.ipAddress = new IPAddress(newIPAddress, status)
+	updateIPAddress(newIPAddress: Primitives<DeviceIPAddress>): void {
+		this.ipAddress = new DeviceIPAddress(newIPAddress)
 	}
 
 	updateMACAddress(newMACAddress: Primitives<MACAddress>): void {
@@ -212,31 +320,31 @@ export class DeviceComputer extends Device {
 		return this.memoryRam.toPrimitives()
 	}
 
-	get processorValue(): Primitives<ProcessorId> {
-		return this.processorId.value
+	get processorValue(): Primitives<ProcessorId> | null {
+		return this.processorId?.value ?? null
 	}
 
-	get hardDriveCapacityValue(): Primitives<HardDriveCapacityId> {
-		return this.hardDriveCapacityId.value
+	get hardDriveCapacityValue(): Primitives<HardDriveCapacityId> | null {
+		return this.hardDriveCapacityId?.value ?? null
 	}
 
-	get hardDriveTypeValue(): Primitives<HardDriveTypeId> {
-		return this.hardDriveTypeId.value
+	get hardDriveTypeValue(): Primitives<HardDriveTypeId> | null {
+		return this.hardDriveTypeId?.value ?? null
 	}
 
-	get operatingSystemValue(): Primitives<OperatingSystemId> {
-		return this.operatingSystemId.value
+	get operatingSystemValue(): Primitives<OperatingSystemId> | null {
+		return this.operatingSystemId?.value ?? null
 	}
 
-	get operatingSystemArqValue(): Primitives<OperatingSystemArqId> {
-		return this.operatingSystemArqId.value ?? null
+	get operatingSystemArqValue(): Primitives<OperatingSystemArqId> | null {
+		return this.operatingSystemArqId?.value ?? null
 	}
 
 	get macAddressValue(): Primitives<MACAddress> {
 		return this.macAddress.value
 	}
 
-	get ipAddressValue(): Primitives<IPAddress> {
+	get ipAddressValue(): Primitives<DeviceIPAddress> {
 		return this.ipAddress.value
 	}
 }

@@ -1,29 +1,29 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { StatusOptions } from '../../../Status/domain/StatusOptions'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
-import { type DeviceId } from '../../domain/valueObject/DeviceId'
-import { type DeviceSerial } from '../../domain/valueObject/DeviceSerial'
-import { type DeviceActivo } from '../../domain/valueObject/DeviceActivo'
-import { type BrandId } from '../../../../Brand/domain/valueObject/BrandId'
-import { type DeviceEmployee } from '../../domain/DeviceEmployee'
-import { type DeviceObservation } from '../../domain/valueObject/DeviceObservation'
-import { type DeviceLocation } from '../../domain/DeviceLocation'
-import { type DeviceModelSeries } from '../../domain/DeviceModelSeries'
-import { type DeviceStatus } from '../../domain/DeviceStatus'
-import { type DeviceStocknumber } from '../../domain/valueObject/DeviceStock'
-import { type DeviceDto } from '../../domain/dto/Device.dto'
-import { type BrandDto } from '../../../../Brand/domain/entity/Brand.dto'
-import { type CategoryDto } from '../../../../Category/Category/domain/entity/Category.dto'
-import { type EmployeeDto } from '../../../../employee/Employee/domain/entity/Employee.dto'
-import { type DeviceComputerDto } from '../../../../Features/Computer/domain/Computer.dto'
-import { type DeviceHardDriveDto } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
-import { type DeviceMFPDto } from '../../../../Features/MFP/domain/MFP.dto'
-import { type HistoryDto } from '../../../../History/domain/History.dto'
-import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
-import { type ModelSeriesDto } from '../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
-import { type StatusDto } from '../../../Status/domain/entity/Status.dto'
-import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { StatusOptions } from '../../../../Status/domain/StatusOptions'
+import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
+import { type DeviceId } from '../../../domain/valueObject/DeviceId'
+import { type DeviceSerial } from '../../../domain/valueObject/DeviceSerial'
+import { type DeviceActivo } from '../../../domain/valueObject/DeviceActivo'
+import { type BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
+import { type DeviceObservation } from '../../../domain/valueObject/DeviceObservation'
+import { type DeviceStatus } from '../../../domain/DeviceStatus'
+import { type DeviceStocknumber } from '../../../domain/valueObject/DeviceStock'
+import { type DeviceDto } from '../../../domain/dto/Device.dto'
+import { type BrandDto } from '../../../../../Brand/domain/entity/Brand.dto'
+import { type CategoryDto } from '../../../../../Category/Category/domain/entity/Category.dto'
+import { type EmployeeDto } from '../../../../../employee/Employee/domain/entity/Employee.dto'
+import { type HistoryDto } from '../../../../../History/domain/History.dto'
+import { type LocationDto } from '../../../../../Location/Location/domain/entity/Location.dto'
+import { type ModelSeriesDto } from '../../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
+import { type StatusDto } from '../../../../Status/domain/entity/Status.dto'
+import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import { type ModelSeriesId } from '../../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
+import { type EmployeeId } from '../../../../../employee/Employee/domain/valueObject/EmployeeId'
+import { type LocationId } from '../../../../../Location/Location/domain/valueObject/LocationId'
+import { type DeviceComputerDto } from '../../../domain/dto/Computer.dto'
+import { type DeviceHardDriveDto } from '../../../domain/dto/HardDrive.dto'
+import { type DeviceMFPDto } from '../../../domain/dto/MFP.dto'
 
 /**
  * @class DeviceModel
@@ -56,9 +56,9 @@ export class DeviceModel
 	declare statusId: Primitives<DeviceStatus>
 	declare categoryId: Primitives<CategoryId>
 	declare brandId: Primitives<BrandId>
-	declare modelId: Primitives<DeviceModelSeries>
-	declare employeeId: Primitives<DeviceEmployee>
-	declare locationId: Primitives<DeviceLocation>
+	declare modelId: Primitives<ModelSeriesId>
+	declare employeeId: Primitives<EmployeeId>
+	declare locationId: Primitives<LocationId>
 	declare observation: Primitives<DeviceObservation>
 	declare stockNumber: Primitives<DeviceStocknumber>
 	declare status: StatusDto
@@ -117,7 +117,7 @@ export class DeviceModel
 					allowNull: true,
 					field: 'location_id',
 					validate: {
-						onlyNullIf(value: Primitives<DeviceLocation>) {
+						onlyNullIf(value: Primitives<LocationId>) {
 							if (this.statusId !== StatusOptions.DESINCORPORADO && value === null) {
 								throw new Error('La ubicación solo puede ser nula si el estatus es "Desincorporado".')
 							}

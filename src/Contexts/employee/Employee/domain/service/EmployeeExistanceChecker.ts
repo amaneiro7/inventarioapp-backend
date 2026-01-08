@@ -8,13 +8,15 @@ export class EmployeeExistenceChecker {
 
 	/**
 	 * Ensures that one or more Employees exist in the repository.
-	 * @param {Primitives<EmployeeId> | Primitives<EmployeeId>[]} employeeIds - The Employee ID or IDs to check for existence.
+	 * @param {Primitives<EmployeeId>  | null | undefined | (Primitives<EmployeeId> | null | undefined)[]} employeeIds - The Employee ID or IDs to check for existence.
 	 * @returns {Promise<void>} A promise that resolves if all Employees exist.
 	 * @throws {EmployeeDoesNotExistError} If any of the Employees do not exist.
 	 */
-	async ensureExist(employeeIds: Primitives<EmployeeId> | Primitives<EmployeeId>[]): Promise<void> {
+	async ensureExist(
+		employeeIds: Primitives<EmployeeId> | null | undefined | (Primitives<EmployeeId> | null | undefined)[]
+	): Promise<void> {
 		const ids = Array.isArray(employeeIds) ? employeeIds : [employeeIds]
-		const uniqueEmployeeIds = [...new Set(ids)]
+		const uniqueEmployeeIds = [...new Set(ids.filter(id => id !== null && id !== undefined))]
 		if (uniqueEmployeeIds.length === 0) {
 			return
 		}

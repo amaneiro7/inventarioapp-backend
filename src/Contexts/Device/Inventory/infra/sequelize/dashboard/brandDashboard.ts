@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { DeviceModel } from '../../../../Device/infrastructure/sequelize/DeviceSchema'
+import { DeviceModel } from '../../../../Device/infrastructure/sequelize/schema/DeviceSchema'
 import { StatusOptions } from '../../../../Status/domain/StatusOptions'
 import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { type RawBrandCountData, type AggregatedBrandData } from './types'

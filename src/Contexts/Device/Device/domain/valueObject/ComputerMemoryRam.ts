@@ -1,6 +1,5 @@
 import { MemoryRamValues } from '../../../../Features/MemoryRam/MemoryRamCapacity/MemoryRamValues'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DeviceComputer } from './Computer'
 
 /**
  * @description Represents the memory RAM modules of a computer.
@@ -32,24 +31,5 @@ export class ComputerMemoryRam {
 	 */
 	static totalAmount(value: Primitives<MemoryRamValues>[]): number {
 		return value.reduce((total, val) => total + Number(val), 0)
-	}
-
-	/**
-	 * @description Handles the logic for updating the memory RAM of a computer entity.
-	 * @param {{ memoryRam?: Primitives<MemoryRamValues>[]; entity: DeviceComputer }} params The parameters for updating.
-	 */
-	static updateMemoryRam({
-		memoryRam,
-		entity
-	}: {
-		memoryRam?: Primitives<MemoryRamValues>[]
-		entity: DeviceComputer
-	}): void {
-		if (memoryRam === undefined || JSON.stringify(entity.memoryRamValue) === JSON.stringify(memoryRam)) {
-			return
-		}
-		entity.updateMemoryRam(memoryRam)
-		const newMemRamValue = ComputerMemoryRam.totalAmount(memoryRam)
-		entity.updateMemoryRamCapacity(newMemRamValue, entity.statusValue)
 	}
 }

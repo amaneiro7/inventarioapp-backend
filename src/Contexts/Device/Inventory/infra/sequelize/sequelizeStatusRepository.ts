@@ -1,7 +1,7 @@
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import { DeviceModel } from '../../../Device/infrastructure/sequelize/DeviceSchema'
+import { DeviceModel } from '../../../Device/infrastructure/sequelize/schema/DeviceSchema'
 import { type StatusDashboardRepository } from '../../domain/StatusDashboardRepository'
 
 // --- Type Definitions for Status Dashboard ---

@@ -7,26 +7,20 @@ import { ComputerName } from '../domain/valueObject/ComputerName'
 import { ComputerOperatingSystem } from '../domain/valueObject/ComputerOperatingSystem'
 import { ComputerOperatingSystemArq } from '../domain/valueObject/ComputerOperatingSystemArq'
 import { ComputerProcessor } from '../domain/valueObject/ComputerProcessor'
-import { IPAddress } from '../domain/valueObject/IPAddress'
+import { IPAddress } from '../domain/valueObject/DeviceIPAddress'
 import { MACAddress } from '../domain/valueObject/MACAddress'
 import { DeviceHardDrive } from '../../../Features/HardDrive/HardDrive/domain/HardDrive'
-import { HardDriveHealth } from '../../../Features/HardDrive/HardDrive/domain/HardDriveHealth'
+import { HardDriveHealth } from '../domain/valueObject/HardDriveHealth'
 import { HDDCapacity } from '../../../Features/HardDrive/HardDrive/domain/HDDCapacity'
 import { HDDType } from '../../../Features/HardDrive/HardDrive/domain/HDDType'
 import { HistoryCreator } from '../../../History/application/HistoryCreator'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { Device } from '../domain/entity/Device'
-import { DeviceActivo } from '../domain/valueObject/DeviceActivo'
 import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistError'
-import { DeviceEmployee } from '../domain/DeviceEmployee'
 import { DeviceId } from '../domain/valueObject/DeviceId'
-import { DeviceLocation } from '../domain/DeviceLocation'
 import { DeviceModelSeries } from '../domain/DeviceModelSeries'
-import { DeviceObservation } from '../domain/valueObject/DeviceObservation'
 import { DeviceRepository } from '../domain/repository/DeviceRepository'
 import { DeviceSerial } from '../domain/valueObject/DeviceSerial'
-import { DeviceStatus } from '../domain/DeviceStatus'
-import { DeviceStocknumber } from '../domain/valueObject/DeviceStock'
 
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityRepository } from '../../../Features/HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
@@ -43,6 +37,11 @@ import { type LocationRepository } from '../../../Location/Location/domain/repos
 import { DeviceDto, type DeviceParams } from '../domain/dto/Device.dto'
 import { type DeviceComputerPrimitives } from '../../../Features/Computer/domain/Computer.dto'
 import { type DeviceHardDrivePrimitives } from '../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
+import { DeviceConsistencyValidator } from '../domain/service/DeviceConsistencyValidator'
+import { DeviceActivoUniquenessChecker } from '../domain/service/DeviceActivoUniquenessChecker'
+import { StatusExistenceChecker } from '../../Status/domain/service/StatusExistanceChecker'
+import { EmployeeExistenceChecker } from '../../../employee/Employee/domain/service/EmployeeExistanceChecker'
+import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
 
 export class DeviceUpdater {
 	private readonly deviceRepository: DeviceRepository
@@ -56,6 +55,8 @@ export class DeviceUpdater {
 	private readonly locationRepository: LocationRepository
 	private readonly employeeRepository: EmployeeRepository
 	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly deviceConsistencyValidator = new DeviceConsistencyValidator()
+
 	constructor(dependencies: {
 		deviceRepository: DeviceRepository
 		processorRepository: ProcessorRepository
@@ -109,7 +110,7 @@ export class DeviceUpdater {
 			await new HistoryCreator({ historyRepository: this.historyRepository }).run({
 				deviceId: deviceEntity.idValue,
 				userId: user.sub,
-				employeeId: deviceEntity.employeeeValue,
+				employeeId: deviceEntity.employeeValue,
 				action: 'UPDATE',
 				newData: devicePrimitives as unknown as Record<string, unknown>,
 				oldData: oldDeviceEntity as unknown as Record<string, unknown>,
@@ -226,33 +227,54 @@ export class DeviceUpdater {
 			stockNumber
 		} = params
 
-		await DeviceStatus.updateStatusField({
-			repository: this.statusRepository,
-			status: statusId,
-			entity: deviceEntity
-		})
-		await Promise.all([
-			DeviceActivo.updateActivoField({ repository: this.deviceRepository, activo, entity: deviceEntity }),
-			DeviceSerial.updateSerialField({ repository: this.deviceRepository, serial, entity: deviceEntity }),
-			DeviceLocation.updateLocationField({
-				repository: this.locationRepository,
-				location: locationId,
-				entity: deviceEntity
-			}),
-			DeviceObservation.updateObservationField({ observation, entity: deviceEntity }),
-			DeviceEmployee.updateEmployeeField({
-				repository: this.employeeRepository,
-				employee: employeeId,
-				entity: deviceEntity
-			}),
-			DeviceModelSeries.updateModelField({
+		// 1. Validaciones de Infraestructura (Existencia y Unicidad)
+		if (statusId && statusId !== deviceEntity.statusValue) {
+			const statusChecker = new StatusExistenceChecker(this.statusRepository)
+			await statusChecker.ensureExist(statusId)
+		}
+
+		if (activo && activo !== deviceEntity.activoValue) {
+			const activoChecker = new DeviceActivoUniquenessChecker(this.deviceRepository)
+			await activoChecker.ensureUnique(activo, deviceEntity.idValue)
+		}
+
+		if (serial && serial !== deviceEntity.serialValue) {
+			await DeviceSerial.ensureSerialDoesNotExit({ repository: this.deviceRepository, serial })
+		}
+
+		if (employeeId && employeeId !== deviceEntity.employeeeValue) {
+			const employeeChecker = new EmployeeExistenceChecker(this.employeeRepository)
+			await employeeChecker.ensureExist(employeeId)
+		}
+
+		// 2. Obtención de Contexto (Datos necesarios para el Validator)
+		let typeOfSite = null
+		if (locationId && locationId !== deviceEntity.locationValue) {
+			const locationChecker = new LocationExistenceChecker(this.locationRepository)
+			await locationChecker.ensureExist(locationId)
+			const location = await this.locationRepository.findById(locationId)
+			typeOfSite = location?.typeOfSiteId ?? null
+		} else if (deviceEntity.locationValue) {
+			// Si no cambia la ubicación, necesitamos el typeOfSite actual para validar consistencia
+			const location = await this.locationRepository.findById(deviceEntity.locationValue)
+			typeOfSite = location?.typeOfSiteId ?? null
+		}
+
+		let generic = null
+		if (modelId && modelId !== deviceEntity.modelSeriesValue) {
+			const modelData = await DeviceModelSeries.ensureModelSeriesExit({
 				repository: this.modelSeriesRepository,
 				modelSeries: modelId,
 				category: categoryId,
-				brand: brandId,
-				entity: deviceEntity
+				brand: brandId
 			})
-		])
-		await DeviceStocknumber.updateStockNumberField({ stockNumber, entity: deviceEntity })
+			generic = modelData.generic
+		} else {
+			const modelData = await this.modelSeriesRepository.findById(deviceEntity.modelSeriesValue)
+			generic = modelData?.generic ?? null
+		}
+
+		// 3. Actualización de Dominio (Síncrona y Pura)
+		deviceEntity.update(params, { typeOfSite, generic }, this.deviceConsistencyValidator)
 	}
 }
