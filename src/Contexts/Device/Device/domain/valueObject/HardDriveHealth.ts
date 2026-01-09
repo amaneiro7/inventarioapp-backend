@@ -1,7 +1,5 @@
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { NumberValueObject } from '../../../../Shared/domain/value-object/NumberValueObject'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DeviceHardDrive } from './HardDrive'
 
 /**
  * @description Represents the health of a hard drive as a percentage.
@@ -13,6 +11,8 @@ export class HardDriveHealth extends NumberValueObject {
 	constructor(readonly value: number) {
 		super(value)
 		this.ensureIsValidRange(value)
+		this.ensureLengthIsBiggerThan(this.MIN_HEALTH, this.value)
+		this.ensureLengthIsSmallerThan(this.MAX_HEALTH, this.value)
 	}
 
 	private ensureIsValidRange(value: number): void {
@@ -21,22 +21,5 @@ export class HardDriveHealth extends NumberValueObject {
 				`<${value}> no es un porcentaje de salud válido. Debe estar entre ${this.MIN_HEALTH} y ${this.MAX_HEALTH}.`
 			)
 		}
-	}
-
-	/**
-	 * @description Handles the logic for updating a device's health status.
-	 * @param {{ health?: Primitives<HardDriveHealth>; entity: DeviceHardDrive }} params The parameters for updating.
-	 */
-	static updateHealthField({
-		health,
-		entity
-	}: {
-		health?: Primitives<HardDriveHealth>
-		entity: DeviceHardDrive
-	}): void {
-		if (health === undefined || entity.healthValue === health) {
-			return
-		}
-		entity.updateHealth(health)
 	}
 }

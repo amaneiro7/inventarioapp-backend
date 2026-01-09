@@ -70,7 +70,7 @@ export class SequelizeLocationMonitoringDashboardByLocationRepository
 		)
 
 		return await this.cache.getCachedData<DashboardByLocationData>({
-			cacheKey: `${this.cacheKey}:lists:dashboardByLocation;${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:dashboardByLocation:${criteria.hash()}`,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				try {

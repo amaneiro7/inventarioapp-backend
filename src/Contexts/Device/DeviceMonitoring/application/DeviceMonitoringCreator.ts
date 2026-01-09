@@ -3,15 +3,24 @@ import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../Device/domain/valueObject/DeviceId'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 /**
  * @description Use case for creating an initial DeviceMonitoring record for a new device.
  */
 export class DeviceMonitoringCreator {
 	private readonly deviceMonitoringRepository: DeviceMonitoringRepository
+	private readonly eventBus: EventBus
 
-	constructor({ deviceMonitoringRepository }: { deviceMonitoringRepository: DeviceMonitoringRepository }) {
+	constructor({
+		deviceMonitoringRepository,
+		eventBus
+	}: {
+		deviceMonitoringRepository: DeviceMonitoringRepository
+		eventBus: EventBus
+	}) {
 		this.deviceMonitoringRepository = deviceMonitoringRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -28,6 +37,7 @@ export class DeviceMonitoringCreator {
 			status: MonitoringStatuses.NOTAVAILABLE
 		})
 
-		await this.deviceMonitoringRepository.save(deviceMonitoring.toPrimitive())
+		await this.deviceMonitoringRepository.save(deviceMonitoring.toPrimitives())
+		await this.eventBus.publish(deviceMonitoring.pullDomainEvents())
 	}
 }

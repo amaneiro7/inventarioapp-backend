@@ -20,7 +20,7 @@ export const register = (container: AwilixContainer) => {
 	container.register({
 		historyRepository: asClass(SequelizeHistoryRepository).singleton(),
 		historyFinderAll: asClass(HistoryFinderAll),
-		historyCreator: asClass(HistoryCreator),
+		historyCreator: asClass(HistoryCreator).singleton(),
 		historyGetAllController: asClass(HistoryGetAllController),
 		totalChangeLastThreMonthsByCategoryRepository: asClass(
 			SequelizeTotalChangeLastThreMonthsByCategoryRepository

@@ -5,7 +5,6 @@ import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/conv
 import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringRepository } from '../domain/repository/LocationMonitoringRepository'
-
 import { type Logger } from '../../../Shared/domain/Logger'
 import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
@@ -126,7 +125,7 @@ export class LocationMonitoringService extends MonitoringService<
 	 * @returns {LocationMonitoringPrimitives} The primitive payload.
 	 */
 	protected createMonitoringPayload(item: LocationMonitoring): LocationMonitoringPrimitives {
-		return item.toPrimitive()
+		return item.toPrimitives()
 	}
 
 	/**

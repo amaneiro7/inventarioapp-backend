@@ -1,7 +1,4 @@
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-object/AcceptedNullStringValueObject'
-import { type DeviceRepository } from '../repository/DeviceRepository'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 /**
  * @description Represents the name of a computer, which can be null.
@@ -24,21 +21,5 @@ export class ComputerName extends AcceptedNullStringValueObject {
 			'No puede contener caracteres especiales que no sean guiones.'
 		)
 		this.ensureMatchesPattern(this.NO_LOWERCASE_REGEX, 'Debe estar en mayúsculas.')
-	}
-
-	static async ensuerComputerNameDoesNotExit({
-		repository,
-		computerName
-	}: {
-		repository: DeviceRepository
-		computerName: Primitives<ComputerName>
-	}): Promise<void> {
-		if (computerName === null) {
-			return
-		}
-		const existingDevice = await repository.searchByComputerName(computerName)
-		if (existingDevice) {
-			throw new InvalidArgumentError('El nombre del equipo ya existe.')
-		}
 	}
 }

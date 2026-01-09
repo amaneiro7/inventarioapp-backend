@@ -7,13 +7,12 @@ import { type DeviceSerial } from '../../../domain/valueObject/DeviceSerial'
 import { type DeviceActivo } from '../../../domain/valueObject/DeviceActivo'
 import { type BrandId } from '../../../../../Brand/domain/valueObject/BrandId'
 import { type DeviceObservation } from '../../../domain/valueObject/DeviceObservation'
-import { type DeviceStatus } from '../../../domain/DeviceStatus'
 import { type DeviceStocknumber } from '../../../domain/valueObject/DeviceStock'
 import { type DeviceDto } from '../../../domain/dto/Device.dto'
 import { type BrandDto } from '../../../../../Brand/domain/entity/Brand.dto'
 import { type CategoryDto } from '../../../../../Category/Category/domain/entity/Category.dto'
 import { type EmployeeDto } from '../../../../../employee/Employee/domain/entity/Employee.dto'
-import { type HistoryDto } from '../../../../../History/domain/History.dto'
+import { type HistoryDto } from '../../../../../History/domain/entity/History.dto'
 import { type LocationDto } from '../../../../../Location/Location/domain/entity/Location.dto'
 import { type ModelSeriesDto } from '../../../../../ModelSeries/ModelSeries/domain/dto/ModelSeries.dto'
 import { type StatusDto } from '../../../../Status/domain/entity/Status.dto'
@@ -24,6 +23,7 @@ import { type LocationId } from '../../../../../Location/Location/domain/valueOb
 import { type DeviceComputerDto } from '../../../domain/dto/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../domain/dto/HardDrive.dto'
 import { type DeviceMFPDto } from '../../../domain/dto/MFP.dto'
+import { type StatusId } from '../../../../Status/domain/valueObject/StatusId'
 
 /**
  * @class DeviceModel
@@ -53,7 +53,7 @@ export class DeviceModel
 	declare id: Primitives<DeviceId>
 	declare serial: Primitives<DeviceSerial>
 	declare activo: Primitives<DeviceActivo>
-	declare statusId: Primitives<DeviceStatus>
+	declare statusId: Primitives<StatusId>
 	declare categoryId: Primitives<CategoryId>
 	declare brandId: Primitives<BrandId>
 	declare modelId: Primitives<ModelSeriesId>

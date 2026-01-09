@@ -44,9 +44,8 @@ export class LocationMonitoring extends Monitoring {
 	 * @returns {LocationMonitoring} A new LocationMonitoring instance.
 	 */
 	static create(params: LocationMonitoringParams): LocationMonitoring {
-		const id = MonitoringId.random()
 		const locationMonitoring = new LocationMonitoring(
-			id,
+			MonitoringId.random(),
 			new LocationId(params.locationId),
 			new MonitoringStatus(params.status),
 			new MonitoringLastScan(params.lastScan),
@@ -56,7 +55,7 @@ export class LocationMonitoring extends Monitoring {
 
 		locationMonitoring.record(
 			new LocationMonitoringCreatedDomainEvent({
-				aggregateId: id.value,
+				aggregateId: locationMonitoring.idValue,
 				locationId: params.locationId,
 				status: params.status
 			})
@@ -85,7 +84,7 @@ export class LocationMonitoring extends Monitoring {
 	 * Converts the LocationMonitoring instance to its primitive representation.
 	 * @returns {LocationMonitoringPrimitives} The primitive representation of the monitoring entry.
 	 */
-	toPrimitive(): LocationMonitoringPrimitives {
+	toPrimitives(): LocationMonitoringPrimitives {
 		return {
 			id: this.idValue,
 			locationId: this.locationValue,

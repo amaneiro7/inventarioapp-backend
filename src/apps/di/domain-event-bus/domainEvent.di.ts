@@ -19,6 +19,11 @@ import { DeactivateUserOnEmployeeTerminated } from '../../../Contexts/User/user/
 import { InvalidateEmployeeCacheOnEmployeeChanged } from '../../../Contexts/employee/Employee/application/InvalidateEmployeeCacheOnEmployeeChanged'
 import { InvalidateProcessorCacheOnProcessorChanged } from '../../../Contexts/Features/Processor/application/InvalidateProcessorCacheOnProcessorChanged'
 import { InvalidateDeviceCacheOnDeviceChanged } from '../../../Contexts/Device/Device/application/InvalidateDeviceCacheOnDeviceChanged'
+import { CreateHistoryOnDeviceChanged } from '../../../Contexts/History/application/CreateHistoryOnDeviceChanged'
+import { InvalidateHistoryCacheOnHistoryChanged } from '../../../Contexts/History/application/InvalidateHistoryCacheOnHistoryChanged'
+import { CreateDeviceMonitoringOnDeviceCreated } from '../../../Contexts/Device/DeviceMonitoring/application/CreateDeviceMonitoringOnDeviceCreated'
+import { InvalidateDeviceMonitoringCacheOnDeviceChanged } from '../../../Contexts/Device/DeviceMonitoring/application/InvalidateDeviceMonitoringCacheOnDeviceChanged'
+import { SyncDeviceMonitoringStateOnEvents } from '../../../Contexts/Device/DeviceMonitoring/application/SyncDeviceMonitoringStateOnEvents'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -40,7 +45,12 @@ export enum DomainEventDependencies {
 	InvalidateEmployeeCacheOnEmployeeChanged = 'invalidateEmployeeCacheOnEmployeeChanged',
 	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated',
 	InvalidateProcessorCacheOnProcessorChanged = 'invalidateProcessorCacheOnProcessorChanged',
-	InvalidateDeviceCacheOnDeviceChanged = 'invalidateDeviceCacheOnDeviceChanged'
+	InvalidateDeviceCacheOnDeviceChanged = 'invalidateDeviceCacheOnDeviceChanged',
+	CreateHistoryOnDeviceChanged = 'createHistoryOnDeviceChanged',
+	InvalidateHistoryCacheOnHistoryChanged = 'invalidateHistoryCacheOnHistoryChanged',
+	CreateDeviceMonitoringOnDeviceCreated = 'createDeviceMonitoringOnDeviceCreated',
+	InvalidateDeviceMonitoringCacheOnDeviceChanged = 'invalidateDeviceMonitoringCacheOnDeviceChanged',
+	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents'
 }
 
 /**
@@ -107,6 +117,19 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidateDeviceCacheOnDeviceChanged]: asClass(
 			InvalidateDeviceCacheOnDeviceChanged
+		).singleton(),
+		[DomainEventDependencies.CreateHistoryOnDeviceChanged]: asClass(CreateHistoryOnDeviceChanged).singleton(),
+		[DomainEventDependencies.InvalidateHistoryCacheOnHistoryChanged]: asClass(
+			InvalidateHistoryCacheOnHistoryChanged
+		).singleton(),
+		[DomainEventDependencies.CreateDeviceMonitoringOnDeviceCreated]: asClass(
+			CreateDeviceMonitoringOnDeviceCreated
+		).singleton(),
+		[DomainEventDependencies.InvalidateDeviceMonitoringCacheOnDeviceChanged]: asClass(
+			InvalidateDeviceMonitoringCacheOnDeviceChanged
+		).singleton(),
+		[DomainEventDependencies.SyncDeviceMonitoringStateOnEvents]: asClass(
+			SyncDeviceMonitoringStateOnEvents
 		).singleton()
 	})
 }

@@ -180,6 +180,7 @@ export class DeviceComputer extends Device {
 		validator: DeviceConsistencyValidator
 	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
 		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		const oldDeviceEntity = structuredClone(this.toPrimitives())
 		const computerConsistencyValidator = new ComputerConsistencyValidator()
 
 		if (params.computerName !== undefined && this.computerNameValue !== params.computerName) {
@@ -251,21 +252,25 @@ export class DeviceComputer extends Device {
 		}
 
 		// Actualizar campos base y validar consistencia general
-		const baseChanges = super.update(params, context, validator)
+		const baseChanges = super.update(params, context, validator, false)
 
 		// Validar consistencia específica de computadoras
 		computerConsistencyValidator.validate(this)
 
-		if (changes.length > 0) {
+		const allChanges = [...changes, ...baseChanges]
+
+		if (allChanges.length > 0) {
 			this.record(
 				new DeviceUpdatedDomainEvent({
 					aggregateId: this.idValue,
-					changes
+					newEntity: this.toPrimitives(),
+					oldEntity: oldDeviceEntity,
+					changes: allChanges
 				})
 			)
 		}
 
-		return [...changes, ...baseChanges]
+		return allChanges
 	}
 
 	// Update methods

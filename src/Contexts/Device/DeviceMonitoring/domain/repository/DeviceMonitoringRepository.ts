@@ -43,4 +43,17 @@ export abstract class DeviceMonitoringRepository {
 	 * @returns {Promise<void>}
 	 */
 	abstract save(payload: DeviceMonitoringPrimitives): Promise<void>
+
+	/**
+	 * Saves an array of Device monitoring entries.
+	 * @param {DeviceMonitoringPrimitives[]} payload - The array of Device monitoring data to be saved.
+	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
+	 */
+	abstract saveAll(payload: DeviceMonitoringPrimitives[]): Promise<void>
+
+	/**
+	 * Invalidates the cache for a specific Device monitoring entry.
+	 * @param {string} [id] - The ID of the Device monitoring entry.
+	 */
+	abstract invalidate(id?: string): Promise<void>
 }

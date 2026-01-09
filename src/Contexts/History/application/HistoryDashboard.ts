@@ -1,5 +1,5 @@
-import { TotalChangeLastThreMonthsByCategoryRepository } from '../domain/TotalChangeLastThreMonthsByCategoryRepository'
-import { type HistoryDashboardDto } from '../domain/HistoryDashboardDto'
+import { TotalChangeLastThreMonthsByCategoryRepository } from '../domain/repository/TotalChangeLastThreMonthsByCategoryRepository'
+import { type HistoryDashboardDto } from '../domain/entity/HistoryDashboardDto'
 
 /**
  * @description Service to generate dashboard data related to history.

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { History } from '../domain/History'
+import { History } from '../domain/entity/History'
 import { GetAllBaseService } from '../../Shared/methods/getAll.abstract'
 import { type ResponseService } from '../../Shared/domain/ResponseType'
-import { type HistoryDto } from '../domain/History.dto'
+import { type HistoryDto } from '../domain/entity/History.dto'
 import { type Criteria } from '../../Shared/domain/criteria/Criteria'
-import { type HistoryRepository } from '../domain/HistoryRepository'
+import { type HistoryRepository } from '../domain/repository/HistoryRepository'
 import { type StatusRepository } from '../../Device/Status/domain/repository/StatusRepository'
 import { type CategoryRepository } from '../../Category/Category/domain/repository/CategoryRepository'
 import { type BrandRepository } from '../../Brand/domain/repository/BrandRepository'

@@ -4,7 +4,7 @@ import { HistoryModel } from './HistorySchema'
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { CacheService } from '../../../Shared/domain/CacheService'
 import { MainCategoryList } from '../../../Category/MainCategory/domain/MainCategoryDefaultData'
-import { type TotalChangeLastThreMonthsByCategoryRepository } from '../../domain/TotalChangeLastThreMonthsByCategoryRepository'
+import { type TotalChangeLastThreMonthsByCategoryRepository } from '../../domain/repository/TotalChangeLastThreMonthsByCategoryRepository'
 
 // Interface for the raw data returned from the Sequelize query
 interface RawHistoryData {
@@ -25,7 +25,7 @@ interface GroupedResult {
  * over the last few months. Utilizes caching for performance.
  */
 export class SequelizeTotalChangeLastThreMonthsByCategoryRepository implements TotalChangeLastThreMonthsByCategoryRepository {
-	private readonly cacheKey: string = 'totalChangeLastThreMonthsByCategory'
+	private readonly cacheKey: string = 'histories'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -41,11 +41,11 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository implements T
 	 */
 	async run({ months = 2 }: { months?: number }): Promise<{ name: string }[]> {
 		// Ensure the cache key is unique for different 'months' values.
-		const specificCacheKey = `${this.cacheKey}:${months}`
+		const specificCacheKey = `${this.cacheKey}:list:totalChangeLastThreMonthsByCategory:${months}`
 
 		return await this.cache.getCachedData({
 			cacheKey: specificCacheKey,
-			ttl: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const cutoffDate = new Date()
 				cutoffDate.setMonth(cutoffDate.getMonth() - months)

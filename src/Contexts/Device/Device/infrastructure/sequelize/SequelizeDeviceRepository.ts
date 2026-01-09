@@ -4,10 +4,11 @@ import { set_fs, utils, type WorkSheet, write } from 'xlsx'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceModel } from './schema/DeviceSchema'
-import { DeviceComputer } from '../../../../Features/Computer/domain/Computer'
 import { DeviceAssociation } from './DeviceAssociation'
-import { DeviceHardDrive } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive'
-import { MFP } from '../../../../Features/MFP/domain/MFP'
+import { DeviceComputer } from '../../domain/entity/Computer'
+import { DeviceHardDrive } from '../../domain/entity/HardDrive'
+import { MFP } from '../../domain/entity/MFP'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
 import { type DeviceRepository } from '../../domain/repository/DeviceRepository'
@@ -16,6 +17,9 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DevicePrimitives, type DeviceDto } from '../../domain/dto/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ClearDefaultDataset } from './DeviceResponse'
+import { type DeviceCacheInvalidator } from '../../domain/repository/DeviceCacheInvalidator'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DeviceId } from '../../domain/valueObject/DeviceId'
 
 /**
  * @class SequelizeDeviceRepository
@@ -23,14 +27,19 @@ import { type ClearDefaultDataset } from './DeviceResponse'
  * @implements {DeviceRepository}
  * @description Concrete implementation of the DeviceRepository using Sequelize.
  */
-export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implements DeviceRepository {
+export class SequelizeDeviceRepository
+	extends SequelizeCriteriaConverter
+	implements DeviceRepository, DeviceCacheInvalidator
+{
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix = 'devices'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
@@ -196,7 +205,6 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 			}
 
 			await transaction.commit()
-			await this.invalidateDeviceCache(payload)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving device: ${error instanceof Error ? error.message : String(error)}`)
@@ -213,23 +221,7 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 	}
 
 	async remove(deviceId: string): Promise<void> {
-		const deviceToRemove = await DeviceModel.findByPk(deviceId, { include: ['computer'] })
 		await DeviceModel.destroy({ where: { id: deviceId } })
-		if (deviceToRemove) {
-			await this.invalidateDeviceCache(deviceToRemove.get({ plain: true }))
-		}
-	}
-
-	private async invalidateDeviceCache(deviceData: Partial<DeviceDto>): Promise<void> {
-		const { id, activo, serial, computer } = deviceData
-		const cacheKeysToRemove = [`${this.cacheKeyPrefix}*`]
-		if (id) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:id:${id}`)
-		if (activo) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:activo:${activo}`)
-		if (serial) cacheKeysToRemove.push(`${this.cacheKeyPrefix}:serial:${serial}`)
-		if (computer?.computerName)
-			cacheKeysToRemove.push(`${this.cacheKeyPrefix}:computerName:${computer.computerName}`)
-
-		await Promise.all(cacheKeysToRemove.map(key => this.cache.removeCachedData({ cacheKey: key })))
 	}
 
 	async donwload(criteria: Criteria): Promise<Buffer> {
@@ -281,5 +273,14 @@ export class SequelizeDeviceRepository extends SequelizeCriteriaConverter implem
 		})
 		utils.book_append_sheet(workbook, worksheet, 'Inventario')
 		return write(workbook, { type: 'buffer', bookType: 'xlsx', compression: true })
+	}
+
+	/**
+	 * @method invalidateDeviceCache
+	 * @description Invalidates all devices-related cache entries.
+	 * Implements DeviceCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<DeviceId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

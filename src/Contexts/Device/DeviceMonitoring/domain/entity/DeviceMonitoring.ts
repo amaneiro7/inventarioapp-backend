@@ -11,6 +11,7 @@ import {
 	type DeviceMonitoringPrimitives
 } from './DeviceMonitoring.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { DeviceMonitoringCreatedDomainEvent } from '../event/DeviceMonitoringCreatedDomainEvent'
 
 /**
  * @class DeviceMonitoring
@@ -37,7 +38,7 @@ export class DeviceMonitoring extends Monitoring {
 	 * @returns {DeviceMonitoring} A new `DeviceMonitoring` instance.
 	 */
 	static create(params: DeviceMonitoringParams): DeviceMonitoring {
-		return new DeviceMonitoring(
+		const deviceMonitoring = new DeviceMonitoring(
 			MonitoringId.random(),
 			new DeviceId(params.deviceId),
 			new MonitoringStatus(params.status),
@@ -45,6 +46,16 @@ export class DeviceMonitoring extends Monitoring {
 			new MonitoringLastSuccess(params.lastSuccess),
 			new MonitoringLastFailed(params.lastFailed)
 		)
+
+		deviceMonitoring.record(
+			new DeviceMonitoringCreatedDomainEvent({
+				aggregateId: deviceMonitoring.idValue,
+				deviceId: params.deviceId,
+				status: params.status
+			})
+		)
+
+		return deviceMonitoring
 	}
 
 	/**
@@ -70,7 +81,7 @@ export class DeviceMonitoring extends Monitoring {
 	 * @description Converts the `DeviceMonitoring` instance into its primitive representation.
 	 * @returns {DeviceMonitoringPrimitives} The primitive representation.
 	 */
-	toPrimitive(): DeviceMonitoringPrimitives {
+	toPrimitives(): DeviceMonitoringPrimitives {
 		return {
 			id: this.idValue,
 			deviceId: this.deviceValue,

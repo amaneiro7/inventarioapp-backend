@@ -53,7 +53,7 @@ export const register = (container: AwilixContainer) => {
 		deviceCreator: asClass(DeviceCreator),
 		deviceMonitoringFinder: asClass(DeviceMonitoringFinder),
 		deviceMonitoringFinderAll: asClass(DeviceMonitoringFinderAll),
-		deviceMonitoringCreator: asClass(DeviceMonitoringCreator),
+		deviceMonitoringCreator: asClass(DeviceMonitoringCreator).singleton(),
 		deviceUpdater: asClass(DeviceUpdater),
 		deviceRemover: asClass(DeviceRemover),
 		deviceExcelService: asClass(DeviceExcelService),

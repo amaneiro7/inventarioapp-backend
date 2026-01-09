@@ -1,7 +1,7 @@
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoring } from './DeviceMonitoring'
 import { type DeviceDto } from '../../../Device/domain/dto/Device.dto'
-import { type IPAddress } from '../../../Device/domain/valueObject/DeviceIPAddress'
+import { type DeviceIPAddress } from '../../../Device/domain/valueObject/DeviceIPAddress'
 import { type ComputerName } from '../../../Device/domain/valueObject/ComputerName'
 import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/domain/entity/Monitoring.dto'
 import { type MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
@@ -31,7 +31,7 @@ export type DeviceMonitoringDto = DeviceMonitoringType & {
  * @description A mapped version of the DeviceMonitoring DTO for client-side display.
  */
 export type DeviceMonitoringMapped = DeviceMonitoringType & {
-	ipAddress?: Primitives<IPAddress>
+	ipAddress?: Primitives<DeviceIPAddress>
 	computerName?: Primitives<ComputerName>
 	location: DeviceDto['location']
 	employee: DeviceDto['employee']

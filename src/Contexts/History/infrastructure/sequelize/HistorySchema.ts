@@ -1,15 +1,15 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
-import { type HistoryDto } from '../../domain/History.dto'
-import { type ActionType, acionTypes } from '../../domain/HistoryAction'
+import { type HistoryDto } from '../../domain/entity/History.dto'
+import { type ActionType, acionTypes } from '../../domain/valueObject/HistoryAction'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
-import { type HistoryId } from '../../domain/HistoryId'
+import { type HistoryId } from '../../domain/valueObject/HistoryId'
 import { type UserId } from '../../../User/user/domain/valueObject/UserId'
 import { type HistoryEmployee } from '../../domain/HistoryEmployee'
 import { type DeviceDto } from '../../../Device/Device/domain/dto/Device.dto'
 import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
 import { type UserDto } from '../../../User/user/domain/entity/User.dto'
-import { type CreatedAt } from '../../domain/CreatedAt'
+import { type CreatedAt } from '../../domain/valueObject/CreatedAt'
 
 export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' | 'user'>> implements HistoryDto {
 	declare id: Primitives<HistoryId>

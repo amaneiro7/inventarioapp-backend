@@ -1,6 +1,7 @@
-import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
+import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService2'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
+import { StatusOptions } from '../../Status/domain/StatusOptions'
 import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
@@ -84,7 +85,7 @@ export class DeviceMonitoringService extends MonitoringService<
 	}
 
 	protected createMonitoringPayload(item: DeviceMonitoring): DeviceMonitoringPrimitives {
-		return item.toPrimitive()
+		return item.toPrimitives()
 	}
 
 	protected async getIpAddress(item: DeviceMonitoringDto): Promise<string | null | undefined> {
@@ -118,5 +119,28 @@ export class DeviceMonitoringService extends MonitoringService<
 		entity.updateLastSuccess(lastSuccess)
 		entity.updateLastFailed(lastFailed)
 		entity.updateLastScan(lastScan)
+	}
+
+	/**
+	 * @description Synchronizes the local monitoring state when a device is updated.
+	 * Fetches the latest data, invalidates cache, and updates the in-memory list based on status.
+	 * @param {string} deviceId - The ID of the device that changed.
+	 */
+	async syncFromDeviceChange(deviceId: string): Promise<void> {
+		const item = await this.deviceMonitoringRepository.findById(deviceId)
+		if (!item) return
+
+		// Invalidate cache for this item because device details (IpAddress/status) changed
+		await this.deviceMonitoringRepository.invalidate(item.id)
+
+		// Check if it should be monitored (InUse AND has IpAddress)
+		const isInUse = item.device.statusId === StatusOptions.INUSE
+		const hasIpAddress = !!item.device.computer?.ipAddress
+
+		if (isInUse && hasIpAddress) {
+			this.monitoredItems.set(item.id, item)
+		} else {
+			this.monitoredItems.delete(item.id)
+		}
 	}
 }

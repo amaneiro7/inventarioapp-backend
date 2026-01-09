@@ -122,7 +122,9 @@ export class DeviceCreator {
 		await this.deviceRepository.save(device.toPrimitives())
 
 		// 5. Publicación de Eventos
-		await this.eventBus.publish(device.pullDomainEvents())
+		const events = device.pullDomainEvents()
+		events.forEach(event => Object.assign(event, { userId: user.sub }))
+		await this.eventBus.publish(events)
 
 		// const device = await this.createDeviceEntity(params)
 		// const { generic, typeOfSite } = await this.validateDeviceRelations(params)

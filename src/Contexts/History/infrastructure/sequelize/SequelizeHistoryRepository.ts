@@ -2,11 +2,15 @@ import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { HistoryModel } from './HistorySchema'
 import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { HistoryAssociation } from './HistoryAssociation'
+import { GenericCacheInvalidator } from '../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type HistoryDto, type HistoryPrimitives } from '../../domain/History.dto'
-import { type HistoryRepository } from '../../domain/HistoryRepository'
+import { type HistoryDto, type HistoryPrimitives } from '../../domain/entity/History.dto'
+import { type HistoryRepository } from '../../domain/repository/HistoryRepository'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type HistoryCacheInvalidator } from '../../domain/repository/HistoryCacheInvalidator'
+import { type HistoryId } from '../../domain/valueObject/HistoryId'
 
 /**
  * @class SequelizeHistoryRepository
@@ -15,12 +19,17 @@ import { type HistoryRepository } from '../../domain/HistoryRepository'
  * @description Concrete implementation of the HistoryRepository using Sequelize.
  * Handles data persistence for History entities, including caching mechanisms.
  */
-export class SequelizeHistoryRepository extends SequelizeCriteriaConverter implements HistoryRepository {
+export class SequelizeHistoryRepository
+	extends SequelizeCriteriaConverter
+	implements HistoryRepository, HistoryCacheInvalidator
+{
 	private readonly cacheKey: string = 'histories'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	/**
@@ -56,7 +65,14 @@ export class SequelizeHistoryRepository extends SequelizeCriteriaConverter imple
 	 */
 	async save(payload: HistoryPrimitives): Promise<void> {
 		await HistoryModel.create(payload)
-		// Invalidate all cache entries related to histories.
-		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
+	}
+
+	/**
+	 * @method invalidateHistoryCache
+	 * @description Invalidates all histories-related cache entries.
+	 * Implements HistoryCacheInvalidator interface.
+	 */
+	async invalidate(id?: Primitives<HistoryId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

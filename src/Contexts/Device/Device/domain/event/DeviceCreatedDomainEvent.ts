@@ -1,8 +1,8 @@
 import { DomainEvent } from '../../../../Shared/domain/event/DomainEvent'
+import { type DeviceComputerPrimitives } from '../dto/Computer.dto'
 import { type DevicePrimitives } from '../dto/Device.dto'
-import { type DeviceComputerPrimitives } from '../../../../Features/Computer/domain/Computer.dto'
-import { type DeviceHardDrivePrimitives } from '../../../../Features/HardDrive/HardDrive/domain/HardDrive.dto'
-import { type DeviceMFPPrimitives } from '../../../../Features/MFP/domain/MFP.dto'
+import { type DeviceHardDrivePrimitives } from '../dto/HardDrive.dto'
+import { type DeviceMFPPrimitives } from '../dto/MFP.dto'
 
 type DeviceCreatedDomainEventAttributes = {
 	readonly device: DevicePrimitives | DeviceComputerPrimitives | DeviceHardDrivePrimitives | DeviceMFPPrimitives

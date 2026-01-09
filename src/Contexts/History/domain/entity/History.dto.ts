@@ -1,13 +1,13 @@
-import { type DeviceDto } from '../../Device/Device/domain/dto/Device.dto'
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type UserDto } from '../../User/user/domain/entity/User.dto'
-import { type ActionType } from './HistoryAction'
-import { type HistoryEmployee } from './HistoryEmployee'
-import { type HistoryId } from './HistoryId'
-import { type DeviceId } from '../../Device/Device/domain/valueObject/DeviceId'
-import { type UserId } from '../../User/user/domain/valueObject/UserId'
-import { type CreatedAt } from './CreatedAt'
-import { type EmployeeDto } from '../../employee/Employee/domain/entity/Employee.dto'
+import { type DeviceDto } from '../../../Device/Device/domain/dto/Device.dto'
+import { type DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
+import { type EmployeeDto } from '../../../employee/Employee/domain/entity/Employee.dto'
+import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type UserDto } from '../../../User/user/domain/entity/User.dto'
+import { type UserId } from '../../../User/user/domain/valueObject/UserId'
+import { type CreatedAt } from '../valueObject/CreatedAt'
+import { type ActionType } from '../valueObject/HistoryAction'
+import { type HistoryId } from '../valueObject/HistoryId'
 
 /**
  * @interface History
@@ -17,7 +17,7 @@ export interface History {
 	id: Primitives<HistoryId>
 	deviceId: Primitives<DeviceId>
 	userId: Primitives<UserId>
-	employeeId: Primitives<HistoryEmployee> | null
+	employeeId: Primitives<EmployeeId> | null
 	action: ActionType
 	/** @description A snapshot of the data before the change occurred. */
 	oldData: Record<string, unknown>

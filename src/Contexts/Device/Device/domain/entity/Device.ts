@@ -122,9 +122,11 @@ export class Device extends AggregateRoot {
 			typeOfSite: Primitives<TypeOfSiteId> | null
 			generic: Primitives<Generic>
 		},
-		validator: DeviceConsistencyValidator
+		validator: DeviceConsistencyValidator,
+		shouldRecordEvent: boolean = true
 	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
 		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		const oldDeviceEntity = structuredClone(this.toPrimitives())
 
 		if (params.activo !== undefined && this.activoValue !== params.activo) {
 			changes.push({
@@ -209,17 +211,27 @@ export class Device extends AggregateRoot {
 			generic: context.generic
 		})
 
-		if (changes.length > 0) {
-			this.registerUpdateEvent(changes)
+		if (changes.length > 0 && shouldRecordEvent) {
+			this.registerUpdateEvent({ changes, newEntity: this.toPrimitives(), oldEntity: oldDeviceEntity })
 		}
 
 		return changes
 	}
 
-	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+	registerUpdateEvent({
+		changes,
+		newEntity,
+		oldEntity
+	}: {
+		newEntity: DevicePrimitives
+		oldEntity: DevicePrimitives
+		changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>
+	}): void {
 		this.record(
 			new DeviceUpdatedDomainEvent({
 				aggregateId: this.idValue,
+				newEntity,
+				oldEntity,
 				changes
 			})
 		)

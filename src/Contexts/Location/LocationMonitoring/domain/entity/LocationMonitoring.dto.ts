@@ -2,7 +2,7 @@ import { type MonitoringPrimitives } from '../../../../Shared/domain/Monitoring/
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoring } from './LocationMonitoring'
 import { type LocationDto } from '../../../Location/domain/entity/Location.dto'
-import { type IPAddress } from '../../../../Device/Device/domain/valueObject/DeviceIPAddress'
+import { type DeviceIPAddress } from '../../../../Device/Device/domain/valueObject/DeviceIPAddress'
 import { type LocationName } from '../../../Location/domain/valueObject/LocationName'
 import { type SiteDto } from '../../../Site/domain/entity/Site.dto'
 import { MonitoringStatuses } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
@@ -35,7 +35,7 @@ export type LocationMonitoringDto = LocationMonitoringType & {
  * Represents a mapped version of Location Monitoring data, including denormalized location details for display.
  */
 export type LocationMonitoringMapped = LocationMonitoringType & {
-	subnet?: Primitives<IPAddress>
+	subnet?: Primitives<DeviceIPAddress>
 	name?: Primitives<LocationName>
 	site: SiteDto
 }

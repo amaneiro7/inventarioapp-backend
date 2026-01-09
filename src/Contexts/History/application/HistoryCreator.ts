@@ -1,6 +1,7 @@
-import { History } from '../domain/History'
-import { type HistoryParams } from '../domain/History.dto'
-import { type HistoryRepository } from '../domain/HistoryRepository'
+import { History } from '../domain/entity/History'
+import { type EventBus } from '../../Shared/domain/event/EventBus'
+import { type HistoryParams } from '../domain/entity/History.dto'
+import { type HistoryRepository } from '../domain/repository/HistoryRepository'
 
 /**
  * @class HistoryCreator
@@ -11,8 +12,10 @@ export class HistoryCreator {
 	 * @param {HistoryRepository} historyRepository - The repository for persisting history data.
 	 */
 	private readonly historyRepository: HistoryRepository
-	constructor({ historyRepository }: { historyRepository: HistoryRepository }) {
+	private readonly eventBus: EventBus
+	constructor({ historyRepository, eventBus }: { historyRepository: HistoryRepository; eventBus: EventBus }) {
 		this.historyRepository = historyRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -24,5 +27,6 @@ export class HistoryCreator {
 		const history = History.create(params)
 
 		await this.historyRepository.save(history.toPrimitives())
+		await this.eventBus.publish(history.pullDomainEvents())
 	}
 }
