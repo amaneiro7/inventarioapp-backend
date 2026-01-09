@@ -19,12 +19,12 @@ export class ModelSeriesExistenceChecker {
 	 */
 	async ensureExist({
 		modelSeriesId,
-		brand,
-		category
+		brandId,
+		categoryId
 	}: {
 		modelSeriesId: Primitives<ModelSeriesId> | null | undefined
-		category?: Primitives<CategoryId>
-		brand?: Primitives<BrandId>
+		categoryId?: Primitives<CategoryId>
+		brandId?: Primitives<BrandId>
 	}): Promise<ModelSeriesDto | undefined> {
 		if (modelSeriesId === null || modelSeriesId === undefined) {
 			return
@@ -35,10 +35,10 @@ export class ModelSeriesExistenceChecker {
 			throw new ModelSeriesDoesNotExistError(modelSeriesId)
 		}
 
-		if (brand && isModelSeriesExist.brandId !== brand) {
+		if (brandId && isModelSeriesExist.brandId !== brandId) {
 			throw new InvalidArgumentError('La marca no coincide con el modelo seleccionado.')
 		}
-		if (category && isModelSeriesExist.categoryId !== category) {
+		if (categoryId && isModelSeriesExist.categoryId !== categoryId) {
 			throw new InvalidArgumentError('La categoría no coincide con el modelo seleccionado.')
 		}
 		return isModelSeriesExist

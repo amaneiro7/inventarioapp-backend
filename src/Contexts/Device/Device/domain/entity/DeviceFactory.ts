@@ -1,84 +1,105 @@
-export class ModelFactory {
-	private readonly memoryRamTypeExistenceChecker: MemoryRamTypeExistenceChecker
+import { Device } from './Device'
+import { DeviceComputer } from './Computer'
+import { DeviceHardDrive } from './HardDrive'
+import { MFP } from './MFP'
+import { ComputerConsistencyValidator } from '../service/ComputerConsistencyValidator'
+import { ProcessorExistenceChecker } from '../../../../Features/Processor/domain/service/ProcessorExistanceChecker'
+import { HardDriveCapacityExistenceChecker } from '../../../../Features/HardDrive/HardDriveCapacity/domain/service/HardDriveCapacityExistanceChecker'
+import { HardDriveTypeExistenceChecker } from '../../../../Features/HardDrive/HardDriveType/domain/service/HardDriveTypeExistanceChecker'
+import { OperatingSystemExistenceChecker } from '../../../../Features/OperatingSystem/OperatingSystem/domain/service/OperatingSystemExistanceChecker'
+import { OperatingSystemArqExistenceChecker } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/service/OperatingSystemArqExistanceChecker'
+import { ComputerNameUniquenessChecker } from '../service/ComputerNameUniquenessChecker'
+import { type DeviceRepository } from '../repository/DeviceRepository'
+import { type OperatingSystemArqRepository } from '../../../../Features/OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
+import { type OperatingSystemRepository } from '../../../../Features/OperatingSystem/OperatingSystem/domain/repository/OperatingSystemRepository'
+import { type HardDriveTypeRepository } from '../../../../Features/HardDrive/HardDriveType/domain/repository/HardDriveTypeRepository'
+import { type HardDriveCapacityRepository } from '../../../../Features/HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
+import { type ProcessorRepository } from '../../../../Features/Processor/domain/repository/ProcessorRepository'
+import { type DeviceDto, type DeviceParams } from '../dto/Device.dto'
+import { type DeviceComputerParams } from '../dto/Computer.dto'
+import { type DeviceHardDriveParams } from '../dto/HardDrive.dto'
+import { type DeviceMFPParams } from '../dto/MFP.dto'
+
+export class DeviceFactory {
 	private readonly processorExistenceChecker: ProcessorExistenceChecker
-	private readonly inputTypeExistenceChecker: InputTypeExistenceChecker
-	constructor(dependencies: ModelDependencies) {
-		this.memoryRamTypeExistenceChecker = new MemoryRamTypeExistenceChecker(dependencies.memoryRamTypeRepository)
-		this.processorExistenceChecker = new ProcessorExistenceChecker(dependencies.processorRepository)
-		this.inputTypeExistenceChecker = new InputTypeExistenceChecker(dependencies.inputTypeRepository)
+	private readonly computerNameUniquenessChecker: ComputerNameUniquenessChecker
+	private readonly hardDriveCapacityExistenceChecker: HardDriveCapacityExistenceChecker
+	private readonly hardDriveTypeExistenceChecker: HardDriveTypeExistenceChecker
+	private readonly operatingSystemExistenceChecker: OperatingSystemExistenceChecker
+	private readonly operatingSystemArqExistenceChecker: OperatingSystemArqExistenceChecker
+	private readonly computerConsistencyValidator = new ComputerConsistencyValidator()
+	constructor({
+		deviceRepository,
+		processorRepository,
+		hardDriveCapacityRepository,
+		hardDriveTypeRepository,
+		operatingSystemArqRepository,
+		operatingSystemRepository
+	}: {
+		deviceRepository: DeviceRepository
+		processorRepository: ProcessorRepository
+		hardDriveCapacityRepository: HardDriveCapacityRepository
+		hardDriveTypeRepository: HardDriveTypeRepository
+		operatingSystemRepository: OperatingSystemRepository
+		operatingSystemArqRepository: OperatingSystemArqRepository
+	}) {
+		this.computerNameUniquenessChecker = new ComputerNameUniquenessChecker(deviceRepository)
+		this.processorExistenceChecker = new ProcessorExistenceChecker(processorRepository)
+		this.hardDriveCapacityExistenceChecker = new HardDriveCapacityExistenceChecker(hardDriveCapacityRepository)
+		this.hardDriveTypeExistenceChecker = new HardDriveTypeExistenceChecker(hardDriveTypeRepository)
+		this.operatingSystemExistenceChecker = new OperatingSystemExistenceChecker(operatingSystemRepository)
+		this.operatingSystemArqExistenceChecker = new OperatingSystemArqExistenceChecker(operatingSystemArqRepository)
 	}
 
-	static async fromPrimitives(primitives: ModelSeriesDto): Promise<ModelSeries> {
-		if (primitives.modelComputer) {
-			return ComputerModels.fromPrimitives(primitives)
+	static async fromPrimitives(primitives: DeviceDto): Promise<Device> {
+		if (primitives.computer) {
+			return DeviceComputer.fromPrimitives(primitives)
 		}
-		if (primitives.modelLaptop) {
-			return LaptopsModels.fromPrimitives(primitives)
+		if (primitives.hardDrive) {
+			return DeviceHardDrive.fromPrimitives(primitives)
 		}
-		if (primitives.modelMonitor) {
-			return MonitorModels.fromPrimitives(primitives)
-		}
-		if (primitives.modelPrinter) {
-			return ModelPrinters.fromPrimitives(primitives)
-		}
-		if (primitives.modelKeyboard) {
-			return KeyboardModels.fromPrimitives(primitives)
-		}
-		if (primitives.modelMouse) {
-			return MouseModels.fromPrimitives(primitives)
+		if (primitives.mfp) {
+			return MFP.fromPrimitives(primitives)
 		}
 
-		return ModelSeries.fromPrimitives(primitives)
+		return Device.fromPrimitives(primitives)
 	}
 
-	async create(params: ModelSeriesParams): Promise<ModelSeries> {
+	async create(params: DeviceParams): Promise<Device> {
 		const { categoryId } = params
 
-		if (ComputerModels.isComputerCategory({ categoryId })) {
-			return this.createComputer(params as ComputerModelsParams)
+		if (DeviceComputer.isComputerCategory({ categoryId })) {
+			return this.createComputer(params as DeviceComputerParams)
 		}
-		if (LaptopsModels.isLaptopCategory({ categoryId })) {
-			return this.createLaptop(params as LaptopModelsParams)
+		if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
+			return this.createHardDrive(params as DeviceHardDriveParams)
 		}
-		if (MonitorModels.isMonitorCategory({ categoryId })) {
-			return MonitorModels.create(params as MonitorModelsParams)
-		}
-		if (ModelPrinters.isPrinterCategory({ categoryId })) {
-			return ModelPrinters.create(params as PrinteModelsParams)
-		}
-		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
-			return this.createKeyboard(params as KeyboardModelsParams)
-		}
-		if (MouseModels.isMouseCategory({ categoryId })) {
-			return this.createMouse(params as MouseModelsParams)
+		if (MFP.isMFPCategory({ categoryId })) {
+			return MFP.create(params as DeviceMFPParams)
 		}
 
-		return ModelSeries.create(params)
+		return Device.create(params)
 	}
 
-	private async createComputer(params: ComputerModelsParams): Promise<ComputerModels> {
+	private async createComputer(params: DeviceComputerParams): Promise<DeviceComputer> {
 		await Promise.all([
-			this.memoryRamTypeExistenceChecker.ensureExist(params.memoryRamTypeId),
-			this.processorExistenceChecker.ensureExist(params.processors)
+			this.computerNameUniquenessChecker.ensureUnique(params?.computerName),
+			this.processorExistenceChecker.ensureExist(params?.processorId),
+			this.hardDriveCapacityExistenceChecker.ensureExist(params?.hardDriveCapacityId),
+			this.hardDriveTypeExistenceChecker.ensureExist(params?.hardDriveTypeId),
+			this.operatingSystemExistenceChecker.ensureExist(params?.operatingSystemId),
+			this.operatingSystemArqExistenceChecker.ensureExist(params?.operatingSystemArqId)
 		])
-		return ComputerModels.create(params)
+		const deviceComputer = DeviceComputer.create(params)
+		this.computerConsistencyValidator.validate(deviceComputer)
+		return deviceComputer
 	}
 
-	private async createLaptop(params: LaptopModelsParams): Promise<LaptopsModels> {
+	private async createHardDrive(params: DeviceHardDriveParams): Promise<DeviceHardDrive> {
 		await Promise.all([
-			this.memoryRamTypeExistenceChecker.ensureExist(params.memoryRamTypeId),
-			this.processorExistenceChecker.ensureExist(params.processors)
+			this.hardDriveCapacityExistenceChecker.ensureExist(params?.hardDriveCapacityId),
+			this.hardDriveTypeExistenceChecker.ensureExist(params?.hardDriveTypeId)
 		])
-		return LaptopsModels.create(params)
-	}
-
-	private async createKeyboard(params: KeyboardModelsParams): Promise<KeyboardModels> {
-		await this.inputTypeExistenceChecker.ensureExist(params.inputTypeId)
-		return KeyboardModels.create(params)
-	}
-
-	private async createMouse(params: MouseModelsParams): Promise<MouseModels> {
-		await this.inputTypeExistenceChecker.ensureExist(params.inputTypeId)
-		return MouseModels.create(params)
+		return DeviceHardDrive.create(params)
 	}
 }

@@ -9,7 +9,7 @@ export class ProcessorExistenceChecker {
 	/**
 	 * Ensures that one or more Processors exist in the repository.
 	 * Ignores null or undefined values.
-	 * @param {Primitives<ProcessorId> | null | undefined |  (Primitives<ProcessorId>| null | undefined )[]} ProcessorIds - The Processor ID or IDs to check for existence.
+	 * @param {Primitives<ProcessorId> | null | undefined | (Primitives<ProcessorId>| null | undefined )[]} ProcessorIds - The Processor ID or IDs to check for existence.
 	 * @returns {Promise<void>} A promise that resolves if all Processors exist.
 	 * @throws {ProcessorDoesNotExistError} If any of the Processors do not exist.
 	 */

@@ -28,22 +28,23 @@ export class ModelFactory {
 	}
 
 	static async fromPrimitives(primitives: ModelSeriesDto): Promise<ModelSeries> {
-		if (primitives.modelComputer) {
+		const { categoryId } = primitives
+		if (ComputerModels.isComputerCategory({ categoryId })) {
 			return ComputerModels.fromPrimitives(primitives)
 		}
-		if (primitives.modelLaptop) {
+		if (LaptopsModels.isLaptopCategory({ categoryId })) {
 			return LaptopsModels.fromPrimitives(primitives)
 		}
-		if (primitives.modelMonitor) {
+		if (MonitorModels.isMonitorCategory({ categoryId })) {
 			return MonitorModels.fromPrimitives(primitives)
 		}
-		if (primitives.modelPrinter) {
+		if (ModelPrinters.isPrinterCategory({ categoryId })) {
 			return ModelPrinters.fromPrimitives(primitives)
 		}
-		if (primitives.modelKeyboard) {
+		if (KeyboardModels.isKeyboardCategory({ categoryId })) {
 			return KeyboardModels.fromPrimitives(primitives)
 		}
-		if (primitives.modelMouse) {
+		if (MouseModels.isMouseCategory({ categoryId })) {
 			return MouseModels.fromPrimitives(primitives)
 		}
 

@@ -6,7 +6,7 @@ import { type InputTypeRepository } from '../../InputType/domain/repository/Inpu
 import { type MemoryRamTypeRepository } from '../../../Features/MemoryRam/MemoryRamType/domain/repository/MemoryRamTypeRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
-import { type ModelSeriesDto, type ModelSeriesParams } from '../domain/dto/ModelSeries.dto'
+import { type ModelSeriesParams } from '../domain/dto/ModelSeries.dto'
 import { type ProcessorRepository } from '../../../Features/Processor/domain/repository/ProcessorRepository'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
@@ -50,7 +50,7 @@ export class ModelSeriesUpdater {
 			throw new ModelSeriesDoesNotExistError(id)
 		}
 
-		const modelEntity = await ModelFactory.fromPrimitives(modelSeries as ModelSeriesDto)
+		const modelEntity = await ModelFactory.fromPrimitives(modelSeries)
 
 		const changes = await modelEntity.update(params, {
 			modelSeriesRepository: this.modelSeriesRepository,

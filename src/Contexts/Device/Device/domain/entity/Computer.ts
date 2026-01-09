@@ -27,12 +27,12 @@ import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
 import { ComputerConsistencyValidator } from '../service/ComputerConsistencyValidator'
 import { DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
+import { ComputerDoesNotExistError } from '../errors/ComputerDoesNotExistError'
 import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
 import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceComputerParams, type DeviceComputerPrimitives } from '../dto/Computer.dto'
 import { type DeviceDto } from '../dto/Device.dto'
-import { ComputerDoesNotExistError } from '../errors/ComputerDoesNotExistError'
 
 /**
  * @description Represents a computer device, extending the base Device class with specific properties.

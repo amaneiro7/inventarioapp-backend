@@ -42,6 +42,8 @@ import { DeviceActivoUniquenessChecker } from '../domain/service/DeviceActivoUni
 import { StatusExistenceChecker } from '../../Status/domain/service/StatusExistanceChecker'
 import { EmployeeExistenceChecker } from '../../../employee/Employee/domain/service/EmployeeExistanceChecker'
 import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
+import { EventBus } from '../../../Shared/domain/event/EventBus'
+import { DeviceFactory } from '../domain/entity/DeviceFactory'
 
 export class DeviceUpdater {
 	private readonly deviceRepository: DeviceRepository
@@ -55,6 +57,7 @@ export class DeviceUpdater {
 	private readonly locationRepository: LocationRepository
 	private readonly employeeRepository: EmployeeRepository
 	private readonly modelSeriesRepository: ModelSeriesRepository
+	private readonly eventBus: EventBus
 	private readonly deviceConsistencyValidator = new DeviceConsistencyValidator()
 
 	constructor(dependencies: {
@@ -69,6 +72,7 @@ export class DeviceUpdater {
 		locationRepository: LocationRepository
 		employeeRepository: EmployeeRepository
 		modelSeriesRepository: ModelSeriesRepository
+		eventBus: EventBus
 	}) {
 		this.deviceRepository = dependencies.deviceRepository
 		this.processorRepository = dependencies.processorRepository
@@ -81,6 +85,7 @@ export class DeviceUpdater {
 		this.locationRepository = dependencies.locationRepository
 		this.employeeRepository = dependencies.employeeRepository
 		this.modelSeriesRepository = dependencies.modelSeriesRepository
+		this.eventBus = dependencies.eventBus
 	}
 
 	async run({
@@ -92,6 +97,9 @@ export class DeviceUpdater {
 		params: Partial<DeviceParams>
 		user?: JwtPayloadUser
 	}): Promise<void> {
+		if (!user?.sub) {
+			throw new InvalidArgumentError('User is required to perform this action.')
+		}
 		const deviceId = new DeviceId(id).value
 		const device = await this.deviceRepository.findById(deviceId)
 
@@ -99,40 +107,23 @@ export class DeviceUpdater {
 			throw new DeviceDoesNotExistError(id)
 		}
 
-		const { deviceEntity, oldDeviceEntity } = this.createDeviceEntity(device)
+		const deviceEntity = await DeviceFactory.fromPrimitives(device)
+		const oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
 
 		await this.updateDeviceFields(deviceEntity, params)
 
 		const devicePrimitives = deviceEntity.toPrimitives()
 		await this.deviceRepository.save(devicePrimitives)
 
-		if (user?.sub) {
-			await new HistoryCreator({ historyRepository: this.historyRepository }).run({
-				deviceId: deviceEntity.idValue,
-				userId: user.sub,
-				employeeId: deviceEntity.employeeValue,
-				action: 'UPDATE',
-				newData: devicePrimitives as unknown as Record<string, unknown>,
-				oldData: oldDeviceEntity as unknown as Record<string, unknown>,
-				createdAt: new Date()
-			})
-		}
-	}
-
-	private createDeviceEntity(device: DeviceDto) {
-		let deviceEntity: Device
-		if (DeviceComputer.isComputerCategory({ categoryId: device.categoryId })) {
-			const { computer } = device
-			if (!computer) throw new InvalidArgumentError('Computer data does not exist for this device')
-			deviceEntity = DeviceComputer.fromPrimitives({ ...device, ...computer })
-		} else if (DeviceHardDrive.isHardDriveCategory({ categoryId: device.categoryId })) {
-			const { hardDrive } = device
-			if (!hardDrive) throw new InvalidArgumentError('Hard drive data does not exist for this device')
-			deviceEntity = DeviceHardDrive.fromPrimitives({ ...device, ...hardDrive })
-		} else {
-			deviceEntity = Device.fromPrimitives(device)
-		}
-		return { deviceEntity, oldDeviceEntity: structuredClone(deviceEntity.toPrimitives()) }
+		await new HistoryCreator({ historyRepository: this.historyRepository }).run({
+			deviceId: deviceEntity.idValue,
+			userId: user.sub,
+			employeeId: deviceEntity.employeeValue,
+			action: 'UPDATE',
+			newData: devicePrimitives as unknown as Record<string, unknown>,
+			oldData: oldDeviceEntity as unknown as Record<string, unknown>,
+			createdAt: new Date()
+		})
 	}
 
 	private async updateDeviceFields(entity: Device, params: Partial<DeviceParams>) {

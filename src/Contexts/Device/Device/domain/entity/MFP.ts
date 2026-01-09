@@ -1,20 +1,27 @@
-import { Device } from '../../../Device/Device/domain/entity/Device'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { BrandId } from '../../../Brand/domain/valueObject/BrandId'
-import { CategoryId } from '../../../Category/Category/domain/valueObject/CategoryId'
-import { DeviceActivo } from '../../../Device/Device/domain/valueObject/DeviceActivo'
-import { DeviceEmployee } from '../../../Device/Device/domain/DeviceEmployee'
-import { DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
-import { DeviceModelSeries } from '../../../Device/Device/domain/DeviceModelSeries'
-import { DeviceObservation } from '../../../Device/Device/domain/valueObject/DeviceObservation'
-import { DeviceSerial } from '../../../Device/Device/domain/valueObject/DeviceSerial'
-import { DeviceStatus } from '../../../Device/Device/domain/DeviceStatus'
-import { MFPIPAddress } from './MFPIPAddress'
-import { DeviceLocation } from '../../../Device/Device/domain/DeviceLocation'
-import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
-import { DeviceStocknumber } from '../../../Device/Device/domain/valueObject/DeviceStock'
+import { Device } from './Device'
+import { DeviceId } from '../valueObject/DeviceId'
+import { StatusId } from '../../../Status/domain/valueObject/StatusId'
+import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/valueObject/ModelSeriesId'
+import { DeviceActivo } from '../valueObject/DeviceActivo'
+import { DeviceSerial } from '../valueObject/DeviceSerial'
+import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
+import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import { DeviceObservation } from '../valueObject/DeviceObservation'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { DeviceStocknumber } from '../valueObject/DeviceStock'
+import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { DeviceIPAddress } from '../valueObject/DeviceIPAddress'
+import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
+import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
+import { MFPDoesNotExistError } from '../errors/MFPDoesNotExistError'
+import { type DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
+import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
+import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
+import { type DeviceDto } from '../dto/Device.dto'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceMFPParams, type DeviceMFPPrimitives } from '../dto/MFP.dto'
-import { CategoryValues } from '../../../Category/Category/domain/CategoryOptions'
 
 /**
  * @description Represents a Multifunctional Printer (MFP) device, extending the base Device class.
@@ -24,15 +31,15 @@ export class MFP extends Device {
 		id: DeviceId,
 		serial: DeviceSerial,
 		activo: DeviceActivo,
-		statusId: DeviceStatus,
+		statusId: StatusId,
 		categoryId: CategoryId,
 		brandId: BrandId,
-		modelId: DeviceModelSeries,
-		employeeId: DeviceEmployee,
-		locationId: DeviceLocation,
+		modelId: ModelSeriesId,
+		employeeId: EmployeeId | null,
+		locationId: LocationId | null,
 		observation: DeviceObservation,
 		stockNumber: DeviceStocknumber,
-		private ipAddress: MFPIPAddress
+		private ipAddress: DeviceIPAddress
 	) {
 		super(
 			id,
@@ -53,20 +60,29 @@ export class MFP extends Device {
 	}
 
 	static create(params: DeviceMFPParams): MFP {
-		return new MFP(
+		const deviceMFP = new MFP(
 			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
-			new DeviceStatus(params.statusId),
+			new StatusId(params.statusId),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
-			new DeviceModelSeries(params.modelId),
-			new DeviceEmployee(params.employeeId, params.statusId),
-			new DeviceLocation(params.locationId),
+			new ModelSeriesId(params.modelId),
+			params.employeeId ? new EmployeeId(params.employeeId) : null,
+			params.locationId ? new LocationId(params.locationId) : null,
 			new DeviceObservation(params.observation),
-			new DeviceStocknumber(params.stockNumber, params.statusId),
-			new MFPIPAddress(params.ipAddress, params.statusId)
+			new DeviceStocknumber(params.stockNumber),
+			new DeviceIPAddress(params.ipAddress)
 		)
+
+		deviceMFP.record(
+			new DeviceCreatedDomainEvent({
+				aggregateId: deviceMFP.idValue,
+				device: deviceMFP.toPrimitives()
+			})
+		)
+
+		return deviceMFP
 	}
 
 	static isMFPCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -80,28 +96,66 @@ export class MFP extends Device {
 		}
 	}
 
-	static fromPrimitives(primitives: DeviceMFPPrimitives): MFP {
+	static fromPrimitives(primitives: DeviceDto): MFP {
+		const { mfp } = primitives
+		if (!mfp) {
+			throw new MFPDoesNotExistError(primitives?.serial ?? primitives.id)
+		}
 		return new MFP(
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),
 			new DeviceActivo(primitives.activo),
-			new DeviceStatus(primitives.statusId),
+			new StatusId(primitives.statusId),
 			new CategoryId(primitives.categoryId),
 			new BrandId(primitives.brandId),
-			new DeviceModelSeries(primitives.modelId),
-			new DeviceEmployee(primitives.employeeId, primitives.statusId),
-			new DeviceLocation(primitives.locationId),
+			new ModelSeriesId(primitives.modelId),
+			primitives.employeeId ? new EmployeeId(primitives.employeeId) : null,
+			primitives.locationId ? new LocationId(primitives.locationId) : null,
 			new DeviceObservation(primitives.observation),
-			new DeviceStocknumber(primitives.stockNumber, primitives.statusId),
-			new MFPIPAddress(primitives.ipAddress, primitives.statusId)
+			new DeviceStocknumber(primitives.stockNumber),
+			new DeviceIPAddress(mfp.ipAddress)
 		)
 	}
 
-	updateIPAddress(newIPAddress: Primitives<MFPIPAddress>, status: Primitives<DeviceStatus>): void {
-		this.ipAddress = new MFPIPAddress(newIPAddress, status)
+	update(
+		params: Partial<DeviceMFPParams>,
+		context: {
+			typeOfSite: Primitives<TypeOfSiteId> | null
+			generic: Primitives<Generic>
+		},
+		validator: DeviceConsistencyValidator
+	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
+		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+
+		if (params.ipAddress !== undefined && this.ipAddressValue !== params.ipAddress) {
+			changes.push({
+				field: 'ipAddress',
+				oldValue: this.ipAddressValue,
+				newValue: params.ipAddress
+			})
+			this.updateIPAddress(params.ipAddress)
+		}
+
+		// Actualizar campos base y validar consistencia general
+		const baseChanges = super.update(params, context, validator)
+
+		if (changes.length > 0) {
+			this.record(
+				new DeviceUpdatedDomainEvent({
+					aggregateId: this.idValue,
+					changes
+				})
+			)
+		}
+
+		return [...changes, ...baseChanges]
 	}
 
-	get ipAddressValue(): Primitives<MFPIPAddress> {
+	updateIPAddress(newIPAddress: Primitives<DeviceIPAddress>): void {
+		this.ipAddress = new DeviceIPAddress(newIPAddress)
+	}
+
+	get ipAddressValue(): Primitives<DeviceIPAddress> {
 		return this.ipAddress.value
 	}
 }
