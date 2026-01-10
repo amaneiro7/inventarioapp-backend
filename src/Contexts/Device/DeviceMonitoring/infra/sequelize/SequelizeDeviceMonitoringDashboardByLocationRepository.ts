@@ -42,7 +42,7 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringDashboardByLocationRepository
 {
-	private readonly cacheKey = 'deviceMonitoringDashboardByLocation'
+	private readonly cacheKey = 'deviceMonitoring'
 	private readonly cache: CacheService
 
 	constructor({ cache }: { cache: CacheService }) {
@@ -58,8 +58,8 @@ export class SequelizeDeviceMonitoringDashboardByLocationRepository
 		)
 
 		return this.cache.getCachedData<DashboardByLocationData>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ttl: TimeTolive.SHORT,
+			cacheKey: `${this.cacheKey}:lists:dashboardByLocation:${criteria.hash()}`,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const rawDevices = (await DeviceMonitoringModel.findAll(
 					findOptions

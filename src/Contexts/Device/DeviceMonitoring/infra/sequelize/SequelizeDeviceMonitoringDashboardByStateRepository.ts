@@ -31,7 +31,7 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 	extends SequelizeCriteriaConverter
 	implements DeviceMonitoringDashboardByStateRepository
 {
-	private readonly cacheKey = 'deviceMonitoringDashboardByState'
+	private readonly cacheKey = 'deviceMonitoring'
 	private readonly cache: CacheService
 
 	constructor({ cache }: { cache: CacheService }) {
@@ -44,8 +44,8 @@ export class SequelizeDeviceMonitoringDashboardByStateRepository
 		const opt = DeviceMonitoringDashboardByStateAssociation.buildDashboardFindOptions(criteria, options)
 
 		return this.cache.getCachedData<DashboardByStateData>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
-			ttl: TimeTolive.SHORT,
+			cacheKey: `${this.cacheKey}:lists:dashboardByState:${criteria.hash()}`,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const devices = (await DeviceMonitoringModel.findAll(opt)) as unknown as DeviceCountByState[]
 				return this.processAndAggregateData(devices)

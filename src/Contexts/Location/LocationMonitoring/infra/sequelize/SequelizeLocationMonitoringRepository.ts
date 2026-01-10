@@ -50,7 +50,7 @@ export class SequelizeLocationMonitoringRepository
 		return await this.cache.getCachedData<ResponseDB<LocationMonitoringDto>>({
 			cacheKey: `${this.cacheKey}:lists:all:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.TOO_SHORT,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const { count, rows } = await LocationMonitoringModel.findAndCountAll(opt)
 				return {
@@ -150,7 +150,6 @@ export class SequelizeLocationMonitoringRepository
 	 */
 	async save(payload: LocationMonitoringPrimitives): Promise<void> {
 		await LocationMonitoringModel.upsert(payload)
-		await this.invalidate(payload.id)
 	}
 
 	/**

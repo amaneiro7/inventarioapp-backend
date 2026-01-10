@@ -47,7 +47,7 @@ export class SequelizeLocationMonitoringDashboardRepository
 			// Cuando SequelizeLocationMonitoringRepository invalide 'locationMonitoring:lists:*', esto también se borrará.
 			cacheKey: `${this.cacheKey}:lists:dashboard:${criteria.hash()}`,
 			criteria,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.MEDIUM,
 			fetchFunction: async () => {
 				const locations = (await LocationMonitoringModel.findAll(opt)) as unknown as LocationCountByStatus[]
 
