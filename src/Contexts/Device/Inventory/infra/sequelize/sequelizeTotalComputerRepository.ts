@@ -14,7 +14,7 @@ import { type TotalComputerRepository } from '../../domain/TotalComputerReposito
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalComputerRepository implements TotalComputerRepository {
-	private readonly cacheKey: string = 'totalComputer'
+	private readonly cacheKey: string = 'devices:dashboard:totalComputer'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -28,7 +28,7 @@ export class SequelizeTotalComputerRepository implements TotalComputerRepository
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await DeviceModel.count({
 					include: [

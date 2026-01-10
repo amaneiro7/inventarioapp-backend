@@ -1,13 +1,22 @@
 import { type ComputerDashboardRepository } from '../domain/ComputerDashboardRepository'
 import { type ComputerMemoryRamModulesRepository } from '../domain/ComputerMemoryRamModulesRepository'
-import { type ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepositoyr'
+import { type ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepository'
 import { type CountByCategoryRepository } from '../domain/CountByCategoryRepository'
 import { type CountByRegionRepository } from '../domain/CountByRegionRepository'
 import { type CountOSByRegionRepository } from '../domain/CountOSByRegionRepository'
-import { type CountTotalOperatingSystemRepository } from '../domain/CountTotalOperatingSystemRepository'
+import {
+	AggregatedOSData,
+	type CountTotalOperatingSystemRepository
+} from '../domain/CountTotalOperatingSystemRepository'
 import { type TotalActiveUsersRepository } from '../domain/TotalActiveUsersRepository'
 import { type TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
 import { type TotalComputerRepository } from '../domain/TotalComputerRepository'
+import { AggregatedBrandData, AggregatedHDDData, StatusCountData } from '../infra/sequelize/dashboard/types'
+import { AggregatedMemoryModuleData } from '../infra/sequelize/sequelizeComputerMemoryRamModulesRepository'
+import { AggregatedMemoryCapacityData } from '../infra/sequelize/sequelizeComputerMemoryRamRepository'
+import { AggregatedCategoryData } from '../infra/sequelize/sequelizeCountByCategoryRepository'
+import { AdministrativeRegionData } from '../infra/sequelize/sequelizeCountByRegionRepository'
+import { AggregatedOSByRegionData } from '../infra/sequelize/sequelizeCountOSByRegionRepository'
 
 /**
  * @class ComputerDashboard
@@ -63,9 +72,36 @@ export class ComputerDashboard {
 	/**
 	 * @method run
 	 * @description Executes all the necessary data-fetching operations in parallel and returns the combined result.
-	 * @returns {Promise<object>} A promise that resolves to the complete dashboard data object.
+	 * @returns {Promise<{
+	 *	total: number
+	 *	activeEmployees: number
+	 *	totalAgencies: number
+	 *	status: StatusCountData[]
+	 *	category: AggregatedCategoryData[]
+	 *	brand: AggregatedBrandData[]
+	 *	region: AdministrativeRegionData[]
+	 *	hardDrive: AggregatedHDDData[]
+	 *	operatingSystem: AggregatedOSData[]
+	 *	memoryRamCapacity: AggregatedMemoryCapacityData[]
+	 *	modulosMemoryRam: AggregatedMemoryModuleData[]
+	 *	operatingSystemByRegion: AggregatedOSByRegionData[]
+	 *}>} A promise that resolves to the complete dashboard data object with inferred types.
 	 */
-	async run(): Promise<object> {
+	// Se elimina el tipo explícito ': Promise<object>' para permitir que TS infiera la estructura exacta del objeto de retorno
+	async run(): Promise<{
+		total: number
+		activeEmployees: number
+		totalAgencies: number
+		status: StatusCountData[]
+		category: AggregatedCategoryData[]
+		brand: AggregatedBrandData[]
+		region: AdministrativeRegionData[]
+		hardDrive: AggregatedHDDData[]
+		operatingSystem: AggregatedOSData[]
+		memoryRamCapacity: AggregatedMemoryCapacityData[]
+		modulosMemoryRam: AggregatedMemoryModuleData[]
+		operatingSystemByRegion: AggregatedOSByRegionData[]
+	}> {
 		const [
 			total,
 			status,

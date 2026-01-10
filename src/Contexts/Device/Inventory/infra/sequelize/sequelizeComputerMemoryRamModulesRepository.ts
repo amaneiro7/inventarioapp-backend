@@ -40,7 +40,7 @@ export interface AggregatedMemoryModuleData {
  * @description Repository for fetching and processing computer memory RAM module data for the dashboard.
  */
 export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemoryRamModulesRepository {
-	private readonly cacheKey: string = 'dashboard:computer-memoryRamModules'
+	private readonly cacheKey: string = 'devices:dashboard:computer-memoryRamModules'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -54,7 +54,7 @@ export class SequelizeComputerMemoryRamModulesRepository implements ComputerMemo
 	async run(): Promise<AggregatedMemoryModuleData[]> {
 		return await this.cache.getCachedData<AggregatedMemoryModuleData[]>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

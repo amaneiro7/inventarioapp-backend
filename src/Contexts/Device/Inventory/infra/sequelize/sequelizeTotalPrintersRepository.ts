@@ -14,7 +14,7 @@ import { type TotalPrintersRepository } from '../../domain/TotalPrintersReposito
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalPrintersRepository implements TotalPrintersRepository {
-	private readonly cacheKey: string = 'totalPrinters'
+	private readonly cacheKey: string = 'devices:dashboard:totalPrinters'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -28,7 +28,7 @@ export class SequelizeTotalPrintersRepository implements TotalPrintersRepository
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await DeviceModel.count({
 					include: [

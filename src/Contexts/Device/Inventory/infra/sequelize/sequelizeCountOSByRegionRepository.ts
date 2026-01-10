@@ -75,7 +75,7 @@ export interface AggregatedOSByRegionData {
  * @description Repository for fetching and processing OS counts grouped by geographical region.
  */
 export class SequelizeCountOSByRegionRepository implements CountOSByRegionRepository {
-	private readonly cacheKey: string = 'dashboard:computer-osByRegion'
+	private readonly cacheKey: string = 'devices:dashboard:computer-osByRegion'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -89,7 +89,7 @@ export class SequelizeCountOSByRegionRepository implements CountOSByRegionReposi
 	async run(): Promise<AggregatedOSByRegionData[]> {
 		return await this.cache.getCachedData({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

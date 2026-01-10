@@ -14,7 +14,7 @@ import { type TotalScreensRepository } from '../../domain/TotalScreensRepository
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalScreensRepository implements TotalScreensRepository {
-	private readonly cacheKey: string = 'totalScreens'
+	private readonly cacheKey: string = 'devices:dashboard:totalScreens'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -28,7 +28,7 @@ export class SequelizeTotalScreensRepository implements TotalScreensRepository {
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await DeviceModel.count({
 					include: [

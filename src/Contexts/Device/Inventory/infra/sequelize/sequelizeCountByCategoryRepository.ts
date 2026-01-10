@@ -33,7 +33,7 @@ export interface AggregatedCategoryData {
  * @description Repository for fetching and processing device counts grouped by category for the dashboard.
  */
 export class SequelizeCountByCategoryRepository implements CountByCategoryRepository {
-	private readonly cacheKey: string = 'dashboard:computer-category'
+	private readonly cacheKey: string = 'devices:dashboard:computer-category'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -47,7 +47,7 @@ export class SequelizeCountByCategoryRepository implements CountByCategoryReposi
 	async run(): Promise<AggregatedCategoryData[]> {
 		return await this.cache.getCachedData<AggregatedCategoryData[]>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

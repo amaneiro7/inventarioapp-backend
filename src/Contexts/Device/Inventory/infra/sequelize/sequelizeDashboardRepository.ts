@@ -13,7 +13,7 @@ import { type AggregatedBrandData, type AggregatedHDDData, type StatusCountData 
  * This repository is responsible for fetching and aggregating computer-related dashboard data.
  */
 export class SequelizeComputerDashboardRepository implements ComputerDashboardRepository {
-	private readonly cacheKeyPrefix: string = 'dashboard:computer'
+	private readonly cacheKeyPrefix: string = 'devices:dashboard:computer'
 
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
@@ -30,7 +30,7 @@ export class SequelizeComputerDashboardRepository implements ComputerDashboardRe
 		const cacheKey = this.generateCacheKey('hdd')
 		return await this.cache.getCachedData<AggregatedHDDData[]>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: fetchAndAggregateHDDData
 		})
 	}

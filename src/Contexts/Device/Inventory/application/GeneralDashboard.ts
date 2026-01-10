@@ -52,9 +52,33 @@ export class GeneralDashboard {
 	/**
 	 * @method run
 	 * @description Executes all data-fetching operations in parallel for the general dashboard.
-	 * @returns {Promise<object>} A promise that resolves to the complete dashboard data object.
+	 * @returns {Promise<{
+	 *	totalByCategory: {
+	 *		name: string
+	 *		count: number
+	 *	}[]
+	 *	totalComputer: number
+	 *	totalScreens: number
+	 *	totalPrinters: number
+	 *	totalFinantialPrinters: number
+	 *	totalActiveUsers: number
+	 *	totalAgencies: number
+	 *	totalAdministrativeSites: number
+	 *	}>} A promise that resolves to the complete dashboard data object.
 	 */
-	async run(): Promise<object> {
+	async run(): Promise<{
+		totalByCategory: {
+			name: string
+			count: number
+		}[]
+		totalComputer: number
+		totalScreens: number
+		totalPrinters: number
+		totalFinantialPrinters: number
+		totalActiveUsers: number
+		totalAgencies: number
+		totalAdministrativeSites: number
+	}> {
 		const [
 			totalByCategory,
 			totalComputer,

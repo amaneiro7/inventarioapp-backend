@@ -11,7 +11,7 @@ import { type TotalActiveUsersRepository } from '../../domain/TotalActiveUsersRe
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalActiveUsersRepository implements TotalActiveUsersRepository {
-	private readonly cacheKey: string = 'totalActiveUsers'
+	private readonly cacheKey: string = 'employees:dashboard:totalActiveUsers'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -25,7 +25,7 @@ export class SequelizeTotalActiveUsersRepository implements TotalActiveUsersRepo
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				return await EmployeeModel.count({
 					where: {

@@ -27,7 +27,7 @@ export interface AggregatedDashboardData {
  * Utilizes caching for improved performance.
  */
 export class SequelizeStatusDashboardRepository implements StatusDashboardRepository {
-	private readonly cacheKey: string = 'dashboard:status'
+	private readonly cacheKey: string = 'devices:dashboard:status'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -41,7 +41,7 @@ export class SequelizeStatusDashboardRepository implements StatusDashboardReposi
 	async run(): Promise<{ total: number; status: AggregatedDashboardData }> {
 		return await this.cache.getCachedData<{ total: number; status: AggregatedDashboardData }>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const devices = (await DeviceModel.findAll({
 					attributes: [

@@ -21,7 +21,7 @@ interface RawCategoryCountData {
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalCountByCategoryRepository implements TotalCountByCategoryRepository {
-	private readonly cacheKey: string = 'totalCountByCategory'
+	private readonly cacheKey: string = 'devices:dashboard:totalCountByCategory'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -36,7 +36,7 @@ export class SequelizeTotalCountByCategoryRepository implements TotalCountByCate
 	async run(): Promise<Array<{ name: string; count: number }>> {
 		return await this.cache.getCachedData<Array<{ name: string; count: number }>>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const categories = (await DeviceModel.findAll({
 					attributes: [

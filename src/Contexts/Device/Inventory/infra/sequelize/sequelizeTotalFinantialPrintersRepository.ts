@@ -14,7 +14,7 @@ import { type TotalFinantialPrintersRepository } from '../../domain/TotalFinanti
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalFinantialPrintersRepository implements TotalFinantialPrintersRepository {
-	private readonly cacheKey: string = 'totalFinantialPrinters'
+	private readonly cacheKey: string = 'devices:dashboard:totalFinantialPrinters'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -22,8 +22,8 @@ export class SequelizeTotalFinantialPrintersRepository implements TotalFinantial
 
 	/**
 	 * @method run
-	 * @description Retrieves the total count of financial printers.
-	 * @returns {Promise<number>} A promise that resolves to the total count of financial printers.
+	 * @description Retrieves the total count of finantial printers.
+	 * @returns {Promise<number>} A promise that resolves to the total count of finantial printers.
 	 */
 	async run(): Promise<number> {
 		return await this.cache.getCachedData<number>({

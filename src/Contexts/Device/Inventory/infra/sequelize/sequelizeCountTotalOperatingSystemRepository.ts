@@ -35,7 +35,7 @@ interface AggregatedOSData {
  * Utilizes caching for improved performance.
  */
 export class SequelizeCountTotalOperatingSystemRepository implements CountTotalOperatingSystemRepository {
-	private readonly cacheKey: string = 'computer-os-dashboard'
+	private readonly cacheKey: string = 'devices:dashboard:computer-os-dashboard'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -49,7 +49,7 @@ export class SequelizeCountTotalOperatingSystemRepository implements CountTotalO
 	async run(): Promise<AggregatedOSData[]> {
 		return await this.cache.getCachedData<AggregatedOSData[]>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

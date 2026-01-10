@@ -3,7 +3,7 @@ import { DeviceModel } from '../../../Device/infrastructure/sequelize/schema/Dev
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
 import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { type ComputerMemoryRamRepository } from '../../domain/ComputerMemoryRamRepositoyr'
+import { type ComputerMemoryRamRepository } from '../../domain/ComputerMemoryRamRepository'
 
 // --- Type Definitions for Memory RAM Capacity ---
 
@@ -32,7 +32,7 @@ export interface AggregatedMemoryCapacityData {
  * @description Repository for fetching and processing computer memory RAM capacity data for the dashboard.
  */
 export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRepository {
-	private readonly cacheKey: string = 'dashboard:computer-memoryRam'
+	private readonly cacheKey: string = 'devices:dashboard:computer-memoryRam'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -46,7 +46,7 @@ export class SequelizeComputerMemoryRamRepository implements ComputerMemoryRamRe
 	async run(): Promise<AggregatedMemoryCapacityData[]> {
 		return await this.cache.getCachedData<AggregatedMemoryCapacityData[]>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

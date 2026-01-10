@@ -13,7 +13,7 @@ import { LocationStatusOptions } from '../../../../Location/LocationStatus/domai
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalAgenciesRepository implements TotalAgenciesRepository {
-	private readonly cacheKey: string = 'totalAgencies'
+	private readonly cacheKey: string = 'locations:dashboard:totalAgencies'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache

@@ -42,7 +42,7 @@ export type AdministrativeRegionData = GeoEntity & { regions: RegionData[] }
  * @description Repository for fetching and processing device counts grouped by geographical region.
  */
 export class SequelizeCountByRegionRepository implements CountByRegionRepository {
-	private readonly cacheKey: string = 'dashboard:computer-region'
+	private readonly cacheKey: string = 'devices:dashboard:computer-region'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
@@ -56,7 +56,7 @@ export class SequelizeCountByRegionRepository implements CountByRegionRepository
 	async run(): Promise<AdministrativeRegionData[]> {
 		return await this.cache.getCachedData<AdministrativeRegionData[]>({
 			cacheKey: this.cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const result = (await DeviceModel.findAll({
 					attributes: [

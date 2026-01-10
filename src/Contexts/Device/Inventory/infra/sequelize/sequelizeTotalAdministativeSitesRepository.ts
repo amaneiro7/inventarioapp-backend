@@ -13,7 +13,7 @@ import { type TotalAdministrativeSitesRepository } from '../../domain/TotalAdmin
  * Utilizes caching for improved performance.
  */
 export class SequelizeTotalAdministrativeSitesRepository implements TotalAdministrativeSitesRepository {
-	private readonly cacheKey: string = 'totalAdministrativeSites'
+	private readonly cacheKey: string = 'locations:dashboard:totalAdministrativeSites'
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
 		this.cache = cache
