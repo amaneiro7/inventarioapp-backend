@@ -12,6 +12,7 @@ import { DeviceObservation } from '../valueObject/DeviceObservation'
 import { DeviceStocknumber } from '../valueObject/DeviceStock'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
+import { DeviceRemovedDomainEvent } from '../event/DeviceRemovedDomainEvent'
 import { DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DevicePrimitives, type DeviceParams, type DeviceDto } from '../dto/Device.dto'
@@ -70,6 +71,18 @@ export class Device extends AggregateRoot {
 		)
 
 		return device
+	}
+
+	/**
+	 * @description Marks the Device as deleted and records the domain event.
+	 */
+	delete(): void {
+		this.record(
+			new DeviceRemovedDomainEvent({
+				aggregateId: this.idValue,
+				serial: this.serialValue
+			})
+		)
 	}
 
 	/**

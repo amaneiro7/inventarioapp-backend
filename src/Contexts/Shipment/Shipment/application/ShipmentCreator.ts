@@ -16,7 +16,7 @@ import { type UserId } from '../../../User/user/domain/valueObject/UserId'
 import { type DeviceId } from '../../../Device/Device/domain/valueObject/DeviceId'
 import { type EmployeeRepository } from '../../../employee/Employee/domain/Repository/EmployeeRepository'
 import { type DeviceDto } from '../../../Device/Device/domain/dto/Device.dto'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/service/GenerateToken'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 export class ShipmentCreator {

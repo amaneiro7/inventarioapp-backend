@@ -3,14 +3,15 @@ import { BrandModel } from './BrandSchema'
 import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { BrandAssociation } from './BrandAssociation'
+import { GenericCacheInvalidator } from '../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
 import { type BrandRepository } from '../../domain/repository/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
 import { type BrandCacheInvalidator } from '../../domain/repository/BrandCacheInvalidator'
-import { Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { BrandId } from '../../domain/valueObject/BrandId'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type BrandId } from '../../domain/valueObject/BrandId'
 
 /**
  * @class SequelizeBrandRepository
@@ -25,10 +26,12 @@ export class SequelizeBrandRepository
 {
 	private readonly cacheKeyPrefix = 'brands'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	/**
@@ -45,7 +48,7 @@ export class SequelizeBrandRepository
 
 		return this.cache.getCachedData<ResponseDB<BrandDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await BrandModel.findAndCountAll(finalOptions)
 				return {
@@ -141,13 +144,10 @@ export class SequelizeBrandRepository
 
 	/**
 	 * @method invalidateBrandCache
-	 * @description Invalidates all brand-related cache entries.
+	 * @description Invalidates all brands-related cache entries.
 	 * Implements BrandCacheInvalidator interface.
 	 */
-	async invalidateBrandCache(id: Primitives<BrandId>): Promise<void> {
-		const promises: Array<Promise<void>> = []
-		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:id:${id}` }))
-		promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:name:*` }))
-		await Promise.all(promises)
+	async invalidate(id?: Primitives<BrandId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

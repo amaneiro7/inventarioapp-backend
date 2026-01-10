@@ -6,7 +6,7 @@ import { EmployeeEmail } from '../../employee/Employee/domain/valueObject/Employ
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { AppSettingDefaults, AppSettingKeys } from '../../AppSettings/domain/entity/SettingsKeys'
 import { AccountLockedError } from '../domain/error/AccountLockedError'
-import { generateChangePasswordToken } from '../domain/GenerateToken'
+import { generateChangePasswordToken } from '../domain/service/GenerateToken'
 import { PasswordExpiredError } from '../domain/error/PasswordExpiredError'
 import { type SettingsFinder } from '../../AppSettings/application/SettingsFinder'
 import { type EmployeeRepository } from '../../employee/Employee/domain/Repository/EmployeeRepository'

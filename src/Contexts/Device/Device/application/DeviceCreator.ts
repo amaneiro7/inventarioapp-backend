@@ -7,7 +7,7 @@ import { StatusExistenceChecker } from '../../Status/domain/service/StatusExista
 import { EmployeeExistenceChecker } from '../../../employee/Employee/domain/service/EmployeeExistanceChecker'
 import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
 import { DeviceFactory } from '../domain/entity/DeviceFactory'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/service/GenerateToken'
 import { type DeviceParams } from '../domain/dto/Device.dto'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 import { type ModelSeriesRepository } from '../../../ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
@@ -100,17 +100,14 @@ export class DeviceCreator {
 				brandId,
 				categoryId
 			}),
-			this.locationExistenceChecker.ensureExist(locationId)
-		])
-		const generic = modelSeries?.generic ?? false
-		const typeOfSite = location?.typeOfSiteId ?? null
-
-		await Promise.all([
-			this.deviceSerialUniquenessChecker.ensureUnique(serial),
+			this.locationExistenceChecker.ensureExist(locationId),
+			this.deviceSerialUniquenessChecker.ensureUnique({ serial, brandId, categoryId }),
 			this.deviceActivoUniquenessChecker.ensureUnique(activo),
 			this.statusExistenceChecker.ensureExist(statusId),
 			this.employeeExistenceChecker.ensureExist(employeeId)
 		])
+		const generic = modelSeries?.generic ?? false
+		const typeOfSite = location?.typeOfSiteId ?? null
 
 		// 2. Creación del Agregado (La Factory valida componentes internos como CPU, RAM, etc.)
 		const device = await this.deviceFactory.create(params)

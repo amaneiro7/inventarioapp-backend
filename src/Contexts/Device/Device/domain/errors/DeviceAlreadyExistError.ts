@@ -8,9 +8,13 @@ import httpStatus from '../../../../Shared/infrastructure/utils/http-status'
  */
 export class DeviceAlreadyExistError extends ApiError {
 	/**
-	 * @param {string} identifier The identifier (serial or asset number) that already exists.
+	 * @param {'serial' | 'activo'} type The type of conflict.
 	 */
-	constructor(readonly identifier: string) {
-		super(httpStatus[400].statusCode, `El dispositivo con el identificador '${identifier}' ya existe.`)
+	constructor(type: 'serial' | 'activo') {
+		const message =
+			type === 'serial'
+				? 'El serial indicado ya existe para la marca y categoría seleccionada.'
+				: 'El número de activo indicado ya existe.'
+		super(httpStatus[400].statusCode, message)
 	}
 }

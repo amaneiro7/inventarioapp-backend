@@ -1,15 +1,19 @@
 import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistError'
 import { DeviceId } from '../domain/valueObject/DeviceId'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { Device } from '../domain/entity/Device'
 
 /**
  * @description Use case for removing a Device entity from the system.
  */
 export class DeviceRemover {
 	private readonly deviceRepository: DeviceRepository
+	private readonly eventBus: EventBus
 
-	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
+	constructor({ deviceRepository, eventBus }: { deviceRepository: DeviceRepository; eventBus: EventBus }) {
 		this.deviceRepository = deviceRepository
+		this.eventBus = eventBus
 	}
 
 	/**
@@ -26,7 +30,10 @@ export class DeviceRemover {
 		if (!device) {
 			throw new DeviceDoesNotExistError(id)
 		}
+		const deviceEntity = Device.fromPrimitives(device)
+		deviceEntity.delete()
 
-		await this.deviceRepository.remove(deviceId)
+		await this.deviceRepository.remove(deviceEntity.idValue)
+		await this.eventBus.publish(deviceEntity.pullDomainEvents())
 	}
 }

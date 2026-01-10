@@ -1,4 +1,4 @@
-import { TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
+import { TokenDenylistService } from '../../../Contexts/Auth/domain/service/TokenDenylistService'
 import { asClass, type AwilixContainer } from 'awilix'
 import { UserLoginLocal } from '../../../Contexts/Auth/application/UserLoginLocal'
 import { LocalAuthStrategy } from '../../../Contexts/Auth/infrastructure/passport/strategies/local.strategy'

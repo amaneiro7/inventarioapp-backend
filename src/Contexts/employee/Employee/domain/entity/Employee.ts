@@ -88,9 +88,8 @@ export class Employee extends AggregateRoot {
 			directivaId: params.directivaId
 		})
 
-		const id = EmployeeId.random()
 		const employee = new Employee(
-			id,
+			EmployeeId.random(),
 			new EmployeeUserName(params.userName),
 			new EmployeeType(params.type),
 			new EmployeeName(params.name),

@@ -29,7 +29,7 @@ export class DeviceActivoUniquenessChecker {
 		}
 		const existingLocation = await this.repository.searchByActivo(activo)
 		if (existingLocation && existingLocation.id !== excludeId) {
-			throw new DeviceAlreadyExistError(activo)
+			throw new DeviceAlreadyExistError('activo')
 		}
 	}
 }

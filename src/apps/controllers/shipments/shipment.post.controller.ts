@@ -1,7 +1,7 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type ShipmentCreator } from '../../../Contexts/Shipment/Shipment/application/ShipmentCreator'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/service/GenerateToken'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'

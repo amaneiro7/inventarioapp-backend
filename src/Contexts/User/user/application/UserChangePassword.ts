@@ -3,7 +3,7 @@ import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { UserId } from '../domain/valueObject/UserId'
 import { PasswordService } from '../domain/service/PasswordService'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/service/GenerateToken'
 import { type UserRepository } from '../domain/Repository/UserRepository'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 

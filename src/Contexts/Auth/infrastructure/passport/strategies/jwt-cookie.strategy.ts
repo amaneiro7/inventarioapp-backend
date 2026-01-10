@@ -1,7 +1,7 @@
 import { type Request } from 'express'
 import { ExtractJwt, Strategy, type StrategyOptions } from 'passport-jwt'
 import { config } from '../../../../Shared/infrastructure/config'
-import { type TokenDenylistService } from '../../../domain/TokenDenylistService'
+import { type TokenDenylistService } from '../../../domain/service/TokenDenylistService'
 
 /**
  * @class JwtCookiesStrategy

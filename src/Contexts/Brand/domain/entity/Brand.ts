@@ -9,6 +9,7 @@ import { BrandCategoryAddedDomainEvent } from '../event/BrandCategoryAddedDomain
 import { BrandCategoryRemovedDomainEvent } from '../event/BrandCategoryRemovedDomainEvent'
 import { type BrandDto, type BrandParams, type BrandPrimitives } from './Brand.dto'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { BrandUpdatedDomainEvent } from '../event/BrandUpdatedDomainEvent'
 
 /**
  * @class Brand
@@ -120,6 +121,15 @@ export class Brand extends AggregateRoot {
 				})
 			)
 		}
+	}
+
+	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+		this.record(
+			new BrandUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
 	}
 
 	/**

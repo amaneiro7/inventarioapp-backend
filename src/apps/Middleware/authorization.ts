@@ -11,7 +11,7 @@ import { PermissionDoesNotExistError } from '../../Contexts/AccessControl/Permis
 import { ADMIN_ROLE_ID } from '../../Contexts/User/Role/domain/RoleOptions'
 import { type PermissionGroupRepository } from '../../Contexts/AccessControl/PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
-import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../Contexts/Auth/domain/service/GenerateToken'
 import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyResolver'
 
 /**

@@ -3,6 +3,8 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DeviceRepository } from '../repository/DeviceRepository'
 import { type DeviceId } from '../valueObject/DeviceId'
 import { type DeviceSerial } from '../valueObject/DeviceSerial'
+import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 
 /**
  * Domain service responsible for verifying that a Device serial is unique within the system.
@@ -23,13 +25,23 @@ export class DeviceSerialUniquenessChecker {
 	 * @returns {Promise<void>} Resolves if the serial is unique.
 	 * @throws {DeviceSerialAlreadyExistError} If a Device with the same serial already exists.
 	 */
-	async ensureUnique(serial: Primitives<DeviceSerial>, excludeId?: Primitives<DeviceId>): Promise<void> {
+	async ensureUnique({
+		serial,
+		brandId,
+		categoryId,
+		excludeId
+	}: {
+		serial: Primitives<DeviceSerial>
+		brandId: Primitives<BrandId>
+		categoryId: Primitives<CategoryId>
+		excludeId?: Primitives<DeviceId>
+	}): Promise<void> {
 		if (serial === null || serial === undefined) {
 			return
 		}
-		const existingLocation = await this.repository.searchBySerial(serial)
+		const existingLocation = await this.repository.searchBySerialAndBrand(serial, brandId, categoryId)
 		if (existingLocation && existingLocation.id !== excludeId) {
-			throw new DeviceAlreadyExistError(serial)
+			throw new DeviceAlreadyExistError('serial')
 		}
 	}
 }

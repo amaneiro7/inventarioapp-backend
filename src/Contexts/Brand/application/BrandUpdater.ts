@@ -56,27 +56,37 @@ export class BrandUpdater {
 
 		const brandEntity = Brand.fromPrimitives(brand)
 
-		let hasChanges = false
+		const changes: Array<{ field: keyof Omit<BrandParams, 'id'>; oldValue: unknown; newValue: unknown }> = []
 
 		if (params.name !== undefined && brandEntity.nameValue !== params.name.trim()) {
 			await this.brandNameUniquenessChecker.ensureUnique(params.name, brandEntity.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: brandEntity.nameValue,
+				newValue: params.name
+			})
 			brandEntity.updateName(params.name)
-			hasChanges = true
 		}
 
 		if (params.categories !== undefined) {
 			await this.categoryExistenceChecker.ensureExist(params.categories)
+			const oldCategories = [...brandEntity.categoriesValue]
 			const categoriesChanged = this.updateCategories({
 				entity: brandEntity,
 				newCategoryIds: params.categories
 			})
 			if (categoriesChanged) {
-				hasChanges = true
+				changes.push({
+					field: 'categories',
+					oldValue: oldCategories,
+					newValue: params.categories
+				})
 			}
 		}
 
 		// Save the updated entity only if it has changed
-		if (hasChanges) {
+		if (changes.length > 0) {
+			brandEntity.registerUpdateEvent(changes)
 			await this.brandRepository.save(brandEntity.toPrimitives())
 			await this.eventBus.publish(brandEntity.pullDomainEvents())
 		}

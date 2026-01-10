@@ -20,6 +20,10 @@ import { type ClearDefaultDataset } from './DeviceResponse'
 import { type DeviceCacheInvalidator } from '../../domain/repository/DeviceCacheInvalidator'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/valueObject/DeviceId'
+import { type DeviceActivo } from '../../domain/valueObject/DeviceActivo'
+import { type DeviceSerial } from '../../domain/valueObject/DeviceSerial'
+import { type BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 
 /**
  * @class SequelizeDeviceRepository
@@ -151,7 +155,7 @@ export class SequelizeDeviceRepository
 		})
 	}
 
-	async searchByActivo(activo: string): Promise<DeviceDto | null> {
+	async searchByActivo(activo: Primitives<DeviceActivo>): Promise<DeviceDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:activo:${activo}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
@@ -163,13 +167,28 @@ export class SequelizeDeviceRepository
 		})
 	}
 
-	async searchBySerial(serial: string): Promise<DeviceDto | null> {
+	async searchBySerial(serial: Primitives<DeviceSerial>): Promise<DeviceDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:serial:${serial}`
 		return this.cache.getCachedData<DeviceDto | null>({
 			cacheKey,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const device = await DeviceModel.findOne({ where: { serial } })
+				return device ? (device.get({ plain: true }) as DeviceDto) : null
+			}
+		})
+	}
+	async searchBySerialAndBrand(
+		serial: Primitives<DeviceSerial>,
+		brandId: Primitives<BrandId>,
+		categoryId: Primitives<CategoryId>
+	): Promise<DeviceDto | null> {
+		const cacheKey = `${this.cacheKeyPrefix}:serial:${serial}:brand:${brandId}:category:${categoryId}`
+		return this.cache.getCachedData<DeviceDto | null>({
+			cacheKey,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const device = await DeviceModel.findOne({ where: { serial, brandId, categoryId } })
 				return device ? (device.get({ plain: true }) as DeviceDto) : null
 			}
 		})

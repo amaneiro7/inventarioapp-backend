@@ -1,20 +1,36 @@
-import { CityCreatedDomainEvent } from '../../../Location/City/domain/event/CityCreatedDomainEvent'
 import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
-import { SiteCreatedDomainEvent } from '../../../Location/Site/domain/event/SiteCreatedDomainEvent'
+import { CargoUpdatedDomainEvent } from '../../../employee/Cargo/domain/event/CargoUpdatedDomainEvent'
+import { DepartamentoUpdatedDomainEvent } from '../../../employee/Departamento/domain/event/DepartamentoUpdatedDomainEvent'
+import { DirectivaUpdatedDomainEvent } from '../../../employee/Directiva/domain/event/DirectivaUpdatedDomainEvent'
+import { VicepresidenciaUpdatedDomainEvent } from '../../../employee/Vicepresidencia/domain/event/VicepresidenciaUpdatedDomainEvent'
+import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../../employee/VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
+import { BrandUpdatedDomainEvent } from '../../../Brand/domain/event/BrandUpdatedDomainEvent'
 import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/SiteUpdatedDomainEvent'
 import { DeviceCreatedDomainEvent } from '../domain/event/DeviceCreatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../domain/event/DeviceUpdatedDomainEvent'
 import { DeviceCacheInvalidator } from '../domain/repository/DeviceCacheInvalidator'
+import { DeviceRemovedDomainEvent } from '../domain/event/DeviceRemovedDomainEvent'
+import { EmployeeUpdatedDomainEvent } from '../../../employee/Employee/domain/event/EmployeeUpdatedDomainEvent'
+import { LocationUpdatedDomainEvent } from '../../../Location/Location/domain/event/LocationUpdatedDomainEvent'
+import { ProcessorUpdatedDomainEvent } from '../../../Features/Processor/domain/event/ProcessorUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 
 export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscriber<
 	| DeviceCreatedDomainEvent
 	| DeviceUpdatedDomainEvent
-	| SiteCreatedDomainEvent
+	| DeviceRemovedDomainEvent
+	| BrandUpdatedDomainEvent
+	| ProcessorUpdatedDomainEvent
+	| EmployeeUpdatedDomainEvent
+	| CargoUpdatedDomainEvent
+	| DepartamentoUpdatedDomainEvent
+	| DirectivaUpdatedDomainEvent
+	| VicepresidenciaUpdatedDomainEvent
+	| VicepresidenciaEjecutivaUpdatedDomainEvent
+	| LocationUpdatedDomainEvent
 	| SiteUpdatedDomainEvent
-	| CityCreatedDomainEvent
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
@@ -28,13 +44,24 @@ export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscrib
 		event:
 			| DeviceCreatedDomainEvent
 			| DeviceUpdatedDomainEvent
-			| SiteCreatedDomainEvent
+			| DeviceRemovedDomainEvent
+			| BrandUpdatedDomainEvent
+			| ProcessorUpdatedDomainEvent
+			| EmployeeUpdatedDomainEvent
+			| CargoUpdatedDomainEvent
+			| DepartamentoUpdatedDomainEvent
+			| DirectivaUpdatedDomainEvent
+			| VicepresidenciaUpdatedDomainEvent
+			| VicepresidenciaEjecutivaUpdatedDomainEvent
+			| LocationUpdatedDomainEvent
 			| SiteUpdatedDomainEvent
-			| CityCreatedDomainEvent
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 	): Promise<void> {
-		const isDeviceEvent = event instanceof DeviceCreatedDomainEvent || event instanceof DeviceUpdatedDomainEvent
+		const isDeviceEvent =
+			event instanceof DeviceCreatedDomainEvent ||
+			event instanceof DeviceUpdatedDomainEvent ||
+			event instanceof DeviceRemovedDomainEvent
 
 		// Si es Device, invalidamos específico
 		await this.invalidator.invalidate(isDeviceEvent ? event.aggregateId : undefined)
@@ -44,9 +71,17 @@ export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscrib
 		return [
 			DeviceCreatedDomainEvent,
 			DeviceUpdatedDomainEvent,
-			SiteCreatedDomainEvent,
+			DeviceRemovedDomainEvent,
+			BrandUpdatedDomainEvent,
+			ProcessorUpdatedDomainEvent,
+			EmployeeUpdatedDomainEvent,
+			CargoUpdatedDomainEvent,
+			DepartamentoUpdatedDomainEvent,
+			DirectivaUpdatedDomainEvent,
+			VicepresidenciaUpdatedDomainEvent,
+			VicepresidenciaEjecutivaUpdatedDomainEvent,
+			LocationUpdatedDomainEvent,
 			SiteUpdatedDomainEvent,
-			CityCreatedDomainEvent,
 			CityUpdatedDomainEvent,
 			RegionUpdatedDomainEvent
 		]

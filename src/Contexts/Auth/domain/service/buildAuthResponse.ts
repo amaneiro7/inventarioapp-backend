@@ -1,12 +1,13 @@
-import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
-import { type AuthResponseDto } from './entity/Auth.dto'
+import { type User } from '../../../User/user/domain/entity/User.dto'
+import { type AuthResponseDto } from '../entity/Auth.dto'
 
 /**
  * @function buildAuthResponse
  * @description Constructs the authentication response object from user data and tokens.
- * @param {User} user - The user object, including their role and employee details.
- * @param {string} accessToken - The generated access token.
- * @param {string} [refreshToken] - The generated refresh token (optional).
+ * @param {object} params - The parameters object.
+ * @param {User} params.user - The user object, including their role and employee details.
+ * @param {string} params.accessToken - The generated access token.
+ * @param {string} [params.refreshToken] - The generated refresh token (optional).
  * @returns {AuthResponseDto} The authentication response DTO.
  */
 export function buildAuthResponse({
@@ -18,26 +19,24 @@ export function buildAuthResponse({
 	accessToken: string
 	refreshToken?: string
 }): AuthResponseDto {
-	const { id, employeeId, role, roleId, status, employee } = user // Updated destructuring
+	const { id, employeeId, role, roleId, status, employee } = user
 	const response: AuthResponseDto = {
 		user: {
 			id,
 			userName: employee.userName,
-			employeeId: employeeId, // Added employeeId
+			employeeId: employeeId,
 			roleId: `${roleId}`,
-			status: status, // Added status
+			status: status,
 			passwordChangeAt: user.passwordChangeAt,
 			passwordNeverExpires: user.passwordNeverExpires,
 			lastLoginAt: user.lastLoginAt,
 			lastLoginIp: user.lastLoginIp,
 			passwordExpired: user.passwordExpired,
 			role: {
-				// id: `${role.id}`,
 				id: role.id,
 				name: role.name
 			},
 			employee: {
-				// Include relevant employee details
 				id: employee.id,
 				userName: employee.userName,
 				type: employee.type,

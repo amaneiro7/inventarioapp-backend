@@ -2,7 +2,7 @@ import { User } from '../domain/entity/User'
 import { UserDoesNotExistError } from '../domain/Errors/UserDoesNotExistError'
 import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type UserRepository } from '../domain/Repository/UserRepository'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/service/GenerateToken'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 
 interface ForceChangePasswordParams {

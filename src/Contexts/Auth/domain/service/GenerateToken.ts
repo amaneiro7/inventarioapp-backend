@@ -1,17 +1,17 @@
 import { sign, SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { randomUUID } from 'crypto'
-import { config } from '../../Shared/infrastructure/config'
-import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
-import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type UserId } from '../../User/user/domain/valueObject/UserId' // Corrected path for UserId
-import { type EmployeeId } from '../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
-import { type PasswordChangeAt } from '../../User/user/domain/valueObject/PasswordChangeAt'
-import { type PasswordNeverExpires } from '../../User/user/domain/valueObject/PasswordNeverExpires'
-import { type CargoId } from '../../employee/Cargo/domain/valueObject/CargoId'
-import { type DepartamentoId } from '../../employee/Departamento/domain/valueObject/DepartamentoId'
-import { type VicepresidenciaId } from '../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { type VicepresidenciaEjecutivaId } from '../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { type DirectivaId } from '../../employee/Directiva/domain/valueObject/DirectivaId'
+import { config } from '../../../Shared/infrastructure/config'
+import { type User } from '../../../User/user/domain/entity/User.dto' // Use User.dto
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type UserId } from '../../../User/user/domain/valueObject/UserId' // Corrected path for UserId
+import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/EmployeeId' // Import EmployeeId
+import { type PasswordChangeAt } from '../../../User/user/domain/valueObject/PasswordChangeAt'
+import { type PasswordNeverExpires } from '../../../User/user/domain/valueObject/PasswordNeverExpires'
+import { type CargoId } from '../../../employee/Cargo/domain/valueObject/CargoId'
+import { type DepartamentoId } from '../../../employee/Departamento/domain/valueObject/DepartamentoId'
+import { type VicepresidenciaId } from '../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import { type VicepresidenciaEjecutivaId } from '../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { type DirectivaId } from '../../../employee/Directiva/domain/valueObject/DirectivaId'
 
 export interface Tokens {
 	accessToken: string

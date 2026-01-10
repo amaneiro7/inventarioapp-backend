@@ -1,7 +1,7 @@
 import { container } from '../di/container'
 import { AppSettingsDependencies } from '../di/app-settings/app-settings.di'
 import { type NextFunction, type Request, type Response } from 'express'
-import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../Contexts/Auth/domain/service/GenerateToken'
 import { type SettingsFinder } from '../../Contexts/AppSettings/application/SettingsFinder'
 import { AppSettingDefaults, AppSettingKeys } from '../../Contexts/AppSettings/domain/entity/SettingsKeys'
 import { PasswordExpiredError } from '../../Contexts/AppSettings/domain/errors/PasswordExpiredError'

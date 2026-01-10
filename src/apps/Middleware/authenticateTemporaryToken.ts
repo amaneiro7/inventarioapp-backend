@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import passport from 'passport'
 import { StrategyOptions } from '../../Contexts/Auth/infrastructure/passport/strategy-options'
-import { type JwtPayloadUser } from '../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../Contexts/Auth/domain/service/GenerateToken'
 import { TokenInvalidOrExpiredError } from '../../Contexts/Auth/domain/error/TokenInvalidOrExpiredError'
 import { TokenPurposeMismatchError } from '../../Contexts/Auth/domain/error/TokenPurposeMismatchError'
 import { InvalidArgumentError } from '../../Contexts/Shared/domain/errors/ApiError'

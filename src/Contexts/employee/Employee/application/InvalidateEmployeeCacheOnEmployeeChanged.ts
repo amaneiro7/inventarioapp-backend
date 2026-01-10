@@ -12,6 +12,9 @@ import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDo
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type EmployeeCacheInvalidator } from '../domain/Repository/EmployeeCacheInvalidator'
+import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/SiteUpdatedDomainEvent'
+import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
+import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
 
 export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubscriber<
 	| EmployeeCreatedDomainEvent
@@ -25,6 +28,9 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 	| VicepresidenciaUpdatedDomainEvent
 	| VicepresidenciaEjecutivaUpdatedDomainEvent
 	| LocationUpdatedDomainEvent
+	| SiteUpdatedDomainEvent
+	| CityUpdatedDomainEvent
+	| RegionUpdatedDomainEvent
 > {
 	private readonly invalidator: EmployeeCacheInvalidator
 

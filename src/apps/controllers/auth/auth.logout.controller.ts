@@ -2,7 +2,7 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { config } from '../../../Contexts/Shared/infrastructure/config'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { type Controller } from '../controller'
-import { type TokenDenylistService } from '../../../Contexts/Auth/domain/TokenDenylistService'
+import { type TokenDenylistService } from '../../../Contexts/Auth/domain/service/TokenDenylistService'
 
 /**
  * Controller for user logout.

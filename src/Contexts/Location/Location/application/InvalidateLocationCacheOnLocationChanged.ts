@@ -3,8 +3,6 @@ import { LocationUpdatedDomainEvent } from '../domain/event/LocationUpdatedDomai
 import { CityUpdatedDomainEvent } from '../../City/domain/event/CityUpdatedDomainEvent'
 import { SiteUpdatedDomainEvent } from '../../Site/domain/event/SiteUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../Region/domain/events/RegionUpdatedDomainEvent'
-import { SiteCreatedDomainEvent } from '../../Site/domain/event/SiteCreatedDomainEvent'
-import { CityCreatedDomainEvent } from '../../City/domain/event/CityCreatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type LocationCacheInvalidator } from '../domain/repository/LocationCacheInvalidator'
@@ -12,9 +10,7 @@ import { type LocationCacheInvalidator } from '../domain/repository/LocationCach
 export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubscriber<
 	| LocationCreatedDomainEvent
 	| LocationUpdatedDomainEvent
-	| SiteCreatedDomainEvent
 	| SiteUpdatedDomainEvent
-	| CityCreatedDomainEvent
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
@@ -28,9 +24,7 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 		event:
 			| LocationCreatedDomainEvent
 			| LocationUpdatedDomainEvent
-			| SiteCreatedDomainEvent
 			| SiteUpdatedDomainEvent
-			| CityCreatedDomainEvent
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 	): Promise<void> {
@@ -45,9 +39,7 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 		return [
 			LocationCreatedDomainEvent,
 			LocationUpdatedDomainEvent,
-			SiteCreatedDomainEvent,
 			SiteUpdatedDomainEvent,
-			CityCreatedDomainEvent,
 			CityUpdatedDomainEvent,
 			RegionUpdatedDomainEvent
 		]

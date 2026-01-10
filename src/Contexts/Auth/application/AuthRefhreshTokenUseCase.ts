@@ -5,8 +5,8 @@ import {
 	generateChangePasswordToken,
 	generateRefreshToken,
 	type JwtPayloadUser
-} from '../domain/GenerateToken'
-import { buildAuthResponse } from '../domain/buildAuthResponse'
+} from '../domain/service/GenerateToken'
+import { buildAuthResponse } from '../domain/service/buildAuthResponse'
 import { UserDoesNotExistError } from '../../User/user/domain/Errors/UserDoesNotExistError'
 import { EmployeeTypesEnum } from '../../employee/Employee/domain/valueObject/EmployeeType'
 import { UserStatusEnum } from '../../User/user/domain/valueObject/UserStatus'

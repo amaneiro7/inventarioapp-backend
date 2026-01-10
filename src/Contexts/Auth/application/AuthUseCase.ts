@@ -1,5 +1,5 @@
-import { generateAccessToken, generateRefreshToken } from '../domain/GenerateToken'
-import { buildAuthResponse } from '../domain/buildAuthResponse'
+import { generateAccessToken, generateRefreshToken } from '../domain/service/GenerateToken'
+import { buildAuthResponse } from '../domain/service/buildAuthResponse'
 import { type User } from '../../User/user/domain/entity/User.dto' // Use User.dto
 import { type AuthResponseDto } from '../domain/entity/Auth.dto'
 

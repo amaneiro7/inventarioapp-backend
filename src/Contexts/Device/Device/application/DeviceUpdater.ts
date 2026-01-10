@@ -18,7 +18,7 @@ import { DeviceComputer } from '../domain/entity/Computer'
 import { DeviceHardDrive } from '../domain/entity/HardDrive'
 import { DeviceSerialUniquenessChecker } from '../domain/service/DeviceSerialUniquenessChecker'
 import { ModelSeriesExistenceChecker } from '../../../ModelSeries/ModelSeries/domain/service/ModelSeriesExistanceChecker'
-import { type JwtPayloadUser } from '../../../Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Auth/domain/service/GenerateToken'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type HardDriveCapacityRepository } from '../../../Features/HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
@@ -133,16 +133,6 @@ export class DeviceUpdater {
 			events.forEach(event => Object.assign(event, { userId: user.sub }))
 			await this.eventBus.publish(events)
 		}
-
-		// await new HistoryCreator({ historyRepository: this.historyRepository }).run({
-		// 	deviceId: deviceEntity.idValue,
-		// 	userId: user.sub,
-		// 	employeeId: deviceEntity.employeeValue,
-		// 	action: 'UPDATE',
-		// 	newData: devicePrimitives as unknown as Record<string, unknown>,
-		// 	oldData: oldDeviceEntity as unknown as Record<string, unknown>,
-		// 	createdAt: new Date()
-		// })
 	}
 
 	private async validateBaseFields(deviceEntity: Device, params: Partial<DeviceParams>): Promise<void> {
@@ -161,7 +151,12 @@ export class DeviceUpdater {
 
 		if (serial && serial !== deviceEntity.serialValue) {
 			const deviceChecker = new DeviceSerialUniquenessChecker(this.deviceRepository)
-			await deviceChecker.ensureUnique(serial, deviceEntity.idValue)
+			await deviceChecker.ensureUnique({
+				serial,
+				brandId: deviceEntity.brandValue,
+				categoryId: deviceEntity.categoryValue,
+				excludeId: deviceEntity.idValue
+			})
 		}
 
 		if (employeeId && employeeId !== deviceEntity.employeeValue) {

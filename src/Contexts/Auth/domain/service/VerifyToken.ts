@@ -1,5 +1,5 @@
 import { JsonWebTokenError, NotBeforeError, verify, TokenExpiredError } from 'jsonwebtoken'
-import { InvalidArgumentError } from '../../Shared/domain/errors/ApiError'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type JwtPayloadUser } from './GenerateToken'
 
 /**

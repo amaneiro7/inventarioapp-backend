@@ -5,6 +5,8 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DevicePrimitives, type DeviceDto } from '../dto/Device.dto'
 import { type DeviceId } from '../valueObject/DeviceId'
 import { type DeviceSerial } from '../valueObject/DeviceSerial'
+import { type BrandId } from '../../../../Brand/domain/valueObject/BrandId'
+import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 
 /**
  * @abstract
@@ -36,19 +38,33 @@ export abstract class DeviceRepository {
 	 * @abstract
 	 * @method searchByActivo
 	 * @description Finds a single device by its asset number.
-	 * @param {Primitives<DeviceSerial>} serial The asset number to search for.
+	 * @param {Primitives<DeviceSerial>} activo The asset number to search for.
 	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the device DTO if found, or null otherwise.
 	 */
-	abstract searchByActivo(serial: Primitives<DeviceSerial>): Promise<DeviceDto | null>
+	abstract searchByActivo(activo: Primitives<DeviceSerial>): Promise<DeviceDto | null>
 
 	/**
 	 * @abstract
 	 * @method searchBySerial
 	 * @description Finds a single device by its serial number.
-	 * @param {Primitives<DeviceSerial>} activo The serial number to search for.
+	 * @param {Primitives<DeviceSerial>} serial The serial number to search for.
 	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the device DTO if found, or null otherwise.
 	 */
-	abstract searchBySerial(activo: Primitives<DeviceSerial>): Promise<DeviceDto | null>
+	abstract searchBySerial(serial: Primitives<DeviceSerial>): Promise<DeviceDto | null>
+	/**
+	 * @abstract
+	 * @method searchBySerialAndBrand
+	 * @description Finds a single device by its serial number, brand and category.
+	 * @param {Primitives<DeviceSerial>} serial The serial number to search for.
+	 * @param {Primitives<BrandId>} brandId The brand ID to search for.
+	 * @param {Primitives<CategoryId>} categoryId The category ID to search for.
+	 * @returns {Promise<DeviceDto | null>} A promise that resolves to the device DTO if found, or null otherwise.
+	 */
+	abstract searchBySerialAndBrand(
+		serial: Primitives<DeviceSerial>,
+		brandId: Primitives<BrandId>,
+		categoryId: Primitives<CategoryId>
+	): Promise<DeviceDto | null>
 
 	/**
 	 * @abstract

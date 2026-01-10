@@ -190,16 +190,6 @@ export class EmployeeUpdater {
 			await this.employeeRepository.save(employeeEntity.toPrimitives())
 			await this.eventBus.publish(employeeEntity.pullDomainEvents())
 		}
-
-		// Si el empleado era de tipo 'service' y acaba de ser marcado como que ya no trabaja,
-		// ejecutamos el caso de uso para desactivar su cuenta de usuario.
-		// if (
-		// 	wasStillWorking &&
-		// 	!employeeEntity.isStillWorkingValue &&
-		// 	employeeEntity.typeValue === EmployeeTypesEnum.SERVICE
-		// ) {
-		// 	await this.userDesactivateAccount.run({ employeeId })
-		// }
 	}
 
 	private async updateWorkStatus(

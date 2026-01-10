@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/service/GenerateToken'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { Controller } from '../controller'
 import { ApiError } from '../../../Contexts/Shared/domain/errors/ApiError'

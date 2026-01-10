@@ -1,4 +1,4 @@
-import { type CacheRepository } from '../../Shared/domain/CacheRepository'
+import { type CacheRepository } from '../../../Shared/domain/CacheRepository'
 
 /**
  * @class TokenDenylistService

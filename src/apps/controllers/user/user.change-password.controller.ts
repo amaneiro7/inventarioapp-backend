@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { type Controller } from '../controller'
-import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/GenerateToken'
+import { type JwtPayloadUser } from '../../../Contexts/Auth/domain/service/GenerateToken'
 import { type UserChangePassword } from '../../../Contexts/User/user/application/UserChangePassword'
 
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
