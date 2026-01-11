@@ -7,7 +7,6 @@ type UpdateAppSettingsDomainEventAttributes = {
 
 export class AppSettingsUpdaterDomainEvent extends DomainEvent {
 	static EVENT_NAME = 'app-settings:updated'
-	static eventName = 'app-settings:updated'
 	public readonly key: string
 	public readonly value: string
 

@@ -16,6 +16,8 @@ export type PermissionGroupParams = Omit<PermissionGroup, 'id'> & {
 	permissions?: Primitives<PermissionId>[]
 }
 
+export type PermissionGroupFields = keyof PermissionGroupParams
+
 export type PermissionGroupPrimitives = PermissionGroup & {
 	permissions: Primitives<PermissionId>[]
 }

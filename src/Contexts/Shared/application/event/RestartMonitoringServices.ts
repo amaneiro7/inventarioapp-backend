@@ -1,4 +1,4 @@
-import { AppSettingsUpdaterDomainEvent } from '../../../AppSettings/domain/entity/AppSettingsUpdaterDomainEvent'
+import { AppSettingsUpdaterDomainEvent } from '../../../AppSettings/domain/event/AppSettingsUpdaterDomainEvent'
 import { AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
 import { type DeviceMonitoringService } from '../../../Device/DeviceMonitoring/application/DeviceMonitoringService'
 import { type SettingsFinder } from '../../../AppSettings/application/SettingsFinder'

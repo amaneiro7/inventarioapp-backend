@@ -42,7 +42,7 @@ export class AccessPolicyRemover {
 		})
 		accessPolicyEntity.remove()
 
-		await this.accessPolicyRepository.remove(accessPolicyId.value)
+		await this.accessPolicyRepository.remove(accessPolicyEntity.idValue)
 		await this.eventBus.publish(accessPolicyEntity.pullDomainEvents())
 	}
 }

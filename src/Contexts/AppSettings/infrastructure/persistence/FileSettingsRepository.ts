@@ -1,16 +1,25 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
+import { GenericCacheInvalidator } from '../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { type SettingsPrimitives } from '../../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../../domain/repository/SettingsRepository'
 import { type SettingsKey } from '../../domain/valueObject/SettingsKey'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type CacheService } from '../../../Shared/domain/CacheService'
+import { type AppSettingsCacheInvalidator } from '../../domain/repository/AppSettingsCacheInvalidator'
 
-export class FileSettingsRepository implements SettingsRepository {
+export class FileSettingsRepository implements SettingsRepository, AppSettingsCacheInvalidator {
 	private readonly filePath = path.join(__dirname, 'settings.json')
 	private settings: Map<string, SettingsPrimitives> = new Map()
+	private readonly cacheKeyPrefix = 'appSettings'
+	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
-	constructor() {
+	constructor({ cache }: { cache: CacheService }) {
 		this.loadSettingsFromFile()
+		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	private loadSettingsFromFile(): void {
@@ -32,12 +41,24 @@ export class FileSettingsRepository implements SettingsRepository {
 	}
 
 	async searchAll(): Promise<SettingsPrimitives[]> {
-		return Array.from(this.settings.values())
+		return this.cache.getCachedData<SettingsPrimitives[]>({
+			cacheKey: `${this.cacheKeyPrefix}:lists`,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				return Array.from(this.settings.values())
+			}
+		})
 	}
 
 	async search(key: Primitives<SettingsKey>): Promise<SettingsPrimitives | null> {
 		const setting = this.settings.get(key)
-		return setting ?? null
+		return this.cache.getCachedData<SettingsPrimitives | null>({
+			cacheKey: `${this.cacheKeyPrefix}:key:${key}`,
+			ttl: TimeTolive.SHORT,
+			fetchFunction: async () => {
+				return setting ?? null
+			}
+		})
 	}
 
 	async save(setting: SettingsPrimitives): Promise<void> {
@@ -50,5 +71,14 @@ export class FileSettingsRepository implements SettingsRepository {
 			this.settings.set(setting.key, setting)
 		}
 		await this.persist()
+	}
+
+	/**
+	 * @method invalidateAppSettingsCache
+	 * @description Invalidates all app settings-related cache entries.
+	 * Implements AppSettingsCacheInvalidator interface.
+	 */
+	async invalidate(key?: Primitives<SettingsKey>): Promise<void> {
+		await this.cacheInvalidator.invalidate(key)
 	}
 }

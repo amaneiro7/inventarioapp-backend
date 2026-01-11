@@ -1,19 +1,19 @@
 import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { AccessPolicyName } from '../valueObject/AccessPolicyName'
 import { CargoId } from '../../../../employee/Cargo/domain/valueObject/CargoId'
-
 import { PermissionGroupId } from '../../../PermissionGroup/domain/valueObject/PermissionGroupId'
 import { AccessPolicyId } from '../valueObject/AccessPolicyId'
 import { AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
-import { AccessPolicyRemovedDomainEvent } from './AccessPolicyRemovedDomainEvent'
-import { AccessPolicyCreatedDomainEvent } from './AccessPolicyCreatedDomainEvent'
-import { PermissionGroupAssignedToAccessPolicyDomainEvent } from './PermissionGroupAssignedToAccessPolicyDomainEvent'
+import { AccessPolicyRemovedDomainEvent } from '../event/AccessPolicyRemovedDomainEvent'
+import { AccessPolicyCreatedDomainEvent } from '../event/AccessPolicyCreatedDomainEvent'
+import { PermissionGroupAssignedToAccessPolicyDomainEvent } from '../event/PermissionGroupAssignedToAccessPolicyDomainEvent'
 import { RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
 import { DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
 import { VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
 import { VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import { AccessPolicyUpdatedDomainEvent } from '../event/AccessPolicyUpdatedDomainEvent'
 import { DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
-import { type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
+import { type AccessPolicyFields, type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 export class AccessPolicy extends AggregateRoot {
@@ -166,6 +166,19 @@ export class AccessPolicy extends AggregateRoot {
 
 	get priorityValue(): Primitives<AccessPolicyPriority> {
 		return this.priority.value
+	}
+
+	registerUpdateEvent({
+		changes
+	}: {
+		changes: Array<{ field: AccessPolicyFields; oldValue: unknown; newValue: unknown }>
+	}): void {
+		this.record(
+			new AccessPolicyUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
 	}
 
 	updateRole(newRoleId: Primitives<RoleId> | null): void {

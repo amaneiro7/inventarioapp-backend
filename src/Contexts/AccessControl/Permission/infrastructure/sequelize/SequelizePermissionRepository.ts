@@ -1,13 +1,17 @@
 import { Op } from 'sequelize'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { PermissionAssociation } from './PermissionAssociation'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { PermissionModel } from './PermissionSchema'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type PermissionRepository } from '../../domain/repository/PermissionRepository'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { type PermissionDto, type PermissionPrimitives } from '../../domain/entity/Permission.dto'
-import { type PermissionRepository } from '../../domain/repository/PermissionRepository'
-import { PermissionAssociation } from './PermissionAssociation'
-import { PermissionModel } from './PermissionSchema'
+import { type PermissionId } from '../../domain/valueObject/PermissionId'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizePermissionRepository
@@ -16,13 +20,18 @@ import { PermissionModel } from './PermissionSchema'
  * @description Concrete implementation of the `PermissionRepository` using Sequelize for data persistence.
  * It handles all database operations for the Permission entity and includes caching to improve performance.
  */
-export class SequelizePermissionRepository extends SequelizeCriteriaConverter implements PermissionRepository {
+export class SequelizePermissionRepository
+	extends SequelizeCriteriaConverter
+	implements PermissionRepository, CacheInvalidator
+{
 	private readonly cacheKeyPrefix = 'permissions'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	/**
@@ -35,11 +44,11 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 	async searchAll(criteria: Criteria): Promise<ResponseDB<PermissionDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = PermissionAssociation.convertFilter(criteria, sequelizeOptions)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<PermissionDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await PermissionModel.findAndCountAll({ ...finalOptions, distinct: true })
 				return {
@@ -60,7 +69,7 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 		const cacheKey = `${this.cacheKeyPrefix}:all`
 		return this.cache.getCachedData<PermissionDto[]>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const permissions = await PermissionModel.findAll()
 				return permissions.map(permission => permission.get({ plain: true }))
@@ -79,7 +88,7 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<PermissionDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const permission = await PermissionModel.findByPk(id)
 				return permission ? permission.get({ plain: true }) : null
@@ -96,15 +105,21 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 	 * The array will be empty if no permissions match the given IDs.
 	 */
 	async findByIds(ids: string[]): Promise<PermissionDto[]> {
-		const permissions = await PermissionModel.findAll({
-			where: {
-				id: {
-					[Op.in]: ids
-				}
-			},
-			raw: true
+		return this.cache.getCachedData<PermissionDto[]>({
+			cacheKey: `${this.cacheKeyPrefix}:ids:${ids.join(',')}`,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const permissions = await PermissionModel.findAll({
+					where: {
+						id: {
+							[Op.in]: ids
+						}
+					},
+					raw: true
+				})
+				return permissions as PermissionDto[]
+			}
 		})
-		return permissions as PermissionDto[]
 	}
 
 	/**
@@ -118,7 +133,7 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<PermissionDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const permission = await PermissionModel.findOne({ where: { name } })
 				return permission ? permission.get({ plain: true }) : null
@@ -136,7 +151,6 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 	 */
 	async save(payload: PermissionPrimitives): Promise<void> {
 		await PermissionModel.upsert(payload)
-		await this.invalidatePermissionCache(payload.id, payload.name)
 	}
 
 	/**
@@ -147,29 +161,15 @@ export class SequelizePermissionRepository extends SequelizeCriteriaConverter im
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
 	async remove(id: string): Promise<void> {
-		const permissionToRemove = await PermissionModel.findByPk(id, { attributes: ['name'] })
-		const permissionName = permissionToRemove?.name
-
 		await PermissionModel.destroy({ where: { id } })
-
-		// Invalidate cache to reflect deletion
-		if (permissionName) {
-			await this.invalidatePermissionCache(id, permissionName)
-		}
 	}
 
 	/**
-	 * @private
 	 * @method invalidatePermissionCache
-	 * @description Invalidates all relevant cache entries for a given brand.
-	 * @param {string} id The ID of the brand.
-	 * @param {string} name The name of the brand.
+	 * @description Invalidates all permissions-related cache entries.
+	 * Implements PermissionCacheInvalidator interface.
 	 */
-	private async invalidatePermissionCache(id: string, name: string): Promise<void> {
-		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}*`, `${this.cacheKeyPrefix}:id:${id}`]
-		if (name) {
-			cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-		}
-		await Promise.all(cacheKeysToRemove.map(async key => this.cache.removeCachedData({ cacheKey: key })))
+	async invalidate(id?: Primitives<PermissionId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

@@ -13,7 +13,7 @@ import { AppSettingKeys } from './SettingsKeys'
 import { AggregateRoot } from '../../../Shared/domain/AggregateRoot'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type SettingsPrimitives } from './Settings.dto'
-import { AppSettingsUpdaterDomainEvent } from './AppSettingsUpdaterDomainEvent'
+import { AppSettingsUpdaterDomainEvent } from '../event/AppSettingsUpdaterDomainEvent'
 
 export class Settings extends AggregateRoot {
 	constructor(

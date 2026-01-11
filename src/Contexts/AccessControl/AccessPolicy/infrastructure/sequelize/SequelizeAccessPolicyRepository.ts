@@ -3,6 +3,7 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { AccessPolicyAssociation } from './AccesspolicyAssociation'
 import { AccessPolicyModel } from './AccessPolicySchema'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -10,6 +11,8 @@ import { type AccessPolicyDto, type AccessPolicyPrimitives } from '../../domain/
 import { type AccessPolicyRepository } from '../../domain/repository/AccessPolicyRepository'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import { type AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
 
 /**
  * @class SequelizeAccessPolicyRepository
@@ -18,13 +21,18 @@ import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName
  * @description Concrete implementation of the `AccessPolicyRepository` using Sequelize for data persistence.
  * It handles all database operations for the AccessPolicy entity and includes caching to improve performance.
  */
-export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter implements AccessPolicyRepository {
+export class SequelizeAccessPolicyRepository
+	extends SequelizeCriteriaConverter
+	implements AccessPolicyRepository, CacheInvalidator
+{
 	private readonly cacheKeyPrefix = 'accessPolicies'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 	/**
 	 * @method searchAll
@@ -65,7 +73,7 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<AccessPolicyDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const accessPolicy = await AccessPolicyModel.findByPk(id, {
 					include: [
@@ -88,14 +96,14 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 	 * @method findByName
 	 * @description Retrieves a single access policy by its unique identifier.
 	 * Caches the result for faster subsequent lookups.
-	 * @param {string} id The ID of the access policy to find.
+	 * @param {string} name The ID of the access policy to find.
 	 * @returns {Promise<AccessPolicyDto | null>} A promise resolving to the access policy DTO if found, otherwise null.
 	 */
 	async findByName(name: Primitives<AccessPolicyName>): Promise<AccessPolicyDto | null> {
 		const cacheKey = `${this.cacheKeyPrefix}:name:${name}`
 		return this.cache.getCachedData<AccessPolicyDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const accessPolicy = await AccessPolicyModel.findOne({
 					where: { name },
@@ -135,7 +143,7 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 
 		return this.cache.getCachedData<AccessPolicyDto[]>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const rows = await AccessPolicyModel.findAll(sequelizeOptions)
 				return rows.map(row => row.get({ plain: true })) as unknown as AccessPolicyDto[]
@@ -160,7 +168,6 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 				await accessPolicyInstance.setPermissionsGroups(permissionsGroups, { transaction })
 			}
 			await transaction.commit()
-			await this.invalidateAccessPolicyCache(payload.id)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving access policy: ${error instanceof Error ? error.message : String(error)}`)
@@ -175,22 +182,15 @@ export class SequelizeAccessPolicyRepository extends SequelizeCriteriaConverter 
 	 * @returns {Promise<void>} A promise that resolves when the remove operation is complete.
 	 */
 	async remove(id: string): Promise<void> {
-		const rowCount = await AccessPolicyModel.destroy({ where: { id } })
-
-		// Invalidate cache to reflect deletion
-		if (rowCount > 0) {
-			await this.invalidateAccessPolicyCache(id)
-		}
+		await AccessPolicyModel.destroy({ where: { id } })
 	}
 
 	/**
-	 * @private
 	 * @method invalidateAccessPolicyCache
-	 * @description Invalidates all relevant cache entries for a given access policy.
-	 * @param {string} id The ID of the access policy.
+	 * @description Invalidates all access policies-related cache entries.
+	 * Implements AccessPolicyCacheInvalidator interface.
 	 */
-	private async invalidateAccessPolicyCache(id: string): Promise<void> {
-		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}:*`, `${this.cacheKeyPrefix}:id:${id}`]
-		await Promise.all(cacheKeysToRemove.map(async key => this.cache.removeCachedData({ cacheKey: key })))
+	async invalidate(id?: Primitives<AccessPolicyId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

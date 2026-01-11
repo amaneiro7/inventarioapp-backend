@@ -24,6 +24,10 @@ import { InvalidateHistoryCacheOnHistoryChanged } from '../../../Contexts/Histor
 import { CreateDeviceMonitoringOnDeviceCreated } from '../../../Contexts/Device/DeviceMonitoring/application/CreateDeviceMonitoringOnDeviceCreated'
 import { InvalidateDeviceMonitoringCacheOnDeviceChanged } from '../../../Contexts/Device/DeviceMonitoring/application/InvalidateDeviceMonitoringCacheOnDeviceChanged'
 import { SyncDeviceMonitoringStateOnEvents } from '../../../Contexts/Device/DeviceMonitoring/application/SyncDeviceMonitoringStateOnEvents'
+import { InvalidateAppSettingsCacheOnAppSettingsChanged } from '../../../Contexts/AppSettings/application/InvalidateAppSettingsCacheOnAppSettingsChanged'
+import { InvalidateAccessPolicyCacheOnAccessPolicyChanged } from '../../../Contexts/AccessControl/AccessPolicy/application/InvalidateAccessPolicyCacheOnAccessPolicyChanged'
+import { InvalidatePermissionGroupCacheOnPermissionGroupChanged } from '../../../Contexts/AccessControl/PermissionGroup/application/InvalidatePermissionGroupCacheOnPermissionGroupChanged'
+import { InvalidatePermissionCacheOnPermissionChanged } from '../../../Contexts/AccessControl/Permission/application/InvalidatePermissionsCacheOnPermissionsChanged'
 
 export enum DomainEventDependencies {
 	RestartMonitoringServices = 'restartMonitoringServices',
@@ -50,7 +54,11 @@ export enum DomainEventDependencies {
 	InvalidateHistoryCacheOnHistoryChanged = 'invalidateHistoryCacheOnHistoryChanged',
 	CreateDeviceMonitoringOnDeviceCreated = 'createDeviceMonitoringOnDeviceCreated',
 	InvalidateDeviceMonitoringCacheOnDeviceChanged = 'invalidateDeviceMonitoringCacheOnDeviceChanged',
-	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents'
+	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents',
+	InvalidateAppSettingsCacheOnAppSettingsChanged = 'invalidateAppSettingsCacheOnAppSettingsChanged',
+	InvalidateAccessPolicyCacheOnAccessPolicyChanged = 'invalidateAccessPolicyCacheOnAccessPolicyChanged',
+	InvalidatePermissionGroupCacheOnPermissionGroupChanged = 'invalidatePermissionGroupCacheOnPermissionGroupChanged',
+	InvalidatePermissionCacheOnPermissionChanged = 'invalidatePermissionCacheOnPermissionChanged'
 }
 
 /**
@@ -130,6 +138,18 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.SyncDeviceMonitoringStateOnEvents]: asClass(
 			SyncDeviceMonitoringStateOnEvents
+		).singleton(),
+		[DomainEventDependencies.InvalidateAppSettingsCacheOnAppSettingsChanged]: asClass(
+			InvalidateAppSettingsCacheOnAppSettingsChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateAccessPolicyCacheOnAccessPolicyChanged]: asClass(
+			InvalidateAccessPolicyCacheOnAccessPolicyChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidatePermissionGroupCacheOnPermissionGroupChanged]: asClass(
+			InvalidatePermissionGroupCacheOnPermissionGroupChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidatePermissionCacheOnPermissionChanged]: asClass(
+			InvalidatePermissionCacheOnPermissionChanged
 		).singleton()
 	})
 }

@@ -194,6 +194,10 @@ export class DeviceAssociation {
 			]
 		}
 
+		const mfpInclude: IncludeOptions = {
+			association: 'mfp',
+			required: mainCategoryId.includes(MainCategoryList.PRINTERS)
+		}
 		const hardDriveInclude: IncludeOptions = {
 			association: 'hardDrive',
 			include: ['hardDriveCapacity', 'hardDriveType']
@@ -216,11 +220,6 @@ export class DeviceAssociation {
 		const locationInclude: IncludeOptions = {
 			association: 'location',
 			include: [typeOfSiteInclude, siteInclude]
-		}
-
-		const mfpInclude: IncludeOptions = {
-			association: 'mfp',
-			required: mainCategoryId.includes(MainCategoryList.PRINTERS)
 		}
 
 		const historyInclude: IncludeOptions = {

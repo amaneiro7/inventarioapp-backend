@@ -1,31 +1,70 @@
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type AccessPolicyId } from '../domain/valueObject/AccessPolicyId'
-import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRepository'
-
-import { type AccessPolicyParams } from '../domain/entity/AccessPolicy.dto'
-import { type EventBus } from '../../../Shared/domain/event/EventBus'
-import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
 import { AccessPolicyDoesNotExistError } from '../domain/errors/AccessPolicyDoesNotExistError'
 import { AccessPolicy } from '../domain/entity/AccessPolicy'
 import { PermissionGroupId } from '../../PermissionGroup/domain/valueObject/PermissionGroupId'
-import { PermissionGroupDoesNotExistError } from '../../PermissionGroup/domain/errors/PermissionGroupDoesNotExistError'
-import { AccessPolicyAlreadyExistsError } from '../domain/errors/AccessPolicyAlreadyExistsError'
+import { AccessPolicyNameUniquenessChecker } from '../domain/service/AccessPolicyNameuniquenessChecker'
+import { PermissionGroupExistenceChecker } from '../../PermissionGroup/domain/service/PermissionGroupExistanceChecker'
+import { RoleExistenceChecker } from '../../../User/Role/domain/service/RoleExistanceChecker'
+import { DirectivaExistenceChecker } from '../../../employee/Directiva/domain/service/DirectivaExistanceChecker'
+import { VicepresidenciaEjecutivaExistenceChecker } from '../../../employee/VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
+import { VicepresidenciaExistenceChecker } from '../../../employee/Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
+import { DepartamentoExistenceChecker } from '../../../employee/Departamento/domain/service/DepartamentoExistanceChecker'
+import { CargoExistenceChecker } from '../../../employee/Cargo/domain/service/CargoExistanceChecker'
+import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { type AccessPolicyId } from '../domain/valueObject/AccessPolicyId'
+import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRepository'
+import { type AccessPolicyFields, type AccessPolicyParams } from '../domain/entity/AccessPolicy.dto'
+import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
+import { type CargoRepository } from '../../../employee/Cargo/domain/repository/CargoRepository'
+import { type DirectivaRepository } from '../../../employee/Directiva/domain/repository/DirectivaRepository'
+import { type VicepresidenciaEjecutivaRepository } from '../../../employee/VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
+import { type VicepresidenciaRepository } from '../../../employee/Vicepresidencia/domain/repository/VicepresidenciaRepository'
+import { type DepartamentoRepository } from '../../../employee/Departamento/domain/repository/DepartamentoRepository'
+import { type RoleRepository } from '../../../User/Role/domain/repository/RoleRepository'
 
 export class AccessPolicyUpdater {
 	private readonly accessPolicyRepository: AccessPolicyRepository
-	private readonly permissionGroupRepository: PermissionGroupRepository
+	private readonly accessPolicyNameUniquenessChecker: AccessPolicyNameUniquenessChecker
+	private readonly permissionGroupExistanceChecker: PermissionGroupExistenceChecker
+	private readonly roleExistenceChecker: RoleExistenceChecker
+	private readonly cargoExistenceChecker: CargoExistenceChecker
+	private readonly departamentoExistenceChecker: DepartamentoExistenceChecker
+	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
+	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
+	private readonly directivaExistenceChecker: DirectivaExistenceChecker
 	private readonly eventBus: EventBus
 	constructor({
+		eventBus,
 		accessPolicyRepository,
 		permissionGroupRepository,
-		eventBus
+		roleRepository,
+		cargoRepository,
+		departamentoRepository,
+		vicepresidenciaRepository,
+		vicepresidenciaEjecutivaRepository,
+		directivaRepository
 	}: {
 		accessPolicyRepository: AccessPolicyRepository
 		permissionGroupRepository: PermissionGroupRepository
+		roleRepository: RoleRepository
+		directivaRepository: DirectivaRepository
+		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
+		vicepresidenciaRepository: VicepresidenciaRepository
+		departamentoRepository: DepartamentoRepository
+		cargoRepository: CargoRepository
 		eventBus: EventBus
 	}) {
 		this.accessPolicyRepository = accessPolicyRepository
-		this.permissionGroupRepository = permissionGroupRepository
+		this.accessPolicyNameUniquenessChecker = new AccessPolicyNameUniquenessChecker(accessPolicyRepository)
+		this.permissionGroupExistanceChecker = new PermissionGroupExistenceChecker(permissionGroupRepository)
+		this.roleExistenceChecker = new RoleExistenceChecker(roleRepository)
+		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
+		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
+			vicepresidenciaEjecutivaRepository
+		)
+		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
+		this.departamentoExistenceChecker = new DepartamentoExistenceChecker(departamentoRepository)
+		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
 		this.eventBus = eventBus
 	}
 
@@ -42,123 +81,155 @@ export class AccessPolicyUpdater {
 			permissionsGroups: permissionsGroups.map(group => group.id)
 		})
 
-		let hasChanges = false
+		const validations: Promise<void>[] = []
+		const changes: Array<{ field: AccessPolicyFields; oldValue: unknown; newValue: unknown }> = []
 
-		// Usamos los métodos de actualización de la entidad de dominio
 		if (params.name !== undefined && params.name !== policy.nameValue) {
-			const existingPolicy = await this.accessPolicyRepository.findByName(params.name)
-			if (existingPolicy && existingPolicy.id !== policy.idValue) {
-				throw new AccessPolicyAlreadyExistsError(params.name)
-			}
+			validations.push(this.accessPolicyNameUniquenessChecker.ensureUnique(params.name, policy.idValue))
+			changes.push({
+				field: 'name',
+				oldValue: policy.nameValue,
+				newValue: params.name
+			})
 			policy.updateName(params.name)
-			hasChanges = true
 		}
 
 		if (params.roleId !== undefined && params.roleId !== policy.roleValue) {
+			validations.push(this.roleExistenceChecker.ensureExist(params.roleId))
+			changes.push({
+				field: 'roleId',
+				oldValue: policy.roleValue,
+				newValue: params.roleId
+			})
 			policy.updateRole(params.roleId)
-			hasChanges = true
 		}
 		if (params.cargoId !== undefined && params.cargoId !== policy.cargoValue) {
+			validations.push(this.cargoExistenceChecker.ensureExist(params.cargoId))
+			changes.push({
+				field: 'cargoId',
+				oldValue: policy.cargoValue,
+				newValue: params.cargoId
+			})
 			policy.updateCargo(params.cargoId)
-			hasChanges = true
 		}
 
 		if (params.departamentoId !== undefined && params.departamentoId !== policy.departamentoValue) {
+			validations.push(this.departamentoExistenceChecker.ensureExist(params.departamentoId))
+			changes.push({
+				field: 'departamentoId',
+				oldValue: policy.departamentoValue,
+				newValue: params.departamentoId
+			})
 			policy.updateDepartamento(params.departamentoId)
-			hasChanges = true
 		}
 
 		if (params.vicepresidenciaId !== undefined && params.vicepresidenciaId !== policy.vicepresidenciaValue) {
+			validations.push(this.vicepresidenciaExistenceChecker.ensureExist(params.vicepresidenciaId))
+			changes.push({
+				field: 'vicepresidenciaId',
+				oldValue: policy.vicepresidenciaValue,
+				newValue: params.vicepresidenciaId
+			})
 			policy.updateVicepresidencia(params.vicepresidenciaId)
-			hasChanges = true
 		}
 
 		if (
 			params.vicepresidenciaEjecutivaId !== undefined &&
 			params.vicepresidenciaEjecutivaId !== policy.vicepresidenciaEjecutivaValue
 		) {
+			validations.push(
+				this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(params.vicepresidenciaEjecutivaId)
+			)
+			changes.push({
+				field: 'vicepresidenciaEjecutivaId',
+				oldValue: policy.vicepresidenciaEjecutivaValue,
+				newValue: params.vicepresidenciaEjecutivaId
+			})
 			policy.updatevicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId)
-			hasChanges = true
 		}
 
 		if (params.directivaId !== undefined && params.directivaId !== policy.directivaValue) {
+			validations.push(this.directivaExistenceChecker.ensureExist(params.directivaId))
+			changes.push({
+				field: 'directivaId',
+				oldValue: policy.directivaValue,
+				newValue: params.directivaId
+			})
 			policy.updateDirectiva(params.directivaId)
-			hasChanges = true
 		}
 
 		if (params.priority !== undefined && params.priority !== policy.priorityValue) {
+			changes.push({
+				field: 'priority',
+				oldValue: policy.priorityValue,
+				newValue: params.priority
+			})
 			policy.updatePriority(params.priority)
-			hasChanges = true
 		}
 
 		if (params.permissionGroupIds !== undefined) {
-			const permissionsChanged = await this.updatePermissionsGroupsInAccessPolic({
+			// Agregamos la validación al array para que se ejecute en paralelo con las demás
+			const uniqueNewPermissionGroupIds = [...new Set(params.permissionGroupIds)]
+			if (uniqueNewPermissionGroupIds.length > 0) {
+				validations.push(this.permissionGroupExistanceChecker.ensureExist(uniqueNewPermissionGroupIds))
+			}
+
+			const oldPermissionsGroups = policy.permissionGroupValue
+			// Ahora este método es síncrono y puramente lógico (optimistic update)
+			const hasChanges = this.updatePermissionsGroupsInAccessPolicy({
 				entity: policy,
 				newPermissionGroupIds: params.permissionGroupIds
 			})
-			if (permissionsChanged) {
-				hasChanges = true
+			if (hasChanges) {
+				changes.push({
+					field: 'permissionGroupIds',
+					oldValue: oldPermissionsGroups,
+					newValue: policy.permissionGroupValue
+				})
 			}
 		}
 
-		if (hasChanges) {
+		await Promise.all(validations)
+		if (changes.length > 0) {
+			policy.registerUpdateEvent({ changes })
 			await this.accessPolicyRepository.save(policy.toPrimitives())
-			// Publicar eventos si la actualización generó alguno
 			await this.eventBus.publish(policy.pullDomainEvents())
 		}
 	}
 
 	/**
 	 * @private
-	 * @description Updates the permissions associated with a PermissionGroup entity.
-	 * This method performs a differential update: it identifies which permissions to add and which to revoke
-	 * by comparing the current permissions of the entity with the new list provided.
-	 * It also validates that all new permission IDs exist in the database before applying changes.
-	 * @param {PermissionGroup} entity The `PermissionGroup` domain entity to update.
-	 * @param {string[]} newPermissionGroupIds An array of permission IDs (as strings) to be set for the group.
-	 * @returns {Promise<void>} A promise that resolves when the update is complete.
-	 * @throws {PermissionDoesNotExistError} If one or more permission IDs in `newPermissionGroupIds` do not correspond to an existing permission.
+	 * @description Updates the permission groups associated with an AccessPolicy entity.
+	 * This method performs a differential update: it identifies which permission groups to add and which to revoke
+	 * by comparing the current permission groups of the entity with the new list provided.
+	 * @param {AccessPolicy} params.entity The `AccessPolicy` domain entity to update.
+	 * @param {Primitives<PermissionGroupId>[]} params.newPermissionGroupIds An array of permission group IDs to be set for the policy.
+	 * @returns {boolean} True if any permission group was added or removed, false otherwise.
 	 */
-	private async updatePermissionsGroupsInAccessPolic({
+	private updatePermissionsGroupsInAccessPolicy({
 		entity,
 		newPermissionGroupIds
 	}: {
 		entity: AccessPolicy
 		newPermissionGroupIds: Primitives<PermissionGroupId>[]
-	}): Promise<boolean> {
+	}): boolean {
 		let hasPermissionsChanged = false
-		const uniquenewPermissionGroupIds = [...new Set(newPermissionGroupIds)]
+		const uniqueNewPermissionGroupIds = [...new Set(newPermissionGroupIds)]
 
-		// 1. Validar la existencia de todos los IDs de permisos entrantes en una sola consulta.
-		if (uniquenewPermissionGroupIds.length > 0) {
-			const foundPermissionsGroups = await this.permissionGroupRepository.findByIds(uniquenewPermissionGroupIds)
-
-			// If the number of found permissions does not match the number of unique IDs,
-			// it means at least one permission does not exist.
-			if (foundPermissionsGroups.length !== uniquenewPermissionGroupIds.length) {
-				// Identificar qué permisos no se encontraron para un mensaje de error más útil.
-				const foundIds = new Set(foundPermissionsGroups.map(p => p.id))
-				const missingIds = uniquenewPermissionGroupIds.filter(id => !foundIds.has(id))
-				throw new PermissionGroupDoesNotExistError({
-					permissionId: missingIds.join(', ')
-				})
-			}
-		}
-
-		const newIdSet = new Set(uniquenewPermissionGroupIds)
-		const currentIdSet = new Set(entity.permissionGroupValue)
+		const newPermissionsGroupIds = new Set(uniqueNewPermissionGroupIds)
+		const currentPermissionsGroupIds = new Set(entity.permissionGroupValue)
 
 		// 3. Determine permissions to add
-		for (const id of newIdSet) {
-			if (!currentIdSet.has(id)) {
+		for (const id of newPermissionsGroupIds) {
+			if (!currentPermissionsGroupIds.has(id)) {
 				entity.assignPermissionGroup(new PermissionGroupId(id))
 				hasPermissionsChanged = true
 			}
 		}
 
 		// 4. Determine permissions to remove
-		for (const id of currentIdSet) {
-			if (!newIdSet.has(id)) {
+		for (const id of currentPermissionsGroupIds) {
+			if (!newPermissionsGroupIds.has(id)) {
 				entity.revokePermissionGroup(new PermissionGroupId(id))
 				hasPermissionsChanged = true
 			}

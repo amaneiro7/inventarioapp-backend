@@ -1,21 +1,22 @@
 import { PermissionGroup } from '../domain/entity/PermissionGroup'
 import { PermissionGroupDoesNotExistError } from '../domain/errors/PermissionGroupDoesNotExistError'
-import { PermissionGroupAlreadyExistsError } from '../domain/errors/PermissionGroupAlreadyExistsError'
-import { PermissionDoesNotExistError } from '../../Permission/domain/errors/PermissionDoesNotExistError'
 import { PermissionGroupId } from '../domain/valueObject/PermissionGroupId'
 import { PermissionId } from '../../Permission/domain/valueObject/PermissionId'
+import { PermissionExistenceChecker } from '../../Permission/domain/service/PermissionExistanceChecker'
+import { PermissionGroupNameUniquenessChecker } from '../domain/service/PermissionGroupNameuniquenessChecker'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupRepository } from '../domain/repository/PermissionGroupRepository'
 import { type PermissionRepository } from '../../Permission/domain/repository/PermissionRepository'
-import { type PermissionGroupParams } from '../domain/entity/PermissionGroup.dto'
+import { type PermissionGroupFields, type PermissionGroupParams } from '../domain/entity/PermissionGroup.dto'
 
 /**
  * @description Use case for updating an existing PermissionGroup entity.
  */
 export class PermissionGroupUpdater {
 	private readonly permissionGroupRepository: PermissionGroupRepository
-	private readonly permissionRepository: PermissionRepository
+	private readonly permissionGroupNameUniquenessChecker: PermissionGroupNameUniquenessChecker
+	private readonly permissionChecker: PermissionExistenceChecker
 	private readonly eventBus: EventBus
 
 	constructor({
@@ -28,7 +29,8 @@ export class PermissionGroupUpdater {
 		eventBus: EventBus
 	}) {
 		this.permissionGroupRepository = permissionGroupRepository
-		this.permissionRepository = permissionRepository
+		this.permissionGroupNameUniquenessChecker = new PermissionGroupNameUniquenessChecker(permissionGroupRepository)
+		this.permissionChecker = new PermissionExistenceChecker(permissionRepository)
 		this.eventBus = eventBus
 	}
 
@@ -57,25 +59,44 @@ export class PermissionGroupUpdater {
 		}
 
 		const permissionGroupEntity = PermissionGroup.fromPrimitives(permissionGroup)
-
+		const changes: Array<{ field: PermissionGroupFields; oldValue: unknown; newValue: unknown }> = []
 		if (params.name !== undefined && params.name !== permissionGroupEntity.nameValue) {
-			const existingGroup = await this.permissionGroupRepository.findByName(params.name)
-			if (existingGroup && existingGroup.id !== permissionGroupEntity.idValue) {
-				throw new PermissionGroupAlreadyExistsError(params.name)
-			}
+			this.permissionGroupNameUniquenessChecker.ensureUnique(params.name, permissionGroupEntity.idValue)
+			changes.push({
+				field: 'name',
+				oldValue: permissionGroupEntity.nameValue,
+				newValue: params.name
+			})
+
 			permissionGroupEntity.updateName(params.name)
 		}
 
 		if (params.description !== undefined && params.description !== permissionGroupEntity.descriptionValue) {
+			changes.push({
+				field: 'description',
+				oldValue: permissionGroupEntity.descriptionValue,
+				newValue: params.description
+			})
 			permissionGroupEntity.updateDescription(params.description)
 		}
 
 		if (params.permissions !== undefined) {
-			await this.updatePermissionsInGroup(permissionGroupEntity, params?.permissions)
+			const oldPermissions = permissionGroupEntity.permissionsValue
+			const hasChanges = await this.updatePermissionsInGroup(permissionGroupEntity, params?.permissions)
+			if (hasChanges) {
+				changes.push({
+					field: 'permissions',
+					oldValue: oldPermissions,
+					newValue: permissionGroupEntity.permissionsValue
+				})
+			}
 		}
 
-		await this.permissionGroupRepository.save(permissionGroupEntity.toPrimitives())
-		await this.eventBus.publish(permissionGroupEntity.pullDomainEvents())
+		if (changes.length > 0) {
+			permissionGroupEntity.registerUpdateEvent({ changes })
+			await this.permissionGroupRepository.save(permissionGroupEntity.toPrimitives())
+			await this.eventBus.publish(permissionGroupEntity.pullDomainEvents())
+		}
 	}
 
 	/**
@@ -84,24 +105,19 @@ export class PermissionGroupUpdater {
 	 * It calculates the difference between current and new permissions and applies granular changes.
 	 * @param {PermissionGroup} entity The permission group entity being updated.
 	 * @param {Primitives<PermissionId>[]} newPermissionPrimitives The list of new permission IDs (as primitives) to set for the group.
-	 * @returns {Promise<void>} A promise that resolves when the permissions are successfully updated.
+	 * @returns {Promise<boolean>} A promise that resolves when the permissions are successfully updated.
 	 * @throws {PermissionDoesNotExistError} If any of the provided permission IDs do not exist.
 	 */
 	private async updatePermissionsInGroup(
 		entity: PermissionGroup,
 		newPermissionPrimitives: Primitives<PermissionId>[]
-	): Promise<void> {
+	): Promise<boolean> {
+		let hasPermissionsChanged = false
 		const uniqueNewPermissionPrimitives = [...new Set(newPermissionPrimitives)]
 
 		// 1. Validate existence of all incoming permission IDs in a single query
 		if (uniqueNewPermissionPrimitives.length > 0) {
-			const foundPermissions = await this.permissionRepository.findByIds(uniqueNewPermissionPrimitives)
-
-			// If the number of found permissions does not match the number of unique IDs,
-			// it means at least one permission does not exist.
-			if (foundPermissions.length !== uniqueNewPermissionPrimitives.length) {
-				throw new PermissionDoesNotExistError()
-			}
+			await this.permissionChecker.ensureExist(uniqueNewPermissionPrimitives)
 		}
 
 		// 2. Convert primitives to value objects for comparison and entity methods
@@ -110,16 +126,20 @@ export class PermissionGroupUpdater {
 
 		// 3. Determine permissions to add
 		for (const newPermId of newPermissionIds) {
-			if (![...currentPermissionIds].some(currentPerm => currentPerm.equals(newPermId))) {
+			if (!currentPermissionIds.has(newPermId)) {
 				entity.assignPermission(newPermId)
 			}
+			hasPermissionsChanged = true
 		}
 
 		// 4. Determine permissions to remove
 		for (const currentPermId of currentPermissionIds) {
-			if (![...newPermissionIds].some(newPerm => newPerm.equals(currentPermId))) {
+			if (!newPermissionIds.has(currentPermId)) {
 				entity.revokePermission(currentPermId)
 			}
+			hasPermissionsChanged = true
 		}
+
+		return hasPermissionsChanged
 	}
 }

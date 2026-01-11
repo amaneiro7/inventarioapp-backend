@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
@@ -11,7 +12,8 @@ import { type PermissionGroupRepository } from '../../domain/repository/Permissi
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PermissionGroupId } from '../../domain/valueObject/PermissionGroupId'
 import { type PermissionGroupName } from '../../domain/valueObject/PermissionGroupName'
-import { Op } from 'sequelize'
+import { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 
 /**
  * @class SequelizePermissionGroupRepository
@@ -21,14 +23,17 @@ import { Op } from 'sequelize'
  */
 export class SequelizePermissionGroupRepository
 	extends SequelizeCriteriaConverter
-	implements PermissionGroupRepository
+	implements PermissionGroupRepository, CacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'permissionGroups'
 	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
 
 	constructor({ cache }: { cache: CacheService }) {
 		super()
 		this.cache = cache
+
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
 	/**
@@ -45,7 +50,7 @@ export class SequelizePermissionGroupRepository
 
 		return this.cache.getCachedData<ResponseDB<PermissionGroupDto>>({
 			cacheKey,
-			ttl: TimeTolive.LONG,
+			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await PermissionGroupModel.findAndCountAll({ ...finalOptions, distinct: true })
 				return {
@@ -67,7 +72,7 @@ export class SequelizePermissionGroupRepository
 		const cacheKey = `${this.cacheKeyPrefix}:id:${id}`
 		return this.cache.getCachedData<PermissionGroupDto | null>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const permissionGroup = await PermissionGroupModel.findByPk(id, {
 					include: [
@@ -135,7 +140,7 @@ export class SequelizePermissionGroupRepository
 
 		return this.cache.getCachedData<PermissionGroupDto[]>({
 			cacheKey,
-			ttl: TimeTolive.SHORT,
+			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const permissionGroups = await PermissionGroupModel.findAll({
 					where: { id: { [Op.in]: sortedIds } },
@@ -171,7 +176,6 @@ export class SequelizePermissionGroupRepository
 			}
 
 			await transaction.commit()
-			await this.invalidateCache(payload.id, payload.name)
 		} catch (error) {
 			await transaction.rollback()
 			throw new Error(`Error saving permission group: ${error instanceof Error ? error.message : String(error)}`)
@@ -185,28 +189,15 @@ export class SequelizePermissionGroupRepository
 	 * @param {Primitives<PermissionGroupId>} id The ID of the permission group to remove.
 	 */
 	async remove(id: Primitives<PermissionGroupId>): Promise<void> {
-		const groupToRemove = await PermissionGroupModel.findByPk(id, { attributes: ['name'] })
-		const groupName = groupToRemove?.name
-
 		await PermissionGroupModel.destroy({ where: { id } })
-
-		if (groupName) {
-			await this.invalidateCache(id, groupName)
-		}
 	}
 
 	/**
-	 * @private
-	 * @method invalidateCache
-	 * @description Invalidates all relevant cache entries for a given permission group.
-	 * @param {string} id The ID of the permission group.
-	 * @param {string} name The name of the permission group.
+	 * @method invalidatePermissionGroupCache
+	 * @description Invalidates all permissions-related cache entries.
+	 * Implements PermissionGroupCacheInvalidator interface.
 	 */
-	private async invalidateCache(id: string, name: string): Promise<void> {
-		const cacheKeysToRemove: string[] = [`${this.cacheKeyPrefix}*`, `${this.cacheKeyPrefix}:id:${id}`]
-		if (name) {
-			cacheKeysToRemove.push(`${this.cacheKeyPrefix}:name:${name}`)
-		}
-		await Promise.all(cacheKeysToRemove.map(async key => this.cache.removeCachedData({ cacheKey: key })))
+	async invalidate(id?: Primitives<PermissionGroupId>): Promise<void> {
+		await this.cacheInvalidator.invalidate(id)
 	}
 }

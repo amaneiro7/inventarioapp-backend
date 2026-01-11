@@ -3,13 +3,19 @@ import { PermissionId } from '../../../Permission/domain/valueObject/PermissionI
 import { PermissionGroupName } from '../valueObject/PermissionGroupName'
 
 import { PermissionGroupId } from '../valueObject/PermissionGroupId'
-import { PermissionGroupDto, PermissionGroupParams, PermissionGroupPrimitives } from './PermissionGroup.dto'
-import { PermissionGroupCreatedDomainEvent } from './PermissionGroupCreatedDomainEvent'
-import { PermissionRevokedFromPermissionGroupDomainEvent } from './PermissionRevokedFromPermissionGroupDomainEvent'
-import { PermissionAssignedToPermissionGroupDomainEvent } from './PermissionAssignedToPermissionGroupDomainEvent'
-import { PermissionGroupRemovedDomainEvent } from './PermissionGroupRemovedDomainEvent'
+import {
+	PermissionGroupDto,
+	PermissionGroupFields,
+	PermissionGroupParams,
+	PermissionGroupPrimitives
+} from './PermissionGroup.dto'
+import { PermissionGroupCreatedDomainEvent } from '../event/PermissionGroupCreatedDomainEvent'
+import { PermissionRevokedFromPermissionGroupDomainEvent } from '../event/PermissionRevokedFromPermissionGroupDomainEvent'
+import { PermissionAssignedToPermissionGroupDomainEvent } from '../event/PermissionAssignedToPermissionGroupDomainEvent'
+import { PermissionGroupRemovedDomainEvent } from '../event/PermissionGroupRemovedDomainEvent'
 import { PermissionGroupDescription } from './PermissionGroupDescription'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { PermissionGroupUpdatedDomainEvent } from '../event/PermissionGroupUpdatedDomainEvent'
 
 export class PermissionGroup extends AggregateRoot {
 	private permissions: Set<PermissionId>
@@ -83,6 +89,19 @@ export class PermissionGroup extends AggregateRoot {
 
 	get permissionsValue(): Primitives<PermissionId>[] {
 		return Array.from(this.permissions).map(p => p.value)
+	}
+
+	registerUpdateEvent({
+		changes
+	}: {
+		changes: Array<{ field: PermissionGroupFields; oldValue: unknown; newValue: unknown }>
+	}): void {
+		this.record(
+			new PermissionGroupUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes
+			})
+		)
 	}
 
 	updateName(newName: string): void {

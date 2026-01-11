@@ -48,7 +48,7 @@ export class SequelizeDeviceRepository
 
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DeviceDto>> {
 		const options = this.convert(criteria)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 		return this.cache.getCachedData<ResponseDB<DeviceDto>>({
 			cacheKey,
 			ttl: TimeTolive.LONG,
@@ -83,26 +83,75 @@ export class SequelizeDeviceRepository
 					include: [
 						{
 							association: 'model',
+							attributes: ['id', 'name', 'generic'],
 							include: [
 								{ association: 'modelComputer', include: ['memoryRamType'] },
 								{ association: 'modelLaptop', include: ['memoryRamType'] }
 							]
 						},
 						'category',
-						'brand',
+						{ association: 'brand', attributes: ['id', 'name'] },
 						'status',
-						'employee',
+						{ association: 'employee', attributes: ['id', 'userName', 'name', 'lastName', 'email'] },
 						{
 							association: 'computer',
+							attributes: [
+								'computerName',
+								'processorId',
+								'memoryRam',
+								'memoryRamCapacity',
+								'hardDriveCapacityId',
+								'hardDriveTypeId',
+								'operatingSystemId',
+								'operatingSystemArqId',
+								'macAddress',
+								'ipAddress'
+							],
 							include: [
-								'processor',
-								'hardDriveCapacity',
-								'hardDriveType',
-								'operatingSystem',
-								'operatingSystemArq'
+								{
+									association: 'processor',
+									attributes: [
+										'productCollection',
+										'numberModel',
+										'name',
+										'frequency',
+										'cores',
+										'threads'
+									]
+								},
+								{
+									association: 'hardDriveCapacity',
+									attributes: ['name']
+								},
+								{
+									association: 'hardDriveType',
+									attributes: ['name']
+								},
+								{
+									association: 'operatingSystem',
+									attributes: ['name', 'buildNumber', 'version']
+								},
+								{
+									association: 'operatingSystemArq',
+									attributes: ['name']
+								}
 							]
 						},
-						{ association: 'hardDrive', include: ['hardDriveCapacity', 'hardDriveType'] },
+						{
+							association: 'hardDrive',
+							attributes: ['hardDriveCapacityId', 'hardDriveTypeId'],
+							include: [
+								{
+									association: 'hardDriveCapacity',
+									attributes: ['name']
+								},
+								{
+									association: 'hardDriveType',
+									attributes: ['name']
+								}
+							]
+						},
+						{ association: 'mfp', attributes: ['ipAddress'] },
 						'location',
 						{
 							association: 'history',

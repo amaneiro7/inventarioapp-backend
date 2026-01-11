@@ -27,6 +27,8 @@ export type AccessPolicyParams = Omit<AccessPolicyRaw, 'id'> & {
 	permissionGroupIds: Primitives<PermissionGroupId>[]
 }
 
+export type AccessPolicyFields = keyof AccessPolicyParams
+
 export type AccessPolicyPrimitives = AccessPolicyRaw & {
 	permissionsGroups: Primitives<PermissionGroupId>[]
 }

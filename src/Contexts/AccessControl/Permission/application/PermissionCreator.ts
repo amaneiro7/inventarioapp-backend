@@ -1,11 +1,12 @@
 import { Permission } from '../domain/entity/Permission'
-import { PermissionAlreadyExistsError } from '../domain/errors/PermissionAlreadyExistsError'
+import { PermissionNameUniquenessChecker } from '../domain/service/PermissionNameuniquenessChecker'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type PermissionRepository } from '../domain/repository/PermissionRepository'
 import { type PermissionParams } from '../domain/entity/Permission.dto'
 
 export class PermissionCreator {
 	private readonly permissionRepository: PermissionRepository
+	private readonly permissionNameUniquenessChecker: PermissionNameUniquenessChecker
 	private readonly eventBus: EventBus
 	constructor({
 		permissionRepository,
@@ -15,14 +16,12 @@ export class PermissionCreator {
 		eventBus: EventBus
 	}) {
 		this.permissionRepository = permissionRepository
+		this.permissionNameUniquenessChecker = new PermissionNameUniquenessChecker(permissionRepository)
 		this.eventBus = eventBus
 	}
 
 	async run({ name, description }: PermissionParams): Promise<void> {
-		const existingPermission = await this.permissionRepository.findByName(name)
-		if (existingPermission) {
-			throw new PermissionAlreadyExistsError(name)
-		}
+		await this.permissionNameUniquenessChecker.ensureUnique(name)
 
 		const permission = Permission.create({ name, description })
 		await this.permissionRepository.save(permission.toPrimitives())

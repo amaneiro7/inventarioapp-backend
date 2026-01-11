@@ -9,15 +9,22 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 
 	async invalidate(id?: string): Promise<void> {
 		if (id) {
-			// Estrategia Específica:
-			// 1. Invalidamos todas las listas
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` })
-			// 1. Invalidamos todas los dashboard
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` })
-			// 2. Invalidamos búsquedas por nombre
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:*` })
-			// 3. Invalidamos el detalle específico
-			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` })
+			// Estrategia Específica: Ejecutamos en paralelo para optimizar el tiempo de respuesta
+			await Promise.all([
+				// 1. Invalidamos búsquedas completas
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:all` }),
+				// 2. Invalidamos todas las listas
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),
+				// 3. Invalidamos todos los dashboards
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` }),
+				// 4. Invalidamos búsquedas por nombre
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:*` }),
+				// 5. Invalidamos el detalle específico
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` }),
+				// 5. Invalidamos el detalle específico
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:key:${id}` })
+			])
 		} else {
 			// Estrategia Global:
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })

@@ -61,29 +61,35 @@ export class DirectivaUpdater {
 		}
 
 		if (params.cargos) {
-			await this.cargoExistenceChecker.ensureExist(params.cargos)
-			changes.push({
-				field: 'cargos',
-				oldValue: directivaEntity.cargosValue,
-				newValue: params.cargos
-			})
+			const uniqueNewCargoPrimitives = [...new Set(params.cargos)]
+			if (uniqueNewCargoPrimitives.length > 0 && uniqueNewCargoPrimitives.length !== params.cargos.length) {
+				await this.cargoExistenceChecker.ensureExist(params.cargos)
+			}
+
+			const oldCargos = directivaEntity.cargosValue
+
 			const uniqueCargos = Array.from(new Set(params.cargos))
-			const newIdSet = new Set(uniqueCargos)
-			const currentIdSet = new Set(directivaEntity.cargosValue)
+			const newCargoIds = new Set(uniqueCargos)
+			const currentCargoIds = new Set(oldCargos)
 
 			// Añadir cargos nuevos
-			for (const id of newIdSet) {
-				if (!currentIdSet.has(id)) {
+			for (const id of newCargoIds) {
+				if (!currentCargoIds.has(id)) {
 					directivaEntity.addCargo(new CargoId(id))
 				}
 			}
 
 			// Eliminar cargos que ya no están
-			for (const id of currentIdSet) {
-				if (!newIdSet.has(id)) {
+			for (const id of currentCargoIds) {
+				if (!newCargoIds.has(id)) {
 					directivaEntity.removeCargo(new CargoId(id))
 				}
 			}
+			changes.push({
+				field: 'cargos',
+				oldValue: oldCargos,
+				newValue: directivaEntity.cargosValue
+			})
 		}
 
 		if (changes.length > 0) {
