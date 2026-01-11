@@ -6,11 +6,9 @@ import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { Generic } from '../../../ModelSeries/domain/valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
-import { InputTypeExistenceChecker } from '../../../InputType/domain/service/InputTypeExistanceChecker'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type MouseModelsPrimitives, type MouseModelsParams } from '../dto/MouseModels.dto'
-import { type ModelDependencies } from './ModelDependencies'
 
 /**
  * @description Represents a mouse model, extending the base ModelSeries class.
@@ -61,25 +59,6 @@ export class MouseModels extends ModelSeries {
 			...super.toPrimitives(),
 			inputTypeId: this.inputTypeValue
 		}
-	}
-
-	async update(
-		params: Partial<MouseModelsParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes = await super.update(params, dependencies)
-
-		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
-			const inputTypeExistenceChecker = new InputTypeExistenceChecker(dependencies.inputTypeRepository)
-			await inputTypeExistenceChecker.ensureExist(params.inputTypeId)
-			changes.push({
-				field: 'inputTypeId',
-				oldValue: this.inputTypeValue,
-				newValue: params.inputTypeId
-			})
-			this.updateInputType(params.inputTypeId)
-		}
-		return changes
 	}
 
 	get inputTypeValue(): Primitives<InputTypeId> {

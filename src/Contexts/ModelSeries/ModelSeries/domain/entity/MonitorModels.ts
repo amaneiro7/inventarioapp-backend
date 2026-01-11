@@ -12,7 +12,6 @@ import { CategoryValues } from '../../../../Category/Category/domain/CategoryOpt
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type MonitorModelsParams, type MonitorModelsPrimitives } from '../dto/MonitoModels.dto'
-import { type ModelDependencies } from './ModelDependencies'
 
 /**
  * @description Represents a monitor model, extending the base ModelSeries class.
@@ -78,51 +77,6 @@ export class MonitorModels extends ModelSeries {
 			hasHDMI: this.hasHDMIValue,
 			hasVGA: this.hasVGAValue
 		}
-	}
-
-	async update(
-		params: Partial<MonitorModelsParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes = await super.update(params, dependencies)
-
-		if (params.screenSize !== undefined && this.screenSizeValue !== params.screenSize) {
-			changes.push({
-				field: 'screenSize',
-				oldValue: this.screenSizeValue,
-				newValue: params.screenSize
-			})
-			this.updateScreenSize(params.screenSize)
-		}
-
-		if (params.hasDVI !== undefined && this.hasDVIValue !== params.hasDVI) {
-			changes.push({
-				field: 'hasDVI',
-				oldValue: this.hasDVIValue,
-				newValue: params.hasDVI
-			})
-			this.updateHasDVI(params.hasDVI)
-		}
-
-		if (params.hasHDMI !== undefined && this.hasHDMIValue !== params.hasHDMI) {
-			changes.push({
-				field: 'hasHDMI',
-				oldValue: this.hasHDMIValue,
-				newValue: params.hasHDMI
-			})
-			this.updateHasHDMI(params.hasHDMI)
-		}
-
-		if (params.hasVGA !== undefined && this.hasVGAValue !== params.hasVGA) {
-			changes.push({
-				field: 'hasVGA',
-				oldValue: this.hasVGAValue,
-				newValue: params.hasVGA
-			})
-			this.updateHasVGA(params.hasVGA)
-		}
-
-		return changes
 	}
 
 	get screenSizeValue(): Primitives<MonitorScreenSize> {

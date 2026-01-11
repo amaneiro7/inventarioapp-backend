@@ -15,7 +15,6 @@ import { HasVGA } from '../valueObject/HasVGA'
 import { BatteryModelName } from '../valueObject/BatteryModelName'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
-import { type ModelDependencies } from './ModelDependencies'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LaptopModelsParams, type LaptopModelsPrimitives } from '../dto/LaptopsModels.dto'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
@@ -120,23 +119,6 @@ export class LaptopsModels extends ComputerModels {
 			...super.toPrimitives(),
 			batteryModel: this.batteryModelValue
 		}
-	}
-
-	async update(
-		params: Partial<LaptopModelsParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes = await super.update(params, dependencies)
-
-		if (params.batteryModel !== undefined && this.batteryModelValue !== params.batteryModel) {
-			changes.push({
-				field: 'batteryModel',
-				oldValue: this.batteryModelValue,
-				newValue: params.batteryModel
-			})
-			this.updateBatteryModel(params.batteryModel)
-		}
-		return changes
 	}
 
 	get batteryModelValue(): Primitives<BatteryModelName> {

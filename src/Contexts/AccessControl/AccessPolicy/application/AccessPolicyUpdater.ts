@@ -33,6 +33,7 @@ export class AccessPolicyUpdater {
 	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
 	private readonly eventBus: EventBus
+
 	constructor({
 		eventBus,
 		accessPolicyRepository,

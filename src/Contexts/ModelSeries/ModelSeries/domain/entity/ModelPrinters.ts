@@ -9,7 +9,6 @@ import { CategoryValues } from '../../../../Category/Category/domain/CategoryOpt
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PrinteModelsParams, type PrinteModelsPrimitives } from '../dto/ModelPrinters.dto'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
-import { type ModelDependencies } from './ModelDependencies'
 
 /**
  * @description Represents a printer model, extending the base ModelSeries class.
@@ -64,22 +63,6 @@ export class ModelPrinters extends ModelSeries {
 			...super.toPrimitives(),
 			cartridgeModel: this.cartridgeModelValue
 		}
-	}
-
-	async update(
-		params: Partial<PrinteModelsParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes = await super.update(params, dependencies)
-		if (params.cartridgeModel !== undefined && this.cartridgeModelValue !== params.cartridgeModel) {
-			changes.push({
-				field: 'cartridgeModel',
-				oldValue: this.cartridgeModelValue,
-				newValue: params.cartridgeModel
-			})
-			this.updateCartridgeModel(params.cartridgeModel)
-		}
-		return changes
 	}
 
 	get cartridgeModelValue(): Primitives<CartridgeModel> {

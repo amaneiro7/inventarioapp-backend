@@ -7,10 +7,8 @@ import { Generic } from '../valueObject/Generic'
 import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
 import { ModelSeriesRenamedDomainEvent } from '../event/ModelSeriesRenamedDomainEvent'
 import { ModelSeriesUpdatedDomainEvent } from '../event/ModelSeriesUpdatedDomainEvent'
-import { ModelSeriesNameUniquenessChecker } from '../service/ModelSeriesNameUniquenessChecker'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from '../dto/ModelSeries.dto'
-import { type ModelDependencies } from './ModelDependencies'
 
 /**
  * @description Represents the ModelSeries domain entity.
@@ -66,36 +64,6 @@ export class ModelSeries extends AggregateRoot {
 			generic: this.genericValue,
 			processors: [] // Base models do not have processors
 		}
-	}
-
-	async update(
-		params: Partial<ModelSeriesParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
-
-		if (params.name !== undefined && this.nameValue !== params.name) {
-			const uniquenessChecker = new ModelSeriesNameUniquenessChecker({
-				modelSeriesRepository: dependencies.modelSeriesRepository
-			})
-			await uniquenessChecker.ensureIsUnique(params.name, this.brandValue, this.idValue)
-			changes.push({
-				field: 'name',
-				oldValue: this.nameValue,
-				newValue: params.name
-			})
-			this.updateName(params.name)
-		}
-		if (params.generic !== undefined && this.genericValue !== params.generic) {
-			changes.push({
-				field: 'generic',
-				oldValue: this.genericValue,
-				newValue: params.generic
-			})
-			this.updateGeneric(params.generic)
-		}
-
-		return changes
 	}
 
 	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {

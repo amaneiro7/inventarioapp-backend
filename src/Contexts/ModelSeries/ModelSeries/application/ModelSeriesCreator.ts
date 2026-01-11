@@ -1,7 +1,4 @@
 import { ModelFactory } from '../domain/entity/ModelFactory'
-import { ModelSeriesNameUniquenessChecker } from '../domain/service/ModelSeriesNameUniquenessChecker'
-import { CategoryExistenceChecker } from '../../../Category/Category/domain/service/CategoryExistenceChecker'
-import { BrandExistenceChecker } from '../../../Brand/domain/service/BrandExistanceChecker'
 import { type ModelSeriesRepository } from '../domain/repository/ModelSeriesRepository'
 import { type BrandRepository } from '../../../Brand/domain/repository/BrandRepository'
 import { type CategoryRepository } from '../../../Category/Category/domain/repository/CategoryRepository'
@@ -16,17 +13,14 @@ import { type EventBus } from '../../../Shared/domain/event/EventBus'
  */
 export class ModelSeriesCreator {
 	private readonly modelSeriesRepository: ModelSeriesRepository
-	private readonly uniquenessChecker: ModelSeriesNameUniquenessChecker
-	private readonly categoryExistenceChecker: CategoryExistenceChecker
-	private readonly brandExistenceChecker: BrandExistenceChecker
 	private readonly modelFactory: ModelFactory
 	private readonly eventBus: EventBus
 
 	constructor({
-		brandRepository,
-		categoryRepository,
 		eventBus,
 		inputTypeRepository,
+		brandRepository,
+		categoryRepository,
 		memoryRamTypeRepository,
 		modelSeriesRepository,
 		processorRepository
@@ -41,10 +35,9 @@ export class ModelSeriesCreator {
 	}) {
 		this.modelSeriesRepository = modelSeriesRepository
 		this.eventBus = eventBus
-		this.categoryExistenceChecker = new CategoryExistenceChecker(categoryRepository)
-		this.brandExistenceChecker = new BrandExistenceChecker(brandRepository)
-		this.uniquenessChecker = new ModelSeriesNameUniquenessChecker({ modelSeriesRepository })
 		this.modelFactory = new ModelFactory({
+			brandRepository,
+			categoryRepository,
 			modelSeriesRepository,
 			inputTypeRepository,
 			memoryRamTypeRepository,
@@ -53,14 +46,6 @@ export class ModelSeriesCreator {
 	}
 
 	async run(params: ModelSeriesParams): Promise<void> {
-		const { name, categoryId, brandId } = params
-
-		await Promise.all([
-			this.categoryExistenceChecker.ensureExist(categoryId),
-			this.brandExistenceChecker.ensureExist(brandId),
-			this.uniquenessChecker.ensureIsUnique(name, brandId)
-		])
-
 		const modelSeries = await this.modelFactory.create(params)
 
 		await this.modelSeriesRepository.save(modelSeries.toPrimitives())

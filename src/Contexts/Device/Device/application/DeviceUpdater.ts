@@ -109,19 +109,20 @@ export class DeviceUpdater {
 		}
 
 		const deviceEntity = await DeviceFactory.fromPrimitives(device)
+		const validations: Promise<void>[] = []
 
 		// 1. Validar campos base (si cambiaron)
-		await this.validateBaseFields(deviceEntity, params)
+		this.validateBaseFields(deviceEntity, params, validations)
 
 		// 2. Validar campos específicos (si cambiaron)
 		if (deviceEntity instanceof DeviceComputer) {
-			await this.validateComputerFields(deviceEntity, params as Partial<DeviceComputerParams>)
+			this.validateComputerFields(deviceEntity, params as Partial<DeviceComputerParams>, validations)
 		} else if (deviceEntity instanceof DeviceHardDrive) {
-			await this.validateHardDriveFields(deviceEntity, params as Partial<DeviceHardDriveParams>)
+			this.validateHardDriveFields(deviceEntity, params as Partial<DeviceHardDriveParams>, validations)
 		}
 
-		// 3. Obtener contexto necesario para la entidad
-		const context = await this.getValidationContext(deviceEntity, params)
+		// 3. Ejecutar validaciones y obtener contexto en paralelo
+		const [context] = await Promise.all([this.getValidationContext(deviceEntity, params), Promise.all(validations)])
 
 		// 4. Actualizar entidad (Síncrono y Puro)
 		const changes = deviceEntity.update(params, context, this.deviceConsistencyValidator)
@@ -135,74 +136,85 @@ export class DeviceUpdater {
 		}
 	}
 
-	private async validateBaseFields(deviceEntity: Device, params: Partial<DeviceParams>): Promise<void> {
+	private validateBaseFields(
+		deviceEntity: Device,
+		params: Partial<DeviceParams>,
+		validations: Promise<void>[]
+	): void {
 		const { serial, activo, statusId, employeeId } = params
 
 		// 1. Validaciones de Infraestructura (Existencia y Unicidad)
 		if (statusId && statusId !== deviceEntity.statusValue) {
 			const statusChecker = new StatusExistenceChecker(this.statusRepository)
-			await statusChecker.ensureExist(statusId)
+			validations.push(statusChecker.ensureExist(statusId))
 		}
 
 		if (activo && activo !== deviceEntity.activoValue) {
 			const activoChecker = new DeviceActivoUniquenessChecker(this.deviceRepository)
-			await activoChecker.ensureUnique(activo, deviceEntity.idValue)
+			validations.push(activoChecker.ensureUnique(activo, deviceEntity.idValue))
 		}
 
 		if (serial && serial !== deviceEntity.serialValue) {
 			const deviceChecker = new DeviceSerialUniquenessChecker(this.deviceRepository)
-			await deviceChecker.ensureUnique({
-				serial,
-				brandId: deviceEntity.brandValue,
-				categoryId: deviceEntity.categoryValue,
-				excludeId: deviceEntity.idValue
-			})
+			validations.push(
+				deviceChecker.ensureUnique({
+					serial,
+					brandId: deviceEntity.brandValue,
+					categoryId: deviceEntity.categoryValue,
+					excludeId: deviceEntity.idValue
+				})
+			)
 		}
 
 		if (employeeId && employeeId !== deviceEntity.employeeValue) {
 			const employeeChecker = new EmployeeExistenceChecker(this.employeeRepository)
-			await employeeChecker.ensureExist(employeeId)
+			validations.push(employeeChecker.ensureExist(employeeId))
 		}
 	}
 
-	private async validateComputerFields(entity: DeviceComputer, params: Partial<DeviceComputerParams>): Promise<void> {
+	private validateComputerFields(
+		entity: DeviceComputer,
+		params: Partial<DeviceComputerParams>,
+		validations: Promise<void>[]
+	): void {
 		if (params.computerName && params.computerName !== entity.computerNameValue) {
 			const checker = new ComputerNameUniquenessChecker(this.deviceRepository)
-			await checker.ensureUnique(params.computerName)
+			validations.push(checker.ensureUnique(params.computerName))
 		}
 		if (params.processorId && params.processorId !== entity.processorValue) {
 			const checker = new ProcessorExistenceChecker(this.processorRepository)
-			await checker.ensureExist(params.processorId)
+			validations.push(checker.ensureExist(params.processorId))
 		}
 		if (params.hardDriveCapacityId && params.hardDriveCapacityId !== entity.hardDriveCapacityValue) {
 			const checker = new HardDriveCapacityExistenceChecker(this.hardDriveCapacityRepository)
-			await checker.ensureExist(params.hardDriveCapacityId)
+			validations.push(checker.ensureExist(params.hardDriveCapacityId))
 		}
 		if (params.hardDriveTypeId && params.hardDriveTypeId !== entity.hardDriveTypeValue) {
 			const checker = new HardDriveTypeExistenceChecker(this.hardDriveTypeRepository)
-			await checker.ensureExist(params.hardDriveTypeId)
+			validations.push(checker.ensureExist(params.hardDriveTypeId))
 		}
 		if (params.operatingSystemId && params.operatingSystemId !== entity.operatingSystemValue) {
 			const checker = new OperatingSystemExistenceChecker(this.operatingSystemRepository)
-			await checker.ensureExist(params.operatingSystemId)
+			validations.push(checker.ensureExist(params.operatingSystemId))
 		}
 		if (params.operatingSystemArqId && params.operatingSystemArqId !== entity.operatingSystemArqValue) {
 			const checker = new OperatingSystemArqExistenceChecker(this.operatingSystemArqRepository)
-			await checker.ensureExist(params.operatingSystemArqId)
+			validations.push(checker.ensureExist(params.operatingSystemArqId))
 		}
 	}
 
-	private async validateHardDriveFields(
+	private validateHardDriveFields(
 		entity: DeviceHardDrive,
-		params: Partial<DeviceHardDriveParams>
-	): Promise<void> {
+		params: Partial<DeviceHardDriveParams>,
+		validations: Promise<void>[]
+	): void {
 		if (params.hardDriveCapacityId && params.hardDriveCapacityId !== entity.hardDriveCapacityValue) {
 			const checker = new HardDriveCapacityExistenceChecker(this.hardDriveCapacityRepository)
-			await checker.ensureExist(params.hardDriveCapacityId)
+			validations.push(checker.ensureExist(params.hardDriveCapacityId))
 		}
 		if (params.hardDriveTypeId && params.hardDriveTypeId !== entity.hardDriveTypeValue) {
 			const checker = new HardDriveTypeExistenceChecker(this.hardDriveTypeRepository)
-			await checker.ensureExist(params.hardDriveTypeId)
+			validations.push(checker.ensureExist(params.hardDriveTypeId))
 		}
 	}
 

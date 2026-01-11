@@ -1,20 +1,22 @@
-import { DeviceCreator } from '../../../../../../src/Contexts/Device/Device/application/DeviceCreator'
-import { DeviceRepository } from '../../../../../../src/Contexts/Device/Device/domain/repository/DeviceRepository'
-import { StatusRepository } from '../../../../../../src/Contexts/Device/Status/domain/repository/StatusRepository'
-import { ModelSeriesRepository } from '../../../../../../src/Contexts/ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
-import { EmployeeRepository } from '../../../../../../src/Contexts/employee/Employee/domain/Repository/EmployeeRepository'
-import { LocationRepository } from '../../../../../../src/Contexts/Location/Location/domain/repository/LocationRepository'
-import { EventBus } from '../../../../../../src/Contexts/Shared/domain/event/EventBus'
-import { DeviceAlreadyExistError } from '../../../../../../src/Contexts/Device/Device/domain/errors/DeviceAlreadyExistError'
-import { InvalidArgumentError } from '../../../../../../src/Contexts/Shared/domain/errors/ApiError'
-import { StatusOptions } from '../../../../../../src/Contexts/Device/Status/domain/StatusOptions'
-import { TypeOfSiteList } from '../../../../../../src/Contexts/Location/TypeOfSite/domain/TypeOfSiteList'
-import { DeviceParams } from '../../../../../../src/Contexts/Device/Device/domain/dto/Device.dto'
-import { ProcessorRepository } from '../../../../../../src/Contexts/Features/Processor/domain/repository/ProcessorRepository'
-import { HardDriveCapacityRepository } from '../../../../../../src/Contexts/Features/HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
-import { HardDriveTypeRepository } from '../../../../../../src/Contexts/Features/HardDrive/HardDriveType/domain/repository/HardDriveTypeRepository'
-import { OperatingSystemRepository } from '../../../../../../src/Contexts/Features/OperatingSystem/OperatingSystem/domain/repository/OperatingSystemRepository'
-import { OperatingSystemArqRepository } from '../../../../../../src/Contexts/Features/OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
+import { randomUUID } from 'node:crypto'
+import { DeviceCreator } from '../../../../../src/Contexts/Device/Device/application/DeviceCreator'
+import { DeviceRepository } from '../../../../../src/Contexts/Device/Device/domain/repository/DeviceRepository'
+import { StatusRepository } from '../../../../../src/Contexts/Device/Status/domain/repository/StatusRepository'
+import { ModelSeriesRepository } from '../../../../../src/Contexts/ModelSeries/ModelSeries/domain/repository/ModelSeriesRepository'
+import { EmployeeRepository } from '../../../../../src/Contexts/employee/Employee/domain/Repository/EmployeeRepository'
+import { LocationRepository } from '../../../../../src/Contexts/Location/Location/domain/repository/LocationRepository'
+import { EventBus } from '../../../../../src/Contexts/Shared/domain/event/EventBus'
+import { DeviceAlreadyExistError } from '../../../../../src/Contexts/Device/Device/domain/errors/DeviceAlreadyExistError'
+import { InvalidArgumentError } from '../../../../../src/Contexts/Shared/domain/errors/ApiError'
+import { StatusOptions } from '../../../../../src/Contexts/Device/Status/domain/StatusOptions'
+import { TypeOfSiteList } from '../../../../../src/Contexts/Location/TypeOfSite/domain/TypeOfSiteList'
+import { DeviceParams } from '../../../../../src/Contexts/Device/Device/domain/dto/Device.dto'
+import { ProcessorRepository } from '../../../../../src/Contexts/Features/Processor/domain/repository/ProcessorRepository'
+import { HardDriveCapacityRepository } from '../../../../../src/Contexts/Features/HardDrive/HardDriveCapacity/domain/repository/HardDriveCapacityRepository'
+import { HardDriveTypeRepository } from '../../../../../src/Contexts/Features/HardDrive/HardDriveType/domain/repository/HardDriveTypeRepository'
+import { OperatingSystemRepository } from '../../../../../src/Contexts/Features/OperatingSystem/OperatingSystem/domain/repository/OperatingSystemRepository'
+import { OperatingSystemArqRepository } from '../../../../../src/Contexts/Features/OperatingSystem/OperatingSystemArq/domain/repository/OperatingSystemArqRepository'
+import { JwtPayloadUser } from '../../../../../src/Contexts/Auth/domain/service/GenerateToken'
 
 describe('DeviceCreator', () => {
 	let deviceCreator: DeviceCreator
@@ -56,7 +58,21 @@ describe('DeviceCreator', () => {
 	const mockOsArqRepo = {} as unknown as OperatingSystemArqRepository
 
 	// Datos Dummy
-	const validUser = { sub: 'user-id', email: 'test@test.com', roleId: '1' }
+	const validUser: JwtPayloadUser = {
+		sub: 'user-id',
+		email: 'test@test.com',
+		roleId: '1',
+		cargoId: randomUUID(),
+		departamentoId: randomUUID(),
+		directivaId: randomUUID(),
+		employeeId: randomUUID(),
+		vicepresidenciaEjecutivaId: randomUUID(),
+		vicepresidenciaId: randomUUID(),
+		passwordChangeAt: null,
+		passwordNeverExpires: false,
+		iat: 0,
+		iss: 'SoporteTecnicoBNC'
+	}
 	const validParams: DeviceParams = {
 		serial: 'SN123',
 		activo: 'ACT123',
@@ -94,9 +110,9 @@ describe('DeviceCreator', () => {
 		;(mockEmployeeRepository.findById as jest.Mock).mockResolvedValue(null) // No employee needed for DISPONIBLE
 		;(mockLocationRepository.findById as jest.Mock).mockResolvedValue({
 			id: 'loc-id',
-			typeOfSiteId: TypeOfSiteList.OFICINA
+			typeOfSiteId: TypeOfSiteList.AGENCIA
 		})
-		;(mockModelSeriesRepository.searchByModelSeriesIdAndBrandIdAndCategoryId as jest.Mock).mockResolvedValue({
+		;(mockModelSeriesRepository.findById as jest.Mock).mockResolvedValue({
 			id: 'model-id',
 			generic: false
 		})
@@ -137,7 +153,7 @@ describe('DeviceCreator', () => {
 		// --- Consistencia: Serial vs Genérico ---
 
 		it('should throw InvalidArgumentError if model is NOT generic and serial is missing', async () => {
-			;(mockModelSeriesRepository.searchByModelSeriesIdAndBrandIdAndCategoryId as jest.Mock).mockResolvedValue({
+			;(mockModelSeriesRepository.findById as jest.Mock).mockResolvedValue({
 				generic: false
 			})
 			const params = { ...validParams, serial: null }
@@ -148,7 +164,7 @@ describe('DeviceCreator', () => {
 		})
 
 		it('should allow missing serial if model IS generic', async () => {
-			;(mockModelSeriesRepository.searchByModelSeriesIdAndBrandIdAndCategoryId as jest.Mock).mockResolvedValue({
+			;(mockModelSeriesRepository.findById as jest.Mock).mockResolvedValue({
 				generic: true
 			})
 			const params = { ...validParams, serial: null }
@@ -179,7 +195,7 @@ describe('DeviceCreator', () => {
 			;(mockStatusRepository.findById as jest.Mock).mockResolvedValue({ id: StatusOptions.INALMACEN })
 			;(mockLocationRepository.findById as jest.Mock).mockResolvedValue({
 				id: 'loc-id',
-				typeOfSiteId: TypeOfSiteList.OFICINA
+				typeOfSiteId: TypeOfSiteList.AGENCIA
 			})
 
 			const params = { ...validParams, statusId: StatusOptions.INALMACEN, stockNumber: 'STOCK-1' }
@@ -214,7 +230,7 @@ describe('DeviceCreator', () => {
 			;(mockStatusRepository.findById as jest.Mock).mockResolvedValue({ id: StatusOptions.PRESTAMO })
 			;(mockLocationRepository.findById as jest.Mock).mockResolvedValue({
 				id: 'loc-id',
-				typeOfSiteId: TypeOfSiteList.OFICINA
+				typeOfSiteId: TypeOfSiteList.TORRE
 			})
 
 			const params = { ...validParams, statusId: StatusOptions.PRESTAMO, employeeId: null }

@@ -7,8 +7,6 @@ import { Generic } from '../valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { HasFingerPrintReader } from '../valueObject/HasFingerPrintReader'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
-import { InputTypeExistenceChecker } from '../../../InputType/domain/service/InputTypeExistanceChecker'
-import { type ModelDependencies } from './ModelDependencies'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type KeyboardModelsParams, type KeyboardModelsPrimitives } from '../dto/KeyboardModels.dto'
@@ -66,37 +64,6 @@ export class KeyboardModels extends ModelSeries {
 			inputTypeId: this.inputTypeValue,
 			hasFingerPrintReader: this.hasFingerPrintReaderValue
 		}
-	}
-
-	async update(
-		params: Partial<KeyboardModelsParams>,
-		dependencies: ModelDependencies
-	): Promise<Array<{ field: string; oldValue: unknown; newValue: unknown }>> {
-		const changes = await super.update(params, dependencies)
-
-		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
-			const inputTypeExistenceChecker = new InputTypeExistenceChecker(dependencies.inputTypeRepository)
-			await inputTypeExistenceChecker.ensureExist(params.inputTypeId)
-			changes.push({
-				field: 'inputTypeId',
-				oldValue: this.inputTypeValue,
-				newValue: params.inputTypeId
-			})
-			this.updateInputType(params.inputTypeId)
-		}
-
-		if (
-			params.hasFingerPrintReader !== undefined &&
-			this.hasFingerPrintReaderValue !== params.hasFingerPrintReader
-		) {
-			this.updateHasFingerPrintReader(params.hasFingerPrintReader)
-			changes.push({
-				field: 'hasFingerPrintReader',
-				oldValue: this.hasFingerPrintReaderValue,
-				newValue: params.hasFingerPrintReader
-			})
-		}
-		return changes
 	}
 
 	get inputTypeValue(): Primitives<InputTypeId> {
