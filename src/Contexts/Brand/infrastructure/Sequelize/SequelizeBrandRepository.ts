@@ -9,9 +9,9 @@ import { type BrandRepository } from '../../domain/repository/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../Shared/domain/ResponseType'
-import { type BrandCacheInvalidator } from '../../domain/repository/BrandCacheInvalidator'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type BrandId } from '../../domain/valueObject/BrandId'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeBrandRepository
@@ -20,10 +20,7 @@ import { type BrandId } from '../../domain/valueObject/BrandId'
  * @description Concrete implementation of the `BrandRepository` using Sequelize for data persistence.
  * It handles all database operations for the Brand entity and includes caching to improve performance.
  */
-export class SequelizeBrandRepository
-	extends SequelizeCriteriaConverter
-	implements BrandRepository, BrandCacheInvalidator
-{
+export class SequelizeBrandRepository extends SequelizeCriteriaConverter implements BrandRepository, CacheInvalidator {
 	private readonly cacheKeyPrefix = 'brands'
 	private readonly cache: CacheService
 	private readonly cacheInvalidator: GenericCacheInvalidator
@@ -44,7 +41,7 @@ export class SequelizeBrandRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<BrandDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = BrandAssociation.convertFilter(criteria, sequelizeOptions)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<BrandDto>>({
 			cacheKey,
@@ -147,7 +144,7 @@ export class SequelizeBrandRepository
 	 * @description Invalidates all brands-related cache entries.
 	 * Implements BrandCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<BrandId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<BrandId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

@@ -6,7 +6,7 @@ import { VicepresidenciaUpdatedDomainEvent } from '../../Vicepresidencia/domain/
 import { DepartamentoUpdatedDomainEvent } from '../../Departamento/domain/event/DepartamentoUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type CargoCacheInvalidator } from '../domain/repository/CargoCacheInvalidator'
+import { CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateCargoCacheOnCargoChanged implements DomainEventSubscriber<
 	| CargoCreatedDomainEvent
@@ -16,9 +16,9 @@ export class InvalidateCargoCacheOnCargoChanged implements DomainEventSubscriber
 	| VicepresidenciaUpdatedDomainEvent
 	| DepartamentoUpdatedDomainEvent
 > {
-	private readonly invalidator: CargoCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ cargoRepository }: { cargoRepository: CargoCacheInvalidator }) {
+	constructor({ cargoRepository }: { cargoRepository: CacheInvalidator }) {
 		this.invalidator = cargoRepository
 	}
 
@@ -31,8 +31,23 @@ export class InvalidateCargoCacheOnCargoChanged implements DomainEventSubscriber
 			| VicepresidenciaUpdatedDomainEvent
 			| DepartamentoUpdatedDomainEvent
 	): Promise<void> {
-		const isCargoEvent = event instanceof CargoCreatedDomainEvent || event instanceof CargoUpdatedDomainEvent
-		await this.invalidator.invalidate(isCargoEvent ? event.aggregateId : undefined)
+		if (event instanceof CargoUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof CargoCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

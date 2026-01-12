@@ -11,7 +11,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type ProcessorDto, type ProcessorPrimitives } from '../../domain/entity/Processor.dto'
 import { type ProcessorNumberModel } from '../../domain/valueObject/ProcessorNumberModel'
 import { type ProcessorRepository } from '../../domain/repository/ProcessorRepository'
-import { type ProcessorCacheInvalidator } from '../../domain/repository/ProcessorCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 import { type ProcessorId } from '../../domain/valueObject/ProcessorId'
 
 /**
@@ -19,7 +19,7 @@ import { type ProcessorId } from '../../domain/valueObject/ProcessorId'
  */
 export class SequelizeProcessorRepository
 	extends SequelizeCriteriaConverter
-	implements ProcessorRepository, ProcessorCacheInvalidator
+	implements ProcessorRepository, CacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'processors'
 	private readonly cache: CacheService
@@ -109,7 +109,7 @@ export class SequelizeProcessorRepository
 	 * @description Invalidates all processors-related cache entries.
 	 * Implements ProcessorCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<ProcessorId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<ProcessorId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

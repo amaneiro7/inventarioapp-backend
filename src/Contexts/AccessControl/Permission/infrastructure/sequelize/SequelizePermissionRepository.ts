@@ -169,7 +169,7 @@ export class SequelizePermissionRepository
 	 * @description Invalidates all permissions-related cache entries.
 	 * Implements PermissionCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<PermissionId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<PermissionId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

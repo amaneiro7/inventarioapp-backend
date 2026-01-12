@@ -9,8 +9,8 @@ import { type ResponseDB } from '../../../Shared/domain/ResponseType'
 import { type HistoryDto, type HistoryPrimitives } from '../../domain/entity/History.dto'
 import { type HistoryRepository } from '../../domain/repository/HistoryRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type HistoryCacheInvalidator } from '../../domain/repository/HistoryCacheInvalidator'
 import { type HistoryId } from '../../domain/valueObject/HistoryId'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeHistoryRepository
@@ -21,7 +21,7 @@ import { type HistoryId } from '../../domain/valueObject/HistoryId'
  */
 export class SequelizeHistoryRepository
 	extends SequelizeCriteriaConverter
-	implements HistoryRepository, HistoryCacheInvalidator
+	implements HistoryRepository, CacheInvalidator
 {
 	private readonly cacheKey: string = 'histories'
 	private readonly cache: CacheService
@@ -43,7 +43,7 @@ export class SequelizeHistoryRepository
 		const options = this.convert(criteria)
 		const opt = HistoryAssociation.converFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<HistoryDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
@@ -72,7 +72,7 @@ export class SequelizeHistoryRepository
 	 * @description Invalidates all histories-related cache entries.
 	 * Implements HistoryCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<HistoryId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<HistoryId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

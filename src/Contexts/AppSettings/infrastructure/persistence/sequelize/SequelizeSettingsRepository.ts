@@ -7,9 +7,9 @@ import { type SettingsPrimitives } from '../../../domain/entity/Settings.dto'
 import { type SettingsRepository } from '../../../domain/repository/SettingsRepository'
 import { type SettingsKey } from '../../../domain/valueObject/SettingsKey'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type AppSettingsCacheInvalidator } from '../../../domain/repository/AppSettingsCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
-export class SequelizeSettingsRepository implements SettingsRepository, AppSettingsCacheInvalidator {
+export class SequelizeSettingsRepository implements SettingsRepository, CacheInvalidator {
 	private readonly model = SequelizeSettingsModel
 	private readonly cacheKeyPrefix = 'appSettings'
 	private readonly cache: CacheService
@@ -74,7 +74,7 @@ export class SequelizeSettingsRepository implements SettingsRepository, AppSetti
 	 * @description Invalidates all app settings-related cache entries.
 	 * Implements AppSettingsCacheInvalidator interface.
 	 */
-	async invalidate(key?: Primitives<SettingsKey>): Promise<void> {
-		await this.cacheInvalidator.invalidate(key)
+	async invalidate(params?: Primitives<SettingsKey> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

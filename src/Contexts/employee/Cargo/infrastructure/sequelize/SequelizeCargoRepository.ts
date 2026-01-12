@@ -14,15 +14,12 @@ import { type CargoName } from '../../domain/valueObject/CargoName'
 import { type CargoDto, type CargoPrimitives } from '../../domain/entity/Cargo.dto'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type CargoCacheInvalidator } from '../../domain/repository/CargoCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @description Concrete implementation of the CargoRepository using Sequelize.
  */
-export class SequelizeCargoRepository
-	extends SequelizeCriteriaConverter
-	implements CargoRepository, CargoCacheInvalidator
-{
+export class SequelizeCargoRepository extends SequelizeCriteriaConverter implements CargoRepository, CacheInvalidator {
 	private readonly cacheKeyPrefix = 'cargos'
 	private readonly cache: CacheService
 	private readonly cacheInvalidator: GenericCacheInvalidator
@@ -143,7 +140,7 @@ export class SequelizeCargoRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements CargoCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<CargoId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<CargoId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

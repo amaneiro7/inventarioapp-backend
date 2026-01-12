@@ -7,9 +7,9 @@ import { type SettingsRepository } from '../../domain/repository/SettingsReposit
 import { type SettingsKey } from '../../domain/valueObject/SettingsKey'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type CacheService } from '../../../Shared/domain/CacheService'
-import { type AppSettingsCacheInvalidator } from '../../domain/repository/AppSettingsCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
-export class FileSettingsRepository implements SettingsRepository, AppSettingsCacheInvalidator {
+export class FileSettingsRepository implements SettingsRepository, CacheInvalidator {
 	private readonly filePath = path.join(__dirname, 'settings.json')
 	private settings: Map<string, SettingsPrimitives> = new Map()
 	private readonly cacheKeyPrefix = 'appSettings'
@@ -78,7 +78,7 @@ export class FileSettingsRepository implements SettingsRepository, AppSettingsCa
 	 * @description Invalidates all app settings-related cache entries.
 	 * Implements AppSettingsCacheInvalidator interface.
 	 */
-	async invalidate(key?: Primitives<SettingsKey>): Promise<void> {
-		await this.cacheInvalidator.invalidate(key)
+	async invalidate(params?: Primitives<SettingsKey> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

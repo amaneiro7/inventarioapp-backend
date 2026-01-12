@@ -25,6 +25,8 @@ export type BrandParams = Omit<
 	'id'
 >
 
+export type BrandChangeFields = keyof Omit<BrandPrimitives, 'id'>
+
 /**
  * @type BrandPrimitives
  * @description Represents the primitive, serializable state of a Brand entity.

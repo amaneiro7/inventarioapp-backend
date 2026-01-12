@@ -3,7 +3,6 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { CityModel } from './CitySchema'
 import { CityAssociation } from './CityAssociation'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
-import { type CityCacheInvalidator } from '../../domain/repository/CityCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -12,6 +11,7 @@ import { type CityRepository } from '../../domain/repository/CityRepository'
 import { type CityName } from '../../domain/valueObject/CityName'
 import { type CityDto, type CityPrimitives } from '../../domain/entity/City.dto'
 import { type CityId } from '../../domain/valueObject/CityId'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeCityRepository
@@ -20,10 +20,7 @@ import { type CityId } from '../../domain/valueObject/CityId'
  * @description Concrete implementation of the CityRepository using Sequelize.
  * Handles data persistence for City entities, including caching mechanisms.
  */
-export class SequelizeCityRepository
-	extends SequelizeCriteriaConverter
-	implements CityRepository, CityCacheInvalidator
-{
+export class SequelizeCityRepository extends SequelizeCriteriaConverter implements CityRepository, CacheInvalidator {
 	private readonly cacheKey: string = 'cities'
 	private readonly cache: CacheService
 	private readonly cacheInvalidator: GenericCacheInvalidator
@@ -43,7 +40,7 @@ export class SequelizeCityRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CityDto>> {
 		const options = CityAssociation.converFilter(criteria, this.convert(criteria))
 		return await this.cache.getCachedData<ResponseDB<CityDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
@@ -135,7 +132,7 @@ export class SequelizeCityRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements CityCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<CityId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<CityId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

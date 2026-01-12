@@ -7,7 +7,7 @@ import { BrandDoesNotExistError } from '../domain/errors/BrandDoesNotExistError'
 import { type CategoryRepository } from '../../Category/Category/domain/repository/CategoryRepository'
 import { type BrandRepository } from '../domain/repository/BrandRepository'
 import { type Primitives } from '../../Shared/domain/value-object/Primitives'
-import { type BrandParams } from '../domain/entity/Brand.dto'
+import { type BrandChangeFields, type BrandParams } from '../domain/entity/Brand.dto'
 import { type EventBus } from '../../Shared/domain/event/EventBus'
 /**
  * @description Use case for updating an existing Brand entity.
@@ -56,10 +56,11 @@ export class BrandUpdater {
 
 		const brandEntity = Brand.fromPrimitives(brand)
 
-		const changes: Array<{ field: keyof Omit<BrandParams, 'id'>; oldValue: unknown; newValue: unknown }> = []
+		const changes: Array<{ field: BrandChangeFields; oldValue: unknown; newValue: unknown }> = []
+		const validations: Promise<void>[] = []
 
 		if (params.name !== undefined && brandEntity.nameValue !== params.name.trim()) {
-			await this.brandNameUniquenessChecker.ensureUnique(params.name, brandEntity.idValue)
+			validations.push(this.brandNameUniquenessChecker.ensureUnique(params.name, brandEntity.idValue))
 			changes.push({
 				field: 'name',
 				oldValue: brandEntity.nameValue,
@@ -69,7 +70,7 @@ export class BrandUpdater {
 		}
 
 		if (params.categories !== undefined) {
-			await this.categoryExistenceChecker.ensureExist(params.categories)
+			validations.push(this.categoryExistenceChecker.ensureExist(params.categories))
 			const oldCategories = [...brandEntity.categoriesValue]
 			const categoriesChanged = this.updateCategories({
 				entity: brandEntity,
@@ -83,6 +84,8 @@ export class BrandUpdater {
 				})
 			}
 		}
+
+		await Promise.all(validations)
 
 		// Save the updated entity only if it has changed
 		if (changes.length > 0) {

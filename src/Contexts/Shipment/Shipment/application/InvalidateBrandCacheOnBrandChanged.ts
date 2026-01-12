@@ -4,7 +4,7 @@ import { ShipmentDeliveredDomainEvent } from '../domain/event/ShipmentDeliveredD
 import { ShipmentStatusChangedDomainEvent } from '../domain/event/ShipmentStatusChangedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type ShipmentCacheInvalidator } from '../domain/repository/ShipmentCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateShipmentCacheOnShipmentChanged implements DomainEventSubscriber<
 	| ShipmentCancelledDomainEvent
@@ -12,9 +12,9 @@ export class InvalidateShipmentCacheOnShipmentChanged implements DomainEventSubs
 	| ShipmentDeliveredDomainEvent
 	| ShipmentStatusChangedDomainEvent
 > {
-	private readonly invalidator: ShipmentCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ shipmentRepository }: { shipmentRepository: ShipmentCacheInvalidator }) {
+	constructor({ shipmentRepository }: { shipmentRepository: CacheInvalidator }) {
 		this.invalidator = shipmentRepository
 	}
 
@@ -26,7 +26,7 @@ export class InvalidateShipmentCacheOnShipmentChanged implements DomainEventSubs
 			| ShipmentStatusChangedDomainEvent
 	): Promise<void> {
 		// Pasamos el ID del agregado que cambió para una invalidación más precisa.
-		await this.invalidator.invalidateShipmentCache(event.aggregateId)
+		await this.invalidator.invalidate(event.aggregateId)
 	}
 
 	subscribedTo(): DomainEventClass[] {

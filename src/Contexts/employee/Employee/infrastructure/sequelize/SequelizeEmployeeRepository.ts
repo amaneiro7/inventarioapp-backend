@@ -13,7 +13,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
 import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
 import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
-import { type EmployeeCacheInvalidator } from '../../domain/Repository/EmployeeCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -24,7 +24,7 @@ import { type EmployeeCacheInvalidator } from '../../domain/Repository/EmployeeC
  */
 export class SequelizeEmployeeRepository
 	extends SequelizeCriteriaConverter
-	implements EmployeeRepository, EmployeeCacheInvalidator
+	implements EmployeeRepository, CacheInvalidator
 {
 	private readonly cacheKey: string = 'employees'
 	private readonly cache: CacheService
@@ -232,7 +232,7 @@ export class SequelizeEmployeeRepository
 	 * @description Invalidates all employees-related cache entries.
 	 * Implements EmployeeCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<EmployeeId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<EmployeeId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

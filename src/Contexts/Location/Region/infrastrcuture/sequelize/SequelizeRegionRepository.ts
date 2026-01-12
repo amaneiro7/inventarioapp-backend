@@ -9,7 +9,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type RegionPrimitives, type RegionDto } from '../../domain/entity/Region.dto'
 import { type RegionId } from '../../domain/valueObject/RegionId'
 import { type RegionRepository } from '../../domain/repository/RegionRepository'
-import { type RegionCacheInvalidator } from '../../domain/repository/RegionCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeRegionRepository
@@ -20,7 +20,7 @@ import { type RegionCacheInvalidator } from '../../domain/repository/RegionCache
  */
 export class SequelizeRegionRepository
 	extends SequelizeCriteriaConverter
-	implements RegionRepository, RegionCacheInvalidator
+	implements RegionRepository, CacheInvalidator
 {
 	private readonly cacheKey: string = 'regions'
 	private readonly cache: CacheService
@@ -43,7 +43,7 @@ export class SequelizeRegionRepository
 		const options = this.convert(criteria)
 		options.include = ['state']
 		return await this.cache.getCachedData<ResponseDB<RegionDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
@@ -88,10 +88,10 @@ export class SequelizeRegionRepository
 
 	/**
 	 * @method invalidateRegionCache
-	 * @description Invalidates all model series-related cache entries.
+	 * @description Invalidates all regions-related cache entries.
 	 * Implements RegionCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<RegionId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<RegionId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

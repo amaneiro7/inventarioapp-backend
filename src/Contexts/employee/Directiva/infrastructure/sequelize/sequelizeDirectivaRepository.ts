@@ -4,7 +4,6 @@ import { DirectivaModel } from './DirectivaSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
-import { type DirectivaCacheInvalidator } from '../../domain/repository/DirectivaCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -14,13 +13,14 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type DirectivaRepository } from '../../domain/repository/DirectivaRepository'
 import { type DirectivaId } from '../../domain/valueObject/DirectivaId'
 import { type DirectivaName } from '../../domain/valueObject/DirectivaName'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @description Concrete implementation of the DirectivaRepository using Sequelize.
  */
 export class SequelizeDirectivaRepository
 	extends SequelizeCriteriaConverter
-	implements DirectivaRepository, DirectivaCacheInvalidator
+	implements DirectivaRepository, CacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'directiva'
 	private readonly cache: CacheService
@@ -135,7 +135,7 @@ export class SequelizeDirectivaRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements DirectivaCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<DirectivaId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<DirectivaId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

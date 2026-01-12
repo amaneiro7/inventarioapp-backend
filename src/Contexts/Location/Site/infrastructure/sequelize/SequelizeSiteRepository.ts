@@ -3,7 +3,6 @@ import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/pe
 import { SiteModels } from './SiteSchema'
 import { SiteAssociation } from './SiteAssociation'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
-import { type SiteCacheInvalidator } from '../../domain/repository/SiteCacheInvalidator'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
@@ -12,6 +11,7 @@ import { type SiteRepository } from '../../domain/repository/SiteRepository'
 import { type SiteDto, type SitePrimitives } from '../../domain/entity/Site.dto'
 import { type SiteId } from '../../domain/valueObject/SiteId'
 import { type SiteName } from '../../domain/valueObject/SiteName'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeSiteRepository
@@ -20,10 +20,7 @@ import { type SiteName } from '../../domain/valueObject/SiteName'
  * @description Concrete implementation of the SiteRepository using Sequelize.
  * Handles data persistence for Site entities, including caching mechanisms.
  */
-export class SequelizeSiteRepository
-	extends SequelizeCriteriaConverter
-	implements SiteRepository, SiteCacheInvalidator
-{
+export class SequelizeSiteRepository extends SequelizeCriteriaConverter implements SiteRepository, CacheInvalidator {
 	private readonly cacheKey: string = 'sites'
 	private readonly cache: CacheService
 	private readonly cacheInvalidator: GenericCacheInvalidator
@@ -43,7 +40,7 @@ export class SequelizeSiteRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<SiteDto>> {
 		const options = SiteAssociation.converFilter(criteria, this.convert(criteria))
 		return await this.cache.getCachedData<ResponseDB<SiteDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
@@ -121,10 +118,10 @@ export class SequelizeSiteRepository
 
 	/**
 	 * @method invalidateSiteCache
-	 * @description Invalidates all model series-related cache entries.
+	 * @description Invalidates all sites-related cache entries.
 	 * Implements SiteCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<SiteId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<SiteId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

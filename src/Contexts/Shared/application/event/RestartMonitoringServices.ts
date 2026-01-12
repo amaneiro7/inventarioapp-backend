@@ -15,7 +15,9 @@ export class RestartMonitoringServices implements DomainEventSubscriber<AppSetti
 	// Definimos explícitamente las claves que nos interesan
 	private readonly relevantKeys: Set<string> = new Set([
 		AppSettingKeys.LOCATION_MONITORING.ENABLED,
-		AppSettingKeys.DEVICE_MONITORING.ENABLED
+		AppSettingKeys.DEVICE_MONITORING.ENABLED,
+		AppSettingKeys.DEVICE_MONITORING.DISABLE_TIME_CHECKS,
+		AppSettingKeys.LOCATION_MONITORING.DISABLE_TIME_CHECKS
 	])
 
 	constructor({

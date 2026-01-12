@@ -4,9 +4,9 @@ import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/Direct
 import { VicepresidenciaUpdatedDomainEvent } from '../../Vicepresidencia/domain/event/VicepresidenciaUpdatedDomainEvent'
 import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
 import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDomainEvent'
-import { type DepartamentoCacheInvalidator } from '../domain/repository/DepartamentoCacheInvalidator'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainEventSubscriber<
 	| DepartamentoCreatedDomainEvent
@@ -16,9 +16,9 @@ export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainE
 	| VicepresidenciaUpdatedDomainEvent
 	| CargoUpdatedDomainEvent
 > {
-	private readonly invalidator: DepartamentoCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ departamentoRepository }: { departamentoRepository: DepartamentoCacheInvalidator }) {
+	constructor({ departamentoRepository }: { departamentoRepository: CacheInvalidator }) {
 		this.invalidator = departamentoRepository
 	}
 
@@ -31,9 +31,23 @@ export class InvalidateDepartamentoCacheOnDepartamentoChanged implements DomainE
 			| VicepresidenciaUpdatedDomainEvent
 			| CargoUpdatedDomainEvent
 	): Promise<void> {
-		const isDepartamentoEvent =
-			event instanceof DepartamentoCreatedDomainEvent || event instanceof DepartamentoUpdatedDomainEvent
-		await this.invalidator.invalidate(isDepartamentoEvent ? event.aggregateId : undefined)
+		if (event instanceof DepartamentoUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof DepartamentoCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

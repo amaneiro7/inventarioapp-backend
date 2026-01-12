@@ -5,7 +5,7 @@ import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/Direct
 import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type VicepresidenciaCacheInvalidator } from '../domain/repository/VicepresidenciaCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements DomainEventSubscriber<
 	| VicepresidenciaCreatedDomainEvent
@@ -14,9 +14,9 @@ export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements D
 	| VicepresidenciaEjecutivaUpdatedDomainEvent
 	| CargoUpdatedDomainEvent
 > {
-	private readonly invalidator: VicepresidenciaCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ vicepresidenciaRepository }: { vicepresidenciaRepository: VicepresidenciaCacheInvalidator }) {
+	constructor({ vicepresidenciaRepository }: { vicepresidenciaRepository: CacheInvalidator }) {
 		this.invalidator = vicepresidenciaRepository
 	}
 
@@ -28,9 +28,23 @@ export class InvalidateVicepresidenciaCacheOnVicepresidenciaChanged implements D
 			| VicepresidenciaEjecutivaUpdatedDomainEvent
 			| CargoUpdatedDomainEvent
 	): Promise<void> {
-		const isVicepresidenciaEvent =
-			event instanceof VicepresidenciaCreatedDomainEvent || event instanceof VicepresidenciaUpdatedDomainEvent
-		await this.invalidator.invalidate(isVicepresidenciaEvent ? event.aggregateId : undefined)
+		if (event instanceof VicepresidenciaUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof VicepresidenciaCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

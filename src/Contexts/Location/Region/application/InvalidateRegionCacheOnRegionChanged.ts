@@ -1,12 +1,12 @@
 import { RegionUpdatedDomainEvent } from '../domain/events/RegionUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type RegionCacheInvalidator } from '../domain/repository/RegionCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateRegionCacheOnRegionChanged implements DomainEventSubscriber<RegionUpdatedDomainEvent> {
-	private readonly invalidator: RegionCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ regionRepository }: { regionRepository: RegionCacheInvalidator }) {
+	constructor({ regionRepository }: { regionRepository: CacheInvalidator }) {
 		this.invalidator = regionRepository
 	}
 

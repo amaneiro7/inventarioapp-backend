@@ -1,12 +1,12 @@
 import { HistoryCreatedDomainEvent } from '../domain/event/HistoryCreatedDomainEvent'
-import { HistoryCacheInvalidator } from '../domain/repository/HistoryCacheInvalidator'
 import { type DomainEventClass } from '../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../Shared/domain/event/DomainEventSubscriber'
+import { type CacheInvalidator } from '../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateHistoryCacheOnHistoryChanged implements DomainEventSubscriber<HistoryCreatedDomainEvent> {
-	private readonly invalidator: HistoryCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ historyRepository }: { historyRepository: HistoryCacheInvalidator }) {
+	constructor({ historyRepository }: { historyRepository: CacheInvalidator }) {
 		this.invalidator = historyRepository
 	}
 

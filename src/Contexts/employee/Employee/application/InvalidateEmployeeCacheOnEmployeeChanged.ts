@@ -9,12 +9,12 @@ import { EmployeeUpdatedDomainEvent } from '../domain/event/EmployeeUpdatedDomai
 import { EmployeeRemovedDomainEvent } from '../domain/event/EmployeeRemovedDomainEvent'
 import { LocationUpdatedDomainEvent } from '../../../Location/Location/domain/event/LocationUpdatedDomainEvent'
 import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDomainEvent'
-import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
-import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type EmployeeCacheInvalidator } from '../domain/Repository/EmployeeCacheInvalidator'
 import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/SiteUpdatedDomainEvent'
 import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
+import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
+import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubscriber<
 	| EmployeeCreatedDomainEvent
@@ -32,9 +32,9 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
-	private readonly invalidator: EmployeeCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ employeeRepository }: { employeeRepository: EmployeeCacheInvalidator }) {
+	constructor({ employeeRepository }: { employeeRepository: CacheInvalidator }) {
 		this.invalidator = employeeRepository
 	}
 
@@ -51,14 +51,37 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			| VicepresidenciaUpdatedDomainEvent
 			| VicepresidenciaEjecutivaUpdatedDomainEvent
 			| LocationUpdatedDomainEvent
+			| SiteUpdatedDomainEvent
+			| CityUpdatedDomainEvent
+			| RegionUpdatedDomainEvent
 	): Promise<void> {
-		const isEmployeeEvent =
-			event instanceof EmployeeCreatedDomainEvent ||
-			event instanceof EmployeeUpdatedDomainEvent ||
+		if (event instanceof EmployeeUpdatedDomainEvent) {
+			const { changes } = event
+			const email = changes.find(change => change.field === 'email')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				email
+			})
+		} else if (event instanceof EmployeeCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				userName: event.userName,
+				email: event.email
+			})
+		} else if (
 			event instanceof EmployeeRemovedDomainEvent ||
-			event instanceof EmployeeReactivatedDomainEvent ||
-			event instanceof EmployeeTypeChangedDomainEvent
-		await this.invalidator.invalidate(isEmployeeEvent ? event.aggregateId : undefined)
+			event instanceof EmployeeTypeChangedDomainEvent ||
+			event instanceof EmployeeReactivatedDomainEvent
+		) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {
@@ -73,7 +96,10 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			LocationUpdatedDomainEvent,
 			DirectivaUpdatedDomainEvent,
 			VicepresidenciaUpdatedDomainEvent,
-			VicepresidenciaEjecutivaUpdatedDomainEvent
+			VicepresidenciaEjecutivaUpdatedDomainEvent,
+			SiteUpdatedDomainEvent,
+			CityUpdatedDomainEvent,
+			RegionUpdatedDomainEvent
 		]
 	}
 }

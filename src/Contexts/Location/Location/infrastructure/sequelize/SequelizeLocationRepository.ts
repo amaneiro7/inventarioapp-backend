@@ -11,7 +11,7 @@ import { type LocationRepository } from '../../domain/repository/LocationReposit
 import { type LocationName } from '../../domain/valueObject/LocationName'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type LocationDto, type LocationPrimitives } from '../../domain/entity/Location.dto'
-import { type LocationCacheInvalidator } from '../../domain/repository/LocationCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeLocationRepository
@@ -22,7 +22,7 @@ import { type LocationCacheInvalidator } from '../../domain/repository/LocationC
  */
 export class SequelizeLocationRepository
 	extends SequelizeCriteriaConverter
-	implements LocationRepository, LocationCacheInvalidator
+	implements LocationRepository, CacheInvalidator
 {
 	private readonly cacheKey: string = 'locations'
 	private readonly cache: CacheService
@@ -155,7 +155,7 @@ export class SequelizeLocationRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements LocationCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<LocationId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<LocationId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

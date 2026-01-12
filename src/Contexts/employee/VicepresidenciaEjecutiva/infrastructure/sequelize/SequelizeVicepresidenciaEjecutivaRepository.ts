@@ -15,16 +15,16 @@ import {
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type VicepresidenciaEjecutivaRepository } from '../../domain/repository/VicepresidenciaEjecutivaRepository'
-import { type VicepresidenciaEjecutivaCacheInvalidator } from '../../domain/repository/VicepresidenciaEjecutivaCacheInvalidator'
 import { type VicepresidenciaEjecutivaId } from '../../domain/valueObject/VicepresidenciaEjecutivaId'
 import { type VicepresidenciaEjecutivaName } from '../../domain/valueObject/VicepresidenciaEjecutivaName'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @description Concrete implementation of the VicepresidenciaEjecutivaRepository using Sequelize.
  */
 export class SequelizeVicepresidenciaEjecutivaRepository
 	extends SequelizeCriteriaConverter
-	implements VicepresidenciaEjecutivaRepository, VicepresidenciaEjecutivaCacheInvalidator
+	implements VicepresidenciaEjecutivaRepository, CacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'vicepresidenciaEjecutiva'
 	private readonly cache: CacheService
@@ -155,7 +155,7 @@ export class SequelizeVicepresidenciaEjecutivaRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements VicepresidenciaEjecutivaCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<VicepresidenciaEjecutivaId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<VicepresidenciaEjecutivaId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

@@ -14,14 +14,26 @@ export class InvalidatePermissionGroupCacheOnPermissionGroupChanged implements D
 	}
 
 	async on(event: PermissionGroupCreatedDomainEvent | PermissionGroupUpdatedDomainEvent): Promise<void> {
-		const isPermissionGroupEvent =
-			event instanceof PermissionGroupCreatedDomainEvent || event instanceof PermissionGroupUpdatedDomainEvent
-
-		// Si es PermissionGroup, invalidamos específico
-		await this.invalidator.invalidate(isPermissionGroupEvent ? event.aggregateId : undefined)
+		if (event instanceof PermissionGroupUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof PermissionGroupCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.body.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {
-		return [PermissionGroupCreatedDomainEvent]
+		return [PermissionGroupCreatedDomainEvent, PermissionGroupUpdatedDomainEvent]
 	}
 }

@@ -5,7 +5,7 @@ import { SiteUpdatedDomainEvent } from '../../Site/domain/event/SiteUpdatedDomai
 import { RegionUpdatedDomainEvent } from '../../Region/domain/events/RegionUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type LocationCacheInvalidator } from '../domain/repository/LocationCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubscriber<
 	| LocationCreatedDomainEvent
@@ -14,9 +14,9 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
-	private readonly invalidator: LocationCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ locationRepository }: { locationRepository: LocationCacheInvalidator }) {
+	constructor({ locationRepository }: { locationRepository: CacheInvalidator }) {
 		this.invalidator = locationRepository
 	}
 
@@ -28,11 +28,23 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 	): Promise<void> {
-		const isLocationEvent =
-			event instanceof LocationCreatedDomainEvent || event instanceof LocationUpdatedDomainEvent
-
-		// Si es Location, invalidamos específico. Si es City/Site, invalidamos todo (undefined).
-		await this.invalidator.invalidate(isLocationEvent ? event.aggregateId : undefined)
+		if (event instanceof LocationUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof LocationCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

@@ -5,7 +5,7 @@ import { CityUpdatedDomainEvent } from '../../City/domain/event/CityUpdatedDomai
 import { CityCreatedDomainEvent } from '../../City/domain/event/CityCreatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type SiteCacheInvalidator } from '../domain/repository/SiteCacheInvalidator'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateSiteCacheOnSiteChanged implements DomainEventSubscriber<
 	| SiteCreatedDomainEvent
@@ -14,9 +14,9 @@ export class InvalidateSiteCacheOnSiteChanged implements DomainEventSubscriber<
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
-	private readonly invalidator: SiteCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ siteRepository }: { siteRepository: SiteCacheInvalidator }) {
+	constructor({ siteRepository }: { siteRepository: CacheInvalidator }) {
 		this.invalidator = siteRepository
 	}
 
@@ -28,8 +28,23 @@ export class InvalidateSiteCacheOnSiteChanged implements DomainEventSubscriber<
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 	): Promise<void> {
-		const isSiteEvent = event instanceof SiteCreatedDomainEvent || event instanceof SiteUpdatedDomainEvent
-		await this.invalidator.invalidate(isSiteEvent ? event.aggregateId : undefined)
+		if (event instanceof SiteUpdatedDomainEvent) {
+			const { changes } = event
+			const name = changes.find(change => change.field === 'name')?.oldValue as string
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name
+			})
+		} else if (event instanceof SiteCreatedDomainEvent) {
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				name: event.name
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

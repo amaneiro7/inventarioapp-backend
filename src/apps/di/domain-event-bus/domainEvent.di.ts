@@ -30,35 +30,48 @@ import { InvalidatePermissionGroupCacheOnPermissionGroupChanged } from '../../..
 import { InvalidatePermissionCacheOnPermissionChanged } from '../../../Contexts/AccessControl/Permission/application/InvalidatePermissionsCacheOnPermissionsChanged'
 
 export enum DomainEventDependencies {
+	// MonitorinService
 	RestartMonitoringServices = 'restartMonitoringServices',
+	CreateLocationMonitoringOnLocationCreated = 'createLocationMonitoringOnLocationCreated',
+	CreateDeviceMonitoringOnDeviceCreated = 'createDeviceMonitoringOnDeviceCreated',
+	InvalidateDeviceMonitoringCacheOnDeviceChanged = 'invalidateDeviceMonitoringCacheOnDeviceChanged',
+	InvalidateLocationMonitoringCacheOnLocationChanged = 'invalidateLocationMonitoringCacheOnLocationChanged',
+	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents',
+	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents',
+	// Bounded Context Access Control
+	InvalidateAccessPolicyCacheOnAccessPolicyChanged = 'invalidateAccessPolicyCacheOnAccessPolicyChanged',
+	InvalidatePermissionGroupCacheOnPermissionGroupChanged = 'invalidatePermissionGroupCacheOnPermissionGroupChanged',
+	InvalidatePermissionCacheOnPermissionChanged = 'invalidatePermissionCacheOnPermissionChanged',
+
+	// Brand
 	InvalidateBrandCacheOnBrandChanged = 'invalidateBrandCacheOnBrandChanged',
-	InvalidateModelSeriesCacheOnModelSeriesChanged = 'invalidateModelSeriesCacheOnModelSeriesChanged',
-	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged',
+	// Device
+	InvalidateDeviceCacheOnDeviceChanged = 'invalidateDeviceCacheOnDeviceChanged',
+	InvalidateProcessorCacheOnProcessorChanged = 'invalidateProcessorCacheOnProcessorChanged',
+	// History
+	CreateHistoryOnDeviceChanged = 'createHistoryOnDeviceChanged',
+	InvalidateHistoryCacheOnHistoryChanged = 'invalidateHistoryCacheOnHistoryChanged',
+
+	//Location
 	InvalidateCityCacheOnCityChanged = 'invalidateCityCacheOnCityChanged',
 	InvalidateSiteCacheOnSiteChanged = 'invalidateSiteCacheOnSiteChanged',
 	InvalidateRegionCacheOnRegionChanged = 'invalidateRegionCacheOnRegionChanged',
 	InvalidateLocationCacheOnLocationChanged = 'invalidateLocationCacheOnLocationChanged',
-	CreateLocationMonitoringOnLocationCreated = 'createLocationMonitoringOnLocationCreated',
-	InvalidateLocationMonitoringCacheOnLocationChanged = 'invalidateLocationMonitoringCacheOnLocationChanged',
-	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents',
+	// Employee
 	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged',
 	InvalidateCargoCacheOnCargoChanged = 'invalidateCargoCacheOnCargoChanged',
 	InvalidateDepartamentoCacheOnDepartamentoChanged = 'invalidateDepartamentoCacheOnDepartamentoChanged',
 	InvalidateVicepresidenciaCacheOnVicepresidenciaChanged = 'invalidateVicepresidenciaCacheOnVicepresidenciaChanged',
 	InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged = 'invalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged',
 	InvalidateEmployeeCacheOnEmployeeChanged = 'invalidateEmployeeCacheOnEmployeeChanged',
+	// User
 	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated',
-	InvalidateProcessorCacheOnProcessorChanged = 'invalidateProcessorCacheOnProcessorChanged',
-	InvalidateDeviceCacheOnDeviceChanged = 'invalidateDeviceCacheOnDeviceChanged',
-	CreateHistoryOnDeviceChanged = 'createHistoryOnDeviceChanged',
-	InvalidateHistoryCacheOnHistoryChanged = 'invalidateHistoryCacheOnHistoryChanged',
-	CreateDeviceMonitoringOnDeviceCreated = 'createDeviceMonitoringOnDeviceCreated',
-	InvalidateDeviceMonitoringCacheOnDeviceChanged = 'invalidateDeviceMonitoringCacheOnDeviceChanged',
-	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents',
-	InvalidateAppSettingsCacheOnAppSettingsChanged = 'invalidateAppSettingsCacheOnAppSettingsChanged',
-	InvalidateAccessPolicyCacheOnAccessPolicyChanged = 'invalidateAccessPolicyCacheOnAccessPolicyChanged',
-	InvalidatePermissionGroupCacheOnPermissionGroupChanged = 'invalidatePermissionGroupCacheOnPermissionGroupChanged',
-	InvalidatePermissionCacheOnPermissionChanged = 'invalidatePermissionCacheOnPermissionChanged'
+	//Model
+	InvalidateModelSeriesCacheOnModelSeriesChanged = 'invalidateModelSeriesCacheOnModelSeriesChanged',
+	//Shipment
+	InvalidateShipmentCacheOnShipmentChanged = 'invalidateShipmentCacheOnShipmentChanged',
+	// App Settings
+	InvalidateAppSettingsCacheOnAppSettingsChanged = 'invalidateAppSettingsCacheOnAppSettingsChanged'
 }
 
 /**

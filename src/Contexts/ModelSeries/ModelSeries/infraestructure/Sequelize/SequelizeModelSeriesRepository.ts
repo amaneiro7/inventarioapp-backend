@@ -19,10 +19,10 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesRepository } from '../../domain/repository/ModelSeriesRepository'
-import { type ModelSeriesCacheInvalidator } from '../../domain/repository/ModelSeriesCacheInvalidator'
 import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/dto/ModelSeries.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ModelSeriesId } from '../../domain/valueObject/ModelSeriesId'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeModelSeriesRepository
@@ -33,7 +33,7 @@ import { type ModelSeriesId } from '../../domain/valueObject/ModelSeriesId'
  */
 export class SequelizeModelSeriesRepository
 	extends SequelizeCriteriaConverter
-	implements ModelSeriesRepository, ModelSeriesCacheInvalidator
+	implements ModelSeriesRepository, CacheInvalidator
 {
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix: string = 'modelSeries'
@@ -57,7 +57,7 @@ export class SequelizeModelSeriesRepository
 		const options = this.convert(criteria)
 		const modelOption = ModelAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<ModelSeriesDto>>({
-			cacheKey: `${this.cacheKeyPrefix}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKeyPrefix}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
@@ -307,7 +307,7 @@ export class SequelizeModelSeriesRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements ModelSeriesCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<ModelSeriesId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<ModelSeriesId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

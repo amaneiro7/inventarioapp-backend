@@ -46,7 +46,7 @@ export class SequelizePermissionGroupRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<PermissionGroupDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = PermissionGroupAssociation.convertFilter(criteria, sequelizeOptions)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<PermissionGroupDto>>({
 			cacheKey,
@@ -197,7 +197,7 @@ export class SequelizePermissionGroupRepository
 	 * @description Invalidates all permissions-related cache entries.
 	 * Implements PermissionGroupCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<PermissionGroupId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<PermissionGroupId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

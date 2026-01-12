@@ -44,7 +44,7 @@ export class SequelizeAccessPolicyRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<AccessPolicyDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = AccessPolicyAssociation.convertFilter(criteria, sequelizeOptions)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<AccessPolicyDto>>({
 			cacheKey,
@@ -190,7 +190,7 @@ export class SequelizeAccessPolicyRepository
 	 * @description Invalidates all access policies-related cache entries.
 	 * Implements AccessPolicyCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<AccessPolicyId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<AccessPolicyId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

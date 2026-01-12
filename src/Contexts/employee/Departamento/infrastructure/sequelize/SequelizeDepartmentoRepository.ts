@@ -14,14 +14,14 @@ import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/entity/Departamento.dto'
 import { type DepartamentoRepository } from '../../domain/repository/DepartamentoRepository'
-import { type DepartamentoCacheInvalidator } from '../../domain/repository/DepartamentoCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @description Concrete implementation of the DepartamentoRepository using Sequelize.
  */
 export class SequelizeDepartamentoRepository
 	extends SequelizeCriteriaConverter
-	implements DepartamentoRepository, DepartamentoCacheInvalidator
+	implements DepartamentoRepository, CacheInvalidator
 {
 	private readonly cacheKeyPrefix = 'departamento'
 	private readonly cache: CacheService
@@ -153,7 +153,7 @@ export class SequelizeDepartamentoRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements DepartamentoCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<DepartamentoId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<DepartamentoId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }
