@@ -41,7 +41,7 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 		this.hasMany(models.Device, { as: 'device', foreignKey: 'categoryId' })
 		this.hasMany(models.DeviceHardDrive, { as: 'deviceHardDrive', foreignKey: 'categoryId' })
 		this.hasMany(models.DeviceComputer, { as: 'deviceComputer', foreignKey: 'categoryId' })
-		this.hasMany(models.DeviceMFP, { as: 'deviceMFP', foreignKey: 'categoryId' })
+		this.hasMany(models.DevicePrinter, { as: 'DevicePrinter', foreignKey: 'categoryId' })
 		// A category can have many model-specific sub-tables
 		this.hasMany(models.ModelComputer, { as: 'modelComputer', foreignKey: 'categoryId' })
 		this.hasMany(models.ModelLaptop, { as: 'modelLaptop', foreignKey: 'categoryId' })

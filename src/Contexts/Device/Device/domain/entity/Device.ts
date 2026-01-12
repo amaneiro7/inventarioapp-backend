@@ -18,6 +18,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type DevicePrimitives, type DeviceParams, type DeviceDto } from '../dto/Device.dto'
 import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
 import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
+import { type DeviceChangeFields } from '../dto/DeviceFields'
 
 /**
  * @class Device
@@ -66,6 +67,8 @@ export class Device extends AggregateRoot {
 		device.record(
 			new DeviceCreatedDomainEvent({
 				aggregateId: device.idValue,
+				serial: device.serialValue,
+				activo: device.activoValue,
 				device: device.toPrimitives()
 			})
 		)
@@ -80,7 +83,8 @@ export class Device extends AggregateRoot {
 		this.record(
 			new DeviceRemovedDomainEvent({
 				aggregateId: this.idValue,
-				serial: this.serialValue
+				serial: this.serialValue,
+				activo: this.activoValue
 			})
 		)
 	}
@@ -135,12 +139,9 @@ export class Device extends AggregateRoot {
 			typeOfSite: Primitives<TypeOfSiteId> | null
 			generic: Primitives<Generic>
 		},
-		validator: DeviceConsistencyValidator,
-		shouldRecordEvent: boolean = true
-	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
-		const oldDeviceEntity = structuredClone(this.toPrimitives())
-
+		validator: DeviceConsistencyValidator
+	): DeviceChangeFields {
+		const changes: DeviceChangeFields = []
 		if (params.activo !== undefined && this.activoValue !== params.activo) {
 			changes.push({
 				field: 'activo',
@@ -224,10 +225,6 @@ export class Device extends AggregateRoot {
 			generic: context.generic
 		})
 
-		if (changes.length > 0 && shouldRecordEvent) {
-			this.registerUpdateEvent({ changes, newEntity: this.toPrimitives(), oldEntity: oldDeviceEntity })
-		}
-
 		return changes
 	}
 
@@ -238,11 +235,13 @@ export class Device extends AggregateRoot {
 	}: {
 		newEntity: DevicePrimitives
 		oldEntity: DevicePrimitives
-		changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>
+		changes: DeviceChangeFields
 	}): void {
 		this.record(
 			new DeviceUpdatedDomainEvent({
 				aggregateId: this.idValue,
+				serial: this.serialValue,
+				activo: this.activoValue,
 				newEntity,
 				oldEntity,
 				changes

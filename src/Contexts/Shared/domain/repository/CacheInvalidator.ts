@@ -1,3 +1,3 @@
 export interface CacheInvalidator {
-	invalidate(id?: string): Promise<void>
+	invalidate(params?: string | Record<string, string | number | null | undefined>): Promise<void>
 }

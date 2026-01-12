@@ -12,7 +12,7 @@ import { AcceptedNullValueObject } from './AcceptedNullValueObjects'
  */
 export abstract class AcceptedNullStringValueObject extends AcceptedNullValueObject<string> {
 	constructor(value: string | null) {
-		super(value === null ? null : value.trim())
+		super(value ? value.trim() : null)
 	}
 
 	protected ensureLengthIsSmallerThan(maxLength: number): void {

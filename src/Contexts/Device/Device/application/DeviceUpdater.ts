@@ -125,11 +125,16 @@ export class DeviceUpdater {
 		const [context] = await Promise.all([this.getValidationContext(deviceEntity, params), Promise.all(validations)])
 
 		// 4. Actualizar entidad (Síncrono y Puro)
+		const oldDeviceEntity = structuredClone(deviceEntity.toPrimitives())
 		const changes = deviceEntity.update(params, context, this.deviceConsistencyValidator)
 
 		if (changes.length > 0) {
-			const devicePrimitives = deviceEntity.toPrimitives()
-			await this.deviceRepository.save(devicePrimitives)
+			deviceEntity.registerUpdateEvent({
+				changes,
+				newEntity: deviceEntity.toPrimitives(),
+				oldEntity: oldDeviceEntity
+			})
+			await this.deviceRepository.save(deviceEntity.toPrimitives())
 			const events = deviceEntity.pullDomainEvents()
 			events.forEach(event => Object.assign(event, { userId: user.sub }))
 			await this.eventBus.publish(events)

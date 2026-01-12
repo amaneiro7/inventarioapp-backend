@@ -9,13 +9,13 @@ import { BrandUpdatedDomainEvent } from '../../../Brand/domain/event/BrandUpdate
 import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/SiteUpdatedDomainEvent'
 import { DeviceCreatedDomainEvent } from '../domain/event/DeviceCreatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../domain/event/DeviceUpdatedDomainEvent'
-import { DeviceCacheInvalidator } from '../domain/repository/DeviceCacheInvalidator'
 import { DeviceRemovedDomainEvent } from '../domain/event/DeviceRemovedDomainEvent'
 import { EmployeeUpdatedDomainEvent } from '../../../employee/Employee/domain/event/EmployeeUpdatedDomainEvent'
 import { LocationUpdatedDomainEvent } from '../../../Location/Location/domain/event/LocationUpdatedDomainEvent'
 import { ProcessorUpdatedDomainEvent } from '../../../Features/Processor/domain/event/ProcessorUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
+import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscriber<
 	| DeviceCreatedDomainEvent
@@ -34,9 +34,9 @@ export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscrib
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 > {
-	private readonly invalidator: DeviceCacheInvalidator
+	private readonly invalidator: CacheInvalidator
 
-	constructor({ deviceRepository }: { deviceRepository: DeviceCacheInvalidator }) {
+	constructor({ deviceRepository }: { deviceRepository: CacheInvalidator }) {
 		this.invalidator = deviceRepository
 	}
 
@@ -63,8 +63,18 @@ export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscrib
 			event instanceof DeviceUpdatedDomainEvent ||
 			event instanceof DeviceRemovedDomainEvent
 
-		// Si es Device, invalidamos específico
-		await this.invalidator.invalidate(isDeviceEvent ? event.aggregateId : undefined)
+		if (isDeviceEvent) {
+			const { serial, activo } = event as DeviceCreatedDomainEvent | DeviceUpdatedDomainEvent
+
+			await this.invalidator.invalidate({
+				id: event.aggregateId,
+				key: event.aggregateId,
+				serial,
+				activo
+			})
+		} else {
+			await this.invalidator.invalidate()
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {

@@ -195,7 +195,7 @@ export class DeviceAssociation {
 		}
 
 		const mfpInclude: IncludeOptions = {
-			association: 'mfp',
+			association: 'printer',
 			required: mainCategoryId.includes(MainCategoryList.PRINTERS)
 		}
 		const hardDriveInclude: IncludeOptions = {

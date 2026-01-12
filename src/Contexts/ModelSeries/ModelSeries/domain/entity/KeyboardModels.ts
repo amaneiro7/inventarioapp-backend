@@ -7,9 +7,12 @@ import { Generic } from '../valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { HasFingerPrintReader } from '../valueObject/HasFingerPrintReader'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type KeyboardModelsParams, type KeyboardModelsPrimitives } from '../dto/KeyboardModels.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 
 /**
  * @description Represents a keyboard model, extending the base ModelSeries class.
@@ -28,7 +31,10 @@ export class KeyboardModels extends ModelSeries {
 	}
 
 	static create(params: KeyboardModelsParams): KeyboardModels {
-		return new KeyboardModels(
+		if (!this.isKeyboardCategory({ categoryId: params.categoryId })) {
+			throw new ModelSeriesCategoryMismatchError('Teclado')
+		}
+		const model = new KeyboardModels(
 			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
@@ -37,6 +43,15 @@ export class KeyboardModels extends ModelSeries {
 			new InputTypeId(params.inputTypeId),
 			new HasFingerPrintReader(params.hasFingerPrintReader)
 		)
+		model.record(
+			new ModelSeriesCreatedDomainEvent({
+				aggregateId: model.idValue,
+				name: model.nameValue,
+				categoryId: model.categoryValue,
+				brandId: model.brandValue
+			})
+		)
+		return model
 	}
 
 	static isKeyboardCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -64,6 +79,33 @@ export class KeyboardModels extends ModelSeries {
 			inputTypeId: this.inputTypeValue,
 			hasFingerPrintReader: this.hasFingerPrintReaderValue
 		}
+	}
+
+	update(params: Partial<KeyboardModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+
+		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
+			changes.push({
+				field: 'inputTypeId',
+				oldValue: this.inputTypeValue,
+				newValue: params.inputTypeId
+			})
+			this.updateInputType(params.inputTypeId)
+		}
+
+		if (
+			params.hasFingerPrintReader !== undefined &&
+			this.hasFingerPrintReaderValue !== params.hasFingerPrintReader
+		) {
+			this.updateHasFingerPrintReader(params.hasFingerPrintReader)
+			changes.push({
+				field: 'hasFingerPrintReader',
+				oldValue: this.hasFingerPrintReaderValue,
+				newValue: params.hasFingerPrintReader
+			})
+		}
+
+		return changes
 	}
 
 	get inputTypeValue(): Primitives<InputTypeId> {

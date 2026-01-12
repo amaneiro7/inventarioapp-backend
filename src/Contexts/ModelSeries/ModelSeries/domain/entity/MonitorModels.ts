@@ -9,9 +9,12 @@ import { HasDVI } from '../valueObject/HasDVI'
 import { HasHDMI } from '../valueObject/HasHDMI'
 import { HasVGA } from '../valueObject/HasVGA'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type MonitorModelsParams, type MonitorModelsPrimitives } from '../dto/MonitoModels.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 
 /**
  * @description Represents a monitor model, extending the base ModelSeries class.
@@ -33,9 +36,9 @@ export class MonitorModels extends ModelSeries {
 
 	static create(params: MonitorModelsParams): MonitorModels {
 		if (!this.isMonitorCategory({ categoryId: params.categoryId })) {
-			throw new Error('Invalid category for monitor model')
+			throw new ModelSeriesCategoryMismatchError('Monitor')
 		}
-		return new MonitorModels(
+		const model = new MonitorModels(
 			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
@@ -46,6 +49,16 @@ export class MonitorModels extends ModelSeries {
 			new HasHDMI(params.hasHDMI),
 			new HasVGA(params.hasVGA)
 		)
+
+		model.record(
+			new ModelSeriesCreatedDomainEvent({
+				aggregateId: model.idValue,
+				name: model.nameValue,
+				categoryId: model.categoryValue,
+				brandId: model.brandValue
+			})
+		)
+		return model
 	}
 
 	static isMonitorCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -93,6 +106,48 @@ export class MonitorModels extends ModelSeries {
 
 	get hasVGAValue(): Primitives<HasVGA> {
 		return this.hasVGA.value
+	}
+
+	update(params: Partial<MonitorModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+
+		if (params.screenSize !== undefined && this.screenSizeValue !== params.screenSize) {
+			changes.push({
+				field: 'screenSize',
+				oldValue: this.screenSizeValue,
+				newValue: params.screenSize
+			})
+			this.updateScreenSize(params.screenSize)
+		}
+
+		if (params.hasDVI !== undefined && this.hasDVIValue !== params.hasDVI) {
+			changes.push({
+				field: 'hasDVI',
+				oldValue: this.hasDVIValue,
+				newValue: params.hasDVI
+			})
+			this.updateHasDVI(params.hasDVI)
+		}
+
+		if (params.hasHDMI !== undefined && this.hasHDMIValue !== params.hasHDMI) {
+			changes.push({
+				field: 'hasHDMI',
+				oldValue: this.hasHDMIValue,
+				newValue: params.hasHDMI
+			})
+			this.updateHasHDMI(params.hasHDMI)
+		}
+
+		if (params.hasVGA !== undefined && this.hasVGAValue !== params.hasVGA) {
+			changes.push({
+				field: 'hasVGA',
+				oldValue: this.hasVGAValue,
+				newValue: params.hasVGA
+			})
+			this.updateHasVGA(params.hasVGA)
+		}
+
+		return changes
 	}
 
 	updateScreenSize(newValue: Primitives<MonitorScreenSize>): void {

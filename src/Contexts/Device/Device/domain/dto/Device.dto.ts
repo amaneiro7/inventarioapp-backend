@@ -19,7 +19,7 @@ import { type ModelSeriesId } from '../../../../ModelSeries/ModelSeries/domain/v
 import { type EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { type DeviceHardDriveDto } from './HardDrive.dto'
-import { type DeviceMFPDto } from './MFP.dto'
+import { type DevicePrinterDto } from './Printer.dto'
 
 /**
  * @interface Device
@@ -52,6 +52,8 @@ export type DevicePrimitives = Device
  */
 export type DeviceParams = Omit<Device, 'id'>
 
+export type DeviceFields = keyof Omit<DevicePrimitives, 'id'>
+
 /**
  * @type DeviceDto
  * @description Represents a Data Transfer Object (DTO) for the Device entity,
@@ -66,7 +68,7 @@ export type DeviceDto = Device & {
 	location: LocationDto
 	computer: DeviceComputerDto | null
 	hardDrive: DeviceHardDriveDto | null
-	mfp: DeviceMFPDto | null
+	printer: DevicePrinterDto | null
 	history: HistoryDto[]
 	updatedAt: Date
 	createdAt: Date

@@ -1,7 +1,7 @@
 import { Device } from './Device'
 import { DeviceComputer } from './Computer'
 import { DeviceHardDrive } from './HardDrive'
-import { MFP } from './MFP'
+import { DevicePrinter } from './Printer'
 import { ComputerConsistencyValidator } from '../service/ComputerConsistencyValidator'
 import { ProcessorExistenceChecker } from '../../../../Features/Processor/domain/service/ProcessorExistanceChecker'
 import { HardDriveCapacityExistenceChecker } from '../../../../Features/HardDrive/HardDriveCapacity/domain/service/HardDriveCapacityExistanceChecker'
@@ -18,7 +18,7 @@ import { type ProcessorRepository } from '../../../../Features/Processor/domain/
 import { type DeviceDto, type DeviceParams } from '../dto/Device.dto'
 import { type DeviceComputerParams } from '../dto/Computer.dto'
 import { type DeviceHardDriveParams } from '../dto/HardDrive.dto'
-import { type DeviceMFPParams } from '../dto/MFP.dto'
+import { type DevicePrinterParams } from '../dto/Printer.dto'
 
 export class DeviceFactory {
 	private readonly processorExistenceChecker: ProcessorExistenceChecker
@@ -58,8 +58,8 @@ export class DeviceFactory {
 		if (primitives.hardDrive) {
 			return DeviceHardDrive.fromPrimitives(primitives)
 		}
-		if (primitives.mfp) {
-			return MFP.fromPrimitives(primitives)
+		if (primitives.printer) {
+			return DevicePrinter.fromPrimitives(primitives)
 		}
 
 		return Device.fromPrimitives(primitives)
@@ -74,8 +74,8 @@ export class DeviceFactory {
 		if (DeviceHardDrive.isHardDriveCategory({ categoryId })) {
 			return this.createHardDrive(params as DeviceHardDriveParams)
 		}
-		if (MFP.isMFPCategory({ categoryId })) {
-			return MFP.create(params as DeviceMFPParams)
+		if (DevicePrinter.isPrinterCategory({ categoryId })) {
+			return DevicePrinter.create(params as DevicePrinterParams)
 		}
 
 		return Device.create(params)

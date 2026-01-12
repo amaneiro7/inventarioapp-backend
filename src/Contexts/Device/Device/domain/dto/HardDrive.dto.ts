@@ -22,6 +22,7 @@ export interface DeviceHardDrive extends Device {
  */
 export type DeviceHardDrivePrimitives = Device & DeviceHardDrive
 
+export type DeviceHardDriveFields = keyof Omit<DeviceHardDrivePrimitives, 'id'>
 /**
  * @type DeviceHardDriveParams
  * @description Represents the parameters required to create a new hard drive device.

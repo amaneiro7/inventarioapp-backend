@@ -2,6 +2,7 @@ import { Device } from './Device'
 import { DeviceId } from '../valueObject/DeviceId'
 import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { CategoryDefault } from '../../../../Category/Category/domain/CategoryDefaultValues'
 import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { HardDriveCapacityId } from '../../../../Features/HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
@@ -22,9 +23,8 @@ import { ComputerMemoryRam } from '../valueObject/ComputerMemoryRam'
 import { ComputerName } from '../valueObject/ComputerName'
 import { DeviceIPAddress } from '../valueObject/DeviceIPAddress'
 import { MACAddress } from '../valueObject/MACAddress'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { DeviceCategoryMismatchError } from '../errors/DeviceCategoryMismatchError'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
-import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
 import { ComputerConsistencyValidator } from '../service/ComputerConsistencyValidator'
 import { DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
 import { ComputerDoesNotExistError } from '../errors/ComputerDoesNotExistError'
@@ -33,6 +33,7 @@ import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueOb
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceComputerParams, type DeviceComputerPrimitives } from '../dto/Computer.dto'
 import { type DeviceDto } from '../dto/Device.dto'
+import { type DeviceChangeFields } from '../dto/DeviceFields'
 
 /**
  * @description Represents a computer device, extending the base Device class with specific properties.
@@ -75,7 +76,9 @@ export class DeviceComputer extends Device {
 			stockNumber
 		)
 		if (!DeviceComputer.isComputerCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('Este dispositivo no es de tipo computadora.')
+			throw new DeviceCategoryMismatchError(
+				`${CategoryDefault.COMPUTERS}, ${CategoryDefault.LAPTOPS}, ${CategoryDefault.ALLINONE} o ${CategoryDefault.SERVERS}`
+			)
 		}
 	}
 
@@ -178,10 +181,11 @@ export class DeviceComputer extends Device {
 			generic: Primitives<Generic>
 		},
 		validator: DeviceConsistencyValidator
-	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
-		const oldDeviceEntity = structuredClone(this.toPrimitives())
+	): DeviceChangeFields {
+		const changes: DeviceChangeFields = []
 		const computerConsistencyValidator = new ComputerConsistencyValidator()
+
+		super.update(params, context, validator)
 
 		if (params.computerName !== undefined && this.computerNameValue !== params.computerName) {
 			changes.push({ field: 'computerName', oldValue: this.computerNameValue, newValue: params.computerName })
@@ -251,26 +255,10 @@ export class DeviceComputer extends Device {
 			this.updateIPAddress(params.ipAddress)
 		}
 
-		// Actualizar campos base y validar consistencia general
-		const baseChanges = super.update(params, context, validator, false)
-
 		// Validar consistencia específica de computadoras
 		computerConsistencyValidator.validate(this)
 
-		const allChanges = [...changes, ...baseChanges]
-
-		if (allChanges.length > 0) {
-			this.record(
-				new DeviceUpdatedDomainEvent({
-					aggregateId: this.idValue,
-					newEntity: this.toPrimitives(),
-					oldEntity: oldDeviceEntity,
-					changes: allChanges
-				})
-			)
-		}
-
-		return allChanges
+		return changes
 	}
 
 	// Update methods

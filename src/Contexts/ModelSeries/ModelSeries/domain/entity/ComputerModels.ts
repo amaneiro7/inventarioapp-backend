@@ -19,6 +19,8 @@ import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomain
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ComputerModelsParams, type ComputerModelsPrimitives } from '../dto/ComputerModels.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 /**
  * @description Represents a computer model, extending the base ModelSeries class.
  */
@@ -44,6 +46,9 @@ export class ComputerModels extends ModelSeries {
 	}
 
 	static create(params: ComputerModelsParams): ComputerModels {
+		if (!this.isComputerCategory({ categoryId: params.categoryId })) {
+			throw new ModelSeriesCategoryMismatchError('Computadora, AllInOne o Servidor')
+		}
 		const processors = new Set<ProcessorId>(params.processors.map(processorId => new ProcessorId(processorId)))
 		const model = new ComputerModels(
 			ModelSeriesId.random(),
@@ -116,6 +121,106 @@ export class ComputerModels extends ModelSeries {
 			hasHDMI: this.hasHDMIValue,
 			hasVGA: this.hasVGAValue
 		}
+	}
+
+	update(params: Partial<ComputerModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+		super.update(params)
+
+		if (params.memoryRamTypeId && params.memoryRamTypeId !== this.memoryRamTypeValue) {
+			changes.push({
+				field: 'memoryRamTypeId',
+				oldValue: this.memoryRamTypeValue,
+				newValue: params.memoryRamTypeId
+			})
+			this.updateMemoryRamTypeId(params.memoryRamTypeId)
+		}
+
+		if (params.memoryRamSlotQuantity && params.memoryRamSlotQuantity !== this.memoryRamSlotQuantityValue) {
+			changes.push({
+				field: 'memoryRamSlotQuantity',
+				oldValue: this.memoryRamSlotQuantityValue,
+				newValue: params.memoryRamSlotQuantity
+			})
+			this.updateMemoryRamSlotQuantity(params.memoryRamSlotQuantity)
+		}
+		if (params.hasBluetooth !== undefined && params.hasBluetooth !== this.hasBluetoothValue) {
+			changes.push({
+				field: 'hasBluetooth',
+				oldValue: this.hasBluetoothValue,
+				newValue: params.hasBluetooth
+			})
+			this.updateHasBluetooth(params.hasBluetooth)
+		}
+		if (params.hasWifiAdapter !== undefined && params.hasWifiAdapter !== this.hasWifiAdapterValue) {
+			changes.push({
+				field: 'hasWifiAdapter',
+				oldValue: this.hasWifiAdapterValue,
+				newValue: params.hasWifiAdapter
+			})
+			this.updateHasWifiAdapter(params.hasWifiAdapter)
+		}
+		if (params.hasDVI !== undefined && params.hasDVI !== this.hasDVIValue) {
+			changes.push({
+				field: 'hasDVI',
+				oldValue: this.hasDVIValue,
+				newValue: params.hasDVI
+			})
+			this.updateHasDVI(params.hasDVI)
+		}
+		if (params.hasHDMI !== undefined && params.hasHDMI !== this.hasHDMIValue) {
+			changes.push({
+				field: 'hasHDMI',
+				oldValue: this.hasHDMIValue,
+				newValue: params.hasHDMI
+			})
+			this.updateHasHDMI(params.hasHDMI)
+		}
+		if (params.hasVGA !== undefined && params.hasVGA !== this.hasVGAValue) {
+			changes.push({
+				field: 'hasVGA',
+				oldValue: this.hasVGAValue,
+				newValue: params.hasVGA
+			})
+			this.updateHasVGA(params.hasVGA)
+		}
+
+		// Actualizar procesadores si vienen en los params
+		if (params.processors) {
+			const currentProcessorIds = this.processorsValue
+			const newProcessorIds = params.processors
+			const uniqueProcessorsIds = Array.from(new Set(newProcessorIds))
+
+			const newIdSet = new Set(uniqueProcessorsIds)
+			const currentIdSet = new Set(currentProcessorIds)
+			let processorsChanged = false
+
+			// Añadir procesadores nuevos
+			for (const id of newIdSet) {
+				if (!currentIdSet.has(id)) {
+					this.addProcessor(new ProcessorId(id))
+					processorsChanged = true
+				}
+			}
+
+			// Eliminar procesadores que ya no están
+			for (const id of currentIdSet) {
+				if (!newIdSet.has(id)) {
+					this.removeProcessor(new ProcessorId(id))
+					processorsChanged = true
+				}
+			}
+
+			if (processorsChanged) {
+				changes.push({
+					field: 'processors',
+					oldValue: currentProcessorIds,
+					newValue: params.processors
+				})
+			}
+		}
+
+		return changes
 	}
 
 	get memoryRamTypeValue(): Primitives<MemoryRamTypeId> {

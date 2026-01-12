@@ -15,9 +15,11 @@ import { HasVGA } from '../valueObject/HasVGA'
 import { BatteryModelName } from '../valueObject/BatteryModelName'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LaptopModelsParams, type LaptopModelsPrimitives } from '../dto/LaptopsModels.dto'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
 
 /**
  * @description Represents a laptop model, extending the ComputerModels class.
@@ -57,6 +59,9 @@ export class LaptopsModels extends ComputerModels {
 	}
 
 	static create(params: LaptopModelsParams): LaptopsModels {
+		if (!this.isLaptopCategory({ categoryId: params.categoryId })) {
+			throw new ModelSeriesCategoryMismatchError('Laptop')
+		}
 		const processors = new Set<ProcessorId>(params.processors.map(processorId => new ProcessorId(processorId)))
 		const model = new LaptopsModels(
 			ModelSeriesId.random(),
@@ -119,6 +124,22 @@ export class LaptopsModels extends ComputerModels {
 			...super.toPrimitives(),
 			batteryModel: this.batteryModelValue
 		}
+	}
+
+	update(params: Partial<LaptopModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+		super.update(params)
+
+		if (params.batteryModel !== undefined && this.batteryModelValue !== params.batteryModel) {
+			changes.push({
+				field: 'batteryModel',
+				oldValue: this.batteryModelValue,
+				newValue: params.batteryModel
+			})
+			this.updateBatteryModel(params.batteryModel)
+		}
+
+		return changes
 	}
 
 	get batteryModelValue(): Primitives<BatteryModelName> {

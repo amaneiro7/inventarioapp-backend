@@ -6,9 +6,12 @@ import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { Generic } from '../../../ModelSeries/domain/valueObject/Generic'
 import { InputTypeId } from '../../../InputType/domain/valueObject/InputTypeId'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type MouseModelsPrimitives, type MouseModelsParams } from '../dto/MouseModels.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 
 /**
  * @description Represents a mouse model, extending the base ModelSeries class.
@@ -26,7 +29,10 @@ export class MouseModels extends ModelSeries {
 	}
 
 	static create(params: MouseModelsParams): MouseModels {
-		return new MouseModels(
+		if (!this.isMouseCategory({ categoryId: params.categoryId })) {
+			throw new ModelSeriesCategoryMismatchError('Mouse')
+		}
+		const model = new MouseModels(
 			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
@@ -34,6 +40,16 @@ export class MouseModels extends ModelSeries {
 			new Generic(params.generic),
 			new InputTypeId(params.inputTypeId)
 		)
+
+		model.record(
+			new ModelSeriesCreatedDomainEvent({
+				aggregateId: model.idValue,
+				name: model.nameValue,
+				categoryId: model.categoryValue,
+				brandId: model.brandValue
+			})
+		)
+		return model
 	}
 
 	static isMouseCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -59,6 +75,21 @@ export class MouseModels extends ModelSeries {
 			...super.toPrimitives(),
 			inputTypeId: this.inputTypeValue
 		}
+	}
+
+	update(params: Partial<MouseModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+
+		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
+			changes.push({
+				field: 'inputTypeId',
+				oldValue: this.inputTypeValue,
+				newValue: params.inputTypeId
+			})
+			this.updateInputType(params.inputTypeId)
+		}
+
+		return changes
 	}
 
 	get inputTypeValue(): Primitives<InputTypeId> {

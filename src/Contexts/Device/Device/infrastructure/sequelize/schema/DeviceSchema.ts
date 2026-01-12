@@ -22,7 +22,7 @@ import { type EmployeeId } from '../../../../../employee/Employee/domain/valueOb
 import { type LocationId } from '../../../../../Location/Location/domain/valueObject/LocationId'
 import { type DeviceComputerDto } from '../../../domain/dto/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../domain/dto/HardDrive.dto'
-import { type DeviceMFPDto } from '../../../domain/dto/MFP.dto'
+import { type DevicePrinterDto } from '../../../domain/dto/Printer.dto'
 import { type StatusId } from '../../../../Status/domain/valueObject/StatusId'
 
 /**
@@ -42,7 +42,7 @@ export class DeviceModel
 			| 'location'
 			| 'computer'
 			| 'hardDrive'
-			| 'mfp'
+			| 'printer'
 			| 'history'
 			| 'updatedAt'
 			| 'createdAt'
@@ -69,7 +69,7 @@ export class DeviceModel
 	declare location: LocationDto
 	declare computer: DeviceComputerDto | null
 	declare hardDrive: DeviceHardDriveDto | null
-	declare mfp: DeviceMFPDto | null
+	declare printer: DevicePrinterDto | null
 	declare history: HistoryDto[]
 	declare updatedAt: Date
 	declare createdAt: Date
@@ -90,7 +90,7 @@ export class DeviceModel
 		this.hasOne(models.DeviceHardDrive, { as: 'hardDrive', foreignKey: 'deviceId' })
 		this.hasOne(models.DeviceComputer, { as: 'computer', foreignKey: 'deviceId' })
 		this.hasOne(models.DeviceMonitoring, { as: 'deviceMonitoring', foreignKey: 'deviceId' })
-		this.hasOne(models.DeviceMFP, { as: 'mfp', foreignKey: 'deviceId' })
+		this.hasOne(models.DevicePrinter, { as: 'printer', foreignKey: 'deviceId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'deviceId' })
 		this.hasMany(models.ShipmentDevice, { as: 'shipmentDevice', foreignKey: 'deviceId' })
 	}
@@ -106,7 +106,7 @@ export class DeviceModel
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
 				activo: { type: DataTypes.STRING, unique: true, allowNull: true },
-				serial: { type: DataTypes.STRING, unique: true, allowNull: true },
+				serial: { type: DataTypes.STRING, allowNull: true },
 				statusId: { type: DataTypes.STRING, allowNull: false, field: 'status_id' },
 				categoryId: { type: DataTypes.STRING, allowNull: false, field: 'category_id' },
 				brandId: { type: DataTypes.UUID, allowNull: false, field: 'brand_id' },
@@ -117,9 +117,10 @@ export class DeviceModel
 					allowNull: true,
 					field: 'location_id',
 					validate: {
-						onlyNullIf(value: Primitives<LocationId>) {
-							if (this.statusId !== StatusOptions.DESINCORPORADO && value === null) {
-								throw new Error('La ubicación solo puede ser nula si el estatus es "Desincorporado".')
+						onlyNullIf(value: Primitives<LocationId> | null) {
+							// Si el estatus NO es desincorporado y no hay ubicación, lanzamos error
+							if (this.statusId !== StatusOptions.DESINCORPORADO && !value) {
+								throw new Error('Un equipo activo o en stock debe tener una ubicación asignada.')
 							}
 						}
 					}
@@ -134,13 +135,16 @@ export class DeviceModel
 				underscored: true,
 				sequelize,
 				indexes: [
-					{ unique: true, fields: ['serial'], name: 'device_serial_uk' },
-					{ fields: ['statusId'], name: 'device_status_idx' },
-					{ fields: ['categoryId'], name: 'device_category_idx' },
-					{ fields: ['brandId'], name: 'device_brand_idx' },
-					{ fields: ['modelId'], name: 'device_model_idx' },
-					{ fields: ['employeeId'], name: 'device_employee_idx' },
-					{ fields: ['locationId'], name: 'device_location_idx' }
+					{ unique: true, fields: ['serial', 'brand_id'], name: 'unique_device_serial_per_brand' },
+					{ fields: ['statusId'], name: 'device_status_id_idx' },
+					{ fields: ['categoryId'], name: 'device_category_id_idx' },
+					{ fields: ['brandId'], name: 'device_brand_id_idx' },
+					{ fields: ['modelId'], name: 'device_model_id_idx' },
+					{ fields: ['employeeId'], name: 'device_employee_id_idx' },
+					{ fields: ['locationId'], name: 'device_location_id_idx' },
+					// OPTIMIZACIÓN: Índices compuestos para filtros frecuentes en dashboards
+					{ fields: ['status_id', 'category_id'], name: 'device_status_category_id_idx' },
+					{ fields: ['location_id', 'status_id'], name: 'device_location_status_id_idx' }
 				]
 			}
 		)

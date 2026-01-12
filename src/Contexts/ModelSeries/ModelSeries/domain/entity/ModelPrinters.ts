@@ -6,9 +6,12 @@ import { BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { Generic } from '../valueObject/Generic'
 import { CartridgeModel } from '../valueObject/CartridgeModel'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
+import { ModelSeriesCreatedDomainEvent } from '../event/ModelSeriesCreatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type PrinteModelsParams, type PrinteModelsPrimitives } from '../dto/ModelPrinters.dto'
 import { type ModelSeriesDto } from '../dto/ModelSeries.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
+import { ModelSeriesCategoryMismatchError } from '../errors/ModelSeriesCategoryMismatchError'
 
 /**
  * @description Represents a printer model, extending the base ModelSeries class.
@@ -27,9 +30,9 @@ export class ModelPrinters extends ModelSeries {
 
 	static create(params: PrinteModelsParams): ModelPrinters {
 		if (!this.isPrinterCategory({ categoryId: params.categoryId })) {
-			throw new Error('La categoría debe ser de tipo impresora.')
+			throw new ModelSeriesCategoryMismatchError('Impresora')
 		}
-		return new ModelPrinters(
+		const model = new ModelPrinters(
 			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
@@ -37,6 +40,15 @@ export class ModelPrinters extends ModelSeries {
 			new Generic(params.generic),
 			new CartridgeModel(params.cartridgeModel)
 		)
+		model.record(
+			new ModelSeriesCreatedDomainEvent({
+				aggregateId: model.idValue,
+				name: model.nameValue,
+				categoryId: model.categoryValue,
+				brandId: model.brandValue
+			})
+		)
+		return model
 	}
 
 	static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
@@ -63,6 +75,21 @@ export class ModelPrinters extends ModelSeries {
 			...super.toPrimitives(),
 			cartridgeModel: this.cartridgeModelValue
 		}
+	}
+
+	update(params: Partial<PrinteModelsParams>): ModelsFields {
+		const changes: ModelsFields = []
+
+		if (params.cartridgeModel !== undefined && this.cartridgeModelValue !== params.cartridgeModel) {
+			changes.push({
+				field: 'cartridgeModel',
+				oldValue: this.cartridgeModelValue,
+				newValue: params.cartridgeModel
+			})
+			this.updateCartridgeModel(params.cartridgeModel)
+		}
+
+		return changes
 	}
 
 	get cartridgeModelValue(): Primitives<CartridgeModel> {

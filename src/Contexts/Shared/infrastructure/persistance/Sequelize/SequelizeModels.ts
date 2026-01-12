@@ -41,7 +41,7 @@ import { type KeyboardModelsDto } from '../../../../ModelSeries/ModelSeries/doma
 import { type MouseModelsDto } from '../../../../ModelSeries/ModelSeries/domain/dto/MouseModels.dto'
 import { type DeviceComputerDto } from '../../../../Device/Device/domain/dto/Computer.dto'
 import { type DeviceHardDriveDto } from '../../../../Device/Device/domain/dto/HardDrive.dto'
-import { type DeviceMFPDto } from '../../../../Device/Device/domain/dto/MFP.dto'
+import { type DevicePrinterDto } from '../../../../Device/Device/domain/dto/Printer.dto'
 import { type HistoryDto } from '../../../../History/domain/entity/History.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
@@ -59,7 +59,7 @@ export type SequelizeModels = Sequelize['models'] & {
 	Device: ModelStatic<Model<DeviceDto>>
 	DeviceComputer: ModelStatic<Model<DeviceComputerDto>>
 	DeviceHardDrive: ModelStatic<Model<DeviceHardDriveDto>>
-	DeviceMFP: ModelStatic<Model<DeviceMFPDto>>
+	DevicePrinter: ModelStatic<Model<DevicePrinterDto>>
 	Processor: ModelStatic<Model<ProcessorDto>>
 	MemoryRamType: ModelStatic<Model<MemoryRamTypeDto>>
 	HardDriveCapacity: ModelStatic<Model<HardDriveCapacityDto>>

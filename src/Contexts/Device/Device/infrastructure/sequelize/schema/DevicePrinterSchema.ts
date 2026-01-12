@@ -4,22 +4,26 @@ import { type DeviceIPAddress } from '../../../domain/valueObject/DeviceIPAddres
 import { type CategoryId } from '../../../../../Category/Category/domain/valueObject/CategoryId'
 import { type DeviceId } from '../../../domain/valueObject/DeviceId'
 import { type Primitives } from '../../../../../Shared/domain/value-object/Primitives'
-import { type DeviceMFPPrimitives } from '../../../domain/dto/MFP.dto'
+import { type DevicePrinterPrimitives } from '../../../domain/dto/Printer.dto'
+import { type SequelizeModels } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
-interface MFPCreationAttributes extends Pick<DeviceMFPPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
+interface DevicePrinterCreationAttributes extends Pick<DevicePrinterPrimitives, 'id' | 'categoryId' | 'ipAddress'> {
 	deviceId: Primitives<DeviceId>
 }
 
 /**
- * @description Sequelize model for the `DeviceMFP` entity.
+ * @description Sequelize model for the `DevicePrinter` entity.
  */
-export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPCreationAttributes {
+export class DevicePrinterModel
+	extends Model<DevicePrinterCreationAttributes>
+	implements DevicePrinterCreationAttributes
+{
 	declare deviceId: Primitives<DeviceId>
 	declare id: Primitives<DeviceId>
 	declare categoryId: Primitives<CategoryId>
 	declare ipAddress: Primitives<DeviceIPAddress>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Device, { as: 'device', foreignKey: 'deviceId' })
 		this.belongsTo(models.Category, { as: 'category', foreignKey: 'categoryId' })
 	}
@@ -28,11 +32,27 @@ export class DeviceMFPModel extends Model<MFPCreationAttributes> implements MFPC
 		this.init(
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
-				categoryId: { type: DataTypes.STRING, allowNull: false, validate: { isIn: [[CategoryValues.MFP]] } },
+				categoryId: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					validate: { isIn: [[CategoryValues.MFP, CategoryValues.LASERPRINTER, CategoryValues.INKPRINTER]] }
+				},
 				deviceId: { type: DataTypes.UUID, allowNull: false },
 				ipAddress: { type: DataTypes.INET, allowNull: true, validate: { isIPv4: true } }
 			},
-			{ modelName: 'DeviceMFP', tableName: 'device_mfp', timestamps: true, underscored: true, sequelize }
+			{
+				modelName: 'DevicePrinter',
+				tableName: 'device_printers',
+				timestamps: true,
+				underscored: true,
+				sequelize,
+				indexes: [
+					// OPTIMIZACIÓN: Vital para el JOIN con la tabla devices
+					{ fields: ['device_id'], name: 'device_printer_device_id_idx' },
+					// OPTIMIZACIÓN: Para búsquedas rápidas por IP
+					{ fields: ['ip_address'], name: 'device_printer_ip_address_idx' }
+				]
+			}
 		)
 	}
 }

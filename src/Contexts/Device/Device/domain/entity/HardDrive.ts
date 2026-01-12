@@ -9,14 +9,13 @@ import { DeviceSerial } from '../valueObject/DeviceSerial'
 import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { DeviceObservation } from '../valueObject/DeviceObservation'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { DeviceCategoryMismatchError } from '../errors/DeviceCategoryMismatchError'
 import { DeviceStocknumber } from '../valueObject/DeviceStock'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { HardDriveHealth } from '../valueObject/HardDriveHealth'
 import { HardDriveCapacityId } from '../../../../Features/HardDrive/HardDriveCapacity/domain/valueObject/HardDriveCapacityId'
 import { HardDriveTypeId } from '../../../../Features/HardDrive/HardDriveType/domain/valueObject/HardDriveTypeId'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
-import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
 import { HardDriveDoesNotExistError } from '../errors/HardDriveDoesNotExist'
 import { type DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
 import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
@@ -24,6 +23,8 @@ import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueOb
 import { type DeviceDto } from '../dto/Device.dto'
 import { type DeviceHardDriveParams, type DeviceHardDrivePrimitives } from '../dto/HardDrive.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { type DeviceChangeFields } from '../dto/DeviceFields'
+import { CategoryDefault } from '../../../../Category/Category/domain/CategoryDefaultValues'
 
 /**
  * @description Represents a hard drive device, extending the base Device class.
@@ -59,7 +60,7 @@ export class DeviceHardDrive extends Device {
 			stockNumber
 		)
 		if (!DeviceHardDrive.isHardDriveCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('Este dispositivo no es de tipo disco duro.')
+			throw new DeviceCategoryMismatchError(CategoryDefault.HARDDRIVE)
 		}
 	}
 
@@ -134,9 +135,11 @@ export class DeviceHardDrive extends Device {
 			generic: Primitives<Generic>
 		},
 		validator: DeviceConsistencyValidator
-	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
-		const oldDeviceEntity = structuredClone(this.toPrimitives())
+	): DeviceChangeFields {
+		const changes: DeviceChangeFields = []
+
+		super.update(params, context, validator)
+
 		if (params.health !== undefined && this.healthValue !== params.health) {
 			changes.push({
 				field: 'health',
@@ -163,23 +166,7 @@ export class DeviceHardDrive extends Device {
 			this.updateHardDriveType(params.hardDriveTypeId)
 		}
 
-		// Actualizar campos base y validar consistencia general
-		const baseChanges = super.update(params, context, validator, false)
-
-		const allChanges = [...changes, ...baseChanges]
-
-		if (allChanges.length > 0) {
-			this.record(
-				new DeviceUpdatedDomainEvent({
-					aggregateId: this.idValue,
-					newEntity: this.toPrimitives(),
-					oldEntity: oldDeviceEntity,
-					changes: allChanges
-				})
-			)
-		}
-
-		return allChanges
+		return changes
 	}
 
 	updateHealth(newHealth: Primitives<HardDriveHealth>): void {

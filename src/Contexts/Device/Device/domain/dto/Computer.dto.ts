@@ -39,6 +39,8 @@ export interface DeviceComputer extends Device {
  */
 export type DeviceComputerPrimitives = DevicePrimitives & DeviceComputer
 
+export type DeviceComputerFields = keyof Omit<DeviceComputerPrimitives, 'id'>
+
 /**
  * @type DeviceComputerParams
  * @description Represents the parameters required to create a new computer device.

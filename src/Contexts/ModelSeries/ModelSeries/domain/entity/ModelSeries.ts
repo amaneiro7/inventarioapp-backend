@@ -9,6 +9,7 @@ import { ModelSeriesRenamedDomainEvent } from '../event/ModelSeriesRenamedDomain
 import { ModelSeriesUpdatedDomainEvent } from '../event/ModelSeriesUpdatedDomainEvent'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type ModelSeriesDto, type ModelSeriesParams, type ModelSeriesPrimitives } from '../dto/ModelSeries.dto'
+import { type ModelsFields } from '../dto/ModelsFields'
 
 /**
  * @description Represents the ModelSeries domain entity.
@@ -25,9 +26,8 @@ export class ModelSeries extends AggregateRoot {
 	}
 
 	static create(params: ModelSeriesParams): ModelSeries {
-		const id = ModelSeriesId.random()
 		const model = new ModelSeries(
-			id,
+			ModelSeriesId.random(),
 			new ModelSeriesName(params.name),
 			new CategoryId(params.categoryId),
 			new BrandId(params.brandId),
@@ -66,7 +66,31 @@ export class ModelSeries extends AggregateRoot {
 		}
 	}
 
-	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
+	update(params: Partial<ModelSeriesParams>): ModelsFields {
+		const changes: ModelsFields = []
+
+		if (params.name !== undefined && params.name !== this.nameValue) {
+			changes.push({
+				field: 'name',
+				oldValue: this.nameValue,
+				newValue: params.name
+			})
+			this.updateName(params.name)
+		}
+
+		if (params.generic !== undefined && params.generic !== this.genericValue) {
+			changes.push({
+				field: 'generic',
+				oldValue: this.genericValue,
+				newValue: params.generic
+			})
+			this.updateGeneric(params.generic)
+		}
+
+		return changes
+	}
+
+	registerUpdateEvent(changes: ModelsFields): void {
 		this.record(
 			new ModelSeriesUpdatedDomainEvent({
 				aggregateId: this.idValue,

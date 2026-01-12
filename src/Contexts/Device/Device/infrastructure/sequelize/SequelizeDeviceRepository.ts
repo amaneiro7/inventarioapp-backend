@@ -7,7 +7,7 @@ import { DeviceModel } from './schema/DeviceSchema'
 import { DeviceAssociation } from './DeviceAssociation'
 import { DeviceComputer } from '../../domain/entity/Computer'
 import { DeviceHardDrive } from '../../domain/entity/HardDrive'
-import { MFP } from '../../domain/entity/MFP'
+import { DevicePrinter } from '../../domain/entity/Printer'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { clearComputerDataset } from './clearComputerDataset'
@@ -17,7 +17,7 @@ import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type DevicePrimitives, type DeviceDto } from '../../domain/dto/Device.dto'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type ClearDefaultDataset } from './DeviceResponse'
-import { type DeviceCacheInvalidator } from '../../domain/repository/DeviceCacheInvalidator'
+import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type DeviceId } from '../../domain/valueObject/DeviceId'
 import { type DeviceActivo } from '../../domain/valueObject/DeviceActivo'
@@ -33,7 +33,7 @@ import { type CategoryId } from '../../../../Category/Category/domain/valueObjec
  */
 export class SequelizeDeviceRepository
 	extends SequelizeCriteriaConverter
-	implements DeviceRepository, DeviceCacheInvalidator
+	implements DeviceRepository, CacheInvalidator
 {
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix = 'devices'
@@ -151,7 +151,7 @@ export class SequelizeDeviceRepository
 								}
 							]
 						},
-						{ association: 'mfp', attributes: ['ipAddress'] },
+						{ association: 'printer', attributes: ['ipAddress'] },
 						'location',
 						{
 							association: 'history',
@@ -268,8 +268,8 @@ export class SequelizeDeviceRepository
 			if (DeviceHardDrive.isHardDriveCategory({ categoryId: payload.categoryId })) {
 				await this.upsertAssociatedDeviceModel(this.models.DeviceHardDrive, payload, transaction)
 			}
-			if (MFP.isMFPCategory({ categoryId: payload.categoryId })) {
-				await this.upsertAssociatedDeviceModel(this.models.DeviceMFP, payload, transaction)
+			if (DevicePrinter.isPrinterCategory({ categoryId: payload.categoryId })) {
+				await this.upsertAssociatedDeviceModel(this.models.DevicePrinter, payload, transaction)
 			}
 
 			await transaction.commit()
@@ -348,7 +348,7 @@ export class SequelizeDeviceRepository
 	 * @description Invalidates all devices-related cache entries.
 	 * Implements DeviceCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<DeviceId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<DeviceId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

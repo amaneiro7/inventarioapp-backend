@@ -9,24 +9,25 @@ import { DeviceSerial } from '../valueObject/DeviceSerial'
 import { EmployeeId } from '../../../../employee/Employee/domain/valueObject/EmployeeId'
 import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { DeviceObservation } from '../valueObject/DeviceObservation'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { DeviceCategoryMismatchError } from '../errors/DeviceCategoryMismatchError'
 import { DeviceStocknumber } from '../valueObject/DeviceStock'
 import { CategoryValues } from '../../../../Category/Category/domain/CategoryOptions'
 import { DeviceIPAddress } from '../valueObject/DeviceIPAddress'
 import { DeviceCreatedDomainEvent } from '../event/DeviceCreatedDomainEvent'
-import { DeviceUpdatedDomainEvent } from '../event/DeviceUpdatedDomainEvent'
-import { MFPDoesNotExistError } from '../errors/MFPDoesNotExistError'
+import { PrinterDoesNotExistError } from '../errors/PrinterDoesNotExistError'
 import { type DeviceConsistencyValidator } from '../service/DeviceConsistencyValidator'
 import { type TypeOfSiteId } from '../../../../Location/TypeOfSite/domain/valueObject/TypeOfSiteId'
 import { type Generic } from '../../../../ModelSeries/ModelSeries/domain/valueObject/Generic'
 import { type DeviceDto } from '../dto/Device.dto'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type DeviceMFPParams, type DeviceMFPPrimitives } from '../dto/MFP.dto'
+import { type DevicePrinterParams, type DevicePrinterPrimitives } from '../dto/Printer.dto'
+import { type DeviceChangeFields } from '../dto/DeviceFields'
+import { CategoryDefault } from '../../../../Category/Category/domain/CategoryDefaultValues'
 
 /**
  * @description Represents a Multifunctional Printer (MFP) device, extending the base Device class.
  */
-export class MFP extends Device {
+export class DevicePrinter extends Device {
 	constructor(
 		id: DeviceId,
 		serial: DeviceSerial,
@@ -54,13 +55,15 @@ export class MFP extends Device {
 			observation,
 			stockNumber
 		)
-		if (!MFP.isMFPCategory({ categoryId: categoryId.value })) {
-			throw new InvalidArgumentError('This device does not belong to the MFP category')
+		if (!DevicePrinter.isPrinterCategory({ categoryId: categoryId.value })) {
+			throw new DeviceCategoryMismatchError(
+				`${CategoryDefault.MFP}, ${CategoryDefault.LASERPRINTER} o ${CategoryDefault.INKJETPRNTER}`
+			)
 		}
 	}
 
-	static create(params: DeviceMFPParams): MFP {
-		const deviceMFP = new MFP(
+	static create(params: DevicePrinterParams): DevicePrinter {
+		const devicePrinter = new DevicePrinter(
 			DeviceId.random(),
 			new DeviceSerial(params.serial),
 			new DeviceActivo(params.activo),
@@ -75,33 +78,38 @@ export class MFP extends Device {
 			new DeviceIPAddress(params.ipAddress)
 		)
 
-		deviceMFP.record(
+		devicePrinter.record(
 			new DeviceCreatedDomainEvent({
-				aggregateId: deviceMFP.idValue,
-				device: deviceMFP.toPrimitives()
+				aggregateId: devicePrinter.idValue,
+				device: devicePrinter.toPrimitives()
 			})
 		)
 
-		return deviceMFP
+		return devicePrinter
 	}
 
-	static isMFPCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
-		return categoryId === CategoryValues.MFP
+	static isPrinterCategory({ categoryId }: { categoryId: Primitives<CategoryId> }): boolean {
+		const acceptedCategories: string[] = [
+			CategoryValues.MFP,
+			CategoryValues.LASERPRINTER,
+			CategoryValues.INKPRINTER
+		]
+		return acceptedCategories.includes(categoryId)
 	}
 
-	toPrimitives(): DeviceMFPPrimitives {
+	toPrimitives(): DevicePrinterPrimitives {
 		return {
 			...super.toPrimitives(),
 			ipAddress: this.ipAddressValue
 		}
 	}
 
-	static fromPrimitives(primitives: DeviceDto): MFP {
-		const { mfp } = primitives
-		if (!mfp) {
-			throw new MFPDoesNotExistError(primitives?.serial ?? primitives.id)
+	static fromPrimitives(primitives: DeviceDto): DevicePrinter {
+		const { printer } = primitives
+		if (!printer) {
+			throw new PrinterDoesNotExistError(primitives?.serial ?? primitives.id)
 		}
-		return new MFP(
+		return new DevicePrinter(
 			new DeviceId(primitives.id),
 			new DeviceSerial(primitives.serial),
 			new DeviceActivo(primitives.activo),
@@ -113,20 +121,21 @@ export class MFP extends Device {
 			primitives.locationId ? new LocationId(primitives.locationId) : null,
 			new DeviceObservation(primitives.observation),
 			new DeviceStocknumber(primitives.stockNumber),
-			new DeviceIPAddress(mfp.ipAddress)
+			new DeviceIPAddress(printer.ipAddress)
 		)
 	}
 
 	update(
-		params: Partial<DeviceMFPParams>,
+		params: Partial<DevicePrinterParams>,
 		context: {
 			typeOfSite: Primitives<TypeOfSiteId> | null
 			generic: Primitives<Generic>
 		},
 		validator: DeviceConsistencyValidator
-	): Array<{ field: string; oldValue: unknown; newValue: unknown }> {
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
-		const oldDeviceEntity = structuredClone(this.toPrimitives())
+	): DeviceChangeFields {
+		const changes: DeviceChangeFields = []
+
+		super.update(params, context, validator)
 
 		if (params.ipAddress !== undefined && this.ipAddressValue !== params.ipAddress) {
 			changes.push({
@@ -137,23 +146,7 @@ export class MFP extends Device {
 			this.updateIPAddress(params.ipAddress)
 		}
 
-		// Actualizar campos base y validar consistencia general
-		const baseChanges = super.update(params, context, validator, false)
-
-		const allChanges = [...changes, ...baseChanges]
-
-		if (allChanges.length > 0) {
-			this.record(
-				new DeviceUpdatedDomainEvent({
-					aggregateId: this.idValue,
-					newEntity: this.toPrimitives(),
-					oldEntity: oldDeviceEntity,
-					changes: allChanges
-				})
-			)
-		}
-
-		return allChanges
+		return changes
 	}
 
 	updateIPAddress(newIPAddress: Primitives<DeviceIPAddress>): void {

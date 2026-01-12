@@ -7,24 +7,31 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 		private readonly cacheKey: string
 	) {}
 
-	async invalidate(id?: string): Promise<void> {
-		if (id) {
-			// Estrategia Específica: Ejecutamos en paralelo para optimizar el tiempo de respuesta
-			await Promise.all([
-				// 1. Invalidamos búsquedas completas
+	async invalidate(params?: string | Record<string, string | number | null | undefined>): Promise<void> {
+		if (params) {
+			const promises: Promise<void>[] = [
+				// 1. Invalidamos búsquedas completas y listas (siempre se invalidan al haber cambios)
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:all` }),
-				// 2. Invalidamos todas las listas
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),
-				// 3. Invalidamos todos los dashboards
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` }),
-				// 4. Invalidamos búsquedas por nombre
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:*` }),
-				// 5. Invalidamos el detalle específico
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${id}` }),
-				// 5. Invalidamos el detalle específico
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:key:${id}` })
-			])
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` })
+			]
+
+			if (typeof params === 'string') {
+				// Comportamiento legacy: Mantenemos la invalidación amplia si solo se pasa un ID string
+				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:*` }))
+				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${params}` }))
+				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:key:${params}` }))
+			} else {
+				// Comportamiento granular: Invalidamos solo las propiedades enviadas
+				for (const [key, value] of Object.entries(params)) {
+					if (value) {
+						promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:${key}:${value}` }))
+					}
+				}
+			}
+
+			await Promise.all(promises)
 		} else {
 			// Estrategia Global:
 			await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}*` })
