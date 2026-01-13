@@ -284,6 +284,8 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				message: `Iniciando escaneo de ping de ${this.getMonitoringName()}.`
 			}) // Log start of scan
 
+			const logBuffer: { fileName: string; message: string }[] = []
+
 			const config = await this.loadMonitoringConfig()
 			const limit = pLimit(config.concurrencyLimit)
 
@@ -298,7 +300,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			// Ejecutamos los pings en paralelo (limitado) y recolectamos los resultados
 			const pingPromises = itemsToMonitor.map(item =>
 				limit(async () => {
-					return await this.performPingCheck(item)
+					return await this.performPingCheck(item, logBuffer)
 				})
 			)
 
@@ -324,6 +326,10 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				await this.repository.saveAll(payloadsToSave)
 			}
 
+			// Flush logs (Escribimos todos los logs acumulados de una vez)
+			// Usamos Promise.all para maximizar la velocidad de escritura si el logger es asíncrono
+			await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
+
 			if (showLogs) {
 				this.logger.info(
 					`[INFO] Todos los trabajos de ping para este escaneo han sido completados. Total monitoreado: ${totalMonitored}`
@@ -347,7 +353,10 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	 * @param {DTO} item - El item a monitorear.
 	 * @returns {Promise<Payload | null>} El payload con el resultado para guardar, o null si no hay cambios/acción.
 	 */
-	protected async performPingCheck(item: DTO): Promise<Payload | null> {
+	protected async performPingCheck(
+		item: DTO,
+		logBuffer: { fileName: string; message: string }[]
+	): Promise<Payload | null> {
 		const ipAddress = await this.getIpAddress(item)
 		const expectedHostname = await this.getExpectedHostname(item)
 
@@ -381,7 +390,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					undefined,
 					new Date()
 				)
-				await this.pingLogger.logPingResult({
+				logBuffer.push({
 					fileName: this.getMonitoringName(),
 					message: `[${this.getMonitoringName()}] ${ipAddress} - EN LÍNEA (Hostname: ${
 						pingResult.hostname ?? 'N/A'
@@ -397,7 +406,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					undefined,
 					new Date()
 				)
-				await this.pingLogger.logPingResult({
+				logBuffer.push({
 					fileName: this.getMonitoringName(),
 					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
 						expectedHostname ?? 'N/A'
@@ -414,7 +423,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					new Date(),
 					new Date()
 				)
-				await this.pingLogger.logPingResult({
+				logBuffer.push({
 					fileName: this.getMonitoringName(),
 					message: `[${this.getMonitoringName()}] ${ipAddress} - FUERA DE LÍNEA: ${error}`
 				})

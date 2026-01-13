@@ -1,11 +1,11 @@
-import { exec } from 'node:child_process'
+import { execFile } from 'node:child_process'
 import { platform } from 'node:os'
 import { promisify } from 'node:util'
 import { type Logger } from '../../Logger'
 import { type IPingService, type PingResult } from '../infra/IPingService'
 
 // Promisify exec for easier async/await usage
-const execFilePromise = promisify(exec)
+const execFilePromise = promisify(execFile)
 
 export class PingService implements IPingService {
 	private readonly logger: Logger
@@ -17,7 +17,7 @@ export class PingService implements IPingService {
 		const getHostNameArg = getHostName ? '-a' : ''
 		let pingArgs: string[] = []
 		const osPlatform = platform()
-		const timeoutInSecondos: number = 8
+		const timeoutInSecondos: number = 10
 
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
@@ -31,11 +31,7 @@ export class PingService implements IPingService {
 
 		try {
 			// Use execFilePromise with a timeout for the command itself
-			// const { stdout, stderr } = await execFilePromise(command, pingArgs, {
-			// 	timeout: timeoutInSecondos * 1000,
-			// 	windowsHide: true
-			// })
-			const { stdout, stderr } = await execFilePromise(`${command} ${pingArgs.join(' ')}`, {
+			const { stdout, stderr } = await execFilePromise(command, pingArgs, {
 				timeout: timeoutInSecondos * 1000,
 				windowsHide: true
 			})
