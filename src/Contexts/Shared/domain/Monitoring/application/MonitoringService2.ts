@@ -328,7 +328,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 			// Flush logs (Escribimos todos los logs acumulados de una vez)
 			// Usamos Promise.all para maximizar la velocidad de escritura si el logger es asíncrono
-			await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
+			//await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
 
 			if (showLogs) {
 				this.logger.info(
