@@ -22,7 +22,11 @@ export class PingService implements IPingService {
 		if (osPlatform.startsWith('win')) {
 			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
 			command = 'ping'
-			pingArgs = ['-n', '1', '-w', '1000', getHostNameArg, ipAddress]
+			pingArgs = ['-n', '1', '-w', '1000']
+			if (getHostName) {
+				pingArgs.push(getHostNameArg)
+			}
+			pingArgs.push(ipAddress)
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'
