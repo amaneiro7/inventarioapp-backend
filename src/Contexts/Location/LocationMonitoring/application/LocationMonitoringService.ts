@@ -15,6 +15,7 @@ import {
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 import { type IPingService } from '../../../Shared/domain/Monitoring/infra/IPingService'
 import { LocationStatusOptions } from '../../LocationStatus/domain/LocationStatusOptions'
+import { SequelizeLocationMonitoringRepository } from '../infra/sequelize/SequelizeLocationMonitoringRepository'
 
 /**
  * Service responsible for monitoring locations. Extends the generic MonitoringService.
@@ -180,5 +181,16 @@ export class LocationMonitoringService extends MonitoringService<
 		} else {
 			this.monitoredItems.delete(item.id)
 		}
+	}
+
+	/**
+	 * @description Invalidates specifically the cache for the list of locations with IPs.
+	 * Used when Subnet or Location Status changes to ensure the monitoring loop fetches fresh data.
+	 */
+	async invalidateActiveIpList(): Promise<void> {
+		// Cast to access the specific method if not in the generic interface
+		await (
+			this.locationMonitoringRepository as unknown as SequelizeLocationMonitoringRepository
+		).invalidateActiveIpCache()
 	}
 }

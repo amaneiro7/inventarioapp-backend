@@ -28,6 +28,8 @@ import { InvalidateAppSettingsCacheOnAppSettingsChanged } from '../../../Context
 import { InvalidateAccessPolicyCacheOnAccessPolicyChanged } from '../../../Contexts/AccessControl/AccessPolicy/application/InvalidateAccessPolicyCacheOnAccessPolicyChanged'
 import { InvalidatePermissionGroupCacheOnPermissionGroupChanged } from '../../../Contexts/AccessControl/PermissionGroup/application/InvalidatePermissionGroupCacheOnPermissionGroupChanged'
 import { InvalidatePermissionCacheOnPermissionChanged } from '../../../Contexts/AccessControl/Permission/application/InvalidatePermissionsCacheOnPermissionsChanged'
+import { InvalidateDeviceMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Device/DeviceMonitoring/application/InvalidateDeviceMonitoringCacheOnGeneralInfoChanged'
+import { InvalidateLocationMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnGeneralInfoChanged'
 
 export enum DomainEventDependencies {
 	// MonitorinService
@@ -36,6 +38,8 @@ export enum DomainEventDependencies {
 	CreateDeviceMonitoringOnDeviceCreated = 'createDeviceMonitoringOnDeviceCreated',
 	InvalidateDeviceMonitoringCacheOnDeviceChanged = 'invalidateDeviceMonitoringCacheOnDeviceChanged',
 	InvalidateLocationMonitoringCacheOnLocationChanged = 'invalidateLocationMonitoringCacheOnLocationChanged',
+	InvalidateDeviceMonitoringCacheOnGeneralInfoChanged = 'invalidateDeviceMonitoringCacheOnGeneralInfoChanged',
+	InvalidateLocationMonitoringCacheOnGeneralInfoChanged = 'invalidateLocationMonitoringCacheOnGeneralInfoChanged',
 	SyncDeviceMonitoringStateOnEvents = 'syncDeviceMonitoringStateOnEvents',
 	SyncLocationMonitoringStateOnEvents = 'syncLocationMonitoringStateOnEvents',
 	// Bounded Context Access Control
@@ -84,6 +88,12 @@ export const register = (container: AwilixContainer) => {
 		[DomainEventDependencies.RestartMonitoringServices]: asClass(RestartMonitoringServices).singleton(),
 		[DomainEventDependencies.InvalidateBrandCacheOnBrandChanged]: asClass(
 			InvalidateBrandCacheOnBrandChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateDeviceMonitoringCacheOnGeneralInfoChanged]: asClass(
+			InvalidateDeviceMonitoringCacheOnGeneralInfoChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateLocationMonitoringCacheOnGeneralInfoChanged]: asClass(
+			InvalidateLocationMonitoringCacheOnGeneralInfoChanged
 		).singleton(),
 		[DomainEventDependencies.InvalidateModelSeriesCacheOnModelSeriesChanged]: asClass(
 			InvalidateModelSeriesCacheOnModelSeriesChanged

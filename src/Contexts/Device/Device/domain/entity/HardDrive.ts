@@ -85,6 +85,8 @@ export class DeviceHardDrive extends Device {
 		deviceHardDrive.record(
 			new DeviceCreatedDomainEvent({
 				aggregateId: deviceHardDrive.idValue,
+				activo: deviceHardDrive.activoValue,
+				serial: deviceHardDrive.serialValue,
 				device: deviceHardDrive.toPrimitives()
 			})
 		)

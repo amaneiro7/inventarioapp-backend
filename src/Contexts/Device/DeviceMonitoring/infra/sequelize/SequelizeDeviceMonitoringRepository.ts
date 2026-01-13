@@ -56,7 +56,8 @@ export class SequelizeDeviceMonitoringRepository
 		pageSize?: number
 	}): Promise<DeviceMonitoringDto[]> {
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
-		const cacheKey = `${this.cacheKeyPrefix}-not-null-ip:${page ?? 1}:${pageSize ?? 'all'}`
+		// Usamos un tag específico 'activeIpList' para poder invalidarlo selectivamente
+		const cacheKey = `${this.cacheKeyPrefix}:lists:activeIpList:${page ?? 1}:${pageSize ?? 'all'}`
 
 		return this.cache.getCachedData<DeviceMonitoringDto[]>({
 			cacheKey,
@@ -91,7 +92,21 @@ export class SequelizeDeviceMonitoringRepository
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const deviceMonitoring = await DeviceMonitoringModel.findByPk(id)
+				const deviceMonitoring = await DeviceMonitoringModel.findByPk(id, {
+					include: [
+						{
+							association: 'device',
+							attributes: ['statusId'],
+							include: [
+								{
+									association: 'computer',
+									attributes: ['ipAddress', 'computerName'],
+									required: true
+								}
+							]
+						}
+					]
+				})
 				return deviceMonitoring ? (deviceMonitoring.get({ plain: true }) as DeviceMonitoringDto) : null
 			}
 		})
@@ -127,7 +142,16 @@ export class SequelizeDeviceMonitoringRepository
 	 * @description Invalidates all model series-related cache entries.
 	 * Implements DeviceMonitoringCacheInvalidator interface.
 	 */
-	async invalidate(id?: Primitives<DeviceId>): Promise<void> {
-		await this.cacheInvalidator.invalidate(id)
+	async invalidate(params?: Primitives<DeviceId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
+	}
+
+	/**
+	 * @method invalidateActiveIpCache
+	 * @description Invalidates only the cache related to the list of devices with active IPs.
+	 * This prevents clearing the entire dashboard cache when only the monitoring list changes.
+	 */
+	async invalidateActiveIpCache(): Promise<void> {
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:lists:activeIpList:*` })
 	}
 }

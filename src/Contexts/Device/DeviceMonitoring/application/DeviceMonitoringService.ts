@@ -14,6 +14,7 @@ import {
 	type MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 import { type IPingService, type PingResult } from '../../../Shared/domain/Monitoring/infra/IPingService'
+import { type SequelizeDeviceMonitoringRepository } from '../infra/sequelize/SequelizeDeviceMonitoringRepository'
 
 /**
  * @description Service responsible for monitoring the status of devices by pinging them.
@@ -142,5 +143,16 @@ export class DeviceMonitoringService extends MonitoringService<
 		} else {
 			this.monitoredItems.delete(item.id)
 		}
+	}
+
+	/**
+	 * @description Invalidates specifically the cache for the list of devices with IPs.
+	 * Used when IP or Status changes to ensure the monitoring loop fetches fresh data.
+	 */
+	async invalidateActiveIpList(): Promise<void> {
+		// Cast to access the specific method if not in the generic interface
+		await (
+			this.deviceMonitoringRepository as unknown as SequelizeDeviceMonitoringRepository
+		).invalidateActiveIpCache()
 	}
 }

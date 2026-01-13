@@ -110,6 +110,8 @@ export class DeviceComputer extends Device {
 		deviceComputer.record(
 			new DeviceCreatedDomainEvent({
 				aggregateId: deviceComputer.idValue,
+				activo: deviceComputer.activoValue,
+				serial: deviceComputer.serialValue,
 				device: deviceComputer.toPrimitives()
 			})
 		)

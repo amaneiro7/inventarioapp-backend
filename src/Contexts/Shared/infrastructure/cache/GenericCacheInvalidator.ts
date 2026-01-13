@@ -19,7 +19,7 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 
 			if (typeof params === 'string') {
 				// Comportamiento legacy: Mantenemos la invalidación amplia si solo se pasa un ID string
-				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:*` }))
+				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${params}` }))
 				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${params}` }))
 				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:key:${params}` }))
 			} else {

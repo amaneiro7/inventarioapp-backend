@@ -81,6 +81,8 @@ export class DevicePrinter extends Device {
 		devicePrinter.record(
 			new DeviceCreatedDomainEvent({
 				aggregateId: devicePrinter.idValue,
+				activo: devicePrinter.activoValue,
+				serial: devicePrinter.serialValue,
 				device: devicePrinter.toPrimitives()
 			})
 		)

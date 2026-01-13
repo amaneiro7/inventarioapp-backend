@@ -79,7 +79,7 @@ export class SequelizeLocationMonitoringRepository
 	}): Promise<LocationMonitoringDto[]> {
 		const offset = page && pageSize ? (page - 1) * pageSize : undefined
 		return await this.cache.getCachedData<LocationMonitoringDto[]>({
-			cacheKey: `${this.cacheKey}:lists:not-null-ip-address:${page ?? 1}:${pageSize ?? 'all'}`,
+			cacheKey: `${this.cacheKey}:lists:activeIpList:${page ?? 1}:${pageSize ?? 'all'}`,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const rows = await LocationMonitoringModel.findAll({
@@ -180,5 +180,14 @@ export class SequelizeLocationMonitoringRepository
 	 */
 	async invalidate(id?: Primitives<LocationId>): Promise<void> {
 		await this.cacheInvalidator.invalidate(id)
+	}
+
+	/**
+	 * @method invalidateActiveIpCache
+	 * @description Invalidates only the cache related to the list of locations with active IPs.
+	 * This prevents clearing the entire dashboard cache when only the monitoring list changes.
+	 */
+	async invalidateActiveIpCache(): Promise<void> {
+		await this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:activeIpList:*` })
 	}
 }

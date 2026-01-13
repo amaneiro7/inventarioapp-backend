@@ -11,7 +11,16 @@ export class InvalidateDeviceMonitoringCacheOnDeviceChanged implements DomainEve
 	}
 
 	async on(event: DeviceUpdatedDomainEvent): Promise<void> {
-		await this.service.syncFromDeviceChange(event.aggregateId)
+		const { changes } = event
+		// Solo nos importa si cambia el estatus (ej. de InUse a Deprecated) o la IP (si viene por update genérico)
+		const statusChanged = changes.some(change => change.field === 'statusId')
+		const ipChanged = changes.some(change => change.field === 'ipAddress')
+		const computerName = changes.some(change => change.field === 'computerName')
+
+		if (statusChanged || ipChanged || computerName) {
+			await this.service.invalidateActiveIpList()
+			await this.service.syncFromDeviceChange(event.aggregateId)
+		}
 	}
 
 	subscribedTo(): DomainEventClass[] {
