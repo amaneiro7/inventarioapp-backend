@@ -65,7 +65,8 @@ export class VicepresidenciaModel
 				modelName: 'Vicepresidencia',
 				tableName: 'vicepresidencias',
 				timestamps: true,
-				underscored: true
+				underscored: true,
+				indexes: [{ fields: ['vicepresidencia_ejecutiva_id'] }]
 			}
 		)
 	}

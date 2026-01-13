@@ -42,7 +42,13 @@ export class ProcessorModel extends Model<ProcessorDto> implements ProcessorDto 
 				frequency: { type: DataTypes.STRING, allowNull: false },
 				name: { type: DataTypes.STRING, allowNull: false }
 			},
-			{ modelName: 'Processor', tableName: 'processors', underscored: true, sequelize }
+			{
+				modelName: 'Processor',
+				tableName: 'processors',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['product_collection'] }, { fields: ['name'] }]
+			}
 		)
 	}
 }

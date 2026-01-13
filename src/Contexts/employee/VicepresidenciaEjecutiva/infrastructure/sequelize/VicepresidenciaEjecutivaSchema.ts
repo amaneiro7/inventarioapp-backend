@@ -61,7 +61,8 @@ export class VicepresidenciaEjecutivaModel
 				modelName: 'VicepresidenciaEjecutiva',
 				tableName: 'vicepresidencia_ejecutivas',
 				timestamps: true,
-				underscored: true
+				underscored: true,
+				indexes: [{ fields: ['directiva_id'] }]
 			}
 		)
 	}

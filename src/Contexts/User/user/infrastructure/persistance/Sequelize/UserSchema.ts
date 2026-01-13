@@ -66,7 +66,8 @@ export class UserModel extends Model<UserPrimitives> implements UserPrimitives {
 				paranoid: true,
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['role_id'] }, { fields: ['status'] }]
 			}
 		)
 	}

@@ -46,9 +46,11 @@ export class StateModel extends Model<Omit<StateDto, 'region'>> implements State
 			},
 			{
 				modelName: 'State',
+				tableName: 'states',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['region_id'] }]
 			}
 		)
 	}

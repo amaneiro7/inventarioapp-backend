@@ -66,7 +66,7 @@ export class ComputerModelsModel extends Model<ComputerModelsCreationAttributes>
 				tableName: 'model_computers',
 				underscored: true,
 				sequelize,
-				indexes: [{ fields: ['memory_ram_type_id'] }]
+				indexes: [{ fields: ['memory_ram_type_id'] }, { fields: ['category_id'] }]
 			}
 		)
 	}

@@ -49,7 +49,7 @@ export class KeyboardModelsModel extends Model<KeyboardModelsCreationAttributes>
 				tableName: 'model_keyboards',
 				underscored: true,
 				sequelize,
-				indexes: [{ fields: ['input_type_id'] }]
+				indexes: [{ fields: ['input_type_id'] }, { fields: ['category_id'] }]
 			}
 		)
 	}

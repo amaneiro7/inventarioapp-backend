@@ -123,7 +123,21 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 					allowNull: false
 				}
 			},
-			{ modelName: 'AccessPolicy', tableName: 'access_policies', underscored: true, sequelize }
+			{
+				modelName: 'AccessPolicy',
+				tableName: 'access_policies',
+				underscored: true,
+				sequelize,
+				indexes: [
+					{ fields: ['role_id'] },
+					{ fields: ['cargo_id'] },
+					{ fields: ['departamento_id'] },
+					{ fields: ['vicepresidencia_id'] },
+					{ fields: ['vicepresidencia_ejecutiva_id'] },
+					{ fields: ['directiva_id'] },
+					{ fields: ['priority'] }
+				]
+			}
 		)
 	}
 }

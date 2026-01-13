@@ -55,7 +55,8 @@ export class RegionModel extends Model<Omit<RegionDto, 'administrativeRegion'>> 
 				tableName: 'regions',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['administrative_region_id'] }]
 			}
 		)
 	}

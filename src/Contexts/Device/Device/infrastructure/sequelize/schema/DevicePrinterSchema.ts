@@ -46,12 +46,7 @@ export class DevicePrinterModel
 				timestamps: true,
 				underscored: true,
 				sequelize,
-				indexes: [
-					// OPTIMIZACIÓN: Vital para el JOIN con la tabla devices
-					{ fields: ['device_id'], name: 'device_printer_device_id_idx' },
-					// OPTIMIZACIÓN: Para búsquedas rápidas por IP
-					{ fields: ['ip_address'], name: 'device_printer_ip_address_idx' }
-				]
+				indexes: [{ fields: ['device_id'] }, { fields: ['ip_address'] }, { fields: ['category_id'] }]
 			}
 		)
 	}

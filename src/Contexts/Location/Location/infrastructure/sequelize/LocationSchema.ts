@@ -89,9 +89,11 @@ export class LocationModel
 			},
 			{
 				modelName: 'Location',
+				tableName: 'locations',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['type_of_site_id'] }, { fields: ['site_id'] }, { fields: ['location_status_id'] }]
 			}
 		)
 	}

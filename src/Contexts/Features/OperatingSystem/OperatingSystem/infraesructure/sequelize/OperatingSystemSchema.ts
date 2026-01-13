@@ -32,7 +32,8 @@ export class OperatingSystemModel extends Model<OperatingSystemDto> implements O
 				tableName: 'operating_system_versions',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['name'] }]
 			}
 		)
 	}

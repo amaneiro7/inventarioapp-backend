@@ -70,9 +70,11 @@ export class LocationMonitoringModel
 			},
 			{
 				modelName: 'LocationMonitoring',
+				tableName: 'location_monitorings',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['location_id'] }, { fields: ['status'] }]
 			}
 		)
 	}

@@ -94,7 +94,19 @@ export class DeviceComputerModel
 				macAddress: { type: DataTypes.MACADDR, unique: true, allowNull: true },
 				ipAddress: { type: DataTypes.INET, allowNull: true, validate: { isIPv4: true } }
 			},
-			{ modelName: 'DeviceComputer', timestamps: true, underscored: true, sequelize }
+			{
+				modelName: 'DeviceComputer',
+				tableName: 'device_computers',
+				timestamps: true,
+				underscored: true,
+				sequelize,
+				indexes: [
+					{ fields: ['device_id'] },
+					{ fields: ['processor_id'] },
+					{ fields: ['operating_system_version_id'] },
+					{ fields: ['ip_address'] }
+				]
+			}
 		)
 	}
 }

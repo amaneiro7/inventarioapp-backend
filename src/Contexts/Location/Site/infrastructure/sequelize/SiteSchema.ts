@@ -60,7 +60,8 @@ export class SiteModels extends Model<Omit<SiteDto, 'city'>> implements SiteDto 
 				tableName: 'sites',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['city_id'] }]
 			}
 		)
 	}

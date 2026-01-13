@@ -42,7 +42,7 @@ export class MouseModelsModel extends Model<MouseModelsCreationAttributes> imple
 				tableName: 'model_mouses',
 				underscored: true,
 				sequelize,
-				indexes: [{ fields: ['input_type_id'] }]
+				indexes: [{ fields: ['input_type_id'] }, { fields: ['category_id'] }]
 			}
 		)
 	}

@@ -67,7 +67,7 @@ export class LaptopModelsModel extends Model<LaptopModelsCreationAttributes> imp
 				tableName: 'model_laptops',
 				underscored: true,
 				sequelize,
-				indexes: [{ fields: ['memory_ram_type_id'] }]
+				indexes: [{ fields: ['memory_ram_type_id'] }, { fields: ['category_id'] }]
 			}
 		)
 	}

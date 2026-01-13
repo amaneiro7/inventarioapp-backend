@@ -49,9 +49,11 @@ export class CityModel extends Model<Omit<CityDto, 'state'>> implements CityDto 
 			},
 			{
 				modelName: 'City',
+				tableName: 'cities',
 				timestamps: false,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['state_id'] }]
 			}
 		)
 	}

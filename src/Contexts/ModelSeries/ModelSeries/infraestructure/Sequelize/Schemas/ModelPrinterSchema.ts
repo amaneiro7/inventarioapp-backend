@@ -38,7 +38,13 @@ export class ModelPrinterModel extends Model<ModelPrinterCreationAttributes> imp
 				},
 				cartridgeModel: { type: DataTypes.STRING, allowNull: false }
 			},
-			{ modelName: 'ModelPrinter', tableName: 'model_printers', underscored: true, sequelize }
+			{
+				modelName: 'ModelPrinter',
+				tableName: 'model_printers',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['category_id'] }]
+			}
 		)
 	}
 }

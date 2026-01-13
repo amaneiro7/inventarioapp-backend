@@ -101,7 +101,15 @@ export class ShipmentModel extends Model<Omit<ShipmentDto, 'shipmentDevice'>> im
 				tableName: 'shipments',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [
+					{ fields: ['origin'] },
+					{ fields: ['destination'] },
+					{ fields: ['sent_by'] },
+					{ fields: ['received_by'] },
+					{ fields: ['status'] },
+					{ fields: ['shipment_date'] }
+				]
 			}
 		)
 	}

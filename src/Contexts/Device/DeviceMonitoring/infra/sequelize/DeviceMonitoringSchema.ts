@@ -55,7 +55,8 @@ export class DeviceMonitoringModel extends Model<Omit<DeviceMonitoringDto, 'devi
 				tableName: 'device_monitorings',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['device_id'] }, { fields: ['status'] }]
 			}
 		)
 	}

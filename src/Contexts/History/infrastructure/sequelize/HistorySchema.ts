@@ -73,8 +73,16 @@ export class HistoryModel extends Model<Omit<HistoryDto, 'employee' | 'device' |
 			},
 			{
 				modelName: 'History',
+				tableName: 'histories',
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [
+					{ fields: ['device_id'] },
+					{ fields: ['user_id'] },
+					{ fields: ['employee_id'] },
+					{ fields: ['action'] },
+					{ fields: ['created_at'] }
+				]
 			}
 		)
 	}

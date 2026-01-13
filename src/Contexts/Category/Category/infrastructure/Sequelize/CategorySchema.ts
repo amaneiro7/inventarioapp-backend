@@ -82,9 +82,7 @@ export class CategoryModel extends Model<Omit<CategoryDto, 'mainCategory'>> impl
 				underscored: true,
 				timestamps: false,
 				sequelize,
-				indexes: [
-					{ fields: ['mainCategoryId'], name: 'category_main_category_id_idx' } // New index
-				]
+				indexes: [{ fields: ['main_category_id'] }]
 			}
 		)
 	}

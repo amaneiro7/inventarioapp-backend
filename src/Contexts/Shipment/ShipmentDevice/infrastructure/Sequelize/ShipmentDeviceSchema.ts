@@ -44,7 +44,8 @@ export class ShipmentDeviceModel extends Model<ShipmentDeviceDto> implements Shi
 				tableName: 'shipment_devices',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [{ fields: ['shipment_id'] }, { fields: ['device_id'] }]
 			}
 		)
 	}

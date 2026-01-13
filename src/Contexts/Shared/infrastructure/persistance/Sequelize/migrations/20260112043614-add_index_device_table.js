@@ -106,7 +106,7 @@ module.exports = {
 			)
 
 			await queryInterface.removeConstraint(tableName, 'unique_device_serial_per_brand', { transaction })
-			;(await queryInterface.removeConstraint('devices', 'check_location_if_not_desincorporado'), { transaction })
+			;(await queryInterface.removeConstraint(tableName, 'check_location_if_not_desincorporado'), { transaction })
 
 			// Revertir cambios
 			await queryInterface.removeIndex(tableName, 'device_printer_status_id_idx', { transaction })

@@ -55,7 +55,12 @@ export class DeviceHardDriveModel
 				tableName: 'device_hard_drives',
 				timestamps: true,
 				underscored: true,
-				sequelize
+				sequelize,
+				indexes: [
+					{ fields: ['device_id'] },
+					{ fields: ['hard_drive_capacity_id'] },
+					{ fields: ['hard_drive_type_id'] }
+				]
 			}
 		)
 	}

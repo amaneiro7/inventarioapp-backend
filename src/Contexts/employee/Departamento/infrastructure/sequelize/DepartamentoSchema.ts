@@ -59,7 +59,14 @@ export class DepartamentoModel
 				name: { type: DataTypes.STRING, allowNull: false, unique: true },
 				vicepresidenciaId: { type: DataTypes.UUID, allowNull: false }
 			},
-			{ sequelize, modelName: 'Departamento', tableName: 'departamentos', timestamps: true, underscored: true }
+			{
+				sequelize,
+				modelName: 'Departamento',
+				tableName: 'departamentos',
+				timestamps: true,
+				underscored: true,
+				indexes: [{ fields: ['vicepresidencia_id'] }]
+			}
 		)
 	}
 }

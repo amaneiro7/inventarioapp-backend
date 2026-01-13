@@ -47,7 +47,13 @@ export class MonitorModelsModel extends Model<MonitorModelsCreationAttributes> i
 				hasHDMI: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_hdmi' },
 				hasVGA: { type: DataTypes.BOOLEAN, allowNull: false, field: 'has_vga' }
 			},
-			{ modelName: 'ModelMonitor', tableName: 'model_monitors', underscored: true, sequelize }
+			{
+				modelName: 'ModelMonitor',
+				tableName: 'model_monitors',
+				underscored: true,
+				sequelize,
+				indexes: [{ fields: ['category_id'] }]
+			}
 		)
 	}
 }
