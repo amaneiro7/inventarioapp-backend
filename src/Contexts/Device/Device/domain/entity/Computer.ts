@@ -184,10 +184,9 @@ export class DeviceComputer extends Device {
 		},
 		validator: DeviceConsistencyValidator
 	): DeviceChangeFields {
-		const changes: DeviceChangeFields = []
 		const computerConsistencyValidator = new ComputerConsistencyValidator()
 
-		super.update(params, context, validator)
+		const changes = super.update(params, context, validator)
 
 		if (params.computerName !== undefined && this.computerNameValue !== params.computerName) {
 			changes.push({ field: 'computerName', oldValue: this.computerNameValue, newValue: params.computerName })

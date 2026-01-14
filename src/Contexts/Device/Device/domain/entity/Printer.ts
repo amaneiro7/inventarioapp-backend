@@ -135,9 +135,7 @@ export class DevicePrinter extends Device {
 		},
 		validator: DeviceConsistencyValidator
 	): DeviceChangeFields {
-		const changes: DeviceChangeFields = []
-
-		super.update(params, context, validator)
+		const changes = super.update(params, context, validator)
 
 		if (params.ipAddress !== undefined && this.ipAddressValue !== params.ipAddress) {
 			changes.push({

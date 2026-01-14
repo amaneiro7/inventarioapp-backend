@@ -138,9 +138,7 @@ export class DeviceHardDrive extends Device {
 		},
 		validator: DeviceConsistencyValidator
 	): DeviceChangeFields {
-		const changes: DeviceChangeFields = []
-
-		super.update(params, context, validator)
+		const changes = super.update(params, context, validator)
 
 		if (params.health !== undefined && this.healthValue !== params.health) {
 			changes.push({

@@ -30,6 +30,7 @@ import { InvalidatePermissionGroupCacheOnPermissionGroupChanged } from '../../..
 import { InvalidatePermissionCacheOnPermissionChanged } from '../../../Contexts/AccessControl/Permission/application/InvalidatePermissionsCacheOnPermissionsChanged'
 import { InvalidateDeviceMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Device/DeviceMonitoring/application/InvalidateDeviceMonitoringCacheOnGeneralInfoChanged'
 import { InvalidateLocationMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnGeneralInfoChanged'
+import { UpdateEmployeeLocationOnDeviceChanged } from '../../../Contexts/employee/Employee/application/UpdateEmployeeLocationOnDeviceChanged'
 
 export enum DomainEventDependencies {
 	// MonitorinService
@@ -63,6 +64,7 @@ export enum DomainEventDependencies {
 	InvalidateLocationCacheOnLocationChanged = 'invalidateLocationCacheOnLocationChanged',
 	// Employee
 	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged',
+	UpdateEmployeeLocationOnDeviceChanged = 'updateEmployeeLocationOnDeviceChanged',
 	InvalidateCargoCacheOnCargoChanged = 'invalidateCargoCacheOnCargoChanged',
 	InvalidateDepartamentoCacheOnDepartamentoChanged = 'invalidateDepartamentoCacheOnDepartamentoChanged',
 	InvalidateVicepresidenciaCacheOnVicepresidenciaChanged = 'invalidateVicepresidenciaCacheOnVicepresidenciaChanged',
@@ -173,6 +175,9 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.InvalidatePermissionCacheOnPermissionChanged]: asClass(
 			InvalidatePermissionCacheOnPermissionChanged
+		).singleton(),
+		[DomainEventDependencies.UpdateEmployeeLocationOnDeviceChanged]: asClass(
+			UpdateEmployeeLocationOnDeviceChanged
 		).singleton()
 	})
 }
