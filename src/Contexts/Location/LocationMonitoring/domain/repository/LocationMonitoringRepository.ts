@@ -1,5 +1,7 @@
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { type MonitoringId } from '../../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
 import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type LocationMonitoringDto, type LocationMonitoringPrimitives } from '../entity/LocationMonitoring.dto'
 
 /**
@@ -61,5 +63,5 @@ export abstract class LocationMonitoringRepository {
 	 * Invalidates the cache for a specific location monitoring entry.
 	 * @param {string} [id] - The ID of the location monitoring entry.
 	 */
-	abstract invalidate(id?: string): Promise<void>
+	abstract invalidate(params?: Primitives<MonitoringId> | Record<string, string>): Promise<void>
 }

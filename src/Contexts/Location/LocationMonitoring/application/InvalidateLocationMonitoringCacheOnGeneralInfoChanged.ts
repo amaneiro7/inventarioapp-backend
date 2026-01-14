@@ -31,12 +31,13 @@ export class InvalidateLocationMonitoringCacheOnGeneralInfoChanged implements Do
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 	): Promise<void> {
-		if (
-			event instanceof LocationUpdatedDomainEvent ||
-			event instanceof LocationRenamedDomainEvent ||
-			event instanceof LocationMonitoringCreatedDomainEvent
-		) {
-			// Si cambia la ubicación específica o se crea el monitoreo, invalidamos listas y esa entrada.
+		if (event instanceof LocationUpdatedDomainEvent || event instanceof LocationRenamedDomainEvent) {
+			// Si cambia la ubicación específica, invalidamos las entradas asociadas a ese locationId
+			await this.invalidator.invalidate({
+				locationId: event.aggregateId
+			})
+		} else if (event instanceof LocationMonitoringCreatedDomainEvent) {
+			// Si se crea el monitoreo, invalidamos por su ID (y listas implícitamente)
 			await this.invalidator.invalidate({
 				id: event.aggregateId,
 				key: event.aggregateId
