@@ -4,6 +4,7 @@ import { config } from '../../Contexts/Shared/infrastructure/config'
 import { ApiError } from '../../Contexts/Shared/domain/errors/ApiError'
 import { type Logger } from '../../Contexts/Shared/domain/Logger'
 import { TokenInvalidOrExpiredError } from '../../Contexts/Auth/domain/error/TokenInvalidOrExpiredError'
+import { PasswordExpiredError } from '../../Contexts/Auth/domain/error/PasswordExpiredError'
 
 /**
  * @description Express error handling middleware.
@@ -17,7 +18,7 @@ import { TokenInvalidOrExpiredError } from '../../Contexts/Auth/domain/error/Tok
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorHandler = (logger: Logger) => (err: Error, req: Request, res: Response, _next: NextFunction) => {
 	// Lista de errores que no queremos registrar para no generar ruido.
-	const ignoredErrors = [TokenInvalidOrExpiredError]
+	const ignoredErrors = [TokenInvalidOrExpiredError, PasswordExpiredError]
 	if (ignoredErrors.some(errorType => err instanceof errorType)) {
 		// No registramos el error, pero sí enviamos la respuesta al cliente.
 	} else {

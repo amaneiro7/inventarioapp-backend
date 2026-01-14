@@ -60,11 +60,12 @@ export class LocationUpdater {
 
 		const locationEntity = Location.fromPrimitives(location)
 
-		const { name, locationStatusId, siteId, typeOfSiteId } = params
-		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		const { name, locationStatusId, siteId, typeOfSiteId, subnet } = params
+		const changes: Array<{ field: keyof LocationParams; oldValue: unknown; newValue: unknown }> = []
+		const validations: Promise<void>[] = []
 
 		if (name && locationEntity.nameValue !== name.trim()) {
-			await this.locationNameUniquenessChecker.ensureUnique(name, locationEntity.idValue)
+			validations.push(this.locationNameUniquenessChecker.ensureUnique(name, locationEntity.idValue))
 			changes.push({
 				field: 'name',
 				oldValue: locationEntity.nameValue,
@@ -74,7 +75,7 @@ export class LocationUpdater {
 		}
 
 		if (locationStatusId && locationEntity.operationalStatusValue !== locationStatusId) {
-			await this.locationStatusExistenceChecker.ensureExist(locationStatusId)
+			validations.push(this.locationStatusExistenceChecker.ensureExist(locationStatusId))
 			changes.push({
 				field: 'locationStatusId',
 				oldValue: locationEntity.operationalStatusValue,
@@ -84,7 +85,7 @@ export class LocationUpdater {
 		}
 
 		if (siteId && locationEntity.siteValue !== siteId) {
-			await this.siteExistenceChecker.ensureExist(siteId)
+			validations.push(this.siteExistenceChecker.ensureExist(siteId))
 			changes.push({
 				field: 'siteId',
 				oldValue: locationEntity.siteValue,
@@ -94,7 +95,7 @@ export class LocationUpdater {
 		}
 
 		if (typeOfSiteId && locationEntity.typeOfSiteValue !== typeOfSiteId) {
-			await this.typeOfSiteExistenceChecker.ensureExist(typeOfSiteId)
+			validations.push(this.typeOfSiteExistenceChecker.ensureExist(typeOfSiteId))
 			changes.push({
 				field: 'typeOfSiteId',
 				oldValue: locationEntity.typeOfSiteValue,
@@ -102,6 +103,17 @@ export class LocationUpdater {
 			})
 			locationEntity.updateTypeOfSite(typeOfSiteId)
 		}
+
+		if (subnet && locationEntity.subnetValue !== subnet) {
+			changes.push({
+				field: 'subnet',
+				oldValue: locationEntity.subnetValue,
+				newValue: subnet
+			})
+			locationEntity.updateSubnet(subnet)
+		}
+
+		await Promise.all(validations)
 
 		if (changes.length > 0) {
 			locationEntity.registerUpdateEvent(changes)
