@@ -64,7 +64,7 @@ export class LocationUpdater {
 		const changes: Array<{ field: keyof LocationParams; oldValue: unknown; newValue: unknown }> = []
 		const validations: Promise<void>[] = []
 
-		if (name && locationEntity.nameValue !== name.trim()) {
+		if (name !== undefined && locationEntity.nameValue !== name.trim()) {
 			validations.push(this.locationNameUniquenessChecker.ensureUnique(name, locationEntity.idValue))
 			changes.push({
 				field: 'name',
@@ -74,7 +74,7 @@ export class LocationUpdater {
 			locationEntity.updateLocationName(name)
 		}
 
-		if (locationStatusId && locationEntity.operationalStatusValue !== locationStatusId) {
+		if (locationStatusId !== undefined && locationEntity.operationalStatusValue !== locationStatusId) {
 			validations.push(this.locationStatusExistenceChecker.ensureExist(locationStatusId))
 			changes.push({
 				field: 'locationStatusId',
@@ -84,7 +84,7 @@ export class LocationUpdater {
 			locationEntity.updateLocationStatus(locationStatusId)
 		}
 
-		if (siteId && locationEntity.siteValue !== siteId) {
+		if (siteId !== undefined && locationEntity.siteValue !== siteId) {
 			validations.push(this.siteExistenceChecker.ensureExist(siteId))
 			changes.push({
 				field: 'siteId',
@@ -94,7 +94,7 @@ export class LocationUpdater {
 			locationEntity.updateSite(siteId)
 		}
 
-		if (typeOfSiteId && locationEntity.typeOfSiteValue !== typeOfSiteId) {
+		if (typeOfSiteId !== undefined && locationEntity.typeOfSiteValue !== typeOfSiteId) {
 			validations.push(this.typeOfSiteExistenceChecker.ensureExist(typeOfSiteId))
 			changes.push({
 				field: 'typeOfSiteId',
@@ -104,7 +104,7 @@ export class LocationUpdater {
 			locationEntity.updateTypeOfSite(typeOfSiteId)
 		}
 
-		if (subnet && locationEntity.subnetValue !== subnet) {
+		if (subnet !== undefined && locationEntity.subnetValue !== subnet) {
 			changes.push({
 				field: 'subnet',
 				oldValue: locationEntity.subnetValue,
