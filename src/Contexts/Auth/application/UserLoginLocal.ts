@@ -60,19 +60,20 @@ export class UserLoginLocal {
 		currentIp?: Primitives<LastLoginIp>
 	}): Promise<UserDto> {
 		let employee: Nullable<EmployeePrimitives>
+		const normalizedInput = userNameOrEmail.toLowerCase()
 
 		// 1. Find employee by userName or email
-		if (userNameOrEmail.includes('@')) {
+		if (normalizedInput.includes('@')) {
 			// Obtener los dominios permitidos desde la configuración
 			const allowedDomains = await this.settingsFinder.findAsArray({
 				key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
 				fallback: [] // Si la configuración no existe, devuelve un array vacío
 			})
 
-			const employeeEmail = new EmployeeEmail(userNameOrEmail, allowedDomains)
+			const employeeEmail = new EmployeeEmail(normalizedInput, allowedDomains)
 			employee = await this.employeeRepository.findByEmail(employeeEmail.value)
 		} else {
-			const employeeUserName = new EmployeeUserName(userNameOrEmail)
+			const employeeUserName = new EmployeeUserName(normalizedInput)
 			employee = await this.employeeRepository.findByUserName(employeeUserName.value)
 		}
 

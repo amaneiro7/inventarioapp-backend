@@ -35,21 +35,6 @@ export class SequelizeEmployeeRepository
 		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
-	async findByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
-		return await this.cache.getCachedData<EmployeeDto | null>({
-			cacheKey: `${this.cacheKey}:userName:${userName}`,
-			ttl: TimeTolive.LONG,
-			fetchFunction: async () => {
-				const employee = await EmployeeModel.findOne({
-					where: {
-						userName
-					}
-				})
-				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
-			}
-		})
-	}
-
 	/**
 	 * @method searchAll
 	 * @description Retrieves a paginated list of Employee entities based on the provided criteria.
@@ -99,6 +84,21 @@ export class SequelizeEmployeeRepository
 		})
 	}
 
+	async findByUserName(userName: Primitives<EmployeeUserName>): Promise<EmployeeDto | null> {
+		return await this.cache.getCachedData<EmployeeDto | null>({
+			cacheKey: `${this.cacheKey}:userName:${userName}`,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const employee = await EmployeeModel.findOne({
+					where: {
+						userName: { [Op.iLike]: userName }
+					}
+				})
+				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+			}
+		})
+	}
+
 	/**
 	 * @method findByEmail
 	 * @description Retrieves a single Employee entity by its email address.
@@ -106,14 +106,14 @@ export class SequelizeEmployeeRepository
 	 * @param {Primitives<EmployeeEmail>} email - The email address of the Employee to search for.
 	 * @returns {Promise<EmployeeDto | null>} A promise that resolves to the Employee DTO if found, or null otherwise.
 	 */
-	async findByEmail(email: Primitives<EmployeeEmail>): Promise<EmployeeDto | null> {
+	async findByEmail(email: NonNullable<Primitives<EmployeeEmail>>): Promise<EmployeeDto | null> {
 		return await this.cache.getCachedData<EmployeeDto | null>({
 			cacheKey: `${this.cacheKey}:email:${email}`,
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const employee = await EmployeeModel.findOne({
 					where: {
-						email
+						email: { [Op.iLike]: email }
 					}
 				})
 				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
