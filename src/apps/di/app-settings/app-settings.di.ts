@@ -7,8 +7,8 @@ import { SettingsGetAllController } from '../../controllers/app-settings/setting
 import { SettingsPatchController } from '../../controllers/app-settings/settings.patch.controller'
 import { SettingsUpdaterBulk } from '../../../Contexts/AppSettings/application/SettingsUpdaterBulk'
 import { SettingsPatchBulkController } from '../../controllers/app-settings/settings.patch-bulk.controller'
-//import { SequelizeSettingsRepository } from '../../../Contexts/Shared/AppSettings/infrastructure/persistence/sequelize/SequelizeSettingsRepository'
-import { FileSettingsRepository } from '../../../Contexts/AppSettings/infrastructure/persistence/FileSettingsRepository'
+import { SequelizeSettingsRepository } from '../../../Contexts/AppSettings/infrastructure/persistence/sequelize/SequelizeSettingsRepository'
+// import { FileSettingsRepository } from '../../../Contexts/AppSettings/infrastructure/persistence/FileSettingsRepository'
 import { SettingsAllowedDomainsGetController } from '../../controllers/app-settings/settings.get-allowed.controller'
 
 export enum AppSettingsDependencies {
@@ -26,8 +26,8 @@ export enum AppSettingsDependencies {
 
 export const register = (container: AwilixContainer): void => {
 	container.register({
-		[AppSettingsDependencies.Repository]: asClass(FileSettingsRepository).singleton(),
-		//settingsRepository: asClass(SequelizeSettingsRepository).singleton(),
+		//[AppSettingsDependencies.Repository]: asClass(FileSettingsRepository).singleton(),
+		[AppSettingsDependencies.Repository]: asClass(SequelizeSettingsRepository).singleton(),
 
 		[AppSettingsDependencies.Finder]: asClass(SettingsFinder).singleton(),
 		[AppSettingsDependencies.FinderAll]: asClass(SettingsFinderAll),

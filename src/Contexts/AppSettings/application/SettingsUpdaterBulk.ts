@@ -30,7 +30,6 @@ export class SettingsUpdaterBulk {
 	async run({ settings }: UpdateSettingsBulkParams): Promise<void> {
 		const settingsToSave: SettingsPrimitives[] = []
 		const eventsToPublish: DomainEvent[] = []
-
 		for (const { key, value } of settings) {
 			const settingKey = new SettingsKey(key).value
 			const existingSetting = await this.settingsRepository.search(settingKey)
@@ -40,7 +39,6 @@ export class SettingsUpdaterBulk {
 			}
 
 			const settingsEntity = Settings.fromPrimitives(existingSetting)
-
 			settingsEntity.updateValue(value)
 			eventsToPublish.push(...settingsEntity.pullDomainEvents())
 

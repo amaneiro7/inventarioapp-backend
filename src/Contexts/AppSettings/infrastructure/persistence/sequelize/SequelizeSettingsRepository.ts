@@ -21,7 +21,7 @@ export class SequelizeSettingsRepository implements SettingsRepository, CacheInv
 	}
 
 	async searchAll(): Promise<SettingsPrimitives[]> {
-		const cacheKey = `${this.cacheKeyPrefix}:lists`
+		const cacheKey = `${this.cacheKeyPrefix}:all`
 		return this.cache.getCachedData<SettingsPrimitives[]>({
 			cacheKey,
 			ttl: TimeTolive.VERY_LONG,
