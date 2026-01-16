@@ -14,8 +14,8 @@ export class InvalidateAccessPolicyCacheOnAccessPolicyChanged implements DomainE
 > {
 	private readonly invalidator: CacheInvalidator
 
-	constructor({ permissionRepository }: { permissionRepository: CacheInvalidator }) {
-		this.invalidator = permissionRepository
+	constructor({ accessPolicyRepository }: { accessPolicyRepository: CacheInvalidator }) {
+		this.invalidator = accessPolicyRepository
 	}
 
 	async on(
