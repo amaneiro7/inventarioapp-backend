@@ -248,7 +248,11 @@ export class Employee extends AggregateRoot {
 	}
 
 	private static ensureCreationRules(params: EmployeeParams): void {
-		if (params.type === EmployeeTypesEnum.SERVICE) {
+		const isGeneric = params.type === EmployeeTypesEnum.GENERIC
+		const isRegular = params.type === EmployeeTypesEnum.REGULAR
+		const isService = params.type === EmployeeTypesEnum.SERVICE
+
+		if (isService) {
 			throw new InvalidArgumentError(
 				'Un empleado de tipo "servicio" no se puede crear directamente. Primero debe crearse como tipo "regular" y luego marcarse como servicio.'
 			)
@@ -260,31 +264,31 @@ export class Employee extends AggregateRoot {
 			)
 		}
 		// Regla de negocio para Nombre y Apellido
-		if (params.type !== EmployeeTypesEnum.GENERIC && !params.name) {
+		if (!isGeneric && !params.name) {
 			throw new InvalidArgumentError('El nombre es requerido para este tipo de empleado.')
 		}
-		if (params.type !== EmployeeTypesEnum.GENERIC && !params.lastName) {
+		if (!isGeneric && !params.lastName) {
 			throw new InvalidArgumentError('El apellido es requerido para este tipo de empleado.')
 		}
 		// El codigo de empleado es requerido solo para los empleados con contrato fijo
-		if (params.type === EmployeeTypesEnum.REGULAR && !params.employeeCode) {
+		if (isRegular && !params.employeeCode) {
 			throw new InvalidArgumentError('El código de empleado es requerido para este tipo de empleado.')
 		}
 
-		if (params.type !== EmployeeTypesEnum.REGULAR && params.employeeCode) {
+		if (!isRegular && params.employeeCode) {
 			throw new InvalidArgumentError('El código de empleado no es requerido para este tipo de empleado.')
 		}
-		if (params.type !== EmployeeTypesEnum.GENERIC && !params.nationality) {
+		if (!isGeneric && !params.nationality) {
 			throw new InvalidArgumentError('La nacionalidad es requerida para este tipo de empleado.')
 		}
-		if (params.type === EmployeeTypesEnum.GENERIC && params.nationality) {
+		if (isGeneric && params.nationality) {
 			throw new InvalidArgumentError('La nacionalidad no es requerida para este tipo de empleado.')
 		}
 
-		if (params.type === EmployeeTypesEnum.GENERIC && params.cedula) {
+		if (isGeneric && params.cedula) {
 			throw new InvalidArgumentError('La cédula del empleado no es requerida para este tipo de empleado.')
 		}
-		if (params.type !== EmployeeTypesEnum.GENERIC && !params.cedula) {
+		if (!isGeneric && !params.cedula) {
 			throw new InvalidArgumentError('La cédula del empleado es requerida para este tipo de empleado.')
 		}
 	}
