@@ -12,6 +12,8 @@ import { EmployeeDeleteController } from '../../controllers/employee/employee.de
 import { EmployeeSearchByCriteriaController } from '../../controllers/employee/employee.searchByCriteria.controller'
 import { EmployeeFinderAll } from '../../../Contexts/employee/Employee/application/EmployeeFinderAll'
 import { EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
+import { EmployeeExcelService } from '../../../Contexts/employee/Employee/application/EmployeeExcelService'
+import { EmployeeDownloadExcelServiceController } from '../../controllers/employee/employee.download-excel-service.controller'
 
 export enum EmployeeDependencies {
 	Repository = 'employeeRepository',
@@ -20,29 +22,33 @@ export enum EmployeeDependencies {
 	Creator = 'employeeCreator',
 	Updater = 'employeeUpdater',
 	Remover = 'employeeRemover',
+	ExcelService = 'employeeExcelService',
 	SearchByCriteria = 'employeeSearchByCriteria',
 	GetController = 'employeeGetController',
 	GetAllController = 'employeeGetAllController',
 	PostController = 'employeePostController',
 	PatchController = 'employeePatchController',
 	DeleteController = 'employeeDeleteController',
-	GetByCriteriaController = 'employeeGetByCriteria'
+	GetByCriteriaController = 'employeeGetByCriteria',
+	ExcelDownloadController = 'employeeExcelDownload'
 }
 
 export const register = (container: AwilixContainer) => {
 	container.register({
-		employeeRepository: asClass(SequelizeEmployeeRepository).singleton(),
-		employeeFinder: asClass(EmployeeFinder),
-		employeeFinderAll: asClass(EmployeeFinderAll),
-		employeeCreator: asClass(EmployeeCreator),
-		employeeUpdater: asClass(EmployeeUpdater),
-		employeeRemover: asClass(EmployeeRemover),
-		employeeSearchByCriteria: asClass(EmployeeSearchByCriteria),
-		employeeGetController: asClass(EmployeeGetController),
-		employeeGetAllController: asClass(EmployeeGetAllController),
-		employeePostController: asClass(EmployeePostController),
-		employeePatchController: asClass(EmployeePatchController),
-		employeeDeleteController: asClass(EmployeeDeleteController),
-		employeeGetByCriteria: asClass(EmployeeSearchByCriteriaController)
+		[EmployeeDependencies.Repository]: asClass(SequelizeEmployeeRepository).singleton(),
+		[EmployeeDependencies.Finder]: asClass(EmployeeFinder),
+		[EmployeeDependencies.FinderAll]: asClass(EmployeeFinderAll),
+		[EmployeeDependencies.Creator]: asClass(EmployeeCreator),
+		[EmployeeDependencies.Updater]: asClass(EmployeeUpdater),
+		[EmployeeDependencies.Remover]: asClass(EmployeeRemover),
+		[EmployeeDependencies.ExcelService]: asClass(EmployeeExcelService),
+		[EmployeeDependencies.SearchByCriteria]: asClass(EmployeeSearchByCriteria),
+		[EmployeeDependencies.GetController]: asClass(EmployeeGetController),
+		[EmployeeDependencies.GetAllController]: asClass(EmployeeGetAllController),
+		[EmployeeDependencies.PostController]: asClass(EmployeePostController),
+		[EmployeeDependencies.PatchController]: asClass(EmployeePatchController),
+		[EmployeeDependencies.DeleteController]: asClass(EmployeeDeleteController),
+		[EmployeeDependencies.ExcelDownloadController]: asClass(EmployeeDownloadExcelServiceController),
+		[EmployeeDependencies.GetByCriteriaController]: asClass(EmployeeSearchByCriteriaController)
 	})
 }

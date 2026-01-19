@@ -8,6 +8,7 @@ import { type EmployeePostController } from '../../controllers/employee/employee
 import { type EmployeePatchController } from '../../controllers/employee/employee.patch.controller'
 import { type EmployeeDeleteController } from '../../controllers/employee/employee.delete.controller'
 import { type EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
+import { type EmployeeDownloadExcelServiceController } from '../../controllers/employee/employee.download-excel-service.controller'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { hasPermission } from '../../Middleware/authorization'
 import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
@@ -19,6 +20,9 @@ export const register = async (router: Router) => {
 	const patchController: EmployeePatchController = container.resolve(EmployeeDependencies.PatchController)
 	const searchByCriteria: EmployeeSearchByCriteriaController = container.resolve(
 		EmployeeDependencies.GetByCriteriaController
+	)
+	const download: EmployeeDownloadExcelServiceController = container.resolve(
+		EmployeeDependencies.ExcelDownloadController
 	)
 	const deleteController: EmployeeDeleteController = container.resolve(EmployeeDependencies.DeleteController)
 
@@ -89,6 +93,27 @@ export const register = async (router: Router) => {
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
 	)
+
+	/**
+	 * @swagger
+	 * /employees/download:
+	 *   get:
+	 *     tags:
+	 *       - Empleados
+	 *     summary: Descargar inventario en Excel
+	 *     description: Genera y descarga un archivo Excel con la lista de empleados.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Archivo Excel generado.
+	 *         content:
+	 *           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+	 *             schema:
+	 *               type: string
+	 *               format: binary
+	 */
+	router.get('/employees/download', ...protectedRoute, criteriaConverterMiddleware, download.run.bind(download))
 
 	/**
 	 * @swagger

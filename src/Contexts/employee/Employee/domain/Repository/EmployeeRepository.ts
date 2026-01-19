@@ -23,5 +23,13 @@ export abstract class EmployeeRepository {
 	abstract findByIds: (ids: Array<Primitives<EmployeeId>>) => Promise<EmployeeDto[]>
 	abstract findByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>>
 	abstract findByUserName(userName: Primitives<EmployeeUserName>): Promise<Nullable<EmployeeDto>>
+	/**
+	 * @abstract
+	 * @method donwload
+	 * @description Generates an Excel file (Buffer) containing device data based on provided criteria.
+	 * @param {Criteria} criteria The criteria for filtering the data to be downloaded.
+	 * @returns {Promise<Buffer>} A promise that resolves to an Excel file buffer.
+	 */
+	abstract donwload(criteria: Criteria): Promise<Buffer>
 	abstract remove(employeeId: Primitives<EmployeeId>): Promise<void>
 }
