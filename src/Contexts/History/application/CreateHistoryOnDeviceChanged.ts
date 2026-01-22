@@ -32,15 +32,44 @@ export class CreateHistoryOnDeviceChanged implements DomainEventSubscriber<
 			})
 		} else if (event instanceof DeviceUpdatedDomainEvent) {
 			const { newEntity, oldEntity } = event
-			await this.historyCreator.run({
-				deviceId: aggregateId,
-				userId,
-				employeeId: newEntity.employeeId,
-				action: 'UPDATE',
-				newData: newEntity as unknown as Record<string, unknown>,
-				oldData: oldEntity as unknown as Record<string, unknown>,
-				createdAt: new Date()
-			})
+
+			// Detectamos si es una transferencia directa entre dos empleados distintos
+			const isTransfer =
+				oldEntity.employeeId && newEntity.employeeId && oldEntity.employeeId !== newEntity.employeeId
+
+			if (isTransfer) {
+				// 1. Registro para el empleado saliente (Historial de "me lo quitaron")
+				await this.historyCreator.run({
+					deviceId: aggregateId,
+					userId,
+					employeeId: oldEntity.employeeId,
+					action: 'UPDATE',
+					newData: newEntity as unknown as Record<string, unknown>,
+					oldData: oldEntity as unknown as Record<string, unknown>,
+					createdAt: new Date()
+				})
+				// 2. Registro para el empleado entrante (Historial de "me lo dieron")
+				await this.historyCreator.run({
+					deviceId: aggregateId,
+					userId,
+					employeeId: newEntity.employeeId,
+					action: 'UPDATE',
+					newData: newEntity as unknown as Record<string, unknown>,
+					oldData: oldEntity as unknown as Record<string, unknown>,
+					createdAt: new Date()
+				})
+			} else {
+				// Caso normal: Asignación (Null->A), Desvinculación (A->Null) o cambio de otros datos sin cambio de usuario
+				await this.historyCreator.run({
+					deviceId: aggregateId,
+					userId,
+					employeeId: newEntity.employeeId ?? oldEntity.employeeId,
+					action: 'UPDATE',
+					newData: newEntity as unknown as Record<string, unknown>,
+					oldData: oldEntity as unknown as Record<string, unknown>,
+					createdAt: new Date()
+				})
+			}
 		}
 	}
 
