@@ -24,6 +24,7 @@ import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObj
 import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
 import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import { HistoryDto } from '../../../../History/domain/entity/History.dto'
 
 /**
  * @interface Employee
@@ -74,4 +75,5 @@ export type EmployeeDto = Employee & {
 	vicepresidencia: Omit<VicepresidenciaDto, 'cargos'>
 	departamento: Omit<DepartamentoDto, 'cargos'>
 	cargo: Omit<CargoDto, 'departamentos' | 'directivas' | 'vicepresidenciasEjecutivas' | 'vicepresidencias'>
+	history: HistoryDto[] | null
 }

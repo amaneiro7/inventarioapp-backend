@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Op } from 'sequelize'
 import fs from 'node:fs'
 import { set_fs, utils, type WorkSheet, write } from 'xlsx'
@@ -158,10 +159,21 @@ export class SequelizeEmployeeRepository
 						{ association: 'departamento', attributes: ['name'] },
 						{ association: 'directiva', attributes: ['name'] },
 						{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
-						{ association: 'vicepresidencia', attributes: ['name'] }
+						{ association: 'vicepresidencia', attributes: ['name'] },
+						'history'
 					]
 				})
-				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+
+				if (!employee) return null
+
+				const employeeDto = employee.get({ plain: true }) as EmployeeDto
+
+				// Transformar el historial para que sea más legible en el frontend
+				if ('history' in employeeDto) {
+					;(employeeDto as any).history = this.transformHistory((employeeDto as any).history)
+				}
+
+				return employeeDto
 			}
 		})
 	}
@@ -289,5 +301,29 @@ export class SequelizeEmployeeRepository
 	 */
 	async invalidate(params?: Primitives<EmployeeId> | Record<string, string>): Promise<void> {
 		await this.cacheInvalidator.invalidate(params)
+	}
+
+	/**
+	 * @private
+	 * @method transformHistory
+	 * @description Sorts and formats the history array for better frontend readability.
+	 * @param {any[]} history The raw history array.
+	 * @returns {any[]} The transformed history array.
+	 */
+	private transformHistory(history: any[]): any[] {
+		if (!Array.isArray(history)) return []
+
+		return history
+			.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+			.map(record => ({
+				...record,
+				formattedDate: new Date(record.createdAt).toLocaleString('es-VE', {
+					day: '2-digit',
+					month: '2-digit',
+					year: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit'
+				})
+			}))
 	}
 }

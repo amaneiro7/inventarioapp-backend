@@ -6,6 +6,7 @@ import { HistoryGetAllController } from '../../controllers/history/history.get-a
 import { SequelizeTotalChangeLastThreMonthsByCategoryRepository } from '../../../Contexts/History/infrastructure/sequelize/SequelizeTotalChangeLastThreMonthsByCategory'
 import { HistoryDashboard } from '../../../Contexts/History/application/HistoryDashboard'
 import { HistoryDashboardGetController } from '../../controllers/history/history-dashboard.controller'
+import { HistoryEnricher } from '../../../Contexts/History/domain/service/HistoryEnricher'
 
 export enum HistoryDependencies {
 	Repository = 'historyRepository',
@@ -13,7 +14,8 @@ export enum HistoryDependencies {
 	Creator = 'historyCreator',
 	GetAllController = 'historyGetAllController',
 	HistoryDashboard = 'historyDashboard',
-	HistoryDashboardGetController = 'historyDashboardGetController'
+	HistoryDashboardGetController = 'historyDashboardGetController',
+	HistoryEnricher = 'historyEnricher'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -26,6 +28,7 @@ export const register = (container: AwilixContainer) => {
 			SequelizeTotalChangeLastThreMonthsByCategoryRepository
 		).singleton(),
 		historyDashboard: asClass(HistoryDashboard),
-		historyDashboardGetController: asClass(HistoryDashboardGetController)
+		historyDashboardGetController: asClass(HistoryDashboardGetController),
+		historyEnricher: asClass(HistoryEnricher).singleton()
 	})
 }

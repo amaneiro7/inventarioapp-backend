@@ -3,15 +3,25 @@ import { EmployeeDoesNotExistError } from '../domain/Errors/EmployeeDoesNotExist
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto } from '../domain/entity/Employee.dto'
+import { type HistoryEnricher } from '../../../History/domain/service/HistoryEnricher'
+import { type HistoryDto } from '../../../History/domain/entity/History.dto'
 
 /**
  * @description Use case for finding an Employee entity by its unique identifier.
  */
 export class EmployeeFinder {
 	private readonly employeeRepository: EmployeeRepository
+	private readonly historyEnricher: HistoryEnricher
 
-	constructor({ employeeRepository }: { employeeRepository: EmployeeRepository }) {
+	constructor({
+		employeeRepository,
+		historyEnricher
+	}: {
+		employeeRepository: EmployeeRepository
+		historyEnricher: HistoryEnricher
+	}) {
 		this.employeeRepository = employeeRepository
+		this.historyEnricher = historyEnricher
 	}
 
 	/**
@@ -27,7 +37,11 @@ export class EmployeeFinder {
 		if (!employee) {
 			throw new EmployeeDoesNotExistError(employeeId)
 		}
+		let mappedHistory: HistoryDto[] | null = null
+		if (employee.history) {
+			mappedHistory = await this.historyEnricher.execute(employee.history)
+		}
 
-		return employee
+		return { ...employee, history: mappedHistory }
 	}
 }
