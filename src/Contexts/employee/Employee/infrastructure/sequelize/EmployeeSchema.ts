@@ -26,6 +26,7 @@ import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObj
 import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
 import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import { HistoryDto } from '../../../../History/domain/entity/History.dto'
 
 /**
  * @description Sequelize model for the `Employee` entity.
@@ -34,7 +35,13 @@ export class EmployeeModel
 	extends Model<
 		Omit<
 			EmployeeDto,
-			'location' | 'vicepresidencia' | 'directiva' | 'vicepresidenciaEjecutiva' | 'departamento' | 'cargo'
+			| 'location'
+			| 'vicepresidencia'
+			| 'directiva'
+			| 'vicepresidenciaEjecutiva'
+			| 'departamento'
+			| 'cargo'
+			| 'history'
 		>
 	>
 	implements EmployeeDto
@@ -57,6 +64,7 @@ export class EmployeeModel
 	declare cargoId: Primitives<CargoId> | null
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
+	declare history: HistoryDto[] | null
 	declare location: LocationDto
 	declare directiva: Omit<DirectivaDto, 'cargos'>
 	declare vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
