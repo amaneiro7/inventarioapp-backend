@@ -2,16 +2,26 @@ import { DeviceDoesNotExistError } from '../domain/errors/DeviceDoesNotExistErro
 import { DeviceId } from '../domain/valueObject/DeviceId'
 import { type DeviceRepository } from '../domain/repository/DeviceRepository'
 import { type Nullable } from '../../../Shared/domain/Nullable'
+import { type HistoryEnricher } from '../../../History/domain/service/HistoryEnricher'
 import { type DeviceDto } from '../domain/dto/Device.dto'
+import { type HistoryDto } from '../../../History/domain/entity/History.dto'
 
 /**
  * @description Use case for finding a Device entity by its unique identifier.
  */
 export class DeviceFinder {
 	private readonly deviceRepository: DeviceRepository
+	private readonly historyEnricher: HistoryEnricher
 
-	constructor({ deviceRepository }: { deviceRepository: DeviceRepository }) {
+	constructor({
+		deviceRepository,
+		historyEnricher
+	}: {
+		deviceRepository: DeviceRepository
+		historyEnricher: HistoryEnricher
+	}) {
 		this.deviceRepository = deviceRepository
+		this.historyEnricher = historyEnricher
 	}
 
 	/**
@@ -29,6 +39,11 @@ export class DeviceFinder {
 			throw new DeviceDoesNotExistError(id)
 		}
 
-		return device
+		let mappedHistory: HistoryDto[] = []
+		if (device.history) {
+			mappedHistory = await this.historyEnricher.execute(device.history)
+		}
+
+		return { ...device, history: mappedHistory }
 	}
 }
