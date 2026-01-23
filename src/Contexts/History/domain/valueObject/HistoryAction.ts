@@ -4,7 +4,9 @@ import { StringValueObject } from '../../../Shared/domain/value-object/StringVal
 export const acionTypes = {
 	CREATE: 'CREATE',
 	UPDATE: 'UPDATE',
-	DELETE: 'DELETE'
+	DELETE: 'DELETE',
+	ASSIGN: 'ASSIGN',
+	UNASSIGN: 'UNASSIGN'
 } as const
 
 export type ActionType = (typeof acionTypes)[keyof typeof acionTypes]

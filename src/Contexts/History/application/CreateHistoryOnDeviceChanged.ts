@@ -32,18 +32,19 @@ export class CreateHistoryOnDeviceChanged implements DomainEventSubscriber<
 			})
 		} else if (event instanceof DeviceUpdatedDomainEvent) {
 			const { newEntity, oldEntity } = event
+			const oldEmployeeId = oldEntity.employeeId
+			const newEmployeeId = newEntity.employeeId
 
 			// Detectamos si es una transferencia directa entre dos empleados distintos
-			const isTransfer =
-				oldEntity.employeeId && newEntity.employeeId && oldEntity.employeeId !== newEntity.employeeId
+			const isTransfer = oldEmployeeId && newEmployeeId && oldEmployeeId !== newEmployeeId
 
 			if (isTransfer) {
 				// 1. Registro para el empleado saliente (Historial de "me lo quitaron")
 				await this.historyCreator.run({
 					deviceId: aggregateId,
 					userId,
-					employeeId: oldEntity.employeeId,
-					action: 'UPDATE',
+					employeeId: oldEmployeeId,
+					action: 'UNASSIGN',
 					newData: newEntity as unknown as Record<string, unknown>,
 					oldData: oldEntity as unknown as Record<string, unknown>,
 					createdAt: new Date()
@@ -52,18 +53,40 @@ export class CreateHistoryOnDeviceChanged implements DomainEventSubscriber<
 				await this.historyCreator.run({
 					deviceId: aggregateId,
 					userId,
-					employeeId: newEntity.employeeId,
-					action: 'UPDATE',
+					employeeId: newEmployeeId,
+					action: 'ASSIGN',
+					newData: newEntity as unknown as Record<string, unknown>,
+					oldData: oldEntity as unknown as Record<string, unknown>,
+					createdAt: new Date()
+				})
+			} else if (!oldEmployeeId && newEmployeeId) {
+				// Asignación simple (Null -> A)
+				await this.historyCreator.run({
+					deviceId: aggregateId,
+					userId,
+					employeeId: newEmployeeId,
+					action: 'ASSIGN',
+					newData: newEntity as unknown as Record<string, unknown>,
+					oldData: oldEntity as unknown as Record<string, unknown>,
+					createdAt: new Date()
+				})
+			} else if (oldEmployeeId && !newEmployeeId) {
+				// Desvinculación simple (A -> Null)
+				await this.historyCreator.run({
+					deviceId: aggregateId,
+					userId,
+					employeeId: oldEmployeeId,
+					action: 'UNASSIGN',
 					newData: newEntity as unknown as Record<string, unknown>,
 					oldData: oldEntity as unknown as Record<string, unknown>,
 					createdAt: new Date()
 				})
 			} else {
-				// Caso normal: Asignación (Null->A), Desvinculación (A->Null) o cambio de otros datos sin cambio de usuario
+				// Cambio de datos sin cambio de asignación (A -> A o Null -> Null)
 				await this.historyCreator.run({
 					deviceId: aggregateId,
 					userId,
-					employeeId: newEntity.employeeId ?? oldEntity.employeeId,
+					employeeId: newEmployeeId ?? oldEmployeeId,
 					action: 'UPDATE',
 					newData: newEntity as unknown as Record<string, unknown>,
 					oldData: oldEntity as unknown as Record<string, unknown>,
