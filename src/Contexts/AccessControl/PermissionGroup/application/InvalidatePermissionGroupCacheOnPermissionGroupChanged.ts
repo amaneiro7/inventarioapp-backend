@@ -9,8 +9,8 @@ export class InvalidatePermissionGroupCacheOnPermissionGroupChanged implements D
 > {
 	private readonly invalidator: CacheInvalidator
 
-	constructor({ permissionRepository }: { permissionRepository: CacheInvalidator }) {
-		this.invalidator = permissionRepository
+	constructor({ permissionGroupRepository }: { permissionGroupRepository: CacheInvalidator }) {
+		this.invalidator = permissionGroupRepository
 	}
 
 	async on(event: PermissionGroupCreatedDomainEvent | PermissionGroupUpdatedDomainEvent): Promise<void> {

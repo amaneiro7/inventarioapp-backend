@@ -59,9 +59,14 @@ export class PermissionGroupUpdater {
 		}
 
 		const permissionGroupEntity = PermissionGroup.fromPrimitives(permissionGroup)
+
+		const validations: Promise<void>[] = []
 		const changes: Array<{ field: PermissionGroupFields; oldValue: unknown; newValue: unknown }> = []
+
 		if (params.name !== undefined && params.name !== permissionGroupEntity.nameValue) {
-			this.permissionGroupNameUniquenessChecker.ensureUnique(params.name, permissionGroupEntity.idValue)
+			validations.push(
+				this.permissionGroupNameUniquenessChecker.ensureUnique(params.name, permissionGroupEntity.idValue)
+			)
 			changes.push({
 				field: 'name',
 				oldValue: permissionGroupEntity.nameValue,
@@ -81,8 +86,17 @@ export class PermissionGroupUpdater {
 		}
 
 		if (params.permissions !== undefined) {
+			const uniquePermissionsIds = [...new Set(params.permissions)]
+			if (uniquePermissionsIds.length > 0) {
+				validations.push(this.permissionChecker.ensureExist(uniquePermissionsIds))
+			}
+
 			const oldPermissions = permissionGroupEntity.permissionsValue
-			const hasChanges = await this.updatePermissionsInGroup(permissionGroupEntity, params?.permissions)
+
+			const hasChanges = await this.updatePermissionsInGroup({
+				entity: permissionGroupEntity,
+				newPermissionIds: params.permissions
+			})
 			if (hasChanges) {
 				changes.push({
 					field: 'permissions',
@@ -92,6 +106,7 @@ export class PermissionGroupUpdater {
 			}
 		}
 
+		await Promise.all(validations)
 		if (changes.length > 0) {
 			permissionGroupEntity.registerUpdateEvent({ changes })
 			await this.permissionGroupRepository.save(permissionGroupEntity.toPrimitives())
@@ -104,40 +119,38 @@ export class PermissionGroupUpdater {
 	 * @description Ensures that all provided permission IDs exist and updates the permission group's permissions.
 	 * It calculates the difference between current and new permissions and applies granular changes.
 	 * @param {PermissionGroup} entity The permission group entity being updated.
-	 * @param {Primitives<PermissionId>[]} newPermissionPrimitives The list of new permission IDs (as primitives) to set for the group.
+	 * @param {Primitives<PermissionId>[]} newPermissionIds The list of new permission IDs (as primitives) to set for the group.
 	 * @returns {Promise<boolean>} A promise that resolves when the permissions are successfully updated.
 	 * @throws {PermissionDoesNotExistError} If any of the provided permission IDs do not exist.
 	 */
-	private async updatePermissionsInGroup(
-		entity: PermissionGroup,
-		newPermissionPrimitives: Primitives<PermissionId>[]
-	): Promise<boolean> {
+	private async updatePermissionsInGroup({
+		entity,
+		newPermissionIds
+	}: {
+		entity: PermissionGroup
+		newPermissionIds: Primitives<PermissionId>[]
+	}): Promise<boolean> {
 		let hasPermissionsChanged = false
-		const uniqueNewPermissionPrimitives = [...new Set(newPermissionPrimitives)]
-
-		// 1. Validate existence of all incoming permission IDs in a single query
-		if (uniqueNewPermissionPrimitives.length > 0) {
-			await this.permissionChecker.ensureExist(uniqueNewPermissionPrimitives)
-		}
+		const uniqueNewPermissionIds = [...new Set(newPermissionIds)]
 
 		// 2. Convert primitives to value objects for comparison and entity methods
-		const newPermissionIds = new Set(uniqueNewPermissionPrimitives.map(p => new PermissionId(p)))
-		const currentPermissionIds = new Set(entity.permissionsValue.map(p => new PermissionId(p)))
+		const newPermissionsIds = new Set(uniqueNewPermissionIds)
+		const currentPermissionIds = new Set(entity.permissionsValue)
 
 		// 3. Determine permissions to add
 		for (const newPermId of newPermissionIds) {
 			if (!currentPermissionIds.has(newPermId)) {
-				entity.assignPermission(newPermId)
+				entity.assignPermission(new PermissionId(newPermId))
+				hasPermissionsChanged = true
 			}
-			hasPermissionsChanged = true
 		}
 
 		// 4. Determine permissions to remove
 		for (const currentPermId of currentPermissionIds) {
-			if (!newPermissionIds.has(currentPermId)) {
-				entity.revokePermission(currentPermId)
+			if (!newPermissionsIds.has(currentPermId)) {
+				entity.revokePermission(new PermissionId(currentPermId))
+				hasPermissionsChanged = true
 			}
-			hasPermissionsChanged = true
 		}
 
 		return hasPermissionsChanged
