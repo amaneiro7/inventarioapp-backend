@@ -12,6 +12,8 @@ import { CargoUpdatedDomainEvent } from '../../Cargo/domain/event/CargoUpdatedDo
 import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/SiteUpdatedDomainEvent'
 import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
+import { DeviceUpdatedDomainEvent } from '../../../Device/Device/domain/event/DeviceUpdatedDomainEvent'
+import { DeviceCreatedDomainEvent } from '../../../Device/Device/domain/event/DeviceCreatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
@@ -22,6 +24,8 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 	| EmployeeRemovedDomainEvent
 	| EmployeeTypeChangedDomainEvent
 	| EmployeeReactivatedDomainEvent
+	| DeviceUpdatedDomainEvent
+	| DeviceCreatedDomainEvent
 	| CargoUpdatedDomainEvent
 	| DepartamentoUpdatedDomainEvent
 	| DirectivaUpdatedDomainEvent
@@ -45,6 +49,8 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			| EmployeeRemovedDomainEvent
 			| EmployeeTypeChangedDomainEvent
 			| EmployeeReactivatedDomainEvent
+			| DeviceUpdatedDomainEvent
+			| DeviceCreatedDomainEvent
 			| CargoUpdatedDomainEvent
 			| DepartamentoUpdatedDomainEvent
 			| DirectivaUpdatedDomainEvent
@@ -89,6 +95,8 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			EmployeeCreatedDomainEvent,
 			EmployeeUpdatedDomainEvent,
 			EmployeeRemovedDomainEvent,
+			DeviceUpdatedDomainEvent,
+			DeviceCreatedDomainEvent,
 			EmployeeReactivatedDomainEvent,
 			EmployeeTypeChangedDomainEvent,
 			CargoUpdatedDomainEvent,
