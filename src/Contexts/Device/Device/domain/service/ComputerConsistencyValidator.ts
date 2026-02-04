@@ -190,12 +190,7 @@ export class ComputerConsistencyValidator {
 		const status = device.statusValue
 		const ipAddress = device.ipAddressValue
 
-		const isInUse =
-			status === StatusOptions.INUSE ||
-			status === StatusOptions.PRESTAMO ||
-			status === StatusOptions.CONTINGENCIA ||
-			status === StatusOptions.JORNADA ||
-			status === StatusOptions.GUARDIA
+		const isInUse = status === StatusOptions.INUSE
 
 		const isNotInUse =
 			status === StatusOptions.INALMACEN ||
