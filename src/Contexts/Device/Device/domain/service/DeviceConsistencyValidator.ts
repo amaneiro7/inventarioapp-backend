@@ -76,7 +76,7 @@ export class DeviceConsistencyValidator {
 		if (isStorage && typeOfSite !== TypeOfSiteList.ALMACEN) {
 			throw new InvalidArgumentError('Un dispositivo en almacén solo puede estar ubicado en un almacén.')
 		}
-		if (status === StatusOptions.DESINCORPORADO && typeOfSite !== null) {
+		if (status === StatusOptions.DESINCORPORADO && device.locationValue !== null) {
 			throw new InvalidArgumentError('Un dispositivo desincorporado no puede tener una ubicación asignada.')
 		}
 	}
