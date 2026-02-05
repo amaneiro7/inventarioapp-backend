@@ -34,7 +34,7 @@ export class SequelizeProcessorRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<ProcessorDto>> {
 		const sequelizeOptions = this.convert(criteria)
 		const finalOptions = ProcessorAssociation.convertFilter(criteria, sequelizeOptions)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<ProcessorDto>>({
 			cacheKey,
