@@ -14,7 +14,8 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:all` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` })
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` }),
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:ids:*` })
 			]
 
 			if (typeof params === 'string') {
@@ -22,7 +23,6 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:name:${params}` }))
 				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:id:${params}` }))
 				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:key:${params}` }))
-				promises.push(this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:ids:${params}` }))
 			} else {
 				// Comportamiento granular: Invalidamos solo las propiedades enviadas
 				for (const [key, value] of Object.entries(params)) {
