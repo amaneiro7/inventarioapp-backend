@@ -17,18 +17,18 @@ export class DepartamentoCreator {
 
 	constructor({
 		cargoRepository,
-		directivaRepository,
+		vicepresidenciaRepository,
 		departamentoRepository,
 		eventBus
 	}: {
 		departamentoRepository: DepartamentoRepository
-		directivaRepository: VicepresidenciaRepository
+		vicepresidenciaRepository: VicepresidenciaRepository
 		cargoRepository: CargoRepository
 		eventBus: EventBus
 	}) {
 		this.departamentoRepository = departamentoRepository
 		this.departamentoNameUniquenessChecker = new DepartamentoNameUniquenessChecker(departamentoRepository)
-		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(directivaRepository)
+		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
 		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
 		this.eventBus = eventBus
 	}
