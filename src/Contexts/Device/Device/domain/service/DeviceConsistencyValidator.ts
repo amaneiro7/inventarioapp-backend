@@ -68,13 +68,15 @@ export class DeviceConsistencyValidator {
 			status === StatusOptions.GUARDIA ||
 			status === StatusOptions.DISPONIBLE ||
 			status === StatusOptions.JORNADA
-		const isStorage = status === StatusOptions.INALMACEN || status === StatusOptions.PORDESINCORPORAR
+		const isStorage = status === StatusOptions.INALMACEN
 
 		if (isInUse && typeOfSite === TypeOfSiteList.ALMACEN) {
 			throw new InvalidArgumentError('Un dispositivo en uso no puede estar ubicado en un almacén.')
 		}
 		if (isStorage && typeOfSite !== TypeOfSiteList.ALMACEN) {
-			throw new InvalidArgumentError('Un dispositivo en almacén solo puede estar ubicado en un almacén.')
+			throw new InvalidArgumentError(
+				'Un dispositivo con estatus "En Almacén" solo puede estar ubicado en un almacén.'
+			)
 		}
 		if (status === StatusOptions.DESINCORPORADO && device.locationValue !== null) {
 			throw new InvalidArgumentError('Un dispositivo desincorporado no puede tener una ubicación asignada.')
