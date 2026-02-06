@@ -36,7 +36,7 @@ export class SequelizeDepartamentoRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<DepartamentoDto>> {
 		const options = this.convert(criteria)
 		const opt = DepartamentoAssociation.convertFilter(criteria, options)
-		const cacheKey = `${this.cacheKeyPrefix}:matching:`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<DepartamentoDto>>({
 			cacheKey,

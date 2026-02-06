@@ -50,7 +50,7 @@ export class SequelizeEmployeeRepository
 		const options = this.convert(criteria)
 		const opt = EmployeeAssociation.convertFilter(criteria, options)
 		return await this.cache.getCachedData<ResponseDB<EmployeeDto>>({
-			cacheKey: `${this.cacheKey}:${criteria.hash()}`,
+			cacheKey: `${this.cacheKey}:lists:${criteria.hash()}`,
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {

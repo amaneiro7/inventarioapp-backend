@@ -33,7 +33,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 	async searchAll(criteria: Criteria): Promise<ResponseDB<CargoDto>> {
 		const options = this.convert(criteria)
 		const opt = CargoAssociation.convertFilter(criteria, options)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<CargoDto>>({
 			cacheKey,

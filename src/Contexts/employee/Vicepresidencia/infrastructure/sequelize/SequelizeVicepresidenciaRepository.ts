@@ -35,7 +35,7 @@ export class SequelizeVicepresidenciaRepository
 	async searchAll(criteria: Criteria): Promise<ResponseDB<VicepresidenciaDto>> {
 		const options = this.convert(criteria)
 		const opt = VicepresidenciaAssociation.convertFilter(criteria, options)
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:lists:${criteria.hash()}`
 
 		return this.cache.getCachedData<ResponseDB<VicepresidenciaDto>>({
 			cacheKey,
