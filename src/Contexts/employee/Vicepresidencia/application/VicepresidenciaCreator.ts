@@ -17,19 +17,19 @@ export class VicepresidenciaCreator {
 
 	constructor({
 		cargoRepository,
-		vicepresidenciaEjectivaRepository,
+		vicepresidenciaEjecutivaRepository,
 		vicepresidenciaRepository,
 		eventBus
 	}: {
 		vicepresidenciaRepository: VicepresidenciaRepository
-		vicepresidenciaEjectivaRepository: VicepresidenciaEjecutivaRepository
+		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 		cargoRepository: CargoRepository
 		eventBus: EventBus
 	}) {
 		this.vicepresidenciaRepository = vicepresidenciaRepository
 		this.vicepresidenciaNameUniquenessChecker = new VicepresidenciaNameUniquenessChecker(vicepresidenciaRepository)
 		this.vicepresidenciaEjectivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
-			vicepresidenciaEjectivaRepository
+			vicepresidenciaEjecutivaRepository
 		)
 		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
 		this.eventBus = eventBus
