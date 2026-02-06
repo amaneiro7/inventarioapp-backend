@@ -64,13 +64,46 @@ export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscrib
 			event instanceof DeviceRemovedDomainEvent
 
 		if (isDeviceEvent) {
-			const { serial, activo } = event as DeviceCreatedDomainEvent | DeviceUpdatedDomainEvent
+			const { serial, activo } = event as
+				| DeviceCreatedDomainEvent
+				| DeviceUpdatedDomainEvent
+				| DeviceRemovedDomainEvent
+
+			let computerName: string | undefined
+			let oldComputerName: string | undefined
+			let brandId: string | undefined
+			let categoryId: string | undefined
+
+			if (event instanceof DeviceCreatedDomainEvent) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const device = event.device as any
+				computerName = device.computerName
+				brandId = device.brandId
+				categoryId = device.categoryId
+			} else if (event instanceof DeviceUpdatedDomainEvent) {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const newDevice = event.newEntity as any
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const oldDevice = event.oldEntity as any
+
+				computerName = newDevice.computerName
+				brandId = newDevice.brandId
+				categoryId = newDevice.categoryId
+
+				if (oldDevice.computerName && oldDevice.computerName !== newDevice.computerName) {
+					oldComputerName = oldDevice.computerName
+				}
+			}
 
 			await this.invalidator.invalidate({
 				id: event.aggregateId,
 				key: event.aggregateId,
 				serial,
-				activo
+				activo,
+				computerName,
+				oldComputerName,
+				brandId,
+				categoryId
 			})
 		} else {
 			await this.invalidator.invalidate()

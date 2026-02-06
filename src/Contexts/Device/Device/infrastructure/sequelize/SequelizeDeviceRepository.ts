@@ -348,7 +348,40 @@ export class SequelizeDeviceRepository
 	 * @description Invalidates all devices-related cache entries.
 	 * Implements DeviceCacheInvalidator interface.
 	 */
-	async invalidate(params?: Primitives<DeviceId> | Record<string, string>): Promise<void> {
+	async invalidate(
+		params?: Primitives<DeviceId> | Record<string, string | number | null | undefined>
+	): Promise<void> {
 		await this.cacheInvalidator.invalidate(params)
+
+		if (params && typeof params !== 'string') {
+			// Invalida cache específica por computerName
+			if (params.computerName) {
+				await this.cache.removeCachedData({
+					cacheKey: `${this.cacheKeyPrefix}:computerName:${params.computerName}`
+				})
+			}
+			// Invalida cache del nombre anterior si cambió (para evitar datos obsoletos)
+			if (params.oldComputerName) {
+				await this.cache.removeCachedData({
+					cacheKey: `${this.cacheKeyPrefix}:computerName:${params.oldComputerName}`
+				})
+			}
+			// Invalida cache por serial
+			if (params.serial) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:serial:${params.serial}` })
+			}
+			// Invalida cache por activo
+			if (params.activo) {
+				await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:activo:${params.activo}` })
+			}
+			// Invalida cache compuesta (Serial + Brand + Category)
+			if (params.serial && params.brandId && params.categoryId) {
+				await this.cache.removeCachedData({
+					cacheKey: `${this.cacheKeyPrefix}:serial:${params.serial}:brand:${params.brandId}:category:${params.categoryId}`
+				})
+			}
+			// Invalida todas las búsquedas por múltiples IDs (findByIds) para evitar inconsistencias en listas parciales
+			await this.cache.removeCachedData({ cacheKey: `${this.cacheKeyPrefix}:ids:*` })
+		}
 	}
 }
