@@ -5,7 +5,7 @@ import { NumberValueObject } from '../../../../Shared/domain/value-object/Number
  */
 export class MemoryRamSlotQuantity extends NumberValueObject {
 	private readonly MIN_SLOTS = 1
-	private readonly MAX_SLOTS = 8
+	private readonly MAX_SLOTS = 16
 
 	constructor(readonly value: number) {
 		super(value)

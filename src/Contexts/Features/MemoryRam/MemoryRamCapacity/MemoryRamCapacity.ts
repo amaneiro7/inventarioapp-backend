@@ -5,7 +5,7 @@ import { NumberValueObject } from '../../../Shared/domain/value-object/NumberVal
  * @description Represents the total memory RAM capacity of a device.
  */
 export class MemoryRamCapacity extends NumberValueObject {
-	private readonly MAX_CAPACITY = 32
+	private readonly MAX_CAPACITY = 256
 	private readonly MIN_STEP = this.MAX_CAPACITY / Math.pow(2, 8) // 0.125
 
 	constructor(readonly value: number) {
