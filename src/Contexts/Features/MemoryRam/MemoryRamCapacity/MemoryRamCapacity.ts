@@ -5,13 +5,13 @@ import { NumberValueObject } from '../../../Shared/domain/value-object/NumberVal
  * @description Represents the total memory RAM capacity of a device.
  */
 export class MemoryRamCapacity extends NumberValueObject {
-	private readonly MAX_CAPACITY = 256
-	private readonly MIN_STEP = this.MAX_CAPACITY / Math.pow(2, 8) // 0.125
+	private readonly MAX_GB: number = 512
+	private readonly STEP_GB: number = 0.125
 
 	constructor(readonly value: number) {
 		super(value)
-		this.ensureLengthIsSmallerThan(this.MAX_CAPACITY, this.value)
-		this.ensureIsValid(value)
+		this.ensureValidRange(this.value)
+		this.ensureStepConsistency(this.value)
 	}
 
 	/**
@@ -19,9 +19,9 @@ export class MemoryRamCapacity extends NumberValueObject {
 	 * @param {number} value The value to validate.
 	 * @throws {InvalidArgumentError} If the value is not valid.
 	 */
-	private ensureIsValid(value: number): void {
-		if (!this.isValid(value)) {
-			throw new InvalidArgumentError(`<${value}> no es una capacidad de RAM válida.`)
+	private ensureValidRange(value: number): void {
+		if (value <= 0 || value > this.MAX_GB) {
+			throw new InvalidArgumentError(`La capacidad de RAM <${value}> debe estar entre 0 y ${this.MAX_GB} GB.`)
 		}
 	}
 
@@ -30,7 +30,17 @@ export class MemoryRamCapacity extends NumberValueObject {
 	 * @param {number} value The value to check.
 	 * @returns {boolean} True if the value is a valid capacity, false otherwise.
 	 */
-	private isValid(value: number): boolean {
-		return value % this.MIN_STEP === 0
+	private ensureStepConsistency(value: number): void {
+		// Multiplicamos por 1000 para evitar problemas de precisión de punto flotante en el módulo
+		// O mejor aún, validamos basándonos en potencias de 128MB (0.125)
+		const precisionMultiplier = 1000
+		const normalizedValue = Math.round(value * precisionMultiplier)
+		const normalizedStep = Math.round(this.STEP_GB * precisionMultiplier)
+
+		if (normalizedValue % normalizedStep !== 0) {
+			throw new InvalidArgumentError(
+				`<${value}> no es una capacidad de RAM válida. Debe ser múltiplo de ${this.STEP_GB} GB.`
+			)
+		}
 	}
 }
