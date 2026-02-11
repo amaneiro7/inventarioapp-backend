@@ -79,6 +79,14 @@ export class Employee extends AggregateRoot {
 	static create(params: EmployeeParams, allowedDomains?: string[]): Employee {
 		this.ensureCreationRules(params)
 
+		this.ensureForbiddenHierarchyByType(params.type, {
+			directivaId: params.directivaId,
+			vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
+			vicepresidenciaId: params.vicepresidenciaId,
+			departamentoId: params.departamentoId
+		})
+		this.ensureForbiddenCargoByType(params.type, params.cargoId)
+
 		this.ensureMandatoryHierarchyByType(params.type, params?.directivaId)
 		this.ensureMandatoryCargoByType(params.type, params?.cargoId)
 		this.ensureHierarchyConsistency({
@@ -297,7 +305,11 @@ export class Employee extends AggregateRoot {
 		type: EmployeeTypesEnum,
 		directivaId: Primitives<DirectivaId> | null
 	): void {
-		const typesRequiringHierarchy = [EmployeeTypesEnum.REGULAR, EmployeeTypesEnum.CONTRACTOR]
+		const typesRequiringHierarchy = [
+			EmployeeTypesEnum.REGULAR,
+			EmployeeTypesEnum.CONTRACTOR,
+			EmployeeTypesEnum.APPRENTICE
+		]
 
 		if (typesRequiringHierarchy.includes(type) && !directivaId) {
 			throw new InvalidArgumentError(`El campo Directiva es obligatorio para empleados de tipo ${type}.`)
@@ -305,10 +317,47 @@ export class Employee extends AggregateRoot {
 	}
 
 	private static ensureMandatoryCargoByType(type: EmployeeTypesEnum, cargoId: Primitives<CargoId> | null): void {
-		const typesRequiringCargo = [EmployeeTypesEnum.REGULAR, EmployeeTypesEnum.CONTRACTOR]
+		const typesRequiringCargo = [
+			EmployeeTypesEnum.REGULAR,
+			EmployeeTypesEnum.CONTRACTOR,
+			EmployeeTypesEnum.APPRENTICE
+		]
 
 		if (typesRequiringCargo.includes(type) && !cargoId) {
 			throw new InvalidArgumentError(`El cargo es obligatorio para empleados de tipo ${type}.`)
+		}
+	}
+
+	private static ensureForbiddenHierarchyByType(
+		type: EmployeeTypesEnum,
+		params: {
+			directivaId: Primitives<DirectivaId> | null
+			vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
+			vicepresidenciaId: Primitives<VicepresidenciaId> | null
+			departamentoId: Primitives<DepartamentoId> | null
+		}
+	): void {
+		const typesForbiddenHierarchy = [EmployeeTypesEnum.GENERIC]
+
+		if (typesForbiddenHierarchy.includes(type)) {
+			if (
+				params.directivaId ||
+				params.vicepresidenciaEjecutivaId ||
+				params.vicepresidenciaId ||
+				params.departamentoId
+			) {
+				throw new InvalidArgumentError(
+					`Los empleados de tipo ${type} no pueden tener asignada una jerarquía (Directiva, Vicepresidencia, etc.).`
+				)
+			}
+		}
+	}
+
+	private static ensureForbiddenCargoByType(type: EmployeeTypesEnum, cargoId: Primitives<CargoId> | null): void {
+		const typesForbiddenCargo = [EmployeeTypesEnum.GENERIC]
+
+		if (typesForbiddenCargo.includes(type) && cargoId) {
+			throw new InvalidArgumentError(`Los empleados de tipo ${type} no pueden tener un cargo asignado.`)
 		}
 	}
 
