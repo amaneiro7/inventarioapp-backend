@@ -297,11 +297,7 @@ export class Employee extends AggregateRoot {
 		type: EmployeeTypesEnum,
 		directivaId: Primitives<DirectivaId> | null
 	): void {
-		const typesRequiringHierarchy = [
-			EmployeeTypesEnum.REGULAR,
-			EmployeeTypesEnum.CONTRACTOR,
-			EmployeeTypesEnum.APPRENTICE
-		]
+		const typesRequiringHierarchy = [EmployeeTypesEnum.REGULAR, EmployeeTypesEnum.CONTRACTOR]
 
 		if (typesRequiringHierarchy.includes(type) && !directivaId) {
 			throw new InvalidArgumentError(`El campo Directiva es obligatorio para empleados de tipo ${type}.`)
@@ -309,11 +305,7 @@ export class Employee extends AggregateRoot {
 	}
 
 	private static ensureMandatoryCargoByType(type: EmployeeTypesEnum, cargoId: Primitives<CargoId> | null): void {
-		const typesRequiringCargo = [
-			EmployeeTypesEnum.REGULAR,
-			EmployeeTypesEnum.CONTRACTOR,
-			EmployeeTypesEnum.APPRENTICE
-		]
+		const typesRequiringCargo = [EmployeeTypesEnum.REGULAR, EmployeeTypesEnum.CONTRACTOR]
 
 		if (typesRequiringCargo.includes(type) && !cargoId) {
 			throw new InvalidArgumentError(`El cargo es obligatorio para empleados de tipo ${type}.`)
