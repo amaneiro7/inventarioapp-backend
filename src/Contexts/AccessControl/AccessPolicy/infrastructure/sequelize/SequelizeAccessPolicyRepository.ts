@@ -139,7 +139,7 @@ export class SequelizeAccessPolicyRepository
 				through: { attributes: [] }
 			}
 		]
-		const cacheKey = `${this.cacheKeyPrefix}:${criteria.hash()}`
+		const cacheKey = `${this.cacheKeyPrefix}:filtered-search:${criteria.hash()}`
 
 		return this.cache.getCachedData<AccessPolicyDto[]>({
 			cacheKey,

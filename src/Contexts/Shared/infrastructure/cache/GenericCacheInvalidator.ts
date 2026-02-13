@@ -15,8 +15,10 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` }),
-				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:ids:*` })
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:ids:*` }),
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:filtered-search:*` })
 			]
+			// Sugerencia conceptual para el Invalidator
 
 			if (typeof params === 'string') {
 				// Comportamiento legacy: Mantenemos la invalidación amplia si solo se pasa un ID string
