@@ -20,7 +20,7 @@ export class MemoryRamCapacity extends NumberValueObject {
 	 * @throws {InvalidArgumentError} If the value is not valid.
 	 */
 	private ensureValidRange(value: number): void {
-		if (value <= 0 || value > this.MAX_GB) {
+		if (value < 0 || value > this.MAX_GB) {
 			throw new InvalidArgumentError(`La capacidad de RAM <${value}> debe estar entre 0 y ${this.MAX_GB} GB.`)
 		}
 	}
