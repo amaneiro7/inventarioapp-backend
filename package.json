@@ -28,6 +28,7 @@
 		"seed:undo": "sequelize-cli db:seed:undo",
 		"seed:undo:all": "sequelize-cli db:seed:undo:all",
 		"seed:generate": "sequelize-cli seed:generate --name",
+		"docker:dev:reset": "docker-compose stop postgres-dev redis-dev rabbitmq-dev && node -e \"const fs = require('fs'); ['postgres_data_dev', 'redis_data_dev'].forEach(dir => fs.rmSync(dir, { recursive: true, force: true })); console.log('Volúmenes de desarrollo reiniciados.');\"",
 		"prepare": "husky"
 	},
 	"keywords": [
@@ -48,14 +49,14 @@
 	"license": "MIT",
 	"dependencies": {
 		"amqplib": "0.10.9",
-		"awilix": "12.1.0",
+		"awilix": "12.1.1",
 		"bcrypt": "6.0.0",
 		"bull": "4.16.5",
 		"compression": "1.8.1",
 		"cookie-parser": "1.4.7",
 		"cookie-session": "2.1.1",
 		"cors": "2.8.6",
-		"dotenv": "17.2.4",
+		"dotenv": "17.3.1",
 		"errorhandler": "1.5.2",
 		"eslint": "10.0.0",
 		"express": "4.22.1",

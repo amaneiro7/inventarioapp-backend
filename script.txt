@@ -1,0 +1,16 @@
+mkdir -p certs
+mkdir -p certbot/www
+
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+
+docker-compose -f docker-compose.prod.yml up -d
+
+
+docker-compose -f docker-compose.prod.yml --env-file .env.prod run --rm certbot certonly --webroot -w /var/www/certbot --staging -d bncenlinea.com --email anmaneiro@bnc.com.ve --agree-tos --no-eff-email
+
+sudo certbot certonly --manual --preferred-challenges dns -d bnc.com.ve
+
+mkdir -p ./certbot/conf/live/www.bncenlinea.com/
+mkcert -key-file ./certbot/conf/live/www.bncenlinea.com/privkey.pem -cert-file ./certbot/conf/live/www.bncenlinea.com/fullchain.pem www.bncenlinea.com bncenlinea.com localhost 127.0.0.1
+mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
+

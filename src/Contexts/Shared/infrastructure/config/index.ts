@@ -20,7 +20,7 @@ const {
 	POSTGRES_PASSWORD: postgresPassword = 'Man12345*',
 	POSTGRES_HOST: postgresHost = 'localhost',
 	POSTGRES_PORT: postgresPort = 5432,
-	POSTGRES_DB_NAME: postgresDBName = 'inventoryApp',
+	POSTGRES_DB: postgresDBName = 'inventoryApp',
 	POSTGRES_SSL: postgresSSL = false,
 	REDIS_HOST: redisHost = 'localhost',
 	REDIS_PORT: redisPort = 6379,
@@ -60,6 +60,11 @@ type Config = {
 	smtpEmail: string
 	smtpPassword: string
 }
+
+console.log(postgresHost)
+console.log(postgresPort)
+console.log(postgresDBName)
+console.log(postgresPassword)
 
 export const config: Config = {
 	env,

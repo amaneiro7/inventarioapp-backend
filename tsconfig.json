@@ -4,7 +4,7 @@
 		"esModuleInterop": true,
 		"target": "es6",
 		"noImplicitAny": true,
-		"incremental": true,
+		"incremental": false,
 		"moduleResolution": "node",
 		"sourceMap": false,
 		"rootDir": ".",

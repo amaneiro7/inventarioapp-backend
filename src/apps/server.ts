@@ -1,8 +1,5 @@
 import express, { json, urlencoded, type Request, type Response } from 'express'
 import * as http from 'node:http'
-import * as https from 'node:https'
-import * as fs from 'node:fs/promises'
-import * as path from 'node:path'
 import * as os from 'node:os' // Importar el módulo os para obtener el hostname
 import swaggerUi from 'swagger-ui-express'
 import cookieParser from 'cookie-parser'
@@ -21,9 +18,7 @@ export class Server {
 	readonly port: string
 	private readonly logger: Logger
 	private express: express.Express
-	private readonly sslKeyPath: string = path.resolve('./src/apps/certificate/nginx.key')
-	private readonly sslCertPath: string = path.resolve('./src/apps/certificate/nginx-certificate.crt')
-	httpServer?: http.Server | https.Server
+	httpServer?: http.Server
 
 	constructor({ logger, port }: { port: string; logger: Logger }) {
 		this.logger = logger
@@ -52,31 +47,6 @@ export class Server {
 		this.express.use(errorHandler(this.logger))
 	}
 
-	private async startHTTPS(): Promise<void> {
-		const hostname = os.hostname() // Obtener el hostname del sistema
-		try {
-			const privateKey = await fs.readFile(this.sslKeyPath, 'utf8')
-			const certificate = await fs.readFile(this.sslCertPath, 'utf8')
-			const credentials = { key: privateKey, cert: certificate }
-
-			await new Promise<void>(resolve => {
-				const env = this.express.get('env') as string
-				this.httpServer = https.createServer(credentials, this.express).listen(this.port, () => {
-					this.logger.info(
-						`Aplicación Inventario Backend ejecutándose en https://${hostname}:${this.port} en modo ${env} (HTTPS)`
-					)
-					this.logger.info('Presione CTRL-C para detener')
-					resolve()
-				})
-			})
-		} catch (error) {
-			this.logger.error(
-				`Error al cargar los certificados HTTPS (${this.sslKeyPath}, ${this.sslCertPath}): ${error}. Iniciando servidor HTTP.`
-			)
-			await this.startHTTP()
-		}
-	}
-
 	private async startHTTP(): Promise<void> {
 		const hostname = os.hostname() // Obtener el hostname del sistema
 		await new Promise<void>(resolve => {
@@ -85,6 +55,9 @@ export class Server {
 				this.logger.info(
 					`Aplicación Inventario Backend ejecutándose en http://${hostname}:${this.port} en modo ${env} (HTTP)`
 				)
+				this.logger.info(
+					'El servidor está listo para recibir conexiones internas (detrás de un proxy inverso).'
+				)
 				this.logger.info('Presione CTRL-C para detener')
 				resolve()
 			})
@@ -92,7 +65,7 @@ export class Server {
 	}
 
 	async listen(): Promise<void> {
-		await this.startHTTPS()
+		await this.startHTTP()
 	}
 
 	getHTTPServer(): Server['httpServer'] {
