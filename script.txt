@@ -1,16 +1,14 @@
-mkdir -p certs
-mkdir -p certbot/www
-
 docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 
 docker-compose -f docker-compose.prod.yml up -d
 
+docker compose -f docker-compose.dev.yml --env-file .env.development up -d
 
-docker-compose -f docker-compose.prod.yml --env-file .env.prod run --rm certbot certonly --webroot -w /var/www/certbot --staging -d bncenlinea.com --email anmaneiro@bnc.com.ve --agree-tos --no-eff-email
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 
-sudo certbot certonly --manual --preferred-challenges dns -d bnc.com.ve
+docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
 
-mkdir -p ./certbot/conf/live/www.bncenlinea.com/
-mkcert -key-file ./certbot/conf/live/www.bncenlinea.com/privkey.pem -cert-file ./certbot/conf/live/www.bncenlinea.com/fullchain.pem www.bncenlinea.com bncenlinea.com localhost 127.0.0.1
+mkdir -p ./certbot/conf/live/srvdocker.corp.bnc.com/
+mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdocker.corp.bnc.com/fullchain.pem srvdocker srvdocker.corp.bnc.com 10.0.11.100 localhost 127.0.0.1
 mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
 
