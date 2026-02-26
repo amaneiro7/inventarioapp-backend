@@ -30,7 +30,7 @@ export class CityPatchController implements Controller {
 	async run(req: CityRequest, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { name, stateId } = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: CityUpdater = container.resolve(CityDependencies.Updater)
 			await update.run({ id, params: { name, stateId } })
 			res.status(httpStatus[200].statusCode).json({

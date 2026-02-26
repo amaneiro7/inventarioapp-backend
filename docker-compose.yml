@@ -1,8 +1,10 @@
 services:
     backend-prod:
         build:
-            context: .
+            context: production
             target: runner # Apunta explícitamente a la etapa final de producción
+            args:
+                - PORT=${PORT:-5050}
         container_name: inventario-backend-prod
         restart: unless-stopped
         env_file:
@@ -15,6 +17,14 @@ services:
             - postgres-prod
             - redis-prod
             - rabbitmq-prod
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50' # Limita el uso de CPU al 50%
+                    memory: 512M # Limita la memoria a 512MB
+                reservations:
+                    cpus: '0.25' # Reserva al menos el 25% de CPU
+                    memory: 256M # Reserva al menos 256MB de memoria
 
     postgres-prod:
         image: postgres:16-alpine

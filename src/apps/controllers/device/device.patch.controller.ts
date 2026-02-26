@@ -22,7 +22,7 @@ export class DevicePatchController implements Controller {
 		try {
 			const user = req.user as JwtPayloadUser
 			const params = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: DeviceUpdater = container.resolve(DeviceDependencies.Updater)
 			await update.run({ id, params, user })
 			res.status(httpStatus[200].statusCode).send({

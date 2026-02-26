@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 /**
  * @description Provides utility methods for hashing and comparing passwords.

@@ -18,7 +18,7 @@ export class UserGetController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const get: UserFinder = container.resolve(UserDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus[200].statusCode).json(data)

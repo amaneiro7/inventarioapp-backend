@@ -18,7 +18,7 @@ export class DirectivaGetController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const get: DirectivaFinder = container.resolve(DirectivaDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus[200].statusCode).json(data)

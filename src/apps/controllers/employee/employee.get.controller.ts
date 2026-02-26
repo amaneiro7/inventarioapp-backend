@@ -18,7 +18,7 @@ export class EmployeeGetController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const get: EmployeeFinder = container.resolve(EmployeeDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus[200].statusCode).json(data)

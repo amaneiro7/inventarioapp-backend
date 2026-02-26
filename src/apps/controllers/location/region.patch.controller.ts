@@ -21,7 +21,7 @@ export class RegionPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: RegionUpdater = container.resolve(RegionDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus[200].statusCode).send({

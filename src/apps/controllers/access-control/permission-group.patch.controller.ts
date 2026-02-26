@@ -20,7 +20,7 @@ export class PermissionGroupPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const create: PermissionGroupUpdater = container.resolve(PermissionGroupDependencies.Updater)
 			await create.run({ id, params })
 			res.status(httpStatus[200].statusCode).json({

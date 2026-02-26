@@ -19,7 +19,7 @@ export class SettingsGetController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { key } = req.params
+			const key = String(req.params.key)
 			const get: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 			const data = await get.run({ key })
 			res.status(httpStatus[200].statusCode).json(data)

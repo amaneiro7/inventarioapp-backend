@@ -20,7 +20,7 @@ export class VicepresidenciaEjecutivaPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: VicepresidenciaEjecutivaUpdater = container.resolve(
 				VicepresidenciaEjecutivaDependencies.Updater
 			)

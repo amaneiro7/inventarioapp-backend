@@ -19,7 +19,7 @@ export class ProcessorDeleteController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const remover: ProcessorRemover = container.resolve(ProcessorDependencies.Remover)
 			await remover.run({ id })
 			res.status(httpStatus[200].statusCode).send({

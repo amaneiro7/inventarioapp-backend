@@ -19,7 +19,7 @@ export class EmployeeDeleteController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const remover: EmployeeRemover = container.resolve(EmployeeDependencies.Remover)
 			await remover.run({ id })
 			res.status(httpStatus[200].statusCode).send({

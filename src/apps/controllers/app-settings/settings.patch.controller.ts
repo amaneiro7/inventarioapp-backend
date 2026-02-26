@@ -20,7 +20,7 @@ export class SettingsPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { value } = req.body
-			const { key } = req.params
+			const key = String(req.params.key)
 			const update: SettingsUpdater = container.resolve(AppSettingsDependencies.Updater)
 			await update.run({ key, value })
 			res.status(httpStatus[200].statusCode).json({

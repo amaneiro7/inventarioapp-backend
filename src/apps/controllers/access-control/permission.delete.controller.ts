@@ -19,7 +19,7 @@ export class PermissionDeleteController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: PermissionRemover = container.resolve(PermissionDependencies.Remover)
 			await update.run({ id })
 			res.status(httpStatus[200].statusCode).json({

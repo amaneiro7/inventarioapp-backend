@@ -18,7 +18,7 @@ export class CargoGetController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const get: CargoFinder = container.resolve(CargoDependencies.Finder)
 			const data = await get.run({ id })
 			res.status(httpStatus[200].statusCode).json(data)

@@ -20,7 +20,7 @@ export class DirectivaPatchController implements Controller {
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const params = req.body
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: DirectivaUpdater = container.resolve(DirectivaDependencies.Updater)
 			await update.run({ id, params })
 			res.status(httpStatus[200].statusCode).send({

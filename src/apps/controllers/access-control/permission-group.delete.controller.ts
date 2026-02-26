@@ -19,7 +19,7 @@ export class PermissionGroupDeleteController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { id } = req.params
+			const id = String(req.params.id)
 			const update: PermissionGroupRemover = container.resolve(PermissionGroupDependencies.Remover)
 			await update.run({ id })
 			res.status(httpStatus[200].statusCode).json({
