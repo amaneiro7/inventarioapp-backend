@@ -12,3 +12,5 @@ mkdir -p ./certbot/conf/live/srvdocker.corp.bnc.com/
 mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdocker.corp.bnc.com/fullchain.pem srvdocker srvdocker.corp.bnc.com 10.0.11.100 localhost 127.0.0.1
 mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
 
+
+docker compose -f docker-compose.yml --env-file .env.prod up -d --build
