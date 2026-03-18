@@ -263,3 +263,5 @@ settings.json
 *.lock
 pnpm-lock.yaml
 package-lock.json
+certbot
+*.pem
