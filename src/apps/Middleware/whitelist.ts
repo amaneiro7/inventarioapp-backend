@@ -10,5 +10,6 @@ export const whitelist = [
 	'mandev',
 	'srvdocker',
 	'srvsoporte',
-	'10.0.11.100'
+	'10.0.11.100',
+	'srvdocker.corp.bnc.com'
 ]

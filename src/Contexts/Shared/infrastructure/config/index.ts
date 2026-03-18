@@ -61,11 +61,6 @@ type Config = {
 	smtpPassword: string
 }
 
-console.log(postgresHost)
-console.log(postgresPort)
-console.log(postgresDBName)
-console.log(postgresPassword)
-
 export const config: Config = {
 	env,
 	isProd: env === 'production',

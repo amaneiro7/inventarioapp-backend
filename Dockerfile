@@ -9,7 +9,6 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 FROM base AS deps
 # Instalamos dependencias de sistema solo aquí
 COPY package.json pnpm-lock.yaml* ./
-# Instalamos dependencias de sistema solo aquí
 RUN pnpm config set node-linker hoisted && \
     npm pkg delete scripts.prepare
 # Instalamos TODO (incluye devDeps para el build)
