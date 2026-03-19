@@ -266,3 +266,5 @@ nginx*
 *.lock
 pnpm-lock.yaml
 package-lock.json
+certbot
+*.pem
