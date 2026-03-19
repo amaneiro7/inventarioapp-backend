@@ -252,7 +252,7 @@ guia paso a paso.txt
 .qodo
 
 #certificate
-certbot
+certbot*
 certificate
 *.crt
 *.pem
@@ -260,7 +260,7 @@ nginx.key
 nginx.keyclear
 
 settings.json
-nginx
+nginx*
 
 *.lockb
 *.lock
