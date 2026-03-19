@@ -4,13 +4,13 @@ services:
             context: .
             target: runner # Apunta explícitamente a la etapa final de producción
             args:
-                - PORT=${PORT:-5050}
+                - PORT=${PORT:-3000}
         restart: unless-stopped
         container_name: inventoryApp_Backend
         env_file:
             - ./.env.prod # Usamos el archivo estándar .env
         ports:
-            - '${PORT:-5050}:${PORT:-5050}' # Usa 5050 si PORT no está definido en el host
+            - '${PORT:-3000}:${PORT:-3000}' # Usa 3000 si PORT no está definido en el host
         environment:
             - NODE_ENV=production
         depends_on: # Se asegura de que las dependencias se inicien primero
@@ -39,7 +39,6 @@ services:
             # Montas los certificados que obtengas (ej. con Certbot)
             - ./certbot/conf:/etc/letsencrypt
         depends_on:
-            # - frontend  <-- Eliminado porque ahora es externo
             - backend
 
     postgres:
@@ -50,7 +49,14 @@ services:
         ports:
             - '5430:5432'
         volumes:
-            - ./postgres_data_prod:/var/lib/postgresql/data
+            - ./postgres_data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER:-postgres}
+            # - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-7n6xKpovNGwF}
+            - POSTGRES_DB=${POSTGRES_DB:-inventoryApp_Prod}
+            - TZ=America/Caracas
+            - LANG=es_VE.UTF-8 # Configura el idioma (Venezuela)
+            - LC_ALL=es_VE.UTF-8
 
     redis:
         image: redis:latest
@@ -64,7 +70,7 @@ services:
             - REDIS_PASSWORD=${REDIS_PASSWORD:-Man12345.}
             - TZ=America/Caracas
         volumes:
-            - ./redis_data_prod:/data
+            - ./redis_data:/data
         command: sh -c "redis-server --requirepass $$REDIS_PASSWORD --appendonly yes"
 
     rabbitmq:
@@ -75,8 +81,10 @@ services:
             - '5672:5672'
             - '15672:15672'
         environment:
-            - RABBITMQ_DEFAULT_USER=appadmin
-            - RABBITMQ_DEFAULT_PASS=Man12345.
+            - RABBITMQ_DEFAULT_USER={RABBITMQ_USER}
+            - RABBITMQ_DEFAULT_PASSWORD={RABBITMQ_PASSWORD}
+        volumes:
+            - ./rabbitmq_data:/var/lib/rabbitmq
 
 networks:
     default:

@@ -6,11 +6,11 @@ docker compose -f docker-compose.dev.yml --env-file .env.development up -d
 
 docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 
-docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
+docker-compose -f docker-compose.yml exec nginx nginx -s reload
 
 mkdir -p ./certbot/conf/live/srvdocker.corp.bnc.com/
-mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdocker.corp.bnc.com/fullchain.pem srvdocker srvdocker.corp.bnc.com 10.0.11.100 localhost 127.0.0.1
-mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
+mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdocker.corp.bnc.com/fullchain.pem srvdocker srvdocker.corp.bnc.com 10.0.11.100 localhost 127.0.0.1 192.168.11.5
+mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100 192.168.11.5
 
 
 docker compose -f docker-compose.yml --env-file .env.prod up -d --build

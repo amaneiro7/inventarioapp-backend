@@ -16,6 +16,7 @@ dotenv.config(options)
 
 const {
 	PORT: port = '3000',
+	CORS_ALLOWED_ORIGINS: corsAllowedOrigins = '',
 	POSTGRES_USER: postgresUser = 'postgres',
 	POSTGRES_PASSWORD: postgresPassword = 'Man12345*',
 	POSTGRES_HOST: postgresHost = 'localhost',
@@ -38,6 +39,7 @@ type Config = {
 	env: string
 	isProd: boolean
 	baseApiUrl: string
+	corsAllowedOrigins?: (string | RegExp)[]
 	port: string
 	postgres: {
 		user: string
@@ -65,6 +67,16 @@ export const config: Config = {
 	env,
 	isProd: env === 'production',
 	baseApiUrl: '/api/v1',
+	corsAllowedOrigins:
+		corsAllowedOrigins.split(',').map(origin => {
+			const trimmed = origin.trim()
+			// Si empieza y termina con '/', lo convertimos a RegExp
+			if (trimmed.startsWith('/') && trimmed.endsWith('/')) {
+				// Eliminamos las barras inicial y final para crear el objeto RegExp
+				return new RegExp(trimmed.slice(1, -1))
+			}
+			return trimmed
+		}) ?? [],
 	port,
 	postgres: {
 		user: postgresUser,

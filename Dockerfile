@@ -1,5 +1,5 @@
 FROM node:22-alpine3.20 AS base
-ENV DIR /app
+ENV DIR=/app
 WORKDIR $DIR
 
 # Instalamos pnpm de forma nativa con Corepack
@@ -27,19 +27,23 @@ RUN pnpm prune --prod
 # --- Etapa 4: Runner (Imagen Final) ---
 FROM base AS runner
 ENV NODE_ENV=production
-# 1. Crear la carpeta de logs y dar permisos (COMO ROOT)
-RUN mkdir -p $DIR/logs && chown -R node:node $DIR
-# Instalamos dumb-init solo en la imagen final
+# Instalamos dumb-init y dependencias de sistema necesarias en runtime
 RUN apk add --no-cache dumb-init=1.2.5-r3
 
-# Copiamos node_modules de producción y la carpeta dist compilada
-COPY --from=builder $DIR/package.json .
-COPY --from=builder $DIR/node_modules ./node_modules
-COPY --from=builder $DIR/dist ./dist
+# Creamos directorio de logs y ajustamos permisos
+RUN mkdir -p $DIR/logs && chown -R node:node $DIR
+
+# Copiamos solo lo necesario con el dueño correcto
+COPY --from=builder --chown=node:node $DIR/node_modules ./node_modules
+COPY --from=builder --chown=node:node $DIR/dist ./dist
+COPY --from=builder --chown=node:node $DIR/package.json ./package.json
 
 
-USER $USER
+USER node
 
 EXPOSE $PORT
 # Ejecutamos directamente con node
-CMD [ "dumb-init", "node", "dist/src/apps/start.js" ]
+# Usamos dumb-init para manejar señales de terminación (SIGTERM)
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD [ "node", "dist/src/apps/start.js" ]
+# CMD [ "dumb-init", "node", "dist/src/apps/start.js" ]
