@@ -242,7 +242,7 @@ $RECYCLE.BIN/
 postgres_data*
 mysql_data*
 redis_data*
-
+rabbitmq_data*
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,windows,linux,macos
 
 #guias
@@ -252,12 +252,15 @@ guia paso a paso.txt
 .qodo
 
 #certificate
+certbot
 certificate
 *.crt
+*.pem
 nginx.key
 nginx.keyclear
 
 settings.json
+nginx
 
 *.lockb
 *.lock
