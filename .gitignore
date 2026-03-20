@@ -256,11 +256,11 @@ certbot*
 certificate
 *.crt
 *.pem
+nginx*
 nginx.key
 nginx.keyclear
 
 settings.json
-nginx*
 
 *.lockb
 *.lock
