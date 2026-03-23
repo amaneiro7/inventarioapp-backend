@@ -71,7 +71,7 @@ services:
             - TZ=America/Caracas
         volumes:
             - ./redis_data:/data
-        command: sh -c "redis-server --requirepass $$REDIS_PASSWORD --appendonly yes"
+        command: sh -c "redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes"
 
     rabbitmq:
         image: 'rabbitmq:latest'
@@ -81,8 +81,8 @@ services:
             - '5672:5672'
             - '15672:15672'
         environment:
-            - RABBITMQ_DEFAULT_USER={RABBITMQ_USER}
-            - RABBITMQ_DEFAULT_PASSWORD={RABBITMQ_PASSWORD}
+            - RABBITMQ_DEFAULT_USER={RABBITMQ_USER:-appadmin}
+            - RABBITMQ_DEFAULT_PASS={RABBITMQ_PASSWORD:-Man12345.}
         volumes:
             - ./rabbitmq_data:/var/lib/rabbitmq
 
