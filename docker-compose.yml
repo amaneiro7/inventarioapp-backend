@@ -12,11 +12,14 @@ services:
         ports:
             - '${PORT:-3000}:${PORT:-3000}' # Usa 3000 si PORT no está definido en el host
         environment:
+            - TZ=America/Caracas
             - NODE_ENV=production
         depends_on: # Se asegura de que las dependencias se inicien primero
             - postgres
             - redis
             - rabbitmq
+        volumes:
+            - ./logs_data:/app/logs
         deploy:
             resources:
                 limits:
