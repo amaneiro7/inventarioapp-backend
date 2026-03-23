@@ -24,6 +24,8 @@ export class Server {
 		this.logger = logger
 		this.port = port
 		this.express = express()
+		this.express.set('trust proxy', 1)
+		this.express.disable('x-powered-by')
 
 		this.express.use(json())
 		this.express.use(urlencoded({ extended: true }))

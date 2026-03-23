@@ -13,9 +13,15 @@ export const options: CorsOptions = {
 	 * @param {string | undefined} origin - The origin of the incoming request.
 	 * @param {(err: Error | null, allow?: boolean) => void} callback - The callback to resolve the origin check.
 	 */
-	origin: (origin, callback) => {
+	origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
 		// Check if the origin is in the whitelist or is a devtunnels URL
-		const isValidOrigin = whitelist.some(domain => origin?.includes(domain))
+		const isValidOrigin = whitelist.some(domain => {
+			if (domain instanceof RegExp) {
+				console.log(`Testing origin "${origin}" against regex: ${domain}`)
+				return domain.test(origin ?? '')
+			}
+			return origin?.includes(domain)
+		})
 
 		if (!origin || isValidOrigin || origin?.includes('devtunnels')) {
 			// Allow the request if it has no origin (e.g., same-origin) or is in the whitelist
