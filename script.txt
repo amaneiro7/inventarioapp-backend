@@ -20,3 +20,4 @@ mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
 
 
 docker compose -f docker-compose.yml --env-file .env.prod up -d --build
+
