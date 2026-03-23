@@ -30,7 +30,7 @@ export class PingService implements IPingService {
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'
-			pingArgs = ['-c', '1', '-A']
+			pingArgs = ['-c', '1', '-A', '-w', '1']
 			// en Linux no Alpine que es la version de docker no tiene para resolver hostname
 			// if (getHostName) {
 			// 	pingArgs.push(getHostNameArg)
