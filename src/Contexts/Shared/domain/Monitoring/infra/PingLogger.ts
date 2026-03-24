@@ -3,7 +3,10 @@ import * as path from 'node:path'
 import { type Logger } from '../../Logger'
 
 export class PingLogger {
-	private readonly logDirectory: string = path.resolve(process.cwd(), 'logs', 'ping')
+	// Usamos variable de entorno para definir la ruta base, o fallback a 'logs' relativo
+	private readonly logDirectory: string = process.env.LOG_DIR
+		? path.resolve(process.env.LOG_DIR, 'ping')
+		: path.resolve(process.cwd(), 'logs', 'ping')
 	private readonly MAX_LOG_DAYS = 3 // Keep logs for 3 days
 	private readonly logger: Logger
 
