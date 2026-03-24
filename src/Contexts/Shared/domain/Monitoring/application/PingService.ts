@@ -30,7 +30,12 @@ export class PingService implements IPingService {
 		} else {
 			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
 			command = 'ping'
-			pingArgs = ['-c', '1', '-W', '1', getHostNameArg, ipAddress]
+			pingArgs = ['-c', '1', '-A', '-W', '1000']
+			// en Linux no Alpine que es la version de docker no tiene para resolver hostname
+			// if (getHostName) {
+			// 	pingArgs.push(getHostNameArg)
+			// }
+			pingArgs.push(ipAddress)
 		}
 
 		try {
@@ -123,11 +128,7 @@ export class PingService implements IPingService {
 			}
 		} else {
 			// Linux/macOS output patterns
-			if (
-				lowerOutput.includes('bytes from') &&
-				!lowerOutput.includes('unreachable') &&
-				!lowerOutput.includes('unknown host')
-			) {
+			if (lowerOutput.includes('bytes from')) {
 				result.alive = true
 			}
 			const timeMatch = output.match(/time=(\d+\.?\d*)\s*ms/i)

@@ -11,12 +11,12 @@ docker-compose -f docker-compose.yml exec nginx nginx -s reload
 mkdir -p ./certbot/conf/live/mandev/
 mkcert -key-file ./certbot/conf/live/mandev/privkey.pem -cert-file ./certbot/conf/live/mandev/fullchain.pem srvdocker mandev localhost 127.0.0.1 192.168.11.5
 mkcert mandev 192.168.11.5
-mkcert -install
 
 
 mkdir -p ./certbot/conf/live/srvdocker.corp.bnc.com/
 mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdocker.corp.bnc.com/fullchain.pem srvdocker srvdocker.corp.bnc.com 10.0.11.100 localhost 127.0.0.1
 mkcert srvdocker srvdocker.corp.bnc.com 10.0.11.100
+mkcert -install
 
 
 docker compose -f docker-compose.yml --env-file .env.prod up -d --build
