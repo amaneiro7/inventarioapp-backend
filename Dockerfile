@@ -29,8 +29,8 @@ FROM base AS runner
 ENV NODE_ENV=production
 # Instalamos dumb-init y dependencias de sistema necesarias en runtime
 RUN apk add --no-cache dumb-init=1.2.5-r3 tzdata
-ENV TZ=America/Venezuela
-RUN cp /usr/share/zoneinfo/America/Venezuela /etc/localtime
+ENV TZ=America/Caracas
+RUN cp /usr/share/zoneinfo/America/Caracas /etc/localtime
 # Creamos directorio de logs y ajustamos permisos
 RUN mkdir -p $DIR/logs && chown -R node:node $DIR
 
