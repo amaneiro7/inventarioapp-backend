@@ -17,7 +17,7 @@ export class PingLogger {
 		try {
 			await fs.mkdir(this.logDirectory, { recursive: true })
 		} catch (error) {
-			this.logger.error(`Fallo al crear el directorio de logs: ${this.logDirectory}, ${error}`)
+			this.logger.error(`Fallo al crear el directorio de logs: ${this.logDirectory}, ${String(error)}`)
 		}
 	}
 
@@ -32,13 +32,24 @@ export class PingLogger {
 		const now = new Date()
 		const logFileName = this.getLogFileName({ date: now, fileName })
 		const logFilePath = path.join(this.logDirectory, logFileName)
-		const timestamp = now.toISOString()
+
+		const timestamp = new Intl.DateTimeFormat('es-VE', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false,
+			timeZoneName: 'short'
+		}).format(now)
+
 		const logEntry = `[${timestamp}] ${message}\n`
 
 		try {
 			await fs.appendFile(logFilePath, logEntry, 'utf8')
 		} catch (error) {
-			this.logger.error(`Fallo al escribir el log de ping en ${logFilePath}, ${error}`)
+			this.logger.error(`Fallo al escribir el log de ping en ${logFilePath}, ${String(error)}`)
 		}
 	}
 
@@ -64,7 +75,7 @@ export class PingLogger {
 				}
 			}
 		} catch (error) {
-			this.logger.error(`Fallo al limpiar logs de ping antiguos: ${error}`)
+			this.logger.error(`Fallo al limpiar logs de ping antiguos: ${String(error)}`)
 		}
 	}
 }
