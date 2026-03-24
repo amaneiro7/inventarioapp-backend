@@ -13,24 +13,30 @@ export class PingService implements IPingService {
 		this.logger = logger
 	}
 	async pingIp({ ipAddress, getHostName }: { ipAddress: string; getHostName?: boolean }): Promise<PingResult> {
-		let command = ''
+		const command = 'ping'
 		const getHostNameArg = getHostName ? '-a' : ''
-		let pingArgs: string[] = []
+		const pingArgs: string[] = []
 		const osPlatform = platform()
-		const timeoutInSecondos: number = 10
+
+		// Estrategia: 2 intentos, 2 segundos de espera por intento.
+		// Total máximo esperado: ~4-5 segundos.
+		// Damos un margen de seguridad al proceso de Node de 8 segundos.
+		const timeoutProcess = 8000
 
 		if (osPlatform.startsWith('win')) {
-			// Windows: -n 1 for 1 ping, -w 1000 for 1000ms timeout
-			command = 'ping'
-			pingArgs = ['-n', '1', '-w', '1000']
+			// Windows: -n 2 (intentos), -w 2000 (2000ms = 2s espera por respuesta)
+			// Nota: .concat devuelve un nuevo array, se debe usar push para modificar el existente
+			pingArgs.push('-n', '2', '-w', '2000')
+
 			if (getHostName) {
 				pingArgs.push(getHostNameArg)
 			}
 			pingArgs.push(ipAddress)
 		} else {
-			// Linux/macOS: -c 1 for 1 ping, -W 1 for 1 second timeout (in seconds)
-			command = 'ping'
-			pingArgs = ['-c', '1', '-A', '-W', '1000']
+			// Linux/macOS: -c 2 (intentos), -W 2 (2 segundos espera)
+			// Quitamos -A (flood) para evitar saturar dispositivos lentos
+			pingArgs.push('-c', '2', '-W', '2')
+
 			// en Linux no Alpine que es la version de docker no tiene para resolver hostname
 			// if (getHostName) {
 			// 	pingArgs.push(getHostNameArg)
@@ -41,7 +47,7 @@ export class PingService implements IPingService {
 		try {
 			// Use execFilePromise with a timeout for the command itself
 			const { stdout, stderr } = await execFilePromise(command, pingArgs, {
-				timeout: timeoutInSecondos * 1000,
+				timeout: timeoutProcess,
 				windowsHide: true
 			})
 
@@ -75,7 +81,7 @@ export class PingService implements IPingService {
 
 				if (error.killed && error.signal === 'SIGTERM') {
 					throw new Error(
-						`Ping a ${ipAddress} agotó el tiempo de espera después de ${timeoutInSecondos} segundos.`
+						`Ping a ${ipAddress} agotó el tiempo de espera del proceso (${timeoutProcess / 1000}s).`
 					)
 				} else if (error.code === 'ENOENT') {
 					throw new Error(`Comando ping no encontrado. ¿Está 'ping' instalado y en el PATH de su sistema?`)
