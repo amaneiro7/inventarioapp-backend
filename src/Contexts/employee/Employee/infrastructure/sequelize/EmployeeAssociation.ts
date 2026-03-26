@@ -59,7 +59,22 @@ export class EmployeeAssociation {
 		}
 		const deviceInclude: IncludeOptions = {
 			association: 'devices',
-			include: ['category', 'brand', 'model', 'computer'],
+			include: [
+				'category',
+				'brand',
+				'model',
+				{
+					association: 'computer',
+					attributes: ['computerName', 'macAddress', 'ipAddress', 'memoryRam', 'memoryRamCapacity'],
+					include: [
+						'operatingSystem',
+						'processor',
+						'hardDriveType',
+						'hardDriveCapacity',
+						'operatingSystemArq'
+					]
+				}
+			],
 			separate: true
 		}
 		options.include = [
