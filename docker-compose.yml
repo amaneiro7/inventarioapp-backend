@@ -36,7 +36,8 @@ services:
         restart: always
         ports:
             - '80:80'
-            - '443:443'
+            - '443:443/tcp'
+            - '443:443/udp' # Para QUIC (UDP)
         volumes:
             # Montas tu configuración de Nginx personalizada
             - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
