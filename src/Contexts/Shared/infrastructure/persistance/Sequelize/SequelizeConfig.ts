@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize'
 import { config } from '../../config'
 import { initializeModels } from './initializeModels' // Corregido: initilizarModels -> initializeModels
+import { DatabaseConnectionError } from '../../../domain/DatabaseConnectionError'
 import { type Database } from '../../../domain/Database'
 import { type Logger } from '../../../domain/Logger'
 
@@ -80,7 +81,10 @@ export class SequelizeConfig implements Database {
 						'Se alcanzó el número máximo de intentos de conexión. No se pudo conectar a la base de datos.'
 					)
 					// Lanza el error para que la aplicación no se inicie.
-					throw new Error(`Unable to connect to the database after ${MAX_RETRIES} attempts.`)
+					throw new DatabaseConnectionError(
+						`No se pudo conectar a la base de datos después de ${MAX_RETRIES} intentos.`,
+						error
+					)
 				}
 
 				// Espera antes del siguiente reintento.

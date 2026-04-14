@@ -26,6 +26,10 @@ const {
 	REDIS_HOST: redisHost = 'localhost',
 	REDIS_PORT: redisPort = 6379,
 	REDIS_PASSWORD: redisPassword = 'Man12345*',
+	RABBITMQ_HOST: rabbitmqHost = 'localhost',
+	RABBITMQ_PORT: rabbitmqPort = 5672,
+	RABBITMQ_USER: rabbitmqUser = 'guest',
+	RABBITMQ_PASSWORD: rabbitmqPassword = 'guest',
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
 	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15',
@@ -52,6 +56,12 @@ type Config = {
 	redis: {
 		host: string
 		port: number
+		password: string
+	}
+	rabbitmq: {
+		host: string
+		port: number
+		user: string
 		password: string
 	}
 	signedCookie: string
@@ -90,6 +100,12 @@ export const config: Config = {
 		host: redisHost,
 		port: Number(redisPort),
 		password: redisPassword
+	},
+	rabbitmq: {
+		host: rabbitmqHost || 'localhost',
+		port: Number(rabbitmqPort) || 5672,
+		user: rabbitmqUser || 'guest',
+		password: rabbitmqPassword || 'guest'
 	},
 	signedCookie,
 	accessTokenSecret,

@@ -1,104 +1,208 @@
-// import amqplib from 'amqplib'
-// import { type Logger } from '../../../domain/Logger'
-// import { config } from '../../config'
+import amqplib from 'amqplib'
+import { RabbitMQExchangeNameFormatter } from './RabbitMQExchangeNameFormatter'
+import { config } from '../../config'
+import type { ConsumeMessage, ConfirmChannel, ChannelModel } from 'amqplib'
+import type { ConnectionSettings } from './ConnectionSettings'
+import type { Logger } from '../../../domain/Logger'
 
-// export type Settings = {
-// 	username: string
-// 	password: string
-// 	vhost: string
-// 	connection: {
-// 		hostname: string
-// 		port: number
-// 	}
-// }
+const { rabbitmq: { host, password, port, user } } = config
 
-// export class RabbitMqConnection {
-// 	private amqpConnection?: amqplib.Connection
-// 	private amqpChannel?: amqplib.ConfirmChannel
-// 	private readonly settings: Settings
-// 	private readonly logger: Logger
+export class RabbitMqConnection {
+	private connectionSettings: ConnectionSettings
+	private channel?: ConfirmChannel
+	private connection?: ChannelModel
+	private isClosingManually = false
+	private retryDelay = 5000
+	private logger: Logger
+	constructor({ connectionSettings, logger }: { connectionSettings: ConnectionSettings; logger: Logger }) {
+		this.connectionSettings = connectionSettings
+		this.logger = logger
+	}
 
-// 	constructor({ logger }: { logger: Logger }) {
-// 		this.settings = config.rabbitmq
-// 		this.logger = logger
-// 	}
+	async connect() {
+		try {
+			this.isClosingManually = false
+			this.connection = await this.amqpConnect()
+			this.channel = await this.amqpChannel()
+			this.logger.info('Connected to RabbitMQ')
+		} catch (error) {
+			this.logger.error(`Error occurred while connecting to RabbitMQ' ${error}`)
+			setTimeout(() => this.connect(), this.retryDelay)
+		}
+	}
 
-// 	async connect(): Promise<void> {
-// 		if (this.amqpConnection) return
-// 		this.amqpConnection = await this.amqpConnect()
-// 		this.amqpChannel = await this.amqpChannelConnect()
-// 	}
+	private async amqpConnect(): Promise<ChannelModel> {
+		const { hostname, port, secure } = this.connectionSettings.connection
+		const { username, password, vhost } = this.connectionSettings
+		const protocol = secure ? 'amqps' : 'amqp'
 
-// 	async close(): Promise<void> {
-// 		await this.channel().close()
+		const connection = await amqplib.connect({
+			protocol,
+			hostname,
+			port,
+			username,
+			password,
+			vhost
+		})
 
-// 		if (this.amqpConnection) {
-// 			await this.amqpConnection.close()
-// 		}
-// 	}
+		connection.on('error', err => {
+			this.logger.error(`RabbitMQ connection error: ${err}`)
+			if (!this.isClosingManually) {
+				setTimeout(() => this.connect(), this.retryDelay)
+			}
+		})
 
-// 	channel(): amqplib.ConfirmChannel {
-// 		if (!this.amqpChannel) {
-// 			throw new Error('RabbitMQ channel not connected')
-// 		}
+		connection.on('close', () => {
+			if (!this.isClosingManually) {
+				this.logger.info('⚠️ RabbitMQ: Conexión perdida. Intentando reconectar...')
+				setTimeout(() => this.connect(), this.retryDelay)
+			}
+			this.logger.info('RabbitMQ connection closed')
+		})
 
-// 		return this.amqpChannel
-// 	}
+		return connection
+	}
 
-// 	async publish(
-// 		exchange: string,
-// 		routingKey: string,
-// 		content: Buffer,
-// 		options: {
-// 			messageId: string
-// 			contentType: string
-// 			contentEncoding: string
-// 			priority?: number
-// 			headers?: unknown
-// 		}
-// 	): Promise<void> {
-// 		if (!this.amqpChannel) {
-// 			await this.connect()
-// 		}
+	private async amqpChannel(): Promise<amqplib.ConfirmChannel> {
+		if (!this.connection) throw new Error('No hay conexión establecida')
+		const channel = await this.connection!.createConfirmChannel()
+		await channel.prefetch(1)
 
-// 		const channel = this.channel()
-// 		// El método publish en un ConfirmChannel devuelve un booleano.
-// 		// Para esperar la confirmación del broker, debemos usar `waitForConfirms`.
-// 		channel.publish(exchange, routingKey, content, options)
-// 		await channel.waitForConfirms()
-// 	}
+		channel.on('error', err => {
+			this.logger.error(`RabbitMQ channel error: ${err}`)
+		})
 
-// 	// --- Métodos privados ---
-// 	private connection(): amqplib.Connection {
-// 		if (!this.amqpConnection) {
-// 			throw new Error('RabbitMQ not connected')
-// 		}
+		return channel
+	}
 
-// 		return this.amqpConnection
-// 	}
+	async exchange(params: { name: string }) {
+		this.ensureConnection()
+		return await this.channel?.assertExchange(params.name, 'topic', { durable: true })
+	}
 
-// 	private async amqpConnect(): Promise<amqplib.Connection> {
-// 		const connection = await amqplib.connect({
-// 			protocol: 'amqp',
-// 			hostname: this.settings.connection.hostname,
-// 			port: this.settings.connection.port,
-// 			username: this.settings.username,
-// 			password: this.settings.password,
-// 			vhost: this.settings.vhost
-// 		})
+	async queue(params: {
+		exchange: string
+		name: string
+		routingKeys: string[]
+		deadLetterExchange?: string
+		deadLetterQueue?: string
+		messageTtl?: number
+	}) {
+		this.ensureConnection()
 
-// 		connection.on('error', (error: unknown) => {
-// 			this.logger.error('[RabbitMqConnection] Connection error')
-// 			this.logger.error(error as Error)
-// 		})
+		const args = this.getQueueArguments(params)
 
-// 		return connection
-// 	}
+		await this.channel?.assertQueue(params.name, {
+			exclusive: false,
+			durable: true,
+			autoDelete: false,
+			arguments: args
+		})
+		for (const routingKey of params.routingKeys) {
+			await this.channel!.bindQueue(params.name, params.exchange, routingKey)
+		}
+	}
 
-// 	private async amqpChannelConnect(): Promise<amqplib.ConfirmChannel> {
-// 		const channel = await this.connection().
-// 		await channel.prefetch(1)
+	private getQueueArguments(params: {
+		exchange: string
+		name: string
+		routingKeys: string[]
+		deadLetterExchange?: string
+		deadLetterQueue?: string
+		messageTtl?: number
+	}): Record<string, string | number> {
+		const args: Record<string, string | number> = {}
+		if (params.deadLetterExchange) args['x-dead-letter-exchange'] = params.deadLetterExchange
+		if (params.deadLetterQueue) args['x-dead-letter-routing-key'] = params.deadLetterQueue
+		if (params.messageTtl) args['x-message-ttl'] = params.messageTtl
+		return args
+	}
 
-// 		return channel
-// 	}
-// }
+	async deleteQueue(queue: string) {
+		return await this.channel!.deleteQueue(queue)
+	}
+	async publish(params: {
+		exchange: string
+		routingKey: string
+		content: Buffer
+		options: {
+			messageId: string
+			contentType: string
+			contentEncoding: string
+			priority?: number
+			headers?: unknown
+		}
+	}) {
+		this.ensureConnection()
+
+		return new Promise<void>((resolve, reject) => {
+			this.channel!.publish(params.exchange, params.routingKey, params.content, params.options, error =>
+				error ? reject(error) : resolve()
+			)
+		})
+	}
+
+	async consume(queue: string, onMessage: (message: ConsumeMessage) => void) {
+		this.ensureConnection()
+		await this.channel!.consume(queue, (message: ConsumeMessage | null) => {
+			if (!message) {
+				return
+			}
+			onMessage(message)
+		})
+	}
+
+	ack(message: ConsumeMessage) {
+		this.channel!.ack(message)
+	}
+
+	async retry(message: ConsumeMessage, queue: string, exchange: string) {
+		const retryExchange = RabbitMQExchangeNameFormatter.retry(exchange)
+		const options = this.getMessageOptions(message)
+
+		return await this.publish({ exchange: retryExchange, routingKey: queue, content: message.content, options })
+	}
+
+	async deadLetter(message: ConsumeMessage, queue: string, exchange: string) {
+		const deadLetterExchange = RabbitMQExchangeNameFormatter.deadLetter(exchange)
+		const options = this.getMessageOptions(message)
+
+		return await this.publish({
+			exchange: deadLetterExchange,
+			routingKey: queue,
+			content: message.content,
+			options
+		})
+	}
+
+	private getMessageOptions(message: ConsumeMessage) {
+		const { messageId, contentType, contentEncoding, priority } = message.properties
+		const options = {
+			messageId,
+			headers: this.incrementRedeliveryCount(message),
+			contentType,
+			contentEncoding,
+			priority
+		}
+		return options
+	}
+
+	private incrementRedeliveryCount(message: ConsumeMessage) {
+		const headers = { ...message.properties.headers }
+		const count = parseInt(headers['redelivery_count'] as string) || 0
+		headers['redelivery_count'] = count + 1
+		return headers
+	}
+
+	async close() {
+		this.isClosingManually = true
+		await this.channel?.close()
+		return await this.connection?.close()
+	}
+
+	private ensureConnection() {
+		if (!this.connection || !this.channel) {
+			throw new Error('❌ Operación fallida: RabbitMQ no está conectado.')
+		}
+	}
+}

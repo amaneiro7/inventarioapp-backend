@@ -1,8 +1,7 @@
 import { EventEmitter } from 'events'
-import { type DomainEvent } from '../../domain/event/DomainEvent'
-// import { type DomainEventSubscriber } from '../../domain/event/DomainEventSubscriber'
-import { type EventBus } from '../../domain/event/EventBus'
 import { DomainEventSubscribers } from './DomainEventSubscribers'
+import type { DomainEvent } from '../../domain/event/DomainEvent'
+import type { EventBus } from '../../domain/event/EventBus'
 
 export class InMemoryEventBus extends EventEmitter implements EventBus {
 	// Cambiamos el constructor para que reciba un array de suscriptores directamente.
