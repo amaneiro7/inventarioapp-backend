@@ -1,8 +1,7 @@
-import { Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { Filter } from '../../../../Shared/domain/criteria/Filter'
 import { Operator } from '../../../../Shared/domain/criteria/FilterOperator'
-import { Filters } from '../../../../Shared/domain/criteria/Filters'
-import { Order } from '../../../../Shared/domain/criteria/Order'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { Filter } from '../../../../Shared/domain/criteria/Filter'
+import type { Order } from '../../../../Shared/domain/criteria/Order'
 
 type MongoFilterOperator = '$eq' | '$ne' | '$gt' | '$lt' | '$regex'
 type MongoFilterValue = boolean | string | number
@@ -38,15 +37,15 @@ export class MongoCriteriaConverter {
 
 	public convert(criteria: Criteria): MongoQuery {
 		return {
-			filter: criteria.hasFilters() ? this.generateFilter(criteria.filters) : {},
+			filter: criteria.hasFilters() ? this.generateFilter(criteria.filters.value) : {},
 			sort: criteria.order.hasOrder() ? this.generateSort(criteria.order) : { _id: -1 },
-			skip: criteria. || 0,
-			limit: criteria.limit || 0
+			skip: criteria.pageNumber || 0,
+			limit: criteria.pageSize || 0
 		}
 	}
 
-	protected generateFilter(filters: Filters): MongoFilter {
-		const filter = filters.filters.map(filter => {
+	protected generateFilter(filters: Filter[]): MongoFilter {
+		const filter = filters.map(filter => {
 			const transformer = this.filterTransformers.get(filter.operator.value)
 
 			if (!transformer) {
