@@ -81,6 +81,7 @@ export interface LocationData {
 	total: number
 	onlineCount: number
 	offlineCount: number
+	vpeName: string[]
 }
 
 /**
