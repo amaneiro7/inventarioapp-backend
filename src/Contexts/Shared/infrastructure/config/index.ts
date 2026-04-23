@@ -30,6 +30,8 @@ const {
 	RABBITMQ_PORT: rabbitmqPort = 5672,
 	RABBITMQ_USER: rabbitmqUser = 'guest',
 	RABBITMQ_PASSWORD: rabbitmqPassword = 'guest',
+	RABBITMQ_SECURE: rabbitmqSecure = false,
+	RABBITMQ_VHOST: rabbitmqVhost = '/',
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
 	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15',
@@ -63,6 +65,8 @@ type Config = {
 		port: number
 		user: string
 		password: string
+		secure: boolean
+		vhost: string
 	}
 	signedCookie: string
 	accessTokenSecret: string
@@ -105,7 +109,9 @@ export const config: Config = {
 		host: rabbitmqHost || 'localhost',
 		port: Number(rabbitmqPort) || 5672,
 		user: rabbitmqUser || 'guest',
-		password: rabbitmqPassword || 'guest'
+		password: rabbitmqPassword || 'guest',
+		secure: rabbitmqSecure === 'true',
+		vhost: rabbitmqVhost || '/'
 	},
 	signedCookie,
 	accessTokenSecret,

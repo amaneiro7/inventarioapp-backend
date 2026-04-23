@@ -5,17 +5,27 @@ import type { ConsumeMessage, ConfirmChannel, ChannelModel } from 'amqplib'
 import type { ConnectionSettings } from './ConnectionSettings'
 import type { Logger } from '../../../domain/Logger'
 
-const { rabbitmq: { host, password, port, user } } = config
+const {
+	rabbitmq: { host, password, port, user, secure, vhost }
+} = config
 
 export class RabbitMqConnection {
-	private connectionSettings: ConnectionSettings
+	private connectionSettings: ConnectionSettings = {
+		username: user,
+		password,
+		vhost,
+		connection: {
+			secure,
+			hostname: host,
+			port
+		}
+	}
 	private channel?: ConfirmChannel
 	private connection?: ChannelModel
 	private isClosingManually = false
 	private retryDelay = 5000
 	private logger: Logger
-	constructor({ connectionSettings, logger }: { connectionSettings: ConnectionSettings; logger: Logger }) {
-		this.connectionSettings = connectionSettings
+	constructor({ logger }: { logger: Logger }) {
 		this.logger = logger
 	}
 
