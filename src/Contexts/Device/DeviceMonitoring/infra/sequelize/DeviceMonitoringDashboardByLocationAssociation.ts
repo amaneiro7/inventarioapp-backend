@@ -105,6 +105,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 		// The original `device.id` was incorrect and prevented proper counting.
 		options.group = [
 			sequelize.col('status'),
+			sequelize.col('device.id'),
 			sequelize.col('device.location.site.city.state.region.administrativeRegion.name'),
 			sequelize.col('device.location.site.name'),
 			sequelize.col('device.location.name'),
