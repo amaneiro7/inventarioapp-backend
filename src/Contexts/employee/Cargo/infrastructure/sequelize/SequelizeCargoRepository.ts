@@ -5,6 +5,7 @@ import { CargoAssociation } from './CargoAssociation'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Nullable } from '../../../../Shared/domain/Nullable'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -127,7 +128,9 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 			await transaction.commit()
 		} catch (error) {
 			await transaction.rollback()
-			throw new Error(`Error saving Cargo: ${error instanceof Error ? error.message : String(error)}`)
+			throw new InvalidArgumentError(
+				`Error saving Cargo: ${error instanceof Error ? error.message : String(error)}`
+			)
 		}
 	}
 

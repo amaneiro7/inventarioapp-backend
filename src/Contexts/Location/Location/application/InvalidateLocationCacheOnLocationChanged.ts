@@ -3,9 +3,10 @@ import { LocationUpdatedDomainEvent } from '../domain/event/LocationUpdatedDomai
 import { CityUpdatedDomainEvent } from '../../City/domain/event/CityUpdatedDomainEvent'
 import { SiteUpdatedDomainEvent } from '../../Site/domain/event/SiteUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../Region/domain/events/RegionUpdatedDomainEvent'
-import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
-import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
-import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
+import { ISPLinkUpdatedDomainEvent } from '../../ISPLinks/domain/event/ISPLinkUpdatedDomainEvent'
+import type { DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
+import type { DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
+import type { CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
 
 export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubscriber<
 	| LocationCreatedDomainEvent
@@ -13,6 +14,7 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 	| SiteUpdatedDomainEvent
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
+	| ISPLinkUpdatedDomainEvent
 > {
 	private readonly invalidator: CacheInvalidator
 
@@ -27,6 +29,7 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 			| SiteUpdatedDomainEvent
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
+			| ISPLinkUpdatedDomainEvent
 	): Promise<void> {
 		if (event instanceof LocationUpdatedDomainEvent) {
 			const { changes } = event
@@ -53,7 +56,8 @@ export class InvalidateLocationCacheOnLocationChanged implements DomainEventSubs
 			LocationUpdatedDomainEvent,
 			SiteUpdatedDomainEvent,
 			CityUpdatedDomainEvent,
-			RegionUpdatedDomainEvent
+			RegionUpdatedDomainEvent,
+			ISPLinkUpdatedDomainEvent
 		]
 	}
 }

@@ -12,6 +12,10 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type LocationDto, type LocationParams, type LocationPrimitives } from '../entity/Location.dto'
 import { LocationSubnetChangedDomainEvent } from '../event/LocationSubnetChangedDomainEvent'
 import { LocationStatusChangedDomainEvent } from '../event/LocationStatusChangedDomainEvent'
+import { TypeOfSiteList } from '../../../TypeOfSite/domain/TypeOfSiteList'
+import { AgencyClassification } from '../valueObject/AgencyClassification'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { ISPLinkId } from '../../../ISPLinks/domain/valueObject/ISPLinkId'
 
 /**
  * Represents a Location domain entity.
@@ -32,7 +36,9 @@ export class Location extends AggregateRoot {
 		private siteId: SiteId,
 		private name: LocationName,
 		private subnet: LocationSubnet,
-		private locationStatusId: LocationStatusId
+		private locationStatusId: LocationStatusId,
+		private agencyClassification: AgencyClassification,
+		private ispLinks = new Set<ISPLinkId>()
 	) {
 		super()
 	}
@@ -43,13 +49,37 @@ export class Location extends AggregateRoot {
 	 * @returns {Location} A new Location instance.
 	 */
 	static create(params: LocationParams): Location {
+		const isAlmacen = params.typeOfSiteId === TypeOfSiteList.ALMACEN
+		const isAgency = params.typeOfSiteId === TypeOfSiteList.AGENCIA
+		if (isAlmacen && params.subnet) {
+			throw new InvalidArgumentError('Una ubicación con tipo de sitio "Almacén" no puede tener una subred.')
+		}
+
+		if (isAgency && !params.agencyClassification) {
+			throw new InvalidArgumentError(
+				'Una ubicación con tipo de sitio "Agencia" debe tener una clasificación de agencia.'
+			)
+		}
+
 		const id = LocationId.random()
 		const typeOfSiteId = new TypeOfSiteId(params.typeOfSiteId)
 		const siteId = new SiteId(params.siteId)
 		const locationName = new LocationName(params.name)
 		const locationSubnet = new LocationSubnet(params.subnet)
 		const locationStatusId = new LocationStatusId(params.locationStatusId)
-		const location = new Location(id, typeOfSiteId, siteId, locationName, locationSubnet, locationStatusId)
+		const agencyClassification = new AgencyClassification(params.agencyClassification)
+		const linkIds = isAgency ? new Set(params.isplinks.map(linkId => new ISPLinkId(linkId))) : new Set<ISPLinkId>()
+
+		const location = new Location(
+			id,
+			typeOfSiteId,
+			siteId,
+			locationName,
+			locationSubnet,
+			locationStatusId,
+			agencyClassification,
+			linkIds
+		)
 		location.record(
 			new LocationCreatedDomainEvent({
 				aggregateId: id.value,
@@ -66,13 +96,16 @@ export class Location extends AggregateRoot {
 	 * @returns {Location} A new Location instance.
 	 */
 	static fromPrimitives(primitives: LocationDto): Location {
+		const uniqueISPLinks = new Set(primitives.ispLinks.map(link => new ISPLinkId(link.id)))
 		return new Location(
 			new LocationId(primitives.id),
 			new TypeOfSiteId(primitives.typeOfSiteId),
 			new SiteId(primitives.siteId),
 			new LocationName(primitives.name),
 			new LocationSubnet(primitives.subnet),
-			new LocationStatusId(primitives.locationStatusId)
+			new LocationStatusId(primitives.locationStatusId),
+			new AgencyClassification(primitives.agencyClassification),
+			uniqueISPLinks
 		)
 	}
 
@@ -87,7 +120,9 @@ export class Location extends AggregateRoot {
 			siteId: this.siteValue,
 			name: this.nameValue,
 			subnet: this.subnetValue,
-			locationStatusId: this.operationalStatusValue
+			locationStatusId: this.operationalStatusValue,
+			agencyClassification: this.agencyClassification.value,
+			isplinks: this.ispLinkValue
 		}
 	}
 
@@ -139,6 +174,23 @@ export class Location extends AggregateRoot {
 		return this.locationStatusId.value
 	}
 
+	get agencyClassificationValue(): Primitives<AgencyClassification> {
+		return this.agencyClassification.value
+	}
+
+	/**
+	 * @getter ispLinkValue
+	 * @description Returns the primitive values of the Location's associated ISP link IDs.
+	 * @returns {ISPLinkId['value'][]}
+	 */
+	get ispLinkValue(): Primitives<ISPLinkId>[] {
+		return Array.from(this.ispLinks).map(c => c.value)
+	}
+
+	private hasISPLink(ispLinkId: ISPLinkId): boolean {
+		return [...this.ispLinks].some(link => link.equals(ispLinkId))
+	}
+
 	registerUpdateEvent(changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>): void {
 		this.record(
 			new LocationUpdatedDomainEvent({
@@ -170,6 +222,9 @@ export class Location extends AggregateRoot {
 	 */
 	updateTypeOfSite(typeOfSite: Primitives<TypeOfSiteId>): void {
 		this.typeOfSiteId = new TypeOfSiteId(typeOfSite)
+		if (typeOfSite !== TypeOfSiteList.AGENCIA) {
+			this.ispLinks.clear()
+		}
 	}
 
 	/**
@@ -210,5 +265,78 @@ export class Location extends AggregateRoot {
 			})
 		)
 		this.locationStatusId = new LocationStatusId(status)
+	}
+
+	updateAgencyClassification(classification: Primitives<AgencyClassification>): void {
+		if (this.typeOfSiteId.value !== TypeOfSiteList.AGENCIA) {
+			throw new InvalidArgumentError(
+				'Solo se puede asignar una clasificación de agencia a una ubicación con tipo de sitio "Agencia".'
+			)
+		}
+		const oldClassification = this.agencyClassification.value
+		this.agencyClassification = new AgencyClassification(classification)
+		this.record(
+			new LocationUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes: [
+					{
+						field: 'agencyClassification',
+						oldValue: oldClassification,
+						newValue: classification
+					}
+				]
+			})
+		)
+	}
+
+	/**
+	 * @description Associates a new ispLink with the Location.
+	 * @param {ISPLinkId} ispLinkId The ispLink to add.
+	 */
+	addISPLink(ispLinkId: ISPLinkId): void {
+		if (this.typeOfSiteId.value !== TypeOfSiteList.AGENCIA) {
+			throw new InvalidArgumentError(
+				'Solo se pueden asociar enlaces ISP a ubicaciones con tipo de sitio "Agencia".'
+			)
+		}
+		if (this.hasISPLink(ispLinkId)) {
+			return // Evita duplicados y eventos innecesarios
+		}
+		this.ispLinks.add(ispLinkId)
+		this.record(
+			new LocationUpdatedDomainEvent({
+				aggregateId: this.idValue,
+				changes: [
+					{
+						field: 'ispLinks',
+						oldValue: this.ispLinkValue,
+						newValue: this.ispLinkValue.concat(ispLinkId.value)
+					}
+				]
+			})
+		)
+	}
+
+	/**
+	 * @description Removes a ispLink association from the Location.
+	 * @param {ISPLinkId} ispLinkId The ispLink to remove.
+	 */
+	removeISPLink(ispLinkId: ISPLinkId): void {
+		const ispLinkToRemove = [...this.ispLinks].find(c => c.equals(ispLinkId))
+		if (ispLinkToRemove) {
+			this.ispLinks.delete(ispLinkToRemove)
+			this.record(
+				new LocationUpdatedDomainEvent({
+					aggregateId: this.idValue,
+					changes: [
+						{
+							field: 'ispLinks',
+							oldValue: this.ispLinkValue,
+							newValue: this.ispLinkValue.filter(v => v !== ispLinkId.value)
+						}
+					]
+				})
+			)
+		}
 	}
 }

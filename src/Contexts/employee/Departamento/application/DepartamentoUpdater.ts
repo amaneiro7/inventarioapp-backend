@@ -55,9 +55,10 @@ export class DepartamentoUpdater {
 
 		const departamentoEntity = Departamento.fromPrimitives(vpe)
 		const changes: Array<{ field: string; oldValue: unknown; newValue: unknown }> = []
+		const validations: Promise<void>[] = []
 
 		if (params.name && departamentoEntity.nameValue !== params.name.trim()) {
-			await this.departamentoNameUniquenessChecker.ensureUnique(params.name)
+			validations.push(this.departamentoNameUniquenessChecker.ensureUnique(params.name))
 			changes.push({
 				field: 'name',
 				oldValue: departamentoEntity.nameValue,
@@ -67,7 +68,7 @@ export class DepartamentoUpdater {
 		}
 
 		if (params.vicepresidenciaId && departamentoEntity.vicepresidenciaValue !== params.vicepresidenciaId) {
-			await this.vicepresidenciaExistenceChecker.ensureExist(params.vicepresidenciaId)
+			validations.push(this.vicepresidenciaExistenceChecker.ensureExist(params.vicepresidenciaId))
 			changes.push({
 				field: 'vicepresidenciaId',
 				oldValue: departamentoEntity.vicepresidenciaValue,
@@ -77,7 +78,7 @@ export class DepartamentoUpdater {
 		}
 
 		if (params.cargos) {
-			await this.cargoExistenceChecker.ensureExist(params.cargos)
+			validations.push(this.cargoExistenceChecker.ensureExist(params.cargos))
 			changes.push({
 				field: 'cargos',
 				oldValue: departamentoEntity.cargosValue,
@@ -101,6 +102,8 @@ export class DepartamentoUpdater {
 				}
 			}
 		}
+
+		await Promise.all(validations)
 
 		if (changes.length > 0) {
 			departamentoEntity.registerUpdateEvent(changes)

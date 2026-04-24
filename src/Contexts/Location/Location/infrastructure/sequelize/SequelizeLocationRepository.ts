@@ -3,6 +3,8 @@ import { LocationAssociation } from './LocationAssociation'
 import { LocationModel } from './LocationSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import { type CacheService } from '../../../../Shared/domain/CacheService'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -112,6 +114,11 @@ export class SequelizeLocationRepository
 									]
 								}
 							]
+						},
+						{
+							association: 'ispLinks',
+							attributes: ['id', 'name'],
+							through: { attributes: [] }
 						}
 					]
 				})
@@ -146,8 +153,24 @@ export class SequelizeLocationRepository
 	 * @returns {Promise<void>} A promise that resolves when the save operation is complete.
 	 */
 	async save(payload: LocationPrimitives): Promise<void> {
-		// Use upsert for atomic create or update operation
-		await LocationModel.upsert(payload)
+		const transaction = await sequelize.transaction()
+		try {
+			const { isplinks, ...locationData } = payload
+			const [locationInstance] = await LocationModel.upsert(locationData, { transaction, returning: true })
+
+			if (isplinks && isplinks.length > 0) {
+				await locationInstance.setISPLinks(isplinks, { transaction })
+			} else if (isplinks && isplinks.length === 0) {
+				await locationInstance.setISPLinks([], { transaction })
+			}
+
+			await transaction.commit()
+		} catch (error) {
+			await transaction.rollback()
+			throw new InvalidArgumentError(
+				`Error saving Location: ${error instanceof Error ? error.message : String(error)}`
+			)
+		}
 	}
 
 	/**

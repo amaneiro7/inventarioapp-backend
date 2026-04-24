@@ -33,33 +33,32 @@ export class LocationAssociation {
 		const siteInclude: IncludeOptions = { association: 'site', required: true, include: [cityInclude] }
 		const typeOfSiteInclude: IncludeOptions = { association: 'typeOfSite' }
 		const locationStatusInclude: IncludeOptions = { association: 'locationStatus' }
-
-		options.include = [siteInclude, typeOfSiteInclude, locationStatusInclude]
-		// Poder filtrar por direccion
-		if ('subnet' in whereFilters) {
-			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
-			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
-
-			whereFilters.subnet = sequelize.literal(`subnet::text ILIKE '%${subnetValue}%'`)
+		const ispLinkInclude: IncludeOptions = {
+			association: 'ispLinks',
+			attributes: ['id', 'name'],
+			through: { attributes: [] } // Exclude attributes from the join table
 		}
 
-		// Poder filtrar por ciudad
-		if ('cityId' in whereFilters) {
-			cityInclude.where = {
-				id: whereFilters.cityId
+		// ------------------- 2. CONFIGURACIÓN DE FILTROS -------------------
+		// Para cada posible filtro, verificamos si está presente en los whereFilters.
+		// Si lo está, configuramos el include correspondiente y eliminamos el filtro del where principal.
+		// Esto asegura que los filtros se apliquen correctamente a través de las asociaciones.
+
+		options.include = [siteInclude, typeOfSiteInclude, locationStatusInclude, ispLinkInclude]
+
+		if ('ispLinkId' in whereFilters) {
+			ispLinkInclude.where = { id: whereFilters.ispLinkId }
+			delete whereFilters.ispLinkId
+		}
+
+		// Configuración de filtros para asociaciones anidadas (ejemplo: city -> state -> region -> administrativeRegion)
+		if ('administrativeRegionId' in whereFilters) {
+			administrativeRegionInclude.where = {
+				id: whereFilters.administrativeRegionId
 			}
 
-			delete whereFilters.cityId
+			delete whereFilters.administrativeRegionId
 		}
-		// Poder filtrar por estado
-		if ('stateId' in whereFilters) {
-			stateInclude.where = {
-				id: whereFilters.stateId
-			}
-
-			delete whereFilters.stateId
-		}
-		// Poder filtrar por region
 		if ('regionId' in whereFilters) {
 			regionInclude.where = {
 				id: whereFilters.regionId
@@ -67,13 +66,27 @@ export class LocationAssociation {
 
 			delete whereFilters.regionId
 		}
-		// Poder filtrar por region Administrativa
-		if ('administrativeRegionId' in whereFilters) {
-			administrativeRegionInclude.where = {
-				id: whereFilters.administrativeRegionId
+		if ('stateId' in whereFilters) {
+			stateInclude.where = {
+				id: whereFilters.stateId
 			}
 
-			delete whereFilters.administrativeRegionId
+			delete whereFilters.stateId
+		}
+		if ('cityId' in whereFilters) {
+			cityInclude.where = {
+				id: whereFilters.cityId
+			}
+
+			delete whereFilters.cityId
+		}
+
+		// Poder filtrar por direccion
+		if ('subnet' in whereFilters) {
+			const subnetFilter = whereFilters.subnet as { [key: symbol]: string }
+			const subnetValue = subnetFilter[Object.getOwnPropertySymbols(subnetFilter)[0]]
+
+			whereFilters.subnet = sequelize.literal(`subnet::text ILIKE '%${subnetValue}%'`)
 		}
 
 		options.where = whereFilters

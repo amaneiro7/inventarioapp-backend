@@ -151,6 +151,12 @@ export const PERMISSIONS = {
 		CREATE: 'locations:create',
 		UPDATE: 'locations:update'
 	},
+	ISP_LINKS: {
+		READ_LIST: 'isp-links:read-list',
+		READ: 'isp-links:read',
+		CREATE: 'isp-links:create',
+		UPDATE: 'isp-links:update'
+	},
 	ADMINISTRATIVE_REGIONS: {
 		READ_LIST: 'administrative-regions:read-list'
 	},

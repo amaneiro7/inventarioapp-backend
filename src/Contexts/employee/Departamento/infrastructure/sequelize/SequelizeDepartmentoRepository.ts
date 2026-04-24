@@ -15,6 +15,7 @@ import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
 import { type DepartamentoDto, type DepartamentoPrimitives } from '../../domain/entity/Departamento.dto'
 import { type DepartamentoRepository } from '../../domain/repository/DepartamentoRepository'
 import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 /**
  * @description Concrete implementation of the DepartamentoRepository using Sequelize.
@@ -140,7 +141,9 @@ export class SequelizeDepartamentoRepository
 			await transaction.commit()
 		} catch (error) {
 			await transaction.rollback()
-			throw new Error(`Error saving Departamento: ${error instanceof Error ? error.message : String(error)}`)
+			throw new InvalidArgumentError(
+				`Error saving Departamento: ${error instanceof Error ? error.message : String(error)}`
+			)
 		}
 	}
 

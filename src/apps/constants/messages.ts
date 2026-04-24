@@ -35,6 +35,8 @@ export const SUCCESS_MESSAGES = {
 	CITY_UPDATED: 'Ciudad actualizada exitosamente',
 	LOCATION_CREATED: 'Ubicación agregado exitosamente',
 	LOCATION_UPDATED: 'Ubicación actualizada exitosamente',
+	ISP_LINK_CREATED: 'Proveedor de enlace ISP creada exitosamente',
+	ISP_LINK_UPDATED: 'Proveedor de enlace ISP actualizada exitosamente',
 	REGION_UPDATED: 'Región actualizado exitosamente',
 	SITE_CREATED: 'Sitio creado exitosamente',
 	SITE_UPDATED: 'Sitio actualizado exitosamente',

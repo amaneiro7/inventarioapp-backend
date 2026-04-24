@@ -9,6 +9,8 @@ import { type TypeOfSiteRepository } from '../../TypeOfSite/domain/repository/Ty
 import { type SiteRepository } from '../../Site/domain/repository/SiteRepository'
 import { type LocationParams } from '../domain/entity/Location.dto'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
+import { ISPLinkExistenceChecker } from '../../ISPLinks/domain/service/ISPLinkExistanceChecker'
+import { ISPLinkRepository } from '../../ISPLinks/domain/repository/ISPLinkRepository'
 
 /**
  * Service to create a new Location.
@@ -19,18 +21,21 @@ export class LocationCreator {
 	private readonly locationStatusExistenceChecker: LocationStatusExistenceChecker
 	private readonly siteExistenceChecker: SiteExistenceChecker
 	private readonly typeOfSiteExistenceChecker: TypeOfSiteExistenceChecker
+	private readonly ispLinkExistenceChecker: ISPLinkExistenceChecker
 	private readonly eventBus: EventBus
 	constructor({
 		locationRepository,
 		typeOfSiteRepository,
 		siteRepository,
 		locationStatusRepository,
+		ispLinkRepository,
 		eventBus
 	}: {
 		locationRepository: LocationRepository
 		typeOfSiteRepository: TypeOfSiteRepository
 		siteRepository: SiteRepository
 		locationStatusRepository: LocationStatusRepository
+		ispLinkRepository: ISPLinkRepository
 		eventBus: EventBus
 	}) {
 		this.locationRepository = locationRepository
@@ -38,6 +43,7 @@ export class LocationCreator {
 		this.locationStatusExistenceChecker = new LocationStatusExistenceChecker(locationStatusRepository)
 		this.siteExistenceChecker = new SiteExistenceChecker(siteRepository)
 		this.typeOfSiteExistenceChecker = new TypeOfSiteExistenceChecker(typeOfSiteRepository)
+		this.ispLinkExistenceChecker = new ISPLinkExistenceChecker(ispLinkRepository)
 		this.eventBus = eventBus
 	}
 
@@ -52,7 +58,8 @@ export class LocationCreator {
 			this.locationNameUniquenessChecker.ensureUnique(params.name),
 			this.locationStatusExistenceChecker.ensureExist(params.locationStatusId),
 			this.siteExistenceChecker.ensureExist(params.siteId),
-			this.typeOfSiteExistenceChecker.ensureExist(params.typeOfSiteId)
+			this.typeOfSiteExistenceChecker.ensureExist(params.typeOfSiteId),
+			this.ispLinkExistenceChecker.ensureExist(params.isplinks)
 		])
 		const location = Location.create(params)
 
