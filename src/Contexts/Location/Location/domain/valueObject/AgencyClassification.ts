@@ -13,10 +13,10 @@ export enum AgencyClassificationEnum {
 export class AgencyClassification extends AcceptedNullStringValueObject {
 	constructor(readonly value: string | null) {
 		super(value)
-		this.ensureIsValidStatus(value)
+		this.ensureIsValidAgencyClassification(value)
 	}
 
-	private ensureIsValidStatus(value: Primitives<AgencyClassification>): void {
+	private ensureIsValidAgencyClassification(value: Primitives<AgencyClassification>): void {
 		// 1. Si el valor es null, salimos de la validación (es válido)
 		if (value === null) {
 			return

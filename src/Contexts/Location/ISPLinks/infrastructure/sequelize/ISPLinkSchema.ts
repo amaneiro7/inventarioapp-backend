@@ -33,7 +33,7 @@ export class ISPLinkModel extends Model<Omit<ISPLinkDto, 'locations'>> implement
 	 */
 	static async associate(models: SequelizeModels): Promise<void> {
 		ISPLinkModel.belongsToMany(models.Location, {
-			through: 'location_isp_Link',
+			through: 'location_isp_link',
 			foreignKey: 'ispLinkId',
 			otherKey: 'locationId',
 			as: 'locations'

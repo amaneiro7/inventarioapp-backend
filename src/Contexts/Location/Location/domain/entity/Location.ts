@@ -8,14 +8,14 @@ import { LocationStatusId } from '../../../LocationStatus/domain/valueObject/Loc
 import { LocationCreatedDomainEvent } from '../event/LocationCreatedDomainEvent'
 import { LocationUpdatedDomainEvent } from '../event/LocationUpdatedDomainEvent'
 import { LocationRenamedDomainEvent } from '../event/LocationRenamedDomainEvent'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type LocationDto, type LocationParams, type LocationPrimitives } from '../entity/Location.dto'
 import { LocationSubnetChangedDomainEvent } from '../event/LocationSubnetChangedDomainEvent'
 import { LocationStatusChangedDomainEvent } from '../event/LocationStatusChangedDomainEvent'
 import { TypeOfSiteList } from '../../../TypeOfSite/domain/TypeOfSiteList'
 import { AgencyClassification } from '../valueObject/AgencyClassification'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { ISPLinkId } from '../../../ISPLinks/domain/valueObject/ISPLinkId'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { LocationDto, LocationParams, LocationPrimitives } from '../entity/Location.dto'
 
 /**
  * Represents a Location domain entity.
