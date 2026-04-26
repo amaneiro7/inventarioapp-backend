@@ -157,11 +157,11 @@ export class SequelizeLocationRepository
 		try {
 			const { isplinks, ...locationData } = payload
 			const [locationInstance] = await LocationModel.upsert(locationData, { transaction, returning: true })
-
+			console.log('Location upserted with ID:', locationInstance)
 			if (isplinks && isplinks.length > 0) {
-				await locationInstance.setISPLinks(isplinks, { transaction })
+				await locationInstance.setIspLinks(isplinks, { transaction })
 			} else if (isplinks && isplinks.length === 0) {
-				await locationInstance.setISPLinks([], { transaction })
+				await locationInstance.setIspLinks([], { transaction })
 			}
 
 			await transaction.commit()

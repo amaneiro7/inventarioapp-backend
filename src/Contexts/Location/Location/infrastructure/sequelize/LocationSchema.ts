@@ -1,10 +1,11 @@
-import {
-	type BelongsToManyAddAssociationsMixin,
-	type BelongsToManyGetAssociationsMixin,
-	type BelongsToManySetAssociationsMixin,
-	DataTypes,
-	Model,
-	type Sequelize
+import { DataTypes, Model } from 'sequelize'
+import type {
+	BelongsToManyAddAssociationsMixin,
+	BelongsToManyCreateAssociationMixin,
+	BelongsToManyGetAssociationsMixin,
+	BelongsToManyHasAssociationMixin,
+	BelongsToManySetAssociationsMixin,
+	Sequelize
 } from 'sequelize'
 import { LocationStatusOptions } from '../../../LocationStatus/domain/LocationStatusOptions'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
@@ -44,10 +45,16 @@ export class LocationModel
 	declare ispLinks: Primitives<ISPLinkId>[] & Omit<ISPLinkDto, 'locations'>[]
 
 	// Association Mixins
-	declare getISPLink: BelongsToManyGetAssociationsMixin<ISPLinkModel>
-	declare addISPLink: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
-	declare setISPLinks: BelongsToManySetAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
-	declare removeISPLink: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare getIspLinks: BelongsToManyGetAssociationsMixin<ISPLinkModel>
+	declare countIspLinks: BelongsToManyHasAssociationMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare hasIspLink: BelongsToManyHasAssociationMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare hasIspLinks: BelongsToManyHasAssociationMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare setIspLinks: BelongsToManySetAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare addIspLink: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare addIspLinks: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare removeIspLink: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare removeIspLinks: BelongsToManyAddAssociationsMixin<ISPLinkModel, Primitives<ISPLinkId>>
+	declare createIspLink: BelongsToManyCreateAssociationMixin<ISPLinkModel>
 
 	/**
 	 * Associates the Location model with other models.

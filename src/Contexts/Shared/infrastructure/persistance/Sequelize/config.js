@@ -19,8 +19,7 @@ module.exports = {
 		migrationStorage: 'sequelize',
 		migrationStorageTableName: 'sequelize_migrations',
 		seederStorage: 'sequelize',
-		seederStorageTableName: 'sequelize_data',
-		logging: console.log
+		seederStorageTableName: 'sequelize_data'
 	},
 	test: {
 		username: 'root',
@@ -33,13 +32,12 @@ module.exports = {
 		username,
 		password,
 		database,
-		port,
+		port: 5430,
 		host,
 		dialect: 'postgres',
 		migrationStorage: 'sequelize',
 		migrationStorageTableName: 'sequelize_migrations',
 		seederStorage: 'sequelize',
-		seederStorageTableName: 'sequelize_data',
-		logging: console.log
+		seederStorageTableName: 'sequelize_data'
 	}
 }
