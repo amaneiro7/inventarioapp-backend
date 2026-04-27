@@ -1,7 +1,7 @@
-import { type IncludeOptions, type Order, type FindOptions } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { IncludeOptions, Order, FindOptions } from 'sequelize'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
  * @class DeviceAssociation
@@ -18,7 +18,14 @@ export class DeviceAssociation {
 	 * @returns {FindOptions} The fully constructed Sequelize FindOptions object.
 	 */
 	convertFilterLocation(criteria: Criteria, options: FindOptions): FindOptions {
-		const mainCategoryId = criteria.obtainFilterValue('mainCategoryId') ?? []
+		const mainCategoryFilter = criteria.obtainFilterValue('mainCategoryId')
+		const mainCategoryId = (
+			Array.isArray(mainCategoryFilter)
+				? mainCategoryFilter
+				: mainCategoryFilter !== undefined && mainCategoryFilter !== null
+					? [mainCategoryFilter]
+					: []
+		) as string[]
 		const whereFilters = { ...options.where } // Clone to avoid direct mutation
 
 		// ------------------- 1. INCLUDES DEFINITION -------------------
