@@ -4,6 +4,7 @@ import { SequelizeCriteriaConverter } from '../../../Shared/infrastructure/persi
 import { TimeTolive } from '../../../Shared/domain/CacheRepository'
 import { BrandAssociation } from './BrandAssociation'
 import { GenericCacheInvalidator } from '../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import { InvalidArgumentError } from '../../../Shared/domain/errors/ApiError'
 import { type BrandPrimitives, type BrandDto } from '../../domain/entity/Brand.dto'
 import { type BrandRepository } from '../../domain/repository/BrandRepository'
 import { type CacheService } from '../../../Shared/domain/CacheService'
@@ -124,7 +125,9 @@ export class SequelizeBrandRepository extends SequelizeCriteriaConverter impleme
 			await transaction.commit()
 		} catch (error) {
 			await transaction.rollback()
-			throw new Error(`Error saving brand: ${error instanceof Error ? error.message : String(error)}`)
+			throw new InvalidArgumentError(
+				`Error saving brand: ${error instanceof Error ? error.message : String(error)}`
+			)
 		}
 	}
 

@@ -224,6 +224,7 @@ export class Location extends AggregateRoot {
 		this.typeOfSiteId = new TypeOfSiteId(typeOfSite)
 		if (typeOfSite !== TypeOfSiteList.AGENCIA) {
 			this.ispLinks.clear()
+			this.agencyClassification = new AgencyClassification(null)
 		}
 	}
 

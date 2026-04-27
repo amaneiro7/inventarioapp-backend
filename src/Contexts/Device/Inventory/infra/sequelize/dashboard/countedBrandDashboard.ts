@@ -1,55 +1,25 @@
-import { Op } from 'sequelize'
-import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { DeviceModel } from '../../../../Device/infrastructure/sequelize/schema/DeviceSchema'
-import { StatusOptions } from '../../../../Status/domain/StatusOptions'
-import { MainCategoryList } from '../../../../../Category/MainCategory/domain/MainCategoryDefaultData'
+import { ComputerCountBrandDashboardAssociation } from './ComputerCountBrandDashboardAssociation'
 import type { RawBrandCountData, AggregatedBrandData } from './types'
+import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
+import type { ResponseDB } from '../../../../../Shared/domain/ResponseType'
 
 /**
  * @function fetchAndAggregateBrandData
  * @description Fetches and aggregates device data by brand, with optional filtering by location.
- * @param {string} categoryId - The main category to filter (e.g., COMPUTER).
- * @param {object} filters - Optional filters for location, site, or region.
+ * @param {criteria} Criteria - The main category to filter (e.g., COMPUTER).
  * @returns {Promise<AggregatedBrandData[]>} A promise that resolves to the aggregated brand data.
  */
-export async function fetchAndAggregateBrandData(): Promise<AggregatedBrandData[]> {
-	const result = (await DeviceModel.findAll({
-		attributes: [
-			'serial',
-			[sequelize.col('category.name'), 'categoryName'],
-			[sequelize.col('brand.name'), 'brandName'],
-			[sequelize.col('model.name'), 'modelName'],
-			[sequelize.col('location.typeOfSite.name'), 'typeOfSiteName'],
-			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
-		],
-		where: {
-			statusId: {
-				[Op.ne]: StatusOptions.DESINCORPORADO
-			}
-		},
-		include: [
-			{
-				association: 'category',
-				attributes: [],
-				where: { mainCategoryId: MainCategoryList.COMPUTER }
-			},
-			{ association: 'brand', attributes: [] },
-			{ association: 'model', attributes: [] },
-			{
-				association: 'location',
-				attributes: [],
-				include: [{ association: 'typeOfSite', attributes: [] }]
-			}
-		],
-		group: ['serial', 'category.name', 'brand.name', 'model.name', 'location.typeOfSite.name'],
-		order: [
-			[sequelize.col('brand.name'), 'ASC'],
-			[sequelize.col('model.name'), 'ASC']
-		],
-		raw: true
-	})) as unknown as RawBrandCountData[]
+export async function fetchAndAggregateBrandData(criteria: Criteria): Promise<ResponseDB<AggregatedBrandData>> {
+	const options = ComputerCountBrandDashboardAssociation.buildDashboardFindOptions(criteria, { raw: true })
 
-	return transformBrandData(result)
+	const { count, rows } = await DeviceModel.findAndCountAll(options)
+	const result = rows.map(row => row.get({ plain: true })) as unknown as RawBrandCountData[]
+
+	return {
+		total: count,
+		data: transformBrandData(result)
+	}
 }
 
 /**

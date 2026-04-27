@@ -1,22 +1,22 @@
-import { type ComputerDashboardRepository } from '../domain/ComputerDashboardRepository'
-import { type ComputerMemoryRamModulesRepository } from '../domain/ComputerMemoryRamModulesRepository'
-import { type ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepository'
-import { type CountByCategoryRepository } from '../domain/CountByCategoryRepository'
-import { type CountByRegionRepository } from '../domain/CountByRegionRepository'
-import { type CountOSByRegionRepository } from '../domain/CountOSByRegionRepository'
-import {
+import type { ComputerDashboardRepository } from '../domain/ComputerDashboardRepository'
+import type { ComputerMemoryRamModulesRepository } from '../domain/ComputerMemoryRamModulesRepository'
+import type { ComputerMemoryRamRepository } from '../domain/ComputerMemoryRamRepository'
+import type { CountByCategoryRepository } from '../domain/CountByCategoryRepository'
+import type { CountByRegionRepository } from '../domain/CountByRegionRepository'
+import type { CountOSByRegionRepository } from '../domain/CountOSByRegionRepository'
+import type {
 	AggregatedOSData,
-	type CountTotalOperatingSystemRepository
+	CountTotalOperatingSystemRepository
 } from '../domain/CountTotalOperatingSystemRepository'
-import { type TotalActiveUsersRepository } from '../domain/TotalActiveUsersRepository'
-import { type TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
-import { type TotalComputerRepository } from '../domain/TotalComputerRepository'
-import { AggregatedBrandData, AggregatedHDDData, StatusCountData } from '../infra/sequelize/dashboard/types'
-import { AggregatedMemoryModuleData } from '../infra/sequelize/sequelizeComputerMemoryRamModulesRepository'
-import { AggregatedMemoryCapacityData } from '../infra/sequelize/sequelizeComputerMemoryRamRepository'
-import { AggregatedCategoryData } from '../infra/sequelize/sequelizeCountByCategoryRepository'
-import { AdministrativeRegionData } from '../infra/sequelize/sequelizeCountByRegionRepository'
-import { AggregatedOSByRegionData } from '../infra/sequelize/sequelizeCountOSByRegionRepository'
+import type { TotalActiveUsersRepository } from '../domain/TotalActiveUsersRepository'
+import type { TotalAgenciesRepository } from '../domain/TotalAgenciesRepository'
+import type { TotalComputerRepository } from '../domain/TotalComputerRepository'
+import type { AggregatedBrandData, AggregatedHDDData, StatusCountData } from '../infra/sequelize/dashboard/types'
+import type { AggregatedMemoryModuleData } from '../infra/sequelize/sequelizeComputerMemoryRamModulesRepository'
+import type { AggregatedMemoryCapacityData } from '../infra/sequelize/sequelizeComputerMemoryRamRepository'
+import type { AggregatedCategoryData } from '../infra/sequelize/sequelizeCountByCategoryRepository'
+import type { AdministrativeRegionData } from '../infra/sequelize/sequelizeCountByRegionRepository'
+import type { AggregatedOSByRegionData } from '../infra/sequelize/sequelizeCountOSByRegionRepository'
 
 /**
  * @class ComputerDashboard

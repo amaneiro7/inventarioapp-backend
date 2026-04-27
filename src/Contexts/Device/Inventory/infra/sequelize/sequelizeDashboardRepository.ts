@@ -1,10 +1,10 @@
-import { CacheService } from '../../../../Shared/domain/CacheService'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
-import { type ComputerDashboardRepository } from '../../domain/ComputerDashboardRepository'
 import { fetchAndAggregateHDDData } from './dashboard/hddDashboard'
 import { fetchAndProcessStatusData } from './dashboard/statusDashboard'
 import { fetchAndAggregateBrandData } from './dashboard/brandDashboard'
-import { type AggregatedBrandData, type AggregatedHDDData, type StatusCountData } from './dashboard/types'
+import type { CacheService } from '../../../../Shared/domain/CacheService'
+import type { ComputerDashboardRepository } from '../../domain/ComputerDashboardRepository'
+import type { AggregatedBrandData, AggregatedHDDData, StatusCountData } from './dashboard/types'
 
 /**
  * @class SequelizeComputerDashboardRepository

@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 import { Primitives } from '../value-object/Primitives'
-import { FiltersPrimitives } from './Filter'
+import { Filter, FiltersPrimitives } from './Filter'
 import { FilterField } from './FilterField'
 import { Filters } from './Filters'
 import { InvalidCriteria } from './InvalidCriteria'
@@ -38,8 +38,8 @@ export class Criteria {
 		return new Criteria(
 			Filters.fromValues(filters),
 			Order.fromValues(orderBy, orderType),
-			Number(pageSize),
-			Number(pageNumber)
+			pageSize ? Number(pageSize) : undefined,
+			pageNumber ? Number(pageNumber) : undefined
 		)
 	}
 
@@ -51,6 +51,31 @@ export class Criteria {
 			pageSize: this.pageSize,
 			pageNumber: this.pageNumber
 		}
+	}
+
+	withFilters(newFilter: Filter[]): Criteria {
+		const updatedFilters = new Filters([...this.filters.value, ...newFilter])
+		return new Criteria(updatedFilters, this.order, this.pageSize, this.pageNumber)
+	}
+
+	withoutPagination(): Criteria {
+		return new Criteria(this.filters, this.order)
+	}
+
+	withOrder(orderBy: string, orderType: string): Criteria {
+		return new Criteria(this.filters, Order.fromValues(orderBy, orderType), this.pageSize, this.pageNumber)
+	}
+
+	withoutFilter(fieldName: string): Criteria {
+		const currentFilters = this.filters.toPrimitives()
+		const updatedFilters = currentFilters.filter(filter => filter.field !== fieldName)
+		return Criteria.fromPrimitives(
+			updatedFilters,
+			this.order.orderBy.value,
+			this.order.orderType.value,
+			this.pageSize,
+			this.pageNumber
+		)
 	}
 
 	hasFilters(): boolean {
@@ -66,9 +91,7 @@ export class Criteria {
 	}
 
 	obtainFilterValue(field: Primitives<FilterField>) {
-		return this.filters.value.map(filter => {
-			if (filter.field.value === field) return filter.value.value
-		})
+		return this.filters.value.find(f => f.field.value === field)?.value.value
 	}
 
 	/**
@@ -78,12 +101,7 @@ export class Criteria {
 	 * @returns {string} A SHA-256 hash string.
 	 */
 	public hash(): string {
-		const data = {
-			filters: this.filters.toPrimitives(),
-			order: this.order.toPrimitives(),
-			pageSize: this.pageSize,
-			pageNumber: this.pageNumber
-		}
+		const data = this.toPrimitives()
 		const json = JSON.stringify(data)
 		return createHash('sha256').update(json).digest('hex')
 	}
