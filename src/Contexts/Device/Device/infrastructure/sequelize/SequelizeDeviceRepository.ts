@@ -24,6 +24,7 @@ import { type DeviceActivo } from '../../domain/valueObject/DeviceActivo'
 import { type DeviceSerial } from '../../domain/valueObject/DeviceSerial'
 import { type BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 /**
  * @class SequelizeDeviceRepository
@@ -275,7 +276,9 @@ export class SequelizeDeviceRepository
 			await transaction.commit()
 		} catch (error) {
 			await transaction.rollback()
-			throw new Error(`Error saving device: ${error instanceof Error ? error.message : String(error)}`)
+			throw new InvalidArgumentError(
+				`Error saving device: ${error instanceof Error ? error.message : String(error)}`
+			)
 		}
 	}
 

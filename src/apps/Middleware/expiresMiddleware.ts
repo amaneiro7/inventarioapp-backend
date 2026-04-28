@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 
 /**
  * @description Sets the `Expires` header to indicate when the response should be considered stale.

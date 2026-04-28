@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 
 /**
  * @description Sets the `Last-Modified` header to the current date and time.

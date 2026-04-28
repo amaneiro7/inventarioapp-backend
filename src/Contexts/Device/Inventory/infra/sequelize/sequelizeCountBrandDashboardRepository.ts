@@ -5,6 +5,8 @@ import type { AggregatedBrandData } from './dashboard/types'
 import type { ComputerCountBrandDashboardRepository } from '../../domain/ComputerCountBrandDashboardRepository'
 import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { ComputerCountBrandDashboardAssociation } from './dashboard/ComputerCountBrandDashboardAssociation'
 
 /**
  * @class SequelizeComputerDashboardRepository
@@ -12,11 +14,15 @@ import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
  * @description Provides an implementation of the `ComputerDashboardRepository` using Sequelize and a cache service.
  * This repository is responsible for fetching and aggregating computer-related dashboard data.
  */
-export class SequelizeComputerCountBrandDashboardRepository implements ComputerCountBrandDashboardRepository {
+export class SequelizeComputerCountBrandDashboardRepository
+	extends SequelizeCriteriaConverter
+	implements ComputerCountBrandDashboardRepository
+{
 	private readonly cacheKeyPrefix: string = 'devices:dashboard:computer'
 
 	private readonly cache: CacheService
 	constructor({ cache }: { cache: CacheService }) {
+		super()
 		this.cache = cache
 	}
 
@@ -28,24 +34,13 @@ export class SequelizeComputerCountBrandDashboardRepository implements ComputerC
 	 */
 	async run(criteria: Criteria): Promise<ResponseDB<AggregatedBrandData>> {
 		// Incluimos el hash del criteria para que filtros distintos tengan caches distintos
-		const cacheKey = this.generateCacheKey(`count-by-brand:${criteria.hash()}`)
+		const options = this.convert(criteria)
+		const deviceOptions = ComputerCountBrandDashboardAssociation.buildDashboardFindOptions(criteria, options)
+		const cacheKey = `${this.cacheKeyPrefix}:count-by-brand:${criteria.hash()}`
 		return await this.cache.getCachedData<ResponseDB<AggregatedBrandData>>({
 			cacheKey,
 			ttl: TimeTolive.MEDIUM,
-			fetchFunction: async () => await fetchAndAggregateBrandData(criteria)
+			fetchFunction: async () => await fetchAndAggregateBrandData(deviceOptions)
 		})
-	}
-
-	/**
-	 * @private
-	 * @method generateCacheKey
-	 * @description Generates a dynamic cache key that includes a timestamp to ensure the cache is periodically refreshed.
-	 * This strategy helps prevent stale data by creating a new key every hour.
-	 * @param {string} suffix - A unique suffix for the cache key.
-	 * @returns {string} The generated cache key.
-	 */
-	private generateCacheKey(suffix: string): string {
-		const timestamp = Math.floor(Date.now() / (1000 * 60 * 60)) // Timestamp updated hourly
-		return `${this.cacheKeyPrefix}:${suffix}:${timestamp}`
 	}
 }

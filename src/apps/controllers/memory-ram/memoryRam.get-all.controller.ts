@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type MemoryRamTypeFinderAll } from '../../../Contexts/Features/MemoryRam/MemoryRamType/application/SearchAllMemoryRamType'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'

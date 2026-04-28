@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type RegionUpdater } from '../../../Contexts/Location/Region/application/RegionUpdater'
 

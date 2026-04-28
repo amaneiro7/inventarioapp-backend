@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type ModelSeriesSearchByCriteria } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelByCriteriaSearcher'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'

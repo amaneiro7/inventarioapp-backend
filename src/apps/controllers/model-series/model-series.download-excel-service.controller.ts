@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type ModelSeriesExcelService } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelExcelService'
 import { type FiltersPrimitives } from '../../../Contexts/Shared/domain/criteria/Filter'

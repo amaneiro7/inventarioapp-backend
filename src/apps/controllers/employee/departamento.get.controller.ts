@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type Controller } from '../controller'
 import { type DepartamentoFinder } from '../../../Contexts/employee/Departamento/application/DepartamentoFinder'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'

@@ -30,13 +30,19 @@ import { DeviceMonitoringDashboardByStateGetController } from '../../controllers
 import { DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
 import { SequelizeDeviceMonitoringDashboardByLocationRepository } from '../../../Contexts/Device/DeviceMonitoring/infra/sequelize/SequelizeDeviceMonitoringDashboardByLocationRepository'
 import { DeviceMonitoringDashboardByLocation } from '../../../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringDashboardByLocation'
+import { SequelizeComputerCountBrandDashboardRepository } from '../../../Contexts/Device/Inventory/infra/sequelize/sequelizeCountBrandDashboardRepository'
+import { ComputerCountBrandDashboard } from '../../../Contexts/Device/Inventory/application/ComputerCountBrandDashboard'
+import { ComputerCountBrandDashboardGetController } from '../../controllers/device/device-compoter-count-brand-dashboard.controller'
 
 export enum ComputerDashboardDependencies {
 	//Repo
 	Repository = 'computerDashboardRepository',
+	CountBrandDashboardRepository = 'computerCountBrandDashboardRepository',
 	//app
 	GeneralDashboard = 'generalDashboard',
 	ComputerDashboard = 'computerDashboard',
+	ComputerCountBrandDashboard = 'computerCountBrandDashboard',
+
 	DeviceMonitoringDashboard = 'deviceMonitoringDashboard',
 	DeviceMonitoringDashboardByState = 'deviceMonitoringDashboardByState',
 	DeviceMonitoringDashboardByLocation = 'deviceMonitoringDashboardByLocation',
@@ -44,6 +50,7 @@ export enum ComputerDashboardDependencies {
 	//controller
 	ComputerDashboardGetController = 'computerDashboardGetController',
 	GeneralDashboardGetController = 'generalDashboardGetController',
+	ComputerCountBrandDashboardGetController = 'computerCountBrandDashboardGetController',
 	DeviceMonitoringDashboardGetController = 'deviceMonitoringDashboardGetController',
 	DeviceMonitoringDashboardByStateGetController = 'deviceMonitoringDashboardByStateGetController',
 	DeviceMonitoringDashboardByLocationGetController = 'deviceMonitoringDashboardByLocationGetController'
@@ -52,6 +59,7 @@ export enum ComputerDashboardDependencies {
 export const register = (container: AwilixContainer) => {
 	container.register({
 		computerDashboardRepository: asClass(SequelizeComputerDashboardRepository).singleton(),
+		computerCountBrandDashboardRepository: asClass(SequelizeComputerCountBrandDashboardRepository).singleton(),
 		countOSByRegionRepository: asClass(SequelizeCountOSByRegionRepository).singleton(),
 		computerMemoryRamRepository: asClass(SequelizeComputerMemoryRamRepository).singleton(),
 
@@ -78,6 +86,7 @@ export const register = (container: AwilixContainer) => {
 
 		computerDashboard: asClass(ComputerDashboard),
 		generalDashboard: asClass(GeneralDashboard),
+		computerCountBrandDashboard: asClass(ComputerCountBrandDashboard),
 		deviceMonitoringDashboard: asClass(DeviceMonitoringDashboard),
 		deviceMonitoringDashboardByState: asClass(DeviceMonitoringDashboardByState),
 		deviceMonitoringDashboardByLocation: asClass(DeviceMonitoringDashboardByLocation),
@@ -86,6 +95,7 @@ export const register = (container: AwilixContainer) => {
 		generalDashboardGetController: asClass(GeneralDashboardGetController),
 		deviceMonitoringDashboardGetController: asClass(DeviceMonitoringDashboardGetController),
 		deviceMonitoringDashboardByStateGetController: asClass(DeviceMonitoringDashboardByStateGetController),
-		deviceMonitoringDashboardByLocationGetController: asClass(DeviceMonitoringDashboardByLocationGetController)
+		deviceMonitoringDashboardByLocationGetController: asClass(DeviceMonitoringDashboardByLocationGetController),
+		computerCountBrandDashboardGetController: asClass(ComputerCountBrandDashboardGetController)
 	})
 }

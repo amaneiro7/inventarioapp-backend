@@ -1,7 +1,6 @@
+import type { FindOptions } from 'sequelize'
 import { DeviceModel } from '../../../../Device/infrastructure/sequelize/schema/DeviceSchema'
-import { ComputerCountBrandDashboardAssociation } from './ComputerCountBrandDashboardAssociation'
 import type { RawBrandCountData, AggregatedBrandData } from './types'
-import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 import type { ResponseDB } from '../../../../../Shared/domain/ResponseType'
 
 /**
@@ -10,15 +9,13 @@ import type { ResponseDB } from '../../../../../Shared/domain/ResponseType'
  * @param {criteria} Criteria - The main category to filter (e.g., COMPUTER).
  * @returns {Promise<AggregatedBrandData[]>} A promise that resolves to the aggregated brand data.
  */
-export async function fetchAndAggregateBrandData(criteria: Criteria): Promise<ResponseDB<AggregatedBrandData>> {
-	const options = ComputerCountBrandDashboardAssociation.buildDashboardFindOptions(criteria, { raw: true })
-
+export async function fetchAndAggregateBrandData(options: FindOptions): Promise<ResponseDB<AggregatedBrandData>> {
 	const { count, rows } = await DeviceModel.findAndCountAll(options)
-	const result = rows.map(row => row.get({ plain: true })) as unknown as RawBrandCountData[]
+	//const result = rows.map(row => row.get({ plain: true })) as unknown as RawBrandCountData[]
 
 	return {
 		total: count,
-		data: transformBrandData(result)
+		data: transformBrandData(rows as unknown as RawBrandCountData[])
 	}
 }
 
@@ -59,14 +56,7 @@ function transformBrandData(rawData: RawBrandCountData[]): AggregatedBrandData[]
 		}
 	}
 
-	// Convert map to array and sort nested structures
-	const transformedData = Array.from(brandMap.values()).map(brand => {
-		brand.model.sort((a, b) => a.name.localeCompare(b.name))
-		for (const model of brand.model) {
-			model.typeOfSite.sort((a, b) => a.name.localeCompare(b.name))
-		}
-		return brand
-	})
-
-	return transformedData.sort((a, b) => a.name.localeCompare(b.name))
+	// Convert map to array
+	const transformedData = Array.from(brandMap.values())
+	return transformedData
 }

@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import httpStatus from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { config } from '../../Contexts/Shared/infrastructure/config'
 import { ApiError } from '../../Contexts/Shared/domain/errors/ApiError'

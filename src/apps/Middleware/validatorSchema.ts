@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { type ValidationError, validationResult } from 'express-validator'
 import { httpStatus } from '../../Contexts/Shared/infrastructure/utils/http-status'
 import { ApiError } from '../../Contexts/Shared/domain/errors/ApiError'

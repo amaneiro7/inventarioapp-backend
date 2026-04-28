@@ -44,6 +44,11 @@ export class ComputerCountBrandDashboard extends GetAllBaseService<AggregatedBra
 					new FilterField('statusId'),
 					new FilterOperator(Operator.NOT_EQUAL),
 					new FilterValue(StatusOptions.DESINCORPORADO)
+				),
+				new Filter(
+					new FilterField('statusId'),
+					new FilterOperator(Operator.NOT_EQUAL),
+					new FilterValue(StatusOptions.PORDESINCORPORAR)
 				)
 			)
 		}
