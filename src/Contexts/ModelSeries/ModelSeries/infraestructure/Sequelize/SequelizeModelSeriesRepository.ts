@@ -1,6 +1,4 @@
-import { type Model, type ModelStatic, type Transaction } from 'sequelize'
-import { set_fs, utils, write } from 'xlsx'
-import fs from 'node:fs'
+import type { Model, ModelStatic, Transaction } from 'sequelize'
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { ComputerModels } from '../../domain/entity/ComputerModels'
 import { LaptopsModels } from '../../domain/entity/LaptopsModels'
@@ -13,16 +11,18 @@ import { MouseModels } from '../../domain/entity/MouseModels'
 import { CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { clearModelDataset } from './clearModelDataset'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ModelSeriesRepository } from '../../domain/repository/ModelSeriesRepository'
-import { type ModelSeriesDto, type ModelSeriesPrimitives } from '../../domain/dto/ModelSeries.dto'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type ModelSeriesId } from '../../domain/valueObject/ModelSeriesId'
-import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { CacheService } from '../../../../Shared/domain/CacheService'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { ModelSeriesRepository } from '../../domain/repository/ModelSeriesRepository'
+import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import type { ModelSeriesId } from '../../domain/valueObject/ModelSeriesId'
+import type { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import type { ModelSeriesDto, ModelSeriesPrimitives } from '../../domain/dto/ModelSeries.dto'
+import { exportToExcel } from '../../../../Shared/infrastructure/utils/ExcelExporter'
 
 /**
  * @class SequelizeModelSeriesRepository
@@ -241,7 +241,7 @@ export class SequelizeModelSeriesRepository
 			} else if (typeof error === 'string') {
 				errorMessage = `Error saving model series: ${error}`
 			}
-			throw new Error(errorMessage)
+			throw new InvalidArgumentError(errorMessage)
 		}
 	}
 
@@ -282,24 +282,13 @@ export class SequelizeModelSeriesRepository
 	 * @returns {Promise<Buffer>} A promise that resolves to an Excel file buffer.
 	 */
 	async donwload(criteria: Criteria): Promise<Buffer> {
-		set_fs(fs)
-
 		const { data } = await this.matching(criteria)
-
 		const wbData = clearModelDataset({ models: data })
-		// Create a new worksheet
-		const worksheet = utils.json_to_sheet(wbData)
-		worksheet['!cols'] = [{ wch: 20 }]
-		const workbook = utils.book_new()
-		utils.book_append_sheet(workbook, worksheet, 'Inventario')
 
-		// Generate a buffer
-		const buf = write(workbook, {
-			type: 'buffer',
-			bookType: 'xlsx',
-			compression: true
+		return exportToExcel(wbData, {
+			title: 'Reporte de Inventario de Modelos',
+			subject: 'Inventario de Models'
 		})
-		return buf
 	}
 
 	/**

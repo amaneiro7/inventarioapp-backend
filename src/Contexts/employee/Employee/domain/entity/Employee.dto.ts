@@ -76,4 +76,6 @@ export type EmployeeDto = Employee & {
 	departamento: Omit<DepartamentoDto, 'cargos'>
 	cargo: Omit<CargoDto, 'departamentos' | 'directivas' | 'vicepresidenciasEjecutivas' | 'vicepresidencias'>
 	history: HistoryDto[] | null
+	updatedAt?: Date
+	createdAt?: Date
 }

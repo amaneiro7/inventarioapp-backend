@@ -1,5 +1,5 @@
-import { Criteria } from '../../../Shared/domain/criteria/Criteria'
-import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
+import type { Criteria } from '../../../Shared/domain/criteria/Criteria'
+import type { EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 
 /**
  * @description Service for generating an Excel file (Buffer) containing employee data based on specified criteria.
@@ -18,7 +18,7 @@ export class EmployeeExcelService {
 	 */
 	async run(criteria: Criteria): Promise<Buffer> {
 		// Creamos un nuevo Criteria sin paginación (limit/offset) para descargar todo
-		const criteriaAll = new Criteria(criteria.filters, criteria.order)
+		const criteriaAll = criteria.withoutPagination()
 		return this.employeeRepository.donwload(criteriaAll)
 	}
 }

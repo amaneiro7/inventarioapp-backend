@@ -1,23 +1,21 @@
 import { Op } from 'sequelize'
-import fs from 'node:fs'
-import { set_fs, utils, type WorkSheet, write } from 'xlsx'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { EmployeeModel } from './EmployeeSchema'
 import { EmployeeAssociation } from './EmployeeAssociation'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
-import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type EmployeePrimitives, type EmployeeDto } from '../../domain/entity/Employee.dto'
-import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
-import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
-import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
-import { type ClearEmployeeDataset } from './EmployeeResponse'
 import { clearEmployeeDataset } from './clearEmployeeDataset'
+import { exportToExcel } from '../../../../Shared/infrastructure/utils/ExcelExporter'
+import type { EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { EmployeeRepository } from '../../domain/Repository/EmployeeRepository'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { CacheService } from '../../../../Shared/domain/CacheService'
+import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import type { EmployeePrimitives, EmployeeDto } from '../../domain/entity/Employee.dto'
+import type { EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
+import type { EmployeeId } from '../../domain/valueObject/EmployeeId'
+import type { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -246,54 +244,12 @@ export class SequelizeEmployeeRepository
 	}
 
 	async donwload(criteria: Criteria): Promise<Buffer> {
-		set_fs(fs)
-
 		const { data } = await this.matching(criteria)
 		const wbData = clearEmployeeDataset({ employees: data })
-
-		if (!wbData.length) {
-			// Handle case where there is no data to write
-			const emptyWorkbook = utils.book_new()
-			utils.book_append_sheet(emptyWorkbook, utils.aoa_to_sheet([['No hay datos para exportar']]), 'Inventario')
-			return write(emptyWorkbook, { type: 'buffer', bookType: 'xlsx', compression: true })
-		}
-
-		const worksheet: WorkSheet = utils.json_to_sheet(wbData)
-		// --- Optimization: Calculate column widths in one go ---
-		const headers = Object.keys(wbData[0])
-		const cols = headers.map(header => {
-			const headerWidth = header.length + 2
-			const maxContentWidth = wbData.reduce(
-				(max, row) => Math.max(max, String(row[header as keyof ClearEmployeeDataset]).length + 2),
-				headerWidth
-			)
-			return { wch: maxContentWidth }
+		return exportToExcel(wbData, {
+			title: 'Reporte de Inventario de Modelos',
+			subject: 'Inventario de Models'
 		})
-		worksheet['!cols'] = cols
-
-		// --- ENhancement: Add metada to the workbook
-		const workbook = utils.book_new()
-		workbook.Props = {
-			Title: 'Reporde de Inventario de Empleados',
-			Subject: 'Inventario de Empleados',
-			Author: 'Sistema de Inventario (BNC)',
-			CreatedDate: new Date()
-		}
-		// --- Enhancement: Add styling for headers (requires a custom cell style function) ---
-		// SheetJS does not have a simple way to apply styles directly to the worksheet object.
-		// For simple styling like bolding headers, you need to iterate and modify cell properties.
-		const headerRow = utils.sheet_to_json(worksheet, { header: 1 })[0] as string[]
-		headerRow.forEach((_header, index) => {
-			const cellRef = utils.encode_cell({ r: 0, c: index })
-			if (worksheet[cellRef]) {
-				worksheet[cellRef].s = {
-					font: { bold: true },
-					fill: { fgColor: { rgb: 'E8F2FF' } }
-				}
-			}
-		})
-		utils.book_append_sheet(workbook, worksheet, 'Inventario')
-		return write(workbook, { type: 'buffer', bookType: 'xlsx', compression: true })
 	}
 
 	/**

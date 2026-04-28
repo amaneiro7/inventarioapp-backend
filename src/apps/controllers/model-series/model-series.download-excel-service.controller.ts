@@ -1,12 +1,9 @@
 import type { Request, Response, NextFunction } from 'express'
-import { type Controller } from '../controller'
-import { type ModelSeriesExcelService } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelExcelService'
-import { type FiltersPrimitives } from '../../../Contexts/Shared/domain/criteria/Filter'
-
+import type { Controller } from '../controller'
+import type { ModelSeriesExcelService } from '../../../Contexts/ModelSeries/ModelSeries/application/ModelExcelService'
 import httpStatus from '../../../Contexts/Shared/infrastructure/utils/http-status'
 import { container } from '../../di/container'
 import { ModelSeriesDependencies } from '../../di/model-series/model-series.di'
-import { SearchByCriteriaQuery } from '../../../Contexts/Shared/domain/SearchByCriteriaQuery'
 
 /**
  * Controller for downloading model series data as an Excel file.
@@ -22,16 +19,8 @@ export class ModelSeriesDownloadExcelServiceController implements Controller {
 	 */
 	async run(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { filters, orderBy, orderType, limit, offset } = req.query
-			const query = new SearchByCriteriaQuery(
-				filters ? (filters as unknown as FiltersPrimitives[]) : [],
-				orderBy ? (orderBy as string) : undefined,
-				orderType ? (orderType as string) : undefined,
-				limit ? Number(limit) : undefined,
-				offset ? Number(offset) : undefined
-			)
 			const downloadExcel: ModelSeriesExcelService = container.resolve(ModelSeriesDependencies.ExcelService)
-			const buf = await downloadExcel.run(query)
+			const buf = await downloadExcel.run(req.criteria!)
 			const now = new Date()
 			const filename = `Reporte-Inventario${now.toLocaleDateString().replace(/[/:]/g, '-')}.xlsx`
 			res.status(httpStatus[200].statusCode)

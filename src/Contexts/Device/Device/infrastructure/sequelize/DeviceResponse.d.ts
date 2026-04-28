@@ -3,7 +3,6 @@
  * @description Defines the structure for a flattened computer device dataset, used for data exports.
  */
 export type ClearComputerDataset = {
-	id: string
 	Usuario: string
 	Ubicación: string
 	'Direccion IP'?: string
@@ -34,7 +33,6 @@ export type ClearComputerDataset = {
  * @description Defines the structure for a flattened default device dataset, used for data exports.
  */
 export type ClearDefaultDataset = {
-	id: string
 	Usuario: string
 	Ubicación: string
 	Serial: string

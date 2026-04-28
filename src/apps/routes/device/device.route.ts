@@ -4,6 +4,8 @@ import { DeviceDependencies } from '../../di/device/device.di'
 import { ComputerDashboardDependencies } from '../../di/device/computerDashboard.di'
 import { criteriaConverterMiddleware } from '../../Middleware/criteriaConverterMiddleware'
 import { protectedRoute } from '../../Middleware/protectedRoute'
+import { hasPermission } from '../../Middleware/authorization'
+import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 // import { type DeviceGetAllController } from '../controllers/device/device.getAll.controller'
 import type { DevicePatchController } from '../../controllers/device/device.patch.controller'
@@ -18,8 +20,6 @@ import type { DeviceMonitoringDashboardGetController } from '../../controllers/d
 import type { DeviceMonitoringDashboardByStateGetController } from '../../controllers/device/device-monitoring-dashboard-by-state.controller'
 import type { DeviceMonitoringDashboardByLocationGetController } from '../../controllers/device/device-monitoring-dashboard-by-location.controller'
 import type { ComputerCountBrandDashboardGetController } from '../../controllers/device/device-compoter-count-brand-dashboard.controller'
-import { hasPermission } from '../../Middleware/authorization'
-import { PERMISSIONS } from '../../../Contexts/Shared/domain/permissions'
 
 export const register = async (router: Router) => {
 	const getController: DeviceGetController = container.resolve(DeviceDependencies.GetController)
