@@ -73,6 +73,14 @@ export class ComputerCountBrandDashboardAssociation {
 			}
 			delete whereFilters.mainCategoryId
 		}
+		// Poder filtrar por main category
+		if ('modelName' in whereFilters) {
+			modelInclude.where = {
+				...(modelInclude.where || {}),
+				name: whereFilters.modelName
+			}
+			delete whereFilters.modelName
+		}
 
 		// Poder filtrar por ubicacion - Tipo de sitio
 		if ('typeOfSiteId' in whereFilters) {
