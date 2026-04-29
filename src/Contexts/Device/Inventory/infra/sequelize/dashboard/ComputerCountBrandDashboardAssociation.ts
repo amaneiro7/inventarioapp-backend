@@ -1,5 +1,5 @@
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
-import type { FindOptions, IncludeOptions } from 'sequelize'
+import type { FindOptions, IncludeOptions, Order } from 'sequelize'
 import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
 
 export class ComputerCountBrandDashboardAssociation {
@@ -73,7 +73,7 @@ export class ComputerCountBrandDashboardAssociation {
 			}
 			delete whereFilters.mainCategoryId
 		}
-		// Poder filtrar por main category
+		// Poder filtrar por modelo
 		if ('modelName' in whereFilters) {
 			modelInclude.where = {
 				...(modelInclude.where || {}),
@@ -140,11 +140,44 @@ export class ComputerCountBrandDashboardAssociation {
 
 		// Re-assign the modified where clauses back to the options.
 		options.where = whereFilters
-		options.order = [
-			[sequelize.col('brand.name'), 'ASC'],
-			[sequelize.col('model.name'), 'ASC']
-		]
+
+		options.order = options.order
+			? this.transformOrder(options.order)
+			: [
+					[sequelize.col('brand.name'), 'ASC'],
+					[sequelize.col('model.name'), 'ASC']
+				]
 
 		return options
+	}
+
+	/**
+	 * @private
+	 * @method transformOrder
+	 * @description Transforms a simple order format into a nested format for Sequelize.
+	 * @param {Order | undefined} order The order configuration from the criteria.
+	 * @returns {Order | undefined} A Sequelize-compatible nested order configuration.
+	 */
+	private static transformOrder(order: Order | undefined): Order | undefined {
+		if (!order || !Array.isArray(order) || order.length === 0) return undefined
+
+		const orderMap: Record<string, string[]> = {
+			brandId: ['brand', 'name'],
+			brandName: ['brand', 'name'],
+			modelId: ['model', 'name'],
+			modelName: ['model', 'name'],
+			categoryId: ['category', 'name'],
+			categoryName: ['category', 'name'],
+			typeOfSiteId: ['location', 'typeOfSite', 'name'],
+			typeOfSiteName: ['location', 'typeOfSite', 'name'],
+			count: ['count']
+		}
+		const transformedOrder = (order as Array<[string, string]>).map(([field, direction]) => {
+			const mappedPath = orderMap[field]
+			// If a mapping exists, use the nested path. Otherwise, use the original field name.
+			return mappedPath ? [...mappedPath, direction] : [field, direction]
+		})
+
+		return transformedOrder as Order
 	}
 }
