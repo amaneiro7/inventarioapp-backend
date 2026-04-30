@@ -141,12 +141,7 @@ export class ComputerCountBrandDashboardAssociation {
 		// Re-assign the modified where clauses back to the options.
 		options.where = whereFilters
 
-		options.order = options.order
-			? this.transformOrder(options.order)
-			: [
-					[sequelize.col('brand.name'), 'ASC'],
-					[sequelize.col('model.name'), 'ASC']
-				]
+		options.order = this.transformOrder(options.order)
 
 		return options
 	}
@@ -169,8 +164,7 @@ export class ComputerCountBrandDashboardAssociation {
 			categoryId: ['category', 'name'],
 			categoryName: ['category', 'name'],
 			typeOfSiteId: ['location', 'typeOfSite', 'name'],
-			typeOfSiteName: ['location', 'typeOfSite', 'name'],
-			count: ['count']
+			typeOfSiteName: ['location', 'typeOfSite', 'name']
 		}
 		const transformedOrder = (order as Array<[string, string]>).map(([field, direction]) => {
 			const mappedPath = orderMap[field]

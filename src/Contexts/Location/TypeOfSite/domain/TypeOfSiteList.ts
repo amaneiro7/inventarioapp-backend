@@ -7,3 +7,9 @@ export const TypeOfSiteList = {
 	AGENCIA: '2',
 	ALMACEN: '3'
 } as const
+
+export const TypeOfSiteOptionsByName = {
+	ADMINISTRATIVE: 'Sede Administrativa',
+	AGENCY: 'Agencia',
+	ALMACEN: 'Almacén'
+} as const

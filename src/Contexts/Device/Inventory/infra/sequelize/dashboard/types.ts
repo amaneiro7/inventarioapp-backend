@@ -70,3 +70,14 @@ export interface AggregatedBrandData {
 	count: number
 	model: ModelAggregatedData[]
 }
+
+export interface ModelData {
+	id: string
+	name: string
+	category: string
+	brand: string
+	count: number
+	inUse: number
+	inAlmacen: number
+	status: 'In Stock' | 'Low Stock' | 'Out of Stock'
+}
