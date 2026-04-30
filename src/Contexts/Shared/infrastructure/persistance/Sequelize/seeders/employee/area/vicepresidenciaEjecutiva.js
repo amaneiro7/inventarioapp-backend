@@ -7,7 +7,7 @@ const VPEOnlyNames = {
 	'SECRETARIA DE LA JUNTA DIRECTIVA': 'Secretaria de la junta directiva',
 	'UNIDAD ADMON INTEGRAL DE RIESGOS': 'Unidad admon integral de riesgos',
 	'V.P. SEGURIDAD DE LA INFORMACION': 'V.P. Seguridad de la informacion',
-	'V.P.E FINANZAS': 'V.P.E. Finanzas',
+	'V.P.E. FINANZAS': 'V.P.E. Finanzas',
 	'V.P.E. BANCA ESPECIALIZADA': 'V.P.E. Banca especializada',
 	'V.P.E. CUMPLIMIENTO': 'V.P.E. Cumplimiento',
 	'V.P.E. DE BANCA COMERCIAL': 'V.P.E. de banca comercial',
@@ -19,7 +19,8 @@ const VPEOnlyNames = {
 	'V.P.E. OPERACIONES CENTRALIZADAS': 'V.P.E. Operaciones centralizadas',
 	'V.P.E. SERVICIOS JURÍDICOS': 'V.P.E. Servicios jurídicos',
 	'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES': 'V.P.E. Soluciones de clientes y serv. digitales',
-	'V.P.E. BANCA CORPORATIVA EMPRESAS E INSTITUCIONES': 'V.P.E. Banca Corporativa, Empresas e Instituciones'
+	'V.P.E. BANCA CORPORATIVA EMPRESAS E INSTITUCIONES': 'V.P.E. Banca Corporativa, Empresas e Instituciones',
+	'V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA': 'V.P.E. Banca Corporativa Multinacional & Energía'
 }
 
 const VPEData = [
@@ -142,6 +143,13 @@ const VPEData = [
 	{
 		id: 'a2241c01-1c76-4384-882f-73b800c41b54',
 		name: 'V.P.E. Banca Corporativa, Empresas e Instituciones',
+		directivaId: directivaData.filter(
+			directiva => directiva.name === directivaOnlyNames['PRESIDENCIA EJECUTIVA']
+		)[0].id
+	},
+	{
+		id: 'c4003d5d-50a4-4f80-84b4-fc085c3b3a1a',
+		name: 'V.P.E. Banca Corporativa Multinacional & Energía',
 		directivaId: directivaData.filter(
 			directiva => directiva.name === directivaOnlyNames['PRESIDENCIA EJECUTIVA']
 		)[0].id

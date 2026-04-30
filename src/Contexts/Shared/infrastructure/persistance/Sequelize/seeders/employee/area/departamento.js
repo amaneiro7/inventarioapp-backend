@@ -186,10 +186,17 @@ const departamentoOnlyNames = {
 	'GERENCIA DE INNOVACIÓN Y PRODUCTOS': 'Gerencia De Innovación Y Productos',
 	'GERENCIA DE ÁREA DE COMUNICACIONES CORPORATIVAS': 'Gerencia De Área De Comunicaciones Corporativas',
 	'COORDINACIÓN DISEÑO GRÁFICO': 'Coordinación Diseño Gráfico',
-	'GERENCIA ANALÍTICA DIGITAL': 'Gerencia Analítica Digital'
+	'GERENCIA ANALÍTICA DIGITAL': 'Gerencia Analítica Digital',
+	// nuevos
+	'GERENCIA CONTROL INSTITUCIONAL': 'Gerencia Control Institucional'
 }
 
 const departamentoData = [
+	{
+		id: '296e9347-451e-4a2f-9f68-e3533cdef8c8',
+		name: 'Gerencia Control Institucional',
+		vicepresidenciaId: VPData.filter(vp => vp.name === VPOnlyNames['V.P. ASEGURAMIENTO NORMATIVO'])[0].id
+	},
 	{
 		id: '6269eb53-a62c-4d30-ba02-386f7818d091',
 		name: 'Coordinación Atención Al Accionista',

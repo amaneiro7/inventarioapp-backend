@@ -246,7 +246,7 @@ const VPData = [
 	{
 		id: '4bd51cdb-bb21-4cbb-898e-f45d0ae33c0f',
 		name: 'Tesoreria',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: 'b1d0ddaa-d855-451f-94c8-341a44f4eb5a',
@@ -343,17 +343,17 @@ const VPData = [
 	{
 		id: '5a0a84f4-25e2-4890-b2b9-c2b75a61e984',
 		name: 'V.P. Contratos Y Servicios',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '6d6167dc-ccc7-407e-9218-45ee3b95768a',
 		name: 'V.P. Control De Activos',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '88da36e8-70bc-4233-b994-63e1753f87f8',
 		name: 'V.P. Control De Inmuebles',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '842272f7-3f71-4676-9122-ea8f7bbd3e9e',
@@ -384,17 +384,17 @@ const VPData = [
 	{
 		id: 'c0e9d33c-6729-44ab-9c78-152069b1832d',
 		name: 'V.P. De Banca Internacional',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '90dceec7-d97d-4871-bbcd-fe8d2dbe006d',
 		name: 'V.P. De Contraloría',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '069e3026-9ca8-4e32-be22-73a2b3a123ae',
 		name: 'V.P. De Fideicomiso',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '6c617337-dc74-443d-ab62-cec323082c59',
@@ -466,7 +466,7 @@ const VPData = [
 	{
 		id: '938f090d-e9ba-4706-89ba-19efa9585424',
 		name: 'V.P. Gestion De Contabilidad Pagos Y Tributos',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '17d3cd50-e9c3-40b2-b2b8-4aa136158550',
@@ -496,7 +496,7 @@ const VPData = [
 	{
 		id: '5e2da0c0-1a63-4016-86f9-0384dd977842',
 		name: 'V.P. Infraestructura Y Mantenimiento Fisico',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: 'ea48feba-29b3-41d7-91af-eeac411f9c79',
@@ -522,7 +522,7 @@ const VPData = [
 	{
 		id: '07d786f3-a317-4d2c-ab7f-c4840452ca6f',
 		name: 'V.P. Planificación Financiera Y Presupuesto',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: 'd928571d-ac60-4ec6-93f0-a25e9b2d04f3',
@@ -541,7 +541,7 @@ const VPData = [
 	{
 		id: '919fbd6d-1b3f-406e-85c6-3cfa0ed080aa',
 		name: 'V.P. Procura, Almacén Y Servicios Generales',
-		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E FINANZAS'])[0].id
+		vicepresidenciaEjecutivaId: VPEData.filter(vpe => vpe.name === VPEOnlyNames['V.P.E. FINANZAS'])[0].id
 	},
 	{
 		id: '570187bc-d77d-4648-a7d2-cb0dfc3c4976',
