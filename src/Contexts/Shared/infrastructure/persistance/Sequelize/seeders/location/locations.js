@@ -400,9 +400,25 @@ const agenciaName = {
 	'AGENCIA(535)': 'Agencia (535) Rio Chico',
 	'AGENCIA(541)': 'Agencia (541) La Vela',
 	'AGENCIA(550)': 'Agencia (550) Santa Isabel',
-	'AGENCIA(552)': 'Agencia (552) Naiguata'
+	'AGENCIA(552)': 'Agencia (552) Naiguata',
+	ROSAL: 'Torre BNC El Rosal',
+	BOLEITA: 'Torre BNC Boleita'
 }
 const agenciasSite = [
+	{
+		id: 'f42dfa7d-bf35-4aec-91ce-906f81166e27',
+		typeOfSiteId: typeOfSite.filter(type => type.name === typeOfSiteOnlyName.SEDE)[0].id,
+		siteId: 'af6153d6-c6db-40a7-9bde-6f66295803a7',
+		name: 'Torre BNC Boleita',
+		subnet: null
+	},
+	{
+		id: '0fb519bb-efa9-4c01-a2fb-18f5e51812a3',
+		typeOfSiteId: typeOfSite.filter(type => type.name === typeOfSiteOnlyName.SEDE)[0].id,
+		siteId: 'a28819d2-50d5-4f63-a453-65bd578ac953',
+		name: 'Torre BNC El Rosal',
+		subnet: null
+	},
 	{
 		id: '658bcab2-ab6f-4c50-8957-1dd9cb608845',
 		typeOfSiteId: typeOfSite.filter(type => type.name === typeOfSiteOnlyName.AGENCIA)[0].id,

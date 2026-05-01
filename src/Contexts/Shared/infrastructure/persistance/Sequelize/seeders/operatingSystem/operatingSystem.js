@@ -1,9 +1,27 @@
 const osName = {
-	WINDOWS11: 'Windows 11',
-	WINDOWS10: 'Windows 10',
+	WINDOWS1121H2: 'Windows 11 21H2',
+	WINDOWS1122H2: 'Windows 11 22H2',
+	WINDOWS1123H2: 'Windows 11 23H2',
+	WINDOWS1124H2: 'Windows 11 24H2',
+	WINDOWS1125H2: 'Windows 11 25H2',
+	WINDOWS10: 'Windows 10 NT 10.0',
+	WINDOWS101511: 'Windows 10 1511',
+	WINDOWS101607: 'Windows 10 1607',
+	WINDOWS101703: 'Windows 10 1703',
+	WINDOWS101709: 'Windows 10 1709',
+	WINDOWS101803: 'Windows 10 1803',
+	WINDOWS101809: 'Windows 10 1809',
+	WINDOWS101903: 'Windows 10 1903',
+	WINDOWS101909: 'Windows 10 1909',
+	WINDOWS102004: 'Windows 10 2004',
+	WINDOWS1020H2: 'Windows 10 20H2',
+	WINDOWS1021H1: 'Windows 10 21H1',
+	WINDOWS1021H2: 'Windows 10 21H2',
+	WINDOWS1022H2: 'Windows 10 22H2',
 	WINDOWS81: 'Windows 8.1',
 	WINDOWS8: 'Windows 8',
 	WINDOWS7: 'Windows 7',
+	WINDOWSVIESTA: 'Windows Vista',
 	WINDOWSXP: 'Windows XP',
 	WINDOWSSERVER2003: 'Windows Server 2003',
 	WINDOWSSERVER2008: 'Windows Server 2008',
@@ -54,7 +72,8 @@ const operatingSystem = [
 	{ id: '32', name: 'Windows 10 21H2', buildNumber: '19044', version: '21H2' },
 	{ id: '33', name: 'Windows 11 21H2', buildNumber: '22000', version: '21H2' },
 	{ id: '34', name: 'Windows 11 22H2', buildNumber: '22621', version: '22H2' },
-	{ id: '35', name: 'Windows 11 23H2', buildNumber: '22631', version: '23H2' }
+	{ id: '35', name: 'Windows 11 23H2', buildNumber: '22631', version: '23H2' },
+	{ id: '36', name: 'Windows 11 25H2', buildNumber: '26100', version: '25H2' }
 ]
 
 module.exports = { operatingSystem, osName }
