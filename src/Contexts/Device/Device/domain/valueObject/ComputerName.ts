@@ -6,8 +6,8 @@ import { AcceptedNullStringValueObject } from '../../../../Shared/domain/value-o
 export class ComputerName extends AcceptedNullStringValueObject {
 	private readonly MIN_LENGTH = 3
 	private readonly MAX_LENGTH = 1000
-	// Este regex acepta letras, números y guiones, pero evita que empiece o termine con guion
-	private readonly HOSTNAME_REGEX = /^[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?$/
+	// Este regex acepta letras, números y guiones, incluyendo al inicio y al final
+	private readonly HOSTNAME_REGEX = /^[A-Z0-9-]+$/
 
 	constructor(readonly value: string | null) {
 		super(value)
@@ -17,9 +17,6 @@ export class ComputerName extends AcceptedNullStringValueObject {
 		}
 		this.ensureLengthIsBiggerThan(this.MIN_LENGTH)
 		this.ensureLengthIsSmallerThan(this.MAX_LENGTH)
-		this.ensureMatchesPattern(
-			this.HOSTNAME_REGEX,
-			'El nombre debe ser alfanumérico y solo puede contener guiones (no al inicio ni al final).'
-		)
+		this.ensureMatchesPattern(this.HOSTNAME_REGEX, 'El nombre debe ser alfanumérico y puede contener guiones.')
 	}
 }
