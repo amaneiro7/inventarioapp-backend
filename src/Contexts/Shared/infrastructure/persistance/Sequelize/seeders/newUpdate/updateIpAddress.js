@@ -1504,6 +1504,10 @@ const newIPUpdate = [
 		ipAddress: '10.103.0.13'
 	},
 	{
+		serial: 'MXL3201WPC',
+		ipAddress: '10.103.0.14'
+	},
+	{
 		serial: 'MXJ9190B4P',
 		ipAddress: '10.103.1.14'
 	},

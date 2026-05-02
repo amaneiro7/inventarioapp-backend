@@ -28,9 +28,81 @@ const processorName = [
 	'Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz',
 	'Intel(R) Core(TM)2 Quad CPU    Q8400  @ 2.66GHz',
 	'Intel(R) Core(TM) i5-8500T CPU @ 2.10GHz',
-	'Intel(R) Pentium(R) D 945 CPU 3.40GHz'
+	'Intel(R) Pentium(R) D 945 CPU 3.40GHz',
+	'Intel(R) Core(TM) i7 14700T CPU @ 1.3GHz',
+	'Intel(R) Core(TM) i7 1355U CPU @ 1.7GHz',
+	'Intel(R) Core(TM) i7 14700 CPU @ 1.5GHz',
+	'Intel(R) Core(TM) i5 12600K CPU @ 2.8GHz',
+	'Intel(R) Core(TM) i7 1185G7 CPU @ 3GHz',
+	'AMD Ryzen 3 3200U with Radeon Vega Mobile Gfx',
+	'Intel(R) Core(TM) i5 1334U CPU @ 3.4GHz',
+	'Snapdragon(R) X Plus X1P64100 Qualcomm(R) Oryon(TM)'
 ]
 const processors = [
+	{
+		id: '2b2cb1f8-8bc4-4466-9488-60aa48590a68',
+		product_collection: 'AMD Ryzen 3',
+		number_model: '3200U with Radeon Vega Mobile Gfx',
+		frequency: '2.6GHz',
+		cores: 2,
+		threads: true
+	},
+	{
+		id: '24844614-a77d-4b2f-a9e1-c92de2cc47f2',
+		product_collection: 'Intel(R) Core(TM) i5',
+		number_model: '1334U',
+		frequency: '3.4GHz',
+		cores: 10,
+		threads: true
+	},
+	{
+		id: '65fd6c17-645e-4ec9-85ef-509123044aff',
+		product_collection: 'Snapdragon(R) X Plus',
+		number_model: 'X1P64100 Qualcomm(R) Oryon(TM)',
+		frequency: '3.4GHz',
+		cores: 10,
+		threads: false
+	},
+	{
+		id: '0a153842-5188-4fbb-923a-1ff29af9f4d0',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '1185G7',
+		frequency: '3.0GHz',
+		cores: 4,
+		threads: true
+	},
+	{
+		id: '86de05a2-7182-40c1-bc88-27e35eb3ca54',
+		product_collection: 'Intel(R) Core(TM) i5',
+		number_model: '12600K',
+		frequency: '2.8GHz',
+		cores: 10,
+		threads: true
+	},
+	{
+		id: '4da08d66-cf9c-4a17-8672-06ea1c1df96d',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '14700',
+		frequency: '1.5GHz',
+		cores: 20,
+		threads: true
+	},
+	{
+		id: '4100f4c2-2398-4fac-b662-188a28b26da0',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '14700T',
+		frequency: '1.3GHz',
+		cores: 20,
+		threads: true
+	},
+	{
+		id: 'dbab8dab-877d-4813-a37c-11dddf86066e',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '1355U',
+		frequency: '1.7GHz',
+		cores: 10,
+		threads: true
+	},
 	{
 		id: '37a5fc25-5261-4d35-b6a9-ec5d9b9bb6a9',
 		product_collection: 'Intel(R) Celeron(R)',

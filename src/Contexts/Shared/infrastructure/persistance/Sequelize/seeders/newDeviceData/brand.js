@@ -9,7 +9,15 @@ const brandOnlyName = {
 	OEM: 'OEM',
 	'To be filled by O.E.M.': 'OEM',
 	'To Be Filled By O.E.M.': 'OEM',
-	Foxconn: 'Foxconn'
+	Foxconn: 'Foxconn',
+	'Dell Inc.': 'Dell',
+	'Dell Inc': 'Dell',
+	DELL: 'Dell',
+	'ASUSTeK COMPUTER INC.': 'Asus',
+	ASUS: 'Asus',
+	'ASUS Computer Inc.': 'Asus',
+	'Compaq Computer Corporation': 'Compaq',
+	Compaq: 'Compaq'
 }
 
 const brandsData = [

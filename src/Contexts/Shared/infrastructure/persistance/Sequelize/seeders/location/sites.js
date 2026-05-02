@@ -235,6 +235,7 @@ const siteOnlyNames = {
 	CAUCAGUA: 'Caucagua',
 	RIOCHICO: 'Rio Chico',
 	LAVELA: 'La Vela',
+	TAQUILLAGOBERNACIONESTADONUEVAESPARTA: 'Taquilla Gobernación Estado Nueva Esparta',
 	SANTAISABEL: 'Santa Isabel',
 	NAIGUATA: 'Naiguata'
 }
@@ -1791,6 +1792,12 @@ const sites = [
 		name: '(541) La Vela',
 		address: 'C.C. La Vela C/Los Uveros Av. Guayacan Porlamar, Nueva Esparta',
 		cityId: cities.filter(city => city.name === cityOnlyNames.PORLAMAR)[0].id
+	},
+	{
+		id: '7ba237fb-3374-4aaf-a5af-4c34ce287f48',
+		name: '(542) Taquilla Gobernación Estado Nueva Esparta',
+		address: 'Av. Constitución, La Asunción, Estado Nueva Esparta.',
+		cityId: cities.filter(city => city.name === cityOnlyNames.LAASUNCION)[0].id
 	},
 	{
 		id: '4a2a3f4e-c1ac-4177-9cd8-2e4900b6f2c0',

@@ -1,6 +1,7 @@
 const states = require('./state')
 
 const cityOnlyNames = {
+	LAASUNCION: 'La Asunción',
 	ANACO: 'Anaco',
 	BARCELONA: 'Barcelona',
 	ELTIGRE: 'El Tigre',
@@ -402,6 +403,11 @@ const cities = [
 		id: 'c104a9ff-dd72-443c-8651-9d26acb8f1f5',
 		name: 'Maturín',
 		stateId: states.filter(state => state.name === 'Monagas')[0].id
+	},
+	{
+		id: '120c8487-cc9d-4629-b59b-79ed94ae1b60',
+		name: 'La Asunción',
+		stateId: states.filter(state => state.name === 'Nueva Esparta')[0].id
 	},
 	{
 		id: '914c268e-4f5e-4c56-9d7d-f0c87809f9f9',

@@ -5,7 +5,7 @@ const { processors } = require('./processor/processors')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		return queryInterface.bulkInsert(
+		queryInterface.bulkInsert(
 			'processors',
 			processors.map(({ id, product_collection, number_model, frequency, cores, threads }) => {
 				return {

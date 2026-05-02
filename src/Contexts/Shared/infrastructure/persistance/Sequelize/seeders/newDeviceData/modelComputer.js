@@ -26,10 +26,66 @@ const modelName = [
 	'HP Compaq Elite 8300 SFF',
 	'Lenovo Product',
 	'HP ProDesk 600 G4 DM (TAA)',
-	'ThinkCentre M57e'
+	'ThinkCentre M57e',
+	'HP Pro Mini 400 G9 Desktop PC',
+	'HP Laptop 15-fd0xxx',
+	'HP Elite Mini 800 G9 Desktop PC',
+	'HP ProBook 450 G8 Notebook PC',
+	'HP EliteBook 850 G8 Notebook PC',
+	//
+	'QL15R3BM8256', // Lapop Compaq
+	'Vivobook_ASUSLaptop X1404VA_X1404VA', // Laptop Asus
+	'Inspiron 14 5441', // Laptop Dell
+	'ThinkCentre M58e' // Desktop Lenovo
 ]
 
 const modelComputer = [
+	{
+		id: 'cabda7e3-6381-4f9a-9f45-4067d6496e4e',
+		name: 'QL15R3BM8256',
+		slots: 2
+	},
+	{
+		id: 'a813fa80-4074-4b2b-8c66-b77ee5a3aae3',
+		name: 'Vivobook_ASUSLaptop X1404VA_X1404VA',
+		slots: 2
+	},
+	{
+		id: 'db16f029-0502-44f3-9953-8e62e5c16772',
+		name: 'Inspiron 14 5441',
+		slots: 1
+	},
+	{
+		id: 'cf9bfd9d-a6aa-472f-95cc-380f31e81f0e',
+		name: 'ThinkCentre M58e',
+		slots: 2
+	},
+	//
+	{
+		id: '20561a81-f206-4613-9ebe-3a30062940ff',
+		name: 'HP ProBook 450 G8 Notebook PC',
+		slots: 2
+	},
+	{
+		id: 'f67ff1b6-6c07-4a35-9930-7060d77f4010',
+		name: 'HP EliteBook 850 G8 Notebook PC',
+		slots: 2
+	},
+	{
+		id: 'f69764d7-45df-4078-8da6-9b2206554183',
+		name: 'HP Laptop 15-fd0xxx',
+		slots: 2
+	},
+	{
+		id: 'b3e5881e-a766-49e0-973f-79b379fc399d',
+		name: 'HP Elite Mini 800 G9 Desktop PC',
+		slots: 2
+	},
+	{
+		id: '3f9943a3-138f-4219-bf44-77280b2d22bf',
+		name: 'HP Pro Mini 400 G9 Desktop PC',
+		slots: 2
+	},
 	{
 		id: '17212b01-df51-4a56-81ce-c02f67e3756b',
 		name: 'HP Pavilion G4-1388la',

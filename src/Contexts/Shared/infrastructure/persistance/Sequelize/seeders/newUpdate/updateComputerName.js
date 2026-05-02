@@ -1156,10 +1156,6 @@ const newComputerNameUpdate = [
 		computerName: '214008GRTES'
 	},
 	{
-		serial: 'MXL318182D',
-		computerName: '30003COOR'
-	},
-	{
 		serial: 'MXL051088H',
 		computerName: '55006CORD'
 	},

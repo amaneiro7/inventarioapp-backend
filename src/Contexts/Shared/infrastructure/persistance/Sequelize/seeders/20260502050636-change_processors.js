@@ -1,7 +1,8 @@
 'use strict'
 
-const { newLocationUpdate } = require('./newUpdate/updateLocation')
+const { newUpdateProcessors } = require('./newUpdate/updateProcessors')
 
+const DEVICE_COMPUTER_TABLE = 'device_computers'
 const DEVICE_TABLE = 'devices'
 
 /** @type {import('sequelize-cli').Migration} */
@@ -10,20 +11,20 @@ module.exports = {
 		// Es recomendable envolver todo en una transacción para mayor seguridad
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
-			for (const update of newLocationUpdate) {
-				const { serial, locationId, locationName } = update
+			for (const update of newUpdateProcessors) {
+				const { serial, processorId } = update
 
-				if (locationId && serial) {
-					console.log(
-						`Updating device with serial ${serial} to location ID ${locationId} and name ${locationName}`
-					)
+				if (processorId && serial) {
+					console.log(`Updating device with serial ${serial} to processor ${processorId}`)
 					await queryInterface.sequelize.query(
-						`UPDATE \"${DEVICE_TABLE}\" 
-          SET \"location_id\" = :locationId, \"updated_at\" = :now
-          WHERE \"serial\" = :serial`,
+						`UPDATE \"${DEVICE_COMPUTER_TABLE}\" 
+          SET \"processor_id\" = :processorId, \"updated_at\" = :now
+          WHERE \"device_id\" IN (
+            SELECT \"id\" FROM \"${DEVICE_TABLE}\" WHERE \"serial\" = :serial
+          )`,
 						{
 							replacements: {
-								locationId: locationId,
+								processorId: processorId,
 								now: new Date(),
 								serial: serial
 							},

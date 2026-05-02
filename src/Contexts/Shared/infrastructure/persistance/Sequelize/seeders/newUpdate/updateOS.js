@@ -2,6 +2,10 @@ const { osName, operatingSystem } = require('../operatingSystem/operatingSystem'
 
 const newOSUpdate = [
 	{
+		serial: 'MXL92855ZZ',
+		operatingSystemId: operatingSystem.filter(os => os.name === osName.WINDOWS1122H2)[0].id
+	},
+	{
 		serial: 'MJ08H7Y6',
 		operatingSystemId: operatingSystem.filter(os => os.name === osName.WINDOWS101909)[0].id
 	},
