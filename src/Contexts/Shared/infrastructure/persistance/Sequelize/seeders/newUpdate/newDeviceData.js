@@ -10113,6 +10113,7 @@ function validateNewDevices(data) {
 		if (!device.hardDriveCapacityId) errors.push('Capacidad HDD no encontrada')
 		if (!device.hardDriveTypeId) errors.push('Tipo HDD no encontrado')
 		if (!device.operatingSystemId) errors.push('Sistema Operativo no encontrado')
+		if (!device.operatingSystemArqId) errors.push('Arquitectura del Sistema Operativo no encontrado')
 
 		const ramSum = device.memoriaRamModules?.reduce((a, b) => a + b, 0) || 0
 		if (ramSum !== device.memoryRamCapacity) {
