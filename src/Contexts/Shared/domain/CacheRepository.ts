@@ -58,6 +58,8 @@ export abstract class CacheRepository {
 	 */
 	abstract delByPattern(pattern: string): Promise<void>
 
+	abstract flushall(): Promise<void>
+
 	abstract close(): Promise<void>
 
 	abstract connect(): Promise<void>

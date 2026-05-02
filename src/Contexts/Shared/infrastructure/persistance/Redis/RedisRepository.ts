@@ -72,6 +72,22 @@ export class RedisRepository implements CacheRepository {
 		}
 	}
 
+	async flushall(): Promise<void> {
+		try {
+			await this.client.flushAll()
+		} catch (error) {
+			this.logger.error(`Error al eliminar valor en Redis: ${error}`)
+		}
+	}
+
+	async flushdb(): Promise<void> {
+		try {
+			await this.client.flushDb()
+		} catch (error) {
+			this.logger.error(`Error al eliminar valor en Redis: ${error}`)
+		}
+	}
+
 	/**
 	 * @method delByPattern
 	 * @description Deletes multiple items from Redis that match a given pattern.

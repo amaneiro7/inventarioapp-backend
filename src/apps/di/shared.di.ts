@@ -6,6 +6,8 @@ import { SequelizeConfig } from '../../Contexts/Shared/infrastructure/persistanc
 import { PingLogger } from '../../Contexts/Shared/domain/Monitoring/infra/PingLogger'
 import { InMemoryEventBus } from '../../Contexts/Shared/infrastructure/event/inMemoryEventBus'
 import { PingService } from '../../Contexts/Shared/domain/Monitoring/application/PingService'
+import { CacheClearController } from '../controllers/shared/cache_clear.controller'
+import { CacheClearer } from '../../Contexts/Shared/application/CacheClearer'
 
 export enum SharedDependencies {
 	Logger = 'logger',
@@ -14,7 +16,9 @@ export enum SharedDependencies {
 	Cache = 'cache',
 	PingService = 'pingService',
 	PingLogger = 'pingLogger',
-	EventBus = 'eventBus'
+	EventBus = 'eventBus',
+	ClearCacheController = 'clearCacheController',
+	CacheClearer = 'cacheClearer'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -25,6 +29,8 @@ export const register = (container: AwilixContainer) => {
 		[SharedDependencies.Cache]: asClass(CacheService).singleton(),
 		[SharedDependencies.PingService]: asClass(PingService).singleton(),
 		[SharedDependencies.PingLogger]: asClass(PingLogger).singleton(),
-		[SharedDependencies.EventBus]: asClass(InMemoryEventBus).singleton()
+		[SharedDependencies.EventBus]: asClass(InMemoryEventBus).singleton(),
+		[SharedDependencies.ClearCacheController]: asClass(CacheClearController).singleton(),
+		[SharedDependencies.CacheClearer]: asClass(CacheClearer).singleton()
 	})
 }
