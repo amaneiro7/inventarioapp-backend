@@ -410,7 +410,7 @@ const newUserSinInfo = [
 		lastname: 'Lecheria',
 		nationality: null,
 		cedula: null,
-		type: 'genericgular'
+		type: 'generic'
 	},
 	{
 		userName: 'ssepulveda',
