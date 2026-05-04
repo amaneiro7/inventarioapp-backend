@@ -1,57 +1,12 @@
 'use strict'
 
-const restoNuevosUsuarios = [
-	{
-		userName: 'angimartinez'
-	},
-	{
-		userName: 'cazambrano'
-	},
-	{
-		userName: 'dbasanta'
-	},
-	{
-		userName: 'drondon'
-	},
-	{
-		userName: 'jmaturel'
-	},
-	{
-		userName: 'jnoguera'
-	},
-	{
-		userName: 'jpepper'
-	},
-	{
-		userName: 'lpalazzi'
-	},
-	{
-		userName: 'lsobrado'
-	},
-	{
-		userName: 'lugonzalez'
-	},
-	{
-		userName: 'mcarrillo'
-	},
-	{
-		userName: 'negonzalez'
-	},
-	{
-		userName: 'svidal'
-	},
-	{
-		userName: 'vvarani'
-	},
-	{
-		userName: 'yecastro'
-	}
-]
+const { newUserSinInfo } = require('./employee/nuevos_usuarios_sin_info')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		const employeesWithTimestamps = restoNuevosUsuarios.map(employee => ({
+		const now = new Date()
+		const employeesWithTimestamps = newUserSinInfo.map(employee => ({
 			id: crypto.randomUUID(),
 			user_name: employee.userName.toLowerCase(),
 			name: null,
@@ -70,8 +25,8 @@ module.exports = {
 			cargo_id: null,
 			extension: Sequelize.literal(`ARRAY[]::VARCHAR[]`),
 			phone: Sequelize.literal(`ARRAY[]::VARCHAR[]`),
-			created_at: new Date(),
-			updated_at: new Date()
+			created_at: now,
+			updated_at: now
 		}))
 		await queryInterface.bulkInsert('employees', employeesWithTimestamps, {})
 	},

@@ -1,1224 +1,187 @@
-const { VPData, VPOnlyNames } = require('./area/vicepresidencia')
-const { VPEData, VPEOnlyNames } = require('./area/vicepresidenciaEjecutiva')
-const { departamentoData, departamentoOnlyNames } = require('./area/departamento')
-const { cargoOnlyNames, cargosData } = require('./cargo/cargos')
-
-function capitalCadena(cadena) {
-	return cadena
-		.toLowerCase()
-		.split('. ')
-		.map(text =>
-			text
-				.split(' ')
-				.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
-				.join(' ')
-		)
-		.join('. ')
-}
-
-/**
- * Función auxiliar para buscar IDs de forma segura y validar existencia
- */
-function getSafeId(data, name, sourceName, originalName) {
-	const found = data.find(item => item.name === name)
-	if (!found) {
-		console.error(`[ERROR SEEDER] No se encontró "${originalName}" en el archivo de ${sourceName}`)
-		return null
-	}
-	return found
-}
-
-const rawData = [
-	{
-		userName: 'aacosta',
-		name: 'ABNER SAMUEL',
-		lastName: 'ACOSTA GARCIA',
-		employeeCode: 16778,
-		nationality: 'V',
-		cedula: 30991123,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'aacosta@bncenlinea.net'
-	},
-	{
-		userName: 'aavendano',
-		name: 'ANGELY MARIAM',
-		lastName: 'AVENDAÑO DUGARTE',
-		employeeCode: 16821,
-		nationality: 'V',
-		cedula: 19421434,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE CAJA DE AHORROS',
-		cargoKey: 'ANALISTA JUNIOR',
-		email: 'aavendano@bncenlinea.net'
-	},
-	{
-		userName: 'abesson',
-		name: 'ANGEL WILFREDO',
-		lastName: 'BESSON PEREZ',
-		employeeCode: 16561,
-		nationality: 'V',
-		cedula: 15516032,
-		vpeKey: 'V.P.E. FINANZAS',
-		depKey: 'GERENCIA DE PRESUPUESTO',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'abesson@bncenlinea.net'
-	},
-	{
-		userName: 'abohorquez',
-		name: 'ANA MERCEDES',
-		lastName: 'BOHORQUEZ FERNANDEZ',
-		employeeCode: 16846,
-		nationality: 'V',
-		cedula: 25011861,
-		vpeKey: 'V.P.E. SERVICIOS JURÍDICOS',
-		depKey: 'GERENCIA CONTROL INSTITUCIONAL',
-		cargoKey: 'ABOGADO SENIOR',
-		email: 'abohorquez@bncenlinea.net'
-	},
-	{
-		userName: 'afreitas',
-		name: 'ASTREA MARIANGEL DEL CARMEN',
-		lastName: 'FREITAS JASPE',
-		employeeCode: 16867,
-		nationality: 'V',
-		cedula: 30908181,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) II',
-		cargoKey: 'OPERADOR',
-		email: 'afreitas@bncenlinea.net'
-	},
-	{
-		userName: 'ancolmenarez',
-		name: 'ANGEL RAFAEL',
-		lastName: 'COLMENAREZ GRIMAN',
-		employeeCode: 16578,
-		nationality: 'V',
-		cedula: 20068180,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'ancolmenarez@bncenlinea.net'
-	},
-	{
-		userName: 'apaolini',
-		name: 'ASTRID GABRIELA',
-		lastName: 'PAOLINI NUÑEZ',
-		employeeCode: 16870,
-		nationality: 'V',
-		cedula: 16562014,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'GERENCIA DE ÁREA MERCADEO',
-		cargoKey: 'GERENTE DE AREA',
-		email: 'apaolini@bncenlinea.net'
-	},
-	{
-		userName: 'bdeandrade',
-		name: 'BRIAN ALEXANDER',
-		lastName: 'DE ANDRADE MARTINS',
-		employeeCode: 16621,
-		nationality: 'V',
-		cedula: 19514223,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE AREA EVAL. DE INDICADORES DE CALIDAD',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'bdeandrade@bncenlinea.net'
-	},
-	{
-		userName: 'bmaterano',
-		name: 'BARBARA VALENTINA',
-		lastName: 'MATERANO SANCHEZ',
-		employeeCode: 16822,
-		nationality: 'V',
-		cedula: 27606091,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) I',
-		cargoKey: 'OPERADOR',
-		email: 'bmaterano@bncenlinea.net'
-	},
-	{
-		userName: 'cmonsalve',
-		name: 'CARMEN JULIA',
-		lastName: 'MONSALVE ANCHIETA',
-		employeeCode: 16698,
-		nationality: 'V',
-		cedula: 14741513,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'cmonsalve@bncenlinea.net'
-	},
-	{
-		userName: 'davelasquez',
-		name: 'DANIEL JOSE',
-		lastName: 'VELASQUEZ BUCARITO',
-		employeeCode: 16792,
-		nationality: 'V',
-		cedula: 31196043,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'davelasquez@bncenlinea.net'
-	},
-	{
-		userName: 'dcova',
-		name: 'DOMERLY DE LOS ANGELES',
-		lastName: 'COVA ',
-		employeeCode: 16858,
-		nationality: 'V',
-		cedula: 16546004,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'dcova@bncenlinea.net'
-	},
-	{
-		userName: 'djimenez',
-		name: 'DARWIN JOSUE',
-		lastName: 'JIMENEZ MEZA',
-		employeeCode: 16883,
-		nationality: 'V',
-		cedula: 22577242,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'djimenez@bncenlinea.net'
-	},
-	{
-		userName: 'dnavarro',
-		name: 'DAYANA CAROLINA',
-		lastName: 'NAVARRO CLEMENTE',
-		employeeCode: 16861,
-		nationality: 'V',
-		cedula: 15420414,
-		vpeKey: 'V.P.E. FINANZAS',
-		depKey: 'GERENCIA DE ÁREA DE NEGOCIOS INTERNACIONALES',
-		cargoKey: 'GERENTE DE NEGOCIOS',
-		email: 'dnavarro@bncenlinea.net'
-	},
-	{
-		userName: 'domarcano',
-		name: 'DORIS JOSEFINA',
-		lastName: 'MARCANO ',
-		employeeCode: 16892,
-		nationality: 'V',
-		cedula: 5475746,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'domarcano@bncenlinea.net'
-	},
-	{
-		userName: 'dperez',
-		name: 'DARIANA DEL CARMEN',
-		lastName: 'PEREZ MORALES',
-		employeeCode: 16782,
-		nationality: 'V',
-		cedula: 28054031,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'dperez@bncenlinea.net'
-	},
-	{
-		userName: 'durbaez',
-		name: 'DEREK JESUS',
-		lastName: 'URBAEZ HERNANDEZ',
-		employeeCode: 16779,
-		nationality: 'V',
-		cedula: 33288289,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) I',
-		cargoKey: 'OPERADOR',
-		email: 'durbaez@bncenlinea.net'
-	},
-	{
-		userName: 'eboadas',
-		name: 'EYLIANA MARIA',
-		lastName: 'BOADAS RODRIGUEZ',
-		employeeCode: 16598,
-		nationality: 'V',
-		cedula: 16577408,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'eboadas@bncenlinea.net'
-	},
-	{
-		userName: 'ecalderin',
-		name: 'ELIANA NAZARETH',
-		lastName: 'CALDERIN COLEGIO',
-		employeeCode: 15137,
-		nationality: 'V',
-		cedula: 30805168,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'ecalderin@bncenlinea.net'
-	},
-	{
-		userName: 'ecastillo',
-		name: 'ESNOHURI RAMONA',
-		lastName: 'CASTILLO ALVES',
-		employeeCode: 16703,
-		nationality: 'V',
-		cedula: 15327984,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'ecastillo@bncenlinea.net'
-	},
-	{
-		userName: 'ecedeno',
-		name: 'EDICSON ALBERTO',
-		lastName: 'CEDEÑO RUZZA',
-		employeeCode: 16832,
-		nationality: 'V',
-		cedula: 19289173,
-		vpeKey: 'V.P.E. GESTIÓN DEL RIESGO',
-		depKey: 'GCIA ANÁLISIS DE CRÉD BANCA COMERCIAL (P-C-E)',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'ecedeno@bncenlinea.net'
-	},
-	{
-		userName: 'edmedina',
-		name: 'EDWIN JOSE',
-		lastName: 'MEDINA RODRIGUEZ',
-		employeeCode: 16757,
-		nationality: 'V',
-		cedula: 28671087,
-		vpeKey: 'SECRETARIA DE LA JUNTA DIRECTIVA',
-		depKey: 'COORDINACIÓN RESPONSABILIDAD SOCIAL CORPORATIVA',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'edmedina@bncenlinea.net'
-	},
-	{
-		userName: 'ehernandez',
-		name: 'EGLISS ANDREINA',
-		lastName: 'HERNANDEZ ESPINOZA',
-		employeeCode: 16888,
-		nationality: 'V',
-		cedula: 19999374,
-		vpeKey: 'V.P.E. GESTIÓN DEL RIESGO',
-		depKey: 'COORD. SEGUIMIENTO Y CONTROL DE CRÉDITO',
-		cargoKey: 'ESPECIALISTA JUNIOR',
-		email: 'ehernandez@bncenlinea.net'
-	},
-	{
-		userName: 'emercado',
-		name: 'ESYERLIZ COROMOTO',
-		lastName: 'MERCADO BLANCO',
-		employeeCode: 16788,
-		nationality: 'V',
-		cedula: 26320745,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'emercado@bncenlinea.net'
-	},
-	{
-		userName: 'etorrealba',
-		name: 'ESPERANZA DEL ROSARIO',
-		lastName: 'TORREALBA PEREZ',
-		employeeCode: 16521,
-		nationality: 'V',
-		cedula: 24771802,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'etorrealba@bncenlinea.net'
-	},
-	{
-		userName: 'ezarate',
-		name: 'ESCARLET SAULIMAR',
-		lastName: 'ZARATE HENRIQUEZ',
-		employeeCode: 15230,
-		nationality: 'V',
-		cedula: 30520422,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'ezarate@bncenlinea.net'
-	},
-	{
-		userName: 'fcabriles',
-		name: 'FABIOLA IRAYAN',
-		lastName: 'CABRILES MARTINEZ',
-		employeeCode: 16887,
-		nationality: 'V',
-		cedula: 20753356,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'fcabriles@bncenlinea.net'
-	},
-	{
-		userName: 'fdedios',
-		name: 'FREDDY ANTONIO',
-		lastName: 'DE DIOS VELANDIA',
-		employeeCode: 16842,
-		nationality: 'V',
-		cedula: 17767882,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'fdedios@bncenlinea.net'
-	},
-	{
-		userName: 'gcardenas',
-		name: 'GREGORY ARNAL',
-		lastName: 'CARDENAS FERNANDEZ',
-		employeeCode: 16789,
-		nationality: 'V',
-		cedula: 15932183,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'gcardenas@bncenlinea.net'
-	},
-	{
-		userName: 'gerodriguez',
-		name: 'GENESIS ORIANA',
-		lastName: 'RODRIGUEZ ESTANGA',
-		employeeCode: 16699,
-		nationality: 'V',
-		cedula: 20561686,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'gerodriguez@bncenlinea.net'
-	},
-	{
-		userName: 'gsanchez',
-		name: 'GREGORI MANUELA',
-		lastName: 'SANCHEZ ROJAS',
-		employeeCode: 16708,
-		nationality: 'V',
-		cedula: 25335403,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'gsanchez@bncenlinea.net'
-	},
-	{
-		userName: 'gtovar',
-		name: 'GRISEL DEL VALLE',
-		lastName: 'TOVAR SALAZAR',
-		employeeCode: 16533,
-		nationality: 'V',
-		cedula: 6920514,
-		vpeKey: 'V.P.E. FINANZAS',
-		depKey: 'GERENCIA DE ÁREA CUMPLIMIENTO TRIBUTARIO',
-		cargoKey: 'GERENTE DE AREA',
-		email: 'gtovar@bncenlinea.net'
-	},
-	{
-		userName: 'hberroteran',
-		name: 'HECTOR MIGUEL',
-		lastName: 'BERROTERAN TORRES',
-		employeeCode: 16854,
-		nationality: 'V',
-		cedula: 20754695,
-		vpeKey: 'V.P.E. INGENIERIA TECNOLÓGICA',
-		depKey: 'COORDINACIÓN SOPORTE POS CAPITAL',
-		cargoKey: 'TECNICO POS JUNIOR',
-		email: 'hberroteran@bncenlinea.net'
-	},
-	{
-		userName: 'hespinoza',
-		name: 'HENDRIALY ANDREINA',
-		lastName: 'ESPINOZA CUMANA',
-		employeeCode: 16844,
-		nationality: 'V',
-		cedula: 26111174,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. MANTENIMIENTO Y SOPORTE AL CLIENTE',
-		cargoKey: 'EJECUTIVO JUNIOR',
-		email: 'hespinoza@bncenlinea.net'
-	},
-	{
-		userName: 'iflores',
-		name: 'ISAAC ',
-		lastName: 'FLORES ROMAN',
-		employeeCode: 16834,
-		nationality: 'V',
-		cedula: 25409594,
-		vpeKey: 'AUDITORIA INTERNA',
-		depKey: 'GERENCIA DE AREA DE AUDITORIA DE AGENCIAS',
-		cargoKey: 'AUDITOR SENIOR',
-		email: 'iflores@bncenlinea.net'
-	},
-	{
-		userName: 'iochoa',
-		name: 'ISMAEL EDUARDO',
-		lastName: 'OCHOA VILLEGAS',
-		employeeCode: 16585,
-		nationality: 'V',
-		cedula: 30063894,
-		vpeKey: 'V.P.E. SERVICIOS JURÍDICOS',
-		depKey: 'GERENCIA DE ÁREA ASUNTOS TÉCNICOS REGULATORIOS',
-		cargoKey: 'ANALISTA JUNIOR',
-		email: 'iochoa@bncenlinea.net'
-	},
-	{
-		userName: 'jangarita',
-		name: 'JORGE LUIS',
-		lastName: 'ANGARITA DUQUE',
-		employeeCode: 16830,
-		nationality: 'V',
-		cedula: 22764224,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORDINACIÓN EVENTOS E IMAGEN CORPORATIVAS',
-		cargoKey: 'ESPECIALISTA JUNIOR',
-		email: 'jangarita@bncenlinea.net'
-	},
-	{
-		userName: 'jeaperez',
-		name: 'JEAN CARLOS',
-		lastName: 'PEREZ VELAZQUEZ',
-		employeeCode: 16827,
-		nationality: 'V',
-		cedula: 29651961,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (T) IV',
-		cargoKey: 'OPERADOR',
-		email: 'jeaperez@bncenlinea.net'
-	},
-	{
-		userName: 'jgil',
-		name: 'JEANETTE KARINA',
-		lastName: 'GIL MONTILLA',
-		employeeCode: 16843,
-		nationality: 'V',
-		cedula: 13094801,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'jgil@bncenlinea.net'
-	},
-	{
-		userName: 'jgomes',
-		name: 'JESUS ENRIQUE BENITO',
-		lastName: 'GOMES BRITO',
-		employeeCode: 16849,
-		nationality: 'V',
-		cedula: 20220126,
-		vpeKey: 'V.P.E. INGENIERIA TECNOLÓGICA',
-		depKey: 'GERENCIA OPEN BANKING',
-		cargoKey: 'GERENTE DE DEPARTAMENTO',
-		email: 'jgomes@bncenlinea.net'
-	},
-	{
-		userName: 'jjari',
-		name: 'JULISSA DEL VALLE',
-		lastName: 'JARI GONZALEZ',
-		employeeCode: 16839,
-		nationality: 'V',
-		cedula: 23900372,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'jjari@bncenlinea.net'
-	},
-	{
-		userName: 'jmerchan',
-		name: 'JENDERSON EDUARDO',
-		lastName: 'MERCHAN MARTINEZ',
-		employeeCode: 16615,
-		nationality: 'V',
-		cedula: 23944801,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'jmerchan@bncenlinea.net'
-	},
-	{
-		userName: 'joalopez',
-		name: 'JOANNEITH IRENE',
-		lastName: 'LOPEZ DE INFANTE',
-		employeeCode: 16739,
-		nationality: 'V',
-		cedula: 16462200,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'GERENCIA DE AREA CONTACT CENTER',
-		cargoKey: 'GERENTE DE AREA',
-		email: 'joalopez@bncenlinea.net'
-	},
-	{
-		userName: 'jofonseca',
-		name: 'JOSE ALBERTO',
-		lastName: 'FONSECA ANTEQUERA',
-		employeeCode: 16544,
-		nationality: 'V',
-		cedula: 25639723,
-		vpeKey: 'V.P.E. SERVICIOS JURÍDICOS',
-		depKey: 'GERENCIA DE ÁREA LEGAL Y ORGANISMOS OFICIALES',
-		cargoKey: 'ABOGADO SENIOR',
-		email: 'jofonseca@bncenlinea.net'
-	},
-	{
-		userName: 'jomunoz',
-		name: 'JOSE ANTONIO',
-		lastName: 'MUÑOZ PEÑA',
-		employeeCode: 16882,
-		nationality: 'V',
-		cedula: 19738613,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'jomunoz@bncenlinea.net'
-	},
-	{
-		userName: 'joquintana',
-		name: 'JOSEMBER DAVID',
-		lastName: 'QUINTANA MENDEZ',
-		employeeCode: 15225,
-		nationality: 'V',
-		cedula: 31593319,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'joquintana@bncenlinea.net'
-	},
-	{
-		userName: 'josalvarez',
-		name: 'JOSE GREGORIO',
-		lastName: 'ALVAREZ OCHOA',
-		employeeCode: 16786,
-		nationality: 'V',
-		cedula: 18693462,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'josalvarez@bncenlinea.net'
-	},
-	{
-		userName: 'jpaul',
-		name: 'JENNIFER JAMILE',
-		lastName: 'PAUL ',
-		employeeCode: 16807,
-		nationality: 'V',
-		cedula: 15828400,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE OPERATIVO Y SERVICIOS',
-		email: 'jpaul@bncenlinea.net'
-	},
-	{
-		userName: 'kotamendis',
-		name: 'KENY ANA',
-		lastName: 'OTAMENDIS MUJICA',
-		employeeCode: 16859,
-		nationality: 'V',
-		cedula: 13866852,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE AREA MEJORA CONTINUA DEL SERVICIO',
-		cargoKey: 'GERENTE DE AREA',
-		email: 'kotamendis@bncenlinea.net'
-	},
-	{
-		userName: 'Lecarmona',
-		name: 'LEIDY LEOMER',
-		lastName: 'CARMONA GIL',
-		employeeCode: 16856,
-		nationality: 'V',
-		cedula: 13374641,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'Lecarmona@bncenlinea.net'
-	},
-	{
-		userName: 'lecontreras',
-		name: 'LEONARDO JOSE',
-		lastName: 'CONTRERAS BARROSO',
-		employeeCode: 16877,
-		nationality: 'V',
-		cedula: 26279243,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) II',
-		cargoKey: 'OPERADOR',
-		email: 'lecontreras@bncenlinea.net'
-	},
-	{
-		userName: 'lramos',
-		name: 'LEIDY JACKELINE',
-		lastName: 'RAMOS ',
-		employeeCode: 16805,
-		nationality: 'V',
-		cedula: 16554151,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORDINACIÓN INTELIGENCIA DE NEGOCIOS',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'lramos@bncenlinea.net'
-	},
-	{
-		userName: 'lurodriguez',
-		name: 'LUIS JOSE',
-		lastName: 'RODRIGUEZ BLANCO',
-		employeeCode: 16897,
-		nationality: 'V',
-		cedula: 27794081,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (T) III',
-		cargoKey: 'OPERADOR',
-		email: 'lurodriguez@bncenlinea.net'
-	},
-	{
-		userName: 'mablanco',
-		name: 'MARIA EUGENIA',
-		lastName: 'BLANCO VALDESPINO',
-		employeeCode: 16705,
-		nationality: 'V',
-		cedula: 20791696,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'mablanco@bncenlinea.net'
-	},
-	{
-		userName: 'mamorillo',
-		name: 'MARIA VICTORIA',
-		lastName: 'MORILLO RAMIREZ',
-		employeeCode: 16894,
-		nationality: 'V',
-		cedula: 30435651,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) II',
-		cargoKey: 'OPERADOR',
-		email: 'mamorillo@bncenlinea.net'
-	},
-	{
-		userName: 'mapino',
-		name: 'MARIANA COROMOTO',
-		lastName: 'PINO DE COUSIN',
-		employeeCode: 16885,
-		nationality: 'V',
-		cedula: 14851673,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'VICEPRESIDENTE DE ZONA',
-		email: 'mapino@bncenlinea.net'
-	},
-	{
-		userName: 'maular',
-		name: 'MARIA DEL CARMEN',
-		lastName: 'AULAR BENAVENTA',
-		employeeCode: 16709,
-		nationality: 'V',
-		cedula: 14618072,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'maular@bncenlinea.net'
-	},
-	{
-		userName: 'milozano',
-		name: 'MILAGROS NAZARETH',
-		lastName: 'LOZANO CONTRERAS',
-		employeeCode: 16785,
-		nationality: 'V',
-		cedula: 30482003,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'milozano@bncenlinea.net'
-	},
-	{
-		userName: 'msilva',
-		name: 'MARIA ALEJANDRA',
-		lastName: 'SILVA VILERA',
-		employeeCode: 16837,
-		nationality: 'V',
-		cedula: 16776103,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'msilva@bncenlinea.net'
-	},
-	{
-		userName: 'msoto',
-		name: 'MARIA ALEXANDRA',
-		lastName: 'SOTO ALVAREZ',
-		employeeCode: 16895,
-		nationality: 'V',
-		cedula: 15844923,
-		vpeKey: 'V.P.E. FINANZAS',
-		depKey: 'GERENCIA DE ÁREA CONTROL PRESUPUESTARIO',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'msoto@bncenlinea.net'
-	},
-	{
-		userName: 'mvalladares',
-		name: 'MARY ANNE',
-		lastName: 'VALLADARES ARCINIEGAS',
-		employeeCode: 16852,
-		nationality: 'V',
-		cedula: 10116314,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE GESTIÓN DE PROCESOS',
-		cargoKey: 'GERENTE DE DEPARTAMENTO',
-		email: 'mvalladares@bncenlinea.net'
-	},
-	{
-		userName: 'nvalencia',
-		name: 'NATACHA DARIANA',
-		lastName: 'VALENCIA SISCO',
-		employeeCode: 15191,
-		nationality: 'V',
-		cedula: 32088761,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'nvalencia@bncenlinea.net'
-	},
-	{
-		userName: 'nyepez',
-		name: 'NELWIN JOSE',
-		lastName: 'YEPEZ ALTUVE',
-		employeeCode: 16828,
-		nationality: 'V',
-		cedula: 27713047,
-		vpeKey: 'AUDITORIA INTERNA',
-		depKey: 'GERENCIA DE AREA AUDITORIA FINANCIERA',
-		cargoKey: 'AUDITOR SENIOR',
-		email: 'nyepez@bncenlinea.net'
-	},
-	{
-		userName: 'oaramburo',
-		name: 'OSBRAHINI DANIELA',
-		lastName: 'ARAMBURO RAMIREZ',
-		employeeCode: 16878,
-		nationality: 'V',
-		cedula: 30261241,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) I',
-		cargoKey: 'OPERADOR',
-		email: 'oaramburo@bncenlinea.net'
-	},
-	{
-		userName: 'ocolina',
-		name: 'ORIANA ANAIS',
-		lastName: 'COLINA ROSALES',
-		employeeCode: 16700,
-		nationality: 'V',
-		cedula: 29619951,
-		vpeKey: 'V.P.E. CUMPLIMIENTO',
-		depKey: 'GERENCIA DE MONITOREO Y VERIFICACIÓN DE OP INUSUAL',
-		cargoKey: 'ESPECIALISTA JUNIOR',
-		email: 'ocolina@bncenlinea.net'
-	},
-	{
-		userName: 'OVALDERREY',
-		name: 'OLIMAR YRAIDA',
-		lastName: 'VALDERREY PEREZ',
-		employeeCode: 16707,
-		nationality: 'V',
-		cedula: 13249866,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'OVALDERREY@bncenlinea.net'
-	},
-	{
-		userName: 'pjuarez',
-		name: 'PAOLA ROSIBEL',
-		lastName: 'JUAREZ MAVARE',
-		employeeCode: 16747,
-		nationality: 'V',
-		cedula: 25390403,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'pjuarez@bncenlinea.net'
-	},
-	{
-		userName: 'plopez',
-		name: 'PATRICIA VALENTINA',
-		lastName: 'LOPEZ ',
-		employeeCode: 16803,
-		nationality: 'V',
-		cedula: 18466303,
-		vpeKey: 'SECRETARIA DE LA JUNTA DIRECTIVA',
-		depKey: 'COORDINACIÓN ATENCIÓN AL ACCIONISTA',
-		cargoKey: 'ANALISTA SENIOR',
-		email: 'plopez@bncenlinea.net'
-	},
-	{
-		userName: 'rmendez',
-		name: 'RANDY MARTIN',
-		lastName: 'MENDEZ ZERPA',
-		employeeCode: 16836,
-		nationality: 'V',
-		cedula: 18329725,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'COORDINADOR(A)',
-		email: 'rmendez@bncenlinea.net'
-	},
-	{
-		userName: 'romarquez',
-		name: 'ROSAURA ',
-		lastName: 'MARQUEZ RAMOS',
-		employeeCode: 16813,
-		nationality: 'V',
-		cedula: 11203749,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'romarquez@bncenlinea.net'
-	},
-	{
-		userName: 'rvalenzuela',
-		name: 'ROXCELYS DANIELA',
-		lastName: 'VALENZUELA SEGURA',
-		employeeCode: 16869,
-		nationality: 'V',
-		cedula: 24478091,
-		vpeKey: 'V.P.E. CUMPLIMIENTO',
-		depKey: 'GERENCIA DE MONITOREO Y VERIFICACIÓN DE OP INUSUAL',
-		cargoKey: 'ESPECIALISTA JUNIOR',
-		email: 'rvalenzuela@bncenlinea.net'
-	},
-	{
-		userName: 'rvera',
-		name: 'RAQUEL ANAIS',
-		lastName: 'VERA UTRERA',
-		employeeCode: 16753,
-		nationality: 'V',
-		cedula: 14884321,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'rvera@bncenlinea.net'
-	},
-	{
-		userName: 'rvivenes',
-		name: 'RICHEL ANYELO',
-		lastName: 'VIVENES CACIQUE',
-		employeeCode: 16831,
-		nationality: 'V',
-		cedula: 29784063,
-		vpeKey: 'V.P.E. CUMPLIMIENTO',
-		depKey: 'GERENCIA DE ANÁLISIS DE OPERACIONES FINANCIERAS',
-		cargoKey: 'ESPECIALISTA JUNIOR',
-		email: 'rvivenes@bncenlinea.net'
-	},
-	{
-		userName: 'salvarez',
-		name: 'SAILIN VIRGINIA',
-		lastName: 'ALVAREZ PALACIOS',
-		employeeCode: 16824,
-		nationality: 'V',
-		cedula: 27913188,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) II',
-		cargoKey: 'OPERADOR',
-		email: 'salvarez@bncenlinea.net'
-	},
-	{
-		userName: 'saure',
-		name: 'SEBASTIAN ANDRES',
-		lastName: 'AURE DEL PINO',
-		employeeCode: 16618,
-		nationality: 'V',
-		cedula: 28158829,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE ÁREA TRANSFORMACIÓN',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'saure@bncenlinea.net'
-	},
-	{
-		userName: 'scalderon',
-		name: 'SIMON JOSE',
-		lastName: 'CALDERON ESCOBAR',
-		employeeCode: 16795,
-		nationality: 'V',
-		cedula: 24598932,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'scalderon@bncenlinea.net'
-	},
-	{
-		userName: 'sdelgado',
-		name: 'STHEFANY DAYANA',
-		lastName: 'DELGADO MEJIA',
-		employeeCode: 16748,
-		nationality: 'V',
-		cedula: 24221009,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'sdelgado@bncenlinea.net'
-	},
-	{
-		userName: 'sfernandez',
-		name: 'SKARLETH GABRIELA',
-		lastName: 'FERNANDEZ PEREZ',
-		employeeCode: 16829,
-		nationality: 'V',
-		cedula: 31408537,
-		vpeKey: 'V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA',
-		depKey: 'V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA',
-		cargoKey: 'ASISTENTE EJECUTIVA',
-		email: 'sfernandez@bncenlinea.net'
-	},
-	{
-		userName: 'sjimenez',
-		name: 'SERGIO RAFAEL',
-		lastName: 'JIMENEZ MARQUEZ',
-		employeeCode: 16682,
-		nationality: 'V',
-		cedula: 13484620,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'sjimenez@bncenlinea.net'
-	},
-	{
-		userName: 'smorin',
-		name: 'SORIANYELY KARINA',
-		lastName: 'MORIN OSORIO',
-		employeeCode: 16847,
-		nationality: 'V',
-		cedula: 27038845,
-		vpeKey: 'V.P.E. INGENIERIA TECNOLÓGICA',
-		depKey: 'GERENCIA INTEGRACIÓN A TERCEROS',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'smorin@bncenlinea.net'
-	},
-	{
-		userName: 'szambrano',
-		name: 'SANDRA YAMILET',
-		lastName: 'ZAMBRANO CARRILLO',
-		employeeCode: 16577,
-		nationality: 'V',
-		cedula: 14628597,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'szambrano@bncenlinea.net'
-	},
-	{
-		userName: 'vacolmenarez',
-		name: 'VANESA DE LOS ANGELES',
-		lastName: 'COLMENAREZ DURAN',
-		employeeCode: 16526,
-		nationality: 'V',
-		cedula: 31785315,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'vacolmenarez@bncenlinea.net'
-	},
-	{
-		userName: 'vcastro',
-		name: 'VICTOR DANIEL',
-		lastName: 'CASTRO GONZALEZ',
-		employeeCode: 16820,
-		nationality: 'V',
-		cedula: 13886574,
-		vpeKey: 'AUDITORIA INTERNA',
-		depKey: 'GERENCIA DE AREA ASUNTOS REGULATORIOS',
-		cargoKey: 'AUDITOR SENIOR',
-		email: 'vcastro@bncenlinea.net'
-	},
-	{
-		userName: 'vijimenez',
-		name: 'VICTOR DAVID',
-		lastName: 'JIMENEZ FERNANDEZ',
-		employeeCode: 16835,
-		nationality: 'V',
-		cedula: 28101063,
-		vpeKey: 'AUDITORIA INTERNA',
-		depKey: 'GERENCIA DE ÁREA CTRL Y SEGUIMIENTO DE AUDITORÍA',
-		cargoKey: 'AUDITOR SENIOR',
-		email: 'vijimenez@bncenlinea.net'
-	},
-	{
-		userName: 'vjimenez',
-		name: 'VANESSA DEL VALLE',
-		lastName: 'JIMENEZ RODRIGUEZ',
-		employeeCode: 16818,
-		nationality: 'V',
-		cedula: 13848077,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'vjimenez@bncenlinea.net'
-	},
-	{
-		userName: 'wgarcia',
-		name: 'WILBERTH DANIEL',
-		lastName: 'GARCIA BRAVO',
-		employeeCode: 16758,
-		nationality: 'V',
-		cedula: 26819912,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) I',
-		cargoKey: 'OPERADOR',
-		email: 'wgarcia@bncenlinea.net'
-	},
-	{
-		userName: 'yacosta',
-		name: 'YANINA NAZARETH',
-		lastName: 'ACOSTA LOPEZ',
-		employeeCode: 16790,
-		nationality: 'V',
-		cedula: 20722949,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'yacosta@bncenlinea.net'
-	},
-	{
-		userName: 'yalvarez',
-		name: 'YERSY TATIANA',
-		lastName: 'ALVAREZ RONDON',
-		employeeCode: 16609,
-		nationality: 'V',
-		cedula: 13463523,
-		vpeKey: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
-		depKey: 'GERENCIA DE CAJA DE AHORROS',
-		cargoKey: 'ESPECIALISTA SENIOR',
-		email: 'yalvarez@bncenlinea.net'
-	},
-	{
-		userName: 'ycoll',
-		name: 'YELITZA MERCEDES',
-		lastName: 'COLL RAYMOND',
-		employeeCode: 16871,
-		nationality: 'V',
-		cedula: 11558769,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'ycoll@bncenlinea.net'
-	},
-	{
-		userName: 'yetovar',
-		name: 'YEIVI JUDITH',
-		lastName: 'TOVAR MEDINA',
-		employeeCode: 16863,
-		nationality: 'V',
-		cedula: 30678227,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) I',
-		cargoKey: 'OPERADOR',
-		email: 'yetovar@bncenlinea.net'
-	},
-	{
-		userName: 'yguanda',
-		name: 'YELITZA MARIA',
-		lastName: 'GUANDA HIDALGO',
-		employeeCode: 16712,
-		nationality: 'V',
-		cedula: 22091431,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'yguanda@bncenlinea.net'
-	},
-	{
-		userName: 'ypadilla',
-		name: 'YENI ',
-		lastName: 'PADILLA VILLAMIZAR',
-		employeeCode: 16819,
-		nationality: 'V',
-		cedula: 13885878,
-		vpeKey: 'V.P.E. FINANZAS',
-		depKey: 'GERENCIA DE ÁREA CORRESPONSALIA',
-		cargoKey: 'GERENTE DE NEGOCIOS',
-		email: 'ypadilla@bncenlinea.net'
-	},
-	{
-		userName: 'ypulido',
-		name: 'YAKELIN MARGARITA',
-		lastName: 'PULIDO SANCHEZ',
-		employeeCode: 16845,
-		nationality: 'V',
-		cedula: 11686785,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'GERENTE DE AGENCIA',
-		email: 'ypulido@bncenlinea.net'
-	},
-	{
-		userName: 'yreyes',
-		name: 'YERLISH PAOLA',
-		lastName: 'REYES GUILLEN',
-		employeeCode: 16760,
-		nationality: 'V',
-		cedula: 31092656,
-		vpeKey: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
-		depKey: 'COORD. ATENCIÓN TELEFÓNICA AL CLIENTE (M) II',
-		cargoKey: 'OPERADOR',
-		email: 'yreyes@bncenlinea.net'
-	},
-	{
-		userName: 'yromero',
-		name: 'YANDHER ANTONIO',
-		lastName: 'ROMERO CASTRO',
-		employeeCode: 16751,
-		nationality: 'V',
-		cedula: 19242658,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'yromero@bncenlinea.net'
-	},
-	{
-		userName: 'yugarcia',
-		name: 'YUBANA ALEXANDRA DE LA CONCEPCION',
-		lastName: 'GARCIA RIVAS',
-		employeeCode: 16675,
-		nationality: 'V',
-		cedula: 23693878,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'PROMOTOR(A) INTEGRAL DE ATENCION AL CLIENTE',
-		email: 'yugarcia@bncenlinea.net'
-	},
-	{
-		userName: 'yzurita',
-		name: 'YANETZI JOHANDRI',
-		lastName: 'ZURITA LUZARDO',
-		employeeCode: 16814,
-		nationality: 'V',
-		cedula: 21424655,
-		vpeKey: 'V.P.E. DE BANCA COMERCIAL',
-		depKey: 'V.P. DE ZONA I ADMINISTRACION DE AGENCIAS I',
-		cargoKey: 'ASESOR DE NEGOCIOS',
-		email: 'yzurita@bncenlinea.net'
+const newUserSinInfo = [
+	{
+		userName: 'josanabria'
+	},
+	{
+		userName: 'lugonzalez'
+	},
+	{
+		userName: 'jnoguera'
+	},
+	{
+		userName: 'svidal'
+	},
+	{
+		userName: 'negonzalez'
+	},
+	{
+		userName: 'msuarez'
+	},
+	{
+		userName: 'AFIGUEIRA'
+	},
+	{
+		userName: 'nipolanco'
+	},
+	{
+		userName: 'gcortez'
+	},
+	{
+		userName: 'gerojas'
+	},
+	{
+		userName: 'ccontreras'
+	},
+	{
+		userName: 'ytabares'
+	},
+	{
+		userName: 'jovargas'
+	},
+	{
+		userName: 'ocarrillo'
+	},
+	{
+		userName: 'lbetancourt'
+	},
+	{
+		userName: 'vvarani'
+	},
+	{
+		userName: 'mcarrillo'
+	},
+	{
+		userName: 'equintana'
+	},
+	{
+		userName: 'amorantes'
+	},
+	{
+		userName: 'fratorres'
+	},
+	{
+		userName: 'vnogueroles'
+	},
+	{
+		userName: 'deyherrera'
+	},
+	{
+		userName: 'yomoreno'
+	},
+	{
+		userName: 'lpalazzi'
+	},
+	{
+		userName: 'dbasanta'
+	},
+	{
+		userName: 'ncontreras'
+	},
+	{
+		userName: 'jherrera'
+	},
+	{
+		userName: 'jpepper'
+	},
+	{
+		userName: 'hevalladares'
+	},
+	{
+		userName: 'gemarquez'
+	},
+	{
+		userName: 'ssepulveda'
+	},
+	{
+		userName: 'hbarrios'
+	},
+	{
+		userName: 'npolanco'
+	},
+	{
+		userName: 'yefernandez'
+	},
+	{
+		userName: 'vsanabria'
+	},
+	{
+		userName: 'nsalgado'
+	},
+	{
+		userName: 'cazambrano'
+	},
+	{
+		userName: 'jchourio'
+	},
+	{
+		userName: 'ldavila'
+	},
+	{
+		userName: 'yefarias'
+	},
+	{
+		userName: 'jbarrero'
+	},
+	{
+		userName: 'lsobrado'
+	},
+	{
+		userName: 'sgutierrez'
+	},
+	{
+		userName: 'javgarcia'
+	},
+	{
+		userName: 'gmoya'
+	},
+	{
+		userName: 'paudiaz'
+	},
+	{
+		userName: 'ohiguera'
+	},
+	{
+		userName: 'drondon'
+	},
+	{
+		userName: 'yquintana'
+	},
+	{
+		userName: 'jvielma'
+	},
+	{
+		userName: 'hramirez'
+	},
+	{
+		userName: 'mpinto'
+	},
+	{
+		userName: 'ruperez'
+	},
+	{
+		userName: 'aavila'
+	},
+	{
+		userName: 'yecastro'
+	},
+	{
+		userName: 'avelandia'
+	},
+	{
+		userName: 'malfonzo'
+	},
+	{
+		userName: 'jdiaz'
+	},
+	{
+		userName: 'slecheria'
+	},
+	{
+		userName: 'angimartinez'
+	},
+	{
+		userName: 'jmaturel'
 	}
 ]
 
-const restoNuevosUsuarios = rawData.map(user => {
-	const vpe = getSafeId(VPEData, VPEOnlyNames[user.vpeKey], 'VPEData', user.vpeKey)
-	const dep = getSafeId(departamentoData, departamentoOnlyNames[user.depKey], 'departamentoData', user.depKey)
-	const cargo = getSafeId(cargosData, cargoOnlyNames[user.cargoKey], 'cargosData', user.cargoKey)
-
-	return {
-		userName: user.userName.trim().toLowerCase(),
-		name: capitalCadena(user.name.trim()),
-		lastName: capitalCadena(user.lastName.trim()),
-		type: 'regular',
-		email: user.email.trim().toLowerCase(),
-		isStillWorking: true,
-		employeeCode: user.employeeCode,
-		nationality: user.nationality,
-		cedula: user.cedula,
-		locationId: null,
-		directivaId: vpe ? vpe.directivaId : null,
-		vicepresidenciaEjecutivaId: vpe ? vpe.id : null,
-		vicepresidenciaId: dep ? dep.vicepresidenciaId : null,
-		departamentoId: dep ? dep.id : null,
-		cargoId: cargo ? cargo.id : null,
-		extension: [],
-		phone: []
-	}
-})
-
-module.exports = { restoNuevosUsuarios }
+module.exports = { newUserSinInfo }
