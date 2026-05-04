@@ -21,6 +21,8 @@ import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEj
 import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
 import { type DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
+import { EmployeeCodeUniquenessChecker } from '../domain/service/EmployeeCodeUniquenessChecker'
+import { EmployeeCedulaUniquenessChecker } from '../domain/service/EmployeeCedulaUniquenessChecker'
 
 /**
  * @description Use case for updating an existing Employee entity.
@@ -28,6 +30,8 @@ import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 export class EmployeeUpdater {
 	private readonly employeeRepository: EmployeeRepository
 	private readonly employeeUserNameUniquenessChecker: EmployeeUserNameUniquenessChecker
+	private readonly employeeCodeUniquenessChecker: EmployeeCodeUniquenessChecker
+	private readonly employeeCedulaUniquenessChecker: EmployeeCedulaUniquenessChecker
 	private readonly employeeEmailUniquenessChecker: EmployeeEmailUniquenessChecker
 	private readonly locationExistenceChecker: LocationExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
@@ -62,6 +66,8 @@ export class EmployeeUpdater {
 		this.employeeRepository = employeeRepository
 		this.employeeUserNameUniquenessChecker = new EmployeeUserNameUniquenessChecker(employeeRepository)
 		this.employeeEmailUniquenessChecker = new EmployeeEmailUniquenessChecker(employeeRepository)
+		this.employeeCodeUniquenessChecker = new EmployeeCodeUniquenessChecker(employeeRepository)
+		this.employeeCedulaUniquenessChecker = new EmployeeCedulaUniquenessChecker(employeeRepository)
 		this.locationExistenceChecker = new LocationExistenceChecker(locationRepository)
 		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
 		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
@@ -91,13 +97,15 @@ export class EmployeeUpdater {
 		}
 
 		const employeeEntity = Employee.fromPrimitives(employee)
+		const isAdmin = params?.isAdmin ?? false // Este flag debería venir del controlador basado en el rol del usuario
+
 		employeeEntity.ensureEmployeeCanBeUpdated()
 		const changes: Array<{ field: keyof Omit<EmployeeParams, 'id'>; oldValue: unknown; newValue: unknown }> = []
-
+		const validations: Promise<unknown>[] = []
 		await this.updateWorkStatus(employeeEntity, params.isStillWorking, changes)
 
 		if (params.userName && employeeEntity.userNameValue !== params.userName.trim()) {
-			await this.employeeUserNameUniquenessChecker.ensureUnique(params.userName)
+			validations.push(this.employeeUserNameUniquenessChecker.ensureUnique(params.userName))
 			changes.push({
 				field: 'userName',
 				oldValue: employeeEntity.userNameValue,
@@ -132,8 +140,38 @@ export class EmployeeUpdater {
 			})
 			employeeEntity.updateLastName(params.lastName)
 		}
+
+		if (params.employeeCode && employeeEntity.employeeCodeValue !== params.employeeCode) {
+			validations.push(this.employeeCodeUniquenessChecker.ensureUnique(params.employeeCode))
+			changes.push({
+				field: 'employeeCode',
+				oldValue: employeeEntity.employeeCodeValue,
+				newValue: params.employeeCode
+			})
+			employeeEntity.updateEmployeeCode(params.employeeCode, isAdmin)
+		}
+
+		if (params.cedula && employeeEntity.cedulaValue !== params.cedula) {
+			validations.push(this.employeeCedulaUniquenessChecker.ensureUnique(params.cedula))
+			changes.push({
+				field: 'cedula',
+				oldValue: employeeEntity.cedulaValue,
+				newValue: params.cedula
+			})
+			employeeEntity.updateCedula(params.cedula, isAdmin)
+		}
+
+		if (params.nationality && employeeEntity.nationalityValue !== params.nationality) {
+			changes.push({
+				field: 'nationality',
+				oldValue: employeeEntity.nationalityValue,
+				newValue: params.nationality
+			})
+			employeeEntity.updateNationality(params.nationality, isAdmin)
+		}
+
 		if (params.email && employeeEntity.emailValue !== params.email.trim()) {
-			await this.employeeEmailUniquenessChecker.ensureUnique(params.email)
+			validations.push(this.employeeEmailUniquenessChecker.ensureUnique(params.email))
 			const allowedDomains = await this.settingsFinder.findAsJson<string[]>({
 				key: AppSettingKeys.SECURITY.ALLOWED_EMAIL_DOMAINS,
 				fallback: []
@@ -147,7 +185,7 @@ export class EmployeeUpdater {
 		}
 
 		if (params.locationId !== undefined && employeeEntity.locationValue !== params.locationId) {
-			await this.locationExistenceChecker.ensureExist(params.locationId)
+			validations.push(this.locationExistenceChecker.ensureExist(params?.locationId))
 			changes.push({
 				field: 'locationId',
 				oldValue: employeeEntity.locationValue,
@@ -157,7 +195,7 @@ export class EmployeeUpdater {
 		}
 
 		if (params.cargoId !== undefined && employeeEntity.cargoValue !== params.cargoId) {
-			await this.cargoExistenceChecker.ensureExist(params.cargoId)
+			validations.push(this.cargoExistenceChecker.ensureExist(params.cargoId))
 			changes.push({
 				field: 'cargoId',
 				oldValue: employeeEntity.cargoValue,
@@ -184,7 +222,7 @@ export class EmployeeUpdater {
 		}
 
 		await this.updateHierarchy(employeeEntity, params, changes)
-
+		await Promise.all(validations)
 		if (changes.length > 0) {
 			employeeEntity.registerUpdateEvent(changes)
 			await this.employeeRepository.save(employeeEntity.toPrimitives())

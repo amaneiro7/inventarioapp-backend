@@ -39,9 +39,9 @@ export class Employee extends AggregateRoot {
 		private lastName: EmployeeLastName,
 		private email: EmployeeEmail,
 		private isStillWorking: EmployeeIsStillWorking,
-		private readonly employeeCode: EmployeeCode,
-		private readonly nationality: EmployeeNationality,
-		private readonly cedula: EmployeeCedula,
+		private employeeCode: EmployeeCode,
+		private nationality: EmployeeNationality,
+		private cedula: EmployeeCedula,
 		private locationId: LocationId | null,
 		private directivaId: DirectivaId | null,
 		private vicepresidenciaEjecutivaId: VicepresidenciaEjecutivaId | null,
@@ -416,6 +416,46 @@ export class Employee extends AggregateRoot {
 			throw new InvalidArgumentError('El nombre es requerido para este tipo de empleado.')
 		}
 		this.name = new EmployeeName(newName)
+	}
+
+	updateEmployeeCode(newEmployeeCode: Primitives<EmployeeCode>, force = false): void {
+		const hasEmployeeCode = this.typeValue === EmployeeTypesEnum.REGULAR
+		if (hasEmployeeCode && !newEmployeeCode) {
+			throw new InvalidArgumentError('El código de empleado es requerido para este tipo de empleado.')
+		}
+		if (this.employeeCodeValue && this.employeeCodeValue !== newEmployeeCode && !force) {
+			throw new InvalidArgumentError('El código de empleado ya está asignado y no puede ser modificado.')
+		}
+		this.employeeCode = new EmployeeCode(newEmployeeCode)
+	}
+
+	updateCedula(newCedula: Primitives<EmployeeCedula>, force = false): void {
+		const hasCedula =
+			this.typeValue === EmployeeTypesEnum.REGULAR ||
+			this.typeValue === EmployeeTypesEnum.CONTRACTOR ||
+			this.typeValue === EmployeeTypesEnum.APPRENTICE
+
+		if (hasCedula && !newCedula) {
+			throw new InvalidArgumentError('La cédula es requerida para este tipo de empleado.')
+		}
+		if (this.cedulaValue && this.cedulaValue !== newCedula && !force) {
+			throw new InvalidArgumentError('La cédula ya está asignada y no puede ser modificada.')
+		}
+		this.cedula = new EmployeeCedula(newCedula)
+	}
+
+	updateNationality(newNationality: Primitives<EmployeeNationality>, force = false): void {
+		const hasNationality =
+			this.typeValue === EmployeeTypesEnum.REGULAR ||
+			this.typeValue === EmployeeTypesEnum.CONTRACTOR ||
+			this.typeValue === EmployeeTypesEnum.APPRENTICE
+		if (hasNationality && !newNationality) {
+			throw new InvalidArgumentError('La nacionalidad es requerida para este tipo de empleado.')
+		}
+		if (this.nationalityValue && this.nationalityValue !== newNationality && !force) {
+			throw new InvalidArgumentError('La nacionalidad ya está asignada y no puede ser modificada.')
+		}
+		this.nationality = new EmployeeNationality(newNationality)
 	}
 
 	updateLastName(newLastName: Primitives<EmployeeLastName>): void {

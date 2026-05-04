@@ -61,7 +61,9 @@ export type EmployeePrimitives = Employee
  * @type EmployeeParams
  * @description Represents the parameters required to create a new Employee.
  */
-export type EmployeeParams = Omit<Employee, 'id'>
+export type EmployeeParams = Omit<Employee, 'id'> & {
+	isAdmin?: boolean
+}
 
 /**
  * @type EmployeeDto
