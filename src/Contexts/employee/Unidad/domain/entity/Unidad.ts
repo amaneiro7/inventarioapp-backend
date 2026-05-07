@@ -10,6 +10,11 @@ import { UnidadRenamedDomainEvent } from '../event/UnidadRenamedDomainEvent'
 import { UnidadUpdatedDomainEvent } from '../event/UnidadUpdatedDomainEvent'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import type { UnidadParams, UnidadPrimitives, UnidadDto } from './Unidad.dto'
+import { TipoUnidad } from '../valueObject/TipoUnidad'
+import { RangeLevel } from '../valueObject/RangeLevel'
+import { CentroDeCosto } from '../valueObject/CentroDeCosto'
+import { CodigoInterno } from '../valueObject/CodigoInterno'
+import { IsUnitActive } from '../valueObject/IsUnitActive'
 
 /**
  * @description Represents the Unidad domain entity, the highest level in the organizational chart.
@@ -18,6 +23,12 @@ export class Unidad extends AggregateRoot {
 	constructor(
 		private readonly id: UnidadId,
 		private name: UnidadName,
+		private tipoUnidad: TipoUnidad,
+		private rangeLevel: RangeLevel,
+		private centroDeCosto: CentroDeCosto,
+		private codigoInterno: CodigoInterno,
+		private isUnitActive: IsUnitActive,
+		private parentId: UnidadId | null,
 		private cargos = new Set<CargoId>()
 	) {
 		super()
@@ -34,15 +45,31 @@ export class Unidad extends AggregateRoot {
 	static create(params: UnidadParams): Unidad {
 		const id = UnidadId.random()
 		const name = new UnidadName(params.name)
+		const tipoUnidad = new TipoUnidad(params.tipoUnidad)
+		const rangeLevel = new RangeLevel(params.rangeLevel)
+		const centroDeCosto = new CentroDeCosto(params.centroDeCosto)
+		const codigoInterno = new CodigoInterno(params.codigoInterno)
+		const isUnitActive = new IsUnitActive(params.isUnitActive)
+		const parentId = params.parentId ? new UnidadId(params.parentId) : null
 		const cargos = new Set(params.cargos.map(cargoId => new CargoId(cargoId)))
-		const directiva = new Unidad(id, name, cargos)
-		directiva.record(
+		const unidad = new Unidad(
+			id,
+			name,
+			tipoUnidad,
+			rangeLevel,
+			centroDeCosto,
+			codigoInterno,
+			isUnitActive,
+			parentId,
+			cargos
+		)
+		unidad.record(
 			new UnidadCreatedDomainEvent({
 				aggregateId: id.value,
 				name: name.value
 			})
 		)
-		return directiva
+		return unidad
 	}
 	/**
 	 * @static
@@ -53,7 +80,17 @@ export class Unidad extends AggregateRoot {
 	 */
 	static fromPrimitives(primitives: UnidadDto): Unidad {
 		const uniqueCargos = new Set(primitives.cargos.map(cargo => new CargoId(cargo.id)))
-		return new Unidad(new UnidadId(primitives.id), new UnidadName(primitives.name), uniqueCargos)
+		return new Unidad(
+			new UnidadId(primitives.id),
+			new UnidadName(primitives.name),
+			new TipoUnidad(primitives.tipoUnidad),
+			new RangeLevel(primitives.rangeLevel),
+			new CentroDeCosto(primitives.centroDeCosto),
+			new CodigoInterno(primitives.codigoInterno),
+			new IsUnitActive(primitives.isUnitActive),
+			primitives.parentId ? new UnidadId(primitives.parentId) : null,
+			uniqueCargos
+		)
 	}
 
 	/**
@@ -65,6 +102,12 @@ export class Unidad extends AggregateRoot {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
+			tipoUnidad: this.tipoUnidadValue,
+			rangeLevel: this.rangeLevelValue,
+			centroDeCosto: this.centroDeCostoValue,
+			codigoInterno: this.codigoInternoValue,
+			isUnitActive: this.isUnitActiveValue,
+			parentId: this.parentIdValue,
 			cargos: this.cargosValue
 		}
 	}
@@ -81,6 +124,7 @@ export class Unidad extends AggregateRoot {
 	/**
 	 * @method updateName
 	 * @description Updates the name of the Unidad.
+	 * Records a `UnidadRenamedDomainEvent`.
 	 * @param {UnidadName['value']} newName The new name for the Unidad.
 	 */
 	updateName(newName: Primitives<UnidadName>): void {
@@ -91,6 +135,66 @@ export class Unidad extends AggregateRoot {
 				name: this.name.value
 			})
 		)
+	}
+
+	/**
+	 * @method updateTipoUnidad
+	 * @description Updates the type of the Unidad.
+	 * @param {Primitives<TipoUnidad>} newTipoUnidad The new type for the Unidad.
+	 */
+	updateTipoUnidad(newTipoUnidad: Primitives<TipoUnidad>): void {
+		this.tipoUnidad = new TipoUnidad(newTipoUnidad)
+	}
+
+	/**
+	 * @method updateRangeLevel
+	 * @description Updates the hierarchical range level of the Unidad.
+	 * @param {Primitives<RangeLevel>} newRangeLevel The new range level for the Unidad.
+	 */
+	updateRangeLevel(newRangeLevel: Primitives<RangeLevel>): void {
+		this.rangeLevel = new RangeLevel(newRangeLevel)
+	}
+
+	/**
+	 * @method updateCentroDeCosto
+	 * @description Updates the cost center of the Unidad.
+	 * @param {Primitives<CentroDeCosto>} newCentroDeCosto The new cost center for the Unidad.
+	 */
+	updateCentroDeCosto(newCentroDeCosto: Primitives<CentroDeCosto>): void {
+		this.centroDeCosto = new CentroDeCosto(newCentroDeCosto)
+	}
+
+	/**
+	 * @method updateCodigoInterno
+	 * @description Updates the internal code of the Unidad.
+	 * @param {Primitives<CodigoInterno>} newCodigoInterno The new internal code for the Unidad.
+	 */
+	updateCodigoInterno(newCodigoInterno: Primitives<CodigoInterno>): void {
+		this.codigoInterno = new CodigoInterno(newCodigoInterno)
+	}
+
+	/**
+	 * @method updateIsUnitActive
+	 * @description Updates the active status of the Unidad.
+	 * @param {Primitives<IsUnitActive>} newIsUnitActive The new active status for the Unidad.
+	 */
+	updateIsUnitActive(newIsUnitActive: Primitives<IsUnitActive>): void {
+		this.isUnitActive = new IsUnitActive(newIsUnitActive)
+	}
+
+	/**
+	 * @method updateParentId
+	 * @description Updates the parent ID of the Unidad, establishing its hierarchical relationship.
+	 * @param {Primitives<UnidadId> | null} newParentId The ID of the parent Unidad, or null if it's a top-level unit.
+	 */
+	updateParentId(newParentId: Primitives<UnidadId> | null): void {
+		if (newParentId === this.idValue) {
+			// Prevent a unit from being its own parent
+			// This is a basic check, more complex hierarchy validation (e.g., circular dependencies)
+			// should be handled by a domain service or application service.
+			throw new Error('Una unidad no puede ser su propia unidad padre.')
+		}
+		this.parentId = newParentId ? new UnidadId(newParentId) : null
 	}
 
 	/**
@@ -155,10 +259,64 @@ export class Unidad extends AggregateRoot {
 	/**
 	 * @getter nameValue
 	 * @description Returns the primitive value of the Unidad's name.
-	 * @returns {UnidadName['value']}
+	 * @returns {Primitives<UnidadName>}
 	 */
 	get nameValue(): Primitives<UnidadName> {
 		return this.name.value
+	}
+
+	/**
+	 * @getter tipoUnidadValue
+	 * @description Returns the primitive value of the Unidad's type.
+	 * @returns {Primitives<TipoUnidad>}
+	 */
+	get tipoUnidadValue(): Primitives<TipoUnidad> {
+		return this.tipoUnidad.value
+	}
+
+	/**
+	 * @getter rangeLevelValue
+	 * @description Returns the primitive value of the Unidad's hierarchical range level.
+	 * @returns {Primitives<RangeLevel>}
+	 */
+	get rangeLevelValue(): Primitives<RangeLevel> {
+		return this.rangeLevel.value
+	}
+
+	/**
+	 * @getter centroDeCostoValue
+	 * @description Returns the primitive value of the Unidad's cost center.
+	 * @returns {Primitives<CentroDeCosto>}
+	 */
+	get centroDeCostoValue(): Primitives<CentroDeCosto> {
+		return this.centroDeCosto.value
+	}
+
+	/**
+	 * @getter codigoInternoValue
+	 * @description Returns the primitive value of the Unidad's internal code.
+	 * @returns {Primitives<CodigoInterno>}
+	 */
+	get codigoInternoValue(): Primitives<CodigoInterno> {
+		return this.codigoInterno.value
+	}
+
+	/**
+	 * @getter isUnitActiveValue
+	 * @description Returns the primitive value indicating if the Unidad is active.
+	 * @returns {Primitives<IsUnitActive>}
+	 */
+	get isUnitActiveValue(): Primitives<IsUnitActive> {
+		return this.isUnitActive.value
+	}
+
+	/**
+	 * @getter parentIdValue
+	 * @description Returns the primitive value of the Unidad's parent ID, or null if it has no parent.
+	 * @returns {Primitives<UnidadId> | null}
+	 */
+	get parentIdValue(): Primitives<UnidadId> | null {
+		return this.parentId?.value ?? null
 	}
 
 	/**

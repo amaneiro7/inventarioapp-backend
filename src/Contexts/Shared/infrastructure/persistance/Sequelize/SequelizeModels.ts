@@ -44,6 +44,7 @@ import { type DeviceHardDriveDto } from '../../../../Device/Device/domain/dto/Ha
 import { type DevicePrinterDto } from '../../../../Device/Device/domain/dto/Printer.dto'
 import { type HistoryDto } from '../../../../History/domain/entity/History.dto'
 import { type ISPLinkDto } from '../../../../Location/ISPLinks/domain/entity/ISPLink.dto'
+import { UnidadDto } from '../../../../employee/Unidad/domain/entity/Unidad.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
 	Category: ModelStatic<Model<CategoryDto>>
@@ -77,6 +78,7 @@ export type SequelizeModels = Sequelize['models'] & {
 	Site: ModelStatic<Model<SiteDto>>
 	Location: ModelStatic<Model<LocationDto>>
 	ISPLink: ModelStatic<Model<ISPLinkDto>>
+	Unindad: ModelStatic<Model<UnidadDto>>
 	Directiva: ModelStatic<Model<DirectivaDto>>
 	VicepresidenciaEjecutiva: ModelStatic<Model<VicepresidenciaEjecutivaDto>>
 	Vicepresidencia: ModelStatic<Model<VicepresidenciaDto>>

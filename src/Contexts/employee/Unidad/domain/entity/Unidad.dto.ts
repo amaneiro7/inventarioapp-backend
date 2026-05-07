@@ -1,8 +1,13 @@
-import { Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
-import { type UnidadId } from '../valueObject/UnidadId'
-import { type UnidadName } from '../valueObject/UnidadName'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
+import type { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import type { CentroDeCosto } from '../valueObject/CentroDeCosto'
+import type { CodigoInterno } from '../valueObject/CodigoInterno'
+import type { IsUnitActive } from '../valueObject/IsUnitActive'
+import type { RangeLevel } from '../valueObject/RangeLevel'
+import type { TipoUnidad } from '../valueObject/TipoUnidad'
+import type { UnidadId } from '../valueObject/UnidadId'
+import type { UnidadName } from '../valueObject/UnidadName'
 
 /**
  * @interface Unidad
@@ -11,6 +16,12 @@ import { type UnidadName } from '../valueObject/UnidadName'
 export interface Unidad {
 	id: Primitives<UnidadId>
 	name: Primitives<UnidadName>
+	tipoUnidad: Primitives<TipoUnidad>
+	rangeLevel: Primitives<RangeLevel>
+	centroDeCosto: Primitives<CentroDeCosto>
+	codigoInterno: Primitives<CodigoInterno>
+	isUnitActive: Primitives<IsUnitActive>
+	parentId: Primitives<UnidadId> | null
 }
 
 /**
