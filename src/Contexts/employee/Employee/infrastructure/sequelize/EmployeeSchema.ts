@@ -1,32 +1,34 @@
 import { DataTypes, Model, type Sequelize } from 'sequelize'
 import { EmployeeTypesEnum, type EmployeeType } from '../../domain/valueObject/EmployeeType'
 import { Nationalities, type EmployeeNationality } from '../../domain/valueObject/EmployeeNationality'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeId } from '../../domain/valueObject/EmployeeId'
-import { type EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
-import { type EmployeeCode } from '../../domain/valueObject/EmployeCode'
-import { type EmployeeName } from '../../domain/valueObject/EmployeeName'
-import { type EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
-import { type EmployeeIsStillWorking } from '../../domain/valueObject/EmployeeIsStillWorking'
-import { type EmployeeCedula } from '../../domain/valueObject/EmployeeCedula'
-import { type EmployeeLastName } from '../../domain/valueObject/EmployeeLastName'
-import { type CargoId } from '../../../Cargo/domain/valueObject/CargoId'
-import { type Extension } from '../../domain/valueObject/Extension'
-import { type PhoneNumber } from '../../domain/valueObject/PhoneNumber'
-import { type EmployeeDto } from '../../domain/entity/Employee.dto'
-import { type LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
-import { type CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import { type DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
-import { type DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import { type VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
-import { type VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
-import { type DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
-import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
-import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
-import { type LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
-import { HistoryDto } from '../../../../History/domain/entity/History.dto'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { EmployeeId } from '../../domain/valueObject/EmployeeId'
+import type { EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
+import type { EmployeeCode } from '../../domain/valueObject/EmployeCode'
+import type { EmployeeName } from '../../domain/valueObject/EmployeeName'
+import type { EmployeeEmail } from '../../domain/valueObject/EmployeeEmail'
+import type { EmployeeIsStillWorking } from '../../domain/valueObject/EmployeeIsStillWorking'
+import type { EmployeeCedula } from '../../domain/valueObject/EmployeeCedula'
+import type { EmployeeLastName } from '../../domain/valueObject/EmployeeLastName'
+import type { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import type { Extension } from '../../domain/valueObject/Extension'
+import type { PhoneNumber } from '../../domain/valueObject/PhoneNumber'
+import type { EmployeeDto } from '../../domain/entity/Employee.dto'
+import type { LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
+import type { CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
+import type { DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
+import type { DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
+import type { VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
+import type { VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
+import type { DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
+import type { VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
+import type { VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
+import type { DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import type { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
+import type { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
+import type { HistoryDto } from '../../../../History/domain/entity/History.dto'
+import type { UnidadId } from '../../../Unidad/domain/valueObject/UnidadId'
+import type { UnidadDto } from '../../../Unidad/domain/entity/Unidad.dto'
 
 /**
  * @description Sequelize model for the `Employee` entity.
@@ -36,6 +38,7 @@ export class EmployeeModel
 		Omit<
 			EmployeeDto,
 			| 'location'
+			| 'unidad'
 			| 'vicepresidencia'
 			| 'directiva'
 			| 'vicepresidenciaEjecutiva'
@@ -57,6 +60,7 @@ export class EmployeeModel
 	declare nationality: Primitives<EmployeeNationality>
 	declare cedula: Primitives<EmployeeCedula>
 	declare locationId: Primitives<LocationId> | null
+	declare unidadId: Primitives<UnidadId> | null
 	declare directivaId: Primitives<DirectivaId> | null
 	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
 	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
@@ -66,6 +70,7 @@ export class EmployeeModel
 	declare phone: Primitives<PhoneNumber>[]
 	declare history: HistoryDto[] | null
 	declare location: LocationDto
+	declare unidad: Omit<UnidadDto, 'cargos'>
 	declare directiva: Omit<DirectivaDto, 'cargos'>
 	declare vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
 	declare vicepresidencia: Omit<VicepresidenciaDto, 'cargos'>
@@ -76,6 +81,7 @@ export class EmployeeModel
 		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' })
 		this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' })
 		this.belongsTo(models.Directiva, { as: 'directiva', foreignKey: 'directivaId' })
+		this.belongsTo(models.Unidad, { as: 'unidad', foreignKey: 'unidadId' })
 		this.belongsTo(models.VicepresidenciaEjecutiva, {
 			as: 'vicepresidenciaEjecutiva',
 			foreignKey: 'vicepresidenciaEjecutivaId'
@@ -105,6 +111,7 @@ export class EmployeeModel
 				nationality: { type: DataTypes.ENUM(...Object.values(Nationalities)), allowNull: true },
 				cedula: { type: DataTypes.INTEGER, allowNull: true },
 				locationId: { type: DataTypes.UUID, allowNull: true },
+				unidadId: { type: DataTypes.UUID, allowNull: true },
 				directivaId: { type: DataTypes.UUID, allowNull: true },
 				vicepresidenciaEjecutivaId: { type: DataTypes.UUID, allowNull: true },
 				vicepresidenciaId: { type: DataTypes.UUID, allowNull: true },
@@ -143,6 +150,7 @@ export class EmployeeModel
 					{ fields: ['location_id'] },
 					{ fields: ['cargo_id'] },
 					{ fields: ['departamento_id'] },
+					{ fields: ['unidad_id'] },
 					{ fields: ['directiva_id'] },
 					{ fields: ['vicepresidencia_id'] },
 					{ fields: ['vicepresidencia_ejecutiva_id'] }

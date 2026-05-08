@@ -1,5 +1,5 @@
-import { type Order, type FindOptions, type IncludeOptions } from 'sequelize'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { Order, FindOptions, IncludeOptions } from 'sequelize'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 /**
  * @class EmployeeAssociation
  * @description A utility class to build complex Sequelize query options for the Employee model.
@@ -19,6 +19,10 @@ export class EmployeeAssociation {
 		// ------------------- 1. INCLUDES DEFINITION -------------------
 		// Define all possible associations that can be included in the query.
 		// These are later referenced by the filter configuration.
+		const unidadInclude: IncludeOptions = {
+			association: 'unidad',
+			attributes: ['id', 'name']
+		}
 		const directivaInclude: IncludeOptions = {
 			association: 'directiva',
 			attributes: ['id', 'name']
@@ -78,6 +82,7 @@ export class EmployeeAssociation {
 			separate: true
 		}
 		options.include = [
+			unidadInclude,
 			directivaInclude,
 			vicepresidenciaEjecutivaInclude,
 			vicepresidenciaInclude,

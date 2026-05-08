@@ -9,17 +9,19 @@ import { VicepresidenciaExistenceChecker } from '../../Vicepresidencia/domain/se
 import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
 import { VicepresidenciaEjecutivaExistenceChecker } from '../../VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
 import { DepartamentoExistenceChecker } from '../../Departamento/domain/service/DepartamentoExistanceChecker'
+import { UnidadExistenceChecker } from '../../Unidad/domain/service/UnidadExistanceChecker'
 import { DirectivaExistenceChecker } from '../../Directiva/domain/service/DirectivaExistanceChecker'
 import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
-import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
-import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
-import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
-import { type EmployeeParams } from '../domain/entity/Employee.dto'
-import { type EventBus } from '../../../Shared/domain/event/EventBus'
-import { type DirectivaRepository } from '../../Directiva/domain/repository/DirectivaRepository'
-import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
-import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
-import { type DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
+import type { EmployeeRepository } from '../domain/Repository/EmployeeRepository'
+import type { LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
+import type { CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
+import type { EmployeeParams } from '../domain/entity/Employee.dto'
+import type { EventBus } from '../../../Shared/domain/event/EventBus'
+import type { DirectivaRepository } from '../../Directiva/domain/repository/DirectivaRepository'
+import type { VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
+import type { VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
+import type { DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
+import type { UnidadRepository } from '../../Unidad/domain/repository/UnidadRepository'
 
 /**
  * @description Use case for creating a new Employee entity.
@@ -31,6 +33,7 @@ export class EmployeeCreator {
 	private readonly employeeEmailUniquenessChecker: EmployeeEmailUniquenessChecker
 	private readonly employeeCedulaUniquenessChecker: EmployeeCedulaUniquenessChecker
 	private readonly locationExistenceChecker: LocationExistenceChecker
+	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
 	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
 	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
@@ -42,6 +45,7 @@ export class EmployeeCreator {
 	constructor({
 		cargoRepository,
 		departamentoRepository,
+		unidadRepository,
 		directivaRepository,
 		employeeRepository,
 		locationRepository,
@@ -52,6 +56,7 @@ export class EmployeeCreator {
 	}: {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
+		unidadRepository: UnidadRepository
 		directivaRepository: DirectivaRepository
 		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 		vicepresidenciaRepository: VicepresidenciaRepository
@@ -66,6 +71,7 @@ export class EmployeeCreator {
 		this.employeeEmailUniquenessChecker = new EmployeeEmailUniquenessChecker(employeeRepository)
 		this.employeeCedulaUniquenessChecker = new EmployeeCedulaUniquenessChecker(employeeRepository)
 		this.locationExistenceChecker = new LocationExistenceChecker(locationRepository)
+		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
 		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
 		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
 			vicepresidenciaEjecutivaRepository
@@ -94,6 +100,7 @@ export class EmployeeCreator {
 			this.employeeEmailUniquenessChecker.ensureUnique(params.email),
 			this.employeeCedulaUniquenessChecker.ensureUnique(params.cedula),
 			this.locationExistenceChecker.ensureExist(params?.locationId),
+			this.unidadExistenceChecker.ensureExist(params?.unidadId),
 			this.directivaExistenceChecker.ensureExist(params?.directivaId),
 			this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(params?.vicepresidenciaEjecutivaId),
 			this.vicepresidenciaExistenceChecker.ensureExist(params?.vicepresidenciaId),

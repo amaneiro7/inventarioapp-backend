@@ -22,6 +22,7 @@ import { type DirectivaId } from '../../../Directiva/domain/valueObject/Directiv
 import { type VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
 import { type VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
 import { type DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import { type SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 
 /**
  * @description Sequelize model for the `Cargo` entity.
@@ -67,7 +68,13 @@ export class CargoModel
 	declare setDepartamentos: BelongsToManySetAssociationsMixin<DepartamentoModel, Primitives<DepartamentoId>>
 	declare removeDepartamento: BelongsToManyAddAssociationsMixin<DepartamentoModel, Primitives<DepartamentoId>>
 
-	static associate(models: Sequelize['models']): void {
+	static associate(models: SequelizeModels): void {
+		this.belongsToMany(models.Unidad, {
+			as: 'unidades',
+			through: 'cargo_unidad',
+			foreignKey: 'cargoId',
+			otherKey: 'unidadId'
+		})
 		this.belongsToMany(models.Directiva, {
 			as: 'directivas',
 			through: 'cargo_directiva',

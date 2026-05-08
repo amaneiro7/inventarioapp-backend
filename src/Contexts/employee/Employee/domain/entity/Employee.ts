@@ -26,6 +26,7 @@ import { EmployeeRemovedDomainEvent } from '../event/EmployeeRemovedDomainEvent'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
+import { UnidadId } from '../../../Unidad/domain/valueObject/UnidadId'
 
 /**
  * @description Represents the Employee domain entity.
@@ -43,6 +44,7 @@ export class Employee extends AggregateRoot {
 		private nationality: EmployeeNationality,
 		private cedula: EmployeeCedula,
 		private locationId: LocationId | null,
+		private unidadId: UnidadId | null,
 		private directivaId: DirectivaId | null,
 		private vicepresidenciaEjecutivaId: VicepresidenciaEjecutivaId | null,
 		private vicepresidenciaId: VicepresidenciaId | null,
@@ -80,6 +82,7 @@ export class Employee extends AggregateRoot {
 		this.ensureCreationRules(params)
 
 		this.ensureForbiddenHierarchyByType(params.type, {
+			unidadId: params.unidadId,
 			directivaId: params.directivaId,
 			vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
 			vicepresidenciaId: params.vicepresidenciaId,
@@ -108,6 +111,7 @@ export class Employee extends AggregateRoot {
 			new EmployeeNationality(params.nationality),
 			new EmployeeCedula(params.cedula),
 			params.locationId ? new LocationId(params.locationId) : null,
+			params.unidadId ? new UnidadId(params.unidadId) : null,
 			params.directivaId ? new DirectivaId(params.directivaId) : null,
 			params.vicepresidenciaEjecutivaId
 				? new VicepresidenciaEjecutivaId(params.vicepresidenciaEjecutivaId)
@@ -148,6 +152,7 @@ export class Employee extends AggregateRoot {
 			new EmployeeNationality(primitives.nationality),
 			new EmployeeCedula(primitives.cedula),
 			primitives.locationId ? new LocationId(primitives.locationId) : null,
+			primitives.unidadId ? new UnidadId(primitives.unidadId) : null,
 			primitives.directivaId ? new DirectivaId(primitives.directivaId) : null,
 			primitives.vicepresidenciaEjecutivaId
 				? new VicepresidenciaEjecutivaId(primitives.vicepresidenciaEjecutivaId)
@@ -173,6 +178,7 @@ export class Employee extends AggregateRoot {
 			nationality: this.nationalityValue,
 			cedula: this.cedulaValue,
 			locationId: this.locationValue,
+			unidadId: this.unidadValue,
 			directivaId: this.directivaValue,
 			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
 			vicepresidenciaId: this.vicepresidenciaValue,
@@ -227,6 +233,9 @@ export class Employee extends AggregateRoot {
 		return this.locationId?.value ?? null
 	}
 
+	get unidadValue(): Primitives<UnidadId> | null {
+		return this.unidadId?.value ?? null
+	}
 	get directivaValue(): Primitives<DirectivaId> | null {
 		return this.directivaId?.value ?? null
 	}
@@ -331,6 +340,7 @@ export class Employee extends AggregateRoot {
 	private static ensureForbiddenHierarchyByType(
 		type: EmployeeTypesEnum,
 		params: {
+			unidadId: Primitives<UnidadId> | null
 			directivaId: Primitives<DirectivaId> | null
 			vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
 			vicepresidenciaId: Primitives<VicepresidenciaId> | null
@@ -341,6 +351,7 @@ export class Employee extends AggregateRoot {
 
 		if (typesForbiddenHierarchy.includes(type)) {
 			if (
+				params.unidadId ||
 				params.directivaId ||
 				params.vicepresidenciaEjecutivaId ||
 				params.vicepresidenciaId ||
@@ -582,6 +593,10 @@ export class Employee extends AggregateRoot {
 
 	updateLocation(newLocationId: Primitives<LocationId> | null): void {
 		this.locationId = newLocationId ? new LocationId(newLocationId) : null
+	}
+
+	updateUnidad(newUnidadId: Primitives<UnidadId> | null): void {
+		this.unidadId = newUnidadId ? new UnidadId(newUnidadId) : null
 	}
 
 	// En Employee.ts

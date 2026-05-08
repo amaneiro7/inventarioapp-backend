@@ -23,6 +23,8 @@ import { type DepartamentoRepository } from '../../Departamento/domain/repositor
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { EmployeeCodeUniquenessChecker } from '../domain/service/EmployeeCodeUniquenessChecker'
 import { EmployeeCedulaUniquenessChecker } from '../domain/service/EmployeeCedulaUniquenessChecker'
+import { UnidadRepository } from '../../Unidad/domain/repository/UnidadRepository'
+import { UnidadExistenceChecker } from '../../Unidad/domain/service/UnidadExistanceChecker'
 
 /**
  * @description Use case for updating an existing Employee entity.
@@ -34,6 +36,7 @@ export class EmployeeUpdater {
 	private readonly employeeCedulaUniquenessChecker: EmployeeCedulaUniquenessChecker
 	private readonly employeeEmailUniquenessChecker: EmployeeEmailUniquenessChecker
 	private readonly locationExistenceChecker: LocationExistenceChecker
+	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
 	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
 	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
@@ -45,6 +48,7 @@ export class EmployeeUpdater {
 	constructor({
 		cargoRepository,
 		departamentoRepository,
+		unidadRepository,
 		directivaRepository,
 		employeeRepository,
 		locationRepository,
@@ -56,6 +60,7 @@ export class EmployeeUpdater {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
 		directivaRepository: DirectivaRepository
+		unidadRepository: UnidadRepository
 		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 		vicepresidenciaRepository: VicepresidenciaRepository
 		departamentoRepository: DepartamentoRepository
@@ -69,6 +74,7 @@ export class EmployeeUpdater {
 		this.employeeCodeUniquenessChecker = new EmployeeCodeUniquenessChecker(employeeRepository)
 		this.employeeCedulaUniquenessChecker = new EmployeeCedulaUniquenessChecker(employeeRepository)
 		this.locationExistenceChecker = new LocationExistenceChecker(locationRepository)
+		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
 		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
 		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
 			vicepresidenciaEjecutivaRepository
@@ -194,6 +200,15 @@ export class EmployeeUpdater {
 			employeeEntity.updateLocation(params.locationId)
 		}
 
+		if (params.unidadId !== undefined && employeeEntity.unidadValue !== params.unidadId) {
+			validations.push(this.unidadExistenceChecker.ensureExist(params.unidadId))
+			changes.push({
+				field: 'unidadId',
+				oldValue: employeeEntity.unidadValue,
+				newValue: params.unidadId
+			})
+			employeeEntity.updateUnidad(params.unidadId)
+		}
 		if (params.cargoId !== undefined && employeeEntity.cargoValue !== params.cargoId) {
 			validations.push(this.cargoExistenceChecker.ensureExist(params.cargoId))
 			changes.push({

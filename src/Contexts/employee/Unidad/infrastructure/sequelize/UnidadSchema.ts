@@ -67,12 +67,14 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 				centroDeCosto: {
 					type: DataTypes.STRING,
 					allowNull: true,
-					unique: true
+					unique: true,
+					field: 'centro_de_costo'
 				},
 				codigoInterno: {
 					type: DataTypes.STRING,
 					allowNull: true,
-					unique: true
+					unique: true,
+					field: 'codigo_interno'
 				},
 				isUnitActive: {
 					type: DataTypes.BOOLEAN,
