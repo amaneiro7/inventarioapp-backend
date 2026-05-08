@@ -121,14 +121,6 @@ export class UnidadUpdater {
 			unidadEntity.updateParentId(newParentId)
 		}
 
-		if (params.tipoUnidad && unidadEntity.tipoUnidadValue !== params.tipoUnidad) {
-			changes.push({
-				field: 'tipoUnidad',
-				oldValue: unidadEntity.tipoUnidadValue,
-				newValue: params.tipoUnidad
-			})
-			unidadEntity.updateTipoUnidad(params.tipoUnidad)
-		}
 		if (params.isUnitActive && unidadEntity.isUnitActiveValue !== params.isUnitActive) {
 			changes.push({
 				field: 'isUnitActive',

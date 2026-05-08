@@ -1,5 +1,5 @@
 import { BrandFinderAll } from '../../../../src/Contexts/Brand/application/BrandFinderAll'
-import { BrandRepository } from '../../../../src/Contexts/Brand/domain/BrandRepository'
+import { BrandRepository } from '../../../../src/Contexts/Brand/domain/repository/BrandRepository'
 import { Criteria } from '../../../../src/Contexts/Shared/domain/criteria/Criteria'
 import { Order } from '../../../../src/Contexts/Shared/domain/criteria/Order'
 import { Filters } from '../../../../src/Contexts/Shared/domain/criteria/Filters'

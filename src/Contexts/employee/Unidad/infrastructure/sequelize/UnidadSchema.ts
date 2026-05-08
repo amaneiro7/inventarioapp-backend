@@ -13,7 +13,6 @@ import type { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import type { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import type { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import type { UnidadDto } from '../../domain/entity/Unidad.dto'
-import { TipoUnidad, TipoUnidadEnum } from '../../domain/valueObject/TipoUnidad'
 import { RangeLevel } from '../../domain/valueObject/RangeLevel'
 import type { CentroDeCosto } from '../../domain/valueObject/CentroDeCosto'
 import type { CodigoInterno } from '../../domain/valueObject/CodigoInterno'
@@ -25,7 +24,6 @@ import type { IsUnitActive } from '../../domain/valueObject/IsUnitActive'
 export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements UnidadDto {
 	declare id: Primitives<UnidadId>
 	declare name: Primitives<UnidadName>
-	declare tipoUnidad: Primitives<TipoUnidad>
 	declare rangeLevel: Primitives<RangeLevel>
 	declare centroDeCosto: Primitives<CentroDeCosto>
 	declare codigoInterno: Primitives<CodigoInterno>
@@ -40,8 +38,8 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 	declare removeCargo: BelongsToManyAddAssociationsMixin<CargoModel, Primitives<CargoId>>
 
 	static associate(models: SequelizeModels): void {
-		this.belongsTo(models.Unindad, { as: 'parent', foreignKey: 'parentId' })
-		this.hasMany(models.Unindad, { as: 'children', foreignKey: 'parentId' })
+		this.belongsTo(models.Unidad, { as: 'parent', foreignKey: 'parentId' })
+		this.hasMany(models.Unidad, { as: 'children', foreignKey: 'parentId' })
 
 		this.hasMany(models.Employee, { as: 'employee', foreignKey: 'unidadId' })
 		this.belongsToMany(models.Cargo, {
@@ -58,10 +56,6 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
 				name: { type: DataTypes.STRING, allowNull: false, unique: true },
-				tipoUnidad: {
-					type: DataTypes.ENUM(...Object.values(TipoUnidadEnum)),
-					defaultValue: TipoUnidadEnum.LINEA
-				},
 				rangeLevel: {
 					type: DataTypes.INTEGER,
 					allowNull: false,

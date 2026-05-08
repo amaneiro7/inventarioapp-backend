@@ -90,6 +90,12 @@ export const PERMISSIONS = {
 		CREATE: 'directivas:create',
 		UPDATE: 'directivas:update'
 	},
+	UNIDADES: {
+		READ_LIST: 'unidades:read-list',
+		READ: 'unidades:read',
+		CREATE: 'unidades:create',
+		UPDATE: 'unidades:update'
+	},
 	VICEPRESIDENCIA_EJECUTIVAS: {
 		READ_LIST: 'vicepresidencia-ejecutivas:read-list',
 		READ: 'vicepresidencia-ejecutivas:read',

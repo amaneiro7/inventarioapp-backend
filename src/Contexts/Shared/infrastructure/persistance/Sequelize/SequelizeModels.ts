@@ -78,7 +78,7 @@ export type SequelizeModels = Sequelize['models'] & {
 	Site: ModelStatic<Model<SiteDto>>
 	Location: ModelStatic<Model<LocationDto>>
 	ISPLink: ModelStatic<Model<ISPLinkDto>>
-	Unindad: ModelStatic<Model<UnidadDto>>
+	Unidad: ModelStatic<Model<UnidadDto>>
 	Directiva: ModelStatic<Model<DirectivaDto>>
 	VicepresidenciaEjecutiva: ModelStatic<Model<VicepresidenciaEjecutivaDto>>
 	Vicepresidencia: ModelStatic<Model<VicepresidenciaDto>>

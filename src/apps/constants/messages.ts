@@ -24,6 +24,8 @@ export const SUCCESS_MESSAGES = {
 	DEPARTAMENTO_UPDATED: 'Departamento actualizado exitosamente',
 	DIRECTIVA_CREATED: 'Directiva creado exitosamente',
 	DIRECTIVA_UPDATED: 'Directiva actualizado exitosamente',
+	UNIDAD_CREATED: 'Unidad organizativa creado exitosamente',
+	UNIDAD_UPDATED: 'Unidad organizativa actualizado exitosamente',
 	EMPLOYEE_DELETED: 'Empleado eliminado exitosamente',
 	EMPLOYEE_CREATED: 'Empleado creado exitosamente',
 	EMPLOYEE_UPDATED: 'Empleado actualizado exitosamente',

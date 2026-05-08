@@ -266,6 +266,50 @@ const options = {
 						}
 					}
 				},
+				Unidad: {
+					type: 'object',
+					properties: {
+						name: {
+							type: 'string',
+							example: 'Gerencia de Tecnología'
+						},
+						tipoUnidad: {
+							type: 'string',
+							example: 'Gerencia'
+						},
+						rangeLevel: {
+							type: 'integer',
+							example: 1
+						},
+						centroDeCosto: {
+							type: 'string',
+							example: 'CC-100'
+						},
+						codigoInterno: {
+							type: 'string',
+							example: 'COD-001'
+						},
+						isUnitActive: {
+							type: 'boolean',
+							example: true
+						},
+						parentId: {
+							type: 'string',
+							format: 'uuid',
+							nullable: true,
+							example: null
+						},
+						cargos: {
+							type: 'array',
+							items: {
+								type: 'string',
+								format: 'uuid'
+							},
+							example: ['d8b9b9a0-5b9a-4b0f-8b0a-9b0a9b0a9b0a']
+						}
+					},
+					required: ['name', 'rangeLevel', 'centroDeCosto', 'codigoInterno']
+				},
 				ModelSeries: {
 					type: 'object',
 					properties: {

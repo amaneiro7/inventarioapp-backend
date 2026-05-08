@@ -2,6 +2,10 @@ import { AggregateRoot } from '../../../../Shared/domain/AggregateRoot'
 import { UnidadId } from '../valueObject/UnidadId'
 import { UnidadName } from '../valueObject/UnidadName'
 import { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
+import { RangeLevel } from '../valueObject/RangeLevel'
+import { CentroDeCosto } from '../valueObject/CentroDeCosto'
+import { CodigoInterno } from '../valueObject/CodigoInterno'
+import { IsUnitActive } from '../valueObject/IsUnitActive'
 import { UnidadCargoAddedDomainEvent } from '../event/UnidadCargoAddedDomainEvent'
 import { UnidadCargoRemovedDomainEvent } from '../event/UnidadCargoRemovedDomainEvent'
 import { UnidadCreatedDomainEvent } from '../event/UnidadCreatedDomainEvent'
@@ -10,11 +14,6 @@ import { UnidadRenamedDomainEvent } from '../event/UnidadRenamedDomainEvent'
 import { UnidadUpdatedDomainEvent } from '../event/UnidadUpdatedDomainEvent'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import type { UnidadParams, UnidadPrimitives, UnidadDto } from './Unidad.dto'
-import { TipoUnidad } from '../valueObject/TipoUnidad'
-import { RangeLevel } from '../valueObject/RangeLevel'
-import { CentroDeCosto } from '../valueObject/CentroDeCosto'
-import { CodigoInterno } from '../valueObject/CodigoInterno'
-import { IsUnitActive } from '../valueObject/IsUnitActive'
 
 /**
  * @description Represents the Unidad domain entity, the highest level in the organizational chart.
@@ -23,7 +22,6 @@ export class Unidad extends AggregateRoot {
 	constructor(
 		private readonly id: UnidadId,
 		private name: UnidadName,
-		private tipoUnidad: TipoUnidad,
 		private rangeLevel: RangeLevel,
 		private centroDeCosto: CentroDeCosto,
 		private codigoInterno: CodigoInterno,
@@ -45,24 +43,13 @@ export class Unidad extends AggregateRoot {
 	static create(params: UnidadParams): Unidad {
 		const id = UnidadId.random()
 		const name = new UnidadName(params.name)
-		const tipoUnidad = new TipoUnidad(params.tipoUnidad)
 		const rangeLevel = new RangeLevel(params.rangeLevel)
 		const centroDeCosto = new CentroDeCosto(params.centroDeCosto)
 		const codigoInterno = new CodigoInterno(params.codigoInterno)
 		const isUnitActive = new IsUnitActive(params.isUnitActive)
 		const parentId = params.parentId ? new UnidadId(params.parentId) : null
 		const cargos = new Set(params.cargos.map(cargoId => new CargoId(cargoId)))
-		const unidad = new Unidad(
-			id,
-			name,
-			tipoUnidad,
-			rangeLevel,
-			centroDeCosto,
-			codigoInterno,
-			isUnitActive,
-			parentId,
-			cargos
-		)
+		const unidad = new Unidad(id, name, rangeLevel, centroDeCosto, codigoInterno, isUnitActive, parentId, cargos)
 		unidad.record(
 			new UnidadCreatedDomainEvent({
 				aggregateId: id.value,
@@ -83,7 +70,6 @@ export class Unidad extends AggregateRoot {
 		return new Unidad(
 			new UnidadId(primitives.id),
 			new UnidadName(primitives.name),
-			new TipoUnidad(primitives.tipoUnidad),
 			new RangeLevel(primitives.rangeLevel),
 			new CentroDeCosto(primitives.centroDeCosto),
 			new CodigoInterno(primitives.codigoInterno),
@@ -102,7 +88,6 @@ export class Unidad extends AggregateRoot {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			tipoUnidad: this.tipoUnidadValue,
 			rangeLevel: this.rangeLevelValue,
 			centroDeCosto: this.centroDeCostoValue,
 			codigoInterno: this.codigoInternoValue,
@@ -135,15 +120,6 @@ export class Unidad extends AggregateRoot {
 				name: this.name.value
 			})
 		)
-	}
-
-	/**
-	 * @method updateTipoUnidad
-	 * @description Updates the type of the Unidad.
-	 * @param {Primitives<TipoUnidad>} newTipoUnidad The new type for the Unidad.
-	 */
-	updateTipoUnidad(newTipoUnidad: Primitives<TipoUnidad>): void {
-		this.tipoUnidad = new TipoUnidad(newTipoUnidad)
 	}
 
 	/**
@@ -263,15 +239,6 @@ export class Unidad extends AggregateRoot {
 	 */
 	get nameValue(): Primitives<UnidadName> {
 		return this.name.value
-	}
-
-	/**
-	 * @getter tipoUnidadValue
-	 * @description Returns the primitive value of the Unidad's type.
-	 * @returns {Primitives<TipoUnidad>}
-	 */
-	get tipoUnidadValue(): Primitives<TipoUnidad> {
-		return this.tipoUnidad.value
 	}
 
 	/**
