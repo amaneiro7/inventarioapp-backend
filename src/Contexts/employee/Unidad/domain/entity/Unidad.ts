@@ -22,7 +22,7 @@ export class Unidad extends AggregateRoot {
 	constructor(
 		private readonly id: UnidadId,
 		private name: UnidadName,
-		private rangeLevel: RangeLevel,
+		private level: RangeLevel,
 		private centroDeCosto: CentroDeCosto,
 		private codigoInterno: CodigoInterno,
 		private isUnitActive: IsUnitActive,
@@ -43,13 +43,13 @@ export class Unidad extends AggregateRoot {
 	static create(params: UnidadParams): Unidad {
 		const id = UnidadId.random()
 		const name = new UnidadName(params.name)
-		const rangeLevel = new RangeLevel(params.rangeLevel)
+		const level = new RangeLevel(params.level)
 		const centroDeCosto = new CentroDeCosto(params.centroDeCosto)
 		const codigoInterno = new CodigoInterno(params.codigoInterno)
 		const isUnitActive = new IsUnitActive(params.isUnitActive)
 		const parentId = params.parentId ? new UnidadId(params.parentId) : null
 		const cargos = new Set(params.cargos.map(cargoId => new CargoId(cargoId)))
-		const unidad = new Unidad(id, name, rangeLevel, centroDeCosto, codigoInterno, isUnitActive, parentId, cargos)
+		const unidad = new Unidad(id, name, level, centroDeCosto, codigoInterno, isUnitActive, parentId, cargos)
 		unidad.record(
 			new UnidadCreatedDomainEvent({
 				aggregateId: id.value,
@@ -70,7 +70,7 @@ export class Unidad extends AggregateRoot {
 		return new Unidad(
 			new UnidadId(primitives.id),
 			new UnidadName(primitives.name),
-			new RangeLevel(primitives.rangeLevel),
+			new RangeLevel(primitives.level),
 			new CentroDeCosto(primitives.centroDeCosto),
 			new CodigoInterno(primitives.codigoInterno),
 			new IsUnitActive(primitives.isUnitActive),
@@ -88,7 +88,7 @@ export class Unidad extends AggregateRoot {
 		return {
 			id: this.idValue,
 			name: this.nameValue,
-			rangeLevel: this.rangeLevelValue,
+			level: this.levelValue,
 			centroDeCosto: this.centroDeCostoValue,
 			codigoInterno: this.codigoInternoValue,
 			isUnitActive: this.isUnitActiveValue,
@@ -128,7 +128,7 @@ export class Unidad extends AggregateRoot {
 	 * @param {Primitives<RangeLevel>} newRangeLevel The new range level for the Unidad.
 	 */
 	updateRangeLevel(newRangeLevel: Primitives<RangeLevel>): void {
-		this.rangeLevel = new RangeLevel(newRangeLevel)
+		this.level = new RangeLevel(newRangeLevel)
 	}
 
 	/**
@@ -242,12 +242,12 @@ export class Unidad extends AggregateRoot {
 	}
 
 	/**
-	 * @getter rangeLevelValue
+	 * @getter levelValue
 	 * @description Returns the primitive value of the Unidad's hierarchical range level.
 	 * @returns {Primitives<RangeLevel>}
 	 */
-	get rangeLevelValue(): Primitives<RangeLevel> {
-		return this.rangeLevel.value
+	get levelValue(): Primitives<RangeLevel> {
+		return this.level.value
 	}
 
 	/**

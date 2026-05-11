@@ -155,6 +155,7 @@ export class SequelizeEmployeeRepository
 						},
 						{ association: 'departamento', attributes: ['name'] },
 						{ association: 'directiva', attributes: ['name'] },
+						{ association: 'unidad' },
 						{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
 						{ association: 'vicepresidencia', attributes: ['name'] },
 						{
@@ -184,7 +185,31 @@ export class SequelizeEmployeeRepository
 					]
 				})
 
-				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+				if (!employee) return null
+
+				const plainEmployee = employee.get({ plain: true }) as EmployeeDto
+
+				// Si tiene unidad, calculamos la cadena completa dinámicamente
+				if (plainEmployee.unidadId) {
+					const query = `
+						WITH RECURSIVE ancestors AS (
+							SELECT id, name, parent_id, 1 as depth FROM unidades WHERE id = :unidadId
+							UNION ALL
+							SELECT u.id, u.name, u.parent_id, a.depth + 1 FROM unidades u 
+							INNER JOIN ancestors a ON u.id = a.parent_id
+						) SELECT name FROM ancestors ORDER BY depth DESC;`
+					const chain = await EmployeeModel.sequelize!.query(query, {
+						replacements: { unidadId: plainEmployee.unidadId },
+						type: 'SELECT'
+					})
+					console.log('chain', chain)
+					console.log('plainEmployee', plainEmployee)
+
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					plainEmployee.unidad.full_chain = chain.map((c: any) => c.name).join(' > ')
+				}
+
+				return plainEmployee as EmployeeDto
 			}
 		})
 	}

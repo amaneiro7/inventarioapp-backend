@@ -15,8 +15,7 @@ module.exports = {
 					},
 					name: {
 						type: Sequelize.STRING,
-						allowNull: false,
-						unique: true
+						allowNull: false
 					},
 					centro_de_costo: {
 						type: Sequelize.STRING,
@@ -34,6 +33,25 @@ module.exports = {
 						type: Sequelize.BOOLEAN,
 						defaultValue: true,
 						field: 'is_unit_active'
+					},
+					level: {
+						type: Sequelize.INTEGER,
+						allowNull: false,
+						validate: {
+							min: 1,
+							max: 8
+						},
+						defaultValue: 1,
+						comment: `
+						1: Directiva, 
+						2: Vicepresidencia Ejecutiva, 
+						3: Vicepresidencia Corporativa, 
+						4: Vicepresidencia Regional, 
+						5: Gerencia Senior,
+						6: Gerencia Operativa,
+						7: Coordinacion, 
+						8: Operativo
+						`
 					},
 					parentId: {
 						type: Sequelize.UUID,
@@ -56,6 +74,44 @@ module.exports = {
 				},
 				{ transaction }
 			)
+			// index
+			await queryInterface.addConstraint('unidades', {
+				fields: ['name', 'parent_id'],
+				type: 'unique',
+				where: { is_unit_active: true },
+				name: 'unique_unidad_name_per_parent',
+				transaction
+			})
+			await queryInterface.addIndex('unidades', {
+				fields: ['centro_de_costo'],
+				unique: true,
+				where: { is_unit_active: true },
+				name: 'unique_unidad_centro_de_costo_active_unidad',
+				transaction
+			})
+			await queryInterface.addIndex('unidades', {
+				fields: ['codigo_interno'],
+				unique: true,
+				where: { is_unit_active: true },
+				name: 'unique_unidad_codigo_interno_active_unidad',
+				transaction
+			})
+			await queryInterface.addIndex('unidades', {
+				fields: ['parent_id'],
+				name: 'idx_unidades_parent_id', // Convención de nombres para índices
+				transaction
+			})
+			await queryInterface.addIndex('unidades', {
+				fields: ['level'],
+				name: 'idx_unidades_level', // Convención de nombres para índices
+				transaction
+			})
+			await queryInterface.addIndex('unidades', {
+				fields: ['is_unit_active'],
+				name: 'idx_unidades_is_unit_active', // Convención de nombres para índices
+				transaction
+			})
+			// associotions
 			await queryInterface.addColumn(
 				'employees',
 				'unidad_id',

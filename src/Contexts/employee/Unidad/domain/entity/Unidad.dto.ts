@@ -15,7 +15,7 @@ import type { UnidadName } from '../valueObject/UnidadName'
 export interface Unidad {
 	id: Primitives<UnidadId>
 	name: Primitives<UnidadName>
-	rangeLevel: Primitives<RangeLevel>
+	level: Primitives<RangeLevel>
 	centroDeCosto: Primitives<CentroDeCosto>
 	codigoInterno: Primitives<CodigoInterno>
 	isUnitActive: Primitives<IsUnitActive>
@@ -42,5 +42,6 @@ export type UnidadParams = Omit<Unidad & { cargos: Primitives<CargoId>[] }, 'id'
  * including associated Cargo DTOs.
  */
 export type UnidadDto = Unidad & {
+	full_chain?: string
 	cargos: Omit<CargoDto, 'directivas' | 'vicepresidenciasEjecutivas' | 'vicepresidencias' | 'departamentos'>[]
 }

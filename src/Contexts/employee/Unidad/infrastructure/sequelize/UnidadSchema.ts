@@ -5,6 +5,7 @@ import type {
 	BelongsToManyGetAssociationsMixin,
 	Sequelize
 } from 'sequelize'
+import { RangeLevel } from '../../domain/valueObject/RangeLevel'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import type { UnidadId } from '../../domain/valueObject/UnidadId'
 import type { UnidadName } from '../../domain/valueObject/UnidadName'
@@ -13,7 +14,6 @@ import type { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import type { CargoModel } from '../../../Cargo/infrastructure/sequelize/CargoSchema'
 import type { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import type { UnidadDto } from '../../domain/entity/Unidad.dto'
-import { RangeLevel } from '../../domain/valueObject/RangeLevel'
 import type { CentroDeCosto } from '../../domain/valueObject/CentroDeCosto'
 import type { CodigoInterno } from '../../domain/valueObject/CodigoInterno'
 import type { IsUnitActive } from '../../domain/valueObject/IsUnitActive'
@@ -24,7 +24,7 @@ import type { IsUnitActive } from '../../domain/valueObject/IsUnitActive'
 export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements UnidadDto {
 	declare id: Primitives<UnidadId>
 	declare name: Primitives<UnidadName>
-	declare rangeLevel: Primitives<RangeLevel>
+	declare level: Primitives<RangeLevel>
 	declare centroDeCosto: Primitives<CentroDeCosto>
 	declare codigoInterno: Primitives<CodigoInterno>
 	declare isUnitActive: Primitives<IsUnitActive>
@@ -55,14 +55,24 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 		this.init(
 			{
 				id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
-				name: { type: DataTypes.STRING, allowNull: false, unique: true },
-				rangeLevel: {
+				name: { type: DataTypes.STRING, allowNull: false },
+				level: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 					validate: {
 						max: RangeLevel.MAX,
 						min: RangeLevel.MIN
-					}
+					},
+					comment: `
+						1: Directiva, 
+						2: Vicepresidencia Ejecutiva, 
+						3: Vicepresidencia Corporativa, 
+						4: Vicepresidencia Regional, 
+						6: Gerencia Senior,
+						7: Gerencia Operativa,
+						7: Coordinacion, 
+						8: Operativo
+						`
 				},
 				centroDeCosto: {
 					type: DataTypes.STRING,
@@ -95,7 +105,30 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 				timestamps: true,
 				underscored: true,
 				paranoid: true,
-				sequelize
+				sequelize,
+				indexes: [
+					{
+						unique: true,
+						fields: ['name'],
+						where: { is_unit_active: true },
+						name: 'unique_unidad_name_active_unidad'
+					},
+					{
+						unique: true,
+						fields: ['centro_de_costo'],
+						where: { is_unit_active: true },
+						name: 'unique_unidad_centro_de_costo_active_unidad'
+					},
+					{
+						unique: true,
+						fields: ['codigo_interno'],
+						where: { is_unit_active: true },
+						name: 'unique_unidad_codigo_interno_active_unidad'
+					},
+					{ fields: ['parent_id'] },
+					{ fields: ['level'] },
+					{ fields: ['is_unit_active'] }
+				]
 			}
 		)
 	}

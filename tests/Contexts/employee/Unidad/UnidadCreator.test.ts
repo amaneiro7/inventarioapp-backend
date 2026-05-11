@@ -15,7 +15,7 @@ describe('UnidadCreator', () => {
 
 	const params = {
 		name: 'Gerencia de Tecnología',
-		rangeLevel: 1,
+		level: 1,
 		centroDeCosto: 'CC-100',
 		codigoInterno: 'COD-001',
 		isUnitActive: true,
@@ -47,7 +47,7 @@ describe('UnidadCreator', () => {
 		expect(UnidadNameUniquenessChecker.prototype.ensureUnique).toHaveBeenCalledWith(params.name)
 		expect(UnidadCentroDeCostoUniquenessChecker.prototype.ensureUnique).toHaveBeenCalledWith(params.centroDeCosto)
 		expect(UnidadCodigoInternoUniquenessChecker.prototype.ensureUnique).toHaveBeenCalledWith(params.codigoInterno)
-		expect(UnidadHierarchyValidator.prototype.validate).toHaveBeenCalledWith(params.rangeLevel, params.parentId)
+		expect(UnidadHierarchyValidator.prototype.validate).toHaveBeenCalledWith(params.level, params.parentId)
 		expect(CargoExistenceChecker.prototype.ensureExist).toHaveBeenCalledWith(params.cargos)
 
 		expect(unidadRepository.save).toHaveBeenCalled()

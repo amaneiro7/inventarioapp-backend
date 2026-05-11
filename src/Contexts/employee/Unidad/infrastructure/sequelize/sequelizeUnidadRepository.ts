@@ -230,4 +230,34 @@ export class SequelizeUnidadRepository
 			}
 		})
 	}
+
+	/**
+	 * Obtiene la jerarquía ascendente (padres) de una unidad específica
+	 */
+	async getAncestors(unidadId: string): Promise<Array<{ id: string; name: string; level: number }>> {
+		const query = `
+			WITH RECURSIVE ancestors AS (
+				-- Caso base: La unidad del empleado
+				SELECT id, name, parent_id, range_level as level, 1 as depth
+				FROM unidades
+				WHERE id = :unidadId AND deleted_at IS NULL
+
+				UNION ALL
+
+				-- Paso recursivo: Buscar el padre
+				SELECT u.id, u.name, u.parent_id, u.range_level, a.depth + 1
+				FROM unidades u
+				INNER JOIN ancestors a ON u.id = a.parent_id
+				WHERE u.deleted_at IS NULL
+			)
+			SELECT id, name, level FROM ancestors ORDER BY depth DESC;
+		`
+		const results = await UnidadModel.sequelize!.query(query, {
+			replacements: { unidadId },
+			type: QueryTypes.SELECT,
+			raw: true
+		})
+
+		return results as Array<{ id: string; name: string; level: number }>
+	}
 }

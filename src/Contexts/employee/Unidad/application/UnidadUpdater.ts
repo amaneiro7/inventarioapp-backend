@@ -97,22 +97,22 @@ export class UnidadUpdater {
 			unidadEntity.updateCodigoInterno(params.codigoInterno)
 		}
 
-		if (params.rangeLevel && unidadEntity.rangeLevelValue !== params.rangeLevel) {
+		if (params.level && unidadEntity.levelValue !== params.level) {
 			changes.push({
-				field: 'rangeLevel',
-				oldValue: unidadEntity.rangeLevelValue,
-				newValue: params.rangeLevel
+				field: 'level',
+				oldValue: unidadEntity.levelValue,
+				newValue: params.level
 			})
-			unidadEntity.updateRangeLevel(params.rangeLevel)
+			unidadEntity.updateRangeLevel(params.level)
 		}
 
 		// Validar jerarquía si cambia el padre O el nivel de la unidad actual
 		const parentIdChanged = params.parentId !== undefined && params.parentId !== unidadEntity.parentIdValue
-		const rangeLevelChanged = params.rangeLevel !== undefined && params.rangeLevel !== unidadEntity.rangeLevelValue
+		const levelChanged = params.level !== undefined && params.level !== unidadEntity.levelValue
 
-		if (parentIdChanged || rangeLevelChanged) {
+		if (parentIdChanged || levelChanged) {
 			const newParentId = params.parentId !== undefined ? params.parentId : unidadEntity.parentIdValue
-			validations.push(this.hierarchyValidator.validate(unidadEntity.rangeLevelValue, newParentId))
+			validations.push(this.hierarchyValidator.validate(unidadEntity.levelValue, newParentId))
 			changes.push({
 				field: 'parentId',
 				oldValue: unidadEntity.parentIdValue,

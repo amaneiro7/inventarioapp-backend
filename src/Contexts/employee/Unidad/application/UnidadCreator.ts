@@ -51,7 +51,7 @@ export class UnidadCreator {
 			this.unidadNameUniquenessChecker.ensureUnique(params.name),
 			this.unidadCentroDeCostoUniquenessChecker.ensureUnique(params.centroDeCosto),
 			this.unidadCodigoInternoUniquenessChecker.ensureUnique(params.codigoInterno),
-			this.unidadHierarchyValidator.validate(params.rangeLevel, params.parentId),
+			this.unidadHierarchyValidator.validate(params.level, params.parentId),
 			this.cargoExistenceChecker.ensureExist(uniqueCargos)
 		])
 

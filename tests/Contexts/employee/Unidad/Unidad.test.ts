@@ -11,7 +11,7 @@ import { UnidadUpdatedDomainEvent } from '../../../../src/Contexts/employee/Unid
 describe('Unidad', () => {
 	const mockUnidadParams = {
 		name: 'Gerencia General',
-		rangeLevel: 1,
+		level: 1,
 		centroDeCosto: 'CC001',
 		codigoInterno: 'GG001',
 		isUnitActive: true,
@@ -47,7 +47,7 @@ describe('Unidad', () => {
 		const primitives = {
 			id,
 			name: 'Dirección de TI',
-			rangeLevel: 2,
+			level: 2,
 			centroDeCosto: 'CC002',
 			codigoInterno: 'DTI001',
 			isUnitActive: true,
@@ -153,9 +153,9 @@ describe('Unidad', () => {
 	it('should record a generic update event for other changes', () => {
 		const unidad = Unidad.create(mockUnidadParams)
 		;(Unidad.prototype.record as jest.Mock).mockClear()
-		const oldValueRangeLavel = mockUnidadParams.rangeLevel
+		const oldValueRangeLavel = mockUnidadParams.level
 		const newRangeLevel = 2
-		const changes = [{ field: 'rangeLevel', oldValue: oldValueRangeLavel, newValue: newRangeLevel }]
+		const changes = [{ field: 'level', oldValue: oldValueRangeLavel, newValue: newRangeLevel }]
 		unidad.updateRangeLevel(newRangeLevel) // This method doesn't record a specific event
 		unidad.registerUpdateEvent(changes) // Manually record generic update event
 
