@@ -3,18 +3,18 @@ import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { StatusOptions } from '../../Status/domain/StatusOptions'
 import { AppSettingDefaults, AppSettingKeys } from '../../../AppSettings/domain/entity/SettingsKeys'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
-import { type Logger } from '../../../Shared/domain/Logger'
-import { type MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
-import { type PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
-import { type DeviceMonitoringDto, type DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
-import {
-	type MonitoringConfigDefaults,
-	type MonitoringConfigKeys
+import type { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import type { DeviceMonitoringRepository } from '../domain/repository/DeviceMonitoringRepository'
+import type { Logger } from '../../../Shared/domain/Logger'
+import type { MonitoringId } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringId'
+import type { PingLogger } from '../../../Shared/domain/Monitoring/infra/PingLogger'
+import type { DeviceMonitoringDto, DeviceMonitoringPrimitives } from '../domain/entity/DeviceMonitoring.dto'
+import type {
+	MonitoringConfigDefaults,
+	MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
-import { type IPingService, type PingResult } from '../../../Shared/domain/Monitoring/infra/IPingService'
-import { type SequelizeDeviceMonitoringRepository } from '../infra/sequelize/SequelizeDeviceMonitoringRepository'
+import type { IPingService, PingResult } from '../../../Shared/domain/Monitoring/infra/IPingService'
+import type { SequelizeDeviceMonitoringRepository } from '../infra/sequelize/SequelizeDeviceMonitoringRepository'
 
 /**
  * @description Service responsible for monitoring the status of devices by pinging them.

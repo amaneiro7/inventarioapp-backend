@@ -129,7 +129,7 @@ export class SequelizeDeviceMonitoringRepository
 	 */
 	async saveAll(payloads: DeviceMonitoringPrimitives[]): Promise<void> {
 		await DeviceMonitoringModel.bulkCreate(payloads, {
-			updateOnDuplicate: ['status', 'lastScan', 'lastSuccess', 'lastFailed', 'deviceId']
+			updateOnDuplicate: ['status', 'lastScan', 'lastSuccess', 'lastFailed']
 		})
 
 		// Optimizamos la invalidación ejecutándola en paralelo

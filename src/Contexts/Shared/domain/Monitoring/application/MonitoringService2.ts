@@ -26,7 +26,17 @@ export interface GenericMonitoringRepository<DTO, Payload> {
  */
 export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
 	protected isRunning: boolean = false
+	protected wasRunningLastCycle: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
+	private readonly dateFormatter = new Intl.DateTimeFormat('es-VE', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false
+	})
 	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 
 	/**
@@ -84,6 +94,15 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} se ha detenido.`)
 	}
 
+	protected checkIfShouldRun(config: MonitoringServiceConfig, currentHour: number, currentDay: number) {
+		return (
+			currentDay >= config.startDayOfWeek &&
+			currentDay <= config.endDayOfWeek &&
+			currentHour >= config.startHour &&
+			currentHour < config.endHour
+		)
+	}
+
 	/**
 	 * @description Ejecuta una iteración del bucle de monitoreo.
 	 * Verifica horarios permitidos, configuración y ejecuta el escaneo si corresponde.
@@ -99,15 +118,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			return
 		}
 		const now = new Date()
-		const formattedISOString = new Intl.DateTimeFormat('es-VE', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hour12: false
-		}).format(now)
+		const formattedISOString = this.dateFormatter.format(now)
 		const currentHour = now.getHours()
 		const currentDay = now.getDay()
 
@@ -115,6 +126,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		const config = await this.loadMonitoringConfig()
 
 		let shouldRun: boolean
+
 		// Verificar si las comprobaciones de tiempo están deshabilitadas
 		if (config.disableTimeChecks) {
 			shouldRun = true
@@ -123,11 +135,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			)
 		} else {
 			// Verificar si estamos dentro del horario permitido
-			shouldRun =
-				currentDay >= config.startDayOfWeek &&
-				currentDay <= config.endDayOfWeek &&
-				currentHour >= config.startHour &&
-				currentHour < config.endHour
+			shouldRun = this.checkIfShouldRun(config, currentHour, currentDay)
 
 			if (showLogs) {
 				if (shouldRun) {
@@ -146,7 +154,14 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 		// Ejecutar el escaneo si corresponde
 		if (shouldRun) {
+			// Si en el ciclo anterior NO debíamos correr, pero en este SÍ, hidratamos.
+			if (!this.wasRunningLastCycle) {
+				await this.hydrateLocalState()
+				this.wasRunningLastCycle = true
+			}
 			await this.executePingScan({ showLogs })
+		} else {
+			this.wasRunningLastCycle = false // Resetear para el próximo inicio de jornada
 		}
 		// Convertir minutos a milisegundos para el tiempo de espera
 		const idleTimeMs = config.idleTimeMs * 60 * 1000
@@ -228,9 +243,13 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	}): boolean
 
 	/**
-	 * @description Carga todos los items monitoreables en la memoria local.
-	 * Se debe llamar al inicio y opcionalmente de forma periódica para reconciliación.
-	 * @returns {Promise<void>}
+	 * @description Carga todos los ítems monitoreables (dispositivos/ubicaciones con IP)
+	 * desde el repositorio de persistencia a la caché local en memoria (`monitoredItems`).
+	 * Este proceso de "hidratación" se realiza al iniciar el bucle de monitoreo
+	 * y permite que los ciclos de escaneo posteriores operen sobre datos en memoria,
+	 * reduciendo la carga en la base de datos y mejorando el rendimiento.
+	 * Utiliza un enfoque paginado para recuperar grandes volúmenes de datos de manera eficiente.
+	 * @returns {Promise<void>} Una promesa que se resuelve cuando todos los ítems han sido cargados en la caché.
 	 */
 	protected async hydrateLocalState(): Promise<void> {
 		this.logger.info(`[CACHE] Hidratando estado local de ${this.getMonitoringName()}...`)
@@ -284,51 +303,57 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				message: `Iniciando escaneo de ping de ${this.getMonitoringName()}.`
 			}) // Log start of scan
 
-			const logBuffer: { fileName: string; message: string }[] = []
-
 			const config = await this.loadMonitoringConfig()
 			const limit = pLimit(config.concurrencyLimit)
 
-			// Usamos el caché local en lugar de consultar la BD
+			// Convertimos el Map a Array para poder segmentar por chunks
 			const itemsToMonitor = Array.from(this.monitoredItems.values())
 			const totalMonitored = itemsToMonitor.length
+			const chunkSize = 500 // Tamaño del lote
 
 			if (showLogs) {
-				this.logger.info(`[INFO] Procesando ${totalMonitored} ${this.getMonitoringName()}s desde memoria.`)
+				this.logger.info(
+					`[INFO] Procesando ${totalMonitored} ${this.getMonitoringName()}s en bloques de ${chunkSize}.`
+				)
 			}
 
-			// Ejecutamos los pings en paralelo (limitado) y recolectamos los resultados
-			const pingPromises = itemsToMonitor.map(item =>
-				limit(async () => {
-					return await this.performPingCheck(item, logBuffer)
-				})
-			)
+			for (let index = 0; index < itemsToMonitor.length; index += chunkSize) {
+				const chunk = itemsToMonitor.slice(index, index + chunkSize)
+				const logBuffer: { fileName: string; message: string }[] = []
 
-			const results = await Promise.allSettled(pingPromises)
-
-			// Filtramos solo los resultados exitosos y que tengan datos para guardar
-			// const payloadsToSave: Payload[] = results
-			// 	.filter(
-			// 		(result): result is PromiseFulfilledResult<Payload | null> =>
-			// 			result.status === 'fulfilled' && result.value !== null
-			// 	)
-			// 	.map(result => result.value as Payload)
-
-			const payloadsToSave: Payload[] = []
-			for (const result of results) {
-				if (result.status === 'fulfilled' && result.value !== null) {
-					payloadsToSave.push(result.value as Payload)
+				if (showLogs) {
+					this.logger.info(
+						`[SCAN] Procesando bloque: ${index + 1} - ${Math.min(index + chunkSize, totalMonitored)}`
+					)
 				}
-			}
 
-			// Guardado en lote (Batch Update)
-			if (payloadsToSave.length > 0) {
-				await this.repository.saveAll(payloadsToSave)
-			}
+				// 1. Ejecutamos los pings del chunk actual con el límite de concurrencia
+				const pingPromises = chunk.map(item =>
+					limit(async () => {
+						return await this.performPingCheck(item, logBuffer)
+					})
+				)
 
-			// Flush logs (Escribimos todos los logs acumulados de una vez)
-			// Usamos Promise.all para maximizar la velocidad de escritura si el logger es asíncrono
-			await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
+				const results = await Promise.allSettled(pingPromises)
+				// 2. Filtramos payloads válidos de este chunk
+				const payloadsToSave: Payload[] = []
+				for (const result of results) {
+					if (result.status === 'fulfilled' && result.value !== null) {
+						payloadsToSave.push(result.value as Payload)
+					}
+				}
+
+				// 3. Guardado masivo e invalidación (saveAll ya lo hace internamente)
+				if (payloadsToSave.length > 0) {
+					await this.repository.saveAll(payloadsToSave)
+				}
+
+				// 4. Liberamos logs de este chunk inmediatamente para no saturar RAM
+				await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
+
+				// Opcional: Pequeña pausa para permitir que el garbage collector actúe
+				if (index + chunkSize < itemsToMonitor.length) await new Promise(res => setImmediate(res))
+			}
 
 			if (showLogs) {
 				this.logger.info(
@@ -359,60 +384,68 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	): Promise<Payload | null> {
 		const ipAddress = await this.getIpAddress(item)
 		const expectedHostname = await this.getExpectedHostname(item)
+		const monitoringName = this.getMonitoringName()
+		const monitoringEntity: Entity | null = this.createMonitoringEntity(item)
 
-		let monitoringEntity: Entity | null = null
-		let pingResult: PingResult | undefined
-
+		// Si no hay IP, marcamos como NO DISPONIBLE
+		if (!ipAddress) {
+			// Nota: Aquí usamos el item de memoria, no consultamos findById de nuevo
+			this.updateMonitoringEntityStatus(monitoringEntity, MonitoringStatuses.NOTAVAILABLE, null, null, null)
+			return this.createMonitoringPayload(monitoringEntity)
+		}
 		try {
-			// Si no hay IP, marcamos como NO DISPONIBLE
-			if (!ipAddress) {
-				// Nota: Aquí usamos el item de memoria, no consultamos findById de nuevo
-				monitoringEntity = this.createMonitoringEntity(item)
-				this.updateMonitoringEntityStatus(monitoringEntity, MonitoringStatuses.NOTAVAILABLE, null, null, null)
-				return this.createMonitoringPayload(monitoringEntity)
-			}
-
-			// Usamos el item de memoria
-			const monitoringRecord = item
-
-			monitoringEntity = this.createMonitoringEntity(monitoringRecord)
 			// Ejecutar el ping
-			pingResult = await this.pingService.pingIp({ ipAddress, getHostName: expectedHostname ? true : false })
+			const pingResult = await this.pingService.pingIp({ ipAddress, getHostName: !!expectedHostname })
 
 			const isValidHostname = this.validatePingResult({ expectedHostname, pingResult })
 
-			if (isValidHostname) {
-				// Actualizar estado a ONLINE
-				this.updateMonitoringEntityStatus(
-					monitoringEntity,
-					MonitoringStatuses.ONLINE,
-					new Date(),
-					undefined,
-					new Date()
-				)
-				logBuffer.push({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - EN LÍNEA (Hostname: ${
-						pingResult.hostname ?? 'N/A'
-					})`
-				})
-			} else {
-				// Se revirtio el cambio porque genero muchos falsos positivos
-				// el dominio tarda mucho en actualizarse y el hacer ping -a podria no devolver el nombre correcto
-				this.updateMonitoringEntityStatus(
-					monitoringEntity,
-					MonitoringStatuses.ONLINE,
-					new Date(),
-					undefined,
-					new Date()
-				)
-				logBuffer.push({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
-						expectedHostname ?? 'N/A'
-					}, Recibido: ${pingResult.hostname ?? 'N/A'})`
-				})
-			}
+			const statusMessage = isValidHostname
+				? `EN LÍNEA (Hostname: ${pingResult.hostname ?? 'N/A'})`
+				: `HOSTNAME_MISMATCH (Esperado: ${expectedHostname ?? 'N/A'}, Recibido: ${pingResult.hostname ?? 'N/A'})`
+
+			this.updateMonitoringEntityStatus(
+				monitoringEntity,
+				MonitoringStatuses.ONLINE,
+				new Date(),
+				undefined,
+				new Date()
+			)
+
+			logBuffer.push({
+				fileName: monitoringName,
+				message: `[${monitoringName}] ${ipAddress} - ${statusMessage}`
+			})
+
+			// if (isValidHostname) {
+			// 	// Actualizar estado a ONLINE
+			// 	this.updateMonitoringEntityStatus(
+			// 		monitoringEntity,
+			// 		MonitoringStatuses.ONLINE,
+			// 		new Date(),
+			// 		undefined,
+			// 		new Date()
+			// 	)
+			// 	logBuffer.push({
+			// 		fileName: monitoringName,
+			// 		message: `[${monitoringName}] ${ipAddress} - EN LÍNEA (Hostname: ${pingResult.hostname ?? 'N/A'})`
+			// 	})
+			// } else {
+			// 	// Se revirtio el cambio porque genero muchos falsos positivos
+			// 	// el dominio tarda mucho en actualizarse y el hacer ping -a podria no devolver el nombre correcto
+			// 	this.updateMonitoringEntityStatus(
+			// 		monitoringEntity,
+			// 		MonitoringStatuses.ONLINE,
+			// 		new Date(),
+			// 		undefined,
+			// 		new Date()
+			// 	)
+			// 	logBuffer.push({
+			// 		fileName: monitoringName,
+			// 		message: `[${monitoringName}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
+			// 			expectedHostname ?? 'N/A'
+			// 		}, Recibido: ${pingResult.hostname ?? 'N/A'})`
+			// 	})
+			// }
 		} catch (error) {
 			// Manejo de errores (OFFLINE)
 			if (monitoringEntity) {
@@ -424,15 +457,12 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					new Date()
 				)
 				logBuffer.push({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - FUERA DE LÍNEA: ${error}`
+					fileName: monitoringName,
+					message: `[${monitoringName}] ${ipAddress} - FUERA DE LÍNEA: ${error instanceof Error ? error.message : error}`
 				})
 			}
 		}
 
-		if (monitoringEntity) {
-			return this.createMonitoringPayload(monitoringEntity)
-		}
-		return null
+		return this.createMonitoringPayload(monitoringEntity)
 	}
 }

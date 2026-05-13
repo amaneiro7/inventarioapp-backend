@@ -165,7 +165,7 @@ export class SequelizeLocationMonitoringRepository
 	 */
 	async saveAll(payloads: LocationMonitoringPrimitives[]): Promise<void> {
 		await LocationMonitoringModel.bulkCreate(payloads, {
-			updateOnDuplicate: ['status', 'lastScan', 'lastSuccess', 'lastFailed', 'locationId']
+			updateOnDuplicate: ['status', 'lastScan', 'lastSuccess', 'lastFailed']
 		})
 
 		// Optimizamos la invalidación ejecutándola en paralelo
