@@ -8,9 +8,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # --- Etapa 2: Deps (Instalación de todo) ---
 FROM base AS deps
 # Instalamos dependencias de sistema solo aquí
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm config set node-linker hoisted && \
-    npm pkg delete scripts.prepare
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml .npmrc ./
+RUN npm pkg delete scripts.prepare
 # Instalamos TODO (incluye devDeps para el build)
 RUN pnpm install --frozen-lockfile || pnpm install
     

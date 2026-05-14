@@ -34,7 +34,7 @@ export class UnidadHierarchyValidator {
 		// Si el padre es Nivel 3 y el hijo es Nivel 3 -> Error.
 		// Si el padre es Nivel 4 y el hijo es Nivel 3 -> Error.
 		// Si el padre es Nivel 2 y el hijo es Nivel 3 -> OK.
-		if (parent.rangeLevel >= childLevel) {
+		if (parent.level >= childLevel) {
 			throw new UnidadHierarchyViolationError()
 		}
 	}

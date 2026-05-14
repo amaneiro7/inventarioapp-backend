@@ -48,6 +48,7 @@ export function buildAuthResponse({
 				nationality: employee.nationality,
 				cedula: employee.cedula,
 				locationId: employee.locationId,
+				unidadId: employee.unidadId,
 				directivaId: employee.directivaId,
 				vicepresidenciaEjecutivaId: employee.vicepresidenciaEjecutivaId,
 				vicepresidenciaId: employee.vicepresidenciaId,

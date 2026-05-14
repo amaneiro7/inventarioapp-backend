@@ -50,7 +50,14 @@ export interface User extends UserAuth {
 	passwordExpired?: boolean
 	employee: Omit<
 		EmployeeDto,
-		'location' | 'directiva' | 'vicepresidenciaEjecutiva' | 'vicepresidencia' | 'departamento' | 'cargo' | 'history'
+		| 'location'
+		| 'unidad'
+		| 'directiva'
+		| 'vicepresidenciaEjecutiva'
+		| 'vicepresidencia'
+		| 'departamento'
+		| 'cargo'
+		| 'history'
 	>
 }
 
