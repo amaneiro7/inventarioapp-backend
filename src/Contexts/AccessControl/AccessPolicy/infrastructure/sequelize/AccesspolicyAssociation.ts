@@ -49,6 +49,10 @@ export class AccessPolicyAssociation {
 			association: 'directiva', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
+		const unidadInclude: IncludeOptions = {
+			association: 'unidad', // As defined in AccessPolicySchema.ts
+			attributes: ['id', 'name'] // We only need it for filtering, not for the result
+		}
 
 		options.include = [
 			permissionGroupInclude,
@@ -57,7 +61,8 @@ export class AccessPolicyAssociation {
 			roleInclude,
 			vicepresidenciaInclude,
 			vicepresidenciaEjecutivaInclude,
-			directivaInclude
+			directivaInclude,
+			unidadInclude
 		]
 
 		// If a AccessPolicyGroupId filter exists, apply it to the association include

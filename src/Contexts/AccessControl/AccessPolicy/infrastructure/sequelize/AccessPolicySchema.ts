@@ -21,6 +21,7 @@ import { type VicepresidenciaId } from '../../../../employee/Vicepresidencia/dom
 import { type VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
 import { type DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
 import { type DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
+import { type UnidadId } from '../../../../employee/Unidad/domain/valueObject/UnidadId'
 
 export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsGroups'>> implements AccessPolicyDto {
 	declare id: Primitives<AccessPolicyId>
@@ -31,6 +32,7 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
 	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
 	declare directivaId: Primitives<DirectivaId> | null
+	declare unidadId: Primitives<UnidadId> | null
 	declare priority: Primitives<AccessPolicyPriority>
 	declare permissionsGroups: PermissionGroupDto[]
 	// Association Mixins
@@ -72,6 +74,10 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 		this.belongsTo(models.Directiva, {
 			as: 'directiva',
 			foreignKey: 'directivaId'
+		})
+		this.belongsTo(models.Unidad, {
+			as: 'unidad',
+			foreignKey: 'unidadId'
 		})
 	}
 
@@ -118,6 +124,11 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 					allowNull: true,
 					field: 'directiva_id'
 				},
+				unidadId: {
+					type: DataTypes.UUID,
+					allowNull: true,
+					field: 'unidad_id'
+				},
 				priority: {
 					type: DataTypes.INTEGER,
 					allowNull: false
@@ -135,6 +146,7 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 					{ fields: ['vicepresidencia_id'] },
 					{ fields: ['vicepresidencia_ejecutiva_id'] },
 					{ fields: ['directiva_id'] },
+					{ fields: ['unidad_id'] },
 					{ fields: ['priority'] }
 				]
 			}

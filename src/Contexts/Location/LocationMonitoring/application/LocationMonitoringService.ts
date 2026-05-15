@@ -1,4 +1,4 @@
-import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService2'
+import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { LocationMonitoring } from '../domain/entity/LocationMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { convertSubnetToHostIp } from '../../../Shared/infrastructure/utils/convertSubnetToHostIp'

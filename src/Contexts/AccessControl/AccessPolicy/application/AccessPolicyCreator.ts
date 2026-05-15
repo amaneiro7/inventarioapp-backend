@@ -2,6 +2,7 @@ import { AccessPolicy } from '../domain/entity/AccessPolicy'
 import { AccessPolicyNameUniquenessChecker } from '../domain/service/AccessPolicyNameuniquenessChecker'
 import { PermissionGroupExistenceChecker } from '../../PermissionGroup/domain/service/PermissionGroupExistanceChecker'
 import { RoleExistenceChecker } from '../../../User/Role/domain/service/RoleExistanceChecker'
+import { UnidadExistenceChecker } from '../../../employee/Unidad/domain/service/UnidadExistanceChecker'
 import { DirectivaExistenceChecker } from '../../../employee/Directiva/domain/service/DirectivaExistanceChecker'
 import { VicepresidenciaEjecutivaExistenceChecker } from '../../../employee/VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
 import { VicepresidenciaExistenceChecker } from '../../../employee/Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
@@ -17,6 +18,7 @@ import { type VicepresidenciaEjecutivaRepository } from '../../../employee/Vicep
 import { type VicepresidenciaRepository } from '../../../employee/Vicepresidencia/domain/repository/VicepresidenciaRepository'
 import { type DepartamentoRepository } from '../../../employee/Departamento/domain/repository/DepartamentoRepository'
 import { type RoleRepository } from '../../../User/Role/domain/repository/RoleRepository'
+import { type UnidadRepository } from '../../../employee/Unidad/domain/repository/UnidadRepository'
 
 export class AccessPolicyCreator {
 	private readonly accessPolicyRepository: AccessPolicyRepository
@@ -28,6 +30,7 @@ export class AccessPolicyCreator {
 	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
 	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
+	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly eventBus: EventBus
 	constructor({
 		eventBus,
@@ -38,11 +41,13 @@ export class AccessPolicyCreator {
 		departamentoRepository,
 		vicepresidenciaRepository,
 		vicepresidenciaEjecutivaRepository,
-		directivaRepository
+		directivaRepository,
+		unidadRepository
 	}: {
 		accessPolicyRepository: AccessPolicyRepository
 		permissionGroupRepository: PermissionGroupRepository
 		roleRepository: RoleRepository
+		unidadRepository: UnidadRepository
 		directivaRepository: DirectivaRepository
 		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 		vicepresidenciaRepository: VicepresidenciaRepository
@@ -54,6 +59,7 @@ export class AccessPolicyCreator {
 		this.accessPolicyNameUniquenessChecker = new AccessPolicyNameUniquenessChecker(accessPolicyRepository)
 		this.permissionGroupExistanceChecker = new PermissionGroupExistenceChecker(permissionGroupRepository)
 		this.roleExistenceChecker = new RoleExistenceChecker(roleRepository)
+		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
 		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
 		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
 			vicepresidenciaEjecutivaRepository
@@ -72,6 +78,7 @@ export class AccessPolicyCreator {
 			priority,
 			departamentoId,
 			directivaId,
+			unidadId,
 			roleId,
 			vicepresidenciaEjecutivaId,
 			vicepresidenciaId
@@ -85,6 +92,7 @@ export class AccessPolicyCreator {
 			this.vicepresidenciaExistenceChecker.ensureExist(vicepresidenciaId),
 			this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(vicepresidenciaEjecutivaId),
 			this.directivaExistenceChecker.ensureExist(directivaId),
+			this.unidadExistenceChecker.ensureExist(unidadId),
 			this.permissionGroupExistanceChecker.ensureExist(permissionGroupIds)
 		])
 
@@ -95,6 +103,7 @@ export class AccessPolicyCreator {
 			permissionGroupIds,
 			priority,
 			directivaId,
+			unidadId,
 			roleId,
 			vicepresidenciaEjecutivaId,
 			vicepresidenciaId

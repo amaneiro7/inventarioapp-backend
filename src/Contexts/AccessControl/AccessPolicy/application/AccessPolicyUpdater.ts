@@ -8,6 +8,7 @@ import { DirectivaExistenceChecker } from '../../../employee/Directiva/domain/se
 import { VicepresidenciaEjecutivaExistenceChecker } from '../../../employee/VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
 import { VicepresidenciaExistenceChecker } from '../../../employee/Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
 import { DepartamentoExistenceChecker } from '../../../employee/Departamento/domain/service/DepartamentoExistanceChecker'
+import { UnidadExistenceChecker } from '../../../employee/Unidad/domain/service/UnidadExistanceChecker'
 import { CargoExistenceChecker } from '../../../employee/Cargo/domain/service/CargoExistanceChecker'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
 import { type AccessPolicyId } from '../domain/valueObject/AccessPolicyId'
@@ -21,6 +22,7 @@ import { type VicepresidenciaEjecutivaRepository } from '../../../employee/Vicep
 import { type VicepresidenciaRepository } from '../../../employee/Vicepresidencia/domain/repository/VicepresidenciaRepository'
 import { type DepartamentoRepository } from '../../../employee/Departamento/domain/repository/DepartamentoRepository'
 import { type RoleRepository } from '../../../User/Role/domain/repository/RoleRepository'
+import { type UnidadRepository } from '../../../employee/Unidad/domain/repository/UnidadRepository'
 
 export class AccessPolicyUpdater {
 	private readonly accessPolicyRepository: AccessPolicyRepository
@@ -32,6 +34,7 @@ export class AccessPolicyUpdater {
 	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
 	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
 	private readonly directivaExistenceChecker: DirectivaExistenceChecker
+	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly eventBus: EventBus
 
 	constructor({
@@ -43,12 +46,14 @@ export class AccessPolicyUpdater {
 		departamentoRepository,
 		vicepresidenciaRepository,
 		vicepresidenciaEjecutivaRepository,
-		directivaRepository
+		directivaRepository,
+		unidadRepository
 	}: {
 		accessPolicyRepository: AccessPolicyRepository
 		permissionGroupRepository: PermissionGroupRepository
 		roleRepository: RoleRepository
 		directivaRepository: DirectivaRepository
+		unidadRepository: UnidadRepository
 		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
 		vicepresidenciaRepository: VicepresidenciaRepository
 		departamentoRepository: DepartamentoRepository
@@ -60,6 +65,7 @@ export class AccessPolicyUpdater {
 		this.permissionGroupExistanceChecker = new PermissionGroupExistenceChecker(permissionGroupRepository)
 		this.roleExistenceChecker = new RoleExistenceChecker(roleRepository)
 		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
+		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
 		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
 			vicepresidenciaEjecutivaRepository
 		)
@@ -157,6 +163,16 @@ export class AccessPolicyUpdater {
 				newValue: params.directivaId
 			})
 			policy.updateDirectiva(params.directivaId)
+		}
+
+		if (params.unidadId !== undefined && params.unidadId !== policy.unidadValue) {
+			validations.push(this.unidadExistenceChecker.ensureExist(params.unidadId))
+			changes.push({
+				field: 'unidadId',
+				oldValue: policy.unidadValue,
+				newValue: params.unidadId
+			})
+			policy.updateUnidad(params.unidadId)
 		}
 
 		if (params.priority !== undefined && params.priority !== policy.priorityValue) {

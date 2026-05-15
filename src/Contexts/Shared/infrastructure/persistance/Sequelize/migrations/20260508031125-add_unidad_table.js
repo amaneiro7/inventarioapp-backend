@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
 			await queryInterface.createTable(
@@ -167,6 +167,26 @@ module.exports = {
 				{ transaction }
 			)
 
+			await queryInterface.addColumn(
+				'access_policies',
+				'unidad_id',
+				{
+					type: Sequelize.UUID,
+					allowNull: true,
+					references: {
+						model: 'unidades',
+						key: 'id'
+					},
+					onUpdate: 'CASCADE',
+					onDelete: 'SET NULL'
+				},
+				{ transaction }
+			)
+			await queryInterface.addIndex('access_policies', ['unidad_id'], {
+				name: 'access_policies_unidad_id_idx',
+				transaction
+			})
+
 			await transaction.commit()
 		} catch (error) {
 			if (transaction) await transaction.rollback()
@@ -175,7 +195,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
 			// 1. Eliminar tabla de unión (depende de unidades y cargos)

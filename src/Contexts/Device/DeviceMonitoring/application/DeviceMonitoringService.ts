@@ -1,4 +1,4 @@
-import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService2'
+import { MonitoringService } from '../../../Shared/domain/Monitoring/application/MonitoringService'
 import { DeviceMonitoring } from '../domain/entity/DeviceMonitoring'
 import { MonitoringStatuses } from '../../../Shared/domain/Monitoring/domain/value-object/MonitoringStatus'
 import { StatusOptions } from '../../Status/domain/StatusOptions'

@@ -10,6 +10,7 @@ import { type DepartamentoId } from '../../../../employee/Departamento/domain/va
 import { type VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
 import { type VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
 import { type DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
+import { type UnidadId } from '../../../../employee/Unidad/domain/valueObject/UnidadId'
 
 export type AccessPolicyRaw = {
 	id: Primitives<AccessPolicyId>
@@ -20,6 +21,7 @@ export type AccessPolicyRaw = {
 	vicepresidenciaId: Primitives<VicepresidenciaId> | null
 	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
 	directivaId: Primitives<DirectivaId> | null
+	unidadId: Primitives<UnidadId> | null
 	priority: Primitives<AccessPolicyPriority>
 }
 

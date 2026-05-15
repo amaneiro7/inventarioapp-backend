@@ -18,6 +18,7 @@ export interface GenericMonitoringRepository<DTO, Payload> {
 	searchNotNullIpAddress: ({ page, pageSize }: { page?: number; pageSize?: number }) => Promise<DTO[]>
 	findById: (id: Primitives<MonitoringId>) => Promise<DTO | null>
 	save: (entity: Payload) => Promise<void>
+	saveAll: (entities: Payload[]) => Promise<void>
 }
 
 /**
@@ -25,8 +26,32 @@ export interface GenericMonitoringRepository<DTO, Payload> {
  */
 export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericMonitoringRepository<DTO, Payload>> {
 	protected isRunning: boolean = false
+	protected wasRunningLastCycle: boolean = false
 	protected timeoutId: NodeJS.Timeout | null = null
+	private readonly dateFormatter = new Intl.DateTimeFormat('es-VE', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false
+	})
 	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
+
+	/**
+	 * @description Caché local en memoria de los items a monitorear.
+	 * Evita consultas constantes a la base de datos en cada ciclo.
+	 */
+	protected monitoredItems: Map<string, DTO> = new Map()
+
+	/**
+	 * @description Constructor del servicio de monitoreo.
+	 * @param {R} repository - Repositorio para acceder a los datos de monitoreo.
+	 * @param {IPingService} pingService - Servicio para realizar pings.
+	 * @param {Logger} logger - Logger para registrar eventos generales.
+	 * @param {PingLogger} pingLogger - Logger específico para resultados de ping.
+	 */
 	constructor(
 		protected readonly repository: R,
 		protected readonly pingService: IPingService,
@@ -34,6 +59,13 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		protected readonly pingLogger: PingLogger
 	) {}
 
+	/**
+	 * @description Inicia el bucle de monitoreo continuo.
+	 * Carga el estado inicial en memoria y comienza el ciclo de ejecución.
+	 * @param {object} params - Parámetros de configuración.
+	 * @param {boolean} [params.showLogs=false] - Indica si se deben mostrar logs detallados en consola.
+	 * @returns {Promise<void>}
+	 */
 	public async startMonitoringLoop({ showLogs = false }: { showLogs: boolean }): Promise<void> {
 		if (this.isRunning) {
 			this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} ya está en ejecución.`)
@@ -41,9 +73,18 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 		this.isRunning = true
 		this.logger.info(`Iniciando el bucle de monitoreo continuo de ${this.getMonitoringName()}...`)
+
+		// // Cargar estado inicial desde la BD antes de empezar el bucle
+		// await this.hydrateLocalState()
+
 		this.runLoop({ showLogs })
 	}
 
+	/**
+	 * @description Detiene el bucle de monitoreo.
+	 * Cancela el timeout activo y actualiza el estado de ejecución a detenido.
+	 * @returns {Promise<void>}
+	 */
 	public async stopMonitoringLoop(): Promise<void> {
 		this.isRunning = false
 		if (this.timeoutId) {
@@ -53,38 +94,48 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		this.logger.info(`El bucle de monitoreo de ${this.getMonitoringName()} se ha detenido.`)
 	}
 
+	protected checkIfShouldRun(config: MonitoringServiceConfig, currentHour: number, currentDay: number) {
+		return (
+			currentDay >= config.startDayOfWeek &&
+			currentDay <= config.endDayOfWeek &&
+			currentHour >= config.startHour &&
+			currentHour < config.endHour
+		)
+	}
+
+	/**
+	 * @description Ejecuta una iteración del bucle de monitoreo.
+	 * Verifica horarios permitidos, configuración y ejecuta el escaneo si corresponde.
+	 * Se reprograma a sí mismo después de un tiempo de inactividad configurado.
+	 * @param {object} params - Parámetros de ejecución.
+	 * @param {boolean} params.showLogs - Indica si se deben mostrar logs.
+	 * @returns {Promise<void>}
+	 */
 	protected async runLoop({ showLogs }: { showLogs: boolean }): Promise<void> {
+		// Verificar si el servicio sigue en ejecución
 		if (!this.isRunning) {
 			this.logger.info('El bucle de monitoreo ha sido detenido.')
 			return
 		}
 		const now = new Date()
-		const formattedISOString = new Intl.DateTimeFormat('es-VE', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hour12: false
-		}).format(now)
+		const formattedISOString = this.dateFormatter.format(now)
 		const currentHour = now.getHours()
 		const currentDay = now.getDay()
 
+		// Cargar configuración actualizada
 		const config = await this.loadMonitoringConfig()
 
 		let shouldRun: boolean
+
+		// Verificar si las comprobaciones de tiempo están deshabilitadas
 		if (config.disableTimeChecks) {
 			shouldRun = true
 			this.logger.info(
 				`[${formattedISOString}] Las comprobaciones de tiempo están deshabilitadas. Ejecutando escaneo de ping de ${this.getMonitoringName()}.`
 			)
 		} else {
-			shouldRun =
-				currentDay >= config.startDayOfWeek &&
-				currentDay <= config.endDayOfWeek &&
-				currentHour >= config.startHour &&
-				currentHour < config.endHour
+			// Verificar si estamos dentro del horario permitido
+			shouldRun = this.checkIfShouldRun(config, currentHour, currentDay)
 
 			if (showLogs) {
 				if (shouldRun) {
@@ -101,17 +152,34 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 			}
 		}
 
+		// Ejecutar el escaneo si corresponde
 		if (shouldRun) {
+			// Si en el ciclo anterior NO debíamos correr, pero en este SÍ, hidratamos.
+			if (!this.wasRunningLastCycle) {
+				await this.hydrateLocalState()
+				this.wasRunningLastCycle = true
+			}
 			await this.executePingScan({ showLogs })
+		} else {
+			this.wasRunningLastCycle = false // Resetear para el próximo inicio de jornada
 		}
+		// Convertir minutos a milisegundos para el tiempo de espera
 		const idleTimeMs = config.idleTimeMs * 60 * 1000
+
+		// Repetir el ciclo después del tiempo de inactividad
 		this.timeoutId = setTimeout(() => this.runLoop({ showLogs }), idleTimeMs)
 	}
 
+	/**
+	 * @description Carga la configuración actual del servicio de monitoreo desde los ajustes de la aplicación.
+	 * Recupera valores como límites de concurrencia, tiempos de espera y horarios permitidos.
+	 * @returns {Promise<MonitoringServiceConfig>} La configuración cargada.
+	 */
 	protected async loadMonitoringConfig(): Promise<MonitoringServiceConfig> {
 		const keys = this.getMonitoringConfigKeys()
 		const defaults = this.getMonitoringConfigDefaults()
 
+		// Obtener configuraciones desde el SettingsFinder
 		const concurrencyLimit = await this.settingsFinder.findAsNumber({
 			key: keys.concurrencyLimit,
 			fallback: defaults.concurrencyLimit
@@ -146,7 +214,7 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		}
 	}
 
-	/**
+	/**f
 	 * @description Las clases hijas deben implementar este método para proporcionar las claves de configuración específicas.
 	 */
 	protected abstract getMonitoringConfigKeys(): MonitoringConfigKeys
@@ -174,6 +242,64 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		pingResult: PingResult
 	}): boolean
 
+	/**
+	 * @description Carga todos los ítems monitoreables (dispositivos/ubicaciones con IP)
+	 * desde el repositorio de persistencia a la caché local en memoria (`monitoredItems`).
+	 * Este proceso de "hidratación" se realiza al iniciar el bucle de monitoreo
+	 * y permite que los ciclos de escaneo posteriores operen sobre datos en memoria,
+	 * reduciendo la carga en la base de datos y mejorando el rendimiento.
+	 * Utiliza un enfoque paginado para recuperar grandes volúmenes de datos de manera eficiente.
+	 * @returns {Promise<void>} Una promesa que se resuelve cuando todos los ítems han sido cargados en la caché.
+	 */
+	protected async hydrateLocalState(): Promise<void> {
+		this.logger.info(`[CACHE] Hidratando estado local de ${this.getMonitoringName()}...`)
+		this.wasRunningLastCycle = false
+		this.monitoredItems.clear()
+
+		const pageSize = 1000
+		let page = 1
+		let hasMore = true
+		let totalLoaded = 0
+
+		while (hasMore) {
+			const items = await this.repository.searchNotNullIpAddress({ page, pageSize })
+			for (const item of items) {
+				const id = this.getMonitoringId(item)
+				this.monitoredItems.set(id, item)
+			}
+			totalLoaded += items.length
+			if (items.length < pageSize) hasMore = false
+			else page++
+		}
+		this.wasRunningLastCycle = true
+		this.logger.info(`[CACHE] ${totalLoaded} items cargados en memoria para ${this.getMonitoringName()}.`)
+	}
+
+	/**
+	 * @description Método para ser llamado desde Eventos de Dominio (Created/Updated).
+	 */
+	public async upsertLocalItem(id: Primitives<MonitoringId>): Promise<void> {
+		const item = await this.repository.findById(id)
+		if (item) {
+			this.monitoredItems.set(id, item)
+		}
+	}
+
+	/**
+	 * @description Método para ser llamado desde Eventos de Dominio (Deleted).
+	 */
+	public removeLocalItem(id: Primitives<MonitoringId>): void {
+		this.monitoredItems.delete(id)
+	}
+
+	/**
+	 * @description Ejecuta el escaneo de ping para todos los items monitoreados.
+	 * Utiliza el caché local para obtener los items, ejecuta pings en paralelo (limitado)
+	 * y guarda los resultados en lote.
+	 * @param {object} params - Parámetros de ejecución.
+	 * @param {boolean} [params.showLogs=false] - Indica si se deben mostrar logs.
+	 * @returns {Promise<void>}
+	 */
 	protected async executePingScan({ showLogs = false }: { showLogs: boolean }): Promise<void> {
 		try {
 			this.pingLogger.logPingResult({
@@ -183,60 +309,54 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 
 			const config = await this.loadMonitoringConfig()
 			const limit = pLimit(config.concurrencyLimit)
-			// const pageSize = this.monitoringConfig?. ?? 1000 // Default to 1000 if not set
-			const pageSize = 1000 // Default to 1000 if not set
-			let page = 1
-			let hasMore = true
-			let totalMonitored = 0
 
-			while (hasMore) {
-				const itemsToMonitor = await this.repository.searchNotNullIpAddress({ page, pageSize })
-				totalMonitored += itemsToMonitor.length
+			// Convertimos el Map a Array para poder segmentar por chunks
+			const itemsToMonitor = Array.from(this.monitoredItems.values())
+			const totalMonitored = itemsToMonitor.length
+			const chunkSize = 500 // Tamaño del lote
+
+			if (showLogs) {
+				this.logger.info(
+					`[INFO] Procesando ${totalMonitored} ${this.getMonitoringName()}s en bloques de ${chunkSize}.`
+				)
+			}
+
+			for (let index = 0; index < itemsToMonitor.length; index += chunkSize) {
+				const chunk = itemsToMonitor.slice(index, index + chunkSize)
+				const logBuffer: { fileName: string; message: string }[] = []
 
 				if (showLogs) {
 					this.logger.info(
-						`[INFO] Procesando lote ${page} con ${itemsToMonitor.length} ${this.getMonitoringName()}s.`
+						`[SCAN] Procesando bloque: ${index + 1} - ${Math.min(index + chunkSize, totalMonitored)}`
 					)
 				}
 
-				if (itemsToMonitor.length === 0) {
-					hasMore = false
-					continue
-				}
-
-				const pingPromises = itemsToMonitor.map(item =>
+				// 1. Ejecutamos los pings del chunk actual con el límite de concurrencia
+				const pingPromises = chunk.map(item =>
 					limit(async () => {
-						const ipAddress = await this.getIpAddress(item)
-						const expectedHostname = await this.getExpectedHostname(item)
-						const monitoringId = this.getMonitoringId(item)
-
-						if (ipAddress) {
-							await this.processPingJob({ monitoringId, ipAddress, expectedHostname })
-						} else {
-							const monitoringRecord = await this.repository.findById(monitoringId)
-							if (monitoringRecord) {
-								const monitoringEntity = this.createMonitoringEntity(monitoringRecord)
-								this.updateMonitoringEntityStatus(
-									monitoringEntity,
-									MonitoringStatuses.NOTAVAILABLE,
-									null,
-									null,
-									null
-								)
-								const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
-								await this.repository.save(monitoringPayload)
-							}
-						}
+						return await this.performPingCheck(item, logBuffer)
 					})
 				)
 
-				await Promise.allSettled(pingPromises)
-
-				if (itemsToMonitor.length < pageSize) {
-					hasMore = false
-				} else {
-					page++
+				const results = await Promise.allSettled(pingPromises)
+				// 2. Filtramos payloads válidos de este chunk
+				const payloadsToSave: Payload[] = []
+				for (const result of results) {
+					if (result.status === 'fulfilled' && result.value !== null) {
+						payloadsToSave.push(result.value as Payload)
+					}
 				}
+
+				// 3. Guardado masivo e invalidación (saveAll ya lo hace internamente)
+				if (payloadsToSave.length > 0) {
+					await this.repository.saveAll(payloadsToSave)
+				}
+
+				// 4. Liberamos logs de este chunk inmediatamente para no saturar RAM
+				await Promise.all(logBuffer.map(log => this.pingLogger.logPingResult(log)))
+
+				// Opcional: Pequeña pausa para permitir que el garbage collector actúe
+				if (index + chunkSize < itemsToMonitor.length) await new Promise(res => setImmediate(res))
 			}
 
 			if (showLogs) {
@@ -257,64 +377,81 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		}
 	}
 
-	protected async processPingJob({
-		ipAddress,
-		monitoringId,
-		expectedHostname
-	}: {
-		monitoringId: Primitives<MonitoringId>
-		ipAddress: string
-		expectedHostname?: string | null | undefined
-	}): Promise<void> {
-		let monitoringEntity: Entity | null = null
-		let pingResult: PingResult | undefined
+	/**
+	 * @description Realiza la lógica de ping pura y retorna el payload para guardar, sin efectos secundarios en BD.
+	 * @param {DTO} item - El item a monitorear.
+	 * @returns {Promise<Payload | null>} El payload con el resultado para guardar, o null si no hay cambios/acción.
+	 */
+	protected async performPingCheck(
+		item: DTO,
+		logBuffer: { fileName: string; message: string }[]
+	): Promise<Payload | null> {
+		const ipAddress = await this.getIpAddress(item)
+		const expectedHostname = await this.getExpectedHostname(item)
+		const monitoringName = this.getMonitoringName()
+		const monitoringEntity: Entity | null = this.createMonitoringEntity(item)
+
+		// Si no hay IP, marcamos como NO DISPONIBLE
+		if (!ipAddress) {
+			// Nota: Aquí usamos el item de memoria, no consultamos findById de nuevo
+			this.updateMonitoringEntityStatus(monitoringEntity, MonitoringStatuses.NOTAVAILABLE, null, null, null)
+			return this.createMonitoringPayload(monitoringEntity)
+		}
 		try {
-			const monitoringRecord = await this.repository.findById(monitoringId)
-
-			if (!monitoringRecord) {
-				this.logger.info(
-					`[WARN] Registro de monitoreo de ${this.getMonitoringName()} con ID ${monitoringId} no encontrado para actualizar.`
-				)
-				return
-			}
-
-			monitoringEntity = this.createMonitoringEntity(monitoringRecord)
-			pingResult = await this.pingService.pingIp({ ipAddress, getHostName: expectedHostname ? true : false })
+			// Ejecutar el ping
+			const pingResult = await this.pingService.pingIp({ ipAddress, getHostName: !!expectedHostname })
 
 			const isValidHostname = this.validatePingResult({ expectedHostname, pingResult })
 
-			if (isValidHostname) {
-				this.updateMonitoringEntityStatus(
-					monitoringEntity,
-					MonitoringStatuses.ONLINE,
-					new Date(),
-					undefined,
-					new Date()
-				)
-				await this.pingLogger.logPingResult({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - EN LÍNEA (Hostname: ${
-						pingResult.hostname ?? 'N/A'
-					})`
-				})
-			} else {
-				// Se revirtio el cambio porque genero muchos falsos positivos
-				// el dominio tarda mucho en actualizarse y el hacer ping -a podria no devolver el nombre correcto
-				this.updateMonitoringEntityStatus(
-					monitoringEntity,
-					MonitoringStatuses.ONLINE,
-					new Date(),
-					undefined,
-					new Date()
-				)
-				await this.pingLogger.logPingResult({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
-						expectedHostname ?? 'N/A'
-					}, Recibido: ${pingResult.hostname ?? 'N/A'})`
-				})
-			}
+			const statusMessage = isValidHostname
+				? `EN LÍNEA (Hostname: ${pingResult.hostname ?? 'N/A'})`
+				: `HOSTNAME_MISMATCH (Esperado: ${expectedHostname ?? 'N/A'}, Recibido: ${pingResult.hostname ?? 'N/A'})`
+
+			this.updateMonitoringEntityStatus(
+				monitoringEntity,
+				MonitoringStatuses.ONLINE,
+				new Date(),
+				undefined,
+				new Date()
+			)
+
+			logBuffer.push({
+				fileName: monitoringName,
+				message: `[${monitoringName}] ${ipAddress} - ${statusMessage}`
+			})
+
+			// if (isValidHostname) {
+			// 	// Actualizar estado a ONLINE
+			// 	this.updateMonitoringEntityStatus(
+			// 		monitoringEntity,
+			// 		MonitoringStatuses.ONLINE,
+			// 		new Date(),
+			// 		undefined,
+			// 		new Date()
+			// 	)
+			// 	logBuffer.push({
+			// 		fileName: monitoringName,
+			// 		message: `[${monitoringName}] ${ipAddress} - EN LÍNEA (Hostname: ${pingResult.hostname ?? 'N/A'})`
+			// 	})
+			// } else {
+			// 	// Se revirtio el cambio porque genero muchos falsos positivos
+			// 	// el dominio tarda mucho en actualizarse y el hacer ping -a podria no devolver el nombre correcto
+			// 	this.updateMonitoringEntityStatus(
+			// 		monitoringEntity,
+			// 		MonitoringStatuses.ONLINE,
+			// 		new Date(),
+			// 		undefined,
+			// 		new Date()
+			// 	)
+			// 	logBuffer.push({
+			// 		fileName: monitoringName,
+			// 		message: `[${monitoringName}] ${ipAddress} - HOSTNAME_MISMATCH (Esperado: ${
+			// 			expectedHostname ?? 'N/A'
+			// 		}, Recibido: ${pingResult.hostname ?? 'N/A'})`
+			// 	})
+			// }
 		} catch (error) {
+			// Manejo de errores (OFFLINE)
 			if (monitoringEntity) {
 				this.updateMonitoringEntityStatus(
 					monitoringEntity,
@@ -323,16 +460,13 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 					new Date(),
 					new Date()
 				)
-				await this.pingLogger.logPingResult({
-					fileName: this.getMonitoringName(),
-					message: `[${this.getMonitoringName()}] ${ipAddress} - FUERA DE LÍNEA: ${error}`
+				logBuffer.push({
+					fileName: monitoringName,
+					message: `[${monitoringName}] ${ipAddress} - FUERA DE LÍNEA: ${error instanceof Error ? error.message : error}`
 				})
 			}
-		} finally {
-			if (monitoringEntity) {
-				const monitoringPayload = this.createMonitoringPayload(monitoringEntity)
-				await this.repository.save(monitoringPayload)
-			}
 		}
+
+		return this.createMonitoringPayload(monitoringEntity)
 	}
 }
