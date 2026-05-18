@@ -34,6 +34,14 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
+		name: 'V.P.E. SERVICIOS JURÍDICOS',
+		level: 2,
+		codigoInterno: 204,
+		is_unit_active: true,
+		parent_id: unionCoord.find(d => d.codigoInterno === 2)?.id,
+		updated_at: now
+	},
+	{
 		name: 'V.P.E. FINANZAS',
 		level: 2,
 		codigoInterno: 205,
@@ -66,6 +74,14 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
+		name: 'V.P.E. GESTIÓN DEL RIESGO',
+		level: 2,
+		codigoInterno: 214,
+		is_unit_active: true,
+		parent_id: unionCoord.find(d => d.codigoInterno === 2)?.id,
+		updated_at: now
+	},
+	{
 		name: 'V.P.E. OPERACIONES Y ADMINISTRACIÓN',
 		level: 2,
 		codigoInterno: 216,
@@ -93,6 +109,14 @@ const level2Actual = [
 		name: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
 		level: 2,
 		codigoInterno: 234,
+		is_unit_active: true,
+		parent_id: unionCoord.find(d => d.codigoInterno === 2)?.id,
+		updated_at: now
+	},
+	{
+		name: 'V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA',
+		level: 2,
+		codigoInterno: 235,
 		is_unit_active: true,
 		parent_id: unionCoord.find(d => d.codigoInterno === 2)?.id,
 		updated_at: now
@@ -150,5 +174,26 @@ const missingInUnion = level2Actual
 const updateNivel2 = [...updatedFromUnion, ...missingInUnion]
 
 console.log('Level 2 Tiene:', level2Actual.length)
+
+/**
+ * Función para identificar qué unidades no lograron encontrar a su padre
+ */
+function checkOrphanUnits(units) {
+	const orphans = units.filter(u => !u.parent_id)
+	if (orphans.length > 0) {
+		console.error(`\n❌ Se encontraron ${orphans.length} unidades de Nivel 2 sin parent_id:`)
+		orphans.forEach(o => {
+			console.log(`  - Nombre: "${o.name}" | Código: ${o.codigoInterno}`)
+		})
+	} else {
+		console.log('\n✅ Todas las unidades de Nivel 2 tienen un parent_id asignado.')
+	}
+	return orphans
+}
+
+// Ejecutar validación al cargar el módulo
+if (require.main === module || process.env.NODE_ENV === 'development') {
+	checkOrphanUnits(level2Actual)
+}
 
 module.exports = { updateNivel2, level2Actual }

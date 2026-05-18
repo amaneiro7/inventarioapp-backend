@@ -909,4 +909,25 @@ const updateNivel3 = [...updatedFromUnion, ...missingInUnion]
 
 console.log('Level 3 Tiene:', level3Actual.length)
 
+/**
+ * Función para identificar qué unidades no lograron encontrar a su padre
+ */
+function checkOrphanUnits(units) {
+	const orphans = units.filter(u => !u.parent_id)
+	if (orphans.length > 0) {
+		console.error(`\n❌ Se encontraron ${orphans.length} unidades de Nivel 3 sin parent_id:`)
+		orphans.forEach(o => {
+			console.log(`  - Nombre: "${o.name}" | Código: ${o.codigoInterno}`)
+		})
+	} else {
+		console.log('\n✅ Todas las unidades de Nivel 3 tienen un parent_id asignado.')
+	}
+	return orphans
+}
+
+// Ejecutar validación al cargar el módulo
+if (require.main === module || process.env.NODE_ENV === 'development') {
+	checkOrphanUnits(level3Actual)
+}
+
 module.exports = { updateNivel3, level3Actual }
