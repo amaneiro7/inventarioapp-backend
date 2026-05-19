@@ -1,8 +1,9 @@
+const { capitalCadena } = require('./capitalCadena')
 const { unionCoord } = require('./newCoordinacion')
 const now = new Date()
 const level2Actual = [
 	{
-		name: 'PRESIDENCIA',
+		name: capitalCadena('PRESIDENCIA'),
 		level: 2,
 		codigoInterno: 101,
 		is_unit_active: true,
@@ -10,7 +11,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'AUDITORIA INTERNA',
+		name: capitalCadena('AUDITORIA INTERNA'),
 		level: 2,
 		codigoInterno: 103,
 		is_unit_active: true,
@@ -18,7 +19,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'UNIDAD ADMON INTEGRAL DE RIESGOS',
+		name: capitalCadena('UNIDAD ADMON INTEGRAL DE RIESGOS'),
 		level: 2,
 		codigoInterno: 106,
 		is_unit_active: true,
@@ -26,7 +27,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'DEFENSORIA DEL CLIENTE',
+		name: capitalCadena('DEFENSORIA DEL CLIENTE'),
 		level: 2,
 		codigoInterno: 107,
 		is_unit_active: true,
@@ -34,7 +35,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. SERVICIOS JURÍDICOS',
+		name: capitalCadena('V.P.E. SERVICIOS JURÍDICOS'),
 		level: 2,
 		codigoInterno: 204,
 		is_unit_active: true,
@@ -42,7 +43,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. FINANZAS',
+		name: capitalCadena('V.P.E. FINANZAS'),
 		level: 2,
 		codigoInterno: 205,
 		is_unit_active: true,
@@ -50,7 +51,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. BANCA CORPORATIVA NACIONAL',
+		name: capitalCadena('V.P.E. BANCA CORPORATIVA NACIONAL'),
 		level: 2,
 		codigoInterno: 208,
 		is_unit_active: true,
@@ -58,7 +59,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. DE BANCA COMERCIAL',
+		name: capitalCadena('V.P.E. DE BANCA COMERCIAL'),
 		level: 2,
 		codigoInterno: 209,
 		is_unit_active: true,
@@ -66,7 +67,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. INGENIERIA TECNOLÓGICA',
+		name: capitalCadena('V.P.E. INGENIERIA TECNOLÓGICA'),
 		level: 2,
 		codigoInterno: 210,
 		is_unit_active: true,
@@ -74,7 +75,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. GESTIÓN DEL RIESGO',
+		name: capitalCadena('V.P.E. GESTIÓN DEL RIESGO'),
 		level: 2,
 		codigoInterno: 214,
 		is_unit_active: true,
@@ -82,7 +83,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. OPERACIONES Y ADMINISTRACIÓN',
+		name: capitalCadena('V.P.E. OPERACIONES Y ADMINISTRACIÓN'),
 		level: 2,
 		codigoInterno: 216,
 		is_unit_active: true,
@@ -90,7 +91,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES',
+		name: capitalCadena('V.P.E. SOLUCIONES DE CLIENTES Y SERV. DIGITALES'),
 		level: 2,
 		codigoInterno: 228,
 		is_unit_active: true,
@@ -98,7 +99,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. SEGURIDAD CORPORATIVA Y PREVENCIÓN DEL FRAU',
+		name: capitalCadena('V.P.E. SEGURIDAD CORPORATIVA Y PREVENCIÓN DEL FRAU'),
 		level: 2,
 		codigoInterno: 231,
 		is_unit_active: true,
@@ -106,7 +107,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN',
+		name: capitalCadena('V.P.E. DESARROLLO ORGANIZACIONAL Y TRANSFORMACIÓN'),
 		level: 2,
 		codigoInterno: 234,
 		is_unit_active: true,
@@ -114,7 +115,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA',
+		name: capitalCadena('V.P.E. BANCA CORPORATIVA MULTINACIONAL & ENERGÍA'),
 		level: 2,
 		codigoInterno: 235,
 		is_unit_active: true,
@@ -122,7 +123,7 @@ const level2Actual = [
 		updated_at: now
 	},
 	{
-		name: 'V.P.E. CUMPLIMIENTO',
+		name: capitalCadena('V.P.E. CUMPLIMIENTO'),
 		level: 2,
 		codigoInterno: 236,
 		is_unit_active: true,
@@ -131,7 +132,7 @@ const level2Actual = [
 	},
 	{
 		id: 'def60643-ab86-4318-b36a-2503669ad706',
-		name: 'SECRETARÍA DE LA JUNTA DIRECTIVA',
+		name: capitalCadena('SECRETARÍA DE LA JUNTA DIRECTIVA'),
 		level: 2,
 		codigoInterno: 108,
 		is_unit_active: true,

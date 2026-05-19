@@ -1,10 +1,6 @@
 import type { LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import type { CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import type { DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import type { VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
-import type { VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
-import type { DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
 import type { EmployeeCode } from '../valueObject/EmployeCode'
 import type { EmployeeCedula } from '../valueObject/EmployeeCedula'
 import type { EmployeeEmail } from '../valueObject/EmployeeEmail'
@@ -17,10 +13,6 @@ import type { EmployeeType } from '../valueObject/EmployeeType'
 import type { EmployeeUserName } from '../valueObject/EmployeeUsername'
 import type { Extension } from '../valueObject/Extension'
 import type { PhoneNumber } from '../valueObject/PhoneNumber'
-import type { DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
-import type { VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import type { VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import type { DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
 import type { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import type { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import type { HistoryDto } from '../../../../History/domain/entity/History.dto'
@@ -44,10 +36,6 @@ export type Employee = {
 	cedula: Primitives<EmployeeCedula>
 	locationId: Primitives<LocationId> | null
 	unidadId: Primitives<UnidadId> | null
-	directivaId: Primitives<DirectivaId> | null
-	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-	vicepresidenciaId: Primitives<VicepresidenciaId> | null
-	departamentoId: Primitives<DepartamentoId> | null
 	cargoId: Primitives<CargoId> | null
 	extension: Primitives<Extension>[]
 	phone: Primitives<PhoneNumber>[]
@@ -75,11 +63,7 @@ export type EmployeeParams = Omit<Employee, 'id'> & {
 export type EmployeeDto = Employee & {
 	location: LocationDto
 	unidad: Omit<UnidadDto, 'cargos'>
-	directiva: Omit<DirectivaDto, 'cargos'>
-	vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
-	vicepresidencia: Omit<VicepresidenciaDto, 'cargos'>
-	departamento: Omit<DepartamentoDto, 'cargos'>
-	cargo: Omit<CargoDto, 'departamentos' | 'directivas' | 'vicepresidenciasEjecutivas' | 'vicepresidencias'>
+	cargo: Omit<CargoDto, 'unidades'>
 	history: HistoryDto[] | null
 	updatedAt?: Date
 	createdAt?: Date

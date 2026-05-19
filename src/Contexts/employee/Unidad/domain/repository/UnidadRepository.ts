@@ -6,34 +6,42 @@ import type { CodigoInterno } from '../valueObject/CodigoInterno'
 import type { CentroDeCosto } from '../valueObject/CentroDeCosto'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
+export interface UnidadChainResult {
+	pathString: string
+	pathArray: string[]
+}
+
 /**
- * @abstract
- * @class UnidadRepository
- * @description Defines the contract for data persistence operations related to directiva entities.
+ * Interface contract for data persistence operations related to Unidad entities.
  */
 export abstract class UnidadRepository extends GenericRepository<UnidadDto> {
 	/**
-	 * @abstract
-	 * @method findByIds
-	 * @description Finds multiple directivas by their IDs.
-	 * @param {Array<UnidadId['value']>} ids The array of cargo IDs to search for.
-	 * @returns {Promise<UnidadDto[]>} A promise that resolves to an array of DTOs.
+	 * Finds multiple units by their specific IDs.
+	 *
+	 * @param ids - The array of primitive unit IDs to search for.
+	 * @returns A promise that resolves to an array of matching Unidad DTOs.
 	 */
 	abstract findByIds: (ids: Array<UnidadId['value']>) => Promise<UnidadDto[]>
-
 	/**
-	 * @abstract
-	 * @method findByCodigoInterno
-	 * @description Finds a unit by its unique internal code.
-	 * @param {string} code The internal code to search for.
+	 * Finds a specific unit using its unique internal code.
+	 *
+	 * @param code - The primitive internal code value.
+	 * @returns A promise that resolves to the Unidad DTO if found, or null otherwise.
 	 */
 	abstract findByCodigoInterno: (code: Primitives<CodigoInterno>) => Promise<Nullable<UnidadDto>>
 
 	/**
-	 * @abstract
-	 * @method findByCentroDeCosto
-	 * @description Finds a unit by its unique cost center.
-	 * @param {string} costCenter The cost center to search for.
+	 * Finds a specific unit using its assigned cost center.
+	 *
+	 * @param costCenter - The primitive cost center value.
+	 * @returns A promise that resolves to the Unidad DTO if found, or null otherwise.
 	 */
 	abstract findByCentroDeCosto: (costCenter: Primitives<CentroDeCosto>) => Promise<Nullable<UnidadDto>>
+
+	/**
+	 * Obtiene la cadena jerárquica completa para múltiples IDs de unidad de forma eficiente.
+	 * @param unidadIds Array de IDs de unidades a procesar.
+	 * @returns Un Map donde la llave es el unidadId y el valor es la cadena "Padre > Hijo > ..."
+	 */
+	abstract getUnidadesFullChains: (unidadIds: string[]) => Promise<Map<string, UnidadChainResult>>
 }

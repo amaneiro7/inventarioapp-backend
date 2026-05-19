@@ -13,6 +13,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName'
 import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 import { type AccessPolicyId } from '../../domain/valueObject/AccessPolicyId'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 /**
  * @class SequelizeAccessPolicyRepository
@@ -170,7 +171,9 @@ export class SequelizeAccessPolicyRepository
 			await transaction.commit()
 		} catch (error) {
 			await transaction.rollback()
-			throw new Error(`Error saving access policy: ${error instanceof Error ? error.message : String(error)}`)
+			throw new InvalidArgumentError(
+				`Error saving access policy: ${error instanceof Error ? error.message : String(error)}`
+			)
 		}
 	}
 

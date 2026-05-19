@@ -21,7 +21,7 @@ import type { IsUnitActive } from '../../domain/valueObject/IsUnitActive'
 /**
  * @description Sequelize model for the `Unidad` entity.
  */
-export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements UnidadDto {
+export class UnidadModel extends Model<Omit<UnidadDto, 'cargos' | 'full_chain'>> implements UnidadDto {
 	declare id: Primitives<UnidadId>
 	declare name: Primitives<UnidadName>
 	declare level: Primitives<RangeLevel>
@@ -29,7 +29,8 @@ export class UnidadModel extends Model<Omit<UnidadDto, 'cargos'>> implements Uni
 	declare codigoInterno: Primitives<CodigoInterno>
 	declare isUnitActive: Primitives<IsUnitActive>
 	declare parentId: Primitives<UnidadId> | null
-	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'departamentos'>[]
+	declare cargos: Primitives<CargoId>[] & Omit<CargoDto, 'unidades'>[]
+	declare full_chain: UnidadDto['full_chain']
 
 	// Association Mixins
 	declare getCargo: BelongsToManyGetAssociationsMixin<CargoModel>

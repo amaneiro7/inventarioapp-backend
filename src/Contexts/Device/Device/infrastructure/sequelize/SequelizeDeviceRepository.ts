@@ -8,6 +8,8 @@ import { DeviceHardDrive } from '../../domain/entity/HardDrive'
 import { DevicePrinter } from '../../domain/entity/Printer'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
+import { exportToExcel } from '../../../../Shared/infrastructure/utils/ExcelExporter'
 import { clearComputerDataset } from './clearComputerDataset'
 import { type DeviceRepository } from '../../domain/repository/DeviceRepository'
 import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
@@ -21,8 +23,7 @@ import { type DeviceActivo } from '../../domain/valueObject/DeviceActivo'
 import { type DeviceSerial } from '../../domain/valueObject/DeviceSerial'
 import { type BrandId } from '../../../../Brand/domain/valueObject/BrandId'
 import { type CategoryId } from '../../../../Category/Category/domain/valueObject/CategoryId'
-import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { exportToExcel } from '../../../../Shared/infrastructure/utils/ExcelExporter'
+import { type UnidadRepository } from '../../../../employee/Unidad/domain/repository/UnidadRepository'
 
 /**
  * @class SequelizeDeviceRepository
@@ -37,11 +38,13 @@ export class SequelizeDeviceRepository
 	private readonly models = sequelize.models
 	private readonly cacheKeyPrefix = 'devices'
 	private readonly cache: CacheService
+	private readonly unidadRepository: UnidadRepository
 	private readonly cacheInvalidator: GenericCacheInvalidator
 
-	constructor({ cache }: { cache: CacheService }) {
+	constructor({ cache, unidadRepository }: { cache: CacheService; unidadRepository: UnidadRepository }) {
 		super()
 		this.cache = cache
+		this.unidadRepository = unidadRepository
 		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
@@ -53,7 +56,22 @@ export class SequelizeDeviceRepository
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(options)
-				return { total: count, data: rows.map(row => row.get({ plain: true })) } as ResponseDB<DeviceDto>
+				const plainDevices = rows.map(row => row.get({ plain: true })) as DeviceDto[]
+
+				// Enriquecer con jerarquía de unidad del empleado
+				const unidadIds = [...new Set(plainDevices.map(d => d.employee?.unidadId).filter(Boolean))] as string[]
+				const fullChainMap = await this.unidadRepository.getUnidadesFullChains(unidadIds)
+
+				plainDevices.forEach(device => {
+					if (device.employee?.unidadId && device.employee.unidad) {
+						device.employee.unidad.full_chain = {
+							text: fullChainMap.get(device.employee.unidadId)?.pathString ?? null,
+							levels: fullChainMap.get(device.employee.unidadId)?.pathArray ?? []
+						}
+					}
+				})
+
+				return { total: count, data: plainDevices } as ResponseDB<DeviceDto>
 			}
 		})
 	}
@@ -67,7 +85,21 @@ export class SequelizeDeviceRepository
 			ttl: TimeTolive.LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await DeviceModel.findAndCountAll(deviceOptions)
-				return { total: count, data: rows.map(row => row.get({ plain: true })) } as ResponseDB<DeviceDto>
+				const plainDevices = rows.map(row => row.get({ plain: true })) as DeviceDto[]
+
+				// Enriquecer con jerarquía de unidad del empleado
+				const unidadIds = [...new Set(plainDevices.map(d => d.employee?.unidadId).filter(Boolean))] as string[]
+				const fullChainMap = await this.unidadRepository.getUnidadesFullChains(unidadIds)
+				plainDevices.forEach(device => {
+					if (device.employee?.unidadId && device.employee.unidad) {
+						device.employee.unidad.full_chain = {
+							text: fullChainMap.get(device.employee.unidadId)?.pathString ?? null,
+							levels: fullChainMap.get(device.employee.unidadId)?.pathArray ?? []
+						}
+					}
+				})
+
+				return { total: count, data: plainDevices } as ResponseDB<DeviceDto>
 			}
 		})
 	}

@@ -6,10 +6,6 @@ import { type AccessPolicyName } from '../valueObject/AccessPolicyName'
 import { type AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 import { type PermissionGroupDto } from '../../../PermissionGroup/domain/entity/PermissionGroup.dto'
 import { type RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
-import { type DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
-import { type VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { type VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { type DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
 import { type UnidadId } from '../../../../employee/Unidad/domain/valueObject/UnidadId'
 
 export type AccessPolicyRaw = {
@@ -17,10 +13,6 @@ export type AccessPolicyRaw = {
 	name: Primitives<AccessPolicyName>
 	roleId: Primitives<RoleId> | null
 	cargoId: Primitives<CargoId> | null
-	departamentoId?: Primitives<DepartamentoId> | null
-	vicepresidenciaId: Primitives<VicepresidenciaId> | null
-	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-	directivaId: Primitives<DirectivaId> | null
 	unidadId: Primitives<UnidadId> | null
 	priority: Primitives<AccessPolicyPriority>
 }

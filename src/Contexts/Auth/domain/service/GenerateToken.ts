@@ -8,10 +8,7 @@ import { type EmployeeId } from '../../../employee/Employee/domain/valueObject/E
 import { type PasswordChangeAt } from '../../../User/user/domain/valueObject/PasswordChangeAt'
 import { type PasswordNeverExpires } from '../../../User/user/domain/valueObject/PasswordNeverExpires'
 import { type CargoId } from '../../../employee/Cargo/domain/valueObject/CargoId'
-import { type DepartamentoId } from '../../../employee/Departamento/domain/valueObject/DepartamentoId'
-import { type VicepresidenciaId } from '../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { type VicepresidenciaEjecutivaId } from '../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { type DirectivaId } from '../../../employee/Directiva/domain/valueObject/DirectivaId'
+import { type UnidadId } from '../../../employee/Unidad/domain/valueObject/UnidadId'
 
 export interface Tokens {
 	accessToken: string
@@ -27,14 +24,14 @@ type JwtPayloadPurposes = 'access' | 'refresh' | 'change-password' | undefined
  */
 export interface UserTokenAttributes extends Pick<User, 'id' | 'employeeId' | 'roleId'> {
 	cargoId: string // ATRIBUTO REQUERIDO PARA ABAC
-	departamentoId: string // ATRIBUTO REQUERIDO PARA ABAC
+	unidadId: string // ATRIBUTO REQUERIDO PARA ABAC
 }
 
 /**
  * @interface JwtPayloadUser
  * @extends JwtPayload
  * @description Define la estructura completa del payload del JWT para tokens de usuario.
- * Incluye los atributos de negocio 'cargoId' y 'departamentoId' para la resolución de políticas de acceso (ABAC).
+ * Incluye los atributos de negocio 'cargoId' y 'unidadId' para la resolución de políticas de acceso (ABAC).
  */
 export interface JwtPayloadUser extends JwtPayload {
 	sub: Primitives<UserId> // User ID
@@ -43,10 +40,7 @@ export interface JwtPayloadUser extends JwtPayload {
 	passwordNeverExpires: Primitives<PasswordNeverExpires> // <--- CAMBIO: Campo añadido}
 	roleId: string
 	cargoId: Primitives<CargoId> | null
-	departamentoId: Primitives<DepartamentoId> | null
-	vicepresidenciaId: Primitives<VicepresidenciaId> | null
-	vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-	directivaId: Primitives<DirectivaId> | null
+	unidadId: Primitives<UnidadId> | null
 	iat: number
 	iss: 'SoporteTecnicoBNC' // Issuer of the token
 	jti?: string // JWT ID for refresh token rotation
@@ -83,16 +77,13 @@ function generateToken<
 	jti?: string
 }) {
 	const { id, employeeId, roleId, employee, passwordChangeAt, passwordNeverExpires } = payload // Updated destructuring
-	const { cargoId, departamentoId, directivaId, vicepresidenciaEjecutivaId, vicepresidenciaId } = employee
+	const { cargoId, unidadId } = employee
 	const tokenPayload: JwtPayloadUser = {
 		sub: id,
 		employeeId,
 		roleId: String(roleId),
 		cargoId,
-		directivaId,
-		vicepresidenciaEjecutivaId,
-		vicepresidenciaId,
-		departamentoId,
+		unidadId,
 		passwordChangeAt,
 		passwordNeverExpires,
 		iat: Math.floor(Date.now()) / 1000,

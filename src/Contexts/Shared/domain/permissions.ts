@@ -78,35 +78,11 @@ export const PERMISSIONS = {
 		CREATE: 'cargos:create',
 		UPDATE: 'cargos:update'
 	},
-	DEPARTAMENTOS: {
-		READ_LIST: 'departamentos:read-list',
-		READ: 'departamentos:read',
-		CREATE: 'departamentos:create',
-		UPDATE: 'departamentos:update'
-	},
-	DIRECTIVAS: {
-		READ_LIST: 'directivas:read-list',
-		READ: 'directivas:read',
-		CREATE: 'directivas:create',
-		UPDATE: 'directivas:update'
-	},
 	UNIDADES: {
 		READ_LIST: 'unidades:read-list',
 		READ: 'unidades:read',
 		CREATE: 'unidades:create',
 		UPDATE: 'unidades:update'
-	},
-	VICEPRESIDENCIA_EJECUTIVAS: {
-		READ_LIST: 'vicepresidencia-ejecutivas:read-list',
-		READ: 'vicepresidencia-ejecutivas:read',
-		CREATE: 'vicepresidencia-ejecutivas:create',
-		UPDATE: 'vicepresidencia-ejecutivas:update'
-	},
-	VICEPRESIDENCIAS: {
-		READ_LIST: 'vicepresidencias:read-list',
-		READ: 'vicepresidencias:read',
-		CREATE: 'vicepresidencias:create',
-		UPDATE: 'vicepresidencias:update'
 	},
 	MEMORY_RAM_TYPES: {
 		READ_LIST: 'memory-ram-types:read-list',

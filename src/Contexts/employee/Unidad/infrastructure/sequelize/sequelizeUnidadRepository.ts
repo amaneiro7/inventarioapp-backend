@@ -5,18 +5,18 @@ import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { GenericCacheInvalidator } from '../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { type CacheService } from '../../../../Shared/domain/CacheService'
-import { type Nullable } from '../../../../Shared/domain/Nullable'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type UnidadDto, type UnidadPrimitives } from '../../domain/entity/Unidad.dto'
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type UnidadRepository } from '../../domain/repository/UnidadRepository'
-import { type UnidadId } from '../../domain/valueObject/UnidadId'
-import { type CodigoInterno } from '../../domain/valueObject/CodigoInterno'
-import { type CentroDeCosto } from '../../domain/valueObject/CentroDeCosto'
-import { type UnidadName } from '../../domain/valueObject/UnidadName'
-import { type CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import type { CacheService } from '../../../../Shared/domain/CacheService'
+import type { Nullable } from '../../../../Shared/domain/Nullable'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import type { UnidadDto, UnidadPrimitives } from '../../domain/entity/Unidad.dto'
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { UnidadChainResult, UnidadRepository } from '../../domain/repository/UnidadRepository'
+import type { UnidadId } from '../../domain/valueObject/UnidadId'
+import type { CodigoInterno } from '../../domain/valueObject/CodigoInterno'
+import type { CentroDeCosto } from '../../domain/valueObject/CentroDeCosto'
+import type { UnidadName } from '../../domain/valueObject/UnidadName'
+import type { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 
 /**
  * @description Concrete implementation of the UnidadRepository using Sequelize.
@@ -35,6 +35,11 @@ export class SequelizeUnidadRepository
 		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
 	}
 
+	/**
+	 * @method searchAll
+	 * @description Recupera una lista paginada de unidades basada en criterios,
+	 * enriqueciendo cada registro con su jerarquía ascendente completa (full_chain).
+	 */
 	async searchAll(criteria: Criteria): Promise<ResponseDB<UnidadDto>> {
 		const options = this.convert(criteria)
 
@@ -46,7 +51,21 @@ export class SequelizeUnidadRepository
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { rows, count } = await UnidadModel.findAndCountAll(options)
-				return { data: rows.map(row => row.get({ plain: true })), total: count } as ResponseDB<UnidadDto>
+				const plainUnidades = rows.map(row => row.get({ plain: true })) as UnidadDto[]
+
+				// Recuperamos las jerarquías de forma masiva para optimizar el rendimiento
+				const unidadIds = plainUnidades.map(u => u.id)
+				const fullChainMap = await this.getUnidadesFullChains(unidadIds)
+
+				const dataWithFullChain = plainUnidades.map(unidad => {
+					const chainResult = fullChainMap.get(unidad.id)
+					unidad.full_chain = chainResult
+						? { text: chainResult.pathString, levels: chainResult.pathArray }
+						: null
+					return unidad
+				})
+
+				return { data: dataWithFullChain, total: count } as ResponseDB<UnidadDto>
 			}
 		})
 	}
@@ -59,6 +78,16 @@ export class SequelizeUnidadRepository
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const unidad = await UnidadModel.findByPk(id, {
+					attributes: [
+						'id',
+						'name',
+						'level',
+						'centroDeCosto',
+						'codigoInterno',
+						'isUnitActive',
+						'parentId',
+						'updatedAt'
+					],
 					include: [
 						{
 							association: 'cargos',
@@ -71,7 +100,19 @@ export class SequelizeUnidadRepository
 						}
 					]
 				})
-				return unidad ? (unidad.get({ plain: true }) as UnidadDto) : null
+				if (!unidad) return null
+
+				const plainUnidad = unidad.get({ plain: true }) as UnidadDto
+
+				// Obtenemos la cadena jerárquica completa (text y levels) de forma recursiva
+				const fullChainMap = await this.getUnidadesFullChains([String(id)])
+				const chainResult = fullChainMap.get(String(id))
+
+				plainUnidad.full_chain = chainResult
+					? { text: chainResult.pathString, levels: chainResult.pathArray }
+					: null
+
+				return plainUnidad
 			}
 		})
 	}
@@ -191,7 +232,8 @@ export class SequelizeUnidadRepository
 	}
 
 	/**
-	 * Obtiene todas las unidades con su código jerárquico calculado dinámicamente (1.2.4)
+	 * @method getTree
+	 * @description Genera un árbol jerárquico de todas las unidades con un código incremental (ej: 1.2.4).
 	 */
 	async getTree(): Promise<Array<UnidadDto & { codigo_hie: string }>> {
 		const query = `
@@ -232,32 +274,56 @@ export class SequelizeUnidadRepository
 	}
 
 	/**
-	 * Obtiene la jerarquía ascendente (padres) de una unidad específica
+	 * @method getUnidadesFullChains
+	 * @description Obtiene la jerarquía ascendente completa para un lote de unidades de forma eficiente.
 	 */
-	async getAncestors(unidadId: string): Promise<Array<{ id: string; name: string; level: number }>> {
-		const query = `
-			WITH RECURSIVE ancestors AS (
-				-- Caso base: La unidad del empleado
-				SELECT id, name, parent_id, range_level as level, 1 as depth
-				FROM unidades
-				WHERE id = :unidadId AND deleted_at IS NULL
+	async getUnidadesFullChains(unidadIds: string[]): Promise<Map<string, UnidadChainResult>> {
+		if (unidadIds.length === 0) return new Map()
 
-				UNION ALL
+		const recursiveQuery = `
+            WITH RECURSIVE UnidadHierarchy AS (
+                SELECT
+                    u.id AS original_unidad_id,                                        
+                    u.parent_id,
+                    u.name::TEXT AS full_chain_path,
+                    1 AS depth
+                FROM unidades AS u
+                WHERE u.id IN (:unidadIds)
 
-				-- Paso recursivo: Buscar el padre
-				SELECT u.id, u.name, u.parent_id, u.range_level, a.depth + 1
-				FROM unidades u
-				INNER JOIN ancestors a ON u.id = a.parent_id
-				WHERE u.deleted_at IS NULL
-			)
-			SELECT id, name, level FROM ancestors ORDER BY depth DESC;
-		`
-		const results = await UnidadModel.sequelize!.query(query, {
-			replacements: { unidadId },
-			type: QueryTypes.SELECT,
-			raw: true
+                UNION ALL
+
+                SELECT
+                    uh.original_unidad_id,                                        
+                    u.parent_id,
+                    u.name::TEXT || ' > ' || uh.full_chain_path::TEXT,
+                    uh.depth + 1
+                FROM unidades AS u
+                INNER JOIN UnidadHierarchy AS uh ON u.id = uh.parent_id
+            )
+            SELECT DISTINCT ON (original_unidad_id)
+                original_unidad_id,
+                full_chain_path
+            FROM UnidadHierarchy
+            ORDER BY original_unidad_id, depth DESC;
+        `
+
+		const results = await UnidadModel.sequelize!.query(recursiveQuery, {
+			replacements: { unidadIds },
+			type: QueryTypes.SELECT
 		})
 
-		return results as Array<{ id: string; name: string; level: number }>
+		const fullChainMap = new Map<string, UnidadChainResult>()
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		results.forEach((row: any) => {
+			const pathString = row.full_chain_path as string
+
+			// Convertimos la cadena de ruta en un array para facilitar su uso posterior (1.2.4)
+			const pathArray = pathString.split(' > ')
+			fullChainMap.set(row.original_unidad_id, {
+				pathString,
+				pathArray
+			})
+		})
+		return fullChainMap
 	}
 }

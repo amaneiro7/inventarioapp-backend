@@ -1,19 +1,20 @@
 import { PermissionGroup } from '../../PermissionGroup/domain/entity/PermissionGroup'
-import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { type PermissionRepository } from '../../Permission/domain/repository/PermissionRepository'
-import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
-import { type AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
-import { type AccessPolicyResolver } from './AccessPolicyResolver'
-import { type RoleId } from '../../../User/Role/domain/valueObject/RoleId'
+import type { Primitives } from '../../../Shared/domain/value-object/Primitives'
+import type { PermissionRepository } from '../../Permission/domain/repository/PermissionRepository'
+import type { PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
+import type { AccessPolicyDto } from '../domain/entity/AccessPolicy.dto'
+import type { AccessPolicyResolver } from './AccessPolicyResolver'
+import type { RoleId } from '../../../User/Role/domain/valueObject/RoleId'
+/**
+ * @interface GetUserPermissionsParams
+ * @description Parámetros para obtener los permisos de un usuario, incluyendo su rol, cargo y unidad organizativa.
+ */
 import { ADMIN_ROLE_ID } from '../../../User/Role/domain/RoleOptions'
 
 export interface GetUserPermissionsParams {
 	roleId?: Primitives<RoleId>
 	cargoId?: AccessPolicyDto['cargoId']
-	departamentoId?: AccessPolicyDto['departamentoId']
-	vicepresidenciaId?: AccessPolicyDto['vicepresidenciaId']
-	vicepresidenciaEjecutivaId?: AccessPolicyDto['vicepresidenciaEjecutivaId']
-	directivaId?: AccessPolicyDto['directivaId']
+	unidadId?: AccessPolicyDto['unidadId']
 }
 
 export class GetUserPermissions {
@@ -35,14 +36,14 @@ export class GetUserPermissions {
 		this.accessPolicyResolver = accessPolicyResolver
 	}
 
-	async run({
-		roleId,
-		cargoId,
-		departamentoId,
-		directivaId,
-		vicepresidenciaEjecutivaId,
-		vicepresidenciaId
-	}: GetUserPermissionsParams): Promise<string[]> {
+	/**
+	 * @method run
+	 * @description Obtiene los permisos de un usuario basado en su rol, cargo y unidad organizativa. Si el usuario tiene el rol de Administrador, se le asignan todos los permisos disponibles.
+	 * @param {GetUserPermissionsParams} params Los parámetros para determinar los permisos del usuario.
+	 * @returns {Promise<string[]>} Una lista de nombres de permisos que el usuario posee.
+	 * @throws {Error} Si ocurre un error durante la resolución de políticas o la consulta de permisos.
+	 */
+	async run({ roleId, cargoId, unidadId }: GetUserPermissionsParams): Promise<string[]> {
 		// 1. Bypass para el rol de Administrador
 		if (String(roleId) === String(ADMIN_ROLE_ID)) {
 			// Si el rol es admin, devolver todos los nombres de permisos existentes
@@ -54,10 +55,7 @@ export class GetUserPermissions {
 		const permissionGroupIds = await this.accessPolicyResolver.run({
 			roleId,
 			cargoId,
-			departamentoId,
-			directivaId,
-			vicepresidenciaEjecutivaId,
-			vicepresidenciaId
+			unidadId
 		})
 		// Si no hay políticas coincidentes, el usuario simplemente no tiene permisos.
 		if (!permissionGroupIds || permissionGroupIds.length === 0) {

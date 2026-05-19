@@ -16,6 +16,7 @@ import type { EmployeePrimitives, EmployeeDto } from '../../domain/entity/Employ
 import type { EmployeeUserName } from '../../domain/valueObject/EmployeeUsername'
 import type { EmployeeId } from '../../domain/valueObject/EmployeeId'
 import type { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
+import type { UnidadRepository } from '../../../Unidad/domain/repository/UnidadRepository'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -31,16 +32,18 @@ export class SequelizeEmployeeRepository
 	private readonly cacheKey: string = 'employees'
 	private readonly cache: CacheService
 	private readonly cacheInvalidator: GenericCacheInvalidator
-	constructor({ cache }: { cache: CacheService }) {
+	private readonly unidadRepository: UnidadRepository
+	constructor({ cache, unidadRepository }: { cache: CacheService; unidadRepository: UnidadRepository }) {
 		super()
 		this.cache = cache
+		this.unidadRepository = unidadRepository
 		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKey)
 	}
 
 	/**
 	 * @method searchAll
 	 * @description Retrieves a paginated list of Employee entities based on the provided criteria.
-	 * Utilizes caching to improve performance for repeated queries.
+	 * Enriches data with the full unit hierarchy and utilizes caching for performance.
 	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
 	 * @returns {Promise<ResponseDB<EmployeeDto>>} A promise that resolves to a paginated response containing Employee DTOs.
 	 */
@@ -53,8 +56,21 @@ export class SequelizeEmployeeRepository
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
+				const plainEmployees = rows.map(row => row.get({ plain: true })) as EmployeeDto[]
+				const unidadIds = [...new Set(plainEmployees.map(e => e.unidadId).filter(Boolean))] as string[]
+				const fullChainMap = await this.unidadRepository.getUnidadesFullChains(unidadIds)
+
+				const employeesWithFullChain = plainEmployees.map(employee => {
+					if (employee.unidadId && employee.unidad) {
+						employee.unidad.full_chain = {
+							text: fullChainMap.get(employee.unidadId)?.pathString ?? null,
+							levels: fullChainMap.get(employee.unidadId)?.pathArray ?? []
+						}
+					}
+					return employee
+				})
 				return {
-					data: rows.map(row => row.get({ plain: true })),
+					data: employeesWithFullChain,
 					total: count
 				} as ResponseDB<EmployeeDto>
 			}
@@ -64,7 +80,7 @@ export class SequelizeEmployeeRepository
 	/**
 	 * @method matching
 	 * @description Retrieves a paginated list of Employee entities that match specific criteria,
-	 * often used for more complex filtering logic defined in EmployeeAssociation.
+	 * supporting complex associations. Enriches data with the full unit hierarchy.
 	 * Utilizes caching for improved performance.
 	 * @param {Criteria} criteria - The criteria for filtering, sorting, and pagination.
 	 * @returns {Promise<ResponseDB<EmployeeDto>>} A promise that resolves to a paginated response containing Employee DTOs.
@@ -78,8 +94,21 @@ export class SequelizeEmployeeRepository
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
 				const { count, rows } = await EmployeeModel.findAndCountAll(opt)
+				const plainEmployees = rows.map(row => row.get({ plain: true })) as EmployeeDto[]
+				const unidadIds = [...new Set(plainEmployees.map(e => e.unidadId).filter(Boolean))] as string[]
+				const fullChainMap = await this.unidadRepository.getUnidadesFullChains(unidadIds)
+
+				const employeesWithFullChain = plainEmployees.map(employee => {
+					if (employee.unidadId && employee.unidad) {
+						employee.unidad.full_chain = {
+							text: fullChainMap.get(employee.unidadId)?.pathString ?? null,
+							levels: fullChainMap.get(employee.unidadId)?.pathArray ?? []
+						}
+					}
+					return employee
+				})
 				return {
-					data: rows.map(row => row.get({ plain: true })),
+					data: employeesWithFullChain,
 					total: count
 				} as ResponseDB<EmployeeDto>
 			}
@@ -126,7 +155,7 @@ export class SequelizeEmployeeRepository
 	/**
 	 * @method findById
 	 * @description Retrieves a single Employee entity by its unique identifier.
-	 * Includes associated devices, cargo, location, and departamento data.
+	 * Includes associated devices, cargo, location, and the full unit hierarchy.
 	 * Utilizes caching for direct ID lookups.
 	 * @param {string} id - The ID of the Employee to search for.
 	 * @returns {Promise<EmployeeDto | null>} A promise that resolves to the Employee DTO if found, or null otherwise.
@@ -153,11 +182,7 @@ export class SequelizeEmployeeRepository
 								}
 							]
 						},
-						{ association: 'departamento', attributes: ['name'] },
-						{ association: 'directiva', attributes: ['name'] },
 						{ association: 'unidad' },
-						{ association: 'vicepresidenciaEjecutiva', attributes: ['name'] },
-						{ association: 'vicepresidencia', attributes: ['name'] },
 						{
 							association: 'history',
 							include: [
@@ -189,24 +214,13 @@ export class SequelizeEmployeeRepository
 
 				const plainEmployee = employee.get({ plain: true }) as EmployeeDto
 
-				// Si tiene unidad, calculamos la cadena completa dinámicamente
+				// Si el empleado tiene una unidad asignada, recuperamos la jerarquía completa
 				if (plainEmployee.unidadId) {
-					const query = `
-						WITH RECURSIVE ancestors AS (
-							SELECT id, name, parent_id, 1 as depth FROM unidades WHERE id = :unidadId
-							UNION ALL
-							SELECT u.id, u.name, u.parent_id, a.depth + 1 FROM unidades u 
-							INNER JOIN ancestors a ON u.id = a.parent_id
-						) SELECT name FROM ancestors ORDER BY depth DESC;`
-					const chain = await EmployeeModel.sequelize!.query(query, {
-						replacements: { unidadId: plainEmployee.unidadId },
-						type: 'SELECT'
-					})
-					console.log('chain', chain)
-					console.log('plainEmployee', plainEmployee)
-
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					plainEmployee.unidad.full_chain = chain.map((c: any) => c.name).join(' > ')
+					const fullChainMap = await this.unidadRepository.getUnidadesFullChains([plainEmployee.unidadId])
+					plainEmployee.unidad.full_chain = {
+						text: fullChainMap.get(plainEmployee.unidadId)?.pathString ?? null,
+						levels: fullChainMap.get(plainEmployee.unidadId)?.pathArray ?? []
+					}
 				}
 
 				return plainEmployee as EmployeeDto
@@ -271,6 +285,7 @@ export class SequelizeEmployeeRepository
 	async donwload(criteria: Criteria): Promise<Buffer> {
 		const { data } = await this.matching(criteria)
 		const wbData = clearEmployeeDataset({ employees: data })
+
 		return exportToExcel(wbData, {
 			title: 'Reporte de Inventario de Modelos',
 			subject: 'Inventario de Models'

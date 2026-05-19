@@ -1,9 +1,5 @@
 import { EmployeeTypeChangedDomainEvent } from '../domain/event/EmployeeTypeChangedDomainEvent'
 import { EmployeeReactivatedDomainEvent } from '../domain/event/EmployeeReactivatedDomainEvent'
-import { DepartamentoUpdatedDomainEvent } from '../../Departamento/domain/event/DepartamentoUpdatedDomainEvent'
-import { DirectivaUpdatedDomainEvent } from '../../Directiva/domain/event/DirectivaUpdatedDomainEvent'
-import { VicepresidenciaUpdatedDomainEvent } from '../../Vicepresidencia/domain/event/VicepresidenciaUpdatedDomainEvent'
-import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
 import { EmployeeCreatedDomainEvent } from '../domain/event/EmployeeCreatedDomainEvent'
 import { EmployeeUpdatedDomainEvent } from '../domain/event/EmployeeUpdatedDomainEvent'
 import { EmployeeRemovedDomainEvent } from '../domain/event/EmployeeRemovedDomainEvent'
@@ -13,6 +9,7 @@ import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/Site
 import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
 import { DeviceUpdatedDomainEvent } from '../../../Device/Device/domain/event/DeviceUpdatedDomainEvent'
+import { UnidadUpdatedDomainEvent } from '../../Unidad/domain/event/UnidadUpdatedDomainEvent'
 import { DeviceCreatedDomainEvent } from '../../../Device/Device/domain/event/DeviceCreatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
@@ -27,10 +24,7 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 	| DeviceUpdatedDomainEvent
 	| DeviceCreatedDomainEvent
 	| CargoUpdatedDomainEvent
-	| DepartamentoUpdatedDomainEvent
-	| DirectivaUpdatedDomainEvent
-	| VicepresidenciaUpdatedDomainEvent
-	| VicepresidenciaEjecutivaUpdatedDomainEvent
+	| UnidadUpdatedDomainEvent
 	| LocationUpdatedDomainEvent
 	| SiteUpdatedDomainEvent
 	| CityUpdatedDomainEvent
@@ -52,10 +46,7 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			| DeviceUpdatedDomainEvent
 			| DeviceCreatedDomainEvent
 			| CargoUpdatedDomainEvent
-			| DepartamentoUpdatedDomainEvent
-			| DirectivaUpdatedDomainEvent
-			| VicepresidenciaUpdatedDomainEvent
-			| VicepresidenciaEjecutivaUpdatedDomainEvent
+			| UnidadUpdatedDomainEvent
 			| LocationUpdatedDomainEvent
 			| SiteUpdatedDomainEvent
 			| CityUpdatedDomainEvent
@@ -100,11 +91,8 @@ export class InvalidateEmployeeCacheOnEmployeeChanged implements DomainEventSubs
 			EmployeeReactivatedDomainEvent,
 			EmployeeTypeChangedDomainEvent,
 			CargoUpdatedDomainEvent,
-			DepartamentoUpdatedDomainEvent,
+			UnidadUpdatedDomainEvent,
 			LocationUpdatedDomainEvent,
-			DirectivaUpdatedDomainEvent,
-			VicepresidenciaUpdatedDomainEvent,
-			VicepresidenciaEjecutivaUpdatedDomainEvent,
 			SiteUpdatedDomainEvent,
 			CityUpdatedDomainEvent,
 			RegionUpdatedDomainEvent

@@ -17,10 +17,6 @@ import { type AccessPolicyName } from '../../domain/valueObject/AccessPolicyName
 import { type PermissionGroupDto } from '../../../PermissionGroup/domain/entity/PermissionGroup.dto'
 import { type PermissionId } from '../../../Permission/domain/valueObject/PermissionId'
 import { type RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
-import { type VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { type VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { type DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
-import { type DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
 import { type UnidadId } from '../../../../employee/Unidad/domain/valueObject/UnidadId'
 
 export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsGroups'>> implements AccessPolicyDto {
@@ -28,10 +24,6 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 	declare name: Primitives<AccessPolicyName>
 	declare roleId: Primitives<RoleId> | null
 	declare cargoId: Primitives<CargoId> | null
-	declare departamentoId: Primitives<DepartamentoId> | null
-	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
-	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-	declare directivaId: Primitives<DirectivaId> | null
 	declare unidadId: Primitives<UnidadId> | null
 	declare priority: Primitives<AccessPolicyPriority>
 	declare permissionsGroups: PermissionGroupDto[]
@@ -59,22 +51,6 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 			foreignKey: 'cargoId'
 		})
 		// Una política puede estar asociada a un departamento (la condición)
-		this.belongsTo(models.Departamento, {
-			as: 'departamento',
-			foreignKey: 'departamentoId'
-		})
-		this.belongsTo(models.Vicepresidencia, {
-			as: 'vicepresidencia',
-			foreignKey: 'vicepresidenciaId'
-		})
-		this.belongsTo(models.VicepresidenciaEjecutiva, {
-			as: 'vicepresidenciaEjecutiva',
-			foreignKey: 'vicepresidenciaEjecutivaId'
-		})
-		this.belongsTo(models.Directiva, {
-			as: 'directiva',
-			foreignKey: 'directivaId'
-		})
 		this.belongsTo(models.Unidad, {
 			as: 'unidad',
 			foreignKey: 'unidadId'
@@ -104,26 +80,6 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 					allowNull: true,
 					field: 'role_id'
 				},
-				departamentoId: {
-					type: DataTypes.UUID,
-					allowNull: true,
-					field: 'departamento_id'
-				},
-				vicepresidenciaId: {
-					type: DataTypes.UUID,
-					allowNull: true,
-					field: 'vicepresidencia_id'
-				},
-				vicepresidenciaEjecutivaId: {
-					type: DataTypes.UUID,
-					allowNull: true,
-					field: 'vicepresidencia_ejecutiva_id'
-				},
-				directivaId: {
-					type: DataTypes.UUID,
-					allowNull: true,
-					field: 'directiva_id'
-				},
 				unidadId: {
 					type: DataTypes.UUID,
 					allowNull: true,
@@ -142,10 +98,6 @@ export class AccessPolicyModel extends Model<Omit<AccessPolicyDto, 'permissionsG
 				indexes: [
 					{ fields: ['role_id'] },
 					{ fields: ['cargo_id'] },
-					{ fields: ['departamento_id'] },
-					{ fields: ['vicepresidencia_id'] },
-					{ fields: ['vicepresidencia_ejecutiva_id'] },
-					{ fields: ['directiva_id'] },
 					{ fields: ['unidad_id'] },
 					{ fields: ['priority'] }
 				]

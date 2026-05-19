@@ -1,16 +1,10 @@
 import { Cargo } from '../domain/entity/Cargo'
 import { CargoNameUniquenessChecker } from '../domain/service/CargoNameuniquenessChecker'
-import { DirectivaExistenceChecker } from '../../Directiva/domain/service/DirectivaExistanceChecker'
-import { VicepresidenciaExistenceChecker } from '../../Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
-import { VicepresidenciaEjecutivaExistenceChecker } from '../../VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
-import { DepartamentoExistenceChecker } from '../../Departamento/domain/service/DepartamentoExistanceChecker'
-import { type DirectivaRepository } from '../../Directiva/domain/repository/DirectivaRepository'
-import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
-import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
-import { type DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
+import { UnidadExistenceChecker } from '../../Unidad/domain/service/UnidadExistanceChecker'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type CargoRepository } from '../domain/repository/CargoRepository'
 import { type CargoParams } from '../domain/entity/Cargo.dto'
+import { type UnidadRepository } from '../../Unidad/domain/repository/UnidadRepository'
 
 /**
  * @description Use case for creating a new Cargo entity.
@@ -18,44 +12,27 @@ import { type CargoParams } from '../domain/entity/Cargo.dto'
 export class CargoCreator {
 	private readonly cargoRepository: CargoRepository
 	private readonly cargoNameUniquenessChecker: CargoNameUniquenessChecker
-	private readonly directivaExistenceChecker: DirectivaExistenceChecker
-	private readonly departamentoExistenceChecker: DepartamentoExistenceChecker
-	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
-	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
+	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly eventBus: EventBus
 
 	/**
 	 * @param {Object} params - The dependencies for the CargoCreator.
 	 * @param {CargoRepository} params.cargoRepository - The repository for Cargo entities.
-	 * @param {DepartamentoRepository} params.departamentoRepository - The repository for Departamento entities.
-	 * @param {DirectivaRepository} params.directivaRepository - The repository for Directiva entities.
-	 * @param {VicepresidenciaEjecutivaRepository} params.vicepresidenciaEjecutivaRepository - The repository for VicepresidenciaEjecutiva entities.
-	 * @param {VicepresidenciaRepository} params.vicepresidenciaRepository - The repository for Vicepresidencia entities.
+	 * @param {UnidadRepository} params.unidadRepository - The repository for Unidad entities.
 	 * @param {EventBus} params.eventBus - The event bus for publishing domain events.
 	 */
 	constructor({
 		cargoRepository,
-		departamentoRepository,
-		directivaRepository,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository,
+		unidadRepository,
 		eventBus
 	}: {
 		cargoRepository: CargoRepository
-		departamentoRepository: DepartamentoRepository
-		directivaRepository: DirectivaRepository
-		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
-		vicepresidenciaRepository: VicepresidenciaRepository
+		unidadRepository: UnidadRepository
 		eventBus: EventBus
 	}) {
 		this.cargoRepository = cargoRepository
 		this.cargoNameUniquenessChecker = new CargoNameUniquenessChecker(cargoRepository)
-		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
-		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
-			vicepresidenciaEjecutivaRepository
-		)
-		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
-		this.departamentoExistenceChecker = new DepartamentoExistenceChecker(departamentoRepository)
+		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
 		this.eventBus = eventBus
 	}
 
@@ -64,35 +41,19 @@ export class CargoCreator {
 	 * @param {{ params: CargoParams }} data The parameters for creating the cargo.
 	 * @returns {Promise<void>} A promise that resolves when the cargo is successfully created.
 	 * @throws {CargoAlreadyExistsError} If a cargo with the same name already exists.
-	 * @throws {DirectivaDoesNotExistError} If any of the provided directivas do not exist.
-	 * @throws {VicepresidenciaEjecutivaDoesNotExistError} If any of the provided executive vice presidencies do not exist.
-	 * @throws {VicepresidenciaDoesNotExistError} If any of the provided vice presidencies do not exist.
-	 * @throws {DepartamentoDoesNotExistError} If any of the provided departments do not exist.
+	 * @throws {UnidadDoesNotExistError} If any of the provided Unidads do not exist.
 	 */
-	async run({
-		params: { name, departamentos, directivas, vicepresidencias, vicepresidenciasEjecutivas }
-	}: {
-		params: CargoParams
-	}): Promise<void> {
-		const uniqueDepartamentos = Array.from(new Set(departamentos))
-		const uniqueDirectivas = Array.from(new Set(directivas))
-		const uniqueVicepresidencias = Array.from(new Set(vicepresidencias))
-		const uniqueVicepresidenciasEjecutivas = Array.from(new Set(vicepresidenciasEjecutivas))
+	async run({ params: { name, unidades } }: { params: CargoParams }): Promise<void> {
+		const uniqueUnidades = Array.from(new Set(unidades))
 
 		await Promise.all([
 			this.cargoNameUniquenessChecker.ensureUnique(name),
-			this.directivaExistenceChecker.ensureExist(uniqueDirectivas),
-			this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(uniqueVicepresidenciasEjecutivas),
-			this.vicepresidenciaExistenceChecker.ensureExist(uniqueVicepresidencias),
-			this.departamentoExistenceChecker.ensureExist(uniqueDepartamentos)
+			this.unidadExistenceChecker.ensureExist(uniqueUnidades)
 		])
 
 		const cargo = Cargo.create({
 			name,
-			departamentos: uniqueDepartamentos,
-			directivas: uniqueDirectivas,
-			vicepresidencias: uniqueVicepresidencias,
-			vicepresidenciasEjecutivas: uniqueVicepresidenciasEjecutivas
+			unidades: uniqueUnidades
 		})
 
 		await this.cargoRepository.save(cargo.toPrimitives())

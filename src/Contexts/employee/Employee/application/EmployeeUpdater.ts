@@ -5,26 +5,18 @@ import { EmployeeDoesNotExistError } from '../domain/Errors/EmployeeDoesNotExist
 import { EmployeeId } from '../domain/valueObject/EmployeeId'
 import { EmployeeUserNameUniquenessChecker } from '../domain/service/EmployeeUserNameUniquenessChecker'
 import { EmployeeEmailUniquenessChecker } from '../domain/service/EmployeeEmailUniquenessChecker'
-import { VicepresidenciaExistenceChecker } from '../../Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
 import { CargoExistenceChecker } from '../../Cargo/domain/service/CargoExistanceChecker'
-import { VicepresidenciaEjecutivaExistenceChecker } from '../../VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
-import { DepartamentoExistenceChecker } from '../../Departamento/domain/service/DepartamentoExistanceChecker'
-import { DirectivaExistenceChecker } from '../../Directiva/domain/service/DirectivaExistanceChecker'
 import { LocationExistenceChecker } from '../../../Location/Location/domain/service/LocationExistanceChecker'
+import { EmployeeCodeUniquenessChecker } from '../domain/service/EmployeeCodeUniquenessChecker'
+import { EmployeeCedulaUniquenessChecker } from '../domain/service/EmployeeCedulaUniquenessChecker'
+import { UnidadRepository } from '../../Unidad/domain/repository/UnidadRepository'
+import { UnidadExistenceChecker } from '../../Unidad/domain/service/UnidadExistanceChecker'
 import { type EmployeeRepository } from '../domain/Repository/EmployeeRepository'
 import { type LocationRepository } from '../../../Location/Location/domain/repository/LocationRepository'
 import { type CargoRepository } from '../../Cargo/domain/repository/CargoRepository'
 import { type EmployeeParams } from '../domain/entity/Employee.dto'
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
-import { type DirectivaRepository } from '../../Directiva/domain/repository/DirectivaRepository'
-import { type VicepresidenciaEjecutivaRepository } from '../../VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
-import { type VicepresidenciaRepository } from '../../Vicepresidencia/domain/repository/VicepresidenciaRepository'
-import { type DepartamentoRepository } from '../../Departamento/domain/repository/DepartamentoRepository'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
-import { EmployeeCodeUniquenessChecker } from '../domain/service/EmployeeCodeUniquenessChecker'
-import { EmployeeCedulaUniquenessChecker } from '../domain/service/EmployeeCedulaUniquenessChecker'
-import { UnidadRepository } from '../../Unidad/domain/repository/UnidadRepository'
-import { UnidadExistenceChecker } from '../../Unidad/domain/service/UnidadExistanceChecker'
 
 /**
  * @description Use case for updating an existing Employee entity.
@@ -37,33 +29,21 @@ export class EmployeeUpdater {
 	private readonly employeeEmailUniquenessChecker: EmployeeEmailUniquenessChecker
 	private readonly locationExistenceChecker: LocationExistenceChecker
 	private readonly unidadExistenceChecker: UnidadExistenceChecker
-	private readonly directivaExistenceChecker: DirectivaExistenceChecker
-	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
-	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
-	private readonly departamentoExistenceChecker: DepartamentoExistenceChecker
 	private readonly cargoExistenceChecker: CargoExistenceChecker
 	private readonly settingsFinder: SettingsFinder
 	private readonly eventBus: EventBus
 
 	constructor({
 		cargoRepository,
-		departamentoRepository,
 		unidadRepository,
-		directivaRepository,
 		employeeRepository,
 		locationRepository,
 		settingsFinder,
-		vicepresidenciaEjecutivaRepository,
-		vicepresidenciaRepository,
 		eventBus
 	}: {
 		employeeRepository: EmployeeRepository
 		locationRepository: LocationRepository
-		directivaRepository: DirectivaRepository
 		unidadRepository: UnidadRepository
-		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
-		vicepresidenciaRepository: VicepresidenciaRepository
-		departamentoRepository: DepartamentoRepository
 		cargoRepository: CargoRepository
 		settingsFinder: SettingsFinder
 		eventBus: EventBus
@@ -75,12 +55,6 @@ export class EmployeeUpdater {
 		this.employeeCedulaUniquenessChecker = new EmployeeCedulaUniquenessChecker(employeeRepository)
 		this.locationExistenceChecker = new LocationExistenceChecker(locationRepository)
 		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
-		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
-		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
-			vicepresidenciaEjecutivaRepository
-		)
-		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
-		this.departamentoExistenceChecker = new DepartamentoExistenceChecker(departamentoRepository)
 		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
 		this.settingsFinder = settingsFinder
 		this.eventBus = eventBus
@@ -236,7 +210,6 @@ export class EmployeeUpdater {
 			employeeEntity.updatePhone(params.phone)
 		}
 
-		await this.updateHierarchy(employeeEntity, params, changes)
 		await Promise.all(validations)
 		if (changes.length > 0) {
 			employeeEntity.registerUpdateEvent(changes)
@@ -263,71 +236,5 @@ export class EmployeeUpdater {
 		} else {
 			entity.markAsTerminated()
 		}
-	}
-
-	private async updateHierarchy(
-		entity: Employee,
-		params: Partial<Omit<EmployeeParams, 'employeeCode' | 'cedula' | 'nationality'>>,
-		changes: Array<{ field: keyof Omit<EmployeeParams, 'id'>; oldValue: unknown; newValue: unknown }>
-	): Promise<void> {
-		// Si no se envía ningún parámetro de jerarquía, no hacemos nada
-		if (
-			params.directivaId === undefined &&
-			params.vicepresidenciaEjecutivaId === undefined &&
-			params.vicepresidenciaId === undefined &&
-			params.departamentoId === undefined
-		) {
-			return
-		}
-
-		await Promise.all([
-			this.directivaExistenceChecker.ensureExist(params.directivaId),
-			this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(params.vicepresidenciaEjecutivaId),
-			this.vicepresidenciaExistenceChecker.ensureExist(params.vicepresidenciaId),
-			this.departamentoExistenceChecker.ensureExist(params.departamentoId)
-		])
-
-		// Usamos los valores nuevos si existen, o mantenemos los actuales de la entidad (fallback)
-		// Nota: Si el frontend envía 'null', se toma como null. Si es undefined, se toma el actual.
-		const newDirectivaId = params.directivaId !== undefined ? params.directivaId : entity.directivaValue
-		const newVicepresidenciaEjecutivaId =
-			params.vicepresidenciaEjecutivaId !== undefined
-				? params.vicepresidenciaEjecutivaId
-				: entity.vicepresidenciaEjecutivaValue
-		const newVicepresidenciaId =
-			params.vicepresidenciaId !== undefined ? params.vicepresidenciaId : entity.vicepresidenciaValue
-		const newDepartamentoId = params.departamentoId !== undefined ? params.departamentoId : entity.departamentoValue
-
-		// Registramos los cambios si los valores nuevos difieren de los actuales
-		if (newDirectivaId !== entity.directivaValue) {
-			changes.push({
-				field: 'directivaId',
-				oldValue: entity.directivaValue,
-				newValue: newDirectivaId
-			})
-		}
-		if (newVicepresidenciaEjecutivaId !== entity.vicepresidenciaEjecutivaValue) {
-			changes.push({
-				field: 'vicepresidenciaEjecutivaId',
-				oldValue: entity.vicepresidenciaEjecutivaValue,
-				newValue: newVicepresidenciaEjecutivaId
-			})
-		}
-		if (newVicepresidenciaId !== entity.vicepresidenciaValue) {
-			changes.push({
-				field: 'vicepresidenciaId',
-				oldValue: entity.vicepresidenciaValue,
-				newValue: newVicepresidenciaId
-			})
-		}
-		if (newDepartamentoId !== entity.departamentoValue) {
-			changes.push({
-				field: 'departamentoId',
-				oldValue: entity.departamentoValue,
-				newValue: newDepartamentoId
-			})
-		}
-
-		entity.updateHierarchy(newDirectivaId, newVicepresidenciaEjecutivaId, newVicepresidenciaId, newDepartamentoId)
 	}
 }

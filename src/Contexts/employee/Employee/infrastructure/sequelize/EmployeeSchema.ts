@@ -16,14 +16,6 @@ import type { PhoneNumber } from '../../domain/valueObject/PhoneNumber'
 import type { EmployeeDto } from '../../domain/entity/Employee.dto'
 import type { LocationDto } from '../../../../Location/Location/domain/entity/Location.dto'
 import type { CargoDto } from '../../../Cargo/domain/entity/Cargo.dto'
-import type { DepartamentoDto } from '../../../Departamento/domain/entity/Departamento.dto'
-import type { DirectivaDto } from '../../../Directiva/domain/entity/Directiva.dto'
-import type { VicepresidenciaDto } from '../../../Vicepresidencia/domain/entity/Vicepresidencia.dto'
-import type { VicepresidenciaEjecutivaDto } from '../../../VicepresidenciaEjecutiva/domain/entity/VicepresidenciaEjecutiva.dto'
-import type { DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
-import type { VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import type { VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import type { DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
 import type { SequelizeModels } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeModels'
 import type { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import type { HistoryDto } from '../../../../History/domain/entity/History.dto'
@@ -34,19 +26,7 @@ import type { UnidadDto } from '../../../Unidad/domain/entity/Unidad.dto'
  * @description Sequelize model for the `Employee` entity.
  */
 export class EmployeeModel
-	extends Model<
-		Omit<
-			EmployeeDto,
-			| 'location'
-			| 'unidad'
-			| 'vicepresidencia'
-			| 'directiva'
-			| 'vicepresidenciaEjecutiva'
-			| 'departamento'
-			| 'cargo'
-			| 'history'
-		>
-	>
+	extends Model<Omit<EmployeeDto, 'location' | 'unidad' | 'cargo' | 'history'>>
 	implements EmployeeDto
 {
 	declare id: Primitives<EmployeeId>
@@ -61,33 +41,19 @@ export class EmployeeModel
 	declare cedula: Primitives<EmployeeCedula>
 	declare locationId: Primitives<LocationId> | null
 	declare unidadId: Primitives<UnidadId> | null
-	declare directivaId: Primitives<DirectivaId> | null
-	declare vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-	declare vicepresidenciaId: Primitives<VicepresidenciaId> | null
-	declare departamentoId: Primitives<DepartamentoId> | null
 	declare cargoId: Primitives<CargoId> | null
 	declare extension: Primitives<Extension>[]
 	declare phone: Primitives<PhoneNumber>[]
 	declare history: HistoryDto[] | null
 	declare location: LocationDto
 	declare unidad: Omit<UnidadDto, 'cargos'>
-	declare directiva: Omit<DirectivaDto, 'cargos'>
-	declare vicepresidenciaEjecutiva: Omit<VicepresidenciaEjecutivaDto, 'cargos'>
-	declare vicepresidencia: Omit<VicepresidenciaDto, 'cargos'>
-	declare departamento: Omit<DepartamentoDto, 'cargos'>
-	declare cargo: Omit<CargoDto, 'departamentos' | 'vicepresidencias' | 'vicepresidenciaEjecutivas' | 'directivas'>
+
+	declare cargo: Omit<CargoDto, 'unidades'>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsTo(models.Cargo, { as: 'cargo', foreignKey: 'cargoId' })
 		this.belongsTo(models.Location, { as: 'location', foreignKey: 'locationId' })
-		this.belongsTo(models.Directiva, { as: 'directiva', foreignKey: 'directivaId' })
 		this.belongsTo(models.Unidad, { as: 'unidad', foreignKey: 'unidadId' })
-		this.belongsTo(models.VicepresidenciaEjecutiva, {
-			as: 'vicepresidenciaEjecutiva',
-			foreignKey: 'vicepresidenciaEjecutivaId'
-		})
-		this.belongsTo(models.Vicepresidencia, { as: 'vicepresidencia', foreignKey: 'vicepresidenciaId' })
-		this.belongsTo(models.Departamento, { as: 'departamento', foreignKey: 'departamentoId' })
 		this.hasMany(models.Device, { as: 'devices', foreignKey: 'employeeId' })
 		this.hasMany(models.History, { as: 'history', foreignKey: 'employeeId' })
 		this.hasMany(models.Shipment, { as: 'toEmployee', foreignKey: 'receivedBy' })
@@ -112,10 +78,6 @@ export class EmployeeModel
 				cedula: { type: DataTypes.INTEGER, allowNull: true },
 				locationId: { type: DataTypes.UUID, allowNull: true },
 				unidadId: { type: DataTypes.UUID, allowNull: true },
-				directivaId: { type: DataTypes.UUID, allowNull: true },
-				vicepresidenciaEjecutivaId: { type: DataTypes.UUID, allowNull: true },
-				vicepresidenciaId: { type: DataTypes.UUID, allowNull: true },
-				departamentoId: { type: DataTypes.UUID, allowNull: true },
 				cargoId: { type: DataTypes.UUID, allowNull: true },
 				extension: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
 				phone: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] }
@@ -149,11 +111,7 @@ export class EmployeeModel
 					// Índices de rendimiento para claves foráneas (Mejora drástica en JOINs)
 					{ fields: ['location_id'] },
 					{ fields: ['cargo_id'] },
-					{ fields: ['departamento_id'] },
-					{ fields: ['unidad_id'] },
-					{ fields: ['directiva_id'] },
-					{ fields: ['vicepresidencia_id'] },
-					{ fields: ['vicepresidencia_ejecutiva_id'] }
+					{ fields: ['unidad_id'] }
 				]
 			}
 		)

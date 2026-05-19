@@ -8,10 +8,7 @@ import { type AccessPolicyRepository } from '../domain/repository/AccessPolicyRe
 interface Params {
 	roleId?: AccessPolicyDto['roleId']
 	cargoId?: AccessPolicyDto['cargoId']
-	departamentoId?: AccessPolicyDto['departamentoId']
-	vicepresidenciaId?: AccessPolicyDto['vicepresidenciaId']
-	vicepresidenciaEjecutivaId?: AccessPolicyDto['vicepresidenciaEjecutivaId']
-	directivaId?: AccessPolicyDto['directivaId']
+	unidadId?: AccessPolicyDto['unidadId']
 }
 
 export class AccessPolicyResolver {
@@ -32,28 +29,16 @@ export class AccessPolicyResolver {
 			new Criteria(new Filters([]), Order.none(), 0, 0)
 		)
 		const allPolicies = accessPolicies.map(policy => {
-			const {
-				cargoId,
-				id,
-				name,
-				permissionsGroups,
-				priority,
-				departamentoId,
-				directivaId,
-				roleId,
-				vicepresidenciaEjecutivaId,
-				vicepresidenciaId
-			} = policy
+			const { cargoId, id, name, permissionsGroups, priority, unidadId, roleId } = policy
+
 			const permissionGroups = permissionsGroups.map(group => group.id)
+
 			return AccessPolicy.fromPrimitives({
 				id,
 				name,
 				roleId,
 				cargoId,
-				departamentoId,
-				vicepresidenciaId,
-				vicepresidenciaEjecutivaId,
-				directivaId,
+				unidadId,
 				permissionsGroups: permissionGroups,
 				priority
 			})

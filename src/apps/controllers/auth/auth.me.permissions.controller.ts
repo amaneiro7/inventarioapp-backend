@@ -32,10 +32,7 @@ export class AuthMePermissionsController implements Controller {
 			const permissions = await GetUserPermissions.run({
 				roleId: Number(jwtToken.roleId),
 				cargoId: jwtToken.cargoId,
-				departamentoId: jwtToken.departamentoId,
-				directivaId: jwtToken.directivaId,
-				vicepresidenciaId: jwtToken.vicepresidenciaId,
-				vicepresidenciaEjecutivaId: jwtToken.vicepresidenciaEjecutivaId
+				unidadId: jwtToken.unidadId
 			})
 
 			res.status(httpStatus[200].statusCode).send({

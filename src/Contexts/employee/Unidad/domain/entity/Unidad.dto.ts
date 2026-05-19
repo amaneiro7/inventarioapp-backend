@@ -41,7 +41,13 @@ export type UnidadParams = Omit<Unidad & { cargos: Primitives<CargoId>[] }, 'id'
  * @description Represents a Data Transfer Object (DTO) for the Unidad entity,
  * including associated Cargo DTOs.
  */
+
+interface FullChainResult {
+	text?: string | null
+	levels: string[]
+}
+
 export type UnidadDto = Unidad & {
-	full_chain?: string
-	cargos: Omit<CargoDto, 'directivas' | 'vicepresidenciasEjecutivas' | 'vicepresidencias' | 'departamentos'>[]
+	full_chain: FullChainResult | null
+	cargos: Omit<CargoDto, 'unidades'>[]
 }

@@ -12,10 +12,7 @@ import { EmployeeCedula } from '../valueObject/EmployeeCedula'
 import { LocationId } from '../../../../Location/Location/domain/valueObject/LocationId'
 import { PhoneNumber } from '../valueObject/PhoneNumber'
 import { Extension } from '../valueObject/Extension'
-import { DirectivaId } from '../../../Directiva/domain/valueObject/DirectivaId'
-import { VicepresidenciaEjecutivaId } from '../../../VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
-import { VicepresidenciaId } from '../../../Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { DepartamentoId } from '../../../Departamento/domain/valueObject/DepartamentoId'
+import { UnidadId } from '../../../Unidad/domain/valueObject/UnidadId'
 import { CargoId } from '../../../Cargo/domain/valueObject/CargoId'
 import { EmployeeCreatedDomainEvent } from '../event/EmployeeCreatedDomainEvent'
 import { EmployeeTerminatedDomainEvent } from '../event/EmployeeTerminatedDomainEvent'
@@ -24,9 +21,8 @@ import { EmployeeTypeChangedDomainEvent } from '../event/EmployeeTypeChangedDoma
 import { EmployeeUpdatedDomainEvent } from '../event/EmployeeUpdatedDomainEvent'
 import { EmployeeRemovedDomainEvent } from '../event/EmployeeRemovedDomainEvent'
 import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeDto, type EmployeeParams, type EmployeePrimitives } from './Employee.dto'
-import { UnidadId } from '../../../Unidad/domain/valueObject/UnidadId'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { EmployeeDto, EmployeeParams, EmployeePrimitives } from './Employee.dto'
 
 /**
  * @description Represents the Employee domain entity.
@@ -45,10 +41,6 @@ export class Employee extends AggregateRoot {
 		private cedula: EmployeeCedula,
 		private locationId: LocationId | null,
 		private unidadId: UnidadId | null,
-		private directivaId: DirectivaId | null,
-		private vicepresidenciaEjecutivaId: VicepresidenciaEjecutivaId | null,
-		private vicepresidenciaId: VicepresidenciaId | null,
-		private departamentoId: DepartamentoId | null,
 		private cargoId: CargoId | null,
 		private extension: Extension[],
 		private phone: PhoneNumber[]
@@ -68,8 +60,7 @@ export class Employee extends AggregateRoot {
 	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE`: Require name, lastName, nationality, and cedula.
 	 *    - `REGULAR`: Specifically requires `employeeCode`.
 	 * 4. **Hierarchy Validation**:
-	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE` must have at least a `Directiva`.
-	 *    - Hierarchy consistency is enforced (e.g., cannot have Department without Vicepresidencia).
+	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE` must have an assigned `Unidad`.
 	 * 5. **Cargo Validation**:
 	 *    - `REGULAR`, `CONTRACTOR`, `APPRENTICE` must have a `Cargo`.
 	 *
@@ -82,22 +73,12 @@ export class Employee extends AggregateRoot {
 		this.ensureCreationRules(params)
 
 		this.ensureForbiddenHierarchyByType(params.type, {
-			unidadId: params.unidadId,
-			directivaId: params.directivaId,
-			vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
-			vicepresidenciaId: params.vicepresidenciaId,
-			departamentoId: params.departamentoId
+			unidadId: params.unidadId
 		})
 		this.ensureForbiddenCargoByType(params.type, params.cargoId)
 
-		this.ensureMandatoryHierarchyByType(params.type, params?.directivaId)
+		this.ensureMandatoryHierarchyByType(params.type, params?.unidadId)
 		this.ensureMandatoryCargoByType(params.type, params?.cargoId)
-		this.ensureHierarchyConsistency({
-			departamentoId: params.departamentoId,
-			vicepresidenciaId: params.vicepresidenciaId,
-			vicepresidenciaEjecutivaId: params.vicepresidenciaEjecutivaId,
-			directivaId: params.directivaId
-		})
 
 		const employee = new Employee(
 			EmployeeId.random(),
@@ -112,12 +93,6 @@ export class Employee extends AggregateRoot {
 			new EmployeeCedula(params.cedula),
 			params.locationId ? new LocationId(params.locationId) : null,
 			params.unidadId ? new UnidadId(params.unidadId) : null,
-			params.directivaId ? new DirectivaId(params.directivaId) : null,
-			params.vicepresidenciaEjecutivaId
-				? new VicepresidenciaEjecutivaId(params.vicepresidenciaEjecutivaId)
-				: null,
-			params.vicepresidenciaId ? new VicepresidenciaId(params.vicepresidenciaId) : null,
-			params.departamentoId ? new DepartamentoId(params.departamentoId) : null,
 			params.cargoId ? new CargoId(params.cargoId) : null,
 			Extension.fromValues(params.extension),
 			PhoneNumber.fromValues(params.phone)
@@ -153,12 +128,6 @@ export class Employee extends AggregateRoot {
 			new EmployeeCedula(primitives.cedula),
 			primitives.locationId ? new LocationId(primitives.locationId) : null,
 			primitives.unidadId ? new UnidadId(primitives.unidadId) : null,
-			primitives.directivaId ? new DirectivaId(primitives.directivaId) : null,
-			primitives.vicepresidenciaEjecutivaId
-				? new VicepresidenciaEjecutivaId(primitives.vicepresidenciaEjecutivaId)
-				: null,
-			primitives.vicepresidenciaId ? new VicepresidenciaId(primitives.vicepresidenciaId) : null,
-			primitives.departamentoId ? new DepartamentoId(primitives.departamentoId) : null,
 			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
 			Extension.fromValues(primitives.extension),
 			PhoneNumber.fromValues(primitives.phone)
@@ -179,10 +148,6 @@ export class Employee extends AggregateRoot {
 			cedula: this.cedulaValue,
 			locationId: this.locationValue,
 			unidadId: this.unidadValue,
-			directivaId: this.directivaValue,
-			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
-			vicepresidenciaId: this.vicepresidenciaValue,
-			departamentoId: this.departamentoValue,
 			cargoId: this.cargoValue,
 			extension: this.extensionValue,
 			phone: this.phoneValue
@@ -235,21 +200,6 @@ export class Employee extends AggregateRoot {
 
 	get unidadValue(): Primitives<UnidadId> | null {
 		return this.unidadId?.value ?? null
-	}
-	get directivaValue(): Primitives<DirectivaId> | null {
-		return this.directivaId?.value ?? null
-	}
-
-	get vicepresidenciaEjecutivaValue(): Primitives<VicepresidenciaEjecutivaId> | null {
-		return this.vicepresidenciaEjecutivaId?.value ?? null
-	}
-
-	get vicepresidenciaValue(): Primitives<VicepresidenciaId> | null {
-		return this.vicepresidenciaId?.value ?? null
-	}
-
-	get departamentoValue(): Primitives<DepartamentoId> | null {
-		return this.departamentoId?.value ?? null
 	}
 
 	get cargoValue(): Primitives<CargoId> | null {
@@ -312,7 +262,7 @@ export class Employee extends AggregateRoot {
 
 	private static ensureMandatoryHierarchyByType(
 		type: EmployeeTypesEnum,
-		directivaId: Primitives<DirectivaId> | null
+		unidadId: Primitives<UnidadId> | null
 	): void {
 		const typesRequiringHierarchy = [
 			EmployeeTypesEnum.REGULAR,
@@ -320,8 +270,8 @@ export class Employee extends AggregateRoot {
 			EmployeeTypesEnum.APPRENTICE
 		]
 
-		if (typesRequiringHierarchy.includes(type) && !directivaId) {
-			throw new InvalidArgumentError(`El campo Directiva es obligatorio para empleados de tipo ${type}.`)
+		if (typesRequiringHierarchy.includes(type) && !unidadId) {
+			throw new InvalidArgumentError(`El campo Unidad es obligatorio para empleados de tipo ${type}.`)
 		}
 	}
 
@@ -341,24 +291,14 @@ export class Employee extends AggregateRoot {
 		type: EmployeeTypesEnum,
 		params: {
 			unidadId: Primitives<UnidadId> | null
-			directivaId: Primitives<DirectivaId> | null
-			vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-			vicepresidenciaId: Primitives<VicepresidenciaId> | null
-			departamentoId: Primitives<DepartamentoId> | null
 		}
 	): void {
 		const typesForbiddenHierarchy = [EmployeeTypesEnum.GENERIC]
 
 		if (typesForbiddenHierarchy.includes(type)) {
-			if (
-				params.unidadId ||
-				params.directivaId ||
-				params.vicepresidenciaEjecutivaId ||
-				params.vicepresidenciaId ||
-				params.departamentoId
-			) {
+			if (params.unidadId) {
 				throw new InvalidArgumentError(
-					`Los empleados de tipo ${type} no pueden tener asignada una jerarquía (Directiva, Vicepresidencia, etc.).`
+					`Los empleados de tipo ${type} no pueden tener asignada una unidad organizativa.`
 				)
 			}
 		}
@@ -369,34 +309,6 @@ export class Employee extends AggregateRoot {
 
 		if (typesForbiddenCargo.includes(type) && cargoId) {
 			throw new InvalidArgumentError(`Los empleados de tipo ${type} no pueden tener un cargo asignado.`)
-		}
-	}
-
-	private static ensureHierarchyConsistency(params: {
-		directivaId: Primitives<DirectivaId> | null
-		vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null
-		vicepresidenciaId: Primitives<VicepresidenciaId> | null
-		departamentoId: Primitives<DepartamentoId> | null
-	}): void {
-		// Validar de abajo hacia arriba es más fácil
-
-		// 1. Si hay Departamento, debe haber Vicepresidencia
-		if (params.departamentoId && !params.vicepresidenciaId) {
-			throw new InvalidArgumentError('No se puede asignar un Departamento sin una Vicepresidencia asociada.')
-		}
-
-		// 2. Si hay Vicepresidencia, debe haber Vicepresidencia Ejecutiva
-		if (params.vicepresidenciaId && !params.vicepresidenciaEjecutivaId) {
-			throw new InvalidArgumentError(
-				'No se puede asignar una Vicepresidencia sin una Vicepresidencia Ejecutiva asociada.'
-			)
-		}
-
-		// 3. Si hay Vicepresidencia Ejecutiva, debe haber Directiva
-		if (params.vicepresidenciaEjecutivaId && !params.directivaId) {
-			throw new InvalidArgumentError(
-				'No se puede asignar una Vicepresidencia Ejecutiva sin una Directiva asociada.'
-			)
 		}
 	}
 
@@ -597,33 +509,6 @@ export class Employee extends AggregateRoot {
 
 	updateUnidad(newUnidadId: Primitives<UnidadId> | null): void {
 		this.unidadId = newUnidadId ? new UnidadId(newUnidadId) : null
-	}
-
-	// En Employee.ts
-	updateHierarchy(
-		directivaId: Primitives<DirectivaId> | null,
-		vicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null,
-		vicepresidenciaId: Primitives<VicepresidenciaId> | null,
-		departamentoId: Primitives<DepartamentoId> | null
-	): void {
-		// 1. Validar que la nueva combinación sea consistente jerárquicamente
-		Employee.ensureHierarchyConsistency({
-			directivaId,
-			vicepresidenciaEjecutivaId,
-			vicepresidenciaId,
-			departamentoId
-		})
-
-		// 2. Validar que cumpla con el tipo de empleado actual
-		Employee.ensureMandatoryHierarchyByType(this.type.value, directivaId)
-
-		// 3. Aplicar cambios
-		this.directivaId = directivaId ? new DirectivaId(directivaId) : null
-		this.vicepresidenciaEjecutivaId = vicepresidenciaEjecutivaId
-			? new VicepresidenciaEjecutivaId(vicepresidenciaEjecutivaId)
-			: null
-		this.vicepresidenciaId = vicepresidenciaId ? new VicepresidenciaId(vicepresidenciaId) : null
-		this.departamentoId = departamentoId ? new DepartamentoId(departamentoId) : null
 	}
 
 	updateCargo(newCargoId: Primitives<CargoId> | null): void {

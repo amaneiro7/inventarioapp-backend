@@ -49,10 +49,6 @@ export function buildAuthResponse({
 				cedula: employee.cedula,
 				locationId: employee.locationId,
 				unidadId: employee.unidadId,
-				directivaId: employee.directivaId,
-				vicepresidenciaEjecutivaId: employee.vicepresidenciaEjecutivaId,
-				vicepresidenciaId: employee.vicepresidenciaId,
-				departamentoId: employee.departamentoId,
 				cargoId: employee.cargoId,
 				extension: employee.extension,
 				phone: employee.phone

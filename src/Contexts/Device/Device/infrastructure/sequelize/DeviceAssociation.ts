@@ -114,21 +114,9 @@ export class DeviceAssociation {
 			association: 'cargo', // 4 - 0
 			attributes: ['id', 'name']
 		}
-		const directivaInclude: IncludeOptions = {
-			association: 'directiva', // 4 - 1
-			attributes: ['id', 'name']
-		}
-		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
-			association: 'vicepresidenciaEjecutiva', // 4 - 2
-			attributes: ['id', 'name']
-		}
-		const vicepresidenciaInclude: IncludeOptions = {
-			association: 'vicepresidencia', // 4 - 3
-			attributes: ['id', 'name']
-		}
-		const departamentoInclude: IncludeOptions = {
-			association: 'departamento', // 4 - 4
-			attributes: ['id', 'name']
+
+		const unidadInclude: IncludeOptions = {
+			association: 'unidad' // 4 - 4
 		}
 
 		const employeInclude: IncludeOptions = {
@@ -141,19 +129,14 @@ export class DeviceAssociation {
 				'lastName',
 				'email',
 				'isStillWorking',
+				'unidadId',
 				'employeeCode',
 				'nationality',
 				'cedula',
 				'extension',
 				'phone'
 			],
-			include: [
-				cargoInclude,
-				directivaInclude,
-				vicepresidenciaEjecutivaInclude,
-				vicepresidenciaInclude,
-				departamentoInclude
-			]
+			include: [cargoInclude, unidadInclude]
 		}
 
 		const processorInclude: IncludeOptions = {
@@ -391,37 +374,13 @@ export class DeviceAssociation {
 			}
 			delete whereFilters?.cargoId
 		}
-		//Filtrar por directiva
-		if ('directivaId' in whereFilters) {
+		//Filtrar por unidad
+		if ('unidadId' in whereFilters) {
 			employeInclude.required = true
-			directivaInclude.where = {
-				id: whereFilters.directivaId
+			unidadInclude.where = {
+				id: whereFilters.unidadId
 			}
-			delete whereFilters?.directivaId
-		}
-		//Filtrar por VPE
-		if ('vicepresidenciaEjecutivaId' in whereFilters) {
-			employeInclude.required = true
-			vicepresidenciaEjecutivaInclude.where = {
-				id: whereFilters.vicepresidenciaEjecutivaId
-			}
-			delete whereFilters?.vicepresidenciaEjecutivaId
-		}
-		//Filtrar por VP
-		if ('vicepresidenciaId' in whereFilters) {
-			employeInclude.required = true
-			vicepresidenciaInclude.where = {
-				id: whereFilters.vicepresidenciaId
-			}
-			delete whereFilters?.vicepresidenciaId
-		}
-		//Filtrar por departamento
-		if ('departamentoId' in whereFilters) {
-			employeInclude.required = true
-			departamentoInclude.where = {
-				id: whereFilters.departamentoId
-			}
-			delete whereFilters?.departamentoId
+			delete whereFilters?.unidadId
 		}
 
 		// Poder filtrar por ubicacion - Tipo de sitio
@@ -504,10 +463,7 @@ export class DeviceAssociation {
 		const orderMap: Record<string, string[]> = {
 			employeeId: ['employee', 'userName'],
 			cargoId: ['employee', 'cargo', 'name'],
-			directivaId: ['employee', 'directiva', 'name'],
-			vicepresidenciaEjecutivaId: ['employee', 'vicepresidenciaEjecutiva', 'name'],
-			vicepresidenciaId: ['employee', 'vicepresidencia', 'name'],
-			departamentoId: ['employee', 'departamento', 'name'],
+			unidadId: ['employee', 'unidad', 'name'],
 			locationId: ['location', 'name'],
 			cityId: ['location', 'site', 'city', 'name'],
 			stateId: ['location', 'site', 'city', 'state', 'name'],

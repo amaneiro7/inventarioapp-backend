@@ -8,13 +8,10 @@ import { SiteUpdatedDomainEvent } from '../../../Location/Site/domain/event/Site
 import { CityUpdatedDomainEvent } from '../../../Location/City/domain/event/CityUpdatedDomainEvent'
 import { RegionUpdatedDomainEvent } from '../../../Location/Region/domain/events/RegionUpdatedDomainEvent'
 import { CargoUpdatedDomainEvent } from '../../../employee/Cargo/domain/event/CargoUpdatedDomainEvent'
-import { DepartamentoUpdatedDomainEvent } from '../../../employee/Departamento/domain/event/DepartamentoUpdatedDomainEvent'
-import { DirectivaUpdatedDomainEvent } from '../../../employee/Directiva/domain/event/DirectivaUpdatedDomainEvent'
-import { VicepresidenciaUpdatedDomainEvent } from '../../../employee/Vicepresidencia/domain/event/VicepresidenciaUpdatedDomainEvent'
-import { VicepresidenciaEjecutivaUpdatedDomainEvent } from '../../../employee/VicepresidenciaEjecutiva/domain/event/VicepresidenciaEjecutivaUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
+import { UnidadUpdatedDomainEvent } from '../../../employee/Unidad/domain/event/UnidadUpdatedDomainEvent'
 
 export class InvalidateDeviceMonitoringCacheOnGeneralInfoChanged implements DomainEventSubscriber<
 	| DeviceUpdatedDomainEvent
@@ -26,10 +23,7 @@ export class InvalidateDeviceMonitoringCacheOnGeneralInfoChanged implements Doma
 	| CityUpdatedDomainEvent
 	| RegionUpdatedDomainEvent
 	| CargoUpdatedDomainEvent
-	| DepartamentoUpdatedDomainEvent
-	| DirectivaUpdatedDomainEvent
-	| VicepresidenciaUpdatedDomainEvent
-	| VicepresidenciaEjecutivaUpdatedDomainEvent
+	| UnidadUpdatedDomainEvent
 > {
 	private readonly invalidator: CacheInvalidator
 
@@ -48,10 +42,7 @@ export class InvalidateDeviceMonitoringCacheOnGeneralInfoChanged implements Doma
 			| CityUpdatedDomainEvent
 			| RegionUpdatedDomainEvent
 			| CargoUpdatedDomainEvent
-			| DepartamentoUpdatedDomainEvent
-			| DirectivaUpdatedDomainEvent
-			| VicepresidenciaUpdatedDomainEvent
-			| VicepresidenciaEjecutivaUpdatedDomainEvent
+			| UnidadUpdatedDomainEvent
 	): Promise<void> {
 		if (event instanceof DeviceUpdatedDomainEvent) {
 			// Solo invalidamos si el dispositivo es una computadora, ya que son los únicos monitoreados
@@ -84,10 +75,7 @@ export class InvalidateDeviceMonitoringCacheOnGeneralInfoChanged implements Doma
 			CityUpdatedDomainEvent,
 			RegionUpdatedDomainEvent,
 			CargoUpdatedDomainEvent,
-			DepartamentoUpdatedDomainEvent,
-			DirectivaUpdatedDomainEvent,
-			VicepresidenciaUpdatedDomainEvent,
-			VicepresidenciaEjecutivaUpdatedDomainEvent
+			UnidadUpdatedDomainEvent
 		]
 	}
 }

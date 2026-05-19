@@ -7,15 +7,11 @@ import { AccessPolicyPriority } from '../valueObject/AccessPolicyPriority'
 import { AccessPolicyRemovedDomainEvent } from '../event/AccessPolicyRemovedDomainEvent'
 import { AccessPolicyCreatedDomainEvent } from '../event/AccessPolicyCreatedDomainEvent'
 import { PermissionGroupAssignedToAccessPolicyDomainEvent } from '../event/PermissionGroupAssignedToAccessPolicyDomainEvent'
-import { RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
-import { DepartamentoId } from '../../../../employee/Departamento/domain/valueObject/DepartamentoId'
-import { VicepresidenciaId } from '../../../../employee/Vicepresidencia/domain/valueObject/VicepresidenciaId'
-import { VicepresidenciaEjecutivaId } from '../../../../employee/VicepresidenciaEjecutiva/domain/valueObject/VicepresidenciaEjecutivaId'
 import { AccessPolicyUpdatedDomainEvent } from '../event/AccessPolicyUpdatedDomainEvent'
-import { DirectivaId } from '../../../../employee/Directiva/domain/valueObject/DirectivaId'
-import { type AccessPolicyFields, type AccessPolicyParams, type AccessPolicyPrimitives } from './AccessPolicy.dto'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import { RoleId } from '../../../../User/Role/domain/valueObject/RoleId'
 import { UnidadId } from '../../../../employee/Unidad/domain/valueObject/UnidadId'
+import type { AccessPolicyFields, AccessPolicyParams, AccessPolicyPrimitives } from './AccessPolicy.dto'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 
 export class AccessPolicy extends AggregateRoot {
 	private permissionsGroups: Set<PermissionGroupId>
@@ -24,10 +20,6 @@ export class AccessPolicy extends AggregateRoot {
 		private name: AccessPolicyName,
 		private roleId: RoleId | null,
 		private cargoId: CargoId | null,
-		private departamentoId: DepartamentoId | null,
-		private vicepresidenciaId: VicepresidenciaId | null,
-		private vicepresidenciaEjecutivaId: VicepresidenciaEjecutivaId | null,
-		private directivaId: DirectivaId | null,
 		private unidadId: UnidadId | null,
 		permissionsGroups: Set<PermissionGroupId>,
 		private priority: AccessPolicyPriority
@@ -43,12 +35,6 @@ export class AccessPolicy extends AggregateRoot {
 			new AccessPolicyName(params.name),
 			params.roleId ? new RoleId(params.roleId) : null,
 			params.cargoId ? new CargoId(params.cargoId) : null,
-			params.departamentoId ? new DepartamentoId(params.departamentoId) : null,
-			params.vicepresidenciaId ? new VicepresidenciaId(params.vicepresidenciaId) : null,
-			params.vicepresidenciaEjecutivaId
-				? new VicepresidenciaEjecutivaId(params.vicepresidenciaEjecutivaId)
-				: null,
-			params.directivaId ? new DirectivaId(params.directivaId) : null,
 			params.unidadId ? new UnidadId(params.unidadId) : null,
 			permissionsGroups,
 			new AccessPolicyPriority(params.priority)
@@ -82,12 +68,6 @@ export class AccessPolicy extends AggregateRoot {
 			new AccessPolicyName(primitives.name),
 			primitives.roleId ? new RoleId(primitives.roleId) : null,
 			primitives.cargoId ? new CargoId(primitives.cargoId) : null,
-			primitives.departamentoId ? new DepartamentoId(primitives.departamentoId) : null,
-			primitives.vicepresidenciaId ? new VicepresidenciaId(primitives.vicepresidenciaId) : null,
-			primitives.vicepresidenciaEjecutivaId
-				? new VicepresidenciaEjecutivaId(primitives.vicepresidenciaEjecutivaId)
-				: null,
-			primitives.directivaId ? new DirectivaId(primitives.directivaId) : null,
 			primitives.unidadId ? new UnidadId(primitives.unidadId) : null,
 			uniquePermissionsGroups,
 			new AccessPolicyPriority(primitives.priority)
@@ -100,10 +80,6 @@ export class AccessPolicy extends AggregateRoot {
 			name: this.nameValue,
 			roleId: this.roleValue,
 			cargoId: this.cargoValue,
-			departamentoId: this.departamentoValue,
-			vicepresidenciaId: this.vicepresidenciaValue,
-			vicepresidenciaEjecutivaId: this.vicepresidenciaEjecutivaValue,
-			directivaId: this.directivaValue,
 			unidadId: this.unidadValue,
 			permissionsGroups: this.permissionGroupValue,
 			priority: this.priorityValue
@@ -114,31 +90,13 @@ export class AccessPolicy extends AggregateRoot {
 	matches(employee: {
 		roleId?: Primitives<RoleId> | null
 		cargoId?: Primitives<CargoId> | null
-		departamentoId?: Primitives<DepartamentoId> | null
-		vicepresidenciaId?: Primitives<VicepresidenciaId> | null
-		vicepresidenciaEjecutivaId?: Primitives<VicepresidenciaEjecutivaId> | null
-		directivaId?: Primitives<DirectivaId> | null
 		unidadId?: Primitives<UnidadId> | null
 	}): boolean {
 		const roleMatch = !this.roleId || String(this.roleValue) === String(employee.roleId)
 		const cargoMatch = !this.cargoId || this.cargoValue === employee.cargoId
-		const deptoMatch = !this.departamentoId || this.departamentoValue === employee.departamentoId
-		const vicepresidenciaMatch = !this.vicepresidenciaId || this.vicepresidenciaValue === employee.vicepresidenciaId
-		const vicepresidenciaEjecutivaMatch =
-			!this.vicepresidenciaEjecutivaId ||
-			this.vicepresidenciaEjecutivaValue === employee.vicepresidenciaEjecutivaId
-		const directivaMatch = !this.directivaId || this.directivaValue === employee.directivaId
 		const unidadMatch = !this.unidadId || this.unidadValue === employee.unidadId
 
-		return (
-			cargoMatch &&
-			deptoMatch &&
-			vicepresidenciaMatch &&
-			vicepresidenciaEjecutivaMatch &&
-			directivaMatch &&
-			unidadMatch &&
-			roleMatch
-		)
+		return cargoMatch && unidadMatch && roleMatch
 	}
 
 	get idValue(): Primitives<AccessPolicyId> {
@@ -156,18 +114,6 @@ export class AccessPolicy extends AggregateRoot {
 		return this.cargoId?.value ?? null
 	}
 
-	get departamentoValue(): Primitives<DepartamentoId> | null {
-		return this.departamentoId?.value ?? null
-	}
-	get vicepresidenciaValue(): Primitives<VicepresidenciaId> | null {
-		return this.vicepresidenciaId?.value ?? null
-	}
-	get vicepresidenciaEjecutivaValue(): Primitives<VicepresidenciaEjecutivaId> | null {
-		return this.vicepresidenciaEjecutivaId?.value ?? null
-	}
-	get directivaValue(): Primitives<DirectivaId> | null {
-		return this.directivaId?.value ?? null
-	}
 	get unidadValue(): Primitives<UnidadId> | null {
 		return this.unidadId?.value ?? null
 	}
@@ -203,20 +149,6 @@ export class AccessPolicy extends AggregateRoot {
 		this.name = new AccessPolicyName(newName)
 	}
 
-	updateDepartamento(newDepartamentoId: Primitives<DepartamentoId> | null): void {
-		this.departamentoId = newDepartamentoId ? new DepartamentoId(newDepartamentoId) : null
-	}
-	updateVicepresidencia(newVicepresidenciaId: Primitives<VicepresidenciaId> | null): void {
-		this.vicepresidenciaId = newVicepresidenciaId ? new VicepresidenciaId(newVicepresidenciaId) : null
-	}
-	updatevicepresidenciaEjecutiva(newvicepresidenciaEjecutivaId: Primitives<VicepresidenciaEjecutivaId> | null): void {
-		this.vicepresidenciaEjecutivaId = newvicepresidenciaEjecutivaId
-			? new VicepresidenciaEjecutivaId(newvicepresidenciaEjecutivaId)
-			: null
-	}
-	updateDirectiva(newDirectivaId: Primitives<DirectivaId> | null): void {
-		this.directivaId = newDirectivaId ? new DirectivaId(newDirectivaId) : null
-	}
 	updateUnidad(newUnidadId: Primitives<UnidadId> | null): void {
 		this.unidadId = newUnidadId ? new UnidadId(newUnidadId) : null
 	}

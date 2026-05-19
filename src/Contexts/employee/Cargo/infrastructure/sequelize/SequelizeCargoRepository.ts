@@ -54,14 +54,7 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
 				const cargo = await CargoModel.findByPk(id, {
-					include: [
-						{
-							association: 'departamentos',
-							attributes: ['id', 'name'],
-							through: { attributes: [] }
-						},
-						'employee'
-					]
+					include: ['employee']
 				})
 				return cargo ? (cargo.get({ plain: true }) as CargoDto) : null
 			}
@@ -108,21 +101,12 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 	async save(payload: CargoPrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { departamentos, directivas, vicepresidenciasEjecutivas, vicepresidencias, ...restPayload } = payload
+			const { unidades, ...restPayload } = payload
 
 			const [cargoInstance] = await CargoModel.upsert(restPayload, { transaction, returning: true })
 
-			if (departamentos) {
-				await cargoInstance.setDepartamentos(departamentos, { transaction })
-			}
-			if (directivas) {
-				await cargoInstance.setDirectivas(directivas, { transaction })
-			}
-			if (vicepresidenciasEjecutivas) {
-				await cargoInstance.setVicepresidenciaEjecutivas(vicepresidenciasEjecutivas, { transaction })
-			}
-			if (vicepresidencias) {
-				await cargoInstance.setVicepresidencias(vicepresidencias, { transaction })
+			if (unidades) {
+				await cargoInstance.setUnidades(unidades, { transaction })
 			}
 
 			await transaction.commit()

@@ -23,22 +23,7 @@ export class EmployeeAssociation {
 			association: 'unidad',
 			attributes: ['id', 'name']
 		}
-		const directivaInclude: IncludeOptions = {
-			association: 'directiva',
-			attributes: ['id', 'name']
-		}
-		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
-			association: 'vicepresidenciaEjecutiva',
-			attributes: ['id', 'name']
-		}
-		const vicepresidenciaInclude: IncludeOptions = {
-			association: 'vicepresidencia',
-			attributes: ['id', 'name']
-		}
-		const departamentoInclude: IncludeOptions = {
-			association: 'departamento',
-			attributes: ['id', 'name']
-		}
+
 		const cargoInclude: IncludeOptions = {
 			association: 'cargo',
 			attributes: ['id', 'name']
@@ -81,16 +66,7 @@ export class EmployeeAssociation {
 			],
 			separate: true
 		}
-		options.include = [
-			unidadInclude,
-			directivaInclude,
-			vicepresidenciaEjecutivaInclude,
-			vicepresidenciaInclude,
-			departamentoInclude,
-			cargoInclude,
-			locationInclude,
-			deviceInclude
-		]
+		options.include = [unidadInclude, cargoInclude, locationInclude, deviceInclude]
 
 		// Poder filtrar por ubicacion - por sitio
 		if ('siteId' in whereFilters) {
@@ -155,10 +131,7 @@ export class EmployeeAssociation {
 
 		const orderMap: Record<string, string[]> = {
 			cargoId: ['cargo', 'name'],
-			directivaId: ['directiva', 'name'],
-			vicepresidenciaEjecutivaId: ['vicepresidenciaEjecutiva', 'name'],
-			vicepresidenciaId: ['vicepresidencia', 'name'],
-			departamentoId: ['departamento', 'name'],
+			unidadId: ['unidad', 'name'],
 			locationId: ['location', 'name'],
 			cityId: ['location', 'site', 'city', 'name'],
 			stateId: ['location', 'site', 'city', 'state', 'name'],

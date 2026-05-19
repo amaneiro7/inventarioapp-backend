@@ -13,10 +13,7 @@ export class CargoAssociation {
 	 * @method convertFilter
 	 * @description Modifies a Sequelize FindOptions object to include Cargo associations.
 	 * It applies a **single, prioritized filter** to the associations. The priority order is:
-	 * 1. `departamentoId`
-	 * 2. `vicepresidenciaId`
-	 * 3. `vicepresidenciaEjecutivaId`
-	 * 4. `directivaId`
+	 * 1. `unidadId`
 	 * Only the first matching filter found in this order will be applied. All association-related
 	 * filter keys are then removed from the main 'where' clause.
 	 *
@@ -26,62 +23,27 @@ export class CargoAssociation {
 	 */
 	static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		// --- 1. Define Includes with Clear Naming ---
-		const departamentoInclude: IncludeOptions = {
-			association: 'departamentos',
-			attributes: ['id', 'name'],
-			through: { attributes: [] }
-		}
-		const vicepresidenciaInclude: IncludeOptions = {
-			association: 'vicepresidencias',
-			attributes: ['id', 'name'],
-			through: { attributes: [] }
-		}
-		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
-			association: 'vicepresidenciaEjecutivas',
-			attributes: ['id', 'name'],
-			through: { attributes: [] }
-		}
-		const directivaInclude: IncludeOptions = {
-			association: 'directivas',
+		const unidadInclude: IncludeOptions = {
+			association: 'unidades',
 			attributes: ['id', 'name'],
 			through: { attributes: [] }
 		}
 
-		options.include = [
-			departamentoInclude,
-			vicepresidenciaInclude,
-			vicepresidenciaEjecutivaInclude,
-			directivaInclude
-		]
+		options.include = [unidadInclude]
 
 		const whereFilters = options.where ?? {}
 
 		// --- 2. Apply Prioritized Filter (Mutually Exclusive) ---
 		// This `if/else if` chain ensures only the highest-priority filter is applied.
-		if ('departamentoId' in whereFilters) {
-			departamentoInclude.where = { id: whereFilters.departamentoId }
-		} else if ('vicepresidenciaId' in whereFilters) {
-			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
-		} else if ('vicepresidenciaEjecutivaId' in whereFilters) {
-			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjecutivaId }
-		} else if ('directivaId' in whereFilters) {
-			directivaInclude.where = { id: whereFilters.directivaId }
+		if ('unidadId' in whereFilters) {
+			unidadInclude.where = { id: whereFilters.unidadId }
 		}
 
 		// --- 3. Clean Up All Association Filter Keys ---
 		// Regardless of which filter was applied (or if none were), we remove all
 		// potential association keys from the main 'where' clause to prevent side effects.
-		if ('departamentoId' in whereFilters) {
-			delete whereFilters.departamentoId
-		}
-		if ('vicepresidenciaId' in whereFilters) {
-			delete whereFilters.vicepresidenciaId
-		}
-		if ('vicepresidenciaEjecutivaId' in whereFilters) {
-			delete whereFilters.vicepresidenciaEjecutivaId
-		}
-		if ('directivaId' in whereFilters) {
-			delete whereFilters.directivaId
+		if ('unidadId' in whereFilters) {
+			delete whereFilters.unidadId
 		}
 
 		options.where = whereFilters

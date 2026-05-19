@@ -79,7 +79,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 		const employeeInclude: IncludeOptions = {
 			association: 'employee',
 			attributes: [],
-			include: [{ association: 'vicepresidenciaEjecutiva', attributes: [] }]
+			include: [{ association: 'unidad', attributes: [] }]
 		}
 
 		// Level 0 (Root)
@@ -96,7 +96,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 			[sequelize.col('device.location.site.city.state.region.administrativeRegion.name'), 'admRegionName'],
 			[sequelize.col('device.location.site.name'), 'siteName'],
 			[sequelize.col('device.location.name'), 'locationName'],
-			[sequelize.col('device.employee.vicepresidenciaEjecutiva.name'), 'vpeName'],
+			[sequelize.col('device.employee.unidad.name'), 'vpeName'],
 			[sequelize.fn('COUNT', sequelize.col('*')), 'count']
 		]
 		options.include = [deviceInclude]
@@ -109,7 +109,7 @@ export class DeviceMonitoringDashboardByLocationAssociation {
 			sequelize.col('device.location.site.city.state.region.administrativeRegion.name'),
 			sequelize.col('device.location.site.name'),
 			sequelize.col('device.location.name'),
-			sequelize.col('device.employee.vicepresidenciaEjecutiva.name')
+			sequelize.col('device.employee.unidad.name')
 		]
 
 		options.raw = true

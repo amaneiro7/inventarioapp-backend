@@ -14,6 +14,7 @@ import { UnidadRenamedDomainEvent } from '../event/UnidadRenamedDomainEvent'
 import { UnidadUpdatedDomainEvent } from '../event/UnidadUpdatedDomainEvent'
 import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
 import type { UnidadParams, UnidadPrimitives, UnidadDto } from './Unidad.dto'
+import { InvalidArgumentError } from '../../../../Shared/domain/errors/ApiError'
 
 /**
  * @description Represents the Unidad domain entity, the highest level in the organizational chart.
@@ -142,10 +143,17 @@ export class Unidad extends AggregateRoot {
 
 	/**
 	 * @method updateCodigoInterno
-	 * @description Updates the internal code of the Unidad.
-	 * @param {Primitives<CodigoInterno>} newCodigoInterno The new internal code for the Unidad.
+	 * @description Actualiza el código interno de la unidad.
+	 * Protege la integridad impidiendo cambios accidentales si ya existe un valor.
+	 * @param {Primitives<CodigoInterno>} newCodigoInterno El nuevo código.
+	 * @param {boolean} force Si es true, permite sobreescribir un código ya existente.
 	 */
-	updateCodigoInterno(newCodigoInterno: Primitives<CodigoInterno>): void {
+	updateCodigoInterno(newCodigoInterno: Primitives<CodigoInterno>, force = false): void {
+		if (this.codigoInternoValue && this.codigoInternoValue !== newCodigoInterno && !force) {
+			throw new InvalidArgumentError(
+				'El código interno ya está asignado y no puede ser modificado para preservar la integridad de los reportes. Use el flag de forzado si es una corrección autorizada.'
+			)
+		}
 		this.codigoInterno = new CodigoInterno(newCodigoInterno)
 	}
 

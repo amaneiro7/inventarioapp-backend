@@ -12,7 +12,7 @@ type UnidadRenamedDomainEventAttributes = {
  * @description Represents the domain event that is triggered when a Unidad is renamed.
  */
 export class UnidadRenamedDomainEvent extends DomainEvent {
-	static readonly EVENT_NAME = 'directiva.renamed'
+	static readonly EVENT_NAME = 'unidad.renamed'
 
 	readonly name: string
 

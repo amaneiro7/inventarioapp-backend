@@ -1,4 +1,4 @@
-import { type NextFunction, type Request, type Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
 import { PermissionGroup } from '../../Contexts/AccessControl/PermissionGroup/domain/entity/PermissionGroup'
 import { PermissionId } from '../../Contexts/AccessControl/Permission/domain/valueObject/PermissionId'
 import { container } from '../di/container'
@@ -9,10 +9,10 @@ import { AuthenticationRequiredError } from '../../Contexts/AccessControl/Permis
 import { ForbiddenError } from '../../Contexts/Shared/domain/errors/ForbiddenError'
 import { PermissionDoesNotExistError } from '../../Contexts/AccessControl/Permission/domain/errors/PermissionDoesNotExistError'
 import { ADMIN_ROLE_ID } from '../../Contexts/User/Role/domain/RoleOptions'
-import { type PermissionGroupRepository } from '../../Contexts/AccessControl/PermissionGroup/domain/repository/PermissionGroupRepository'
-import { type PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
-import { type JwtPayloadUser } from '../../Contexts/Auth/domain/service/GenerateToken'
-import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyResolver'
+import type { PermissionGroupRepository } from '../../Contexts/AccessControl/PermissionGroup/domain/repository/PermissionGroupRepository'
+import type { PermissionRepository } from '../../Contexts/AccessControl/Permission/domain/repository/PermissionRepository'
+import type { JwtPayloadUser } from '../../Contexts/Auth/domain/service/GenerateToken'
+import type { AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPolicy/application/AccessPolicyResolver'
 
 /**
  * @function hasPermission
@@ -20,7 +20,7 @@ import { type AccessPolicyResolver } from '../../Contexts/AccessControl/AccessPo
  * tiene un permiso específico requerido para acceder a la ruta.
  *
  * @param {string} requiredPermissionName El nombre del permiso necesario (ej: 'user:create').
- * @returns {Function} Un middleware asíncrono (req, res, next).
+ * @returns {(req: Request, res: Response, next: NextFunction) => Promise<void>} Un middleware asíncrono (req, res, next).
  */
 export const hasPermission = (requiredPermissionName: string) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
@@ -43,8 +43,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			}
 
 			// 4. VALIDAR DATOS PARA RESOLVER POLÍTICA
-			const { roleId, cargoId, departamentoId, directivaId, vicepresidenciaEjecutivaId, vicepresidenciaId } =
-				userPayload
+			const { roleId, cargoId, unidadId } = userPayload
 
 			if (!roleId) {
 				return next(new ForbiddenError('Falta el rol para resolver la política de acceso.'))
@@ -55,10 +54,7 @@ export const hasPermission = (requiredPermissionName: string) => {
 			const permissionGroupIds = await accessPolicyResolver.run({
 				roleId: Number(roleId),
 				cargoId,
-				departamentoId,
-				directivaId,
-				vicepresidenciaEjecutivaId,
-				vicepresidenciaId
+				unidadId
 			})
 			if (!permissionGroupIds || permissionGroupIds.length === 0) {
 				const userFriendlyMessage = 'Su perfil no tiene grupos de permisos asignados.'

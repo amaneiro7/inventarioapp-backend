@@ -10,11 +10,7 @@ import { InvalidateLocationCacheOnLocationChanged } from '../../../Contexts/Loca
 import { CreateLocationMonitoringOnLocationCreated } from '../../../Contexts/Location/LocationMonitoring/application/CreateLocationMonitoringOnLocationCreated'
 import { InvalidateLocationMonitoringCacheOnLocationChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnLocationChanged'
 import { SyncLocationMonitoringStateOnEvents } from '../../../Contexts/Location/LocationMonitoring/application/SyncLocationMonitoringStateOnEvents'
-import { InvalidateDirectivaCacheOnDirectivaChanged } from '../../../Contexts/employee/Directiva/application/InvalidateDirectivaCacheOnDirectivaChanged'
 import { InvalidateCargoCacheOnCargoChanged } from '../../../Contexts/employee/Cargo/application/InvalidateCargoCacheOnCargoChanged'
-import { InvalidateDepartamentoCacheOnDepartamentoChanged } from '../../../Contexts/employee/Departamento/application/InvalidateDepartamentoCacheOnDepartamentoChanged'
-import { InvalidateVicepresidenciaCacheOnVicepresidenciaChanged } from '../../../Contexts/employee/Vicepresidencia/application/InvalidateVicepresidenciaCacheOnVicepresidenciaChanged'
-import { InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged } from '../../../Contexts/employee/VicepresidenciaEjecutiva/application/InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged'
 import { DeactivateUserOnEmployeeTerminated } from '../../../Contexts/User/user/application/DeactivateUserOnEmployeeTerminated'
 import { InvalidateEmployeeCacheOnEmployeeChanged } from '../../../Contexts/employee/Employee/application/InvalidateEmployeeCacheOnEmployeeChanged'
 import { InvalidateProcessorCacheOnProcessorChanged } from '../../../Contexts/Features/Processor/application/InvalidateProcessorCacheOnProcessorChanged'
@@ -31,6 +27,7 @@ import { InvalidatePermissionCacheOnPermissionChanged } from '../../../Contexts/
 import { InvalidateDeviceMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Device/DeviceMonitoring/application/InvalidateDeviceMonitoringCacheOnGeneralInfoChanged'
 import { InvalidateLocationMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnGeneralInfoChanged'
 import { UpdateEmployeeLocationOnDeviceChanged } from '../../../Contexts/employee/Employee/application/UpdateEmployeeLocationOnDeviceChanged'
+import { InvalidateUnidadCacheOnUnidadChanged } from '../../../Contexts/employee/Unidad/application/InvalidateUnidadCacheOnUnidadChanged'
 
 export enum DomainEventDependencies {
 	// MonitorinService
@@ -63,12 +60,10 @@ export enum DomainEventDependencies {
 	InvalidateRegionCacheOnRegionChanged = 'invalidateRegionCacheOnRegionChanged',
 	InvalidateLocationCacheOnLocationChanged = 'invalidateLocationCacheOnLocationChanged',
 	// Employee
-	InvalidateDirectivaCacheOnDirectivaChanged = 'invalidateDirectivaCacheOnDirectivaChanged',
+	InvalidateUnidadCacheOnUnidadChanged = 'invalidateUnidadCacheOnUnidadChanged',
 	UpdateEmployeeLocationOnDeviceChanged = 'updateEmployeeLocationOnDeviceChanged',
 	InvalidateCargoCacheOnCargoChanged = 'invalidateCargoCacheOnCargoChanged',
-	InvalidateDepartamentoCacheOnDepartamentoChanged = 'invalidateDepartamentoCacheOnDepartamentoChanged',
-	InvalidateVicepresidenciaCacheOnVicepresidenciaChanged = 'invalidateVicepresidenciaCacheOnVicepresidenciaChanged',
-	InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged = 'invalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged',
+
 	InvalidateEmployeeCacheOnEmployeeChanged = 'invalidateEmployeeCacheOnEmployeeChanged',
 	// User
 	DeactivateUserOnEmployeeTerminated = 'deactivateUserOnEmployeeTerminated',
@@ -124,20 +119,11 @@ export const register = (container: AwilixContainer) => {
 		[DomainEventDependencies.SyncLocationMonitoringStateOnEvents]: asClass(
 			SyncLocationMonitoringStateOnEvents
 		).singleton(),
-		[DomainEventDependencies.InvalidateDirectivaCacheOnDirectivaChanged]: asClass(
-			InvalidateDirectivaCacheOnDirectivaChanged
-		).singleton(),
 		[DomainEventDependencies.InvalidateCargoCacheOnCargoChanged]: asClass(
 			InvalidateCargoCacheOnCargoChanged
 		).singleton(),
-		[DomainEventDependencies.InvalidateDepartamentoCacheOnDepartamentoChanged]: asClass(
-			InvalidateDepartamentoCacheOnDepartamentoChanged
-		).singleton(),
-		[DomainEventDependencies.InvalidateVicepresidenciaCacheOnVicepresidenciaChanged]: asClass(
-			InvalidateVicepresidenciaCacheOnVicepresidenciaChanged
-		).singleton(),
-		[DomainEventDependencies.InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged]: asClass(
-			InvalidateVicepresidenciaEjecutivaCacheOnVicepresidenciaEjecutivaChanged
+		[DomainEventDependencies.InvalidateUnidadCacheOnUnidadChanged]: asClass(
+			InvalidateUnidadCacheOnUnidadChanged
 		).singleton(),
 		[DomainEventDependencies.DeactivateUserOnEmployeeTerminated]: asClass(
 			DeactivateUserOnEmployeeTerminated

@@ -4,10 +4,6 @@ import { PermissionGroupId } from '../../PermissionGroup/domain/valueObject/Perm
 import { AccessPolicyNameUniquenessChecker } from '../domain/service/AccessPolicyNameuniquenessChecker'
 import { PermissionGroupExistenceChecker } from '../../PermissionGroup/domain/service/PermissionGroupExistanceChecker'
 import { RoleExistenceChecker } from '../../../User/Role/domain/service/RoleExistanceChecker'
-import { DirectivaExistenceChecker } from '../../../employee/Directiva/domain/service/DirectivaExistanceChecker'
-import { VicepresidenciaEjecutivaExistenceChecker } from '../../../employee/VicepresidenciaEjecutiva/domain/service/VicepresidenciaEjecutivaExistanceChecker'
-import { VicepresidenciaExistenceChecker } from '../../../employee/Vicepresidencia/domain/service/VicepresidenciaExistanceChecker'
-import { DepartamentoExistenceChecker } from '../../../employee/Departamento/domain/service/DepartamentoExistanceChecker'
 import { UnidadExistenceChecker } from '../../../employee/Unidad/domain/service/UnidadExistanceChecker'
 import { CargoExistenceChecker } from '../../../employee/Cargo/domain/service/CargoExistanceChecker'
 import { type Primitives } from '../../../Shared/domain/value-object/Primitives'
@@ -17,10 +13,6 @@ import { type AccessPolicyFields, type AccessPolicyParams } from '../domain/enti
 import { type EventBus } from '../../../Shared/domain/event/EventBus'
 import { type PermissionGroupRepository } from '../../PermissionGroup/domain/repository/PermissionGroupRepository'
 import { type CargoRepository } from '../../../employee/Cargo/domain/repository/CargoRepository'
-import { type DirectivaRepository } from '../../../employee/Directiva/domain/repository/DirectivaRepository'
-import { type VicepresidenciaEjecutivaRepository } from '../../../employee/VicepresidenciaEjecutiva/domain/repository/VicepresidenciaEjecutivaRepository'
-import { type VicepresidenciaRepository } from '../../../employee/Vicepresidencia/domain/repository/VicepresidenciaRepository'
-import { type DepartamentoRepository } from '../../../employee/Departamento/domain/repository/DepartamentoRepository'
 import { type RoleRepository } from '../../../User/Role/domain/repository/RoleRepository'
 import { type UnidadRepository } from '../../../employee/Unidad/domain/repository/UnidadRepository'
 
@@ -30,10 +22,6 @@ export class AccessPolicyUpdater {
 	private readonly permissionGroupExistanceChecker: PermissionGroupExistenceChecker
 	private readonly roleExistenceChecker: RoleExistenceChecker
 	private readonly cargoExistenceChecker: CargoExistenceChecker
-	private readonly departamentoExistenceChecker: DepartamentoExistenceChecker
-	private readonly vicepresidenciaExistenceChecker: VicepresidenciaExistenceChecker
-	private readonly vicepresidenciaEjecutivaExistenceChecker: VicepresidenciaEjecutivaExistenceChecker
-	private readonly directivaExistenceChecker: DirectivaExistenceChecker
 	private readonly unidadExistenceChecker: UnidadExistenceChecker
 	private readonly eventBus: EventBus
 
@@ -43,20 +31,12 @@ export class AccessPolicyUpdater {
 		permissionGroupRepository,
 		roleRepository,
 		cargoRepository,
-		departamentoRepository,
-		vicepresidenciaRepository,
-		vicepresidenciaEjecutivaRepository,
-		directivaRepository,
 		unidadRepository
 	}: {
 		accessPolicyRepository: AccessPolicyRepository
 		permissionGroupRepository: PermissionGroupRepository
 		roleRepository: RoleRepository
-		directivaRepository: DirectivaRepository
 		unidadRepository: UnidadRepository
-		vicepresidenciaEjecutivaRepository: VicepresidenciaEjecutivaRepository
-		vicepresidenciaRepository: VicepresidenciaRepository
-		departamentoRepository: DepartamentoRepository
 		cargoRepository: CargoRepository
 		eventBus: EventBus
 	}) {
@@ -64,13 +44,7 @@ export class AccessPolicyUpdater {
 		this.accessPolicyNameUniquenessChecker = new AccessPolicyNameUniquenessChecker(accessPolicyRepository)
 		this.permissionGroupExistanceChecker = new PermissionGroupExistenceChecker(permissionGroupRepository)
 		this.roleExistenceChecker = new RoleExistenceChecker(roleRepository)
-		this.directivaExistenceChecker = new DirectivaExistenceChecker(directivaRepository)
 		this.unidadExistenceChecker = new UnidadExistenceChecker(unidadRepository)
-		this.vicepresidenciaEjecutivaExistenceChecker = new VicepresidenciaEjecutivaExistenceChecker(
-			vicepresidenciaEjecutivaRepository
-		)
-		this.vicepresidenciaExistenceChecker = new VicepresidenciaExistenceChecker(vicepresidenciaRepository)
-		this.departamentoExistenceChecker = new DepartamentoExistenceChecker(departamentoRepository)
 		this.cargoExistenceChecker = new CargoExistenceChecker(cargoRepository)
 		this.eventBus = eventBus
 	}
@@ -118,51 +92,6 @@ export class AccessPolicyUpdater {
 				newValue: params.cargoId
 			})
 			policy.updateCargo(params.cargoId)
-		}
-
-		if (params.departamentoId !== undefined && params.departamentoId !== policy.departamentoValue) {
-			validations.push(this.departamentoExistenceChecker.ensureExist(params.departamentoId))
-			changes.push({
-				field: 'departamentoId',
-				oldValue: policy.departamentoValue,
-				newValue: params.departamentoId
-			})
-			policy.updateDepartamento(params.departamentoId)
-		}
-
-		if (params.vicepresidenciaId !== undefined && params.vicepresidenciaId !== policy.vicepresidenciaValue) {
-			validations.push(this.vicepresidenciaExistenceChecker.ensureExist(params.vicepresidenciaId))
-			changes.push({
-				field: 'vicepresidenciaId',
-				oldValue: policy.vicepresidenciaValue,
-				newValue: params.vicepresidenciaId
-			})
-			policy.updateVicepresidencia(params.vicepresidenciaId)
-		}
-
-		if (
-			params.vicepresidenciaEjecutivaId !== undefined &&
-			params.vicepresidenciaEjecutivaId !== policy.vicepresidenciaEjecutivaValue
-		) {
-			validations.push(
-				this.vicepresidenciaEjecutivaExistenceChecker.ensureExist(params.vicepresidenciaEjecutivaId)
-			)
-			changes.push({
-				field: 'vicepresidenciaEjecutivaId',
-				oldValue: policy.vicepresidenciaEjecutivaValue,
-				newValue: params.vicepresidenciaEjecutivaId
-			})
-			policy.updatevicepresidenciaEjecutiva(params.vicepresidenciaEjecutivaId)
-		}
-
-		if (params.directivaId !== undefined && params.directivaId !== policy.directivaValue) {
-			validations.push(this.directivaExistenceChecker.ensureExist(params.directivaId))
-			changes.push({
-				field: 'directivaId',
-				oldValue: policy.directivaValue,
-				newValue: params.directivaId
-			})
-			policy.updateDirectiva(params.directivaId)
 		}
 
 		if (params.unidadId !== undefined && params.unidadId !== policy.unidadValue) {

@@ -1,7 +1,7 @@
 import { employeeTypeTranslations } from './employeeTypeTranslations'
-import { type EmployeeDto } from '../../domain/entity/Employee.dto'
-import { type ClearEmployeeDataset } from './EmployeeResponse'
-import { type EmployeeTypesEnum } from '../../domain/valueObject/EmployeeType'
+import type { EmployeeDto } from '../../domain/entity/Employee.dto'
+import type { ClearEmployeeDataset } from './EmployeeResponse'
+import type { EmployeeTypesEnum } from '../../domain/valueObject/EmployeeType'
 
 /**
  * Configuración de etiquetas por defecto para campos vacíos.
@@ -11,13 +11,11 @@ const LABELS = {
 	NO_APLICA: 'No Aplica',
 	SIN_FECHA: 'Sin Fecha',
 	SIN_CARGO: 'Sin Cargo',
-	SIN_DEPARTAMENTO: 'Sin Departamento',
-	SIN_VICEPRESIDENCIA: 'Sin Vicepresidencia',
+	SIN_UNIDAD: 'Sin Unidad',
 	SIN_NOMBRE: 'Sin Nombre',
 	SIN_NACIONALIDAD: 'Sin Nacionalidad',
 	SIN_CEDULA: 'Sin Cédula',
-	SIN_CORREO: 'Sin Correo',
-	SIN_DIRECTIVA: 'Sin Directiva'
+	SIN_CORREO: 'Sin Correo'
 } as const
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('es-VE')
@@ -39,7 +37,7 @@ function getValueOrDefault<T>(value: T | null | undefined, defaultValue: string)
  */
 export function clearEmployeeDataset({ employees }: { employees: EmployeeDto[] }): Array<ClearEmployeeDataset> {
 	return employees.map(employee => {
-		// Optimización: Extraer referencias anidadas para evitar múltiples accesos profundos
+		// Desestructuración de datos de ubicación para aplanar el dataset del Excel
 		const loc = employee.location
 		const site = loc?.site
 		const city = site?.city
@@ -61,16 +59,29 @@ export function clearEmployeeDataset({ employees }: { employees: EmployeeDto[] }
 			'Correo Electrónico': employee.email ?? LABELS.SIN_CORREO
 		}
 
-		// 2. Datos Estructurales (Cargo, Departamento, etc)
+		// 2. Datos Organizacionales (Cargo y Jerarquía de Unidades)
+		// Se extrae la cadena jerárquica pre-calculada en el repositorio para evitar lógica recursiva aquí
+		const hierarchy = employee?.unidad?.full_chain?.levels ?? []
+
+		// Nombre de la unidad inmediata a la que pertenece el empleado
+		const unidadEspecifica = employee?.unidad?.name ?? LABELS.SIN_UNIDAD
+
 		const structuralFields = {
 			Cargo: getValueOrDefault(employee.cargo?.name, LABELS.SIN_CARGO) as string,
-			Departamento: getValueOrDefault(employee.departamento?.name, LABELS.SIN_DEPARTAMENTO) as string,
-			Vicepresidencia: getValueOrDefault(employee.vicepresidencia?.name, LABELS.SIN_VICEPRESIDENCIA) as string,
-			'Vicepresidencia Ejecutiva': getValueOrDefault(
-				employee.vicepresidenciaEjecutiva?.name,
-				LABELS.SIN_VICEPRESIDENCIA
-			) as string,
-			Directiva: getValueOrDefault(employee.directiva?.name, LABELS.SIN_DIRECTIVA) as string
+			/**
+			 * Desglose por columnas de la jerarquía (Niveles 1 al 6) para permitir filtrado y agrupación en Excel
+			 */
+			'Jerarquía Nivel 1 (Directiva)': hierarchy[0] ?? LABELS.NO_APLICA,
+			'Jerarquía Nivel 2 (VPE)': hierarchy[1] ?? LABELS.NO_APLICA,
+			'Jerarquía Nivel 3 (VP)': hierarchy[2] ?? LABELS.NO_APLICA,
+			'Jerarquía Nivel 4 (Gerencia)': hierarchy[3] ?? LABELS.NO_APLICA,
+			'Jerarquía Nivel 5 (Depto)': hierarchy[4] ?? LABELS.NO_APLICA,
+			'Jerarquía Nivel 6': hierarchy[5] ?? LABELS.NO_APLICA,
+
+			'Unidad Específica': unidadEspecifica,
+
+			// Cadena de texto completa para una lectura rápida del contexto organizacional
+			'Ruta Jerárquica': employee?.unidad?.full_chain?.text ?? LABELS.SIN_UNIDAD
 		}
 
 		// 3. Datos de Ubicación y Contacto

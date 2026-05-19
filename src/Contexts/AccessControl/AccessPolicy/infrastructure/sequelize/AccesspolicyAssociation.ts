@@ -33,37 +33,13 @@ export class AccessPolicyAssociation {
 			association: 'cargo', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
-		const departamentoInclude: IncludeOptions = {
-			association: 'departamento', // As defined in AccessPolicySchema.ts
-			attributes: ['id', 'name'] // We only need it for filtering, not for the result
-		}
-		const vicepresidenciaInclude: IncludeOptions = {
-			association: 'vicepresidencia', // As defined in AccessPolicySchema.ts
-			attributes: ['id', 'name'] // We only need it for filtering, not for the result
-		}
-		const vicepresidenciaEjecutivaInclude: IncludeOptions = {
-			association: 'vicepresidenciaEjecutiva', // As defined in AccessPolicySchema.ts
-			attributes: ['id', 'name'] // We only need it for filtering, not for the result
-		}
-		const directivaInclude: IncludeOptions = {
-			association: 'directiva', // As defined in AccessPolicySchema.ts
-			attributes: ['id', 'name'] // We only need it for filtering, not for the result
-		}
+
 		const unidadInclude: IncludeOptions = {
 			association: 'unidad', // As defined in AccessPolicySchema.ts
 			attributes: ['id', 'name'] // We only need it for filtering, not for the result
 		}
 
-		options.include = [
-			permissionGroupInclude,
-			cargoInclude,
-			departamentoInclude,
-			roleInclude,
-			vicepresidenciaInclude,
-			vicepresidenciaEjecutivaInclude,
-			directivaInclude,
-			unidadInclude
-		]
+		options.include = [permissionGroupInclude, cargoInclude, roleInclude, unidadInclude]
 
 		// If a AccessPolicyGroupId filter exists, apply it to the association include
 		if ('permissionGroupId' in whereFilters) {
@@ -83,29 +59,11 @@ export class AccessPolicyAssociation {
 			// Remove the filter from the main where clause to avoid ambiguity
 			delete whereFilters.cargoId
 		}
-		// If a directivaId filter exists, apply it to the association include
-		if ('directivaId' in whereFilters) {
-			directivaInclude.where = { id: whereFilters.directivaId }
+		// If a unidadId filter exists, apply it to the association include
+		if ('unidadId' in whereFilters) {
+			unidadInclude.where = { id: whereFilters.unidadId }
 			// Remove the filter from the main where clause to avoid ambiguity
-			delete whereFilters.directivaId
-		}
-		// If a vicepresidenciaEjectivaId filter exists, apply it to the association include
-		if ('vicepresidenciaEjectivaId' in whereFilters) {
-			vicepresidenciaEjecutivaInclude.where = { id: whereFilters.vicepresidenciaEjectivaId }
-			// Remove the filter from the main where clause to avoid ambiguity
-			delete whereFilters.vicepresidenciaEjectivaId
-		}
-		// If a vicepresidenciaId filter exists, apply it to the association include
-		if ('vicepresidenciaId' in whereFilters) {
-			vicepresidenciaInclude.where = { id: whereFilters.vicepresidenciaId }
-			// Remove the filter from the main where clause to avoid ambiguity
-			delete whereFilters.vicepresidenciaId
-		}
-		// If a departamentoId filter exists, apply it to the association include
-		if ('departamentoId' in whereFilters) {
-			departamentoInclude.where = { id: whereFilters.departamentoId }
-			// Remove the filter from the main where clause to avoid ambiguity
-			delete whereFilters.departamentoId
+			delete whereFilters.unidadId
 		}
 
 		options.where = whereFilters

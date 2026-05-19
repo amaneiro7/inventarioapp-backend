@@ -19,6 +19,7 @@ const LABELS = {
 	SIN_CATEGORIA: 'Sin Categoría',
 	SIN_MARCA: 'Sin Marca',
 	SIN_MODELO: 'Sin Modelo',
+	SIN_UNIDAD: 'Sin Unidad',
 	SIN_FECHA: 'Sin Fecha',
 	NO_APLICA: 'No Aplica',
 	SIN_IP: 'Sin IP',
@@ -62,7 +63,7 @@ export function clearComputerDataset({
 	devices: DeviceDto[]
 }): Array<Partial<ClearComputerDataset & ClearDefaultDataset>> {
 	return devices.map(device => {
-		// Optimización: Extraer referencias anidadas una sola vez
+		// Aplanado de relaciones jerárquicas del dispositivo y su empleado asignado
 		const loc = device.location
 		const site = loc?.site
 		const city = site?.city
@@ -87,7 +88,12 @@ export function clearComputerDataset({
 			Modelo: getValueOrDefault(device.model?.name, LABELS.SIN_MODELO)
 		}
 
-		// 2. Campos Específicos (Cuerpo)
+		// 2. Datos Organizacionales del Usuario Responsable
+		// Se hereda la jerarquía de la unidad del empleado para dar contexto al activo
+		const hierarchy = employee?.unidad?.full_chain?.levels ?? []
+
+		// Nombre de la unidad inmediata del empleado
+		const unidadEspecifica = employee?.unidad?.name ?? LABELS.SIN_UNIDAD
 		let specificFields = {}
 		if (device.category.mainCategoryId === MainCategoryList.COMPUTER && device.computer) {
 			const comp = device.computer
@@ -113,16 +119,23 @@ export function clearComputerDataset({
 				Apellido: getValueOrDefault(employee?.lastName, LABELS.NO_APLICA),
 				Cédula:
 					employee?.nationality && employee?.cedula
-						? `${employee.nationality}-${employee.cedula}`
+						? `${employee?.nationality}-${employee?.cedula}`
 						: LABELS.NO_APLICA,
 				'Código de Empleado': getValueOrDefault(employee?.employeeCode, LABELS.NO_APLICA),
-				Directiva: getValueOrDefault(employee?.directiva?.name, LABELS.NO_APLICA),
-				'Vicepresidencia Ejecutiva': getValueOrDefault(
-					employee?.vicepresidenciaEjecutiva?.name,
-					LABELS.NO_APLICA
-				),
-				Vicepresidencia: getValueOrDefault(employee?.vicepresidencia?.name, LABELS.NO_APLICA),
-				Departamento: getValueOrDefault(employee?.departamento?.name, LABELS.NO_APLICA),
+				/**
+				 * Mapeo de la jerarquía organizacional del empleado responsable del activo
+				 */
+				'Jerarquía Nivel 1 (Directiva)': hierarchy[0] ?? LABELS.NO_APLICA,
+				'Jerarquía Nivel 2 (VPE)': hierarchy[1] ?? LABELS.NO_APLICA,
+				'Jerarquía Nivel 3 (VP)': hierarchy[2] ?? LABELS.NO_APLICA,
+				'Jerarquía Nivel 4 (Gerencia)': hierarchy[3] ?? LABELS.NO_APLICA,
+				'Jerarquía Nivel 5 (Depto)': hierarchy[4] ?? LABELS.NO_APLICA,
+				'Jerarquía Nivel 6': hierarchy[5] ?? LABELS.NO_APLICA,
+
+				'Unidad Específica': unidadEspecifica,
+
+				// Referencia visual completa de la ubicación organizacional
+				'Ruta Jerárquica': employee?.unidad?.full_chain?.text ?? LABELS.SIN_UNIDAD,
 				Cargo: getValueOrDefault(employee?.cargo?.name, LABELS.NO_APLICA)
 			}
 		}
