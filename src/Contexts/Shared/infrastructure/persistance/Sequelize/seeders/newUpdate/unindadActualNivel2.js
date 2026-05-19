@@ -1,4 +1,4 @@
-const { capitalCadena } = require('./capitalCadena')
+const { capitalCadena, cleanText } = require('./capitalCadena')
 const { unionCoord } = require('./newCoordinacion')
 const now = new Date()
 const level2Actual = [
@@ -159,9 +159,9 @@ const updatedFromUnion = unionCoord.map(unis => {
 
 // 2. Identificamos los elementos en level2Actual que NO están en unionCoord para agregarlos
 const missingInUnion = level2Actual
-	.filter(vp => !unionCoord.some(u => u.name.toLowerCase() === vp.name.toLowerCase()))
+	.filter(vp => !unionCoord.some(u => cleanText(u.name) === cleanText(vp.name)))
 	.map(vp => ({
-		id: vp.id || '',
+		id: vp.id || randomUUID(),
 		name: vp.name,
 		level: vp.level,
 		codigoInterno: vp.codigoInterno,

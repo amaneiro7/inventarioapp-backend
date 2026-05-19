@@ -1,3 +1,6 @@
+const { randomUUID } = require('node:crypto')
+const now = new Date()
+
 function capitalCadena(cadena) {
 	// Lista de palabras que deben permanecer en minúscula (artículos, preposiciones, conjunciones)
 	const excepciones = ['de', 'la', 'el', 'en', 'y', 'o', 'con', 'del', 'las', 'los', 'para', 'por']
@@ -30,4 +33,25 @@ function capitalCadena(cadena) {
 		.join(' ')
 }
 
-module.exports = { capitalCadena }
+// Función helper para limpiar acentos y pasarlo a minúsculas
+const cleanText = str =>
+	str
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+
+const missingUnidadId = (data, compareList) => {
+	return data
+		.filter(item => !compareList.some(comp => cleanText(comp.name) === cleanText(item.name)))
+		.map(d => ({
+			id: d.id || randomUUID(),
+			name: d.name,
+			level: d.level,
+			codigoInterno: d.codigoInterno,
+			isUnitActive: d.isUnitActive,
+			parent_id: d.parent_id,
+			created_at: now,
+			updated_at: now
+		}))
+}
+module.exports = { capitalCadena, cleanText, missingUnidadId }

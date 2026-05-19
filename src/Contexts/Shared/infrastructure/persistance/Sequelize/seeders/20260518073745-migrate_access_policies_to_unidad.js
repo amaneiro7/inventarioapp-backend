@@ -6,25 +6,25 @@ const accessPolicyMigrate = [
 	{
 		name: 'Soporte TI Occidente',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Tecnico Occidente'.toLowerCase()
+			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
 		)?.id
 	},
 	{
 		name: 'Soporte TI Occidente Manager',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Tecnico Occidente'.toLowerCase()
+			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
 		)?.id
 	},
 	{
 		name: 'Soporte Tecnico Gerencial',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Tecnico Occidente'.toLowerCase()
+			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
 		)?.id
 	},
 	{
 		name: 'Soporte TI Caracas',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Tecnico Caracas'.toLowerCase()
+			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Caracas'.toLowerCase()
 		)?.id
 	},
 	{
