@@ -877,7 +877,7 @@ const level3Actual = [
 
 // 1. Actualizamos los elementos existentes en unionCoord que coinciden con vpActual
 const updatedFromUnion = updateNivel2.map(unis => {
-	const found = level3Actual.find(d => d.name.toLowerCase() === unis.name.toLowerCase())
+	const found = level3Actual.find(d => cleanText(d.name) === cleanText(unis.name))
 	if (found) {
 		return {
 			...unis,

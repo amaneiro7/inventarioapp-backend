@@ -1,6 +1,6 @@
 const { randomUUID } = require('node:crypto')
 const { updateNivel3 } = require('./unindadActualNivel3')
-const { capitalCadena } = require('./capitalCadena')
+const { capitalCadena, cleanText } = require('./capitalCadena')
 const now = new Date()
 
 const level4Actual = [
@@ -1999,7 +1999,7 @@ const level4Actual = [
 
 // 1. Actualizamos los elementos existentes en unionCoord que coinciden con vpActual
 const updatedFromUnion = updateNivel3.map(unis => {
-	const found = level4Actual.find(d => d.name.toLowerCase() === unis.name.toLowerCase())
+	const found = level4Actual.find(d => cleanText(d.name) === cleanText(unis.name))
 	if (found) {
 		return {
 			...unis,
@@ -2015,7 +2015,7 @@ const updatedFromUnion = updateNivel3.map(unis => {
 
 // 2. Identificamos los elementos en vpActual que NO están en unionCoord para agregarlos
 const missingInUnion = level4Actual
-	.filter(vp => !updateNivel3.some(u => u.name.toLowerCase() === vp.name.toLowerCase()))
+	.filter(vp => !updateNivel3.some(u => cleanText(u.name) === cleanText(vp.name)))
 	.map(vp => ({
 		id: vp.id || randomUUID(),
 		name: vp.name,

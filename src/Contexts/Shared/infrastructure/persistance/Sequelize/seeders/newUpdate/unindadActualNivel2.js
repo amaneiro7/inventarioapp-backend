@@ -143,7 +143,7 @@ const level2Actual = [
 
 // 1. Actualizamos los elementos existentes en unionCoord que coinciden con level2Actual
 const updatedFromUnion = unionCoord.map(unis => {
-	const found = level2Actual.find(d => d.name.toLowerCase() === unis.name.toLowerCase())
+	const found = level2Actual.find(d => cleanText(d.name) === cleanText(unis.name))
 	if (found) {
 		return {
 			...unis,
