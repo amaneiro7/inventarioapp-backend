@@ -1,5 +1,6 @@
-import type { Order, FindOptions, IncludeOptions } from 'sequelize'
+import { type Order, type FindOptions, type IncludeOptions, Op } from 'sequelize'
 import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 /**
  * @class EmployeeAssociation
  * @description A utility class to build complex Sequelize query options for the Employee model.
@@ -114,6 +115,31 @@ export class EmployeeAssociation {
 			}
 
 			delete whereFilters?.administrativeRegionId
+		}
+
+		//Filtrar por unidad (jerárquicamente)
+		if ('unidadId' in whereFilters) {
+			// Hacemos que la inclusión de la unidad sea requerida para aplicar el filtro.
+			unidadInclude.required = true
+			const unidadIdFilter = whereFilters.unidadId as { [key: symbol]: string }
+			const targetUnidadId = unidadIdFilter[Object.getOwnPropertySymbols(unidadIdFilter)[0]]
+
+			// Implementación de búsqueda jerárquica recursiva:
+			// Esto busca el ID de la unidad y todos sus descendientes (sub-niveles)
+			unidadInclude.where = {
+				id: {
+					[Op.in]: sequelize.literal(`(
+						WITH RECURSIVE subordinates AS (
+							SELECT id FROM unidades WHERE id = '${targetUnidadId}'
+							UNION
+							SELECT u.id FROM unidades u
+							INNER JOIN subordinates s ON s.id = u.parent_id
+						)
+						SELECT id FROM subordinates
+					)`)
+				}
+			}
+			delete whereFilters?.unidadId
 		}
 
 		// Re-assign the modified where clauses back to the options.

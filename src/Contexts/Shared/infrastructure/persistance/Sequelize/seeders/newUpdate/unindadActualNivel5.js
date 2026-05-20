@@ -2058,6 +2058,7 @@ const updatedFromUnion = updateNivel4.map(unis => {
 	if (found) {
 		return {
 			...unis,
+			name: unis.name, // Mantenemos el nombre de unionCoord para evitar cambios no deseados
 			level: found.level,
 			codigoInterno: found.codigoInterno,
 			isUnitActive: found.isUnitActive,

@@ -1,6 +1,6 @@
 import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { MainCategoryList } from '../../../../Category/MainCategory/domain/MainCategoryDefaultData'
-import type { IncludeOptions, Order, FindOptions } from 'sequelize'
+import { type IncludeOptions, type Order, type FindOptions, Op } from 'sequelize'
 import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
 
 /**
@@ -377,8 +377,24 @@ export class DeviceAssociation {
 		//Filtrar por unidad
 		if ('unidadId' in whereFilters) {
 			employeInclude.required = true
+
+			const unidadIdFilter = whereFilters.unidadId as { [key: symbol]: string }
+			const targetUnidadId = unidadIdFilter[Object.getOwnPropertySymbols(unidadIdFilter)[0]]
+
+			// Implementación de búsqueda jerárquica recursiva:
+			// Esto busca el ID de la unidad y todos sus descendientes (sub-niveles)
 			unidadInclude.where = {
-				id: whereFilters.unidadId
+				id: {
+					[Op.in]: sequelize.literal(`(
+						WITH RECURSIVE subordinates AS (
+							SELECT id FROM unidades WHERE id = '${targetUnidadId}'
+							UNION
+							SELECT u.id FROM unidades u
+							INNER JOIN subordinates s ON s.id = u.parent_id
+						)
+						SELECT id FROM subordinates
+					)`)
+				}
 			}
 			delete whereFilters?.unidadId
 		}

@@ -1,36 +1,37 @@
 'use strict'
 
+const { cleanText } = require('./newUpdate/capitalCadena')
 const { unidadCompleteUpdate } = require('./newUpdate/unindadActualDuplicate')
 
 const accessPolicyMigrate = [
 	{
 		name: 'Soporte TI Occidente',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
+			d => cleanText(d.name) === cleanText('Gerencia De Soporte Técnico Occidente')
 		)?.id
 	},
 	{
 		name: 'Soporte TI Occidente Manager',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
+			d => cleanText(d.name) === cleanText('Gerencia De Soporte Técnico Occidente')
 		)?.id
 	},
 	{
 		name: 'Soporte Tecnico Gerencial',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Occidente'.toLowerCase()
+			d => cleanText(d.name) === cleanText('Gerencia De Soporte Técnico Occidente')
 		)?.id
 	},
 	{
 		name: 'Soporte TI Caracas',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'Gerencia De Soporte Técnico Caracas'.toLowerCase()
+			d => cleanText(d.name) === cleanText('Gerencia De Soporte Técnico Caracas')
 		)?.id
 	},
 	{
 		name: 'Soporte Tecnico VP',
 		unidad_id: unidadCompleteUpdate.find(
-			d => d.name.toLowerCase() === 'V.P. Gestión De Soporte Técnico Y Arquitectura TI'.toLowerCase()
+			d => cleanText(d.name) === cleanText('V.P. Gestión De Soporte Técnico Y Arquitectura TI')
 		)?.id
 	}
 ]

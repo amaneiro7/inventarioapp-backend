@@ -5,8 +5,14 @@
 const newPermissions = [
 	{
 		id: crypto.randomUUID(),
+		name: 'admin:clear-cache',
+		description:
+			'Permite limpiar la caché del sistema para solucionar problemas de datos obsoletos o inconsistentes.'
+	},
+	{
+		id: crypto.randomUUID(),
 		name: 'unidades:read-list',
-		description: 'Permite listar todo los proveedores de servicios de internet (ISP) registrados en el sistema.'
+		description: 'Permite listar todos los proveedores de servicios de internet (ISP) registrados.'
 	},
 	{
 		id: crypto.randomUUID(),
@@ -16,12 +22,12 @@ const newPermissions = [
 	{
 		id: crypto.randomUUID(),
 		name: 'unidades:create',
-		description: 'Permite crear un nuevo proveedor de servicios de internet (ISP) en el sistema.'
+		description: 'Permite registrar un nuevo proveedor de servicios de internet (ISP).'
 	},
 	{
 		id: crypto.randomUUID(),
 		name: 'unidades:update',
-		description: 'Permite actualizar un proveedor de servicios de internet (ISP) existente en el sistema.'
+		description: 'Permite actualizar la información de un proveedor de servicios de internet (ISP) existente.'
 	}
 ]
 
@@ -50,7 +56,7 @@ module.exports = {
 			await queryInterface.bulkDelete(
 				'permissions',
 				{
-					id: { [Sequelize.Op.in]: newPermissions.map(p => p.id) }
+					name: { [Sequelize.Op.in]: newPermissions.map(p => p.name) }
 				},
 				{ transaction }
 			)

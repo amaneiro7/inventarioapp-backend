@@ -1,6 +1,6 @@
 const { randomUUID } = require('node:crypto')
 const { updateNivel6 } = require('./unindadActualNivel6')
-const { capitalCadena } = require('./capitalCadena')
+const { capitalCadena, cleanText } = require('./capitalCadena')
 const now = new Date()
 
 const finalCheck = [

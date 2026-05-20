@@ -49,9 +49,10 @@ module.exports = {
 			await queryInterface.dropTable('vicepresidencia_ejecutivas', { transaction })
 			await queryInterface.dropTable('directivas', { transaction })
 
-			await queryInterface.dropTable('centro_costos', { transaction })
-			await queryInterface.dropTable('centro_trabajos', { transaction })
+			await queryInterface.removeColumn('model_laptops', 'processor_socket_id', { transaction })
 			await queryInterface.dropTable('processor_sockets', { transaction })
+			await queryInterface.dropTable('centro_trabajos', { transaction })
+			await queryInterface.dropTable('centro_costos', { transaction })
 
 			await transaction.commit()
 		} catch (error) {

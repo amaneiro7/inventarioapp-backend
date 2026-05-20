@@ -147,6 +147,7 @@ const updatedFromUnion = unionCoord.map(unis => {
 	if (found) {
 		return {
 			...unis,
+			name: found.name,
 			level: found.level,
 			codigoInterno: found.codigoInterno,
 			isUnitActive: found.is_unit_active,
@@ -174,8 +175,7 @@ const missingInUnion = level2Actual
 // 3. Combinamos ambos resultados para obtener la lista final
 const updateNivel2 = [...updatedFromUnion, ...missingInUnion]
 
-console.log('Level 2 Tiene:', level2Actual.length)
-
+console.log('Nivel 2 Actualizado:', updateNivel2.length)
 /**
  * Función para identificar qué unidades no lograron encontrar a su padre
  */
