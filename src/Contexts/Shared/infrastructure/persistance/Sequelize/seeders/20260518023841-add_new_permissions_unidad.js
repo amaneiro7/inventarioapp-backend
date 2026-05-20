@@ -5,12 +5,6 @@
 const newPermissions = [
 	{
 		id: crypto.randomUUID(),
-		name: 'admin:clear-cache',
-		description:
-			'Permite limpiar la caché del sistema para solucionar problemas de datos obsoletos o inconsistentes.'
-	},
-	{
-		id: crypto.randomUUID(),
 		name: 'unidades:read-list',
 		description: 'Permite listar todos los proveedores de servicios de internet (ISP) registrados.'
 	},

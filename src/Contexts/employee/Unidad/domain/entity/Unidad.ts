@@ -151,7 +151,7 @@ export class Unidad extends AggregateRoot {
 	updateCodigoInterno(newCodigoInterno: Primitives<CodigoInterno>, force = false): void {
 		if (this.codigoInternoValue && this.codigoInternoValue !== newCodigoInterno && !force) {
 			throw new InvalidArgumentError(
-				'El código interno ya está asignado y no puede ser modificado para preservar la integridad de los reportes. Use el flag de forzado si es una corrección autorizada.'
+				'El código interno ya está asignado y no puede ser modificado para preservar la integridad de los reportes.'
 			)
 		}
 		this.codigoInterno = new CodigoInterno(newCodigoInterno)
