@@ -252,27 +252,34 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	 * @returns {Promise<void>} Una promesa que se resuelve cuando todos los ítems han sido cargados en la caché.
 	 */
 	protected async hydrateLocalState(): Promise<void> {
-		this.logger.info(`[CACHE] Hidratando estado local de ${this.getMonitoringName()}...`)
-		this.wasRunningLastCycle = false
-		this.monitoredItems.clear()
+		try {
+			this.logger.info(`[CACHE] Hidratando estado local de ${this.getMonitoringName()}...`)
+			this.wasRunningLastCycle = false
+			this.monitoredItems.clear()
 
-		const pageSize = 1000
-		let page = 1
-		let hasMore = true
-		let totalLoaded = 0
+			const pageSize = 1000
+			let page = 1
+			let hasMore = true
+			let totalLoaded = 0
 
-		while (hasMore) {
-			const items = await this.repository.searchNotNullIpAddress({ page, pageSize })
-			for (const item of items) {
-				const id = this.getMonitoringId(item)
-				this.monitoredItems.set(id, item)
+			while (hasMore) {
+				const items = await this.repository.searchNotNullIpAddress({ page, pageSize })
+				for (const item of items) {
+					const id = this.getMonitoringId(item)
+					this.monitoredItems.set(id, item)
+				}
+				totalLoaded += items.length
+				if (items.length < pageSize) hasMore = false
+				else page++
 			}
-			totalLoaded += items.length
-			if (items.length < pageSize) hasMore = false
-			else page++
+			this.wasRunningLastCycle = true
+			this.logger.info(`[CACHE] ${totalLoaded} items cargados en memoria para ${this.getMonitoringName()}.`)
+		} catch (error) {
+			this.logger.error(`[CRITICAL] Error hidratando estado: ${error}`)
+			// IMPORTANTE: Si la hidratación falla, NO deberías marcar wasRunningLastCycle = true
+			this.wasRunningLastCycle = false
+			throw error // Detén el ciclo para que no escanee con datos corruptos
 		}
-		this.wasRunningLastCycle = true
-		this.logger.info(`[CACHE] ${totalLoaded} items cargados en memoria para ${this.getMonitoringName()}.`)
 	}
 
 	/**
@@ -301,17 +308,21 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 	 * @returns {Promise<void>}
 	 */
 	protected async executePingScan({ showLogs = false }: { showLogs: boolean }): Promise<void> {
+		// Al inicio del bucle dentro de executePingScan
+		const currentItems = Array.from(this.monitoredItems.keys())
+		this.logger.info(`[DEBUG] Escaneando ${currentItems.length} items de la caché.`)
+
 		try {
 			this.pingLogger.logPingResult({
 				fileName: this.getMonitoringName(),
 				message: `Iniciando escaneo de ping de ${this.getMonitoringName()}.`
-			}) // Log start of scan
+			})
 
 			const config = await this.loadMonitoringConfig()
 			const limit = pLimit(config.concurrencyLimit)
 
-			// Convertimos el Map a Array para poder segmentar por chunks
-			const itemsToMonitor = Array.from(this.monitoredItems.values())
+			// Obtenemos los items y permitimos un ordenamiento opcional en la capa de aplicación
+			const itemsToMonitor = await this.applyApplicationLevelSorting(Array.from(this.monitoredItems.values()))
 			const totalMonitored = itemsToMonitor.length
 			const chunkSize = 500 // Tamaño del lote
 
@@ -375,6 +386,16 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 				message: `Error durante el escaneo de ping de ${this.getMonitoringName()}: ${error}`
 			}) // Log error
 		}
+	}
+
+	/**
+	 * @description Permite a las subclases aplicar un ordenamiento específico en memoria
+	 * antes de iniciar el escaneo. Por defecto no hace nada.
+	 * @param items Lista de items a monitorear.
+	 * @returns Lista ordenada.
+	 */
+	protected async applyApplicationLevelSorting(items: DTO[]): Promise<DTO[]> {
+		return items
 	}
 
 	/**

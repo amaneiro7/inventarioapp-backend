@@ -1,3 +1,4 @@
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { Op } from 'sequelize'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { DeviceMonitoringModel } from './DeviceMonitoringSchema'
@@ -79,7 +80,8 @@ export class SequelizeDeviceMonitoringRepository
 								}
 							]
 						}
-					]
+					], // Asegúrate de que 'ip_address' sea el nombre real de la columna en la BD
+					order: [[sequelize.cast(sequelize.col('device.computer.ip_address'), 'INET'), 'ASC']]
 				})
 				return rows.map(row => row.get({ plain: true })) as DeviceMonitoringDto[]
 			}

@@ -1,4 +1,5 @@
 import { Op } from 'sequelize'
+import { sequelize } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import { SequelizeCriteriaConverter } from '../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
 import { LocationMonitoringModel } from './LocationMonitoringSchema'
 import { TimeTolive } from '../../../../Shared/domain/CacheRepository'
@@ -93,7 +94,8 @@ export class SequelizeLocationMonitoringRepository
 								subnet: { [Op.ne]: null }
 							}
 						}
-					]
+					],
+					order: [[sequelize.cast(sequelize.col('location.subnet'), 'INET'), 'ASC']]
 				})
 				return rows.map(row => row.get({ plain: true })) as LocationMonitoringDto[]
 			}
@@ -130,7 +132,8 @@ export class SequelizeLocationMonitoringRepository
 			fetchFunction: async () => {
 				const locationMonitoring = await LocationMonitoringModel.findOne({
 					where: { locationId },
-					include: ['location']
+					include: ['location'],
+					order: [['location', 'subnet', 'ASC']]
 				})
 				return locationMonitoring ? (locationMonitoring.get({ plain: true }) as LocationMonitoringDto) : null
 			}
