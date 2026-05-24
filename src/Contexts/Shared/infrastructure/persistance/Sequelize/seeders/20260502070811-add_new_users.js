@@ -1,5 +1,6 @@
 'use strict'
 
+const crypto = require('node:crypto')
 const { newUserSinInfo, capitalCadena } = require('./employee/nuevos_usuarios_sin_info')
 
 /** @type {import('sequelize-cli').Migration} */
@@ -7,7 +8,7 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
-			console.log('--- Fase 1: Insertando nuevos empleados (restoNuevosUsuarios) ---')
+			console.log('--- Fase 1: Insertando nuevos empleados (newUserSinInfo) ---')
 			const now = new Date()
 			const employeesWithTimestamps = newUserSinInfo.map(
 				({ cedula, lastname, name, nationality, type, userName }) => ({
@@ -47,7 +48,7 @@ module.exports = {
 		await queryInterface.bulkDelete(
 			'employees',
 			{
-				user_name: { [Sequelize.Op.in]: restoNuevosUsuarios.map(p => p.userName) }
+				user_name: { [Sequelize.Op.in]: newUserSinInfo.map(p => p.userName) }
 			},
 			{}
 		)
