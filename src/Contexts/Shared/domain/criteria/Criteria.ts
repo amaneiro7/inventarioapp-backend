@@ -66,9 +66,9 @@ export class Criteria {
 		return new Criteria(this.filters, Order.fromValues(orderBy, orderType), this.pageSize, this.pageNumber)
 	}
 
-	withoutFilter(fieldName: string): Criteria {
+	withoutFilter(...fieldsToRemove: string[]): Criteria {
 		const currentFilters = this.filters.toPrimitives()
-		const updatedFilters = currentFilters.filter(filter => filter.field !== fieldName)
+		const updatedFilters = currentFilters.filter(filter => !fieldsToRemove.includes(filter.field))
 		return Criteria.fromPrimitives(
 			updatedFilters,
 			this.order.orderBy.value,

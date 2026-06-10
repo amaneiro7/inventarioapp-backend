@@ -1,6 +1,7 @@
-import { Op, type Order, type FindOptions, type IncludeOptions } from 'sequelize'
+import { Op, type Order, type FindOptions, type IncludeOptions, WhereOptions } from 'sequelize'
 import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
+import { MigrationRule } from '../../domain/entity/MigrationRule'
 
 export class HardwareEvaluationAssociation {
 	/**
@@ -9,7 +10,15 @@ export class HardwareEvaluationAssociation {
 	 * @param {FindOptions} options The base FindOptions to be modified.
 	 * @returns {FindOptions} The configured Sequelize FindOptions object.
 	 */
-	public static convertFilter({ options }: { criteria?: Criteria; options: FindOptions }): FindOptions {
+	public static convertFilter({
+		options,
+		criteria,
+		rule
+	}: {
+		criteria?: Criteria
+		options: FindOptions
+		rule: MigrationRule
+	}): FindOptions {
 		const modelComputerInclude: IncludeOptions = {
 			association: 'modelComputer',
 			include: ['memoryRamType'],
@@ -106,7 +115,8 @@ export class HardwareEvaluationAssociation {
 
 		options.include = [computerInclude, locationInclude, modelInclude, brandInclude, statusInclude, employeInclude]
 
-		const whereFilters = options.where ?? {}
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const whereFilters = (options.where ?? {}) as WhereOptions & Record<symbol, any>
 
 		if ('computerName' in whereFilters) {
 			computerInclude.where = {
@@ -245,10 +255,102 @@ export class HardwareEvaluationAssociation {
 
 			delete whereFilters?.administrativeRegionId
 		}
+
+		// --- Lógica de Filtros de Evaluación (Apto / No Apto) ---
+
+		// Definimos las condiciones básicas basadas en la Regla de Migración
+		// 1. Tipamos explícitamente las condiciones para ayudar a TypeScript
+		const ramCondition: WhereOptions = { memoryRamCapacity: { [Op.gte]: rule.minRamGbValue } }
+		const processorCondition: WhereOptions = { processorId: { [Op.in]: rule.approvedProcessorValue } }
+		const diskCondition = { name: { [Op.gte]: rule.minDiskGbValue } }
+
+		// 2. Inicializamos arrays de condiciones para AND y OR con tipos estrictos de Sequelize
+		const andConditions: WhereOptions[] = []
+		const orConditions: WhereOptions[] = []
+
+		// Filtro individual: RAM (Solo se aplica si el usuario selecciona 'true' o 'false')
+		const isRamApto = criteria?.obtainFilterValue('isRamApto')
+		if (isRamApto === 'true') {
+			// Si queremos que la RAM sea apta, lo metemos al include de computer
+			computerInclude.where = { ...(computerInclude.where || {}), ...ramCondition }
+		} else if (isRamApto === 'false') {
+			// Si explícitamente pedimos los NO aptos por RAM
+			computerInclude.where = {
+				...(computerInclude.where || {}),
+				memoryRamCapacity: { [Op.lt]: rule.minRamGbValue }
+			}
+		}
+
+		// Filtro individual: Procesador
+		const isProcessorApto = criteria?.obtainFilterValue('isProcessorApto')
+		if (isProcessorApto === 'true') {
+			computerInclude.where = { ...(computerInclude.where || {}), ...processorCondition }
+		} else if (isProcessorApto === 'false') {
+			computerInclude.where = {
+				...(computerInclude.where || {}),
+				processorId: { [Op.notIn]: rule.approvedProcessorValue }
+			}
+		}
+
+		// Filtro individual: Disco
+		const isDiskApto = criteria?.obtainFilterValue('isDiskApto')
+		if (isDiskApto === 'true') {
+			hardDriveCapacityInclude.where = { ...(hardDriveCapacityInclude.where || {}), ...diskCondition }
+		} else if (isDiskApto === 'false') {
+			hardDriveCapacityInclude.where = {
+				...(hardDriveCapacityInclude.where || {}),
+				name: { [Op.lt]: rule.minDiskGbValue }
+			}
+		}
+
+		// --- Filtros Globales (Dashboard) ---
+		const isAptoFilter = criteria?.obtainFilterValue('isApto')
+		// Filtro Global: Apto (Cumple TODAS las condiciones)
+		if (isAptoFilter === 'true') {
+			// Empujamos las condiciones individuales al AND general
+			computerInclude.where = {
+				...(computerInclude.where || {}),
+				...ramCondition,
+				...processorCondition
+			}
+			hardDriveCapacityInclude.where = {
+				...(hardDriveCapacityInclude.where || {}),
+				...diskCondition
+			}
+		} else if (isAptoFilter === 'false') {
+			whereFilters[Op.or] = [
+				...((whereFilters[Op.or] as WhereOptions[]) || []),
+				{ '$computer.memory_ram_capacity$': { [Op.lt]: rule.minRamGbValue } },
+				{ '$computer.processor_id$': { [Op.notIn]: rule.approvedProcessorValue } },
+				{ '$computer.hardDriveCapacity.name$': { [Op.lt]: rule.minDiskGbValue } }
+			]
+		}
+
+		if ('isApto' in whereFilters) {
+			delete whereFilters?.isApto
+		}
+		if ('isRamApto' in whereFilters) {
+			delete whereFilters?.isRamApto
+		}
+		if ('isProcessorApto' in whereFilters) {
+			delete whereFilters?.isProcessorApto
+		}
+		if ('isDiskApto' in whereFilters) {
+			delete whereFilters?.isDiskApto
+		}
+
+		// 3. Inyectamos las condiciones acumuladas en el where principal de forma segura y tipada
+		if (andConditions.length > 0) {
+			whereFilters[Op.and] = andConditions // <-- TypeScript ya sabe qué es Op.and aquí
+		}
+
+		if (orConditions.length > 0) {
+			whereFilters[Op.or] = orConditions // <-- Sin usar "as any"
+		}
+
 		options.where = {
 			...whereFilters,
-			// Filtro de Negocio: Pendientes de migración (Versiones heredadas de Windows)
-			// Usamos la sintaxis de $ para acceder a columnas de asociaciones incluidas
+			// Filtro de Negocio Base: Solo dispositivos con SO antiguos
 			'$computer.operatingSystem.name$': {
 				[Op.or]: [
 					{ [Op.like]: '%Windows XP%' },

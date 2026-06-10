@@ -7,6 +7,24 @@ import type {
 import type { MigrationRuleRepository } from '../domain/repository/MigrationRuleRepository'
 import type { HardwareEvaluationRepository } from '../domain/repository/HardwareEvaluationRepository'
 import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { DeviceComputerDto } from '../../../Device/domain/dto/Computer.dto'
+
+// Función auxiliar para el mapeo, podría estar en un archivo de mapeador dedicado o como método estático
+function mapDeviceToEvaluationDto(device: DeviceComputerDto, ruleEntity: MigrationRule): EvaluationHardwareDeviceDto {
+	const result = ruleEntity.evaluateDeviceCompatibility(device)
+	return new DeviceEvaluation(
+		device.id,
+		device.serial ?? 'Sin serial',
+		device.location?.name || 'N/A',
+		device.employee?.userName || 'N/A',
+		device.processor?.name || 'N/A',
+		`${device.memoryRamCapacity} GB`,
+		`${device.hardDriveCapacity?.name || 0} GB`,
+		device.computerName || 'N/A',
+		device.ipAddress || 'N/A',
+		result
+	).toPublicJson()
+}
 
 export class EvaluationHardwareDashboard {
 	private readonly migrationRuleRepository: MigrationRuleRepository
@@ -23,7 +41,7 @@ export class EvaluationHardwareDashboard {
 		this.hardwareEvaluationRepository = hardwareEvaluationRepository
 	}
 
-	async run(criteria?: Criteria): Promise<EvaluationHardwareDashboardResponse> {
+	async run(criteria: Criteria): Promise<EvaluationHardwareDashboardResponse> {
 		// 1. Obtener la regla activa
 		const activeRuleDto = await this.migrationRuleRepository.findActiveRule()
 		if (!activeRuleDto) {
@@ -37,13 +55,17 @@ export class EvaluationHardwareDashboard {
 
 		const ruleEntity = MigrationRule.fromPrimitives(activeRuleDto)
 
-		// 2. Obtener dispositivos pendientes (usamos el repo especializado)
-		// IMPORTANTE: Obtenemos el universo completo sin paginación para calcular los totales reales
-		const { data: pendingDevices, total: totalPendingDevices } =
-			await this.hardwareEvaluationRepository.findPendingDevices(criteria)
-		const repoCriteriaWithoutPagination = criteria ? criteria.withoutPagination() : undefined
-		const { data: allPendingDevices, total } =
-			await this.hardwareEvaluationRepository.findPendingDevices(repoCriteriaWithoutPagination)
+		// 2. Obtener los conteos de aptos/no aptos para el resumen del dashboard
+		// Estos conteos deben ser para el universo completo de dispositivos que coinciden con los criterios generales,
+		// sin aplicar el filtro 'isApto' o 'isNoApto' que se usaría para la paginación.
+		// Para esto, pasamos un Criteria sin los filtros de aptitud específicos.
+		// const criteriaForSummary = criteria
+		// 	? criteria.withoutFilter('isApto', 'isNoApto', 'isRamApto', 'isDiskApto', 'isProcessorApto')
+		// 	: undefined
+
+		const criteriaForSummary = criteria.withoutPagination()
+		const { data: allPendingDevices, total: totalSummary } =
+			await this.hardwareEvaluationRepository.findPendingDevices(ruleEntity, criteriaForSummary)
 
 		// 3. Con el listado de todos los devices hacer el conteo
 		let apto = 0
@@ -55,39 +77,31 @@ export class EvaluationHardwareDashboard {
 			else noApto++
 		})
 
-		// Solo los devices que han sido paginados
-		const allEvaluations: EvaluationHardwareDeviceDto[] = pendingDevices.map(device => {
-			const result = ruleEntity.evaluateDeviceCompatibility(device)
+		// 3. Obtener los dispositivos paginados y filtrados (incluyendo filtros de aptitud si existen)
+		// El repositorio debe aplicar la lógica de compatibilidad de la regla y los filtros de aptitud
+		const { data: paginatedDevices, total: totalPaginatedDevices } =
+			await this.hardwareEvaluationRepository.findPendingDevices(ruleEntity, criteria)
 
-			return new DeviceEvaluation(
-				device.id,
-				device.serial ?? 'Sin serial',
-				device.location?.name || 'N/A',
-				device.employee?.userName || 'N/A',
-				device.processor?.name || 'N/A',
-				`${device.memoryRamCapacity} GB`,
-				`${device.hardDriveCapacity?.name || 0} GB`,
-				device.computerName || 'N/A',
-				device.ipAddress || 'N/A',
-				result
-			).toPublicJson()
-		})
+		// 4. Mapear los dispositivos obtenidos a DTOs de evaluación
+		const allEvaluations: EvaluationHardwareDeviceDto[] = paginatedDevices.map(device =>
+			mapDeviceToEvaluationDto(device, ruleEntity)
+		)
 
 		return {
 			migrationRule: activeRuleDto,
 			summary: {
-				total,
+				total: totalSummary, // Total de todos los dispositivos evaluables
 				apto,
 				noApto
 			},
 			devices: allEvaluations,
 			info: {
-				total: totalPendingDevices,
+				total: totalPaginatedDevices, // Total de dispositivos en la lista paginada (después de filtros de aptitud)
 				page:
 					criteria?.pageNumber === undefined || criteria?.pageNumber === null || criteria?.pageNumber === 0
 						? 1
 						: criteria?.pageNumber,
-				totalPage: this.calcularPaginas(totalPendingDevices, criteria?.pageSize)
+				totalPage: this.calcularPaginas(totalPaginatedDevices, criteria?.pageSize)
 			}
 		}
 	}

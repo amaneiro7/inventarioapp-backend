@@ -1,7 +1,13 @@
-import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import { ResponseDB } from '../../../../../Shared/domain/ResponseType'
-import type { DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
+import { type Criteria } from '../../../../../Shared/domain/criteria/Criteria'
+import { type ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import { type DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
+import { type MigrationRule } from '../entity/MigrationRule'
 
-export abstract class HardwareEvaluationRepository {
-	abstract findPendingDevices: (criteria?: Criteria) => Promise<ResponseDB<DeviceComputerDto>>
+export interface HardwareEvaluationRepository {
+	findPendingDevices(rule: MigrationRule, criteria?: Criteria): Promise<ResponseDB<DeviceComputerDto>>
+
+	countDevicesByCompatibility(
+		rule: MigrationRule,
+		criteria?: Criteria
+	): Promise<{ apto: number; noApto: number; total: number }>
 }
