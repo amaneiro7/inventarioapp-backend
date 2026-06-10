@@ -37,12 +37,6 @@ export class CargoAssociation {
 		// This `if/else if` chain ensures only the highest-priority filter is applied.
 		if ('unidadId' in whereFilters) {
 			unidadInclude.where = { id: whereFilters.unidadId }
-		}
-
-		// --- 3. Clean Up All Association Filter Keys ---
-		// Regardless of which filter was applied (or if none were), we remove all
-		// potential association keys from the main 'where' clause to prevent side effects.
-		if ('unidadId' in whereFilters) {
 			delete whereFilters.unidadId
 		}
 

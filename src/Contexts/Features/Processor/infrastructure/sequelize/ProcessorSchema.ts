@@ -29,6 +29,12 @@ export class ProcessorModel extends Model<ProcessorDto> implements ProcessorDto 
 			foreignKey: 'processorId',
 			otherKey: 'modelId'
 		})
+		this.belongsToMany(models.MigrationRule, {
+			as: 'migratrionRules',
+			through: 'processors_migration_rules',
+			otherKey: 'migrationRuleId',
+			foreignKey: 'processorId'
+		})
 	}
 
 	static initialize(sequelize: Sequelize): void {

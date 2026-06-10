@@ -13,6 +13,18 @@ export abstract class NumberValueObject extends ValueObject<number> {
 		return this.value === other.value
 	}
 
+	protected ensureIsInteger(value: number): void {
+		if (!Number.isInteger(value)) {
+			throw new Error(`El valor <${value}> para <${this.constructor.name}> debe ser un número entero.`)
+		}
+	}
+
+	protected ensureIsPositive(value: number): void {
+		if (value < 0) {
+			throw new Error(`El valor <${value}> para <${this.constructor.name}> debe ser un número positivo.`)
+		}
+	}
+
 	protected ensureLengthIsSmallerThan(maxLength: number, value: number): void {
 		if (value > maxLength) {
 			throw new NumberTooLongError(this.constructor.name, maxLength)

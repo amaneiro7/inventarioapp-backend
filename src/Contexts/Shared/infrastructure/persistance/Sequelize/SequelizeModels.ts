@@ -39,6 +39,7 @@ import type { DevicePrinterDto } from '../../../../Device/Device/domain/dto/Prin
 import type { HistoryDto } from '../../../../History/domain/entity/History.dto'
 import type { ISPLinkDto } from '../../../../Location/ISPLinks/domain/entity/ISPLink.dto'
 import type { UnidadDto } from '../../../../employee/Unidad/domain/entity/Unidad.dto'
+import type { MigrationRuleDto } from '../../../../Device/features/deviceEvaluation/domain/entity/MigrationRule.dto'
 
 export type SequelizeModels = Sequelize['models'] & {
 	Category: ModelStatic<Model<CategoryDto>>
@@ -57,6 +58,7 @@ export type SequelizeModels = Sequelize['models'] & {
 	DeviceHardDrive: ModelStatic<Model<DeviceHardDriveDto>>
 	DevicePrinter: ModelStatic<Model<DevicePrinterDto>>
 	Processor: ModelStatic<Model<ProcessorDto>>
+	MigrationRule: ModelStatic<Model<MigrationRuleDto>>
 	MemoryRamType: ModelStatic<Model<MemoryRamTypeDto>>
 	HardDriveCapacity: ModelStatic<Model<HardDriveCapacityDto>>
 	HardDriveType: ModelStatic<Model<HardDriveTypeDto>>

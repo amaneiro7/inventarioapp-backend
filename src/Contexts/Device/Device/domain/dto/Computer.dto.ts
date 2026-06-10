@@ -14,7 +14,7 @@ import { type Primitives } from '../../../../Shared/domain/value-object/Primitiv
 import { type ComputerName } from '../valueObject/ComputerName'
 import { type DeviceIPAddress } from '../valueObject/DeviceIPAddress'
 import { type MACAddress } from '../valueObject/MACAddress'
-import { type Device, type DevicePrimitives } from './Device.dto'
+import { DeviceDto, type Device, type DevicePrimitives } from './Device.dto'
 
 /**
  * @interface DeviceComputer
@@ -61,10 +61,11 @@ export type DeviceComputerParams = Device & {
  * @type DeviceComputerDto
  * @description Data Transfer Object for a DeviceComputer, including related entities.
  */
-export type DeviceComputerDto = DeviceComputer & {
-	processor: ProcessorDto
-	hardDriveCapacity: HardDriveCapacityDto
-	hardDriveType: HardDriveTypeDto
-	operatingSystem: OperatingSystemDto
-	operatingSystemArq: OperatingSystemArqDto
-}
+export type DeviceComputerDto = DeviceComputer &
+	DeviceDto & {
+		processor: ProcessorDto
+		hardDriveCapacity: HardDriveCapacityDto
+		hardDriveType: HardDriveTypeDto
+		operatingSystem: OperatingSystemDto
+		operatingSystemArq: OperatingSystemArqDto
+	}

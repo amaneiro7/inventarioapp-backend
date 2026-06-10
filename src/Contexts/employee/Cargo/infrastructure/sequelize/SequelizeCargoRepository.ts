@@ -107,6 +107,8 @@ export class SequelizeCargoRepository extends SequelizeCriteriaConverter impleme
 
 			if (unidades) {
 				await cargoInstance.setUnidades(unidades, { transaction })
+			} else {
+				await cargoInstance.setUnidades([], { transaction })
 			}
 
 			await transaction.commit()
