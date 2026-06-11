@@ -19,23 +19,26 @@ import type { MigrationRuleMinDiskGb } from '../../domain/valueObject/MigrationR
 /**
  * @description Sequelize model for the `MigrationRule` entity.
  */
-export class MigrationRuleModel extends Model<Omit<MigrationRuleDto, 'approvedProcessor'>> implements MigrationRuleDto {
+export class MigrationRuleModel
+	extends Model<Omit<MigrationRuleDto, 'approvedProcessors'>>
+	implements MigrationRuleDto
+{
 	declare id: Primitives<MigrationRuleId>
 	declare minRamGb: Primitives<MigrationRuleMinRamGb>
 	declare minDiskGb: Primitives<MigrationRuleMinDiskGb>
 	declare isActive: Primitives<MigrationRuleIsActive>
 	declare parentId: Primitives<MigrationRuleId> | null
-	declare approvedProcessor: Primitives<ProcessorId>[] & Omit<ProcessorDto, 'MigrationRules'>[]
+	declare approvedProcessors: Primitives<ProcessorId>[] & Omit<ProcessorDto, 'MigrationRules'>[]
 
 	// Association Mixins
-	declare getProcessor: BelongsToManyGetAssociationsMixin<ProcessorModel>
-	declare addProcessor: BelongsToManyAddAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
-	declare setProcessors: BelongsToManySetAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
-	declare removeProcessor: BelongsToManyAddAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
+	declare getApprovedProcessors: BelongsToManyGetAssociationsMixin<ProcessorModel>
+	declare addApprovedProcessor: BelongsToManyAddAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
+	declare setApprovedProcessors: BelongsToManySetAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
+	declare removeApprovedProcessor: BelongsToManyAddAssociationsMixin<ProcessorModel, Primitives<ProcessorId>>
 
 	static associate(models: SequelizeModels): void {
 		this.belongsToMany(models.Processor, {
-			as: 'approvedProcessor',
+			as: 'approvedProcessors',
 			through: 'processors_migration_rules',
 			foreignKey: 'migrationRuleId',
 			otherKey: 'processorId'

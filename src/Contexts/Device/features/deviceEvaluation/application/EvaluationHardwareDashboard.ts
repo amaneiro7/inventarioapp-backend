@@ -1,30 +1,12 @@
 import { MigrationRule } from '../domain/entity/MigrationRule'
-import { DeviceEvaluation } from '../domain/entity/DeviceEvaluation'
 import type {
 	EvaluationHardwareDashboardResponse,
 	EvaluationHardwareDeviceDto
 } from '../domain/entity/EvaluationHardwareDashboard.dto'
+import { mapDeviceToEvaluationDto } from '../domain/service/mapDeviceToEvaluationDto'
 import type { MigrationRuleRepository } from '../domain/repository/MigrationRuleRepository'
 import type { HardwareEvaluationRepository } from '../domain/repository/HardwareEvaluationRepository'
 import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import type { DeviceComputerDto } from '../../../Device/domain/dto/Computer.dto'
-
-// Función auxiliar para el mapeo, podría estar en un archivo de mapeador dedicado o como método estático
-function mapDeviceToEvaluationDto(device: DeviceComputerDto, ruleEntity: MigrationRule): EvaluationHardwareDeviceDto {
-	const result = ruleEntity.evaluateDeviceCompatibility(device)
-	return new DeviceEvaluation(
-		device.id,
-		device.serial ?? 'Sin serial',
-		device.location?.name || 'N/A',
-		device.employee?.userName || 'N/A',
-		device.processor?.name || 'N/A',
-		`${device.memoryRamCapacity} GB`,
-		`${device.hardDriveCapacity?.name || 0} GB`,
-		device.computerName || 'N/A',
-		device.ipAddress || 'N/A',
-		result
-	).toPublicJson()
-}
 
 export class EvaluationHardwareDashboard {
 	private readonly migrationRuleRepository: MigrationRuleRepository
@@ -47,7 +29,7 @@ export class EvaluationHardwareDashboard {
 		if (!activeRuleDto) {
 			return {
 				message: 'No active migration rule found.',
-				summary: { total: 0, apto: 0, noApto: 0 },
+				summary: { total: 0, apto: 0, noApto: 0, isDiskOk: 0, isProcessorOk: 0, isRamOk: 0 },
 				devices: [],
 				info: { total: 0, page: 1, totalPage: 1 }
 			}
@@ -69,12 +51,22 @@ export class EvaluationHardwareDashboard {
 
 		// 3. Con el listado de todos los devices hacer el conteo
 		let apto = 0
+		let isRamOk = 0
+		let isDiskOk = 0
+		let isProcessorOk = 0
 		let noApto = 0
 
 		allPendingDevices.forEach(device => {
 			const result = ruleEntity.evaluateDeviceCompatibility(device)
-			if (result.isApto) apto++
-			else noApto++
+			if (result.isRamOk) isRamOk++
+			if (result.isDiskOk) isDiskOk++
+			if (result.isProcessorOk) isProcessorOk++
+
+			if (result.isApto) {
+				apto++
+			} else {
+				noApto++
+			}
 		})
 
 		// 3. Obtener los dispositivos paginados y filtrados (incluyendo filtros de aptitud si existen)
@@ -92,7 +84,10 @@ export class EvaluationHardwareDashboard {
 			summary: {
 				total: totalSummary, // Total de todos los dispositivos evaluables
 				apto,
-				noApto
+				noApto,
+				isDiskOk,
+				isProcessorOk,
+				isRamOk
 			},
 			devices: allEvaluations,
 			info: {

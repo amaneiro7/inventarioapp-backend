@@ -13,6 +13,8 @@ import { MigrationRulePostController } from '../../controllers/migration-rule/mi
 import { MigrationRulePatchController } from '../../controllers/migration-rule/migration-rule.patch.controller'
 import { MigrationRuleDeleteController } from '../../controllers/migration-rule/migration-rule.delete.controller'
 import { EvaluationHardwareDashboardGetController } from '../../controllers/migration-rule/evaluation-hardware-dashboard.controller'
+import { EvaluationHardwareExcelService } from '../../../Contexts/Device/features/deviceEvaluation/application/EvaluationHardwareExcelService'
+import { EvaluationHardwareDownloadExcelServiceController } from '../../controllers/migration-rule/evaluation-hardware.download-excel-service.controller'
 
 export enum MigrationRuleDependencies {
 	Repository = 'migrationRuleRepository',
@@ -21,11 +23,13 @@ export enum MigrationRuleDependencies {
 	Creator = 'migrationRuleCreator',
 	Updater = 'migrationRuleUpdater',
 	Remover = 'migrationRuleRemover',
+	ExcelService = 'evaluationHardwareExcelService',
 	GetController = 'migrationRuleGetController',
 	GetAllController = 'migrationRuleGetAllController',
 	PostController = 'migrationRulePostController',
 	PatchController = 'migrationRulePatchController',
 	DeleteController = 'migrationRuleDeleteController',
+	ExcelDownloadController = 'evaluationHardwareExcelDownload',
 	HardwareEvaluationRepository = 'hardwareEvaluationRepository',
 	EvaluationHardwareDashboard = 'evaluationHardwareDashboard',
 	EvaluationHardwareDashboardGetController = 'evaluationHardwareDashboardGetController'
@@ -44,6 +48,7 @@ export const register = (container: AwilixContainer) => {
 		[MigrationRuleDependencies.Creator]: asClass(MigrationRuleCreator),
 		[MigrationRuleDependencies.Updater]: asClass(MigrationRuleUpdater),
 		[MigrationRuleDependencies.Remover]: asClass(MigrationRuleRemover),
+		[MigrationRuleDependencies.ExcelService]: asClass(EvaluationHardwareExcelService),
 		// Dashboard
 		[MigrationRuleDependencies.EvaluationHardwareDashboard]: asClass(EvaluationHardwareDashboard),
 		// Controllers
@@ -52,6 +57,7 @@ export const register = (container: AwilixContainer) => {
 		[MigrationRuleDependencies.PostController]: asClass(MigrationRulePostController),
 		[MigrationRuleDependencies.PatchController]: asClass(MigrationRulePatchController),
 		[MigrationRuleDependencies.DeleteController]: asClass(MigrationRuleDeleteController),
+		[MigrationRuleDependencies.ExcelDownloadController]: asClass(EvaluationHardwareDownloadExcelServiceController),
 		[MigrationRuleDependencies.EvaluationHardwareDashboardGetController]: asClass(
 			EvaluationHardwareDashboardGetController
 		)

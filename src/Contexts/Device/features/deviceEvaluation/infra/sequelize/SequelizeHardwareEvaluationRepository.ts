@@ -1,12 +1,21 @@
-import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
-import { HardwareEvaluationRepository } from '../../domain/repository/HardwareEvaluationRepository'
+import { Op, type WhereOptions } from 'sequelize'
 import { DeviceModel } from '../../../../Device/infrastructure/sequelize/schema/DeviceSchema'
-import { HardwareEvaluationAssociation } from './HardwareEvaluationAssociation'
-import type { DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
-import { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
-import type { ResponseDB } from '../../../../../Shared/domain/ResponseType'
 import { MigrationRule } from '../../domain/entity/MigrationRule'
-import { Op, WhereOptions } from 'sequelize'
+import { SequelizeCriteriaConverter } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeCriteriaConverter'
+import { HardwareEvaluationAssociation } from './HardwareEvaluationAssociation'
+import { GenericCacheInvalidator } from '../../../../../Shared/infrastructure/cache/GenericCacheInvalidator'
+import type { Criteria } from '../../../../../Shared/domain/criteria/Criteria'
+import type { HardwareEvaluationRepository } from '../../domain/repository/HardwareEvaluationRepository'
+import type { DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
+import type { ResponseDB } from '../../../../../Shared/domain/ResponseType'
+import type { CacheInvalidator } from '../../../../../Shared/domain/repository/CacheInvalidator'
+import type { CacheService } from '../../../../../Shared/domain/CacheService'
+import type { DeviceId } from '../../../../Device/domain/valueObject/DeviceId'
+import type { Primitives } from '../../../../../Shared/domain/value-object/Primitives'
+import { TimeTolive } from '../../../../../Shared/domain/CacheRepository'
+import { EvaluationExcelService } from '../../domain/entity/EvaluationExcelService.dto'
+import { exportToExcel } from '../../../../../Shared/infrastructure/utils/ExcelExporter'
+import { MigrationRuleId } from '../../domain/valueObject/MigrationRuleId'
 //import { sequelize } from '../../../../../Shared/infrastructure/persistance/Sequelize/SequelizeConfig'
 
 /**
@@ -14,8 +23,18 @@ import { Op, WhereOptions } from 'sequelize'
  */
 export class SequelizeHardwareEvaluationRepository
 	extends SequelizeCriteriaConverter
-	implements HardwareEvaluationRepository
+	implements HardwareEvaluationRepository, CacheInvalidator
 {
+	private readonly cacheKeyPrefix = 'hardwareEvaluation'
+	private readonly cache: CacheService
+	private readonly cacheInvalidator: GenericCacheInvalidator
+
+	constructor({ cache }: { cache: CacheService }) {
+		super()
+		this.cache = cache
+		this.cacheInvalidator = new GenericCacheInvalidator(cache, this.cacheKeyPrefix)
+	}
+
 	async countDevicesByCompatibility(
 		rule: MigrationRule,
 		criteria?: Criteria
@@ -47,13 +66,23 @@ export class SequelizeHardwareEvaluationRepository
 		]
 
 		// 4. Ejecutar ambos conteos en paralelo
-		const [aptoCount, total] = await Promise.all([DeviceModel.count(aptoOptions), DeviceModel.count(baseOptions)])
+		return this.cache.getCachedData({
+			cacheKey: `${this.cacheKeyPrefix}:count`,
+			criteria,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const [aptoCount, total] = await Promise.all([
+					DeviceModel.count(aptoOptions),
+					DeviceModel.count(baseOptions)
+				])
 
-		return {
-			apto: aptoCount,
-			noApto: total - aptoCount,
-			total
-		}
+				return {
+					apto: aptoCount,
+					noApto: total - aptoCount,
+					total
+				}
+			}
+		})
 	}
 	/**
 	 * @method findPendingDevices
@@ -62,23 +91,47 @@ export class SequelizeHardwareEvaluationRepository
 	async findPendingDevices(rule: MigrationRule, criteria?: Criteria): Promise<ResponseDB<DeviceComputerDto>> {
 		const options = criteria ? this.convert(criteria) : {}
 		const optionsWithAssociation = HardwareEvaluationAssociation.convertFilter({ criteria, options, rule })
-		const { count: total, rows: devices } = await DeviceModel.findAndCountAll(optionsWithAssociation)
 
-		// Mapeo para aplanar la estructura de Sequelize al DTO esperado por la capa de aplicación
-		const data = devices.map(device => {
-			const plainDevice = device.get({ plain: true }) as DeviceComputerDto
-			const { computer, ...deviceBase } = plainDevice
+		return this.cache.getCachedData<ResponseDB<DeviceComputerDto>>({
+			cacheKey: `${this.cacheKeyPrefix}:pending`,
+			criteria,
+			ttl: TimeTolive.VERY_LONG,
+			fetchFunction: async () => {
+				const { count: total, rows: devices } = await DeviceModel.findAndCountAll(optionsWithAssociation)
 
-			return {
-				...deviceBase,
-				...computer,
-				id: deviceBase.id // Aseguramos que el ID sea el del dispositivo
-			} as DeviceComputerDto
+				// Mapeo para aplanar la estructura de Sequelize al DTO esperado por la capa de aplicación
+				const data = devices.map(device => {
+					const plainDevice = device.get({ plain: true }) as DeviceComputerDto
+					const { computer, ...deviceBase } = plainDevice
+
+					return {
+						...deviceBase,
+						...computer,
+						id: deviceBase.id // Aseguramos que el ID sea el del dispositivo
+					} as DeviceComputerDto
+				})
+
+				return {
+					data,
+					total
+				}
+			}
 		})
+	}
 
-		return {
-			data,
-			total
-		}
+	async donwload(evaluations: EvaluationExcelService[], activeRuleId: Primitives<MigrationRuleId>): Promise<Buffer> {
+		return await exportToExcel(evaluations, {
+			title: 'Reporte de Evaluación de Hardware para Migración',
+			subject: `Regla ID: ${activeRuleId}`
+		})
+	}
+
+	/**
+	 * @method invalidateMigrationRuleCache
+	 * @description Invalidates all model series-related cache entries.
+	 * Implements MigrationRuleCacheInvalidator interface.
+	 */
+	async invalidate(params?: Primitives<DeviceId> | Record<string, string>): Promise<void> {
+		await this.cacheInvalidator.invalidate(params)
 	}
 }

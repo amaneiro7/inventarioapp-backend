@@ -51,7 +51,7 @@ export class SequelizeMigrationRuleRepository
 					where: { isActive: true },
 					include: [
 						{
-							association: 'approvedProcessor',
+							association: 'approvedProcessors',
 							attributes: ['id', 'name'],
 							through: { attributes: [] }
 						}
@@ -97,7 +97,7 @@ export class SequelizeMigrationRuleRepository
 				const migrationRule = await MigrationRuleModel.findByPk(id, {
 					include: [
 						{
-							association: 'approvedProcessor',
+							association: 'approvedProcessors',
 							attributes: ['id', 'name'],
 							through: { attributes: [] }
 						}
@@ -127,7 +127,7 @@ export class SequelizeMigrationRuleRepository
 				const migrationRules = await MigrationRuleModel.findAll({
 					where: { id: { [Op.in]: sortedIds } }
 				})
-				return migrationRules.map(unidad => unidad.get({ plain: true })) as MigrationRuleDto[]
+				return migrationRules.map(rule => rule.get({ plain: true })) as MigrationRuleDto[]
 			}
 		})
 	}
@@ -135,14 +135,14 @@ export class SequelizeMigrationRuleRepository
 	async save(payload: MigrationRulePrimitives): Promise<void> {
 		const transaction = await sequelize.transaction()
 		try {
-			const { approvedProcessor, ...restPayload } = payload
+			const { approvedProcessors, ...restPayload } = payload
 
-			const [unidadInstance] = await MigrationRuleModel.upsert(restPayload, { transaction, returning: true })
+			const [ruleInstance] = await MigrationRuleModel.upsert(restPayload, { transaction, returning: true })
 
-			if (approvedProcessor) {
-				await unidadInstance.setProcessors(approvedProcessor, { transaction })
+			if (approvedProcessors) {
+				await ruleInstance.setApprovedProcessors(approvedProcessors, { transaction })
 			} else {
-				await unidadInstance.setProcessors([], { transaction })
+				await ruleInstance.setApprovedProcessors([], { transaction })
 			}
 
 			await transaction.commit()

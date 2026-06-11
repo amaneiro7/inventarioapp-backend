@@ -19,6 +19,9 @@ export interface MigrationRule {
 
 export interface EvaluationResult {
 	isApto: boolean
+	isRamOk: boolean
+	isDiskOk: boolean
+	isProcessorOk: boolean
 	reasons: string[]
 }
 
@@ -27,7 +30,7 @@ export interface EvaluationResult {
  * @description Represents the primitive, serializable state of a MigrationRule entity.
  */
 export type MigrationRulePrimitives = MigrationRule & {
-	approvedProcessor: Primitives<ProcessorId>[]
+	approvedProcessors: Primitives<ProcessorId>[]
 }
 
 /**
@@ -42,5 +45,5 @@ export type MigrationRuleParams = Omit<MigrationRule & { approvedProcessor: Prim
  * including associated Processor DTOs.
  */
 export type MigrationRuleDto = MigrationRule & {
-	approvedProcessor: Omit<ProcessorDto, 'MigrationRules'>[]
+	approvedProcessors: Omit<ProcessorDto, 'MigrationRules'>[]
 }

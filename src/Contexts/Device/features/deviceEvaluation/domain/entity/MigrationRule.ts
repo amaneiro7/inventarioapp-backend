@@ -15,7 +15,7 @@ import type {
 import { MigrationRuleUpdatedDomainEvent } from '../event/MigrationRuleUpdatedDomainEvent'
 import { MigrationRuleProcessorAddedDomainEvent } from '../event/MigrationRuleProcessorAddedDomainEvent'
 import { MigrationRuleProcessorRemovedDomainEvent } from '../event/MigrationRuleProcessorRemovedDomainEvent'
-import { DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
+import type { DeviceComputerDto } from '../../../../Device/domain/dto/Computer.dto'
 
 export class MigrationRule extends AggregateRoot {
 	constructor(
@@ -52,12 +52,12 @@ export class MigrationRule extends AggregateRoot {
 	}
 
 	static fromPrimitives(primitives: MigrationRuleDto): MigrationRule {
-		const uniqueProcessosr = new Set(primitives.approvedProcessor.map(p => new ProcessorId(p.id)))
+		const uniqueProcessor = new Set(primitives.approvedProcessors.map(p => new ProcessorId(p.id)))
 		return new MigrationRule(
 			new MigrationRuleId(primitives.id),
 			new MigrationRuleMinRamGb(primitives.minRamGb),
 			new MigrationRuleMinDiskGb(primitives.minDiskGb),
-			uniqueProcessosr,
+			uniqueProcessor,
 			new MigrationRuleIsActive(primitives.isActive)
 		)
 	}
@@ -68,7 +68,7 @@ export class MigrationRule extends AggregateRoot {
 			minRamGb: this.minRamGbValue,
 			minDiskGb: this.minDiskGbValue,
 			isActive: this.isActiveValue,
-			approvedProcessor: this.approvedProcessorValue
+			approvedProcessors: this.approvedProcessorValue
 		}
 	}
 
@@ -101,6 +101,9 @@ export class MigrationRule extends AggregateRoot {
 
 		return {
 			isApto: isRamOk && isDiskOk && isProcessorOk,
+			isRamOk,
+			isDiskOk,
+			isProcessorOk,
 			reasons
 		}
 	}

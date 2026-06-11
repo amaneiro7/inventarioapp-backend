@@ -9,10 +9,10 @@ import { DeviceRemovedDomainEvent } from '../domain/event/DeviceRemovedDomainEve
 import { EmployeeUpdatedDomainEvent } from '../../../employee/Employee/domain/event/EmployeeUpdatedDomainEvent'
 import { LocationUpdatedDomainEvent } from '../../../Location/Location/domain/event/LocationUpdatedDomainEvent'
 import { ProcessorUpdatedDomainEvent } from '../../../Features/Processor/domain/event/ProcessorUpdatedDomainEvent'
+import { UnidadUpdatedDomainEvent } from '../../../employee/Unidad/domain/event/UnidadUpdatedDomainEvent'
 import { type DomainEventClass } from '../../../Shared/domain/event/DomainEvent'
 import { type DomainEventSubscriber } from '../../../Shared/domain/event/DomainEventSubscriber'
 import { type CacheInvalidator } from '../../../Shared/domain/repository/CacheInvalidator'
-import { UnidadUpdatedDomainEvent } from '../../../employee/Unidad/domain/event/UnidadUpdatedDomainEvent'
 
 export class InvalidateDeviceCacheOnDeviceChanged implements DomainEventSubscriber<
 	| DeviceCreatedDomainEvent

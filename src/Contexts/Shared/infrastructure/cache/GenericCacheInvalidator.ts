@@ -11,6 +11,7 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 		if (params) {
 			const promises: Promise<void>[] = [
 				// 1. Invalidamos búsquedas completas y listas (siempre se invalidan al haber cambios)
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:active` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:all` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),

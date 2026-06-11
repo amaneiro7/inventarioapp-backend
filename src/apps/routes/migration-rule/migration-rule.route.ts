@@ -1,11 +1,11 @@
 import type { Router } from 'express'
-
 import type { MigrationRuleDeleteController } from '../../controllers/migration-rule/migration-rule.delete.controller'
 import type { MigrationRulePatchController } from '../../controllers/migration-rule/migration-rule.patch.controller'
 import type { MigrationRulePostController } from '../../controllers/migration-rule/migration-rule.post.controller'
 import type { MigrationRuleGetController } from '../../controllers/migration-rule/migration-rule.get.controller'
 import type { MigrationRuleGetAllController } from '../../controllers/migration-rule/migration-rule.get-all.controller'
 import type { EvaluationHardwareDashboardGetController } from '../../controllers/migration-rule/evaluation-hardware-dashboard.controller'
+import type { EvaluationHardwareDownloadExcelServiceController } from '../../controllers/migration-rule/evaluation-hardware.download-excel-service.controller'
 import { container } from '../../di/container'
 import { protectedRoute } from '../../Middleware/protectedRoute'
 import { MigrationRuleDependencies } from '../../di/device/migrationRule.di'
@@ -25,6 +25,9 @@ export const register = async (router: Router) => {
 	)
 	const deleteController: MigrationRuleDeleteController = container.resolve(
 		MigrationRuleDependencies.DeleteController
+	)
+	const download: EvaluationHardwareDownloadExcelServiceController = container.resolve(
+		MigrationRuleDependencies.ExcelDownloadController
 	)
 
 	/**
@@ -47,6 +50,33 @@ export const register = async (router: Router) => {
 		hasPermission(PERMISSIONS.MIGRATION_RULES.READ_LIST),
 		criteriaConverterMiddleware,
 		getAllController.run.bind(getAllController)
+	)
+
+	/**
+	 * @swagger
+	 * /migration-rules/download:
+	 *   get:
+	 *     tags:
+	 *       - Migration Rules
+	 *     summary: Descargar reporte de evaluación de hardware en Excel
+	 *     description: Genera y descarga un archivo Excel con la evaluación de compatibilidad de los dispositivos pendientes basándose en la regla de migración activa.
+	 *     security:
+	 *       - bearerAuth: []
+	 *     responses:
+	 *       '200':
+	 *         description: Archivo Excel generado.
+	 *         content:
+	 *           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+	 *             schema:
+	 *               type: string
+	 *               format: binary
+	 */
+	router.get(
+		'/migration-rules/download',
+		...protectedRoute,
+		hasPermission(PERMISSIONS.MIGRATION_RULES.READ_LIST),
+		criteriaConverterMiddleware,
+		download.run.bind(download)
 	)
 
 	/**

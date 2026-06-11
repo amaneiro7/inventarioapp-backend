@@ -28,6 +28,8 @@ import { InvalidateDeviceMonitoringCacheOnGeneralInfoChanged } from '../../../Co
 import { InvalidateLocationMonitoringCacheOnGeneralInfoChanged } from '../../../Contexts/Location/LocationMonitoring/application/InvalidateLocationMonitoringCacheOnGeneralInfoChanged'
 import { UpdateEmployeeLocationOnDeviceChanged } from '../../../Contexts/employee/Employee/application/UpdateEmployeeLocationOnDeviceChanged'
 import { InvalidateUnidadCacheOnUnidadChanged } from '../../../Contexts/employee/Unidad/application/InvalidateUnidadCacheOnUnidadChanged'
+import { InvalidateMigrationRuleCacheOnMigrationRuleChanged } from '../../../Contexts/Device/features/deviceEvaluation/application/InvalidateMigrationRuleCacheOnMigrationRuleChanged'
+import { InvalidateEvaluationHardwareDashboardCacheOnChanged } from '../../../Contexts/Device/features/deviceEvaluation/application/InvalidateEvaluationHardwareDashboardCacheOnChanged'
 
 export enum DomainEventDependencies {
 	// MonitorinService
@@ -50,6 +52,8 @@ export enum DomainEventDependencies {
 	// Device
 	InvalidateDeviceCacheOnDeviceChanged = 'invalidateDeviceCacheOnDeviceChanged',
 	InvalidateProcessorCacheOnProcessorChanged = 'invalidateProcessorCacheOnProcessorChanged',
+	InvalidateMigrationRuleCacheOnMigrationRuleChanged = 'invalidateMigrationRuleCacheOnMigrationRuleChanged',
+	InvalidateEvaluationHardwareDashboardCacheOnChanged = 'invalidateEvaluationHardwareDashboardCacheOnChanged',
 	// History
 	CreateHistoryOnDeviceChanged = 'createHistoryOnDeviceChanged',
 	InvalidateHistoryCacheOnHistoryChanged = 'invalidateHistoryCacheOnHistoryChanged',
@@ -164,6 +168,12 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		[DomainEventDependencies.UpdateEmployeeLocationOnDeviceChanged]: asClass(
 			UpdateEmployeeLocationOnDeviceChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateMigrationRuleCacheOnMigrationRuleChanged]: asClass(
+			InvalidateMigrationRuleCacheOnMigrationRuleChanged
+		).singleton(),
+		[DomainEventDependencies.InvalidateEvaluationHardwareDashboardCacheOnChanged]: asClass(
+			InvalidateEvaluationHardwareDashboardCacheOnChanged
 		).singleton()
 	})
 }

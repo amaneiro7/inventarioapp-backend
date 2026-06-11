@@ -14,7 +14,7 @@ export class MigrationRuleAssociation {
 	 */
 	public static convertFilter(criteria: Criteria, options: FindOptions): FindOptions {
 		const processorInclude: IncludeOptions = {
-			association: 'approvedProcessor',
+			association: 'approvedProcessors',
 			attributes: ['id', 'name'],
 			through: { attributes: [] }
 		}
