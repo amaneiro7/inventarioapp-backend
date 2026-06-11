@@ -22,7 +22,7 @@ export class EvaluationHardwareDashboardGetController implements Controller {
 				MigrationRuleDependencies.EvaluationHardwareDashboard
 			)
 
-			const data = await getAll.run(req.criteria)
+			const data = await getAll.run(req.criteria!)
 			res.status(httpStatus[200].statusCode).json(data)
 		} catch (error) {
 			next(error)

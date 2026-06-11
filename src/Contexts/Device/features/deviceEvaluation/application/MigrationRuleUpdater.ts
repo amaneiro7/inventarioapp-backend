@@ -92,7 +92,7 @@ export class MigrationRuleUpdater {
 		if (params.approvedProcessor !== undefined) {
 			await this.processorExistenceChecker.ensureExist(params.approvedProcessor)
 			changes.push({
-				field: 'approvedProcessor',
+				field: 'approvedProcessors',
 				oldValue: migrationRuleEntity.approvedProcessorValue,
 				newValue: params.approvedProcessor
 			})
