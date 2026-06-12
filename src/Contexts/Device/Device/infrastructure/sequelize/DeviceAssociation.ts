@@ -319,6 +319,13 @@ export class DeviceAssociation {
 			}
 			delete whereFilters.memoryRamCapacity
 		}
+		if ('hardDriveCapacity' in whereFilters) {
+			hardDriveCapacityInclude.where = {
+				...(hardDriveCapacityInclude.where || {}),
+				name: whereFilters.hardDriveCapacity
+			}
+			delete whereFilters.hardDriveCapacity
+		}
 		if ('macAddress' in whereFilters) {
 			computerInclude.where = {
 				...(computerInclude.where || {}),
