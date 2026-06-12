@@ -38,10 +38,10 @@ module.exports = {
 				{ transaction }
 			)
 			// index
-			await queryInterface.addConstraint('migration_rules', {
+			await queryInterface.addIndex('migration_rules', {
 				fields: ['is_active'],
 				type: 'unique',
-				where: { is_active: true },
+				where: { is_active: true, deleted_at: null },
 				name: 'unique_active_migration_rule',
 				transaction
 			})

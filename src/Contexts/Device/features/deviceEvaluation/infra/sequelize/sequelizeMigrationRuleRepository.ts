@@ -77,7 +77,7 @@ export class SequelizeMigrationRuleRepository
 			criteria,
 			ttl: TimeTolive.VERY_LONG,
 			fetchFunction: async () => {
-				const { rows, count } = await MigrationRuleModel.findAndCountAll(modelOptions)
+				const { rows, count } = await MigrationRuleModel.findAndCountAll({ ...modelOptions, distinct: true })
 
 				return {
 					total: count,

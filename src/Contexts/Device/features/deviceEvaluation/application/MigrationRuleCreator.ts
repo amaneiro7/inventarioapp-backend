@@ -36,11 +36,11 @@ export class MigrationRuleCreator {
 	 * @returns {Promise<void>} A promise that resolves when the migration rule is successfully created.
 	 */
 	async run({ params }: { params: MigrationRuleParams }): Promise<void> {
-		const { approvedProcessor } = params
-		const uniqueProcessors = Array.from(new Set(approvedProcessor))
+		const { approvedProcessors } = params
+		const uniqueProcessors = Array.from(new Set(approvedProcessors))
 		await Promise.all([this.processorExistenceChecker.ensureExist(uniqueProcessors)])
 
-		const migrationRule = MigrationRule.create({ ...params, approvedProcessor: uniqueProcessors })
+		const migrationRule = MigrationRule.create({ ...params, approvedProcessors: uniqueProcessors })
 
 		if (migrationRule.isActiveValue) {
 			await this.migrationRuleActivator.activate(migrationRule)

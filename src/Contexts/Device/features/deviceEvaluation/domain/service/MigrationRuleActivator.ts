@@ -6,14 +6,14 @@ export class MigrationRuleActivator {
 
 	/**
 	 * @description Ensures that only one migration rule is active at a time.
-	 * If the provided rule is being activated, it deactivates the currently active rule.
+	 * If the provided rule is being activated, it desactivates the currently active rule.
 	 */
 	async activate(migrationRule: MigrationRule): Promise<void> {
 		const currentActiveRule = await this.migrationRuleRepository.findActiveRule()
 
 		if (currentActiveRule && currentActiveRule.id !== migrationRule.toPrimitives().id) {
 			const currentActiveRuleEntity = MigrationRule.fromPrimitives(currentActiveRule)
-			currentActiveRuleEntity.deactivate()
+			currentActiveRuleEntity.desactivate()
 			await this.migrationRuleRepository.save(currentActiveRuleEntity.toPrimitives())
 		}
 	}

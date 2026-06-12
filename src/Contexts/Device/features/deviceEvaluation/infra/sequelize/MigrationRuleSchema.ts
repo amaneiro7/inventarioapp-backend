@@ -74,8 +74,11 @@ export class MigrationRuleModel
 				indexes: [
 					{
 						unique: true,
-						fields: ['isActive'],
-						where: { isActive: true },
+						fields: ['is_active'],
+						where: {
+							is_active: true,
+							deleted_at: null
+						},
 						name: 'unique_active_migration_rule'
 					}
 				]

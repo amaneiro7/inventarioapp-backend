@@ -8,7 +8,7 @@ type MigrationRuleCreatedDomainEventAttributes = {
 	readonly minRamGb: number
 	readonly minDiskGb: number
 	readonly isActive: boolean
-	readonly approvedProcessor: string[]
+	readonly approvedProcessors: string[]
 }
 
 /**
@@ -20,14 +20,14 @@ export class MigrationRuleCreatedDomainEvent extends DomainEvent {
 	readonly minRamGb: number
 	readonly minDiskGb: number
 	readonly isActive: boolean
-	readonly approvedProcessor: string[]
+	readonly approvedProcessors: string[]
 
 	constructor({
 		aggregateId,
 		minRamGb,
 		minDiskGb,
 		isActive,
-		approvedProcessor,
+		approvedProcessors,
 		eventId,
 		occurredOn
 	}: {
@@ -35,7 +35,7 @@ export class MigrationRuleCreatedDomainEvent extends DomainEvent {
 		minRamGb: number
 		minDiskGb: number
 		isActive: boolean
-		approvedProcessor: string[]
+		approvedProcessors: string[]
 		eventId?: string
 		occurredOn?: Date
 	}) {
@@ -43,7 +43,7 @@ export class MigrationRuleCreatedDomainEvent extends DomainEvent {
 		this.minRamGb = minRamGb
 		this.minDiskGb = minDiskGb
 		this.isActive = isActive
-		this.approvedProcessor = approvedProcessor
+		this.approvedProcessors = approvedProcessors
 	}
 
 	toPrimitives(): MigrationRuleCreatedDomainEventAttributes {
@@ -51,7 +51,7 @@ export class MigrationRuleCreatedDomainEvent extends DomainEvent {
 			minRamGb: this.minRamGb,
 			minDiskGb: this.minDiskGb,
 			isActive: this.isActive,
-			approvedProcessor: this.approvedProcessor
+			approvedProcessors: this.approvedProcessors
 		}
 	}
 
@@ -67,7 +67,7 @@ export class MigrationRuleCreatedDomainEvent extends DomainEvent {
 			minRamGb: attributes.minRamGb,
 			minDiskGb: attributes.minDiskGb,
 			isActive: attributes.isActive,
-			approvedProcessor: attributes.approvedProcessor,
+			approvedProcessors: attributes.approvedProcessors,
 			eventId,
 			occurredOn
 		})

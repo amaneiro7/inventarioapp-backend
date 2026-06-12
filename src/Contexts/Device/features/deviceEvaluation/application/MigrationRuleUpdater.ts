@@ -84,19 +84,20 @@ export class MigrationRuleUpdater {
 				newValue: params.isActive
 			})
 			if (params.isActive) {
+				console.log('Activar')
 				await this.migrationRuleActivator.activate(migrationRuleEntity)
 			}
 			migrationRuleEntity.updateIsActive(params.isActive)
 		}
 
-		if (params.approvedProcessor !== undefined) {
-			await this.processorExistenceChecker.ensureExist(params.approvedProcessor)
+		if (params.approvedProcessors !== undefined) {
+			await this.processorExistenceChecker.ensureExist(params.approvedProcessors)
 			changes.push({
 				field: 'approvedProcessors',
 				oldValue: migrationRuleEntity.approvedProcessorValue,
-				newValue: params.approvedProcessor
+				newValue: params.approvedProcessors
 			})
-			const uniqueProcessors = Array.from(new Set(params.approvedProcessor))
+			const uniqueProcessors = Array.from(new Set(params.approvedProcessors))
 			const newIdSet = new Set(uniqueProcessors)
 			const currentIdSet = new Set(migrationRuleEntity.approvedProcessorValue)
 

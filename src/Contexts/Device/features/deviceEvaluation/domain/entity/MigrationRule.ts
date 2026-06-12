@@ -32,7 +32,7 @@ export class MigrationRule extends AggregateRoot {
 		const id = MigrationRuleId.random()
 		const minRamGb = new MigrationRuleMinRamGb(params.minRamGb)
 		const minDiskGb = new MigrationRuleMinDiskGb(params.minDiskGb)
-		const approvedProcessor = new Set(params.approvedProcessor.map(id => new ProcessorId(id)))
+		const approvedProcessor = new Set(params.approvedProcessors.map(id => new ProcessorId(id)))
 		// Por defecto, una nueva regla de migración se crea como activa
 		const isActive = new MigrationRuleIsActive(true)
 
@@ -44,7 +44,7 @@ export class MigrationRule extends AggregateRoot {
 				minRamGb: minRamGb.value,
 				minDiskGb: minDiskGb.value,
 				isActive: isActive.value,
-				approvedProcessor: params.approvedProcessor
+				approvedProcessors: params.approvedProcessors
 			})
 		)
 
@@ -168,7 +168,7 @@ export class MigrationRule extends AggregateRoot {
 	/**
 	 * Regla de negocio: Desactivar explícitamente la regla
 	 */
-	public deactivate(): void {
+	public desactivate(): void {
 		this.isActive = new MigrationRuleIsActive(false)
 	}
 

@@ -37,7 +37,7 @@ export type MigrationRulePrimitives = MigrationRule & {
  * @type MigrationRuleParams
  * @description Represents the parameters required to create a new MigrationRule.
  */
-export type MigrationRuleParams = Omit<MigrationRule & { approvedProcessor: Primitives<ProcessorId>[] }, 'id'>
+export type MigrationRuleParams = Omit<MigrationRule & { approvedProcessors: Primitives<ProcessorId>[] }, 'id'>
 
 /**
  * @type MigrationRuleDto
