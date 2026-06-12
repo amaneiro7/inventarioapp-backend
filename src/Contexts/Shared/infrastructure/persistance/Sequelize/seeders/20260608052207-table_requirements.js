@@ -21,8 +21,8 @@ const newPermissions = [
 	},
 	{
 		id: crypto.randomUUID(),
-		name: 'migration-rules:download',
-		description: 'Permite descargar el listado y reporte de las reglas de migración de hardware.'
+		name: 'dashboard:hardware-evaluation-dashboard:download',
+		description: 'Permite descargar los reportes del tablero de control de evaluación de hardware.'
 	},
 	{
 		id: crypto.randomUUID(),
@@ -103,7 +103,12 @@ module.exports = {
 					})
 				}
 				// Asignar permisos de escritura/gestión al Gestor
-				if (p.name.includes('create') || p.name.includes('update') || p.name.includes('delete')) {
+				if (
+					p.name.includes('create') ||
+					p.name.includes('update') ||
+					p.name.includes('delete') ||
+					p.name.includes('download')
+				) {
 					assignments.push({
 						permission_id: p.id,
 						permission_group_id: gestorGroup.id,

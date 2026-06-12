@@ -74,7 +74,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/migration-rules/download',
 		...protectedRoute,
-		hasPermission(PERMISSIONS.MIGRATION_RULES.DOWNLOAD),
+		hasPermission(PERMISSIONS.DASHBOARD.DOWNLOAD_HARDWARE_EVALUATION_DASHBOARD),
 		criteriaConverterMiddleware,
 		download.run.bind(download)
 	)
