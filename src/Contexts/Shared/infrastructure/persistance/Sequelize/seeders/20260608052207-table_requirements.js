@@ -16,6 +16,16 @@ const newPermissions = [
 	},
 	{
 		id: crypto.randomUUID(),
+		name: 'dashboard:read-hardware-evaluation-dashboard',
+		description: 'Permite visualizar el tablero de control de evaluación de hardware para procesos de migración.'
+	},
+	{
+		id: crypto.randomUUID(),
+		name: 'migration-rules:download',
+		description: 'Permite descargar el listado y reporte de las reglas de migración de hardware.'
+	},
+	{
+		id: crypto.randomUUID(),
 		name: 'migration-rules:create',
 		description: 'Permite crear una nueva regla de migración de hardware.'
 	},
@@ -28,6 +38,19 @@ const newPermissions = [
 		id: crypto.randomUUID(),
 		name: 'migration-rules:delete',
 		description: 'Permite eliminar una regla de migración de hardware del sistema.'
+	}
+]
+
+const newPermissionGroup = [
+	{
+		id: crypto.randomUUID(),
+		name: 'Lector de Reglas de Migración',
+		description: 'Permite visualizar las reglas de migración y el tablero de evaluación de hardware.'
+	},
+	{
+		id: crypto.randomUUID(),
+		name: 'Gestor de Reglas de Migración',
+		description: 'Permite administrar (crear, editar, eliminar) las reglas de migración de hardware.'
 	}
 ]
 
@@ -57,6 +80,41 @@ module.exports = {
 
 			await queryInterface.bulkInsert('permissions', permissionsWithTimestamps, { transaction })
 
+			const groupsWithTimestamps = newPermissionGroup.map(g => ({
+				...g,
+				created_at: new Date(),
+				updated_at: new Date()
+			}))
+
+			await queryInterface.bulkInsert('permission_groups', groupsWithTimestamps, { transaction })
+
+			const lectorGroup = newPermissionGroup.find(g => g.name === 'Lector de Reglas de Migración')
+			const gestorGroup = newPermissionGroup.find(g => g.name === 'Gestor de Reglas de Migración')
+			const assignments = []
+
+			newPermissions.forEach(p => {
+				// Asignar permisos de lectura al Lector
+				if (p.name.includes('read') || p.name.includes('download')) {
+					assignments.push({
+						permission_id: p.id,
+						permission_group_id: lectorGroup.id,
+						created_at: new Date(),
+						updated_at: new Date()
+					})
+				}
+				// Asignar permisos de escritura/gestión al Gestor
+				if (p.name.includes('create') || p.name.includes('update') || p.name.includes('delete')) {
+					assignments.push({
+						permission_id: p.id,
+						permission_group_id: gestorGroup.id,
+						created_at: new Date(),
+						updated_at: new Date()
+					})
+				}
+			})
+
+			await queryInterface.bulkInsert('asignacion_permiso_grupo', assignments, { transaction })
+
 			await queryInterface.bulkInsert('processors_migration_rules', processorsMigrationRulesData, { transaction })
 
 			await transaction.commit()
@@ -74,6 +132,16 @@ module.exports = {
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
 			// Eliminamos en orden inverso para respetar las llaves foráneas
+			await queryInterface.bulkDelete(
+				'asignacion_permiso_grupo',
+				{ permission_group_id: { [Sequelize.Op.in]: newPermissionGroup.map(g => g.id) } },
+				{ transaction }
+			)
+			await queryInterface.bulkDelete(
+				'permission_groups',
+				{ id: { [Sequelize.Op.in]: newPermissionGroup.map(g => g.id) } },
+				{ transaction }
+			)
 			await queryInterface.bulkDelete(
 				'permissions',
 				{ name: { [Sequelize.Op.in]: newPermissions.map(p => p.name) } },

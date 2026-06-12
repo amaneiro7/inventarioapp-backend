@@ -74,7 +74,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/migration-rules/download',
 		...protectedRoute,
-		hasPermission(PERMISSIONS.MIGRATION_RULES.READ_LIST),
+		hasPermission(PERMISSIONS.MIGRATION_RULES.DOWNLOAD),
 		criteriaConverterMiddleware,
 		download.run.bind(download)
 	)
@@ -199,7 +199,7 @@ export const register = async (router: Router) => {
 	router.get(
 		'/migration-rules/dashboard/pending-devices',
 		...protectedRoute,
-		hasPermission(PERMISSIONS.MIGRATION_RULES.READ_LIST),
+		hasPermission(PERMISSIONS.DASHBOARD.READ_HARDWARE_EVALUATION_DASHBOARD),
 		criteriaConverterMiddleware,
 		dashboardController.run.bind(dashboardController)
 	)
