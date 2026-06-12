@@ -17,6 +17,7 @@ dotenv.config(options)
 const {
 	PORT: port = '3000',
 	CORS_ALLOWED_ORIGINS: corsAllowedOrigins = '',
+	TRUST_PROXY: trustProxy = '1',
 	POSTGRES_USER: postgresUser = 'postgres',
 	POSTGRES_PASSWORD: postgresPassword = 'Man12345*',
 	POSTGRES_HOST: postgresHost = 'localhost',
@@ -44,6 +45,7 @@ const {
 type Config = {
 	env: string
 	isProd: boolean
+	trustProxy: string
 	baseApiUrl: string
 	corsAllowedOrigins?: (string | RegExp)[]
 	port: string
@@ -80,6 +82,7 @@ type Config = {
 export const config: Config = {
 	env,
 	isProd: env === 'production',
+	trustProxy,
 	baseApiUrl: '/api/v1',
 	corsAllowedOrigins:
 		corsAllowedOrigins.split(',').map(origin => {

@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import responseTime from 'response-time'
+import { config } from '../Contexts/Shared/infrastructure/config'
 import { options } from './Middleware/cors'
 import { limiter } from './Middleware/rateLimit'
 import { morganLog } from './Middleware/morgan'
@@ -24,7 +25,7 @@ export class Server {
 		this.logger = logger
 		this.port = port
 		this.express = express()
-		this.express.set('trust proxy', 1)
+		this.configureTrustProxy()
 		this.express.disable('x-powered-by')
 
 		this.express.use(json())
@@ -47,6 +48,24 @@ export class Server {
 		registerRoutes({ express: this.express })
 
 		this.express.use(errorHandler(this.logger))
+	}
+
+	private configureTrustProxy(): void {
+		const trustProxyRaw = config.trustProxy || '1'
+
+		// Convertir a booleano si es necesario
+		if (trustProxyRaw === 'true') {
+			this.express.set('trust proxy', true)
+			return
+		}
+		if (trustProxyRaw === 'false') {
+			this.express.set('trust proxy', false)
+			return
+		}
+
+		// Si es un número (hops), convertirlo. Si es un string (IPs), dejarlo como está.
+		const trustProxyValue = isNaN(Number(trustProxyRaw)) ? trustProxyRaw : Number(trustProxyRaw)
+		this.express.set('trust proxy', trustProxyValue)
 	}
 
 	private async startHTTP(): Promise<void> {
