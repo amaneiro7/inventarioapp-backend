@@ -6,13 +6,13 @@ import { SharedDependencies } from './di/shared.di'
 import { AuthDependencies } from './di/auth/auth.di'
 import { DeviceDependencies } from './di/device/device.di'
 import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
-import { type DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
-import { type LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
-import { type PassportManager } from '../Contexts/Auth/infrastructure/passport'
-import { type Logger } from '../Contexts/Shared/domain/Logger'
-import { type CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
-import { type Database } from '../Contexts/Shared/domain/Database'
-import { type EventBus } from '../Contexts/Shared/domain/event/EventBus'
+import type { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
+import type { LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
+import type { PassportManager } from '../Contexts/Auth/infrastructure/passport'
+import type { Logger } from '../Contexts/Shared/domain/Logger'
+import type { CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
+import type { Database } from '../Contexts/Shared/domain/Database'
+import type { EventBus } from '../Contexts/Shared/domain/event/EventBus'
 
 export class InventarioBackendApp {
 	server?: Server
@@ -33,6 +33,7 @@ export class InventarioBackendApp {
 			await passportManager.initialize()
 			this.logger.info('Passport manager inicializado correctamente.')
 
+			// 3. Configurar el Event Bus y sus suscriptores.
 			await this.configureEventBus()
 
 			// 4. Poner el servidor a escuchar SOLO después de que todo lo demás esté listo.

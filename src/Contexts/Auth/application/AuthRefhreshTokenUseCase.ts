@@ -58,7 +58,7 @@ export class AuthRefreshTokenUseCase {
 			user.employee.type !== EmployeeTypesEnum.SERVICE ||
 			!user.employee.isStillWorking
 		) {
-			throw new UserDoesNotExistError(id)
+			throw new UserDoesNotExistError()
 		}
 
 		const userEntity = User.fromPrimitives(user)

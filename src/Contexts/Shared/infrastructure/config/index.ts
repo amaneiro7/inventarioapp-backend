@@ -33,6 +33,7 @@ const {
 	RABBITMQ_PASSWORD: rabbitmqPassword = 'guest',
 	RABBITMQ_SECURE: rabbitmqSecure = false,
 	RABBITMQ_VHOST: rabbitmqVhost = '/',
+	INTERNAL_SHARED_SECRET: internalSharedSecret,
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
 	ACCESS_TOKEN_EXPIRES_IN: accessTokenExpiresIn = '15',
@@ -70,6 +71,7 @@ type Config = {
 		secure: boolean
 		vhost: string
 	}
+	internalSharedSecret?: string
 	signedCookie: string
 	accessTokenSecret: string
 	refreshTokenSecret: string
@@ -119,6 +121,7 @@ export const config: Config = {
 	signedCookie,
 	accessTokenSecret,
 	refreshTokenSecret,
+	internalSharedSecret,
 	accessTokenExpiresIn: Number(accessTokenExpiresIn),
 	refreshTokenExpiresIn: Number(refreshTokenExpiresIn),
 	// accessTokenRedisExpiresIn: Number(accessTokenExpiresIn) * 60,

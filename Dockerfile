@@ -1,4 +1,4 @@
-FROM node:22-alpine3.20 AS base
+FROM node:24-alpine3.24 AS base
 ENV DIR=/app
 WORKDIR $DIR
 
@@ -27,7 +27,7 @@ RUN pnpm prune --prod
 FROM base AS runner
 ENV NODE_ENV=production
 # Instalamos dumb-init y dependencias de sistema necesarias en runtime
-RUN apk add --no-cache dumb-init=1.2.5-r3 tzdata
+RUN apk add --no-cache dumb-init=1.2.5-r4 tzdata
 ENV TZ=America/Caracas
 RUN cp /usr/share/zoneinfo/America/Caracas /etc/localtime
 # Creamos directorio de logs y ajustamos permisos

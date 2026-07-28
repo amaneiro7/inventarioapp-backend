@@ -25,6 +25,7 @@ import { UserReactivateAccountController } from '../../controllers/user/user.rea
 import { UserPatchController } from '../../controllers/user/user.patch.controller'
 import { UserForceChangePasswordController } from '../../controllers/user/user.force-change-password.controller'
 import { UserForceChangePassword } from '../../../Contexts/User/user/application/UserForceChangePassword'
+import { UserInternalValidateController } from '../../controllers/user/user.internal-validate.controller'
 
 export enum UserDependencies {
 	Repository = 'userRepository',
@@ -42,6 +43,7 @@ export enum UserDependencies {
 	ForceChangePassword = 'userForceChangePassword',
 
 	GetController = 'userGetController',
+	UserInternalValidateController = 'userInternalValidateController',
 	GetAllController = 'userGetAllController',
 	DisabledController = 'userDisabledController',
 	ReactivateAccountController = 'userReactivateAccountController',
@@ -72,6 +74,7 @@ export const register = (container: AwilixContainer) => {
 		[UserDependencies.CreateController]: asClass(UserCreateController),
 		[UserDependencies.PatchController]: asClass(UserPatchController),
 		[UserDependencies.GetController]: asClass(UserGetController),
+		[UserDependencies.UserInternalValidateController]: asClass(UserInternalValidateController),
 		[UserDependencies.GetAllController]: asClass(UserGetAllController),
 		[UserDependencies.DisabledController]: asClass(UserDisabledController),
 		[UserDependencies.ReactivateAccountController]: asClass(UserReactivateAccountController),

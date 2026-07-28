@@ -51,7 +51,15 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const user = await UserModel.findOne({ where: { employeeId }, include: ['role', 'employee'] }) // Include employee
+				const user = await UserModel.findOne({
+					where: { employeeId },
+					include: [
+						'role',
+						{
+							association: 'employee'
+						}
+					]
+				}) // Include employee
 				return user ? (user.get({ plain: true }) as User) : null
 			}
 		})
@@ -64,7 +72,15 @@ export class SequelizeUserRepository extends SequelizeCriteriaConverter implemen
 			cacheKey,
 			ttl: TimeTolive.SHORT,
 			fetchFunction: async () => {
-				const user = await UserModel.findByPk(id, { include: ['role', 'employee'] }) // Include employee
+				const user = await UserModel.findByPk(id, {
+					include: [
+						'role',
+						{
+							association: 'employee',
+							include: ['cargo', 'unidad'] // Include cargo and unidad associations
+						}
+					]
+				}) // Include employee
 				return user ? (user.get({ plain: true }) as User) : null
 			}
 		})
