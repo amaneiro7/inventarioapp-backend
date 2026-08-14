@@ -431,11 +431,11 @@ const modelComputer = [
 		name: 'HP All-in-One 24-e0XX',
 		slots: 1
 	},
-	{
-		id: 'cb7c8589-4fbd-45c5-94d9-3d251273d295',
-		name: 'ThinkCentre M710S',
-		slots: 2
-	},
+	// {
+	// 	id: 'cb7c8589-4fbd-45c5-94d9-3d251273d295',
+	// 	name: 'ThinkCentre M710S',
+	// 	slots: 4
+	// },
 	{
 		id: 'cdfd08c0-59d0-4bfc-a021-e6d53e1325fc',
 		name: 'HP Compaq Elite 8300 SFF',
@@ -522,8 +522,18 @@ const modelComputer = [
 	{
 		id: 'c1516b46-fe43-4b97-8ae3-e4395ef6284a',
 		name: 'ThinkCentre M710s',
+		slots: 4
+	},
+	{
+		id: '5f37c47d-5103-43cc-a039-a2b81969e842',
+		name: 'HP ProBook 460 16 inch G11 Notebook PC',
 		slots: 2
-	}
+	},
+	{
+		id: '23901920-0a41-4fba-9238-6d81af9a9e97',
+		name: 'HP ENVY Laptop 16-h1xxx',
+		slots: 2
+	},
 ]
 
 // Crear un Set de los nombres de procesador del segundo array para una búsqueda eficiente

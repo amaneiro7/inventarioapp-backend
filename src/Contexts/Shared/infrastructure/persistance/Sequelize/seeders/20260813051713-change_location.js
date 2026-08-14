@@ -6,7 +6,7 @@ const DEVICE_TABLE = 'devices'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		// Es recomendable envolver todo en una transacción para mayor seguridad
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
@@ -19,8 +19,8 @@ module.exports = {
 					)
 					await queryInterface.sequelize.query(
 						`UPDATE \"${DEVICE_TABLE}\" 
-          SET \"location_id\" = :locationId, \"updated_at\" = :now
-          WHERE \"serial\" = :serial`,
+						SET \"location_id\" = :locationId, \"updated_at\" = :now
+						WHERE \"serial\" = :serial`,
 						{
 							replacements: {
 								locationId: locationId,
@@ -42,7 +42,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		/**
 		 * Add commands to revert seed here.
 		 *

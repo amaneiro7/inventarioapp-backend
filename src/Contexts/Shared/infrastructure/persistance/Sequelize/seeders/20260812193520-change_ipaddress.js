@@ -6,7 +6,7 @@ const DEVICE_TABLE = 'devices'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-	async up(queryInterface, Sequelize) {
+	async up (queryInterface, Sequelize) {
 		// Es recomendable envolver todo en una transacción para mayor seguridad
 		const transaction = await queryInterface.sequelize.transaction()
 		try {
@@ -17,10 +17,10 @@ module.exports = {
 					console.log(`Updating device with serial ${serial} to IP ${ipAddress}`)
 					await queryInterface.sequelize.query(
 						`UPDATE \"${DEVICE_COMPUTER_TABLE}\" 
-          SET \"ip_address\" = :ipAddress, \"updated_at\" = :now
-          WHERE \"device_id\" IN (
-            SELECT \"id\" FROM \"${DEVICE_TABLE}\" WHERE \"serial\" = :serial
-          )`,
+						SET \"ip_address\" = :ipAddress, \"updated_at\" = :now
+						WHERE \"device_id\" IN (
+							SELECT \"id\" FROM \"${DEVICE_TABLE}\" WHERE \"serial\" = :serial
+						)`,
 						{
 							replacements: {
 								ipAddress: ipAddress,
@@ -42,7 +42,7 @@ module.exports = {
 		}
 	},
 
-	async down(queryInterface, Sequelize) {
+	async down (queryInterface, Sequelize) {
 		/**
 		 * Add commands to revert seed here.
 		 *

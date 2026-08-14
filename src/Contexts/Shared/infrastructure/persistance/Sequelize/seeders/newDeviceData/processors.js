@@ -36,9 +36,27 @@ const processorName = [
 	'Intel(R) Core(TM) i7 1185G7 CPU @ 3GHz',
 	'AMD Ryzen 3 3200U with Radeon Vega Mobile Gfx',
 	'Intel(R) Core(TM) i5 1334U CPU @ 3.4GHz',
-	'Snapdragon(R) X Plus X1P64100 Qualcomm(R) Oryon(TM)'
+	'Snapdragon(R) X Plus X1P64100 Qualcomm(R) Oryon(TM)',
+	'Intel(R) Core(TM) i7 13700H',
+	'Intel(R) Core(TM) Ultra 7 155U',
 ]
 const processors = [
+	{
+		id: 'e7cc69cc-ba84-4b08-85c9-e96733dcdfe1',
+		product_collection: 'Intel(R) Core(TM) i7',
+		number_model: '13700H',
+		frequency: '3.7GHz',
+		cores: 14,
+		threads: true
+	},
+	{
+		id: '2340dea8-5ea6-4f6a-8677-ae3465b4ca43',
+		product_collection: 'Intel(R) Core(TM) Ultra 7',
+		number_model: '155U',
+		frequency: '1.7GHz',
+		cores: 12,
+		threads: false
+	},
 	{
 		id: '2b2cb1f8-8bc4-4466-9488-60aa48590a68',
 		product_collection: 'AMD Ryzen 3',
