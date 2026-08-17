@@ -5,6 +5,15 @@ const almacenes = {
 
 const changeConflictNameToAlmacen = [
 	{
+		oldComputerName: 'A098050BCAINS',
+		locationId: almacenes.rosal,
+		statusId: '2',
+		computerName: null,
+		ipAddress: null,
+		operatingSystemId: null,
+		operatingSystemArqId: null
+	},
+	{
 		oldComputerName: '098236MEDPAG',
 		locationId: almacenes.rosal,
 		statusId: '2',
@@ -57,14 +66,11 @@ const changeConflictNameToAlmacen = [
 		ipAddress: null,
 		operatingSystemId: null,
 		operatingSystemArqId: null
-	}
-]
-
-const chanceConflictNameToPorDesincorporar = [
-	// Por desincorporar
+	},
 	{
-		oldComputerName: '011027CORDN',
-		statusId: '3',
+		oldComputerName: 'A095026BNCPERSO',
+		locationId: almacenes.rosal,
+		statusId: '2',
 		computerName: null,
 		ipAddress: null,
 		operatingSystemId: null,
@@ -72,7 +78,18 @@ const chanceConflictNameToPorDesincorporar = [
 	}
 ]
 
+// const chanceConflictNameToPorDesincorporar = [
+// 	// Por desincorporar
+// 	{
+// 		oldComputerName: '011027CORDN',
+// 		statusId: '3',
+// 		computerName: null,
+// 		ipAddress: null,
+// 		operatingSystemId: null,
+// 		operatingSystemArqId: null
+// 	}
+// ]
+
 module.exports = {
-	changeConflictNameToAlmacen,
-	chanceConflictNameToPorDesincorporar
+	changeConflictNameToAlmacen
 }
