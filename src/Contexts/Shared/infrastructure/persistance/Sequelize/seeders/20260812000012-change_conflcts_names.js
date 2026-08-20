@@ -34,12 +34,12 @@ module.exports = {
 				// Actualizar tabla device_computers
 				await queryInterface.sequelize.query(
 					`UPDATE device_computers 
-           SET computer_name = :computerName, 
-               ip_address = :ipAddress, 
-               operating_system_version_id = :operatingSystemId, 
-               operating_system_arq_id = :operatingSystemArqId, 
-               updated_at = :now
-           WHERE computer_name = :oldComputerName`,
+						SET computer_name = :computerName, 
+							ip_address = :ipAddress, 
+							operating_system_version_id = :operatingSystemId, 
+							operating_system_arq_id = :operatingSystemArqId, 
+							updated_at = :now
+						WHERE computer_name = :oldComputerName`,
 					{
 						replacements: {
 							computerName,
