@@ -25,7 +25,13 @@ export class DomainEventDeserializer extends Map<string, DomainEventClass> {
 	}
 
 	deserialize(event: string) {
-		const eventData = JSON.parse(event).data as DomainEventJSON
+		const parsed = JSON.parse(event)
+		const eventData = (parsed.data || parsed.dadta) as DomainEventJSON
+
+		if (!eventData) {
+			throw new Error("Invalid domain event format: missing 'data' property")
+		}
+
 		const { type, aggregateId, attributes, id, occurred_on } = eventData
 		const eventClass = super.get(type)
 

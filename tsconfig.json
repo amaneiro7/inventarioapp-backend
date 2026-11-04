@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"esModuleInterop": true,
-		"target": "es6",
+		"target": "es2022",
 		"noImplicitAny": true,
 		"incremental": false,
 		"moduleResolution": "node",
@@ -18,6 +18,6 @@
 		"emitDecoratorMetadata": true,
 		"typeRoots": ["./node_modules/@types", "./src/types"]
 	},
-	"include": ["src/**/**.ts", "tests/Contexts/employee/Unidad/UnidadCreator.test.ts"],
-	"exclude": ["node_modules", "./dist", "./confg", "./seeders", "./models", "./tests"]
+	"include": ["src/**/**.ts"],
+	"exclude": ["node_modules", "./dist", "./config", "./seeders", "./models", "./tests"]
 }

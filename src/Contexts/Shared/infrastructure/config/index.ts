@@ -33,6 +33,7 @@ const {
 	RABBITMQ_PASSWORD: rabbitmqPassword = 'guest',
 	RABBITMQ_SECURE: rabbitmqSecure = false,
 	RABBITMQ_VHOST: rabbitmqVhost = '/',
+	MONGO_URL: mongoUrl = 'mongodb://localhost:27017/inventory_dev',
 	INTERNAL_SHARED_SECRET: internalSharedSecret,
 	SIGNED_COOKIE_SECRET: signedCookie = 'signed_cookie_secret',
 	ACCESS_TOKEN_SECRET: accessTokenSecret = 'access_token_scret',
@@ -62,6 +63,9 @@ type Config = {
 		host: string
 		port: number
 		password: string
+	}
+	mongo: {
+		url: string
 	}
 	rabbitmq: {
 		host: string
@@ -109,6 +113,9 @@ export const config: Config = {
 		host: redisHost,
 		port: Number(redisPort),
 		password: redisPassword
+	},
+	mongo: {
+		url: mongoUrl
 	},
 	rabbitmq: {
 		host: rabbitmqHost || 'localhost',

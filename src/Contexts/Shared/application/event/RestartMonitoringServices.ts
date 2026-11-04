@@ -38,11 +38,11 @@ export class RestartMonitoringServices implements DomainEventSubscriber<AppSetti
 
 		// Inicializamos el estado de los servicios al instanciar el suscriptor.
 		// Usamos un IIFE para poder usar async en el constructor.
-		;(async () => {
-			await this.initializeServicesState()
-		})().catch(error => {
-			this.logger.error(`[RestartMonitoringServices] Error during initial state setup: ${error as string}`)
-		})
+		// ;(async () => {
+		// 	await this.initializeServicesState()
+		// })().catch(error => {
+		// 	this.logger.error(`[RestartMonitoringServices] Error during initial state setup: ${error as string}`)
+		// })
 	}
 
 	// --- Domain Event Handlers ---
@@ -78,14 +78,18 @@ export class RestartMonitoringServices implements DomainEventSubscriber<AppSetti
 	 * @description Comprueba el estado inicial de la configuración y arranca los servicios si es necesario.
 	 * Se ejecuta una sola vez cuando la aplicación se inicia.
 	 */
-	private async initializeServicesState(): Promise<void> {
-		this.logger.info('[RestartMonitoringServices] Initializing monitoring services state...')
+	public async init(): Promise<void> {
+		try {
+			this.logger.info('[RestartMonitoringServices] Initializing monitoring services state...')
 
-		const isLocationEnabled = await this.isSettingEnabled(AppSettingKeys.LOCATION_MONITORING.ENABLED, false)
-		this.handleLocationMonitoring(AppSettingKeys.LOCATION_MONITORING.ENABLED, isLocationEnabled)
+			const isLocationEnabled = await this.isSettingEnabled(AppSettingKeys.LOCATION_MONITORING.ENABLED, false)
+			this.handleLocationMonitoring(AppSettingKeys.LOCATION_MONITORING.ENABLED, isLocationEnabled)
 
-		const isDeviceEnabled = await this.isSettingEnabled(AppSettingKeys.DEVICE_MONITORING.ENABLED, false)
-		this.handleDeviceMonitoring(AppSettingKeys.DEVICE_MONITORING.ENABLED, isDeviceEnabled)
+			const isDeviceEnabled = await this.isSettingEnabled(AppSettingKeys.DEVICE_MONITORING.ENABLED, false)
+			this.handleDeviceMonitoring(AppSettingKeys.DEVICE_MONITORING.ENABLED, isDeviceEnabled)
+		} catch (error) {
+			this.logger.error(`[RestartMonitoringServices] Error during initial state setup: ${error as string}`)
+		}
 	}
 
 	private async isSettingEnabled(key: string, fallback: boolean): Promise<boolean> {

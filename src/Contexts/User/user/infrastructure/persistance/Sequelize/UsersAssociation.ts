@@ -35,7 +35,7 @@ export class UsersAssociation {
 		if ('name' in whereFilters) {
 			employeeInclude.where = {
 				...employeeInclude.where,
-				nameemail: whereFilters.name
+				name: whereFilters.name
 			}
 			delete whereFilters?.name
 		}

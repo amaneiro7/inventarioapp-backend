@@ -30,9 +30,9 @@ export class RabbitMQConsumer {
 
 	async onMessage(message: ConsumeMessage) {
 		const content = message.content.toString()
-		const domainEvent = this.deserializer.deserialize(content)
 
 		try {
+			const domainEvent = this.deserializer.deserialize(content)
 			await this.subscriber.on(domainEvent)
 		} catch {
 			await this.handleError(message)

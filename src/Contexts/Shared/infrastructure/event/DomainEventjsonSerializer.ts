@@ -3,7 +3,7 @@ import type { DomainEvent } from '../../domain/event/DomainEvent'
 export class DomainEventJsonSerializer {
 	static serialize(event: DomainEvent): string {
 		return JSON.stringify({
-			dadta: {
+			data: {
 				id: event.eventId,
 				type: event.eventName,
 				occurred_on: event.occurredOn.toISOString(),
