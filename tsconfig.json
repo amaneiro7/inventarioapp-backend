@@ -5,7 +5,6 @@
 		"target": "es2022",
 		"noImplicitAny": true,
 		"incremental": false,
-		"moduleResolution": "node",
 		"ignoreDeprecations": "6.0",
 		"sourceMap": false,
 		"rootDir": ".",
