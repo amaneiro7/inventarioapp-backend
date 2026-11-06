@@ -10,6 +10,7 @@ FROM base AS deps
 # Instalamos dependencias de sistema solo aquí
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml .npmrc ./
 RUN npm pkg delete scripts.prepare
+
 # Instalamos TODO (incluye devDeps para el build)
 RUN pnpm install --frozen-lockfile || pnpm install
     
