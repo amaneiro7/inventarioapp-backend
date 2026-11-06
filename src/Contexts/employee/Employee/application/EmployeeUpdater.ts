@@ -73,7 +73,7 @@ export class EmployeeUpdater {
 		const employee = await this.employeeRepository.findById(employeeId)
 
 		if (!employee) {
-			throw new EmployeeDoesNotExistError(id)
+			throw new EmployeeDoesNotExistError({ id })
 		}
 
 		const employeeEntity = Employee.fromPrimitives(employee)

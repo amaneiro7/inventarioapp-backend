@@ -56,7 +56,7 @@ export class ShipmentUpdater {
 				}
 				const employee = await this.employeeRepository.findById(params?.receivedBy)
 				if (employee === null) {
-					throw new EmployeeDoesNotExistError(params.receivedBy)
+					throw new EmployeeDoesNotExistError({ id: params.receivedBy })
 				}
 				shipmentEntity.deliver({ deliveryDate: params?.deliveryDate, receivedById: params.receivedBy })
 			} else {

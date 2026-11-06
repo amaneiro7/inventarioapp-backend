@@ -17,6 +17,8 @@ import type { EmployeeUserName } from '../../domain/valueObject/EmployeeUsername
 import type { EmployeeId } from '../../domain/valueObject/EmployeeId'
 import type { CacheInvalidator } from '../../../../Shared/domain/repository/CacheInvalidator'
 import type { UnidadRepository } from '../../../Unidad/domain/repository/UnidadRepository'
+import type { EmployeeCode } from '../../domain/valueObject/EmployeCode'
+import { employeeGetInclude } from './employeeGetInclude'
 
 /**
  * @class SequelizeEmployeeRepository
@@ -123,9 +125,51 @@ export class SequelizeEmployeeRepository
 				const employee = await EmployeeModel.findOne({
 					where: {
 						userName: { [Op.iLike]: userName }
-					}
+					},
+					...employeeGetInclude
 				})
-				return employee ? (employee.get({ plain: true }) as EmployeeDto) : null
+				if (!employee) return null
+
+				const plainEmployee = employee.get({ plain: true }) as EmployeeDto
+
+				// Si el empleado tiene una unidad asignada, recuperamos la jerarquía completa
+				if (plainEmployee.unidadId) {
+					const fullChainMap = await this.unidadRepository.getUnidadesFullChains([plainEmployee.unidadId])
+					plainEmployee.unidad.full_chain = {
+						text: fullChainMap.get(plainEmployee.unidadId)?.pathString ?? null,
+						levels: fullChainMap.get(plainEmployee.unidadId)?.pathArray ?? []
+					}
+				}
+
+				return plainEmployee as EmployeeDto
+			}
+		})
+	}
+	async findByEmployeeCode(employeeCode: Primitives<EmployeeCode>): Promise<EmployeeDto | null> {
+		return await this.cache.getCachedData<EmployeeDto | null>({
+			cacheKey: `${this.cacheKey}:employeeCode:${employeeCode}`,
+			ttl: TimeTolive.LONG,
+			fetchFunction: async () => {
+				const employee = await EmployeeModel.findOne({
+					where: {
+						employeeCode
+					},
+					...employeeGetInclude
+				})
+				if (!employee) return null
+
+				const plainEmployee = employee.get({ plain: true }) as EmployeeDto
+
+				// Si el empleado tiene una unidad asignada, recuperamos la jerarquía completa
+				if (plainEmployee.unidadId) {
+					const fullChainMap = await this.unidadRepository.getUnidadesFullChains([plainEmployee.unidadId])
+					plainEmployee.unidad.full_chain = {
+						text: fullChainMap.get(plainEmployee.unidadId)?.pathString ?? null,
+						levels: fullChainMap.get(plainEmployee.unidadId)?.pathArray ?? []
+					}
+				}
+
+				return plainEmployee as EmployeeDto
 			}
 		})
 	}

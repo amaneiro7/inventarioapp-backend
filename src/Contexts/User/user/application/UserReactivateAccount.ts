@@ -72,7 +72,7 @@ export class UserReactivateAccount {
 
 		const employee = await this.employeeRepository.findById(userEntity.employeeValue)
 		if (!employee) {
-			throw new EmployeeDoesNotExistError(userEntity.employeeValue)
+			throw new EmployeeDoesNotExistError({ id: userEntity.employeeValue })
 		}
 		const employeeEntity = Employee.fromPrimitives(employee)
 

@@ -56,7 +56,7 @@ export class CreateUserFromEmployee {
 		// 1. Validate Employee existence
 		const employee = await this.employeeRepository.findById(payload.employeeId)
 		if (!employee) {
-			throw new EmployeeDoesNotExistError(payload.employeeId)
+			throw new EmployeeDoesNotExistError({ id: payload.employeeId })
 		}
 
 		// 2. Ensure no User already exists for this employee

@@ -14,6 +14,8 @@ import { EmployeeFinderAll } from '../../../Contexts/employee/Employee/applicati
 import { EmployeeGetAllController } from '../../controllers/employee/employee.get-all.controller'
 import { EmployeeExcelService } from '../../../Contexts/employee/Employee/application/EmployeeExcelService'
 import { EmployeeDownloadExcelServiceController } from '../../controllers/employee/employee.download-excel-service.controller'
+import { EmployeeSignatureFinder } from '../../../Contexts/employee/Employee/application/EmployeeSignatureFinder'
+import { EmployeeSignatureGetController } from '../../controllers/employee/employee.signature.get.controller'
 
 export enum EmployeeDependencies {
 	Repository = 'employeeRepository',
@@ -24,13 +26,15 @@ export enum EmployeeDependencies {
 	Remover = 'employeeRemover',
 	ExcelService = 'employeeExcelService',
 	SearchByCriteria = 'employeeSearchByCriteria',
+	SignatureFinder = 'employeeSignatureFinder',
 	GetController = 'employeeGetController',
 	GetAllController = 'employeeGetAllController',
 	PostController = 'employeePostController',
 	PatchController = 'employeePatchController',
 	DeleteController = 'employeeDeleteController',
 	GetByCriteriaController = 'employeeGetByCriteria',
-	ExcelDownloadController = 'employeeExcelDownload'
+	ExcelDownloadController = 'employeeExcelDownload',
+	SignatureGetController = 'employeeSignatureGetController'
 }
 
 export const register = (container: AwilixContainer) => {
@@ -43,12 +47,14 @@ export const register = (container: AwilixContainer) => {
 		[EmployeeDependencies.Remover]: asClass(EmployeeRemover),
 		[EmployeeDependencies.ExcelService]: asClass(EmployeeExcelService),
 		[EmployeeDependencies.SearchByCriteria]: asClass(EmployeeSearchByCriteria),
+		[EmployeeDependencies.SignatureFinder]: asClass(EmployeeSignatureFinder),
 		[EmployeeDependencies.GetController]: asClass(EmployeeGetController),
 		[EmployeeDependencies.GetAllController]: asClass(EmployeeGetAllController),
 		[EmployeeDependencies.PostController]: asClass(EmployeePostController),
 		[EmployeeDependencies.PatchController]: asClass(EmployeePatchController),
 		[EmployeeDependencies.DeleteController]: asClass(EmployeeDeleteController),
 		[EmployeeDependencies.ExcelDownloadController]: asClass(EmployeeDownloadExcelServiceController),
-		[EmployeeDependencies.GetByCriteriaController]: asClass(EmployeeSearchByCriteriaController)
+		[EmployeeDependencies.GetByCriteriaController]: asClass(EmployeeSearchByCriteriaController),
+		[EmployeeDependencies.SignatureGetController]: asClass(EmployeeSignatureGetController)
 	})
 }

@@ -25,7 +25,7 @@ export class EmployeeExistenceChecker {
 		if (foundEmployees.length !== uniqueEmployeeIds.length) {
 			const foundIds = new Set(foundEmployees.map(c => c.id))
 			const missingIds = uniqueEmployeeIds.filter(id => !foundIds.has(id))
-			throw new EmployeeDoesNotExistError(missingIds.join(', '))
+			throw new EmployeeDoesNotExistError({ id: missingIds.join(', ') })
 		}
 	}
 }

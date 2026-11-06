@@ -107,7 +107,7 @@ export class ShipmentCreator {
 		}
 		const employee = await this.employeeRepository.findById(employeeId)
 		if (employee === null) {
-			throw new EmployeeDoesNotExistError(employeeId)
+			throw new EmployeeDoesNotExistError({ id: employeeId })
 		}
 	}
 

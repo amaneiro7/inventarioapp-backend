@@ -35,7 +35,7 @@ export class EmployeeFinder {
 		const employee = await this.employeeRepository.findById(employeeId)
 
 		if (!employee) {
-			throw new EmployeeDoesNotExistError(employeeId)
+			throw new EmployeeDoesNotExistError({ id: employeeId })
 		}
 		let mappedHistory: HistoryDto[] | null = null
 		if (employee.history) {

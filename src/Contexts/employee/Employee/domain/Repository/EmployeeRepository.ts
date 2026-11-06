@@ -1,11 +1,12 @@
-import { type Criteria } from '../../../../Shared/domain/criteria/Criteria'
-import { type Nullable } from '../../../../Shared/domain/Nullable'
-import { type ResponseDB } from '../../../../Shared/domain/ResponseType'
-import { type Primitives } from '../../../../Shared/domain/value-object/Primitives'
-import { type EmployeeDto, type EmployeePrimitives } from '../entity/Employee.dto'
-import { type EmployeeEmail } from '../valueObject/EmployeeEmail'
-import { type EmployeeId } from '../valueObject/EmployeeId'
-import { type EmployeeUserName } from '../valueObject/EmployeeUsername' // Import EmployeeUserName
+import type { Criteria } from '../../../../Shared/domain/criteria/Criteria'
+import type { Nullable } from '../../../../Shared/domain/Nullable'
+import type { ResponseDB } from '../../../../Shared/domain/ResponseType'
+import type { Primitives } from '../../../../Shared/domain/value-object/Primitives'
+import type { EmployeeDto, EmployeePrimitives } from '../entity/Employee.dto'
+import type { EmployeeCode } from '../valueObject/EmployeCode'
+import type { EmployeeEmail } from '../valueObject/EmployeeEmail'
+import type { EmployeeId } from '../valueObject/EmployeeId'
+import type { EmployeeUserName } from '../valueObject/EmployeeUsername' // Import EmployeeUserName
 
 export abstract class EmployeeRepository {
 	abstract save(payload: EmployeePrimitives): Promise<void>
@@ -22,6 +23,7 @@ export abstract class EmployeeRepository {
 	 */
 	abstract findByIds: (ids: Array<Primitives<EmployeeId>>) => Promise<EmployeeDto[]>
 	abstract findByEmail(email: Primitives<EmployeeEmail>): Promise<Nullable<EmployeeDto>>
+	abstract findByEmployeeCode(employeeCode: Primitives<EmployeeCode>): Promise<Nullable<EmployeeDto>>
 	abstract findByUserName(userName: Primitives<EmployeeUserName>): Promise<Nullable<EmployeeDto>>
 	/**
 	 * @abstract

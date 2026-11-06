@@ -38,7 +38,8 @@ export const options: CorsOptions = {
 		'Content-Type',
 		'Authorization',
 		'Access-Control-Allow-Credentials',
-		'Access-Control-Allow-Origin'
+		'Access-Control-Allow-Origin',
+		'x-client-id'
 	],
 	// Define the headers that are exposed to the client-side script
 	exposedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials', 'Access-Control-Allow-Origin']
