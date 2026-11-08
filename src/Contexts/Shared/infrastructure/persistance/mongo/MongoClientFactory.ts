@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb'
 import MongoConfig from './MongoConfig'
 
+const TIMEOUT = 3000
+
 export class MongoClientFactory {
 	private static clients: { [key: string]: MongoClient } = {}
 
@@ -21,7 +23,11 @@ export class MongoClientFactory {
 	}
 
 	private static async createAndConnectClient(config: MongoConfig): Promise<MongoClient> {
-		const client = new MongoClient(config.url, { ignoreUndefined: true })
+		const client = new MongoClient(config.url, {
+			ignoreUndefined: true,
+			serverSelectionTimeoutMS: TIMEOUT,
+			connectTimeoutMS: TIMEOUT
+		})
 
 		await client.connect()
 

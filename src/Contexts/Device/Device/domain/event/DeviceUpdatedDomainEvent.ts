@@ -8,6 +8,7 @@ type DeviceChange = {
 }
 
 type DeviceUpdatedDomainEventAttributes = {
+	readonly userId?: string
 	readonly serial: DevicePrimitives['serial']
 	readonly activo: DevicePrimitives['activo']
 	readonly newEntity: DevicePrimitives
@@ -18,6 +19,7 @@ type DeviceUpdatedDomainEventAttributes = {
 export class DeviceUpdatedDomainEvent extends DomainEvent {
 	static readonly EVENT_NAME = 'device.updated'
 
+	readonly userId?: string
 	readonly serial: DevicePrimitives['serial']
 	readonly activo: DevicePrimitives['activo']
 	readonly newEntity: DevicePrimitives
@@ -26,6 +28,7 @@ export class DeviceUpdatedDomainEvent extends DomainEvent {
 
 	constructor({
 		aggregateId,
+		userId,
 		serial,
 		activo,
 		newEntity,
@@ -35,6 +38,7 @@ export class DeviceUpdatedDomainEvent extends DomainEvent {
 		occurredOn
 	}: {
 		aggregateId: string
+		userId?: string
 		serial: DevicePrimitives['serial']
 		activo: DevicePrimitives['activo']
 		newEntity: DevicePrimitives
@@ -49,10 +53,12 @@ export class DeviceUpdatedDomainEvent extends DomainEvent {
 		this.newEntity = newEntity
 		this.oldEntity = oldEntity
 		this.changes = changes
+		this.userId = userId
 	}
 
 	toPrimitives(): DeviceUpdatedDomainEventAttributes {
 		return {
+			userId: this.userId,
 			serial: this.serial,
 			activo: this.activo,
 			newEntity: this.newEntity,

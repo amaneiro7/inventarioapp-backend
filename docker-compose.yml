@@ -19,6 +19,7 @@ services:
             - postgres
             - redis
             - rabbitmq
+            - mongo
         volumes:
             - ./logs_data:/app/logs
         deploy:

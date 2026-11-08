@@ -62,15 +62,18 @@ export const register = (container: AwilixContainer) => {
 			const messageRetryTtl = 5000 // 5 segundos antes de reintentar
 			return new RabbitMQConfigurer(rabbitMqConnection, queueNameFormatter, messageRetryTtl)
 		}).singleton(),
-		[SharedDependencies.EventBus]: asFunction(({ failoverPublisher, rabbitMqConnection, queueNameFormatter }) => {
-			return new RabbitMqEventBus({
-				failoverPublisher,
-				rabbitMqConnection,
-				exchange: 'inventoryapp-events',
-				queueNameFormatter,
-				maxRetries: 3
-			})
-		}).singleton()
+		[SharedDependencies.EventBus]: asFunction(
+			({ failoverPublisher, rabbitMqConnection, queueNameFormatter, logger }) => {
+				return new RabbitMqEventBus({
+					failoverPublisher,
+					rabbitMqConnection,
+					exchange: 'inventoryapp-events',
+					queueNameFormatter,
+					maxRetries: 3,
+					logger
+				})
+			}
+		).singleton()
 		// [SharedDependencies.EventBus]: asClass(InMemoryEventBus).singleton()
 	})
 }

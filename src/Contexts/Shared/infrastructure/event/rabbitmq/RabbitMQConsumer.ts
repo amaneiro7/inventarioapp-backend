@@ -3,6 +3,7 @@ import type { DomainEvent } from '../../../domain/event/DomainEvent'
 import type { DomainEventSubscriber } from '../../../domain/event/DomainEventSubscriber'
 import type { DomainEventDeserializer } from '../DomainEventDeserializer'
 import type { RabbitMqConnection } from './RabbitMqConnection'
+import { Logger } from '../../../domain/Logger'
 
 export class RabbitMQConsumer {
 	private subscriber: DomainEventSubscriber<DomainEvent>
@@ -11,6 +12,7 @@ export class RabbitMQConsumer {
 	private maxRetries: number
 	private queueName: string
 	private exchange: string
+	private logger: Logger
 
 	constructor(params: {
 		subscriber: DomainEventSubscriber<DomainEvent>
@@ -19,6 +21,7 @@ export class RabbitMQConsumer {
 		queueName: string
 		exchange: string
 		maxRetries: number
+		logger: Logger
 	}) {
 		this.subscriber = params.subscriber
 		this.deserializer = params.deserializer
@@ -26,6 +29,7 @@ export class RabbitMQConsumer {
 		this.maxRetries = params.maxRetries
 		this.queueName = params.queueName
 		this.exchange = params.exchange
+		this.logger = params.logger
 	}
 
 	async onMessage(message: ConsumeMessage) {
@@ -34,7 +38,10 @@ export class RabbitMQConsumer {
 		try {
 			const domainEvent = this.deserializer.deserialize(content)
 			await this.subscriber.on(domainEvent)
-		} catch {
+		} catch (error) {
+			this.logger.error(
+				`[RabbitMQConsumer Error] Falló el suscriptor ${this.subscriber.constructor.name}: ${error}`
+			)
 			await this.handleError(message)
 		} finally {
 			this.connection.ack(message)

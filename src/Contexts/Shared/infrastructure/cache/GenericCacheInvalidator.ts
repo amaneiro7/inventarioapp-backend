@@ -13,6 +13,7 @@ export class GenericCacheInvalidator implements CacheInvalidator {
 				// 1. Invalidamos búsquedas completas y listas (siempre se invalidan al haber cambios)
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:active` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:all` }),
+				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:list:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:lists:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:matching:*` }),
 				this.cache.removeCachedData({ cacheKey: `${this.cacheKey}:dashboard:*` }),

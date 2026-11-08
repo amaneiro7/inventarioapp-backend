@@ -7,6 +7,7 @@ import type { DomainEventFailoverPublisher } from '../DomainEventFailoverPublish
 import type { DomainEventSubscribers } from '../DomainEventSubscribers'
 import type { RabbitMqConnection } from './RabbitMqConnection'
 import type { RabbitMQqueueFormatter } from './RabbitMQqueueFormatter'
+import type { Logger } from '../../../domain/Logger'
 
 export class RabbitMqEventBus implements EventBus {
 	private failoverPublisher: DomainEventFailoverPublisher
@@ -14,25 +15,29 @@ export class RabbitMqEventBus implements EventBus {
 	private exchange: string
 	private queueNameFormatter: RabbitMQqueueFormatter
 	private maxRetries: number
+	private logger: Logger
 
 	constructor({
 		failoverPublisher,
 		rabbitMqConnection,
 		exchange,
 		queueNameFormatter,
-		maxRetries
+		maxRetries,
+		logger
 	}: {
 		failoverPublisher: DomainEventFailoverPublisher
 		rabbitMqConnection: RabbitMqConnection
 		exchange: string
 		queueNameFormatter: RabbitMQqueueFormatter
 		maxRetries: number
+		logger: Logger
 	}) {
 		this.rabbitMqConnection = rabbitMqConnection
 		this.failoverPublisher = failoverPublisher
 		this.exchange = exchange
 		this.queueNameFormatter = queueNameFormatter
 		this.maxRetries = maxRetries
+		this.logger = logger
 	}
 
 	async publish(events: Array<DomainEvent>): Promise<void> {
@@ -44,7 +49,13 @@ export class RabbitMqEventBus implements EventBus {
 
 				await this.rabbitMqConnection.publish({ exchange: this.exchange, routingKey, content, options })
 			} catch {
-				await this.failoverPublisher.publish(event)
+				try {
+					await this.failoverPublisher.publish(event)
+				} catch (error) {
+					this.logger.error(
+						`Failed to publish event ${event.eventName} with ID ${event.eventId} to failover publisher: ${error}`
+					)
+				}
 			}
 		}
 	}
@@ -55,7 +66,7 @@ export class RabbitMqEventBus implements EventBus {
 
 		for (const subscriber of subscribers.items) {
 			const queueName = this.queueNameFormatter.format(subscriber)
-			const rabbitMQConsumer = consumerFactory.build(subscriber, this.exchange, queueName)
+			const rabbitMQConsumer = consumerFactory.build(subscriber, this.exchange, queueName, this.logger)
 
 			await this.rabbitMqConnection.consume(queueName, rabbitMQConsumer.onMessage.bind(rabbitMQConsumer))
 		}

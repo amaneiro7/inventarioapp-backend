@@ -41,7 +41,7 @@ export class SequelizeTotalChangeLastThreMonthsByCategoryRepository implements T
 	 */
 	async run({ months = 2 }: { months?: number }): Promise<{ name: string }[]> {
 		// Ensure the cache key is unique for different 'months' values.
-		const specificCacheKey = `${this.cacheKey}:list:totalChangeLastThreMonthsByCategory:${months}`
+		const specificCacheKey = `${this.cacheKey}:lists:totalChangeLastThreMonthsByCategory:${months}`
 
 		return await this.cache.getCachedData({
 			cacheKey: specificCacheKey,

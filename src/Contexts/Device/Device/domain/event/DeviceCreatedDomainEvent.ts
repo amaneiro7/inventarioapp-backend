@@ -6,19 +6,21 @@ import { type DevicePrinterPrimitives } from '../dto/Printer.dto'
 
 type DeviceCreatedDomainEventAttributes = {
 	readonly device: DevicePrimitives | DeviceComputerPrimitives | DeviceHardDrivePrimitives | DevicePrinterPrimitives
+	readonly userId?: string
 	readonly serial: DevicePrimitives['serial']
 	readonly activo: DevicePrimitives['activo']
 }
 
 export class DeviceCreatedDomainEvent extends DomainEvent {
 	static readonly EVENT_NAME = 'device.created'
-
+	readonly userId?: string
 	readonly device: DevicePrimitives | DeviceComputerPrimitives | DeviceHardDrivePrimitives | DevicePrinterPrimitives
 	readonly serial: DevicePrimitives['serial']
 	readonly activo: DevicePrimitives['activo']
 
 	constructor({
 		aggregateId,
+		userId,
 		serial,
 		activo,
 		device,
@@ -26,6 +28,7 @@ export class DeviceCreatedDomainEvent extends DomainEvent {
 		occurredOn
 	}: {
 		aggregateId: string
+		userId?: string
 		device: DevicePrimitives | DeviceComputerPrimitives | DeviceHardDrivePrimitives | DevicePrinterPrimitives
 		serial: DevicePrimitives['serial']
 		activo: DevicePrimitives['activo']
@@ -36,13 +39,15 @@ export class DeviceCreatedDomainEvent extends DomainEvent {
 		this.device = device
 		this.serial = serial
 		this.activo = activo
+		this.userId = userId
 	}
 
 	toPrimitives(): DeviceCreatedDomainEventAttributes {
 		return {
 			device: this.device,
 			serial: this.serial,
-			activo: this.activo
+			activo: this.activo,
+			userId: this.userId
 		}
 	}
 
