@@ -18,6 +18,16 @@ mkcert -key-file ./certbot/conf/live/srvdocker.corp.bnc.com/privkey.pem -cert-fi
 mkcert srvdocker *.srvdocker.corp.bnc.com srvdocker.corp.bnc.com 10.0.11.100
 mkcert -install
 
+mkdir -p ./certbot/conf/live/mandev/
+mkcert -key-file ./certbot/conf/live/mandev/privkey.pem -cert-file ./certbot/conf/live/mandev/fullchain.pem srvdockerdb mandev localhost 127.0.0.1 192.168.11.5
+mkcert mandev 192.168.11.5
+
+
+mkdir -p ./certbot/conf/live/srvdockerdb.corp.bnc.com/
+mkcert -key-file ./certbot/conf/live/srvdockerdb.corp.bnc.com/privkey.pem -cert-file ./certbot/conf/live/srvdockerdb.corp.bnc.com/fullchain.pem srvdockerdb *.srvdockerdb.corp.bnc.com srvdockerdb.corp.bnc.com 10.235.1.13 localhost 127.0.0.1
+mkcert srvdockerdb *.srvdockerdb.corp.bnc.com srvdockerdb.corp.bnc.com 10.235.1.13
+mkcert -install
+
 
 docker compose -f docker-compose.yml --env-file .env.prod up -d --build
 
