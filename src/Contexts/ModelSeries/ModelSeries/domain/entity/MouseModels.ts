@@ -79,6 +79,9 @@ export class MouseModels extends ModelSeries {
 
 	update(params: Partial<MouseModelsParams>): ModelsFields {
 		const changes: ModelsFields = []
+		const superUpdate = super.update(params)
+
+		changes.push(...superUpdate)
 
 		if (params.inputTypeId !== undefined && this.inputTypeValue !== params.inputTypeId) {
 			changes.push({

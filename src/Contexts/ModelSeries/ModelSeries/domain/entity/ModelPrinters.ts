@@ -79,6 +79,9 @@ export class ModelPrinters extends ModelSeries {
 
 	update(params: Partial<PrinteModelsParams>): ModelsFields {
 		const changes: ModelsFields = []
+		const superUpdate = super.update(params)
+
+		changes.push(...superUpdate)
 
 		if (params.cartridgeModel !== undefined && this.cartridgeModelValue !== params.cartridgeModel) {
 			changes.push({

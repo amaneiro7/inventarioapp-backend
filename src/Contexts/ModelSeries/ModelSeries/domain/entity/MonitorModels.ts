@@ -110,6 +110,9 @@ export class MonitorModels extends ModelSeries {
 
 	update(params: Partial<MonitorModelsParams>): ModelsFields {
 		const changes: ModelsFields = []
+		const superUpdate = super.update(params)
+
+		changes.push(...superUpdate)
 
 		if (params.screenSize !== undefined && this.screenSizeValue !== params.screenSize) {
 			changes.push({

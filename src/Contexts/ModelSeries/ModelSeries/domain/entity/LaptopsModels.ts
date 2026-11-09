@@ -128,7 +128,9 @@ export class LaptopsModels extends ComputerModels {
 
 	update(params: Partial<LaptopModelsParams>): ModelsFields {
 		const changes: ModelsFields = []
-		super.update(params)
+		const superUpdate = super.update(params)
+
+		changes.push(...superUpdate)
 
 		if (params.batteryModel !== undefined && this.batteryModelValue !== params.batteryModel) {
 			changes.push({

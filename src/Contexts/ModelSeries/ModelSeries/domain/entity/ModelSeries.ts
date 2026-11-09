@@ -86,7 +86,7 @@ export class ModelSeries extends AggregateRoot {
 			})
 			this.updateGeneric(params.generic)
 		}
-
+		console.log('update', changes)
 		return changes
 	}
 

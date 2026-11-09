@@ -125,7 +125,9 @@ export class ComputerModels extends ModelSeries {
 
 	update(params: Partial<ComputerModelsParams>): ModelsFields {
 		const changes: ModelsFields = []
-		super.update(params)
+		const superUpdate = super.update(params)
+
+		changes.push(...superUpdate)
 
 		if (params.memoryRamTypeId && params.memoryRamTypeId !== this.memoryRamTypeValue) {
 			changes.push({
