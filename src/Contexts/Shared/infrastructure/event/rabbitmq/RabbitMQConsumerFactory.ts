@@ -3,7 +3,7 @@ import type { DomainEvent } from '../../../domain/event/DomainEvent'
 import type { DomainEventSubscriber } from '../../../domain/event/DomainEventSubscriber'
 import type { DomainEventDeserializer } from '../DomainEventDeserializer'
 import type { RabbitMqConnection } from './RabbitMqConnection'
-import { Logger } from '../../../domain/Logger'
+import type { Logger } from '../../../domain/Logger'
 
 export class RabbitMQConsumerFactory {
 	constructor(
