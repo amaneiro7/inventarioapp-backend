@@ -84,7 +84,6 @@ export class MigrationRuleUpdater {
 				newValue: params.isActive
 			})
 			if (params.isActive) {
-				console.log('Activar')
 				await this.migrationRuleActivator.activate(migrationRuleEntity)
 			}
 			migrationRuleEntity.updateIsActive(params.isActive)

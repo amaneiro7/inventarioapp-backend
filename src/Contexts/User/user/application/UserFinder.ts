@@ -30,7 +30,6 @@ export class UserFinder {
 		skipAdminCheck?: boolean // Optional flag to skip admin check
 	}): Promise<UserDto> {
 		// 1. Find the employee by email
-		console.log('UserFinder: Searching for user with ID:', id) // Debugging log
 		const foundUser = await this.userRepository.findById(id)
 
 		if (!foundUser) {
