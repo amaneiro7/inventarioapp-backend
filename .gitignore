@@ -257,9 +257,9 @@ certbot*
 certificate
 *.crt
 *.pem
-nginx*
 nginx.key
 nginx.keyclear
+nginx.conf
 
 settings.json
 
@@ -269,3 +269,4 @@ pnpm-lock.yaml
 package-lock.json
 certbot
 *.pem
+

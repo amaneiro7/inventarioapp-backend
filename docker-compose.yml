@@ -35,13 +35,19 @@ services:
         image: nginx:latest
         container_name: nginx_inventory
         restart: always
+        environment:
+            - SERVER_NAME=${SERVER_NAME:-srvdocker}
+            - SERVER_NAME_FULLNAME=${SERVER_NAME_FULLNAME:-srvdocker.corp.bnc.com}
+        command: >
+            /bin/sh -c "envsubst '$$SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
         ports:
             - '80:80'
             - '443:443/tcp'
             - '443:443/udp' # Para QUIC (UDP)
         volumes:
             # Montas tu configuración de Nginx personalizada
-            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template:ro
+            # - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
             # Montas los certificados que obtengas (ej. con Certbot)
             - ./certbot/conf:/etc/letsencrypt
         depends_on:
@@ -71,7 +77,7 @@ services:
         env_file:
             - ./.env.prod
         environment:
-            - MONGO_URL=mongodb://mongo:27017/dev
+            - MONGO_URL=${MONGO_URL:-mongodb://mongo_prod:27017/prod}
         volumes:
             - ./mongo_data:/data/db:delegated
         ports:
