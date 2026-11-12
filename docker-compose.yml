@@ -35,7 +35,7 @@ services:
         build:
             context: .
             target: runner
-        command: ['node', 'dist/src/apps/MonitoringApp/monitoring-entrypoint.ts']
+        command: ['node', 'dist/src/apps/MonitoringApp/monitoring-entrypoint.js']
         restart: unless-stopped
         container_name: inventoryApp_Monitoring_Worker
         env_file:

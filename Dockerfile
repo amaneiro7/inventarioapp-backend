@@ -23,11 +23,12 @@ COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml .npmrc ./
 RUN npm pkg delete scripts.prepare
 
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    pnpm install --prod --frozen-lockfile || pnpm install --prod
+pnpm install --prod --frozen-lockfile || pnpm install --prod
 
 # --- Etapa 4: Builder (Compilación de TypeScript) ---
 FROM base AS builder
 COPY --from=deps $DIR/node_modules ./node_modules
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml .npmrc ./
 COPY tsconfig*.json ./
 COPY src ./src
 
