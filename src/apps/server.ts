@@ -13,7 +13,7 @@ import { security } from './Middleware/security'
 import { errorHandler } from './Middleware/errorHandler'
 import { registerRoutes } from './routes'
 import { swaggerSpec } from './Middleware/swagger'
-import { type Logger } from '../Contexts/Shared/domain/Logger'
+import type { Logger } from '../Contexts/Shared/domain/Logger'
 
 export class Server {
 	readonly port: string

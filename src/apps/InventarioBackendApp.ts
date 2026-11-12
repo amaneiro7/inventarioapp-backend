@@ -4,17 +4,17 @@ import { container } from './di/container'
 import { DomainEventSubscribers } from '../Contexts/Shared/infrastructure/event/DomainEventSubscribers'
 import { SharedDependencies } from './di/shared.di'
 import { AuthDependencies } from './di/auth/auth.di'
-import { DeviceDependencies } from './di/device/device.di'
-import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
-import { DomainEventDependencies } from './di/domain-event-bus/domainEvent.di'
-import type { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
-import type { LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
+// import { DeviceDependencies } from './di/device/device.di'
+// import { LocationMonitoringDependencies } from './di/location/location-monitoring.di'
+// import type { DeviceMonitoringService } from '../Contexts/Device/DeviceMonitoring/application/DeviceMonitoringService'
+// import type { LocationMonitoringService } from '../Contexts/Location/LocationMonitoring/application/LocationMonitoringService'
+// import { DomainEventDependencies } from './di/domain-event-bus/domainEvent.di'
 import type { PassportManager } from '../Contexts/Auth/infrastructure/passport'
 import type { Logger } from '../Contexts/Shared/domain/Logger'
 import type { CacheRepository } from '../Contexts/Shared/domain/CacheRepository'
 import type { Database } from '../Contexts/Shared/domain/Database'
 import type { EventBus } from '../Contexts/Shared/domain/event/EventBus'
-import type { RestartMonitoringServices } from '../Contexts/Shared/application/event/RestartMonitoringServices'
+// import type { RestartMonitoringServices } from '../Contexts/Shared/application/event/RestartMonitoringServices'
 import type { RabbitMqConnection } from '../Contexts/Shared/infrastructure/event/rabbitmq/RabbitMqConnection'
 import type { RabbitMQConfigurer } from '../Contexts/Shared/infrastructure/event/rabbitmq/RabbitMQConfigurer'
 
@@ -39,12 +39,12 @@ export class InventarioBackendApp {
 
 			// 3. Configurar el Event Bus y sus suscriptores.
 			await this.configureEventBus()
-			// 👉 3.1. Inicializar el estado de los servicios de monitoreo de forma controlada:
-			const restartMonitoring: RestartMonitoringServices = container.resolve(
-				DomainEventDependencies.RestartMonitoringServices
-			)
+			// // 👉 3.1. Inicializar el estado de los servicios de monitoreo de forma controlada:
+			// const restartMonitoring: RestartMonitoringServices = container.resolve(
+			// 	DomainEventDependencies.RestartMonitoringServices
+			// )
 
-			await restartMonitoring.init()
+			// await restartMonitoring.init()
 
 			// 4. Poner el servidor a escuchar SOLO después de que todo lo demás esté listo.
 			await this.server.listen()
@@ -61,17 +61,17 @@ export class InventarioBackendApp {
 
 	async stop(): Promise<void> {
 		this.logger.info('Iniciando el proceso de apagado (Graceful Shutdown)...')
-		const locationPingService: LocationMonitoringService = container.resolve(
-			LocationMonitoringDependencies.LocationMonitoringService
-		)
-		const devicePingService: DeviceMonitoringService = container.resolve(DeviceDependencies.DeviceMonitoringService)
+		// const locationPingService: LocationMonitoringService = container.resolve(
+		// 	LocationMonitoringDependencies.LocationMonitoringService
+		// )
+		// const devicePingService: DeviceMonitoringService = container.resolve(DeviceDependencies.DeviceMonitoringService)
 		const cache: CacheRepository = container.resolve(SharedDependencies.CacheRepository)
 		const database: Database = container.resolve(SharedDependencies.Database)
 		try {
 			// Detener los bucles de monitoreo
-			locationPingService.stopMonitoringLoop()
-			devicePingService.stopMonitoringLoop()
-			this.logger.info('Servicios de monitoreo detenidos.')
+			// locationPingService.stopMonitoringLoop()
+			// devicePingService.stopMonitoringLoop()
+			// this.logger.info('Servicios de monitoreo detenidos.')
 
 			// Cerrar conexiones a la base de datos y caché
 			await database.close()

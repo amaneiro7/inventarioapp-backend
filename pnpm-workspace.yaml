@@ -24,3 +24,6 @@ minimumReleaseAgeExclude:
   - amqplib@2.3.1
   - dotenv@18.0.10
   - typescript-eslint@8.72.2
+  - glob@14.0.6
+  - mongodb@7.9.0
+  - prettier@3.10.1

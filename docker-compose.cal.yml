@@ -31,6 +31,35 @@ services:
                     cpus: '0.25' # Reserva al menos el 25% de CPU
                     memory: 256M # Reserva al menos 256MB de memoria
 
+    monitoring-worker:
+        build:
+            context: .
+            target: runner
+        command: ['node', 'dist/src/apps/MonitoringApp/monitoring-entrypoint.ts']
+        restart: unless-stopped
+        container_name: inventoryApp_Monitoring_Worker
+        env_file:
+            - ./.env.prod
+        environment:
+            - TZ=America/Caracas
+            - NODE_ENV=production
+            - LOG_DIR=/app/logs
+        depends_on:
+            - postgres
+            - redis
+            - rabbitmq
+            - mongo
+        volumes:
+            - ./logs_data:/app/logs
+        deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
+            reservations:
+                cpus: '0.20'
+                memory: 256M
+
     nginx:
         image: nginx:latest
         container_name: nginx_inventory
@@ -45,7 +74,7 @@ services:
             - '443:443/udp' # Para QUIC (UDP)
         volumes:
             # Montas tu configuración de Nginx personalizada
-            - ./templates:/etc/nginx/templates            
+            - ./templates:/etc/nginx/templates
             # - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
             # Montas los certificados que obtengas (ej. con Certbot)
             - ./certbot/conf:/etc/letsencrypt

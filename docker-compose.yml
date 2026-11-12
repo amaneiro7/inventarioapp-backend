@@ -31,6 +31,35 @@ services:
                     cpus: '0.25' # Reserva al menos el 25% de CPU
                     memory: 256M # Reserva al menos 256MB de memoria
 
+    monitoring-worker:
+        build:
+            context: .
+            target: runner
+        command: ['node', 'dist/src/apps/MonitoringApp/monitoring-entrypoint.ts']
+        restart: unless-stopped
+        container_name: inventoryApp_Monitoring_Worker
+        env_file:
+            - ./.env.prod
+        environment:
+            - TZ=America/Caracas
+            - NODE_ENV=production
+            - LOG_DIR=/app/logs
+        depends_on:
+            - postgres
+            - redis
+            - rabbitmq
+            - mongo
+        volumes:
+            - ./logs_data:/app/logs
+        deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
+            reservations:
+                cpus: '0.20'
+                memory: 256M
+
     nginx:
         image: nginx:latest
         container_name: nginx_inventory
@@ -38,7 +67,7 @@ services:
         environment:
             - SERVER_NAME=${SERVER_NAME:-srvdocker}
             - SERVER_FULLNAME=${SERVER_FULLNAME:-srvdocker.corp.bnc.com}
-            - SERVER_IP=${SERVER_IP:-'10.235.1.65'}  
+            - SERVER_IP=${SERVER_IP:-'10.235.1.65'}
         ports:
             - '80:80'
             - '443:443/tcp'

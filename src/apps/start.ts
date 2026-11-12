@@ -1,12 +1,15 @@
 import 'reflect-metadata'
 import { InventarioBackendApp } from './InventarioBackendApp'
-;(async () => {
+
+const app = new InventarioBackendApp()
+
+async function main() {
 	try {
-		await new InventarioBackendApp().start().catch(handleError)
+		await app.start().catch(handleError)
 	} catch (e) {
 		handleError(e)
 	}
-})()
+}
 
 process.on('uncaughtException', err => {
 	console.error('uncaughtException', err)
@@ -17,3 +20,5 @@ function handleError(e: unknown) {
 	console.log(e)
 	process.exit(1)
 }
+
+void main()

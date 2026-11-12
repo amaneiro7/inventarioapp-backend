@@ -1,4 +1,3 @@
-// import { sync } from 'fast-glob'
 import { globSync } from 'glob'
 import { resolve } from 'node:path'
 import { type AwilixContainer, createContainer } from 'awilix'

@@ -13,9 +13,10 @@ import {
 	MonitoringConfigDefaults,
 	MonitoringConfigKeys
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
-import { type IPingService } from '../../../Shared/domain/Monitoring/infra/IPingService'
 import { LocationStatusOptions } from '../../LocationStatus/domain/LocationStatusOptions'
 import { SequelizeLocationMonitoringRepository } from '../infra/sequelize/SequelizeLocationMonitoringRepository'
+import type { IPingService } from '../../../Shared/domain/Monitoring/infra/IPingService'
+import type { SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 /**
  * Service responsible for monitoring locations. Extends the generic MonitoringService.
@@ -31,23 +32,27 @@ export class LocationMonitoringService extends MonitoringService<
 	protected readonly pingService: IPingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
+	protected readonly settingsFinder: SettingsFinder
 
 	constructor({
 		locationMonitoringRepository,
 		logger,
 		pingLogger,
-		pingService
+		pingService,
+		settingsFinder
 	}: {
 		locationMonitoringRepository: LocationMonitoringRepository
 		pingService: IPingService
 		logger: Logger
 		pingLogger: PingLogger
+		settingsFinder: SettingsFinder
 	}) {
-		super(locationMonitoringRepository, pingService, logger, pingLogger)
+		super(locationMonitoringRepository, pingService, logger, pingLogger, settingsFinder)
 		this.locationMonitoringRepository = locationMonitoringRepository
 		this.pingService = pingService
 		this.logger = logger
 		this.pingLogger = pingLogger
+		this.settingsFinder = settingsFinder
 	}
 
 	protected getMonitoringConfigKeys(): MonitoringConfigKeys {

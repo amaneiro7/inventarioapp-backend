@@ -1,6 +1,4 @@
 import pLimit from 'p-limit'
-import { AppSettingsDependencies } from '../../../../../apps/di/app-settings/app-settings.di'
-import { container } from '../../../../../apps/di/container'
 import { MonitoringStatuses } from '../domain/value-object/MonitoringStatus'
 import { type Primitives } from '../../value-object/Primitives' // prettier-ignore
 import { type Logger } from '../../Logger'
@@ -37,7 +35,6 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		second: '2-digit',
 		hour12: false
 	})
-	private readonly settingsFinder: SettingsFinder = container.resolve(AppSettingsDependencies.Finder)
 
 	/**
 	 * @description Caché local en memoria de los items a monitorear.
@@ -56,7 +53,8 @@ export abstract class MonitoringService<DTO, Payload, Entity, R extends GenericM
 		protected readonly repository: R,
 		protected readonly pingService: IPingService,
 		protected readonly logger: Logger,
-		protected readonly pingLogger: PingLogger
+		protected readonly pingLogger: PingLogger,
+		protected readonly settingsFinder: SettingsFinder
 	) {}
 
 	/**

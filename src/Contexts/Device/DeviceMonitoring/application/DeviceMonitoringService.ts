@@ -15,6 +15,7 @@ import type {
 } from '../../../Shared/domain/Monitoring/domain/entity/MonitoringConfig'
 import type { IPingService, PingResult } from '../../../Shared/domain/Monitoring/infra/IPingService'
 import type { SequelizeDeviceMonitoringRepository } from '../infra/sequelize/SequelizeDeviceMonitoringRepository'
+import type { SettingsFinder } from '../../../AppSettings/application/SettingsFinder'
 
 /**
  * @description Service responsible for monitoring the status of devices by pinging them.
@@ -30,23 +31,27 @@ export class DeviceMonitoringService extends MonitoringService<
 	protected readonly pingService: IPingService
 	protected readonly logger: Logger
 	protected readonly pingLogger: PingLogger
+	protected readonly settingsFinder: SettingsFinder
 
 	constructor({
 		deviceMonitoringRepository,
 		pingService,
 		logger,
-		pingLogger
+		pingLogger,
+		settingsFinder
 	}: {
 		deviceMonitoringRepository: DeviceMonitoringRepository
 		pingService: IPingService
 		logger: Logger
 		pingLogger: PingLogger
+		settingsFinder: SettingsFinder
 	}) {
-		super(deviceMonitoringRepository, pingService, logger, pingLogger)
+		super(deviceMonitoringRepository, pingService, logger, pingLogger, settingsFinder)
 		this.deviceMonitoringRepository = deviceMonitoringRepository
 		this.pingService = pingService
 		this.logger = logger
 		this.pingLogger = pingLogger
+		this.settingsFinder = settingsFinder
 	}
 
 	protected getMonitoringConfigKeys(): MonitoringConfigKeys {
