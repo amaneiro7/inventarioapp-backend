@@ -43,7 +43,7 @@ services:
         environment:
             - TZ=America/Caracas
             - NODE_ENV=production
-            - LOG_DIR=/app/logs
+            - LOG_DIR=/app/logs # Asegura que la app escriba en el volumen montado
         depends_on:
             - postgres
             - redis
@@ -52,13 +52,13 @@ services:
         volumes:
             - ./logs_data:/app/logs
         deploy:
-        resources:
-            limits:
-                cpus: '0.50'
-                memory: 512M
-            reservations:
-                cpus: '0.20'
-                memory: 256M
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 512M
+                reservations:
+                    cpus: '0.20'
+                    memory: 256M
 
     nginx:
         image: nginx:latest

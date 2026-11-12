@@ -52,13 +52,13 @@ services:
         volumes:
             - ./logs_data:/app/logs
         deploy:
-        resources:
-            limits:
-                cpus: '0.50'
-                memory: 512M
-            reservations:
-                cpus: '0.20'
-                memory: 256M
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 512M
+                reservations:
+                    cpus: '0.20'
+                    memory: 256M
 
     nginx:
         image: nginx:latest
