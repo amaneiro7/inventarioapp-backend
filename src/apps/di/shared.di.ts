@@ -54,7 +54,7 @@ export const register = (container: AwilixContainer) => {
 		).singleton(),
 		// 3. Cliente de MongoDB y Failover Publisher
 		[SharedDependencies.DomainEventFailoverPublisher]: asFunction(() => {
-			const client = MongoClientFactory.createClient('shared', { url: config.mongo.url })
+			const client = MongoClientFactory.createClient('shared', config.mongo)
 			return new DomainEventFailoverPublisher({ client })
 		}).singleton(),
 		// 4. COnfigruador de Exchanges y Queues

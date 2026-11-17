@@ -81,7 +81,7 @@ export const registerDependecies = (container: AwilixContainer): void => {
 		).singleton(),
 		// 3. Cliente de MongoDB y Failover Publisher
 		[MonitoringAppDependencies.FailoverPublisher]: asFunction(() => {
-			const client = MongoClientFactory.createClient('monitoring-worker', { url: config.mongo.url })
+			const client = MongoClientFactory.createClient('monitoring-worker', config.mongo)
 			return new DomainEventFailoverPublisher({ client })
 		}).singleton(),
 		// 4. COnfigruador de Exchanges y Queues

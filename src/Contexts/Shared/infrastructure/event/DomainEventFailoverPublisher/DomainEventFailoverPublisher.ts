@@ -10,6 +10,7 @@ export class DomainEventFailoverPublisher {
 
 	constructor({ client, deserializer }: { client: Promise<MongoClient>; deserializer?: DomainEventDeserializer }) {
 		this.client = client
+		this.client.catch(() => {})
 		this.deserializer = deserializer
 	}
 
